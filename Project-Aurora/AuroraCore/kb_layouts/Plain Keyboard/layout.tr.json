@@ -11,8 +11,7 @@
       {
         "visualName": "ESC",
         "tag": 1,
-        "line_break": false,
-        "margin_left": 0.0,
+          "margin_left": 0.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -26,8 +25,7 @@
       {
         "visualName": "F1",
         "tag": 2,
-        "line_break": false,
-        "margin_left": 32.0,
+          "margin_left": 32.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -41,8 +39,7 @@
       {
         "visualName": "F2",
         "tag": 3,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -56,8 +53,7 @@
       {
         "visualName": "F3",
         "tag": 4,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -71,8 +67,7 @@
       {
         "visualName": "F4",
         "tag": 5,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -86,8 +81,7 @@
       {
         "visualName": "F5",
         "tag": 6,
-        "line_break": false,
-        "margin_left": 34.0,
+          "margin_left": 34.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -101,8 +95,7 @@
       {
         "visualName": "F6",
         "tag": 7,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -116,8 +109,7 @@
       {
         "visualName": "F7",
         "tag": 8,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -131,8 +123,7 @@
       {
         "visualName": "F8",
         "tag": 9,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -146,8 +137,7 @@
       {
         "visualName": "F9",
         "tag": 10,
-        "line_break": false,
-        "margin_left": 29.0,
+          "margin_left": 29.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -161,8 +151,7 @@
       {
         "visualName": "F10",
         "tag": 11,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -176,8 +165,7 @@
       {
         "visualName": "F11",
         "tag": 12,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -191,8 +179,7 @@
       {
         "visualName": "F12",
         "tag": 13,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -206,8 +193,7 @@
       {
         "visualName": "PRINT",
         "tag": 14,
-        "line_break": false,
-        "margin_left": 14.0,
+          "margin_left": 14.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -221,8 +207,7 @@
       {
         "visualName": "SCRL\r\nLOCK",
         "tag": 15,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -236,7 +221,7 @@
       {
         "visualName": "PAUSE",
         "tag": 16,
-        "line_break": true,
+        "line_break": 37.0,
         "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
@@ -251,8 +236,7 @@
       {
         "visualName": "~",
         "tag": 17,
-        "line_break": false,
-        "margin_left": 0.0,
+          "margin_left": 0.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -266,8 +250,7 @@
       {
         "visualName": "1",
         "tag": 18,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -281,8 +264,7 @@
       {
         "visualName": "2",
         "tag": 19,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -296,8 +278,7 @@
       {
         "visualName": "3",
         "tag": 20,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -311,8 +292,7 @@
       {
         "visualName": "4",
         "tag": 21,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -326,8 +306,7 @@
       {
         "visualName": "5",
         "tag": 22,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -341,8 +320,7 @@
       {
         "visualName": "6",
         "tag": 23,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -356,8 +334,7 @@
       {
         "visualName": "7",
         "tag": 24,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -371,8 +348,7 @@
       {
         "visualName": "8",
         "tag": 25,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -386,8 +362,7 @@
       {
         "visualName": "9",
         "tag": 26,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -401,8 +376,7 @@
       {
         "visualName": "0",
         "tag": 27,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -416,8 +390,7 @@
       {
         "visualName": "?",
         "tag": 28,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -431,8 +404,7 @@
       {
         "visualName": "_",
         "tag": 29,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -446,8 +418,7 @@
       {
         "visualName": "BACKSPACE",
         "tag": 30,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 67.0,
         "height": 30.0,
@@ -461,8 +432,7 @@
       {
         "visualName": "INSERT",
         "tag": 31,
-        "line_break": false,
-        "margin_left": 14.0,
+          "margin_left": 14.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -476,8 +446,7 @@
       {
         "visualName": "HOME",
         "tag": 32,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -491,8 +460,7 @@
       {
         "visualName": "PAGE\r\nUP",
         "tag": 33,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -506,8 +474,7 @@
       {
         "visualName": "NUM\r\nLOCK",
         "tag": 34,
-        "line_break": false,
-        "margin_left": 14.0,
+          "margin_left": 14.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -521,8 +488,7 @@
       {
         "visualName": "/",
         "tag": 35,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -536,8 +502,7 @@
       {
         "visualName": "*",
         "tag": 36,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -551,7 +516,7 @@
       {
         "visualName": "-",
         "tag": 37,
-        "line_break": true,
+        "line_break": 37.0,
         "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
@@ -566,8 +531,7 @@
       {
         "visualName": "TAB",
         "tag": 38,
-        "line_break": false,
-        "margin_left": 0.0,
+          "margin_left": 0.0,
         "margin_top": 0.0,
         "width": 50.0,
         "height": 30.0,
@@ -581,8 +545,7 @@
       {
         "visualName": "Q",
         "tag": 39,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -596,8 +559,7 @@
       {
         "visualName": "W",
         "tag": 40,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -611,8 +573,7 @@
       {
         "visualName": "E",
         "tag": 41,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -626,8 +587,7 @@
       {
         "visualName": "R",
         "tag": 42,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -641,8 +601,7 @@
       {
         "visualName": "T",
         "tag": 43,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -656,8 +615,7 @@
       {
         "visualName": "Y",
         "tag": 44,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -671,8 +629,7 @@
       {
         "visualName": "U",
         "tag": 45,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -686,8 +643,7 @@
       {
         "visualName": "I",
         "tag": 46,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -701,8 +657,7 @@
       {
         "visualName": "O",
         "tag": 47,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -716,8 +671,7 @@
       {
         "visualName": "P",
         "tag": 48,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -731,8 +685,7 @@
       {
         "visualName": "Ğ",
         "tag": 49,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -746,8 +699,7 @@
       {
         "visualName": "Ü",
         "tag": 50,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 40.0,
         "height": 30.0,
@@ -761,8 +713,7 @@
       {
         "visualName": "DEL",
         "tag": 52,
-        "line_break": false,
-        "margin_left": 58.0,
+          "margin_left": 58.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -776,8 +727,7 @@
       {
         "visualName": "END",
         "tag": 53,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -791,8 +741,7 @@
       {
         "visualName": "PAGE\r\nDOWN",
         "tag": 54,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -806,8 +755,7 @@
       {
         "visualName": "7",
         "tag": 55,
-        "line_break": false,
-        "margin_left": 14.0,
+          "margin_left": 14.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -821,8 +769,7 @@
       {
         "visualName": "8",
         "tag": 56,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -836,8 +783,7 @@
       {
         "visualName": "9",
         "tag": 57,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -851,7 +797,7 @@
       {
         "visualName": "+",
         "tag": 58,
-        "line_break": true,
+        "line_break": 37.0,
         "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
@@ -866,8 +812,7 @@
       {
         "visualName": "CAPS\r\nLOCK",
         "tag": 59,
-        "line_break": false,
-        "margin_left": 0.0,
+          "margin_left": 0.0,
         "margin_top": 0.0,
         "width": 60.0,
         "height": 30.0,
@@ -881,8 +826,7 @@
       {
         "visualName": "A",
         "tag": 60,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -896,8 +840,7 @@
       {
         "visualName": "S",
         "tag": 61,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -911,8 +854,7 @@
       {
         "visualName": "D",
         "tag": 62,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -926,8 +868,7 @@
       {
         "visualName": "F",
         "tag": 63,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -941,8 +882,7 @@
       {
         "visualName": "G",
         "tag": 64,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -956,8 +896,7 @@
       {
         "visualName": "H",
         "tag": 65,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -971,8 +910,7 @@
       {
         "visualName": "J",
         "tag": 66,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -986,8 +924,7 @@
       {
         "visualName": "K",
         "tag": 67,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1001,8 +938,7 @@
       {
         "visualName": "L",
         "tag": 68,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1016,8 +952,7 @@
       {
         "visualName": "Ş",
         "tag": 69,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1031,8 +966,7 @@
       {
         "visualName": "İ",
         "tag": 70,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1046,8 +980,7 @@
       {
         "visualName": ";",
         "tag": 71,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1061,8 +994,7 @@
       {
         "visualName": "ENTER",
         "tag": 72,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": -37.0,
         "width": 38.0,
         "height": 67.0,
@@ -1076,8 +1008,7 @@
       {
         "visualName": "4",
         "tag": 73,
-        "line_break": false,
-        "margin_left": 131.0,
+          "margin_left": 131.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1091,8 +1022,7 @@
       {
         "visualName": "5",
         "tag": 74,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1106,7 +1036,7 @@
       {
         "visualName": "6",
         "tag": 75,
-        "line_break": true,
+        "line_break": 37.0,
         "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
@@ -1121,8 +1051,7 @@
       {
         "visualName": "SHIFT",
         "tag": 76,
-        "line_break": false,
-        "margin_left": 0.0,
+          "margin_left": 0.0,
         "margin_top": 0.0,
         "width": 48.0,
         "height": 30.0,
@@ -1136,8 +1065,7 @@
       {
         "visualName": ">",
         "tag": 77,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1151,8 +1079,7 @@
       {
         "visualName": "Z",
         "tag": 78,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1166,8 +1093,7 @@
       {
         "visualName": "X",
         "tag": 79,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1181,8 +1107,7 @@
       {
         "visualName": "C",
         "tag": 80,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1196,8 +1121,7 @@
       {
         "visualName": "V",
         "tag": 81,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1211,8 +1135,7 @@
       {
         "visualName": "B",
         "tag": 82,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1226,8 +1149,7 @@
       {
         "visualName": "N",
         "tag": 83,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1241,8 +1163,7 @@
       {
         "visualName": "M",
         "tag": 84,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1256,8 +1177,7 @@
       {
         "visualName": "Ö",
         "tag": 85,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1271,8 +1191,7 @@
       {
         "visualName": "Ç",
         "tag": 86,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1286,8 +1205,7 @@
       {
         "visualName": ":",
         "tag": 87,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1301,8 +1219,7 @@
       {
         "visualName": "SHIFT",
         "tag": 88,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 87.0,
         "height": 30.0,
@@ -1316,8 +1233,7 @@
       {
         "visualName": "↑",
         "tag": 89,
-        "line_break": false,
-        "margin_left": 49.0,
+          "margin_left": 49.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1331,8 +1247,7 @@
       {
         "visualName": "1",
         "tag": 90,
-        "line_break": false,
-        "margin_left": 52.0,
+          "margin_left": 52.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1346,8 +1261,7 @@
       {
         "visualName": "2",
         "tag": 91,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1361,8 +1275,7 @@
       {
         "visualName": "3",
         "tag": 92,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1376,7 +1289,7 @@
       {
         "visualName": "ENTER",
         "tag": 93,
-        "line_break": true,
+        "line_break": 37.0,
         "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
@@ -1391,8 +1304,7 @@
       {
         "visualName": "CTRL",
         "tag": 94,
-        "line_break": false,
-        "margin_left": 0.0,
+          "margin_left": 0.0,
         "margin_top": 0.0,
         "width": 51.0,
         "height": 30.0,
@@ -1406,8 +1318,7 @@
       {
         "visualName": "WIN",
         "tag": 95,
-        "line_break": false,
-        "margin_left": 5.0,
+          "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 39.0,
         "height": 30.0,
@@ -1421,8 +1332,7 @@
       {
         "visualName": "ALT",
         "tag": 96,
-        "line_break": false,
-        "margin_left": 5.0,
+          "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 42.0,
         "height": 30.0,
@@ -1436,8 +1346,7 @@
       {
         "visualName": "SPACE",
         "tag": 97,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 208.0,
         "height": 30.0,
@@ -1451,8 +1360,7 @@
       {
         "visualName": "ALT",
         "tag": 98,
-        "line_break": false,
-        "margin_left": 5.0,
+          "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 41.0,
         "height": 30.0,
@@ -1466,8 +1374,7 @@
       {
         "visualName": "WIN",
         "tag": 99,
-        "line_break": false,
-        "margin_left": 5.0,
+          "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 41.0,
         "height": 30.0,
@@ -1481,8 +1388,7 @@
       {
         "visualName": "APP",
         "tag": 100,
-        "line_break": false,
-        "margin_left": 5.0,
+          "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 40.0,
         "height": 30.0,
@@ -1496,8 +1402,7 @@
       {
         "visualName": "CTRL",
         "tag": 101,
-        "line_break": false,
-        "margin_left": 5.0,
+          "margin_left": 5.0,
         "margin_top": 0.0,
         "width": 50.0,
         "height": 30.0,
@@ -1511,8 +1416,7 @@
       {
         "visualName": "←",
         "tag": 102,
-        "line_break": false,
-        "margin_left": 12.0,
+          "margin_left": 12.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1526,8 +1430,7 @@
       {
         "visualName": "↓",
         "tag": 103,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1541,8 +1444,7 @@
       {
         "visualName": "→",
         "tag": 104,
-        "line_break": false,
-        "margin_left": 7.0,
+          "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,
         "height": 30.0,
@@ -1556,8 +1458,7 @@
       {
         "visualName": "0",
         "tag": 105,
-        "line_break": false,
-        "margin_left": 15.0,
+          "margin_left": 15.0,
         "margin_top": 0.0,
         "width": 67.0,
         "height": 30.0,
@@ -1571,7 +1472,7 @@
       {
         "visualName": ".",
         "tag": 106,
-        "line_break": true,
+        "line_break": 37.0,
         "margin_left": 7.0,
         "margin_top": 0.0,
         "width": 30.0,

@@ -78,14 +78,14 @@
     "15": {
       "visualName": "DEL",
       "tag": 52,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": 7.0
     },
     "34": {
       "margin_left": 7.0
     },
     "37": {
-      "line_break": true
+      "line_break": 37.0
     },
     "50": {
       "line_break": null,
@@ -95,7 +95,7 @@
       "margin_left": 60
     },
     "58": {
-      "line_break": true
+      "line_break": 37.0
     },
     "72": {
       "tag": 72,
@@ -110,7 +110,7 @@
       "margin_left": 7
     },
     "75": {
-      "line_break": true
+      "line_break": 37.0
     },
     "76": {
       "tag": 76,
@@ -129,7 +129,7 @@
       "margin_left": 7.0
     },
     "93": {
-      "line_break": true
+      "line_break": 37.0
     },
     "94": {
       "tag": 94,
@@ -188,7 +188,7 @@
       "margin_left": 7.0
     },
     "106": {
-      "line_break": true
+      "line_break": 37.0
     }
   },
   "included_features": [

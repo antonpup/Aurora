@@ -5,7 +5,7 @@
       {
         "visualName": "TOUCHPAD",
         "tag": 0,
-        "line_break": false,
+        "line_break": -1.0,
         "margin_left": 149.0,
         "margin_top": 0.0,
         "width": 208.0,

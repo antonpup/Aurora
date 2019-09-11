@@ -20,7 +20,7 @@ namespace Aurora.Devices.Layout
     {
         public string visualName;
         public LEDINT tag;
-        public bool? line_break;
+        public double? line_break;
         public double? margin_left;
         public double? margin_top;
         public double? width;
@@ -34,7 +34,7 @@ namespace Aurora.Devices.Layout
         {
         }
 
-        public VirtualLight(string text, LEDINT tag, bool? enabled = true, bool? linebreak = false, double? fontsize = 12, double? margin_left = 7, double? margin_top = 0, double? width = 30, double? height = 30, int? width_bits = 2, int? height_bits = 2, int? margin_left_bits = 0, int? margin_top_bits = 0)
+        public VirtualLight(string text, LEDINT tag, bool? enabled = true, double? linebreak = null, double? fontsize = 12, double? margin_left = 7, double? margin_top = 0, double? width = 30, double? height = 30, int? width_bits = 2, int? height_bits = 2, int? margin_left_bits = 0, int? margin_top_bits = 0)
         {
             this.visualName = text;
             this.tag = tag;
@@ -62,6 +62,11 @@ namespace Aurora.Devices.Layout
                 if (otherKey.enabled != null) this.enabled = otherKey.enabled;
             }
             return this;
+        }
+
+        public bool hasLineBreak()
+        {
+            return ((this.line_break ?? -1) > 0);
         }
     }
 
@@ -142,9 +147,9 @@ namespace Aurora.Devices.Layout
                 if (layout_width < current_width)
                     layout_width = current_width;
 
-                if (key.line_break.Value)
+                if (key.hasLineBreak())
                 {
-                    current_height += 37;
+                    current_height += key.line_break.Value;
                     current_width = 0;
                 }
 
@@ -316,13 +321,13 @@ namespace Aurora.Devices.Layout
                     }
                     else
                     {
-                        if (previous_linebreak && !key.line_break.Value)
+                        if (previous_linebreak && !key.hasLineBreak())
                         {
                             key.margin_left -= x_correction;
                             //key.margin_left_bits -= x_correction_bit;
                         }
 
-                        previous_linebreak = key.line_break.Value;
+                        previous_linebreak = key.hasLineBreak();
                     }
                 }
 
@@ -380,9 +385,9 @@ namespace Aurora.Devices.Layout
                 if (layout_width < current_width)
                     layout_width = current_width;
 
-                if (key.line_break.Value)
+                if (key.hasLineBreak())
                 {
-                    current_height += 37;
+                    current_height += key.line_break.Value;
                     current_width = 0;
                 }
 
@@ -459,9 +464,9 @@ namespace Aurora.Devices.Layout
                     br_x = (x + width);
                     br_y = (y + height);
 
-                    if (key.line_break.Value)
+                    if (key.hasLineBreak())
                     {
-                        cur_height += 37;
+                        cur_height += key.line_break.Value;
                         cur_width = 0;
                     }
                     else

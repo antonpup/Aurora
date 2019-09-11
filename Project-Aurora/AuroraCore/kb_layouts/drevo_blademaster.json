@@ -30,7 +30,7 @@
     "16": {
       "visualName": null,
       "tag": 16,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -45,7 +45,7 @@
     "33": {
       "visualName": null,
       "tag": 33,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -60,7 +60,7 @@
     "54": {
       "visualName": null,
       "tag": 54,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -75,7 +75,7 @@
     "72": {
       "visualName": null,
       "tag": 72,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -90,7 +90,7 @@
     "89": {
       "visualName": null,
       "tag": 89,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -135,7 +135,7 @@
     "104": {
       "visualName": null,
       "tag": 104,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,

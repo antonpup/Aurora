@@ -1,19 +1,18 @@
 ﻿@inject IJSRuntime JsRuntime;
 @inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
 
-
-
-<div style="overflow:hidden;height:600px">
+<div style="overflow:hidden;height:600px" @onmouseout="OnMouseOut">
 
     <div id='virtual-region'>
         @foreach (Aurora.Devices.Layout.DeviceLayout device in deviceLayout.AllLayouts)
         {
-            <div style="position:absolute;top:@(device.Location.Y)px;left:@(device.Location.X)px">
+            <div @onmouseover="DeviceOnMouseOver" @onmouseout="DeviceOnMouseOut" @onmousedown="DeviceOnMouseDown" >
                 <DeviceLayout Device="@device" />
             </div>
         }
     </div>
 </div>
+
 
 @code {
 
@@ -25,7 +24,30 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            await JsRuntime.InvokeAsync<object>("attachPanZoom", "#virtual-region");
+        }
+    }
 
-        await JsRuntime.InvokeAsync<object>("attachPanZoom", "#virtual-region");
+    void OnMouseOut(MouseEventArgs e)
+    {
+
+    }
+
+    async Task DeviceOnMouseDown(MouseEventArgs e)
+    {
+
+    }
+
+    async Task DeviceOnMouseOver(MouseEventArgs e)
+    {
+        await JsRuntime.InvokeAsync<object>("pausePanZoom");
+    }
+
+    async Task DeviceOnMouseOut(MouseEventArgs e)
+    {
+        await JsRuntime.InvokeAsync<object>("resumePanZoom");
+
     }
 }

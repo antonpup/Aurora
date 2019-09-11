@@ -1,6 +1,7 @@
 ﻿@using System.IO
 @using Aurora.Utils;
 
+<div class="device-layout @(Device.GetType().Name)" style="position:absolute;top:@(Device.Location.Y)px;left:@(Device.Location.X)px;width:@(Device.VirtualGroup.Region.Width)px;height:@(Device.VirtualGroup.Region.Height)px;">
 @{
     string layoutsPath = "device_assets";
     double layout_height = 0;
@@ -50,7 +51,6 @@
             <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" :"" )">
                 @if (key.tag == -1)
                 {
-                    //For some reason when an image is done like this it doesn't want to load
                     <img class="vkimg" src="@image_path" asp-append-version="true"/>
                 }
             </div>
@@ -75,9 +75,9 @@
             if (layout_width < current_width)
                 layout_width = current_width;
 
-            if (key.line_break.Value)
+            if (key.hasLineBreak())
             {
-                current_height += 37;
+                current_height += key.line_break.Value;
                 current_width = 0;
                 //isFirstInRow = true;
             }
@@ -87,7 +87,7 @@
         }
     }
 }
-
+</div>
 
 @code {
     protected override void OnInitialized()

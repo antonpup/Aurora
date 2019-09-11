@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @namespace AuroraUI.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -28,16 +28,30 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <script>
+        var instance
+
         window.attachPanZoom = (id) => {
-            console.log("called with "+id)
+            if (instance != null)
+                return
+
+            console.log("called with " + id)
             var element = document.querySelector(id)
-            
+
             // and forward it it to panzoom.
             //TODO: Dispose of this at some point
-            var instance = panzoom(element)
+            instance = panzoom(element)
 
 
             console.log("done")
+        }
+        window.pausePanZoom = () => {
+            if (instance != null)
+                instance.pause();
+        }
+
+        window.resumePanZoom = () => {
+            if (instance != null)
+                instance.resume();
         }
     </script>
 </body>

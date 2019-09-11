@@ -37,7 +37,7 @@
     "13": {
       "visualName": null,
       "tag": 13,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -52,7 +52,7 @@
     "37": {
       "visualName": null,
       "tag": 37,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -67,7 +67,7 @@
     "58": {
       "visualName": null,
       "tag": 58,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -97,7 +97,7 @@
     "75": {
       "visualName": null,
       "tag": 75,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
@@ -127,7 +127,7 @@
     "93": {
       "visualName": null,
       "tag": 93,
-      "line_break": true,
+      "line_break": 37.0,
       "margin_left": null,
       "margin_top": null,
       "width": null,
