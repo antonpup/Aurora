@@ -18,7 +18,7 @@ namespace Aurora.Devices.Layout
     public class DeviceColorComposition
     {
         public readonly object bitmapLock = new object();
-        public Dictionary<LEDINT, System.Drawing.Color> deviceColours;
+        public Dictionary<LEDINT, Color> deviceColours;
         public Bitmap keyBitmap;
     }
 
@@ -48,9 +48,9 @@ namespace Aurora.Devices.Layout
         protected static string layouts_path_root = "Device Layouts";
 
         #region settings
-        private System.Drawing.Point location = new System.Drawing.Point(0, 0);
+        private Point location = new Point(0, 0);
         //[JsonIgnore]
-        public System.Drawing.Point Location { get { return location; } set { UpdateVar(ref location, value); } }
+        public Point Location { get { return location; } set { UpdateVar(ref location, value); } }
 
         private short selectedSDK = -1;
         //[JsonIgnore]
@@ -158,7 +158,7 @@ namespace Aurora.Devices.Layout
 
         internal void UpdateColors(Bitmap colormap)
         {
-            Dictionary<LEDINT, System.Drawing.Color> colors = new Dictionary<LEDINT, System.Drawing.Color>();
+            Dictionary<LEDINT, Color> colors = new Dictionary<LEDINT, Color>();
 
             foreach (KeyValuePair<LEDINT, BitmapRectangle> keyRegion in this.VirtualGroup.BitmapMap)
             {
