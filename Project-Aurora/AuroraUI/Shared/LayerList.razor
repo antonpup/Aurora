@@ -2,32 +2,15 @@
 @using  Aurora.Settings.Layers
 @using System.Collections.ObjectModel
 
-<!--<MatList SingleSelection="true">
+<div class="list-group">
     @foreach (var layer in Layers)
     {
         //Use @key to stop the items from remaining selected when the Profile changes
-        <MatListItem @key="@layer.Name" @onclick="@(e => SelectedLayerChanged.InvokeAsync(layer))">
+        <a @key="@layer.Name" @onclick="@(e => LayerSelected(layer))" class="@(SelectedLayer == layer ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action")">
             @layer.Name
-        </MatListItem>
+        </a>
     }
-</MatList>-->
-
-    <div class="list-group">
-        @foreach (var layer in Layers)
-        {
-            //Use @key to stop the items from remaining selected when the Profile changes
-                <a @key="@layer.Name" @onclick="@(e => LayerSelected(layer))" class="@(SelectedLayer == layer ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action")">
-                    @layer.Name
-                </a>
-        }
-        <!--<a href="#" class="list-group-item list-group-item-action active">
-        Cras justo odio
-    </a>
-    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-    <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>-->
-    </div>
+</div>
 
 @code {
     [Parameter]
