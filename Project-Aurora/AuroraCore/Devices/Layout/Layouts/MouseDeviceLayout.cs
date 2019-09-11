@@ -121,12 +121,11 @@ namespace Aurora.Devices.Layout.Layouts
         //[JsonIgnore]
         public PreferredMouse Style { get { return style; } set { UpdateVar(ref style, value); } }
 
-        private static string cultures_folder = "kb_layouts";
         private static string layoutsPath = "";
 
         static MouseDeviceLayout()
         {
-            layoutsPath = Path.Combine(Const.ExecutingDirectory, cultures_folder);
+            layoutsPath = Path.Combine(Const.ExecutingDirectory, layouts_path_root, "Mouse");
         }
 
         private class MouseLayout
@@ -142,39 +141,40 @@ namespace Aurora.Devices.Layout.Layouts
             switch (Style)
             {
                 case PreferredMouse.Generic_Peripheral:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
+                    mouse_feature_path = "generic_peripheral.json";
                     break;
                 case PreferredMouse.Generic_Mousepad:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
+                    mouse_feature_path = "generic_mousepad.json";
                     break;
                 case PreferredMouse.Logitech_G900:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
+                    mouse_feature_path = "logitech_g900_features.json";
                     break;
                 case PreferredMouse.Logitech_G502:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json");
+                    mouse_feature_path = "logitech_g502_features.json";
                     break;
                 case PreferredMouse.Corsair_Sabre:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json");
+                    mouse_feature_path = "corsair_sabre_features.json";
                     break;
                 case PreferredMouse.Corsair_M65:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_m65_features.json");
+                    mouse_feature_path = "corsair_m65_features.json";
                     break;
                 case PreferredMouse.Corsair_Katar:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json");
+                    mouse_feature_path = "corsair_katar_features.json";
                     break;
                 case PreferredMouse.Clevo_Touchpad:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
+                    mouse_feature_path = "clevo_touchpad_features.json";
                     break;
                 case PreferredMouse.SteelSeries_Rival_300:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");
+                    mouse_feature_path = "steelseries_rival_300_features.json";
                     break;
                 case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json");
+                    mouse_feature_path = "steelseries_rival_300_hp_omen_edition_features.json";
                     break;
                 case PreferredMouse.Asus_Pugio:
-                    mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                    mouse_feature_path = "asus_pugio_features.json";
                     break;
             }
+            mouse_feature_path = Path.Combine(layoutsPath, mouse_feature_path);
 
             if (!string.IsNullOrWhiteSpace(mouse_feature_path))
             {

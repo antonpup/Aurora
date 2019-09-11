@@ -1362,14 +1362,15 @@ namespace Aurora.Devices.Layout.Layouts
         [JsonIgnore]
         public Dictionary<LEDINT, string> KeyText { get { return virtualGroup.KeyText; } }
 
-        private static string cultures_folder = "kb_layouts";
         private static string layoutsPath = "";
+        private static string stylesPath = "";
         [JsonIgnore]
         private PreferredKeyboardLocalization _loaded_localization;
 
         static KeyboardDeviceLayout()
         {
-            layoutsPath = Path.Combine(Const.ExecutingDirectory, cultures_folder);
+            layoutsPath = Path.Combine(Const.ExecutingDirectory, layouts_path_root, "Keyboard");
+            stylesPath = Path.Combine(layoutsPath, "Styles");
         }
 
         protected override void loadLayouts()
@@ -1581,102 +1582,104 @@ namespace Aurora.Devices.Layout.Layouts
                 switch (this.Style)
                 {
                     case (PreferredKeyboard.Logitech_G910):
-                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
+                        layoutConfigPath = "logitech_g910.json";
                         break;
                     case (PreferredKeyboard.Logitech_G810):
-                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g810.json");
+                        layoutConfigPath = "logitech_g810.json";
                         break;
                     case (PreferredKeyboard.Logitech_GPRO):
-                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
+                        layoutConfigPath = "logitech_gpro.json";
                         break;
                     case (PreferredKeyboard.Logitech_G410):
-                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
+                        layoutConfigPath = "logitech_g410.json";
                         break;
                     case (PreferredKeyboard.Logitech_G213):
-                        layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+                        layoutConfigPath = "logitech_g213.json";
                         break;
                     case (PreferredKeyboard.Corsair_K95):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
+                        layoutConfigPath = "corsair_k95.json";
                         break;
                     case (PreferredKeyboard.Corsair_K95_PL):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
+                        layoutConfigPath = "corsair_k95_platinum.json";
                         break;
                     case (PreferredKeyboard.Corsair_K70):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
+                        layoutConfigPath = "corsair_k70.json";
                         break;
                     case (PreferredKeyboard.Corsair_K70MK2):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70_mk2.json");
+                        layoutConfigPath = "corsair_k70_mk2.json";
                         break;
                     case (PreferredKeyboard.Corsair_K65):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
+                        layoutConfigPath = "corsair_k65.json";
                         break;
                     case (PreferredKeyboard.Corsair_STRAFE):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+                        layoutConfigPath = "corsair_strafe.json";
                         break;
                     case (PreferredKeyboard.Corsair_K68):
-                        layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
+                        layoutConfigPath = "corsair_k68.json";
                         break;
                     case (PreferredKeyboard.Razer_Blackwidow):
-                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
+                        layoutConfigPath = "razer_blackwidow.json";
                         break;
                     case (PreferredKeyboard.Razer_Blackwidow_X):
-                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
+                        layoutConfigPath = "razer_blackwidow_x.json";
                         break;
                     case (PreferredKeyboard.Razer_Blackwidow_TE):
-                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
+                        layoutConfigPath = "razer_blackwidow_te.json";
                         break;
                     case (PreferredKeyboard.Razer_Blade):
-                        layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
+                        layoutConfigPath = "razer_blade.json";
                         break;
                     case (PreferredKeyboard.Masterkeys_Pro_L):
-                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
+                        layoutConfigPath = "masterkeys_pro_l.json";
                         break;
                     case (PreferredKeyboard.Masterkeys_Pro_S):
-                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
+                        layoutConfigPath = "masterkeys_pro_s.json";
                         break;
                     case (PreferredKeyboard.Masterkeys_Pro_M):
-                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
+                        layoutConfigPath = "masterkeys_pro_m.json";
                         break;
                     case (PreferredKeyboard.Masterkeys_MK750):
-                        layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+                        layoutConfigPath = "masterkeys_mk750.json";
                         break;
                     case (PreferredKeyboard.Roccat_Ryos):
-                        layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
+                        layoutConfigPath = "roccat_ryos.json";
                         break;
                     case (PreferredKeyboard.SteelSeries_Apex_M800):
-                        layoutConfigPath = Path.Combine(layoutsPath, "stecase (ries_apex_m800.json");
+                        layoutConfigPath = "steelseries_apex_m800.json";
                         break;
                     case (PreferredKeyboard.SteelSeries_Apex_M750):
-                        layoutConfigPath = Path.Combine(layoutsPath, "stecase (ries_apex_m750.json");
+                        layoutConfigPath = "steelseries_apex_m750.json";
                         break;
                     case (PreferredKeyboard.SteelSeries_Apex_M750_TKL):
-                        layoutConfigPath = Path.Combine(layoutsPath, "stecase (ries_apex_m750_tkl.json");
+                        layoutConfigPath = "steelseries_apex_m750_tkl.json";
                         break;
                     case (PreferredKeyboard.Wooting_One):
-                        layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
+                        layoutConfigPath = "wooting_one.json";
                         break;
                     case (PreferredKeyboard.Asus_Strix_Flare):
-                        layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+                        layoutConfigPath = "asus_strix_flare.json";
                         break;
                     case (PreferredKeyboard.SoundBlasterX_Vanguard_K08):
-                        layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
+                        layoutConfigPath = "soundblasterx_vanguardk08.json";
                         break;
                     case (PreferredKeyboard.GenericLaptop):
-                        layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
+                        layoutConfigPath = "generic_laptop.json";
                         break;
                     case (PreferredKeyboard.GenericLaptopNumpad):
-                        layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
+                        layoutConfigPath = "generic_laptop_numpad.json";
                         break;
                     case (PreferredKeyboard.Drevo_BladeMaster):
-                        layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
+                        layoutConfigPath = "drevo_blademaster.json";
                         break;
                     case (PreferredKeyboard.Wooting_Two):
-                        layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+                        layoutConfigPath = "wooting_two.json";
                         break;
                     default:
                         AuroraCore.logger.Error("No match for PreferredKeyboard style");
                         return;
                 }
+
+                layoutConfigPath = Path.Combine(stylesPath, layoutConfigPath);
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                 {
@@ -1697,7 +1700,7 @@ namespace Aurora.Devices.Layout.Layouts
 
                     foreach (string feature in layoutConfig.included_features)
                     {
-                        string feature_path = Path.Combine(layoutsPath, "Extra Features", feature);
+                        string feature_path = Path.Combine(stylesPath, "Extra Features", feature);
 
                         if (File.Exists(feature_path))
                         {
@@ -1809,7 +1812,7 @@ namespace Aurora.Devices.Layout.Layouts
 
         private void LoadCulture(String culture)
         {
-            var fileName = "Plain Keyboard\\layout." + culture + ".json";
+            var fileName = "Languages\\layout." + culture + ".json";
             var layoutPath = Path.Combine(layoutsPath, fileName);
 
             if (!File.Exists(layoutPath))

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -180,6 +180,312 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CroccatTalkWrapper\win32-x86\talkfx-c.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.abnt2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.ansi.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.de.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.dvorak.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.dvorak_int.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.es.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.fr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.hu.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.intl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.iso.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.it.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.jpn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.la.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.nordic.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.ru.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.swiss.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.tr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.uk.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Languages\layout.us.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\asus_strix_flare.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_k65.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_k68.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_k70.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_k70_mk2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_k95.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_k95_platinum.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_sabre.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\corsair_strafe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\drevo_blademaster.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k65_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k68_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k70_mk2_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k95_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k95_platinum_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k95_platinum_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_k95_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_strafe_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\corsair_strafe_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\drevo_blademaster_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\generic_laptop_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\generic_laptop_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\generic_laptop_numpad_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\generic_laptop_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\generic_laptop_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\generic_laptop_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\logitech_g810_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\logitech_g910_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\logitech_g910_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\logitech_gpro_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\masterkeys_mk750_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\masterkeys_mk750_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\masterkeys_mk750_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\masterkeys_pro_l_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\masterkeys_pro_m_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\razer_blackwidow_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\razer_blackwidow_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\razer_blade_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\razer_blade_right_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\razer_blade_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\roccat_ryos_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\soundblasterx_vanguardk08_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\soundblasterx_vanguardk08_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\steelseries_apex_m750_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\steelseries_apex_m750_tkl_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\steelseries_apex_m800_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\steelseries_apex_m800_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\Extra Features\wooting_two_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\generic_laptop.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\generic_laptop_numpad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\logitech_g213.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\logitech_g410.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\logitech_g910.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\logitech_gpro.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\masterkeys_mk750.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\masterkeys_pro_l.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\masterkeys_pro_m.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\masterkeys_pro_s.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\razer_blackwidow.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\razer_blackwidow_te.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\razer_blackwidow_x.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\razer_blade.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\roccat_ryos.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\soundblasterx_vanguardk08.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\steelseries_apex_m750.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\steelseries_apex_m750_tkl.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\steelseries_apex_m800.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\wooting_one.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Keyboard\Styles\wooting_two.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\asus_pugio_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\clevo_touchpad_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\corsair_katar_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\corsair_m65_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\corsair_sabre_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\generic_mousepad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\generic_peripheral.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\logitech_g502_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\logitech_g900_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\steelseries_qck_2zone_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\steelseries_qck_prism_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\steelseries_rival_300_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Device Layouts\Mouse\steelseries_rival_300_hp_omen_edition_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Devices\Integrations\SteelSeries\GameSenseSDK.cs" />

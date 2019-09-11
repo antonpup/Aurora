@@ -45,6 +45,8 @@ namespace Aurora.Devices.Layout
 
     public abstract class DeviceLayout : Settings.SettingsBase, IDisposable
     {
+        protected static string layouts_path_root = "Device Layouts";
+
         #region settings
         private System.Drawing.Point location = new System.Drawing.Point(0, 0);
         //[JsonIgnore]
