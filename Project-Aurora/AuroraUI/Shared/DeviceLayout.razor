@@ -1,101 +1,149 @@
 ﻿@using System.IO
 @using Aurora.Utils;
 
-<div class="device-layout @(Device.GetType().Name)" style="position:absolute;top:@(Device.Location.Y)px;left:@(Device.Location.X)px;width:@(Device.VirtualGroup.Region.Width)px;height:@(Device.VirtualGroup.Region.Height)px;">
-@{
-    string layoutsPath = "device_assets";
-    double layout_height = 0;
-    double layout_width = 0;
 
-    double current_height = 0;
-    double current_width = 0;
 
-    string images_path = "device_assets/images";
+<div class="device-layout @(Device.GetType().Name)" style="position:absolute;top:@(Y)px;left:@(X)px;width:@(Device.VirtualGroup.Region.Width)px;height:@(Device.VirtualGroup.Region.Height)px;">
+    <div class="virtual-edit-overlay" style="visibility:@(EditMode?"visible":"hidden")" @onmouseout="OnMouseMove" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp" @onmousemove="OnMouseMove"/>
 
-    foreach (VirtualLight key in Device.VirtualGroup.grouped_keys)
-    {
-        double keyMargin_Left = key.margin_left.Value;
-        double keyMargin_Top = key.margin_top.Value;
+    @{
+        string layoutsPath = "device_assets";
+        double layout_height = 0;
+        double layout_width = 0;
 
-        string image_path = "";
+        double current_height = 0;
+        double current_width = 0;
 
-        if (!string.IsNullOrWhiteSpace(key.image))
-            image_path = images_path + "/" + key.image;
+        string images_path = "device_assets/images";
 
-        DynamicDeviceLED dynamicDeviceLED = new DynamicDeviceLED(key.tag, Device);
-
-        double x, y;
-
-        if (key.absolute_location.Value)
+        foreach (VirtualLight key in Device.VirtualGroup.grouped_keys)
         {
-            x = key.margin_left.Value; y = key.margin_top.Value;
-        }
-        else
-        {
-            x = current_width + key.margin_left.Value; y = current_height + key.margin_top.Value;
-        }
-        System.Drawing.Color clr = System.Drawing.Color.White;
-        if (key.tag != -1 && Device.DeviceColours != null && Device.DeviceColours.deviceColours.TryGetValue(key.tag, out System.Drawing.Color outClr))
-            clr = outClr;
-        if (string.IsNullOrWhiteSpace(image_path))
-        {
-            <div class="vk" style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());">
-                @key.visualName
-            </div>
-        }
-        else
-        {
-            //style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());"
-            //<image class="vkimg" src="@image_path" asp-append-version="true" >
-            //</image>
-            <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" :"" )">
-                @if (key.tag == -1)
-                {
-                    <img class="vkimg" src="@image_path" asp-append-version="true"/>
-                }
-            </div>
+            double keyMargin_Left = key.margin_left.Value;
+            double keyMargin_Top = key.margin_top.Value;
 
-        }
+            string image_path = "";
 
+            if (!string.IsNullOrWhiteSpace(key.image))
+                image_path = images_path + "/" + key.image;
 
-        //if (key.tag != -1 && !virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
-        //    virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
+            DynamicDeviceLED dynamicDeviceLED = new DynamicDeviceLED(key.tag, Device);
 
+            double x, y;
 
-
-        if (!key.absolute_location.Value)
-        {
-            if (key.width + keyMargin_Left > 0)
-                current_width += key.width.Value + keyMargin_Left;
-
-            if (keyMargin_Top > 0)
-                current_height += keyMargin_Top;
-
-
-            if (layout_width < current_width)
-                layout_width = current_width;
-
-            if (key.hasLineBreak())
+            if (key.absolute_location.Value)
             {
-                current_height += key.line_break.Value;
-                current_width = 0;
-                //isFirstInRow = true;
+                x = key.margin_left.Value; y = key.margin_top.Value;
+            }
+            else
+            {
+                x = current_width + key.margin_left.Value; y = current_height + key.margin_top.Value;
+            }
+            System.Drawing.Color clr = System.Drawing.Color.White;
+            if (key.tag != -1 && Device.DeviceColours != null && Device.DeviceColours.deviceColours.TryGetValue(key.tag, out System.Drawing.Color outClr))
+                clr = outClr;
+            if (string.IsNullOrWhiteSpace(image_path))
+            {
+                <div class="vk @(Device.GetType().Name)-vk" style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());">
+                    @key.visualName
+                </div>
+            }
+            else
+            {
+                //style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());"
+                //<image class="vkimg" src="@image_path" asp-append-version="true" >
+                //</image>
+                <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" :"" )">
+                    @if (key.tag == -1)
+                    {
+                        <img class="vkimg @(Device.GetType().Name)-vk" src="@image_path" asp-append-version="true" />
+                    }
+                </div>
+
             }
 
-            if (layout_height < current_height)
-                layout_height = current_height;
+
+            //if (key.tag != -1 && !virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
+            //    virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
+
+
+
+            if (!key.absolute_location.Value)
+            {
+                if (key.width + keyMargin_Left > 0)
+                    current_width += key.width.Value + keyMargin_Left;
+
+                if (keyMargin_Top > 0)
+                    current_height += keyMargin_Top;
+
+
+                if (layout_width < current_width)
+                    layout_width = current_width;
+
+                if (key.hasLineBreak())
+                {
+                    current_height += key.line_break.Value;
+                    current_width = 0;
+                    //isFirstInRow = true;
+                }
+
+                if (layout_height < current_height)
+                    layout_height = current_height;
+            }
         }
     }
-}
 </div>
 
 @code {
+    [Parameter]
+    public Aurora.Devices.Layout.DeviceLayout Device { get; set; }
+
+    [Parameter]
+    public bool EditMode { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> EditModeChanged { get; set; }
+
+    double X, Y = 0;
+
     protected override void OnInitialized()
     {
         Device.ColoursUpdated += (_) => { InvokeAsync(() => this.StateHasChanged()); };
-
+        X = Device.Location.X;
+        Y = Device.Location.Y;
     }
 
-    [Parameter]
-    public Aurora.Devices.Layout.DeviceLayout Device { get; set; }
+    bool Dragging { get; set; } = false;
+
+    double pos1, pos2, pos3, pos4 = 0;
+
+    async Task OnMouseMove(MouseEventArgs e)
+    {
+        if (!Dragging)
+            return;
+
+        pos1 = pos3 - e.ClientX;
+        pos2 = pos4 - e.ClientY;
+        pos3 = e.ClientX;
+        pos4 = e.ClientY;
+
+        X = Math.Max(X - pos1, 0);
+        Y = Math.Max(Y - pos2,0);
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    async Task OnMouseDown(MouseEventArgs e)
+    {
+        Dragging = true;
+        //Get the mouse cursor position at start
+        pos3 = e.ClientX;
+        pos4 = e.ClientY;
+    }
+
+    async Task OnMouseUp(MouseEventArgs e)
+    {
+        Dragging = false;
+        Device.Location = new System.Drawing.Point((int)X, (int)Y);
+    }
+
+
 }

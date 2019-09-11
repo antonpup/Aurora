@@ -148,6 +148,7 @@ namespace Aurora.Devices.Layout
             if (e.PropertyName == nameof(DeviceLayout.Location))
             {
                 deviceLocationChanged();
+                this.SaveSettings();
                 return;
             }
 

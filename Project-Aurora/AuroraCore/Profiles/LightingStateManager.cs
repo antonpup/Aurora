@@ -149,7 +149,7 @@ namespace Aurora.Profiles
         private ActiveProcessMonitor processMonitor;
         private RunningProcessMonitor runningProcessMonitor;
 
-        public LightingStateManager() : base("LightingStateManagerSettings.json")
+        public LightingStateManager() : base()
         {
         }
 

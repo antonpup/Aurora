@@ -36,6 +36,7 @@ namespace AuroraUI
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton(AuroraCore.Instance);
             services.AddSingleton(GlobalDeviceLayout.Instance);
+            services.AddBlazorContextMenu();
             services.AddBlazorise(options =>
                     {
                         options.ChangeTextOnKeyPress = true; // optional

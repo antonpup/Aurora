@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.ContextMenu" Version="0.21.0" />
     <PackageReference Include="Blazorise.Bootstrap" Version="0.8.4" />
     <PackageReference Include="Blazorise.Components" Version="0.8.4" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.8.4" />
