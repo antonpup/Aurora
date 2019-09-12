@@ -62,6 +62,9 @@ namespace Aurora.Profiles
                 InvokePropertyChanged(old, newVal);
             }
         }
+
+        public bool EnableByDefault { get; set; } = true;
+        public bool EnableOverlaysByDefault { get; set; } = true;
     }
 
     public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
@@ -137,6 +140,11 @@ namespace Aurora.Profiles
             LoadProfiles();
             Initialized = true;
             return Initialized;
+        }
+
+        protected override void SettingsCreateHook() {
+            Settings.IsEnabled = Config.EnableByDefault;
+            Settings.IsOverlayEnabled = Config.EnableOverlaysByDefault;
         }
 
         protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
