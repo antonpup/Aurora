@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 using Aurora.Settings;
 using Aurora.Settings.Bindables;
@@ -65,13 +67,23 @@ namespace Aurora.Devices.Hue
             try
             {
                 curKey = config.Get<int>("first_key");
-                IBridgeLocator bridgeLocator = new HttpBridgeLocator();
-                var bridges = bridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).Result;
-                bridge = bridges.First();
-                client = new LocalHueClient(bridge.IpAddress);
-                if (File.Exists(Path.Combine(Global.AppDataDirectory, bridge.BridgeId)))
+                var _ip = config.Get<string>("ip");
+                if (_ip == "0.0.0.0" || !new Regex(@"\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9])\b").IsMatch(_ip))
                 {
-                    client.Initialize(File.ReadAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId)));
+                    IBridgeLocator bridgeLocator = new HttpBridgeLocator();
+                    var bridges = bridgeLocator.LocateBridgesAsync(TimeSpan.FromSeconds(5)).GetAwaiter().GetResult();
+                    bridge = bridges.First();
+                    client = new LocalHueClient(bridge.IpAddress);
+                    conf = client.GetConfigAsync().Result;
+                }
+                else
+                {
+                    client = new LocalHueClient(_ip);
+                    conf = client.GetConfigAsync().Result;
+                }
+                if (File.Exists(Path.Combine(Global.AppDataDirectory, conf.BridgeId)))
+                {
+                    client.Initialize(File.ReadAllText(Path.Combine(Global.AppDataDirectory, conf.BridgeId)));
                 }
                 else
                 {
@@ -83,7 +95,7 @@ namespace Aurora.Devices.Hue
                             {
                                 var key = client.RegisterAsync("Aurora", Environment.MachineName).Result;
                                 client.Initialize(key);
-                                File.WriteAllText(Path.Combine(Global.AppDataDirectory, bridge.BridgeId), key);
+                                File.WriteAllText(Path.Combine(Global.AppDataDirectory, conf.BridgeId), key);
                             }
                             catch
                             {
@@ -93,12 +105,11 @@ namespace Aurora.Devices.Hue
                         }
                     });
                 }
-                conf = client.GetConfigAsync().Result;
                 return true;
             }
             catch (Exception e)
             {
-                Global.logger.Error(e, "No bridge found");
+                Global.logger.Error($"Error initializing Hue connection{Environment.NewLine}{e.ToString()}");
                 return false;
             }
         }
@@ -255,7 +266,8 @@ namespace Aurora.Devices.Hue
             {"key_iteration_count", new HueIdentifiers("Iteration count", "How many times to iterate on one key before jumping to the next one")},
             {"first_key", new HueIdentifiers("First key selection", "The first key to iterate on (must be lower or equal than last key)")},
             {"last_key", new HueIdentifiers("Last key selection", "The last key to iterate on (must be higher or equal than first key)")},
-            {"send_interval", new HueIdentifiers("Delay", "The delay to use to send to hue (min 100ms)")}
+            {"send_interval", new HueIdentifiers("Delay", "The delay to use to send to hue (min 100ms)")},
+            {"ip", new HueIdentifiers("IP", "The IP to try to connect to (default 0.0.0.0 witch will scan network for bridges)") }
         };
 
         public static string GetTitle(string v)
@@ -286,6 +298,7 @@ namespace Aurora.Devices.Hue
 
         protected override void InitialiseDefaults()
         {
+            Set("ip", "0.0.0.0");
             Set("default_delay", 1, 1, int.MaxValue);
             Set("default_color", new RealColor(Color.White));
             Set("blend_keys", false);

@@ -62,6 +62,10 @@ namespace Aurora.Settings
                     Value = b.Value;
                     Default = b.Default;
                     break;
+                case Bindable<string> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    break;
             }
             Title = title;
             Remark = remark;
@@ -105,6 +109,9 @@ namespace Aurora.Settings
                             break;
                         case BindableColor b:
                             b.Value = (RealColor)newvalue;
+                            break;
+                        case Bindable<string> b:
+                            b.Value = (string)newvalue;
                             break;
                     }
                 Value = newvalue;
@@ -157,6 +164,10 @@ namespace Aurora.Settings
                             Value = b.Value;
                             b.ValueChanged += _ => ValueChanged();
                             break;
+                        case Bindable<string> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
                     }
             }
             catch (Exception e)
@@ -185,6 +196,9 @@ namespace Aurora.Settings
                     Value = b.Value;
                     break;
                 case BindableColor b:
+                    Value = b.Value;
+                    break;
+                case Bindable<string> b:
                     Value = b.Value;
                     break;
             }
