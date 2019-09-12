@@ -79,6 +79,7 @@ namespace Aurora.Profiles
         public string ID { get { return Config.ID; } }
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
+        public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
         public event PropertyChangedExEventHandler PropertyChanged;
         protected LightEventType type;
         public LightEventType Type
