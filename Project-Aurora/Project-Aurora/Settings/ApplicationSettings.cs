@@ -10,6 +10,7 @@ namespace Aurora.Settings
     {
         #region Private Properties
         private bool isEnabled = true;
+        private bool isOverlayEnabled = true;
 
         private bool hidden = false;
 
@@ -18,6 +19,7 @@ namespace Aurora.Settings
 
         #region Public Properties
         public bool IsEnabled { get { return isEnabled; } set { isEnabled = value; InvokePropertyChanged(); } }
+        public bool IsOverlayEnabled { get { return isOverlayEnabled; } set { isOverlayEnabled = value; InvokePropertyChanged(); } }
 
         public bool Hidden { get { return hidden; } set { hidden = value; InvokePropertyChanged(); } }
 

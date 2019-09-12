@@ -30,6 +30,7 @@ namespace Aurora.Profiles
         void OnStop();
 
         bool IsEnabled { get; }
+        bool IsOverlayEnabled { get; }
 
         LightEventConfig Config { get; }
     }
@@ -100,6 +101,8 @@ namespace Aurora.Profiles
         {
             get { return this.Application?.Settings?.IsEnabled ?? true; }
         }
+
+        public virtual bool IsOverlayEnabled => this.Application?.Settings?.IsOverlayEnabled ?? true;
 
         public bool Initialized { get; protected set; }
 
