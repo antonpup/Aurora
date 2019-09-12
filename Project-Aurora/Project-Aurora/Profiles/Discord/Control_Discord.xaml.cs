@@ -58,33 +58,26 @@ namespace Aurora.Profiles.Discord
         private void InstallPlugin()
         {
             string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string bd = Path.Combine(appdata, "BetterDiscord", "plugins");
+            string bd = Path.Combine(appdata, "BetterDiscord", "plugins", "AuroraGSI.plugin.js");
 
-            if (!Directory.Exists(bd))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(bd));
-            }
+            if (!File.Exists(bd))            
+                Directory.CreateDirectory(Path.GetDirectoryName(bd));           
 
-            using (FileStream pluginStream = File.Create(Path.Combine(bd, "AuroraGSI.plugin.js")))
+            using (FileStream pluginStream = File.Create(Path.Combine(bd)))
             {
                 pluginStream.Write(Properties.Resources.DiscordGSIPlugin, 0, Properties.Resources.DiscordGSIPlugin.Length);
             }
+            MessageBox.Show("Plugin installed successfully");
         }
 
         private void UninstallPlugin()
         {
             string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string bd = Path.Combine(appdata, "BetterDiscord", "plugins");
+            string path = Path.Combine(appdata, "BetterDiscord", "plugins", "AuroraGSI.plugin.js");
 
-            if (!Directory.Exists(bd))
+            if (File.Exists(path))
             {
-                MessageBox.Show("Can't uninstall plugin, directory not found.");
-                return;
-            }
-                
-            if (File.Exists(Path.Combine(bd, "AuroraGSI.plugin.js")))
-            {
-                File.Delete(Path.Combine(bd, "AuroraGSI.plugin.js"));
+                File.Delete(path);
                 MessageBox.Show("Plugin uninstalled successfully");
                 return;
             }
@@ -94,7 +87,5 @@ namespace Aurora.Profiles.Discord
                 return;
             }
         }
-
-
     }
 }
