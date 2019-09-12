@@ -172,11 +172,11 @@
     <Reference Include="RGB.NET.Brushes, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Brushes.0.1.26\lib\net45\RGB.NET.Brushes.dll</HintPath>
     </Reference>
-      <HintPath>..\packages\Q42.HueApi.ColorConverters.3.10.1\lib\net45\Q42.HueApi.ColorConverters.dll</HintPath>
     <Reference Include="Q42.HueApi.ColorConverters, Version=3.10.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Q42.HueApi.ColorConverters.3.10.1\lib\net45\Q42.HueApi.ColorConverters.dll</HintPath>
     </Reference>
-      <HintPath>..\packages\Q42.HueApi.3.11.0\lib\net45\Q42.HueApi.dll</HintPath>
     <Reference Include="Q42.HueApi, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Q42.HueApi.3.11.0\lib\net45\Q42.HueApi.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Core, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Core.0.1.26\lib\net45\RGB.NET.Core.dll</HintPath>
