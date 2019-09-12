@@ -1,0 +1,191 @@
+{
+  "projectName": "Aurora",
+  "projectOwner": "antonpup",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "none",
+  "contributors": [
+    {
+      "login": "antonpup",
+      "name": "Anton Pupkov",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3421963?v=4",
+      "profile": "https://github.com/antonpup",
+      "contributions": [
+        "code",
+        "question",
+        "doc",
+        "design",
+        "infra",
+        "review"
+      ]
+    },
+    {
+      "login": "simon-wh",
+      "name": "Simon W",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/10797576?v=4",
+      "profile": "https://github.com/simon-wh",
+      "contributions": [
+        "code",
+        "question",
+        "doc",
+        "infra",
+        "review",
+        "projectManagement",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Wibble199",
+      "name": "Will Bennion",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/3984322?v=4",
+      "profile": "https://github.com/Wibble199",
+      "contributions": [
+        "code",
+        "question",
+        "doc",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "diogotr7",
+      "name": "Diogo Trindade",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/29486064?v=4",
+      "profile": "https://github.com/diogotr7",
+      "contributions": [
+        "code",
+        "question",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "Gurjot95",
+      "name": "Gurjot",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/20298837?v=4",
+      "profile": "https://www.uniquegem.net",
+      "contributions": [
+        "code",
+        "question",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "gitmacer",
+      "name": "Tim Oberle",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/37345589?v=4",
+      "profile": "https://github.com/gitmacer",
+      "contributions": [
+        "code",
+        "question",
+        "bug"
+      ]
+    },
+    {
+      "login": "SnakePin",
+      "name": "SnakePin",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/18491360?v=4",
+      "profile": "https://github.com/SnakePin",
+      "contributions": [
+        "code",
+        "question"
+      ]
+    },
+    {
+      "login": "MoshiMoshi0",
+      "name": "MoshiMoshi0",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/902882?v=4",
+      "profile": "https://github.com/MoshiMoshi0",
+      "contributions": [
+        "code",
+        "question"
+      ]
+    },
+    {
+      "login": "rajkosto",
+      "name": "Rajko Stojadinovic",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/205276?v=4",
+      "profile": "http://rajko.info",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "DogeAmazed",
+      "name": "DogeAmazed",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/2185647?v=4",
+      "profile": "https://github.com/DogeAmazed",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "VoronFX",
+      "name": "Igor Voronin",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7604250?v=4",
+      "profile": "https://github.com/VoronFX",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
+    },
+    {
+      "login": "DrParanoia",
+      "name": "Arturs Ziborovs",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1381419?v=4",
+      "profile": "https://lokalise.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "srodriguez1850",
+      "name": "Sebastian Rodriguez",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/9145577?v=4",
+      "profile": "https://github.com/srodriguez1850",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "JoeyBallentine",
+      "name": "Joey Ballentine",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/34788790?v=4",
+      "profile": "https://github.com/JoeyBallentine",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "meng0609",
+      "name": "孟晓宁",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/15703207?v=4",
+      "profile": "https://github.com/meng0609",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "th3an7",
+      "name": "Łukasz Ordon",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/13398380?v=4",
+      "profile": "https://github.com/th3an7",
+      "contributions": [
+        "question"
+      ]
+    },
+    {
+      "login": "Popat0",
+      "name": "Popat0",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/712015?v=4",
+      "profile": "https://github.com/Popat0",
+      "contributions": [
+        "question"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}

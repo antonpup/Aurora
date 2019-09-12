@@ -104,6 +104,11 @@
     <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.26\lib\net45\Interop.AuraServiceLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="IronPython, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.dll</HintPath>
     </Reference>
@@ -164,20 +169,20 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Q42.HueApi, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Q42.HueApi.3.11.0\lib\net45\Q42.HueApi.dll</HintPath>
+    <Reference Include="RGB.NET.Brushes, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Brushes.0.1.26\lib\net45\RGB.NET.Brushes.dll</HintPath>
     </Reference>
-    <Reference Include="Q42.HueApi.ColorConverters, Version=3.10.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Q42.HueApi.ColorConverters.3.10.1\lib\net45\Q42.HueApi.ColorConverters.dll</HintPath>
+    <Reference Include="Q42.HueApi.ColorConverters, Version=3.10.1.0, Culture=neutral, processorArchitecture=MSIL">
     </Reference>
-    <Reference Include="RGB.NET.Brushes, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Brushes.0.1.23\lib\net45\RGB.NET.Brushes.dll</HintPath>
+      <HintPath>..\packages\Q42.HueApi.3.11.0\lib\net45\Q42.HueApi.dll</HintPath>
+    <Reference Include="Q42.HueApi, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
     </Reference>
     <Reference Include="RGB.NET.Core, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Core.0.1.26\lib\net45\RGB.NET.Core.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Devices.Asus, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.23\lib\net45\RGB.NET.Devices.Asus.dll</HintPath>
+    <Reference Include="RGB.NET.Devices.Asus, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.26\lib\net45\RGB.NET.Devices.Asus.dll</HintPath>
     </Reference>
     <Reference Include="RGB.NET.Devices.Corsair, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Devices.Corsair.0.1.26\lib\net45\RGB.NET.Devices.Corsair.dll</HintPath>
@@ -186,8 +191,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\RazerSdkWrapper.dll</HintPath>
     </Reference>
-    <Reference Include="RGB.NET.Groups, Version=0.1.23.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RGB.NET.Groups.0.1.23\lib\net45\RGB.NET.Groups.dll</HintPath>
+    <Reference Include="RGB.NET.Groups, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Groups.0.1.26\lib\net45\RGB.NET.Groups.dll</HintPath>
     </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>.\Roccat-Talk.dll</HintPath>
@@ -373,6 +378,7 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -2542,9 +2548,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets'))" />
-    <Error Condition="!Exists('..\packages\RGB.NET.Resources.Asus.0.1.0\build\RGB.NET.Resources.Asus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Asus.0.1.0\build\RGB.NET.Resources.Asus.targets'))" />
+    <Error Condition="!Exists('..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets'))" />
   </Target>
-  <Import Project="..\packages\RGB.NET.Resources.Asus.0.1.0\build\RGB.NET.Resources.Asus.targets" Condition="Exists('..\packages\RGB.NET.Resources.Asus.0.1.0\build\RGB.NET.Resources.Asus.targets')" />
+  <Import Project="..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets" Condition="Exists('..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 
        Other similar extension points exist, see Microsoft.Common.targets.

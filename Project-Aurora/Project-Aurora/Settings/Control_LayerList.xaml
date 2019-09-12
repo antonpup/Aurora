@@ -7,7 +7,7 @@
              xmlns:Utils="clr-namespace:Aurora.Utils"
              xmlns:Win="System.Windows"
              mc:Ignorable="d" 
-             d:DesignHeight="150" d:DesignWidth="200">
+             d:DesignHeight="150" d:DesignWidth="200" GotFocus="UserControl_GotFocus">
     <UserControl.Resources>
         <ResourceDictionary>
             <Utils:TextCharacterLimitConv x:Key="TextCharacterLimitConv" MaxLength="24"/>
@@ -55,7 +55,7 @@
                 </RadioButton>
             </Grid>
 
-            <Controls:ReorderableListBox ItemsSource="{Binding ActiveLayerCollection}" SelectedItem="{Binding Path=SelectedLayer, Mode=TwoWay}" DragElementTag="Dragger" SelectionMode="Single" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" KeyDown="ReorderableListBox_KeyDown">
+            <Controls:ReorderableListBox x:Name="lstLayers" ItemsSource="{Binding ActiveLayerCollection}" SelectedItem="{Binding Path=SelectedLayer, Mode=TwoWay}" DragElementTag="Dragger" SelectionMode="Single" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Disabled" KeyDown="ReorderableListBox_KeyDown">
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
                         <DockPanel  HorizontalAlignment="Stretch" Width="192" >

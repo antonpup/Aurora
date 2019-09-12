@@ -90,7 +90,7 @@ namespace Aurora.Settings
 
         private void ResetLayer(LayerHandlerEntry type)
         {
-            if (IsLoaded && !isSettingNewLayer)
+            if (IsLoaded && !isSettingNewLayer && type != null)
             {
                 _Layer.Handler = Global.LightingStateManager.GetLayerHandlerInstance(type);
 

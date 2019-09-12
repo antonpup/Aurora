@@ -371,7 +371,7 @@ namespace Aurora.Profiles
                     ((Layer)e.ErrorContext.OriginalObject).Handler = null;
                     e.ErrorContext.Handled = true;
                 }
-            } else if (e.ErrorContext.Path.Equals("$type") && e.ErrorContext.Member == null)
+            } else if (e.ErrorContext.Path.Equals("$type") && e.ErrorContext.Member == null && e.ErrorContext.Error.Message.Contains("WrapperProfile"))
             {
                 MessageBox.Show($"The profile type for {this.Config.Name} has been changed, your profile will be reset and your old one moved to have the extension '.corrupted', ignore the following error", "Profile type changed", MessageBoxButton.OK, MessageBoxImage.Information);
             }
