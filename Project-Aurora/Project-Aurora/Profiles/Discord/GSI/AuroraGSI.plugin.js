@@ -28,7 +28,7 @@ class AuroraGSI {
 	
     getName() { return "AuroraGSI"; }
     getDescription() { return "Sends information to Aurora about users connecting to/disconnecting from, mute/deafen status"; }
-    getVersion() { return "1.0.1"; }
+    getVersion() { return "1.1"; }
 	getAuthor() { return "Popato & DrMeteor"; }
 	getChanges() {
 		return {
@@ -39,6 +39,19 @@ class AuroraGSI {
             "1.0.1" :
             `
                 Added conditions for only reacting to local user.
+            `,
+            "1.0.2" :
+            `
+                Removed isBeingCalled.
+				Removed redundant loop.
+            `,
+            "1.0.3" :
+            `
+                Updated the CDN for the library.
+            `,
+            "1.1" :
+            `
+                Made the state only be sent if it changed.
             `
 		};
     }
@@ -73,6 +86,7 @@ class AuroraGSI {
                 "name": "",      
             }
         }
+        this.lastJson;
     }
 
     load() {}//legacy
@@ -88,7 +102,7 @@ class AuroraGSI {
 			lib = document.createElement("script");
 			lib.setAttribute("id", "NeatoBurritoLibrary");
 			lib.setAttribute("type", "text/javascript");
-			lib.setAttribute("src", "https://cdn.jsdelivr.net/gh/Popat0/Discord-GSI/NeatoBurritoLibrary.js");
+			lib.setAttribute("src", "https://raw.githack.com/Popat0/Discord-GSI/master/NeatoBurritoLibrary.js");
 			document.head.appendChild(lib);
 		}
         if(typeof window.Metalloriff !== "undefined") libLoadedEvent();
@@ -96,9 +110,8 @@ class AuroraGSI {
     }
     
     stop() {
-        clearInterval(this.jsonTimer);
         clearInterval(this.updatetimer);
-		this.unpatch();
+		//this.unpatch();
         this.ready = false;
     }
     
@@ -113,7 +126,7 @@ class AuroraGSI {
             getUser = NeatoLib.Modules.get(["getUser"]).getUser,
             getChannel = NeatoLib.Modules.get(["getChannel"]).getChannel;
 		
-		this.jsonTimer = setInterval( this.sendJsonToAurora, 50, this.json );
+		// this.jsonTimer = setInterval( this.sendJsonToAurora, 50, this.json );
 
         this.updatetimer = setInterval(() => { 
             var self = this;
@@ -125,13 +138,13 @@ class AuroraGSI {
             var voiceChannel = NeatoLib.getSelectedVoiceChannel();
 			if (voiceChannel)
 				var voiceStates = getVoiceStates(voiceChannel.guild_id);
-            
+
             if(localUser && localStatus){
                 self.json.user.id = localUser.id;
                 self.json.user.status = localStatus;
             }
             else {
-                self.json.user.id = 0;
+                self.json.user.id = -1;
                 self.json.user.status = "";
             }
 
@@ -140,7 +153,7 @@ class AuroraGSI {
                 self.json.guild.name = guild.name;
             }
             else {
-                self.json.guild.id = 0;
+                self.json.guild.id = -1;
                 self.json.guild.name = "";
             }
 
@@ -170,8 +183,8 @@ class AuroraGSI {
             }
             else
             {
-                self.json.text.id = 0;
-                self.json.text.type = "";
+                self.json.text.id = -1;
+                self.json.text.type = -1;
                 self.json.text.name = "";
             }
 
@@ -188,7 +201,7 @@ class AuroraGSI {
                 }
             }
             else{
-                self.json.voice.id = 0;
+                self.json.voice.id = -1;
                 self.json.voice.type = -1;    
                 self.json.voice.name = "";
             }
@@ -201,24 +214,22 @@ class AuroraGSI {
                 }        
             }
 			
-			self.json.user.being_called = false;
 			self.json.user.unread_messages = false;
 			self.json.user.mentions = false;
-			
-			this.unpatch = NeatoLib.monkeyPatchInternal(NeatoLib.Modules.get("isMentioned"), "isMentioned", e => {
-				if (e.args[0].call != null) {
-					self.json.user.being_called = true;
-				}
-			});
 			
 			if (document.querySelector('[class^="numberBadge-"]'))
 				self.json.user.mentions = true;
 			if (document.getElementsByClassName("bd-unread").length > 0)
-				self.json.user.unread_messages = true;
-			
+                self.json.user.unread_messages = true;
+
+            if(JSON.stringify(this.json) !== this.lastJson){
+                console.log("false");
+                this.lastJson = JSON.stringify(this.json);
+                this.sendJsonToAurora (this.json);
+            }			
         }, 100);
 		
-        //NeatoLib.Events.onPluginLoaded(this);
+        NeatoLib.Events.onPluginLoaded(this);
     }
 
     async sendJsonToAurora(json) {
