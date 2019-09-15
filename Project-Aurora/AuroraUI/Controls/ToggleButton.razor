@@ -1,0 +1,24 @@
+﻿@inherits ControlBase
+
+<button class="btn @Class" @onclick="ToggleChecked" style="border:1px solid #@(Checked ? "0F0" : "F00");@Style">
+    @if (!string.IsNullOrWhiteSpace(IconLeft)) {
+        <Icon Name="@IconLeft" />
+    }
+    @Label
+    @if (!string.IsNullOrWhiteSpace(IconRight)) {
+        <Icon Name="@IconRight" />
+    }
+</button>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string IconLeft { get; set; } = null;
+    [Parameter] public string IconRight { get; set; } = null;
+
+    [Parameter] public bool Checked { get; set; }
+    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+
+    void ToggleChecked() {
+        CheckedChanged.InvokeAsync(Checked = !Checked);
+    }
+}

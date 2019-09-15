@@ -1,0 +1,192 @@
+@import url(materialdesignicons.min.css);
+
+@import url(virtual-keyboard.css);
+@import url(contextmenu.css);
+
+/* Later this will be dynamically imported based on the user's preferences. */
+@import url(themes/Default.css);
+
+
+html, body, app, .root-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* The split panel will hopefully be made resizable in future, so it has separate rules to facilitate that. */
+.split-panel-horizontal { }
+.split-panel-vertical { }
+.split-panel-item { }
+
+.d-f {
+    display: flex;
+    align-items: stretch;
+}
+.f-v {
+    flex-direction: column;
+}
+.f-h {
+    flex-direction: row;
+}
+.d-f > * {
+    min-width: 0px; /* Fixes the individual items not respecting their flex-basis if the content is too large. */
+    min-height: 0px;
+}
+.fg-1 { flex: 1; }
+.as-c {
+    align-self: center;
+}
+
+.h-full {
+    height: 100%;
+}
+.w-full {
+    width: 100%;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+button::-moz-focus-inner {
+    border: 0; /* Removes Firefox's dotted outline on focused <button>s. */
+}
+
+
+
+
+
+
+
+/* This stuff will be reworked into a theme CSS file. Need to determine which properties are part of the theme and which should be constantly there */
+.application-list li button {
+    display: flex;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 1rem;
+    align-items: center;
+    color: #9399A2;
+    transition: all var(--transition-timing);
+}
+
+.application-list .application-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+}
+
+.application-list .application-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 1.1rem;
+}
+
+.application-list li button:hover {
+    background: #FFFFFF08;
+}
+
+.application-list li.active button {
+    background: #FFF1;
+    color: #FFF;
+}
+
+/* Context menu */
+body .blazor-context-menu--default {
+    color: #FFF;
+    background: #0F141A;
+    box-shadow: 0 0 4px 2px rgba(0,0,0,.3);
+    padding: 2px;
+    border-radius: 2px;
+}
+
+body .blazor-context-menu__list {
+    padding: 0;
+}
+
+body .blazor-context-menu__item--default {
+    border-radius: 2px;
+}
+
+body .blazor-context-menu__item--default:hover {
+    border-color: #26A0DA;
+    background: #FFFFFF08;
+}
+
+body .blazor-context-menu__seperator__hr {
+    margin: 2px 1rem;
+    border-top-color: #0b1017;
+    border-bottom-color: #1b232d;
+}
+
+.aurora-logo {
+    margin: 8px;
+}
+
+.btn {
+    background: #2A3340;
+    border: none;
+    padding: 6px;
+    border-radius: 4px;
+    color: #FFF;
+    transition: all var(--transition-timing);
+}
+
+.btn:hover {
+    background: #394453;
+}
+
+.btn-group {
+    font-size: 0;
+}
+
+.btn-group > .btn:not(:first-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-group > .btn:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+input, select {
+    font-size: 1rem;
+    padding: 6px 8px;
+    background: #00000018;
+    border: none;
+    border-radius: 4px;
+    color: #F9F9F9;
+    transition: all var(--transition-timing);
+    border: 1px solid #0006;
+}
+input:focus, select:focus {
+    border-color: #3A8BDB;
+    box-shadow: 0 0 4px 0 #3a8bdb88;
+}
+
+
+
+/* These are VERY temporary */
+.layers-column {
+    background: #232932
+}
+
+.central {
+    background: #323942;
+}
+
+.properties {
+    background: #2B313A;
+}

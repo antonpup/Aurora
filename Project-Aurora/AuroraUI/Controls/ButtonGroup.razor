@@ -1,0 +1,9 @@
+﻿@inherits ControlBase
+
+<div class="btn-group @Class">
+    @ChildContent
+</div>
+
+@code {
+[Parameter] public RenderFragment ChildContent { get; set; }
+}

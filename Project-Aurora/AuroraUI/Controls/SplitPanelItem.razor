@@ -1,0 +1,11 @@
+﻿@inherits ControlBase
+
+<div class="split-panel-item @Class" style="flex: @Grow @Grow @(Size)px;@Style">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public float Size { get; set; } = 0;
+    [Parameter] public float Grow { get; set; } = 1f;
+}

@@ -1,0 +1,19 @@
+﻿@inherits ControlBase
+
+<button class="btn @Class" @onclick="OnClick" style="@Style">
+    @if (!string.IsNullOrWhiteSpace(IconLeft)) {
+        <Icon Name="@IconLeft" />
+    }
+    @Label
+    @if (!string.IsNullOrWhiteSpace(IconRight)) {
+        <Icon Name="@IconRight" />
+    }
+</button>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string IconLeft { get; set; } = null;
+    [Parameter] public string IconRight { get; set; } = null;
+
+    [Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
+}

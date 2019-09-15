@@ -1,0 +1,12 @@
+﻿:root {
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+
+    --primary-color: #3498DB;
+    --danger-color: #E7433C;
+    --success-color: #2ECC71;
+    --warning-color: #E67E22;
+    --info-color: #1ABC9C;
+
+    --transition-timing: 150ms ease-out; /* The same format as CSS's `transition` property, but without the property name */
+}

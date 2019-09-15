@@ -1,0 +1,11 @@
+﻿@using AuroraUI.Utils
+@inherits ControlBase
+
+<div class="d-f f-@Orientation.ToString().ToLower()[0] split-panel split-panel-@Orientation.ToString().ToLower() @Class" style="@Style">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public Orientation Orientation { get; set; } = Orientation.Horizontal;
+}

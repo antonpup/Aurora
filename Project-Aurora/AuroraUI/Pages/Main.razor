@@ -1,0 +1,82 @@
+﻿@page "/"
+@using Aurora.Settings.Layers;
+@using AuroraUI.Utils
+@inject Aurora.AuroraCore Core
+
+<!-- This file contains the main layout -->
+
+<CascadingValue Name="SelectedLayer" Value="SelectedLayer">
+<CascadingValue Name="SelectedLayerChanged" Value="SelectedLayerChanged" TValue="Action<Layer>">
+    <SplitPanel Class="root-container">
+
+        <!-- Left most column (application list) -->
+        <SplitPanelItem Size="240" Grow="0">
+            <div class="d-f f-v h-full" style="background: #1A1F26">
+                <!-- Top item: logo -->
+                <img class="aurora-logo as-c" src="https://via.placeholder.com/64/000000/EEEEEE" width="64" height="64" />
+
+                <!-- Second item: search -->
+                <Textbox Placeholder="Search..." />
+
+                <!-- Main item: app list -->
+                <ApplicationList @bind-SelectedApplication="FocusedApplication" Class="fg-1" />
+
+                <!-- Bottom item: buttons (add, show/hide visible etc.) -->
+                <ButtonGroup Class="as-c">
+                    <AuroraButton Label="Add" />
+                    <AuroraButton Label="Show/hide" />
+                    <AuroraButton Label="Settings" />
+                </ButtonGroup>
+            </div>
+        </SplitPanelItem>
+
+
+        <!-- Second column (profiles/layers lists) -->
+        <SplitPanelItem Size="240" Grow="0" Class="layers-column">
+            <ProfileLayerList @bind-CurrentApplication="FocusedApplication" />
+        </SplitPanelItem>
+
+
+        <!-- Last column (preview and layer properties/overview) -->
+        <SplitPanelItem Grow="1" Class="central">
+            <SplitPanel Orientation="Orientation.Vertical" Class="h-full">
+                <!-- Preview -->
+                <SplitPanelItem>
+                    <AuroraUI.Components.GlobalDeviceLayout />
+                </SplitPanelItem>
+
+                <!-- Bottom pane -->
+                <SplitPanelItem>
+                    <SplitPanel Class="h-full properties">
+                        <!-- Layer properties -->
+                        <SplitPanelItem>
+                            Layer properties
+                            <Textbox Placeholder="Test" />
+                        </SplitPanelItem>
+
+                        <!-- Overview -->
+                        <SplitPanelItem Size="240" Grow="0" Class="overview">
+                            <h4>Overview</h4>
+
+                            <p><strong>Selected layer:</strong> @SelectedLayer?.Name</p>
+                            <p><strong>Selected app:</strong> @FocusedApplication?.Config.Name</p>
+                        </SplitPanelItem>
+                    </SplitPanel>                    
+                </SplitPanelItem>
+            </SplitPanel>
+        </SplitPanelItem>
+    </SplitPanel>
+</CascadingValue>
+</CascadingValue>
+
+@code {
+    Application FocusedApplication { get; set; }
+
+    Layer SelectedLayer { get; set; }
+    void SelectedLayerChanged(Layer layer) { SelectedLayer = layer; StateHasChanged(); }
+
+    protected override void OnInitialized()
+    {
+        FocusedApplication = Core.LightingStateManager.DesktopProfile;
+    }
+}

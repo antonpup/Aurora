@@ -19,7 +19,8 @@
 }
 
 .virtual-layout {
-    height: 600px;
+    position: relative;
+    height: 100%;
     overflow: hidden;
 }
 
@@ -40,4 +41,10 @@
 
 .overlay {
     z-index:20;
+}
+
+.virtual-layout-edit-button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
 }

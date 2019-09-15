@@ -1,0 +1,26 @@
+﻿@using Aurora.Profiles
+@using  Aurora.Settings.Layers
+
+<div class="d-f f-v h-full">
+    <Dropdown Items="CurrentApplication.Profiles" DisplayMember="p => p.ProfileName" />
+
+    <LayerList @bind-Layers="CurrentApplication.Profile.Layers" />
+    <LayerList @bind-Layers="CurrentApplication.Profile.OverlayLayers" />
+</div>
+
+@code {
+    void ProfileSelectionChanged(object newValue)
+    {
+        if (int.TryParse((string)newValue, out int profileIndex))
+        {
+            CurrentApplication.SwitchToProfile(CurrentApplication.Profiles[profileIndex]);
+            InvokeAsync(() => StateHasChanged());
+        }
+    }
+
+    [Parameter]
+    public Application CurrentApplication { get; set; }
+
+    [Parameter]
+    public EventCallback<Application> CurrentApplicationChanged { get; set; }
+}

@@ -1,0 +1,35 @@
+﻿@using Aurora.Profiles
+@inject Aurora.AuroraCore Core
+
+<ContextMenu Id="app-menu" Animation="Animation.Grow">
+    <Item><Icon Name="cancel" /> Disable</Item>
+    <Item><Icon Name="check" /> Enable</Item>
+    <Item><Icon Name="eye-off-outline" /> Hide</Item>
+    <Item><Icon Name="eye-outline" /> Unhide</Item>
+    <Item><Icon Name="trash-can-outline" /> Delete</Item>
+</ContextMenu>
+
+<ul class="application-list @Class" style="overflow-y: scroll">
+    @foreach (var evt in Core.LightingStateManager.Events) {
+        <ContextMenuTrigger MenuId="app-menu" Data="evt">
+            <li class="@(SelectedApplication == (Application)evt.Value ? "active" : "")">
+                <button @onclick="() => SetSelectedApplication(evt.Value)">
+                    <img class="application-logo" src="https://via.placeholder.com/24/000000/EEEEEE" width="24" height="24" />
+                    <span class="application-label">@evt.Value.Config.Name</span>
+                </button>
+            </li>
+        </ContextMenuTrigger>
+    }
+</ul>
+
+@code {
+    [Parameter] public Application SelectedApplication { get; set; }
+    [Parameter] public EventCallback<Application> SelectedApplicationChanged { get; set; }
+    [CascadingParameter(Name = "SelectedLayerChanged")] Action<Aurora.Settings.Layers.Layer> ChangeSelectedLayer { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+
+    void SetSelectedApplication(ILightEvent evt) {
+        SelectedApplicationChanged.InvokeAsync(SelectedApplication = (Application)evt);
+        ChangeSelectedLayer(null);
+    }
+}

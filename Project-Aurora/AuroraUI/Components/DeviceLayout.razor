@@ -4,7 +4,7 @@
 
 
 <div class="device-layout @(Device.GetType().Name)" style="position:absolute;top:@(Y)px;left:@(X)px;width:@(Device.VirtualGroup.Region.Width)px;height:@(Device.VirtualGroup.Region.Height)px;">
-    <div class="virtual-edit-overlay" style="visibility:@(EditMode?"visible":"hidden")" @onmouseout="OnMouseMove" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp" @onmousemove="OnMouseMove"/>
+    <div class="virtual-edit-overlay" style="visibility:@(EditMode ? "visible" : "hidden")" @onmouseout="OnMouseMove" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp" @onmousemove="OnMouseMove"/>
 
     @{
         string layoutsPath = "device_assets";
@@ -16,8 +16,7 @@
 
         string images_path = "device_assets/images";
 
-        foreach (VirtualLight key in Device.VirtualGroup.grouped_keys)
-        {
+        foreach (VirtualLight key in Device.VirtualGroup.grouped_keys) {
             double keyMargin_Left = key.margin_left.Value;
             double keyMargin_Top = key.margin_top.Value;
 
@@ -30,33 +29,26 @@
 
             double x, y;
 
-            if (key.absolute_location.Value)
-            {
+            if (key.absolute_location.Value) {
                 x = key.margin_left.Value; y = key.margin_top.Value;
-            }
-            else
-            {
+            } else {
                 x = current_width + key.margin_left.Value; y = current_height + key.margin_top.Value;
             }
             System.Drawing.Color clr = System.Drawing.Color.White;
             if (key.tag != -1 && Device.DeviceColours != null && Device.DeviceColours.deviceColours.TryGetValue(key.tag, out System.Drawing.Color outClr))
                 clr = outClr;
-            if (string.IsNullOrWhiteSpace(image_path))
-            {
+            if (string.IsNullOrWhiteSpace(image_path)) {
                 <div class="vk @(Device.GetType().Name)-vk" style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());">
                     @key.visualName
                 </div>
-            }
-            else
-            {
+            } else {
                 //style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());"
                 //<image class="vkimg" src="@image_path" asp-append-version="true" >
                 //</image>
-                <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" :"" )">
-                    @if (key.tag == -1)
-                    {
+                <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" : "" )">
+                    @if (key.tag == -1) {
                         <img class="vkimg @(Device.GetType().Name)-vk" src="@image_path" asp-append-version="true" />
-                    }
+    }
                 </div>
 
             }
@@ -67,8 +59,7 @@
 
 
 
-            if (!key.absolute_location.Value)
-            {
+            if (!key.absolute_location.Value) {
                 if (key.width + keyMargin_Left > 0)
                     current_width += key.width.Value + keyMargin_Left;
 
@@ -79,8 +70,7 @@
                 if (layout_width < current_width)
                     layout_width = current_width;
 
-                if (key.hasLineBreak())
-                {
+                if (key.hasLineBreak()) {
                     current_height += key.line_break.Value;
                     current_width = 0;
                     //isFirstInRow = true;
@@ -105,9 +95,11 @@
 
     double X, Y = 0;
 
-    protected override void OnInitialized()
-    {
-        Device.ColoursUpdated += (_) => { InvokeAsync(() => this.StateHasChanged()); };
+    protected override void OnInitialized() {
+        Device.ColoursUpdated += (_) => InvokeAsync(() => {
+            // Sometimes this occurs in an error saying the renderer has been disposed. There is probably a better way than wrapping this in try...catch
+            try { this.StateHasChanged(); } catch { }
+        });
         X = Device.Location.X;
         Y = Device.Location.Y;
     }

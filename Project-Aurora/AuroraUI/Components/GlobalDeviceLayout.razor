@@ -1,39 +1,24 @@
 ﻿@inject IJSRuntime JsRuntime;
 @inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
 
-<ContextMenu Id="device-menu" ListCssClass="overlay" CssClass="overlay" ShownCssClass="overlay">
-    <Item Id="menuitem-edit" OnClick="ItemClick" OnAppearing="ItemOnAppearingHandler">Edit</Item>
-    <Item Id="menuitem-stopedit" OnClick="ItemClick" OnAppearing="ItemOnAppearingHandler">Stop Editing</Item>
-</ContextMenu>
-
-<ContextMenuTrigger MenuId="device-menu" Data="this">
-    <div class="virtual-layout" @onmouseout="OnMouseOut">
-
-        <div id='virtual-region'>
-            @foreach (Aurora.Devices.Layout.DeviceLayout device in deviceLayout.AllLayouts)
-            {
-                <div @onmouseover="DeviceOnMouseOver" @onmouseout="DeviceOnMouseOut" @onmousedown="DeviceOnMouseDown">
-                    <DeviceLayout Device="@device" @bind-EditMode="@EditMode" />
-                </div>
-            }
-        </div>
+<div class="virtual-layout" @onmouseout="OnMouseOut">
+    <div id="virtual-region">
+        @foreach (Aurora.Devices.Layout.DeviceLayout device in deviceLayout.AllLayouts)
+        {
+            <div @onmouseover="DeviceOnMouseOver" @onmouseout="DeviceOnMouseOut" @onmousedown="DeviceOnMouseDown">
+                <DeviceLayout Device="@device" @bind-EditMode="@EditMode" />
+            </div>
+        }
     </div>
-</ContextMenuTrigger>
+
+    <ToggleButton IconRight="ruler-square" Class="virtual-layout-edit-button" @bind-Checked="EditMode" />
+</div>
 
 
 @code {
 
     [Parameter]
     public bool EditMode { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> EditModeChanged { get; set; }
-
-    protected override void OnInitialized()
-    {
-        //deviceLayout.NewLayerRender += (_) => { this.StateHasChanged(); };
-
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

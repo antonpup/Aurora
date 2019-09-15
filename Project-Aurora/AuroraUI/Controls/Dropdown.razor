@@ -1,0 +1,34 @@
+﻿@inherits ControlBase
+@typeparam TItem
+
+<select class="@Class" @onchange="UpdateSelection" style="@Style">
+    @foreach (var item in Items) {
+        <option value="@item">
+            @(DisplayMember == null ? item.ToString() : DisplayMember(item).ToString())
+        </option>
+    }
+</select>
+
+@code {
+    [Parameter] public IEnumerable<TItem> Items { get; set; }
+
+    [Parameter] public TItem SelectedItem { get; set; }
+    [Parameter] public EventCallback<TItem> SelectedItemChanged { get; set; }
+
+    [Parameter] public object SelectedValue { get; set; }
+    [Parameter] public EventCallback<object> SelectedValueChanged { get; set; }
+
+    [Parameter] public Func<TItem, object> ValueMember { get; set; }
+    [Parameter] public Func<TItem, object> DisplayMember { get; set; }
+
+
+    void UpdateSelection(ChangeEventArgs e) {
+        var item = (TItem)e.Value;
+
+        SelectedItem = item;
+        SelectedItemChanged.InvokeAsync(SelectedItem);
+
+        SelectedValue = ValueMember == null ? item : ValueMember?.Invoke(item);
+        SelectedValueChanged.InvokeAsync(SelectedValue);
+    }
+}
