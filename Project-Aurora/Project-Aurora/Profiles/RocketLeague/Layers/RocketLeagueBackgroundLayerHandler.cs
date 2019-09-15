@@ -93,16 +93,16 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
                 switch (rlstate.Player.Team)
                 {
-                    case RocketLeagueTeam.Blue:
-                        bg_layer.Fill(Properties.BlueColor);
-                        playerColor = Properties.BlueColor;
-                        enemyColor = Properties.OrangeColor;
-                        break;
-                    case RocketLeagueTeam.Orange:
-                        bg_layer.Fill(Properties.OrangeColor);
-                        playerColor = Properties.OrangeColor;
-                        enemyColor = Properties.BlueColor;
-                        break;
+                    //case RocketLeagueTeam.Blue:
+                    //    bg_layer.Fill(Properties.BlueColor);
+                    //    playerColor = Properties.BlueColor;
+                    //    enemyColor = Properties.OrangeColor;
+                    //    break;
+                    //case RocketLeagueTeam.Orange:
+                    //    bg_layer.Fill(Properties.OrangeColor);
+                    //    playerColor = Properties.OrangeColor;
+                    //    enemyColor = Properties.BlueColor;
+                    //    break;
                     default:
                         bg_layer.Fill(Properties.DefaultColor);
                         playerColor = Properties.DefaultColor;

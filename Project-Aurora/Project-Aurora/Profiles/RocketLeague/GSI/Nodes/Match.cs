@@ -55,8 +55,8 @@
         {
             Blue = new Team_RocketLeague(_ParsedData["team_0"]?.ToString() ?? "");
             Orange = new Team_RocketLeague(_ParsedData["team_1"]?.ToString() ?? "");
-            Type = GetEnum<RocketLeagueMatchType>("type");
-            Mode = GetEnum<RocketLeagueGameMode>("mode");
+            //Type = GetEnum<RocketLeagueMatchType>("type");
+           // Mode = GetEnum<RocketLeagueGameMode>("mode");
             RemainingSeconds = GetInt("time");
         }
     }

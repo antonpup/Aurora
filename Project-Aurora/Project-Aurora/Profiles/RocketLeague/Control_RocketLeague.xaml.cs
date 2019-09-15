@@ -56,7 +56,7 @@ namespace Aurora.Profiles.RocketLeague
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Team = (RocketLeagueTeam)this.preview_team.SelectedItem;
+            //(profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Team = (RocketLeagueTeam)this.preview_team.SelectedItem;
         }
 
         private void preview_boost_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
