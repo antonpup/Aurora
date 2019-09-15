@@ -12,18 +12,18 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
 
         public int Goals;
 
-        public byte Red;
+        public float Red;
 
-        public byte Green;
+        public float Green;
 
-        public byte Blue;
+        public float Blue;
         internal Team_RocketLeague(string JSON) : base(JSON)
         {
             Name = GetString("name");
             Goals = GetInt("goals");
-            Red = (byte)GetInt("red");
-            Green = (byte)GetInt("green");
-            Blue = (byte)GetInt("blue");
+            Red = GetFloat("red");
+            Green = GetFloat("green");
+            Blue = GetFloat("blue");
         }
     }
 }
