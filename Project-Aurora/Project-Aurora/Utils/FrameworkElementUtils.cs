@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Aurora.Utils {
     public static class FrameworkElementExtensions {
@@ -23,5 +25,22 @@ namespace Aurora.Utils {
         /// </summary>
         public static T WithBinding<T>(this T self, DependencyProperty dp, object source, string path, BindingMode? bindingMode = null, IValueConverter converter = null) where T : FrameworkElement
             => self.WithBinding(dp, new Binding(path) { Source = source }, bindingMode, converter);
+
+        /// <summary>
+        /// Adds a child to the given target.
+        /// </summary>
+        public static T WithChild<T>(this T self, object child) where T : IAddChild {
+            self.AddChild(child);
+            return self;
+        }
+
+        /// <summary>
+        /// Adds a child in with the given dock to the target DockPanel based element.
+        /// </summary>
+        public static T WithChild<T>(this T self, UIElement child, Dock dock) where T : DockPanel {
+            DockPanel.SetDock(child, dock);
+            self.Children.Add(child);
+            return self;
+        }
     }
 }
