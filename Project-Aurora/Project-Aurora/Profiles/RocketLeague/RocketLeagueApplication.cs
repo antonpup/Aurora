@@ -18,12 +18,23 @@ namespace Aurora.Profiles.RocketLeague
     public class RocketLeague : Application
     {
         public RocketLeague()
-            : base(new LightEventConfig { Name = "Rocket League", ID = "rocketleague", ProcessNames = new[] { "rocketleague.exe" }, ProfileType = typeof(RocketLeagueProfile), OverviewControlType = typeof(Control_RocketLeague), GameStateType = typeof(GameState_RocketLeague), Event = new GameEvent_Generic(), IconURI = "Resources/rocketleague_256x256.png" })
+            : base(
+            new LightEventConfig {
+                Name = "Rocket League",
+                ID = "rocketleague",
+                ProcessNames = new[] { "rocketleague.exe" },
+                ProfileType = typeof(RocketLeagueProfile),
+                OverviewControlType = typeof(Control_RocketLeague),
+                GameStateType = typeof(GameState_RocketLeague),
+                Event = new GameEvent_Generic(),
+                IconURI = "Resources/rocketleague_256x256.png"
+            })
         {
 
             var extra = new List<LayerHandlerEntry>
             {
-                new LayerHandlerEntry("RocketLeagueBackground", "Rocket League Layer", typeof(RocketLeagueBackgroundLayerHandler)),
+                new LayerHandlerEntry("RocketLeagueScoreSplit", "Rocket League Score Slipt Layer", typeof(RocketLeagueScoreSplitLayerHandler)),
+                new LayerHandlerEntry("RocketLeagueGoalExplosion", "Rocket League Goal Explosion", typeof(RocketLeagueGoalExplosionLayerHandler))
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(extra, false);

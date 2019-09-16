@@ -368,6 +368,11 @@
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueScoreSplitLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueScoreSplitLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueScoreSplitLayerHandler.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -628,10 +633,9 @@
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueGoalExplosionLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
@@ -1677,6 +1681,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueScoreSplitLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2017,7 +2025,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

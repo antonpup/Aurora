@@ -32,7 +32,7 @@ namespace Aurora.Profiles.RocketLeague
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "Player/BoostAmount",
+                        _VariablePath = "Player/Boost",
                         _MaxVariablePath = "100",
                     },
                 }),
@@ -45,11 +45,10 @@ namespace Aurora.Profiles.RocketLeague
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "Player/BoostAmount",
+                        _VariablePath = "Player/Boost",
                         _MaxVariablePath = "100"
                     },
                 }),
-                new Layer("Rocket League Background", new Layers.RocketLeagueBackgroundLayerHandler())
             };
         }
     }

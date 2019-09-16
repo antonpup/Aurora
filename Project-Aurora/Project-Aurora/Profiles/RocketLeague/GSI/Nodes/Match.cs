@@ -29,12 +29,12 @@
         /// <summary>
         /// The type the current match is
         /// </summary>
-        public RocketLeagueMatchType Type;
+        public int Type;
 
         /// <summary>
         /// The current mode being played
         /// </summary>
-        public RocketLeagueGameMode Mode;
+        public int Mode;
 
         /// <summary>
         /// The Blue team playing in the match
@@ -55,8 +55,8 @@
         {
             Blue = new Team_RocketLeague(_ParsedData["team_0"]?.ToString() ?? "");
             Orange = new Team_RocketLeague(_ParsedData["team_1"]?.ToString() ?? "");
-            //Type = GetEnum<RocketLeagueMatchType>("type");
-           // Mode = GetEnum<RocketLeagueGameMode>("mode");
+            Type = GetInt("type");
+            Mode = GetInt("mode");
             RemainingSeconds = GetInt("time");
         }
     }
