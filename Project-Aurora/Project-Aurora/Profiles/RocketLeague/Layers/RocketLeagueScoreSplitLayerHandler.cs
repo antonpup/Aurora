@@ -49,54 +49,45 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
                 if (rlstate.Match.Blue.Goals >= 0 && rlstate.Match.Orange.Goals >= 0 && ColorsValid(rlstate))
                 {
-                    Color blue = GetTeamColor(rlstate.Match.Blue);
-                    Color orange = GetTeamColor(rlstate.Match.Orange);
+                    var myTeam = rlstate.Player.Team == 0 ? rlstate.Match.Blue : rlstate.Match.Orange;
+                    var enemyTeam = rlstate.Player.Team == 1 ? rlstate.Match.Blue : rlstate.Match.Orange;
 
-                    int total_score = rlstate.Match.Blue.Goals + rlstate.Match.Orange.Goals;
-
-                    LinearGradientBrush the_split_brush = new LinearGradientBrush(
-                            new Point(0, 0),
-                            new Point(Effects.canvas_biggest, 0),
-                            Color.Red, Color.Red);
-
-                    Color[] colors = new Color[]
+                    Color[] blendColors = new Color[]
                     {
-                        blue,
-                        blue,
-                        orange,
-                        orange
+                        GetTeamColor(myTeam),
+                        GetTeamColor(myTeam),
+                        GetTeamColor(enemyTeam),
+                        GetTeamColor(enemyTeam)
                     };
-                    int num_colors = colors.Length;
-                    float[] blend_positions = new float[num_colors];
 
-                    if (rlstate.Match.Orange.Goals > rlstate.Match.Blue.Goals)
-                    {
-                        blend_positions[0] = 0.0f;
-                        blend_positions[1] = (1.0f - ((float)rlstate.Match.Orange.Goals / (float)total_score)) - 0.01f;
-                        blend_positions[2] = (1.0f - ((float)rlstate.Match.Orange.Goals / (float)total_score)) + 0.01f;
-                        blend_positions[3] = 1.0f;
-                    }
-                    else if (rlstate.Match.Orange.Goals < rlstate.Match.Blue.Goals)
-                    {
-                        blend_positions[0] = 0.0f;
-                        blend_positions[1] = ((float)rlstate.Match.Blue.Goals / (float)total_score) - 0.01f;
-                        blend_positions[2] = ((float)rlstate.Match.Blue.Goals / (float)total_score) + 0.01f;
-                        blend_positions[3] = 1.0f;
-                    }
+                    float goalRatio;
+
+                    if (myTeam.Goals == 0 && enemyTeam.Goals == 0)
+                        goalRatio = 0.50f;
                     else
+                        goalRatio = (float)myTeam.Goals / (myTeam.Goals + enemyTeam.Goals);
+
+                    float[] blendPositions = new float[4]
                     {
-                        blend_positions[0] = 0.0f;
-                        blend_positions[1] = 0.49f;
-                        blend_positions[2] = 0.51f;
-                        blend_positions[3] = 1.0f;
-                    }
+                        0.0f,
+                        goalRatio - 0.01f,
+                        goalRatio + 0.01f,
+                        1.0f
+                    };
 
-                    ColorBlend color_blend = new ColorBlend();
-                    color_blend.Colors = colors;
-                    color_blend.Positions = blend_positions;
-                    the_split_brush.InterpolationColors = color_blend;
+                    ColorBlend blend = new ColorBlend
+                    {
+                        Colors = blendColors,
+                        Positions = blendPositions
+                    };
 
-                    layer.Fill(the_split_brush);
+                    LinearGradientBrush brush = new LinearGradientBrush(
+                            new Point(0, 0), new Point(Effects.canvas_biggest, 0),
+                            Color.Empty, Color.Empty);
+
+                    brush.InterpolationColors = blend;
+
+                    layer.Fill(brush);
                 }
             }
 
