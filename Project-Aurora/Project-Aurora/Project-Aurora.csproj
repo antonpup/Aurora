@@ -683,6 +683,7 @@
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_NumericChangeDetector.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ProcessRunning.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_TrueExtender.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIEnum.xaml.cs">
       <DependentUpon>Control_BooleanGSIEnum.xaml</DependentUpon>
     </Compile>

@@ -35,7 +35,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public Visual GetControl(Application a) => control ?? (control = new StackPanel()
             .WithChild(new DockPanel { LastChildFill = true }
                 .WithChild(new Label { Content = "Expression", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
-                .WithChild(ep = new Control_EvaluatablePresenter { EvalType = EvaluatableType.Number }
+                .WithChild(ep = new Control_EvaluatablePresenter { EvalType = EvaluatableType.Number, Margin = new System.Windows.Thickness(24, 0, 0, 0) }
                     .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay)))
             .WithChild(new CheckBox { Content = "Trigger on increase" }
                 .WithBinding(CheckBox.IsCheckedProperty, this, "DetectRising"))
