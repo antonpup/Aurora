@@ -91,32 +91,30 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 var ownTeam = state.Player.Team == 0 ? state.Match.Blue : state.Match.Orange;
                 var opponentTeam = state.Player.Team == 1 ? state.Match.Blue : state.Match.Orange;
 
-                if (Properties.ShowFriendlyGoalExplosion)
+                if (ownTeam.Goals > previousOwnTeamGoals)//keep track of goals even if we dont play the animation
                 {
-                    if(ownTeam.Goals > previousOwnTeamGoals && ColorsValid(state))//if goal happened
-                    {
-                        previousOwnTeamGoals = ownTeam.Goals;
+                    previousOwnTeamGoals = ownTeam.Goals;
+                    if (Properties.ShowFriendlyGoalExplosion && ColorsValid(state))
+                    { 
                         Color playerColor = GetTeamColor(ownTeam);
                         this.SetTracks(playerColor);
-
                         goal_explosion_mix.Clear();
                         showAnimation_Explosion = true;
                     }
                 }
-
-                if (Properties.ShowEnemyGoalExplosion)
+                
+                if(opponentTeam.Goals > previousOpponentGoals)
                 {
-                    if(opponentTeam.Goals > previousOpponentGoals && ColorsValid(state))
+                    previousOpponentGoals = opponentTeam.Goals;
+                    if (Properties.ShowEnemyGoalExplosion && ColorsValid(state))
                     {
-                        previousOpponentGoals = opponentTeam.Goals;
                         Color opponentColor = GetTeamColor(opponentTeam);
                         this.SetTracks(opponentColor);
-
                         goal_explosion_mix.Clear();
                         showAnimation_Explosion = true;
                     }
                 }
-
+                
                 if (showAnimation_Explosion)
                 {
                     if(Properties.Background)
@@ -144,7 +142,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
         protected override UserControl CreateControl()
         {
-            return new Control_RocketLeagueGoalExplosionLayer();
+            return new Control_RocketLeagueGoalExplosionLayer(this);
         }
 
         private static bool ColorsValid(GameState_RocketLeague state)
@@ -157,7 +155,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
                    (state.Match.Orange.Blue >= 0 && state.Match.Blue.Blue <= 1);
         }
 
-        private Color GetTeamColor(Team_RocketLeague team)
+        private static Color GetTeamColor(Team_RocketLeague team)
         {
             return Color.FromArgb(
             (int)(team.Red * 255.0f),
@@ -185,7 +183,8 @@ namespace Aurora.Profiles.RocketLeague.Layers
                         (int)(Effects.canvas_width_center * 0.9),
                         Effects.canvas_height_center, 
                         Effects.canvas_biggest / 2.0f, 
-                        playerColor, 4)
+                        playerColor,
+                        4)
                 );
             }
         }

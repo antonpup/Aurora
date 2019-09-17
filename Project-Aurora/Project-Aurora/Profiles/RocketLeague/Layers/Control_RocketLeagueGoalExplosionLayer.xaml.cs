@@ -28,12 +28,8 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
         public Control_RocketLeagueGoalExplosionLayer(RocketLeagueGoalExplosionLayerHandler datacontext)
         {
+            InitializeComponent();
             this.DataContext = datacontext;
-            InitializeComponent();         
-        }
-
-        internal void SetProfile(Application profile)
-        {
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

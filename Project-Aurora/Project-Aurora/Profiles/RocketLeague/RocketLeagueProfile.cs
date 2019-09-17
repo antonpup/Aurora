@@ -4,6 +4,7 @@ using Aurora.Settings.Layers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Profiles.RocketLeague.Layers;
 
 namespace Aurora.Profiles.RocketLeague
 {
@@ -11,7 +12,7 @@ namespace Aurora.Profiles.RocketLeague
     {
         public RocketLeagueProfile() : base()
         {
-            
+
         }
 
         public override void Reset()
@@ -41,7 +42,7 @@ namespace Aurora.Profiles.RocketLeague
                     Properties = new PercentGradientLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.AllAtOnce,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral } ),
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral, Devices.DeviceKeys.Peripheral_Logo } ),
                         _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
@@ -49,6 +50,8 @@ namespace Aurora.Profiles.RocketLeague
                         _MaxVariablePath = "100"
                     },
                 }),
+                new Layer("Goal Explosion", new RocketLeagueGoalExplosionLayerHandler()),
+                new Layer("Score Split", new RocketLeagueScoreSplitLayerHandler()),
             };
         }
     }
