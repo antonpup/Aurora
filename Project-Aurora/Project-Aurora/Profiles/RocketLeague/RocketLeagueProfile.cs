@@ -52,6 +52,13 @@ namespace Aurora.Profiles.RocketLeague
                 }),
                 new Layer("Goal Explosion", new RocketLeagueGoalExplosionLayerHandler()),
                 new Layer("Score Split", new RocketLeagueScoreSplitLayerHandler()),
+                new Layer("Background Layer", new SolidFillLayerHandler()
+                {
+                    Properties = new SolidFillLayerHandlerProperties
+                    {
+                        _PrimaryColor = Color.Blue
+                    }
+                }),
             };
         }
     }
