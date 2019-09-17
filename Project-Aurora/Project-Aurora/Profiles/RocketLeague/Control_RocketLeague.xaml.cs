@@ -3,6 +3,7 @@ using Aurora.Profiles.RocketLeague.GSI;
 using Aurora.Profiles.RocketLeague.GSI.Nodes;
 using Aurora.Settings;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -46,6 +47,16 @@ namespace Aurora.Profiles.RocketLeague
                 profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(@"https://bakkesmod.com/index.php");
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Process.Start(@"https://github.com/diogotr7/AuroraGSI-RocketLeague/releases");
         }
     }
 }
