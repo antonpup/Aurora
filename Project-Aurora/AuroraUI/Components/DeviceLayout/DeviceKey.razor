@@ -22,7 +22,10 @@
 else if (Key.tag != -1)
 {
     // Draw the specified custom image as a mask over a coloured block
-    <rect x="@x" y="@y" width="@Key.width" height="@Key.height" rx="6" fill="@color.ToHex()" style="-webkit-mask-image:url(@imagePath);mask-image:url(@imagePath)" />
+    <mask id="mask_@(Device.DeviceID)_@Key.tag">
+        <image x="@x" y="@y" width="@Key.width" height="@Key.height" href="@imagePath" />
+    </mask>
+    <rect x="@x" y="@y" width="@Key.width" height="@Key.height" rx="6" fill="@color.ToHex()" mask="url(#mask_@(Device.DeviceID)_@Key.tag)" />
 } else
 {
     <image x="@x" y="@y" width="@Key.width" height="@Key.height" href="@imagePath" />
