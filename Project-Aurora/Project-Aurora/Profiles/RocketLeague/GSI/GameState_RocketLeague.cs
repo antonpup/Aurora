@@ -1,8 +1,31 @@
 ﻿using Aurora.Profiles.RocketLeague.GSI.Nodes;
 using System;
+using System.ComponentModel;
 
 namespace Aurora.Profiles.RocketLeague.GSI
 {
+    public enum RocketLeagueStatus
+    {
+        [Description("Menu")]
+        Undefined = -1,
+        Replay,
+        OnlineGame,
+        Freeplay,
+        Training,
+        Spectate
+    };
+
+    public class Game_RocketLeague : Node<Game_RocketLeague>
+    {
+        public int Status = -1;
+        //public RocketLeagueStatus Status;
+
+        internal Game_RocketLeague(string json_data) : base(json_data)
+        {
+            Status = GetInt("status");
+        }
+    }
+
     /// <summary>
     /// A class representing various information relating to Rocket League
     /// </summary>
@@ -10,34 +33,14 @@ namespace Aurora.Profiles.RocketLeague.GSI
     {
         private Player_RocketLeague _Player;
         private Match_RocketLeague _Match;
+        private Game_RocketLeague _Game;
 
-        /// <summary>
-        /// Information about the local player
-        /// </summary>
-        public Player_RocketLeague Player
-        {
-            get
-            {
-                if (_Player == null)
-                    _Player = new Player_RocketLeague(_ParsedData["player"]?.ToString() ?? "");
 
-                return _Player;
-            }
-        }
+        public Player_RocketLeague Player => _Player = new Player_RocketLeague(_ParsedData["player"]?.ToString() ?? "");
 
-        /// <summary>
-        /// Information about the local player
-        /// </summary>
-        public Match_RocketLeague Match
-        {
-            get
-            {
-                if (_Match == null)
-                    _Match = new Match_RocketLeague(_ParsedData["match"]?.ToString() ?? "");
+        public Match_RocketLeague Match => _Match ?? new Match_RocketLeague(_ParsedData["match"]?.ToString() ?? "");
 
-                return _Match;
-            }
-        }
+        public Game_RocketLeague Game => _Game ?? new Game_RocketLeague(_ParsedData["game"]?.ToString() ?? "");
 
         /// <summary>
         /// Creates a default GameState_RocketLeague instance.

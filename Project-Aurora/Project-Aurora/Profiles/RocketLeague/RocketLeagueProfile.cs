@@ -90,6 +90,7 @@ namespace Aurora.Profiles.RocketLeague
                                                         new IfElseNumeric(new BooleanGSINumeric("Player/Team", 1), new NumberGSINumeric("Match/Blue/Green"), new NumberGSINumeric("Match/Orange/Green")),
                                                         new IfElseNumeric(new BooleanGSINumeric("Player/Team", 1), new NumberGSINumeric("Match/Blue/Blue"), new NumberGSINumeric("Match/Orange/Blue"))
                     )
+                    .SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Game/Status", ComparisonOperator.NEQ, -1))
                 ),
                 new Layer("Background Layer", new SolidFillLayerHandler()
                 {
