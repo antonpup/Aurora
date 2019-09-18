@@ -90,6 +90,12 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 var state = gamestate as GameState_RocketLeague;
                 var ownTeam = state.Player.Team == 0 ? state.Match.Blue : state.Match.Orange;
                 var opponentTeam = state.Player.Team == 1 ? state.Match.Blue : state.Match.Orange;
+                if (ownTeam.Goals == -1 || opponentTeam.Goals == -1)
+                {
+                    //reset goals when game ends
+                    previousOwnTeamGoals = 0;
+                    previousOpponentGoals = 0;
+                }
 
                 if (ownTeam.Goals > previousOwnTeamGoals)//keep track of goals even if we dont play the animation
                 {
