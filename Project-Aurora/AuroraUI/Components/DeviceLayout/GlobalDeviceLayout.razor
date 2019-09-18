@@ -1,0 +1,32 @@
+﻿@inject IJSRuntime JsRuntime;
+@inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
+
+<div class="virtual-layout">
+    <svg xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" @ref="virtualLayout">
+        <CascadingValue Name="EditMode" Value="EditMode">
+            @foreach (var device in deviceLayout.AllLayouts)
+            {
+                <DeviceLayout Device="@device" />
+            }
+        </CascadingValue>
+    </svg>
+    <ToggleButton IconRight="ruler-square" Class="virtual-layout-edit-button" @bind-Checked="EditMode" />
+</div>
+
+
+@code {
+    ElementReference virtualLayout;
+
+    public bool EditMode { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await JsRuntime.InvokeAsync<object>("deviceLayout.init", virtualLayout, DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void X(string msg) {
+        Console.WriteLine("JS invoked method, with argument: " + msg);
+    }
+}

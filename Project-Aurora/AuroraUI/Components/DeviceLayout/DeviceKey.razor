@@ -1,0 +1,38 @@
+﻿@using System.Drawing;
+@using Aurora.Utils;
+
+@{
+    // Calculate the position of the key.
+    var x = (Key.margin_left ?? 0) + (Key.absolute_location == true ? 0 : RelativeOffsetX);
+    var y = (Key.margin_top ?? 0) + (Key.absolute_location == true ? 0 : RelativeOffsetY);
+    var imagePath = $"{ImagesPath}/{Key.image}";
+
+    // Get the color of the key
+    var color = Color.Black;
+    if (Key.tag != -1)
+        Device?.DeviceColours?.deviceColours.TryGetValue(Key.tag, out color);
+}
+
+@if (string.IsNullOrWhiteSpace(Key.image))
+{
+    // If there is no custom image provided, display a default key image
+    <rect x="@x" y="@y" width="@Key.width" height="@Key.height" rx="6" fill="@color.ToHex()" />
+    <text><text x="@(x + Key.width / 2)" y="@(y + Key.height / 2)" dominant-baseline="middle" text-anchor="middle" fill="white">@Key.visualName</text></text>
+}
+else if (Key.tag != -1)
+{
+    // Draw the specified custom image as a mask over a coloured block
+    <rect x="@x" y="@y" width="@Key.width" height="@Key.height" rx="6" fill="@color.ToHex()" style="-webkit-mask-image:url(@imagePath);mask-image:url(@imagePath)" />
+} else
+{
+    <image x="@x" y="@y" width="@Key.width" height="@Key.height" href="@imagePath" />
+}
+
+@code {
+    const string ImagesPath = "device_assets/images";
+
+    [Parameter] public VirtualLight Key { get; set; }
+    [Parameter] public double RelativeOffsetX { get; set; }
+    [Parameter] public double RelativeOffsetY { get; set; }
+    [Parameter] public Aurora.Devices.Layout.DeviceLayout Device { get; set; }
+}

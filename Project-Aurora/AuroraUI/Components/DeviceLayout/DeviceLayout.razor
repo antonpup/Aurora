@@ -1,0 +1,45 @@
+﻿
+<CascadingValue Name="Device" Value="Device">
+    <g transform="translate(@Device.Location.X, @Device.Location.Y)">
+        @* @Device.VirtualGroup.Region.Width, @Device.VirtualGroup.Region.Height *@
+        @{
+            double layoutHeight = 0;
+            double layoutWidth = 0;
+
+            double currentHeight = 0;
+            double currentWidth = 0;
+
+            foreach (VirtualLight key in Device.VirtualGroup.grouped_keys) {
+
+                <DeviceKey Key="key" Device="Device" RelativeOffsetX="currentWidth" RelativeOffsetY="currentHeight" />
+
+                // Increment the relative position values for relative keys
+                if (key.absolute_location.Value != true) {
+                    currentWidth += Math.Max(key.width.Value + key.margin_left ?? 0, 0);
+                    currentHeight += Math.Max(key.margin_top ?? 0, 0);
+
+                    layoutWidth = Math.Max(layoutWidth, currentWidth);
+
+                    if (key.hasLineBreak()) {
+                        currentHeight += key.line_break.Value;
+                        currentWidth = 0;
+                    }
+
+                    layoutHeight = Math.Max(layoutHeight, currentHeight);
+                }
+            }
+        }
+    </g>
+</CascadingValue>
+
+@code {
+    [Parameter] public Aurora.Devices.Layout.DeviceLayout Device { get; set; }
+    [CascadingParameter] public bool EditMode { get; set; }
+
+    protected override void OnInitialized() {
+        Device.ColoursUpdated += (_) => InvokeAsync(() => {
+            // Sometimes this occurs in an error saying the renderer has been disposed. There is probably a better way than wrapping this in try...catch
+            try { this.StateHasChanged(); } catch { }
+        });
+    }
+}

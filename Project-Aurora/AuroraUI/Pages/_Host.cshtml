@@ -20,38 +20,6 @@
 
     <script src="_framework/blazor.server.js"></script>
     <script src="_content/Blazor.ContextMenu/blazorContextMenu.min.js"></script>
-
-    <script>
-        var instance
-
-        window.attachPanZoom = (id) => {
-            if (instance != null)
-                return
-
-            console.log("called with " + id)
-            var element = document.querySelector(id)
-
-            // and forward it it to panzoom.
-            //TODO: Dispose of this at some point
-            instance = panzoom(element)
-
-
-            console.log("done")
-        }
-        window.pausePanZoom = () => {
-            if (instance != null)
-                instance.pause();
-        }
-
-        window.resumePanZoom = () => {
-            if (instance != null)
-                instance.resume();
-        }
-
-        window.someJsMethod = function (helper) {
-            console.log(helper);
-            helper.invokeMethodAsync("SomeMethod", "Hello");
-        }
-    </script>
+    <script src="~/js/device-layout.js"></script>
 </body>
 </html>
