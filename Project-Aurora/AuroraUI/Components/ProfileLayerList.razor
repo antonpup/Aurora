@@ -4,8 +4,8 @@
 <div class="d-f f-v h-full">
     <Dropdown Items="CurrentApplication.Profiles" DisplayMember="p => p.ProfileName" />
 
-    <LayerList @bind-Layers="CurrentApplication.Profile.Layers" />
-    <LayerList @bind-Layers="CurrentApplication.Profile.OverlayLayers" />
+    <LayerTree Layers="CurrentApplication.Profile.Layers" />
+    <LayerTree Layers="CurrentApplication.Profile.OverlayLayers" />
 </div>
 
 @code {

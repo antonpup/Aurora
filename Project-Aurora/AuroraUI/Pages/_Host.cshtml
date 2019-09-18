@@ -47,6 +47,11 @@
             if (instance != null)
                 instance.resume();
         }
+
+        window.someJsMethod = function (helper) {
+            console.log(helper);
+            helper.invokeMethodAsync("SomeMethod", "Hello");
+        }
     </script>
 </body>
 </html>

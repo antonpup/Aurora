@@ -1,0 +1,27 @@
+﻿@using Aurora.Settings.Layers
+@using System.Collections.ObjectModel
+
+@* The right-click context menu for any of the layer items. *@
+<ContextMenu Id="layer-menu" Animation="Animation.Grow">
+    <Item><Icon Name="cancel" /> Disable</Item>
+    <Item><Icon Name="check" /> Enable</Item>
+    <Item><Icon Name="eye-off-outline" /> Copy</Item>
+    <Item><Icon Name="eye-outline" /> Paste</Item>
+    <Seperator />
+    <Item><Icon Name="trash-can-outline" /> Delete</Item>
+</ContextMenu>
+
+<div class="list-group fg-1">
+    <ul>
+        @foreach (var layer in Layers)
+        {
+            //Use @key to stop the items from remaining selected when the Profile changes
+            <LayerTreeItem Model="layer" @key="layer.Name" />
+        }
+    </ul>
+</div>
+
+@code {
+    /// <summary>The list of layers to be displayed by this element</summary>
+    [Parameter] public ObservableCollection<Layer> Layers { get; set; }
+}

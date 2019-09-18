@@ -1,0 +1,38 @@
+﻿@using Aurora.Settings.Layers
+@inject IJSRuntime JSRuntime
+
+<ContextMenuTrigger MenuId="layer-menu" Data="Model">
+    <li class="@(SelectedLayer == Model ? "active" : "")" draggable="true" @ondragstart="DragStart">
+        <button @onclick="() => SelectedLayerChanged?.Invoke(Model)">@Model.Name</button>
+    </li>
+</ContextMenuTrigger>
+
+@code {
+    /// <summary>The layer that should be represented by this item.</summary>
+    [Parameter] public Layer Model { get; set; }
+
+    /// <summary>A cascading parameter that represents the layer the user has selected. This may be a regular layer or an overlay layer.</summary>
+    [CascadingParameter] public Layer SelectedLayer { get; set; }
+    /// <summary>Cascading action that can be called to set the selected layer in this cascading context.</summary>
+    [CascadingParameter] public Action<Layer> SelectedLayerChanged { get; set; }
+
+    void DragStart()
+    {
+        Console.WriteLine("Start");
+    }
+
+    void Click()
+    {
+        Console.WriteLine("Click");
+        JSRuntime.InvokeAsync<object>("someJsMethod", DotNetObjectReference.Create(new Test()));
+    }
+
+    public class Test
+    {
+        [JSInvokable]
+        public void SomeMethod(string value)
+        {
+            Console.WriteLine(value);
+        }
+    }
+}

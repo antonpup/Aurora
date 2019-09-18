@@ -22,6 +22,9 @@ namespace AuroraUI
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+#if DEBUG
+                    webBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, "true");
+#endif
                     webBuilder.UseStartup<Startup>();
                 });
     }
