@@ -45,7 +45,7 @@
                 //style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;background-color:@(clr.ToHex());"
                 //<image class="vkimg" src="@image_path" asp-append-version="true" >
                 //</image>
-                <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"-webkit-mask-box-image: url({image_path});background-color:{clr.ToHex()}" : "" )">
+                <div style="position:absolute;top:@(y)px;left:@(x)px;width:@(key.width)px;height:@(key.height)px;@(key.tag != -1 ? $"webkit-mask-image: url({image_path});mask-image: url({image_path});background-color:{clr.ToHex()}" : "" )">
                     @if (key.tag == -1) {
                         <img class="vkimg @(Device.GetType().Name)-vk" src="@image_path" asp-append-version="true" />
     }
