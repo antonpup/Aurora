@@ -34,7 +34,6 @@
 
 @code {
     [Parameter] public Aurora.Devices.Layout.DeviceLayout Device { get; set; }
-    [CascadingParameter] public bool EditMode { get; set; }
 
     protected override void OnInitialized() {
         Device.ColoursUpdated += (_) => InvokeAsync(() => {

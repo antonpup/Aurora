@@ -59,6 +59,11 @@ button::-moz-focus-inner {
     border: 0; /* Removes Firefox's dotted outline on focused <button>s. */
 }
 
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
 
 
 

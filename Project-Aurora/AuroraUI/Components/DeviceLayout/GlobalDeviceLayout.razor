@@ -1,14 +1,13 @@
 ﻿@inject IJSRuntime JsRuntime;
 @inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
 
-<div class="virtual-layout">
-    <svg xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" @ref="virtualLayout">
-        <CascadingValue Name="EditMode" Value="EditMode">
-            @foreach (var device in deviceLayout.AllLayouts)
-            {
+<div class="virtual-layout no-select">
+    <svg xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%" @ref="virtualLayout" data-editmode="@EditMode.ToString()">
+        <g> @* Root SVG element that will have the zoom/scale and pan/translation transformations applied *@
+            @foreach (var device in deviceLayout.AllLayouts) {
                 <DeviceLayout Device="@device" />
             }
-        </CascadingValue>
+        </g>
     </svg>
     <ToggleButton IconRight="ruler-square" Class="virtual-layout-edit-button" @bind-Checked="EditMode" />
 </div>
@@ -22,7 +21,7 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-            await JsRuntime.InvokeAsync<object>("deviceLayout.init", virtualLayout, DotNetObjectReference.Create(this));
+            await JsRuntime.InvokeAsync<object>("auroraUi.deviceLayout.init", virtualLayout, DotNetObjectReference.Create(this));
     }
 
     [JSInvokable]

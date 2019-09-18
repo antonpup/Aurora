@@ -6,6 +6,7 @@
     var x = (Key.margin_left ?? 0) + (Key.absolute_location == true ? 0 : RelativeOffsetX);
     var y = (Key.margin_top ?? 0) + (Key.absolute_location == true ? 0 : RelativeOffsetY);
     var imagePath = $"{ImagesPath}/{Key.image}";
+    var sizeAttrs = new Dictionary<string, object> { { "x", x }, { "y", y }, { "width", Key.width }, { "height", Key.height } };
 
     // Get the color of the key
     var color = Color.Black;
@@ -16,19 +17,20 @@
 @if (string.IsNullOrWhiteSpace(Key.image))
 {
     // If there is no custom image provided, display a default key image
-    <rect x="@x" y="@y" width="@Key.width" height="@Key.height" rx="6" fill="@color.ToHex()" />
+    <rect @attributes="sizeAttrs" rx="6" fill="@color.ToHex()" />
     <text><text x="@(x + Key.width / 2)" y="@(y + Key.height / 2)" dominant-baseline="middle" text-anchor="middle" fill="white">@Key.visualName</text></text>
 }
 else if (Key.tag != -1)
 {
     // Draw the specified custom image as a mask over a coloured block
     <mask id="mask_@(Device.DeviceID)_@Key.tag">
-        <image x="@x" y="@y" width="@Key.width" height="@Key.height" href="@imagePath" />
+        <image @attributes="sizeAttrs" href="@imagePath" />
     </mask>
-    <rect x="@x" y="@y" width="@Key.width" height="@Key.height" rx="6" fill="@color.ToHex()" mask="url(#mask_@(Device.DeviceID)_@Key.tag)" />
+    <rect @attributes="sizeAttrs" rx="6" fill="@color.ToHex()" mask="url(#mask_@(Device.DeviceID)_@Key.tag)" />
 } else
 {
-    <image x="@x" y="@y" width="@Key.width" height="@Key.height" href="@imagePath" />
+    // If tag is -1, this image is not a key and should just be drawn as a static image
+    <image @attributes="sizeAttrs" href="@imagePath" />
 }
 
 @code {
