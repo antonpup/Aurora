@@ -12,9 +12,9 @@
     [Parameter] public Layer Model { get; set; }
 
     /// <summary>A cascading parameter that represents the layer the user has selected. This may be a regular layer or an overlay layer.</summary>
-    [CascadingParameter] public Layer SelectedLayer { get; set; }
+    [CascadingParameter(Name = "SelectedLayer")] public Layer SelectedLayer { get; set; }
     /// <summary>Cascading action that can be called to set the selected layer in this cascading context.</summary>
-    [CascadingParameter] public Action<Layer> SelectedLayerChanged { get; set; }
+    [CascadingParameter(Name = "SelectedLayerChanged")] public Action<Layer> SelectedLayerChanged { get; set; }
 
     void DragStart()
     {
