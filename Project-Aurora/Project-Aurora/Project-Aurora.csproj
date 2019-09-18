@@ -368,11 +368,7 @@
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueScoreSplitLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueScoreSplitLayer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueScoreSplitLayerHandler.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -1680,10 +1676,6 @@
     <Page Include="Controls\Control_FieldPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueScoreSplitLayer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>

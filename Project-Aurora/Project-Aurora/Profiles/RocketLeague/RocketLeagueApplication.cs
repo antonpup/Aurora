@@ -33,7 +33,6 @@ namespace Aurora.Profiles.RocketLeague
 
             var extra = new List<LayerHandlerEntry>
             {
-                new LayerHandlerEntry("RocketLeagueScoreSplit", "Rocket League Score Slipt Layer", typeof(RocketLeagueScoreSplitLayerHandler)),
                 new LayerHandlerEntry("RocketLeagueGoalExplosion", "Rocket League Goal Explosion", typeof(RocketLeagueGoalExplosionLayerHandler))
             };
 
