@@ -1,6 +1,6 @@
 ﻿
 <CascadingValue Name="Device" Value="Device">
-    <g transform="translate(@Device.Location.X, @Device.Location.Y)">
+    <g transform="translate(@Device.Location.X @Device.Location.Y)" data-device-id="@Device.DeviceID">
         @* @Device.VirtualGroup.Region.Width, @Device.VirtualGroup.Region.Height *@
         @{
             double layoutHeight = 0;

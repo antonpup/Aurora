@@ -1,4 +1,4 @@
-﻿@inject IJSRuntime JsRuntime;
+@inject IJSRuntime JsRuntime;
 @inject Aurora.Devices.Layout.GlobalDeviceLayout deviceLayout
 
 <div class="virtual-layout no-select">
@@ -25,7 +25,10 @@
     }
 
     [JSInvokable]
-    public void X(string msg) {
-        Console.WriteLine("JS invoked method, with argument: " + msg);
+    public void SetDevicePosition(byte deviceId, double x, double y) {
+        //var dev = deviceLayout.AllLayouts.SingleOrDefault(x => x.DeviceID == deviceId);
+        var dev = deviceLayout.AllLayouts.FirstOrDefault(x => x.DeviceID == deviceId);
+        if (dev != null)
+            dev.Location = new System.Drawing.Point((int)x, (int)y);
     }
 }
