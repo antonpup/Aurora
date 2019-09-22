@@ -1,4 +1,6 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
+using System;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -117,6 +119,56 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         public IEvaluatable<bool> Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
+        IEvaluatable IEvaluatable.Clone() => Clone();
+    }
+
+
+
+    /// <summary>
+    /// Condition that accesses a specified game state variable (of any enum type) and returns a comparison between it and a static enum of the same type.
+    /// </summary>
+    [OverrideLogic("Enum State Variable", category: OverrideLogicCategory.State)]
+    public class BooleanGSIEnum : IEvaluatable<bool> {
+
+        /// <summary>Creates a blank enum game state lookup evaluatable.</summary>
+        public BooleanGSIEnum() { }
+        /// <summary>Creates an enum game state lookup that returns true when the variable at the given path equals the given enum.</summary>
+        public BooleanGSIEnum(string path, Enum val) { StatePath = path; EnumValue = val; }
+
+        // The path of the game state enum
+        public string StatePath { get; set; }
+
+        // The value to compare the GSI enum against.
+        // Has to be converted using the TypeAnnotatedObjectConverter else the type won't be stored, only the number (which JSON then doesn't know how to serialise back)
+        [Newtonsoft.Json.JsonConverter(typeof(TypeAnnotatedObjectConverter))]
+        public Enum EnumValue { get; set; }
+
+        // Control
+        private Control_BooleanGSIEnum control;
+        public Visual GetControl(Application application) {
+            if (control == null)
+                control = new Control_BooleanGSIEnum(this);
+            control.SetApplication(application);
+            return control;
+        }
+
+        /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
+        public bool Evaluate(IGameState gameState) {
+            var @enum = GameStateUtils.TryGetEnumFromState(gameState, StatePath);
+            return @enum != null && @enum.Equals(EnumValue);
+        }
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        /// <summary>Update the assigned control with the new application.</summary>
+        public void SetApplication(Application application) {
+            control?.SetApplication(application);
+
+            // Check to ensure the variable paths are valid
+            if (application != null && !string.IsNullOrWhiteSpace(StatePath) && !application.ParameterLookup.ContainsKey(StatePath))
+                StatePath = string.Empty;
+        }
+
+        public IEvaluatable<bool> Clone() => new BooleanGSIEnum { StatePath = StatePath, EnumValue = EnumValue };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

@@ -81,10 +81,10 @@ namespace Aurora.Utils
 
             reader.Read(); // Read "$type" property name
             reader.Read(); // Read "$type" value
-            var targetType = Type.GetType(reader.Value.ToString()); // Find the type based on the fully-qualified name from the $type
+            var typeName = reader.Value?.ToString(); // Find the type based on the fully-qualified name from the $type. This will be null if the original value was null
             reader.Read(); // Read "$value" property name
             reader.Read(); // Read "$value" value
-            var value = JsonConvert.DeserializeObject(reader.Value.ToString(), targetType); // The $value is a JSON-encoded string, so decode as the requested type
+            var value = typeName == null ? null : JsonConvert.DeserializeObject(reader.Value.ToString(), Type.GetType(typeName)); // The $value is a JSON-encoded string, so decode as the requested type
             reader.Read(); // Read end of object (if this is not done, it breaks the next converter)
 
             return value;
