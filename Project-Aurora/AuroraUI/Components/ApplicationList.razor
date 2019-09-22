@@ -1,5 +1,6 @@
 ﻿@using Aurora.Profiles
 @inject Aurora.AuroraCore Core
+@inject IJSRuntime JsRuntime
 
 <ContextMenu Id="app-menu" Animation="Animation.Grow">
     <Item><Icon Name="cancel" /> Disable</Item>
@@ -9,7 +10,7 @@
     <Item><Icon Name="trash-can-outline" /> Delete</Item>
 </ContextMenu>
 
-<ul class="application-list @Class" style="overflow-y: scroll">
+<ul class="application-list @Class" style="position:relative" @ref="appList">
     @foreach (var evt in Core.LightingStateManager.Events) {
         <ContextMenuTrigger MenuId="app-menu" Data="evt">
             <li class="@(SelectedApplication == (Application)evt.Value ? "active" : "")">
@@ -27,6 +28,13 @@
     [Parameter] public EventCallback<Application> SelectedApplicationChanged { get; set; }
     [CascadingParameter(Name = "SelectedLayerChanged")] Action<Aurora.Settings.Layers.Layer> ChangeSelectedLayer { get; set; }
     [Parameter] public string Class { get; set; } = "";
+
+    ElementReference appList;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender)
+            await JsRuntime.InvokeVoidAsync("scrollbarInit", appList);
+    }
 
     void SetSelectedApplication(ILightEvent evt) {
         SelectedApplicationChanged.InvokeAsync(SelectedApplication = (Application)evt);

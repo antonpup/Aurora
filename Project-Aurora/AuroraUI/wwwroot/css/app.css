@@ -2,6 +2,7 @@
 
 @import url(virtual-keyboard.css);
 @import url(contextmenu.css);
+@import url(perfect-scrollbar.css);
 
 /* Later this will be dynamically imported based on the user's preferences. */
 @import url(themes/Default.css);
