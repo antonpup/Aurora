@@ -1,7 +1,7 @@
 ﻿
 namespace Aurora.Profiles.RocketLeague.GSI.Nodes
 {
-    public enum RocketLeaguePlaylist
+    public enum RLPlaylist
     {
         Undefined = -1,
         Duel = 1,
@@ -40,7 +40,7 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
         /// <summary>
         /// The current mode being played
         /// </summary>
-        public int Playlist = -1;
+        public RLPlaylist Playlist = RLPlaylist.Undefined;
 
         /// <summary>
         /// The Blue team playing in the match
@@ -61,7 +61,7 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
         {
             Blue = new Team_RocketLeague(_ParsedData["team_0"]?.ToString() ?? "");
             Orange = new Team_RocketLeague(_ParsedData["team_1"]?.ToString() ?? "");
-            Playlist = GetInt("playlist");
+            Playlist = (RLPlaylist)GetInt("playlist");
             RemainingSeconds = GetInt("time");
         }
     }

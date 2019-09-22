@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Aurora.Profiles.RocketLeague.GSI
 {
-    public enum RocketLeagueStatus
+    public enum RLStatus
     {
         [Description("Menu")]
         Undefined = -1,
@@ -17,12 +17,11 @@ namespace Aurora.Profiles.RocketLeague.GSI
 
     public class Game_RocketLeague : Node<Game_RocketLeague>
     {
-        public int Status = -1;
-        //public RocketLeagueStatus Status;
+        public RLStatus Status;
 
         internal Game_RocketLeague(string json_data) : base(json_data)
         {
-            Status = GetInt("status");
+            Status = (RLStatus)GetInt("status");
         }
     }
 

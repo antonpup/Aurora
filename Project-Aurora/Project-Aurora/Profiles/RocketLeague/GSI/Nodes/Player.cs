@@ -1,32 +1,6 @@
 ﻿namespace Aurora.Profiles.RocketLeague.GSI.Nodes
 {
     /// <summary>
-    /// Enum list for each player team
-    /// </summary>
-    public enum RocketLeagueTeam
-    {
-        /// <summary>
-        /// Undefined
-        /// </summary>
-        Undefined = -1,
-
-        /// <summary>
-        /// Blue Team
-        /// </summary>
-        Blue = 0,
-
-        /// <summary>
-        /// Orange Team
-        /// </summary>
-        Orange = 1,
-
-        /// <summary>
-        /// Spectator
-        /// </summary>
-        Spectator = 2 
-    }
-
-    /// <summary>
     /// Class representing player information
     /// </summary>
     public class Player_RocketLeague : Node<Player_RocketLeague>
