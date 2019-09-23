@@ -1,46 +1,16 @@
-﻿.vk {
-    font-size: x-small;
-    color: white;
-    border: 1px solid white;
-    text-align: center;
-    border-radius: 5px;
-    overflow-wrap:break-word;
-}
-
-.vkimg {
-}
-
-.KeyboardDeviceLayout {
-    background-color: dimgrey;
-    border-radius:10px;
-}
-
-.MouseDeviceLayout {
-}
-
-.virtual-layout {
+﻿.virtual-layout {
     position: relative;
     height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
-.virtual-edit-overlay {
-    cursor: move;
-    position: absolute;
-    margin-left: 0px;
-    margin-top: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
-    z-index: 2;
-    border-width: thick;
-    border-color: gray;
-    border-radius: 10px;
-    border-style: solid;
+.virtual-layout svg {
+    cursor: grab;
 }
 
-.overlay {
-    z-index:20;
+.virtual-layout svg[data-editmode="True"] g[data-device-id] {
+    cursor: move;
 }
 
 .virtual-layout-edit-button {
