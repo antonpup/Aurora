@@ -1,0 +1,11 @@
+﻿@inherits ControlBase
+
+<label class="switch">
+    <input type="checkbox" @onchange="e => { Value = (bool)e.Value; ValueChanged.InvokeAsync((bool)e.Value); }" />
+    <div></div>
+</label>
+
+@code {
+    [Parameter] public bool Value { get; set; }
+    [Parameter] public EventCallback<bool> ValueChanged { get; set; }
+}

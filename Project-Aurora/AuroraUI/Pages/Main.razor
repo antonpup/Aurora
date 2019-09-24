@@ -52,6 +52,9 @@
                         <SplitPanelItem>
                             <InputField TValue="string" @bind-Value="TestString" />
                             <span><strong>Value:</strong> @TestString</span>
+                            <br/>
+                            <Switch @bind-Value="TestBool" />
+                            <span><strong>Value:</strong> @TestBool</span>
                         </SplitPanelItem>
 
                         <!-- Overview -->
@@ -73,6 +76,7 @@
     Application FocusedApplication { get; set; }
 
     string TestString { get; set; } = "Initial";
+    bool TestBool { get; set; }
 
     Layer SelectedLayer { get; set; }
     void SelectedLayerChanged(Layer layer) { SelectedLayer = layer; StateHasChanged(); }

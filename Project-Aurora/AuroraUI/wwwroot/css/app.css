@@ -182,6 +182,41 @@ input:focus, select:focus {
     box-shadow: 0 0 4px 0 #3a8bdb88;
 }
 
+label.switch input[type="checkbox"] {
+    display: none;
+}
+
+label.switch input[type="checkbox"] ~ div {
+    position: relative;
+    width: 48px;
+    display: inline-block;
+    height: 28px;
+    border-radius: 14px;
+    background: #00000018;
+    border: 1px solid #0006;
+    transition: background var(--transition-timing);
+}
+
+label.switch input[type="checkbox"] ~ div::before {
+    display: block;
+    content: ' ';
+    width: 20px;
+    height: 20px;
+    background: #b6c2d2;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    transition: left var(--transition-timing);
+}
+
+label.switch input[type="checkbox"]:checked ~ div {
+    background: #3A8BDB;
+}
+
+label.switch input[type="checkbox"]:checked ~ div::before {
+    left: 22px;
+}
 
 
 /* These are VERY temporary */
