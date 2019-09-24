@@ -50,8 +50,8 @@
                     <SplitPanel Class="h-full properties">
                         <!-- Layer properties -->
                         <SplitPanelItem>
-                            Layer properties
-                            <Textbox Placeholder="Test" />
+                            <InputField TValue="string" @bind-Value="TestString" />
+                            <span><strong>Value:</strong> @TestString</span>
                         </SplitPanelItem>
 
                         <!-- Overview -->
@@ -71,6 +71,8 @@
 
 @code {
     Application FocusedApplication { get; set; }
+
+    string TestString { get; set; } = "Initial";
 
     Layer SelectedLayer { get; set; }
     void SelectedLayerChanged(Layer layer) { SelectedLayer = layer; StateHasChanged(); }
