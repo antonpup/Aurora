@@ -3,6 +3,7 @@
 @import url(virtual-keyboard.css);
 @import url(contextmenu.css);
 @import url(perfect-scrollbar.css);
+@import url(pickr.css);
 
 /* Later this will be dynamically imported based on the user's preferences. */
 @import url(themes/Default.css);
@@ -216,6 +217,31 @@ label.switch input[type="checkbox"]:checked ~ div {
 
 label.switch input[type="checkbox"]:checked ~ div::before {
     left: 22px;
+}
+
+.color-picker-trigger .color-block {
+    width: 23px;
+    height: 12px;
+    display: inline-block;
+    position: relative;
+    top: 1px;
+}
+.color-picker-trigger .color-block::after, .color-picker-trigger .color-block::before {
+    display: block;
+    content: ' ';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+}
+.color-picker-trigger .color-block::after {    
+    background: inherit;
+}
+.color-picker-trigger .color-block::before {
+    background: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path fill="white" d="M1,0H2V1H1V0ZM0,1H1V2H0V1Z"/><path fill="gray" d="M0,0H1V1H0V0ZM1,1H2V2H1V1Z"/></svg>')
+}
+.color-picker-trigger .color-name {
+    display: inline-block;
+    width: 68px;
 }
 
 

@@ -1,0 +1,35 @@
+﻿@using System.Drawing;
+@using Aurora.Utils;
+@inherits ControlBase
+@implements IDisposable
+@inject IJSRuntime JsRuntime
+
+<button class="btn color-picker-trigger @Class" style="@Style" @ref="pickerButton">
+    <div class="color-block" />
+    <span class="color-name"></span>
+</button>
+
+@code {
+    [Parameter] public Color Value { get; set; }
+    [Parameter] public EventCallback<Color> ValueChanged { get; set; }
+
+    ElementReference pickerButton;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.init", pickerButton, DotNetObjectReference.Create(this));
+    }
+
+    public void Dispose()
+    {
+        JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.dispose", pickerButton);
+    }
+
+    [JSInvokable]
+    public void UpdateColor(byte r, byte g, byte b, byte a)
+    {
+        Value = Color.FromArgb(a, r, g, b);
+        ValueChanged.InvokeAsync(Value);
+    }
+}
