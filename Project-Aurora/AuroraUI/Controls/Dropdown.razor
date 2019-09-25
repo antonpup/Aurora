@@ -1,34 +1,32 @@
 ﻿@inherits ControlBase
-@typeparam TItem
+@implements IDisposable
+@inject IJSRuntime JsRuntime
 
-<select class="@Class" @onchange="UpdateSelection" style="@Style">
-    @foreach (var item in Items) {
-        <option value="@item">
-            @(DisplayMember == null ? item.ToString() : DisplayMember(item).ToString())
-        </option>
-    }
-</select>
+<div style="position:relative">
+    <div @ref="triggerElement">
+        @Trigger
+    </div>
+    <div @ref="contentElement" class="dropdown-content @(FullWidth ? "w-full" : "")">
+        @Content
+    </div>
+</div>
 
 @code {
-    [Parameter] public IEnumerable<TItem> Items { get; set; }
+    [Parameter] public RenderFragment Trigger { get; set; }
+    [Parameter] public RenderFragment Content { get; set; }
 
-    [Parameter] public TItem SelectedItem { get; set; }
-    [Parameter] public EventCallback<TItem> SelectedItemChanged { get; set; }
+    [Parameter] public bool FullWidth { get; set; } = false;
 
-    [Parameter] public object SelectedValue { get; set; }
-    [Parameter] public EventCallback<object> SelectedValueChanged { get; set; }
-
-    [Parameter] public Func<TItem, object> ValueMember { get; set; }
-    [Parameter] public Func<TItem, object> DisplayMember { get; set; }
+    ElementReference triggerElement;
+    ElementReference contentElement;
 
 
-    void UpdateSelection(ChangeEventArgs e) {
-        var item = (TItem)e.Value;
+    protected override void OnAfterRender(bool firstRender) {
+        if (firstRender)
+            JsRuntime.InvokeVoidAsync("auroraUi.dropdown.init", triggerElement, contentElement, DotNetObjectReference.Create(this), FullWidth ? "bottom-start" : "bottom");
+    }
 
-        SelectedItem = item;
-        SelectedItemChanged.InvokeAsync(SelectedItem);
-
-        SelectedValue = ValueMember == null ? item : ValueMember?.Invoke(item);
-        SelectedValueChanged.InvokeAsync(SelectedValue);
+    public void Dispose() {
+        JsRuntime.InvokeVoidAsync("auroraUi.dropdown.dispose", triggerElement);
     }
 }

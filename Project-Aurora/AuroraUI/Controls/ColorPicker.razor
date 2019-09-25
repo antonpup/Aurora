@@ -15,10 +15,10 @@
 
     ElementReference pickerButton;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
-            await JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.init", pickerButton, DotNetObjectReference.Create(this));
+            JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.init", pickerButton, DotNetObjectReference.Create(this));
     }
 
     public void Dispose()

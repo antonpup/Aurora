@@ -2,7 +2,7 @@
 @using  Aurora.Settings.Layers
 
 <div class="d-f f-v h-full">
-    <Dropdown Items="CurrentApplication.Profiles" DisplayMember="p => p.ProfileName" />
+    <Combobox Items="CurrentApplication.Profiles" DisplayMember="p => p.ProfileName" />
 
     <LayerTree Layers="CurrentApplication.Profile.Layers" />
     <LayerTree Layers="CurrentApplication.Profile.OverlayLayers" />

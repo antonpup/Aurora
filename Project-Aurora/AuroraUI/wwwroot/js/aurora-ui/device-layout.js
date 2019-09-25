@@ -2,7 +2,7 @@
     // Some config constants
     const MIN_ZOOM = 0.4;
     const MAX_ZOOM = 3;
-    const ZOOM_DELTA = -0.01;
+    const ZOOM_DELTA = -0.02;
 
     const MOVE_GUIDE_DIST = 15; // Distance from a device edge before the guide is visible
     const MOVE_SNAP_DIST = 10; // Distance from a device edge before the dragged element 'snaps' to that guide
@@ -137,7 +137,7 @@
 
                 // Calculate new zoom level and a ratio between new and old zoom
                 let oldZoom = zoom;
-                zoom = Math.min(Math.max(zoom + e.deltaY * ZOOM_DELTA, MIN_ZOOM), MAX_ZOOM);
+                zoom = Math.min(Math.max(zoom + Math.sign(e.deltaY) * ZOOM_DELTA, MIN_ZOOM), MAX_ZOOM);
 				let zoomRatio = oldZoom / zoom;
 
                 // Pan the canvas slightly so that the point under the mouse doesn't appear to move relative to the viewport

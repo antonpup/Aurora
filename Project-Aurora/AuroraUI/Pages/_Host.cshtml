@@ -17,11 +17,18 @@
         @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
     </app>
 
+    <!-- Blazor runtime -->
     <script src="_framework/blazor.server.js"></script>
+
+    <!-- External scripts -->
     <script src="_content/Blazor.ContextMenu/blazorContextMenu.min.js"></script>
     <script src="~/js/perfect-scrollbar.min.js"></script>
     <script src="~/js/pickr.min.js"></script>
-    <script src="~/js/device-layout.js"></script>
-    <script src="~/js/color-picker.js"></script>
+    <script src="~/js/popper.min.js"></script>
+
+    <!-- Aurora UI scripts -->
+    <script src="~/js/aurora-ui/color-picker.js"></script>
+    <script src="~/js/aurora-ui/device-layout.js"></script>
+    <script src="~/js/aurora-ui/dropdown.js"></script>
 </body>
 </html>

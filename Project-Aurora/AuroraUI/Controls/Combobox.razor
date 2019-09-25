@@ -1,0 +1,54 @@
+﻿@inherits ControlBase
+@typeparam TItem
+
+<Dropdown FullWidth="true">
+    <Trigger>
+        <AuroraButton style="display:block;width:100%" Label="Temp" />
+    </Trigger>
+    <Content>
+        <ul data-dropdown-dismiss>
+            @foreach (var item in Items)
+            {
+                <li><button @onclick="_ => SelectedItem = item">@DisplayOf(item)</button></li>
+            }
+        </ul>
+    </Content>
+</Dropdown>
+
+@code {
+
+    [Parameter] public IEnumerable<TItem> Items { get; set; }
+
+    private TItem selectedItem;
+    [Parameter] public TItem SelectedItem {
+        get => selectedItem;
+        set {
+            if (!Equals(value, selectedItem)) {
+                selectedItem = value;
+                SelectedItemChanged.InvokeAsync(SelectedItem);
+                SelectedValueChanged.InvokeAsync(SelectedValue);
+            }
+        }
+    }
+
+    [Parameter] public object SelectedValue {
+        get => ValueOf(SelectedItem);
+        set => SelectedItem = FindItemFromValue(value);
+    }
+
+    [Parameter] public EventCallback<TItem> SelectedItemChanged { get; set; }
+    [Parameter] public EventCallback<object> SelectedValueChanged { get; set; }
+
+    [Parameter] public Func<TItem, object> ValueMember { get; set; }
+    [Parameter] public Func<TItem, object> DisplayMember { get; set; }
+
+
+    object ValueOf(TItem item) =>
+        item == null || ValueMember == null ? item : ValueMember(item);
+
+    object DisplayOf(TItem item) =>
+        item == null || DisplayMember == null ? item : DisplayMember(item);
+
+    TItem FindItemFromValue(object value) =>
+        Items.FirstOrDefault(i => Equals(value, ValueOf(i)));
+}

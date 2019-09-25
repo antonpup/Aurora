@@ -58,6 +58,9 @@
                             <br />
                             <ColorPicker @bind-Value="TestColor" />
                             <span><strong>Value:</strong> @TestColor.ToString()</span>
+                            <br />
+                            <EnumCombobox TEnum="TestEnum" @bind-SelectedItem="TestEnumValue" />
+                            <span><strong>Value:</strong> @TestEnumValue.ToString()</span>
                         </SplitPanelItem>
 
                         <!-- Overview -->
@@ -81,6 +84,7 @@
     string TestString { get; set; } = "Initial";
     bool TestBool { get; set; }
     System.Drawing.Color TestColor { get; set; } = System.Drawing.Color.Red;
+    TestEnum TestEnumValue { get; set; } = TestEnum.B;
 
     Layer SelectedLayer { get; set; }
     void SelectedLayerChanged(Layer layer) { SelectedLayer = layer; StateHasChanged(); }
@@ -88,5 +92,9 @@
     protected override void OnInitialized()
     {
         FocusedApplication = Core.LightingStateManager.DesktopProfile;
+    }
+
+    public enum TestEnum {
+        A, B, C
     }
 }
