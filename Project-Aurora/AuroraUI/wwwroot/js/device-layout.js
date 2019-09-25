@@ -1,8 +1,11 @@
-(function () {
+﻿(function () {
     // Some config constants
     const MIN_ZOOM = 0.4;
     const MAX_ZOOM = 3;
     const ZOOM_DELTA = -0.01;
+
+    const MOVE_GUIDE_DIST = 15; // Distance from a device edge before the guide is visible
+    const MOVE_SNAP_DIST = 10; // Distance from a device edge before the dragged element 'snaps' to that guide
 
     window.auroraUi = window.auroraUi || {};
     window.auroraUi.deviceLayout = {
@@ -11,6 +14,11 @@
          * @param {SVGSVGElement} svg The target element to initialise the device layout on.
          * @param {{invokeMethodAsync(remoteMethodName:string, ...params):void}} deviceLayout A .NET reference object for the layout controller. */
         init(svg, deviceLayout) {
+
+            /** @type {SVGLineElement} */
+            let horizontalGuideLine = svg.querySelector('[data-role="hoz-guide"]');
+            /** @type {SVGLineElement} */
+            let verticalGuideLine = svg.querySelector('[data-role="vert-guide"]');
 
             let zoom = 1;
             let panX = 0, panY = 0;
@@ -22,7 +30,15 @@
             let deviceElement;
             /** @type {SVGGElement} */
             let deviceGhost;
-			let devX = 0, devY = 0;
+            let dragX = 0, dragY = 0;
+            let devX = 0, devY = 0;
+            let devW = 0, devH = 0;
+            let devOffsetX = 0, devOffsetY = 0;
+            /** @type {Set<number>} */
+            let deviceGuidesX;
+            /** @type {Set<number>} */
+            let deviceGuidesY;
+
             let mouseLastX = 0, mouseLastY = 0;
 
 
@@ -41,7 +57,11 @@
                     // Once the while loop has exited, check we have a deviceId. If this isn't the case, the e.target was an element that was not a child of a device.
                     // The device id should always have a value since only devices are ever in the SVG, but this will future proof it.
                     if (!isNaN(devId)) {
-                        devX = +deviceElement.dataset['deviceX']; devY = +deviceElement.dataset['deviceY'];
+                        // Get a list of all OTHER devices and populate the guide position sets. This should to be done before the ghost is created
+                        populateGuidePositions();
+
+                        dragX = devX = +deviceElement.dataset['deviceX']; dragY = devY = +deviceElement.dataset['deviceY'];
+                        devW = +deviceElement.dataset['deviceW']; devH = +deviceElement.dataset['deviceH'];
                         deviceGhost = createGhost(deviceElement);
                         mode = "move";
                         svg.style.cursor = "move";
@@ -60,15 +80,23 @@
                 // Calculate the delta distance that the mouse has moved since the last pointermove event.
 				let deltaX = mouseLastX - e.clientX, deltaY = mouseLastY - e.clientY;
 
-				if (mode == "move") {
+                if (mode == "move") {
                     // When moving a device, update the device X and Y position based on the amount the mouse has moved
                     // Must take into account the zoom level otherwise the device won't move enough or will move too much when zoomed in/out
-					devX -= deltaX / zoom;
-					devY -= deltaY / zoom;
-                    // Update the ghost's position
-					deviceGhost.setAttribute('transform', `translate(${devX} ${devY})`);
+					dragX -= deltaX / zoom;
+                    dragY -= deltaY / zoom;
 
-				} else if (mode == "pan") {
+                    // Redraw the guide lines and snap the device X and Y position if required
+                    devOffsetX = updateGuideLinePosition(dragX, devW, deviceGuidesX, verticalGuideLine, "x");
+                    devOffsetY = updateGuideLinePosition(dragY, devH, deviceGuidesY, horizontalGuideLine, "y");
+
+                    devX = dragX + devOffsetX;
+                    devY = dragY + devOffsetY;
+
+                    // Update the ghost's position
+                    deviceGhost.setAttribute('transform', `translate(${devX} ${devY})`);
+
+                } else if (mode == "pan") {
                     // When panning, we simply update the panX and panY values. No need to take zoom into account here because the
                     // main SVG container element's transform is applied in the order: translate first, scale second.
                     panX -= deltaX;
@@ -95,7 +123,8 @@
 				}
 
 				svg.releasePointerCapture(e.pointerId); // Release our mouse capture on the pointer
-				mode = "none";
+                mode = "none";
+                horizontalGuideLine.style.display = verticalGuideLine.style.display = 'none'; // Hide the gudie lines
 				svg.style.cursor = null;
             });
 
@@ -142,6 +171,17 @@
                     (elementX - panX) / zoom,
                     (elementY - panY) / zoom
                 ];
+}
+
+            /** Converts a pair X and Y coordinates that are relative to the SVG items inside the SVG into coordinates that are relative to the target SVG element.
+             * @param {number} svgX The X coordinate relative to the SVG canvas.
+             * @param {number} svgY The Y coordinate relative to the SVG canvas.
+             * @returns {[number,number]} The [X, Y] coordinates relative to the target SVG element, taking into account pan and zoom level. */
+            function svgToElementCoords(svgX, svgY) {
+                return [
+                    svgX * zoom + panX,
+                    svgY * zoom + panY
+                ];
             }
 
             /** Creates a 'ghost' clone of the target element. The ghost is identical to the target node but does not receive mouse events and is semi-transparent.
@@ -155,6 +195,48 @@
                 ghost.zIndex = 1; // appear on top of other elements
                 el.parentElement.appendChild(ghost);
                 return ghost;
+            }
+
+            /** Re-populates the two guide position sets from the current devices and their positions. */
+            function populateGuidePositions() {
+                deviceGuidesX = new Set();
+                deviceGuidesY = new Set();
+                [...svg.querySelectorAll('g[data-device-id]')].forEach(el => { // For each device elements
+                    if (el == deviceElement) return;
+                    // Because we are using a set, we don't need to worry about duplicates - that's handled for us
+                    deviceGuidesX.add(+el.dataset['deviceX']);
+                    deviceGuidesX.add(+el.dataset['deviceX'] + +el.dataset['deviceW']);
+                    deviceGuidesY.add(+el.dataset['deviceY']);
+                    deviceGuidesY.add(+el.dataset['deviceY'] + +el.dataset['deviceH']);
+                });
+            }
+
+
+            /** Updates a guide line's position and visibility. Returns the new offset in this dimension.
+             * @param {number} a The element's position in the target dimension (will be the X or Y position).
+             * @param {number} b The element's size in the target dimension (will be the width or height).
+             * @param {Set<number>} guides The unique list of guides in this dimension.
+             * @param {SVGLineElement} line The guide line element whose position will be updated.
+             * @param {"x"|"y"} prop Which property of the line will be updated. */
+            function updateGuideLinePosition(a, b, guides, line, prop) {
+                // Find the smallest offset to a guide for both the left/top (a) and the right/bottom (b).
+                let closestA = [...guides].map(m => m - a).sort((a, b) => Math.abs(a) - Math.abs(b))[0],
+                    closestB = [...guides].map(n => n - (a + b)).sort((a, b) => Math.abs(a) - Math.abs(b))[0];
+                let closestIsB = Math.abs(closestA) > Math.abs(closestB);
+                let closest = closestIsB ? closestB : closestA;
+
+                // If the absolute offset is less than the min distance constant, show and update the position of the guide line element
+                let vis = Math.abs(closest) < MOVE_GUIDE_DIST;
+                line.style.display = vis ? 'block' : 'none';
+                if (vis) {
+                    // Convert the position (which is relative to the SVG canvas) to a position relative to the SVG DOM element. 
+                    let canvasPos = prop == "x" ? svgToElementCoords(a + closest + (closestIsB ? b : 0), 0)[0] : svgToElementCoords(0, a + closest + (closestIsB ? b : 0))[1];
+                    line.setAttribute(prop + '1', canvasPos);
+                    line.setAttribute(prop + '2', canvasPos);
+                }
+
+                // If the absolute offset it within snapping distance, return this offset
+                return Math.abs(closest) < MOVE_SNAP_DIST ? closest : 0;
             }
         }
     };
