@@ -21,6 +21,6 @@
 
 .virtual-layout svg[data-editmode="True"] line[data-role="hoz-guide"], .virtual-layout svg[data-editmode="True"] line[data-role="vert-guide"] {
     stroke: cyan;
-    stroke-width: 2;
+    stroke-width: 1;
     stroke-dasharray: 6 4;
 }

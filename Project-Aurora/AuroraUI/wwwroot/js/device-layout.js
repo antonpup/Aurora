@@ -231,6 +231,7 @@
                 if (vis) {
                     // Convert the position (which is relative to the SVG canvas) to a position relative to the SVG DOM element. 
                     let canvasPos = prop == "x" ? svgToElementCoords(a + closest + (closestIsB ? b : 0), 0)[0] : svgToElementCoords(0, a + closest + (closestIsB ? b : 0))[1];
+                    canvasPos = Math.round(canvasPos) + .5; // Ensuring the line is at a half coord appears to make it respect the 1px width
                     line.setAttribute(prop + '1', canvasPos);
                     line.setAttribute(prop + '2', canvasPos);
                 }
