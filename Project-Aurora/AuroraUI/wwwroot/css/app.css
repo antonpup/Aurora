@@ -1,7 +1,6 @@
 @import url(materialdesignicons.min.css);
 
 @import url(virtual-keyboard.css);
-@import url(contextmenu.css);
 @import url(perfect-scrollbar.css);
 @import url(pickr.css);
 
@@ -107,34 +106,6 @@ button::-moz-focus-inner {
 .application-list li.active button {
     background: #FFF1;
     color: #FFF;
-}
-
-/* Context menu */
-body .blazor-context-menu--default {
-    color: #FFF;
-    background: #0F141A;
-    box-shadow: 0 0 4px 2px rgba(0,0,0,.3);
-    padding: 2px;
-    border-radius: 2px;
-}
-
-body .blazor-context-menu__list {
-    padding: 0;
-}
-
-body .blazor-context-menu__item--default {
-    border-radius: 2px;
-}
-
-body .blazor-context-menu__item--default:hover {
-    border-color: #26A0DA;
-    background: #FFFFFF08;
-}
-
-body .blazor-context-menu__seperator__hr {
-    margin: 2px 1rem;
-    border-top-color: #0b1017;
-    border-bottom-color: #1b232d;
 }
 
 .aurora-logo {
@@ -244,7 +215,7 @@ label.switch input[type="checkbox"]:checked ~ div::before {
     width: 68px;
 }
 
-.dropdown-content {
+body .dropdown-content {
     color: #FFF;
     background: #0F141A;
     box-shadow: 0 0 4px 2px rgba(0,0,0,.3);
@@ -258,6 +229,31 @@ label.switch input[type="checkbox"]:checked ~ div::before {
     pointer-events: auto;
     opacity: 1;
 }
+
+ul.dropdown-list {
+    list-style: none;
+    padding: 0;
+}
+
+.dropdown-list li {
+    border-radius: 2px;
+    padding: 6px;
+    white-space: nowrap;
+}
+
+.dropdown-list li:hover {
+    background: #FFFFFF08;
+}
+
+.dropdown-list .separator hr {
+    margin: 2px 1rem;
+    border-top-color: #0b1017;
+    border-bottom-color: #1b232d;
+}
+
+
+
+
 
 /* These are VERY temporary */
 .layers-column {

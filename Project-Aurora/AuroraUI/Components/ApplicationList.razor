@@ -33,7 +33,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if (firstRender)
-            await JsRuntime.InvokeVoidAsync("scrollbarInit", appList);
+            await JsRuntime.InvokeVoidAsync("auroraUi.scrollbar.init", appList);
     }
 
     void SetSelectedApplication(ILightEvent evt) {

@@ -1,15 +1,17 @@
 ﻿@inherits ControlBase
+@implements IDisposable
 @typeparam TItem
+@inject IJSRuntime JsRuntime
 
 <Dropdown FullWidth="true">
     <Trigger>
         <AuroraButton style="display:block;width:100%" Label="Temp" />
     </Trigger>
     <Content>
-        <ul data-dropdown-dismiss>
+        <ul class="dropdown-list" style="max-height:310px;position:relative" data-dropdown-dismiss @ref="itemList">
             @foreach (var item in Items)
             {
-                <li><button @onclick="_ => SelectedItem = item">@DisplayOf(item)</button></li>
+                <li @onclick="_ => SelectedItem = item">@DisplayOf(item)</li>
             }
         </ul>
     </Content>
@@ -51,4 +53,16 @@
 
     TItem FindItemFromValue(object value) =>
         Items.FirstOrDefault(i => Equals(value, ValueOf(i)));
+
+
+    ElementReference itemList;
+    protected override void OnAfterRender(bool firstRender) {
+        // If first render, we want to init a new scrollbar.
+        // If non-first render, make the scrollbar update it's size incase there has been any items added or removed
+        JsRuntime.InvokeVoidAsync("auroraUi.scrollbar." + (firstRender ? "init" : "update"), itemList);
+    }
+
+    public void Dispose() {
+        JsRuntime.InvokeVoidAsync("auroraUi.scrollbar.dispose", itemList);
+    }
 }

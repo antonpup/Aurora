@@ -26,7 +26,14 @@ namespace AuroraUI {
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton(AuroraCore.Instance);
             services.AddSingleton(GlobalDeviceLayout.Instance);
-            services.AddBlazorContextMenu();
+            services.AddBlazorContextMenu(opt => {
+                opt.ConfigureTemplate(tpl => {
+                    tpl.MenuCssClass = "dropdown-content show";
+                    tpl.MenuListCssClass = "dropdown-list";
+                    tpl.MenuItemCssClass = "";
+                    tpl.SeperatorCssClass = "separator";
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
