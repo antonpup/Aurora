@@ -581,12 +581,12 @@
     <PackageReference Include="SharpDX.DXGI" Version="4.0.1" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
     <PackageReference Include="TaskScheduler" Version="2.8.15" />
+    <PackageReference Include="Wooting.NET" Version="1.0.0" />
     <PackageReference Include="YeeLightAPI_SnakePin" Version="0.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj" />
-    <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj" />
   </ItemGroup>
 
   <ItemGroup>
