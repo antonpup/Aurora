@@ -11,7 +11,13 @@
         <ul class="dropdown-list" style="max-height:310px;position:relative" data-dropdown-dismiss @ref="itemList">
             @foreach (var item in Items)
             {
-                <li @onclick="_ => SelectedItem = item">@DisplayOf(item)</li>
+                <li @onclick="_ => SelectedItem = item">
+                    @if (ItemTemplate == null) {
+                        @DisplayOf(item);
+                    } else {
+                        @ItemTemplate(item); // N.B. I tried doing @(ItemTemplate == null ? DisplayOf(item) : ItemTemplate(item)) but this didn't work correctly (I think maybe due to implicit typecasting of the renderfragment to an object? maybe?)
+                    }
+                </li>
             }
         </ul>
     </Content>
@@ -43,6 +49,8 @@
 
     [Parameter] public Func<TItem, object> ValueMember { get; set; }
     [Parameter] public Func<TItem, object> DisplayMember { get; set; }
+
+    [Parameter] public RenderFragment<TItem> ItemTemplate { get; set; }
 
 
     object ValueOf(TItem item) =>

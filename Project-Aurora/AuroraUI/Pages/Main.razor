@@ -59,7 +59,11 @@
                             <ColorPicker @bind-Value="TestColor" />
                             <span><strong>Value:</strong> @TestColor.ToString()</span>
                             <br />
-                            <EnumCombobox TEnum="TestEnum" @bind-SelectedItem="TestEnumValue" />
+                            <EnumCombobox TEnum="TestEnum" @bind-SelectedItem="TestEnumValue">
+                                <ItemTemplate>
+                                    <strong>Option</strong> for item <em>@context.ToString()</em>!
+                                </ItemTemplate>
+                            </EnumCombobox>
                             <span><strong>Value:</strong> @TestEnumValue.ToString()</span>
                         </SplitPanelItem>
 
