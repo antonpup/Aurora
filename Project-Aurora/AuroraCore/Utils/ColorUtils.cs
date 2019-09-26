@@ -6,9 +6,16 @@ namespace Aurora.Utils
 {
     public static class ColorExt
     {
+        /// <summary>Converts this color to it's representation in the format #RRGGBB.</summary>
         public static string ToHex(this Color c)
         {
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+        }
+
+        /// <summary>Converts this color to it's representation in the format #RRGGBBAA.</summary>
+        public static string ToHexa(this Color c)
+        {
+            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2") + c.A.ToString("X2");
         }
 
         public static string ToRGB(this Color c)

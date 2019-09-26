@@ -18,7 +18,9 @@
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
-            JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.init", pickerButton, DotNetObjectReference.Create(this));
+            JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.init", pickerButton, DotNetObjectReference.Create(this), Value.ToHexa());
+        else
+            JsRuntime.InvokeVoidAsync("auroraUi.colorPicker.setColor", pickerButton, Value.ToHexa());
     }
 
     public void Dispose()
