@@ -39,16 +39,15 @@
 			}
 
 			function documentMouseDownHandler(e) {
-				// Outside click if the element that was clicked on is not inside the popper or the trigger
-				let clickOutside = e.target != trigger && e.target != popElement && !trigger.contains(e.target) && !popElement.contains(e.target);
-				if (clickOutside || isDismiss) close();
+				// Is outside click if the element that was clicked on is not inside the popper or the trigger
+				if (e.target != trigger && e.target != popElement && !trigger.contains(e.target) && !popElement.contains(e.target))
+					close();
 			}
 
 			function documentClickHandler(e) {
-				// Check if the element clicked on is inside an element marked with 'data-dropdown-dismiss'
-				let closestDismiss = e.target.closest('[data-dropdown-dismiss]');
-				let isDismiss = closestDismiss != null && popElement.contains(closestDismiss);
-				if (isDismiss) close();
+				let closestDismiss = e.target.closest('[data-dropdown-dismiss]'); // get closest element with 'data-dropdown-dismiss' attribute
+				if (closestDismiss != null && popElement.contains(closestDismiss)) // check that element is present and is part of the popover (and not a different dropdown)
+					close();
 			}
 		},
 
