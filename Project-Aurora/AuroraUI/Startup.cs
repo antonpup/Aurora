@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AuroraUI.Data;
 using Aurora;
 using Aurora.Devices.Layout;
 
@@ -23,7 +22,6 @@ namespace AuroraUI {
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton(AuroraCore.Instance);
             services.AddSingleton(GlobalDeviceLayout.Instance);
             services.AddBlazorContextMenu(opt => {
@@ -60,7 +58,8 @@ namespace AuroraUI {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
-            AuroraCore.Instance.Initialize();
+
+            app.ApplicationServices.GetService<AuroraCore>().Initialize();
         }
     }
 }
