@@ -1,4 +1,5 @@
 ﻿@inherits ControlBase
+@attribute [InputFieldControlAttribute(typeof(bool), SpecialName = "switch")]
 
 <label class="switch">
     <input type="checkbox" @onchange="e => { Value = (bool)e.Value; ValueChanged.InvokeAsync((bool)e.Value); }" />

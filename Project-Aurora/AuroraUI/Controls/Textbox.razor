@@ -1,4 +1,5 @@
 ﻿@inherits ControlBase
+@attribute [InputFieldControlAttribute(typeof(string))]
 
 <input placeholder="@Placeholder" class="@Class" value="@Value" @oninput="e => { Value = e.Value.ToString(); ValueChanged.InvokeAsync(Value); }" style="@Style" />
 

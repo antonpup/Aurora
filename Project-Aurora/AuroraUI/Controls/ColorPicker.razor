@@ -2,6 +2,7 @@
 @using Aurora.Utils;
 @inherits ControlBase
 @implements IDisposable
+@attribute [InputFieldControlAttribute(typeof(Color))]
 @inject IJSRuntime JsRuntime
 
 <button class="btn color-picker-trigger @Class" style="@Style" @ref="pickerButton">

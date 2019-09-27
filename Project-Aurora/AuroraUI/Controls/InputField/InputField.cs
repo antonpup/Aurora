@@ -16,18 +16,29 @@ namespace AuroraUI.Controls.InputField {
 
 
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
-            var control = GetControlFor(typeof(TValue));
-            if (control == null)
-                // If no control exists for this datatype, show a warning message
-                builder.AddMarkupContent(0, $"<div class='editor-type-error'>Editor for the data type '{typeof(TValue).Name}' is unavailable.</div>");
-            else
-            {
-                // Otherwise, create markup for this control, adding the relevant Value and ValueChanged attributes
+
+            if (GetControlFor(typeof(TValue)) is { } control) {
+                // If a control exists, create markup for this control, adding the relevant Value and ValueChanged attributes
                 builder.OpenComponent(0, control);
                 builder.AddAttribute(1, "Value", Value);
-                builder.AddAttribute(2, "ValueChanged", EventCallback.Factory.Create<TValue>(this, newValue => { Value = newValue; ValueChanged.InvokeAsync(Value); }));
+                builder.AddAttribute(2, "ValueChanged", EventCallback.Factory.Create<TValue>(this, OnInputValueChanged));
                 builder.CloseComponent();
-            }
+
+            } else if (typeof(TValue).IsEnum) {
+                // For enums, if a control exists for this specific enum use that (in the above branch), else use the default enum combo
+                builder.OpenComponent<EnumCombobox<TValue>>(0);
+                builder.AddAttribute(1, "SelectedItem", Value);
+                builder.AddAttribute(2, "SelectedItemChanged", EventCallback.Factory.Create<TValue>(this, OnInputValueChanged));
+                builder.CloseComponent();
+
+            } else
+                // If no control exists for this datatype, show a warning message
+                builder.AddMarkupContent(0, $"<div class='editor-type-error'>Editor for the data type '{typeof(TValue).Name}' is unavailable.</div>");
+        }
+
+        private void OnInputValueChanged(TValue newValue) {
+            Value = newValue;
+            ValueChanged.InvokeAsync(Value);
         }
 
         /// <summary>Gets the editor type that will be used for the given data type.</summary>

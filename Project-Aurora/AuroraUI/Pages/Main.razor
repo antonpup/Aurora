@@ -53,17 +53,13 @@
                             <InputField TValue="string" @bind-Value="TestString" />
                             <span><strong>Value:</strong> @TestString</span>
                             <br />
-                            <Switch @bind-Value="TestBool" />
+                            <InputField TValue="bool" @bind-Value="TestBool" />
                             <span><strong>Value:</strong> @TestBool</span>
                             <br />
-                            <ColorPicker @bind-Value="TestColor" />
+                            <InputField TValue="System.Drawing.Color" @bind-Value="TestColor" />
                             <span><strong>Value:</strong> @TestColor.ToString()</span>
                             <br />
-                            <EnumCombobox TEnum="TestEnum" @bind-SelectedItem="TestEnumValue">
-                                <ItemTemplate>
-                                    <strong>Option</strong> for item <em>@context.ToString()</em>!
-                                </ItemTemplate>
-                            </EnumCombobox>
+                            <InputField TValue="TestEnum" @bind-Value="TestEnumValue" />
                             <span><strong>Value:</strong> @TestEnumValue.ToString()</span>
                         </SplitPanelItem>
 
