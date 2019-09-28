@@ -27,10 +27,13 @@
     }
 
     [JSInvokable]
-    public void SetDevicePosition(byte deviceId, double x, double y) {
-        //var dev = deviceLayout.AllLayouts.SingleOrDefault(x => x.DeviceID == deviceId);
-        var dev = deviceLayout.AllLayouts.FirstOrDefault(x => x.DeviceID == deviceId);
-        if (dev != null)
-            dev.Location = new System.Drawing.Point((int)x, (int)y);
+    public void SetDevicePosition(byte deviceTypeId, byte deviceId, double x, double y) {
+        try {
+            var dev = deviceLayout.GetDeviceFromTypeAndId(deviceTypeId, deviceId);
+            if (dev != null)
+                dev.Location = new System.Drawing.Point((int)x, (int)y);
+        } catch (KeyNotFoundException) {
+            Console.WriteLine($"Attempted to access an invalid device with type id {deviceTypeId} and device id {deviceId}.");
+        }
     }
 }

@@ -341,6 +341,12 @@ namespace Aurora.Devices.Layout
             throw new KeyNotFoundException();*/
         }
 
+        public DeviceLayout GetDeviceFromTypeAndId(byte typeId, byte deviceId) {
+            if (DeviceLookup.TryGetValue((typeId, deviceId), out var layout))
+                return layout;
+            throw new KeyNotFoundException();
+        }
+
         public string GetDeviceLEDName(DeviceLED deviceLED)
         {
             (DeviceLayout layout, LEDINT led) = GetDeviceFromDeviceLED(deviceLED);

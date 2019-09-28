@@ -25,7 +25,7 @@
 
             /** @type {"none"|"pan"|"move"} */
             let mode = "none";
-            let devId = -1;
+            let devId = -1, devTypeId = -1;
             /** @type {SVGElement} */
             let deviceElement;
             /** @type {SVGGElement} */
@@ -51,12 +51,12 @@
                     deviceElement = e.target;
                     // The e.target may not be the SVG G element that represents the device, it may be a descendant element of this (e.g. a key, light, image, etc.)
                     // So we keep searching up the DOM tree from the e.target element until we find one that is a SVG G element representing a device (it will have a data-device-id attribute)
-                    while (isNaN(devId = +deviceElement.dataset["deviceId"]) && deviceElement != svg)
+                    while ((isNaN(devTypeId = +deviceElement.dataset["deviceTypeId"]) || isNaN(devId = +deviceElement.dataset["deviceId"])) && deviceElement != svg)
                         deviceElement = deviceElement.parentElement;
 
                     // Once the while loop has exited, check we have a deviceId. If this isn't the case, the e.target was an element that was not a child of a device.
                     // The device id should always have a value since only devices are ever in the SVG, but this will future proof it.
-                    if (!isNaN(devId)) {
+                    if (!isNaN(devTypeId) && !isNaN(devId)) {
                         // Get a list of all OTHER devices and populate the guide position sets. This should to be done before the ghost is created
                         populateGuidePositions();
 
@@ -112,7 +112,7 @@
             svg.addEventListener('pointerup', e => {
                 // On mouse release, if we're moving an element, send the new updated device position to the Blazor server.
                 if (mode == "move") {
-                    deviceLayout.invokeMethodAsync("SetDevicePosition", devId, devX, devY);
+                    deviceLayout.invokeMethodAsync("SetDevicePosition", devTypeId, devId, devX, devY);
                     deviceElement.setAttribute('transform', `translate(${devX} ${devY})`); // Update the device position immediately otherwise it appears to 'flash' for a few ms as the Blazor server updates it
                 }
 
