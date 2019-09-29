@@ -1,0 +1,15 @@
+﻿{
+  "id":  "test-plugin",
+  "name": "Test Plugin",
+  "author": "Simon",
+  "project-site": "",
+  "version": "1.0",
+  "aurora-version": "1.2",
+  "components": {
+    "managers": [
+      "TestManager"
+    ],
+    "layers": false,
+    "assembly": "TestPlugin.dll"
+  }
+}
