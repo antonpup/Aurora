@@ -617,6 +617,10 @@
       <DependentUpon>Control_DOOM.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DOOM\DOOMApplication.cs" />
+    <Compile Include="Profiles\Divinity2\Control_Divinity2.xaml.cs">
+      <DependentUpon>Control_Divinity2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Divinity2\Divinity2Application.cs" />
     <Compile Include="Profiles\DeadCells\Control_DeadCells.xaml.cs">
       <DependentUpon>Control_DeadCells.xaml</DependentUpon>
     </Compile>
@@ -1552,6 +1556,7 @@
     <Resource Include="Resources\mc_clock_night.png" />
     <Resource Include="Resources\kf2.png" />
     <Resource Include="Resources\doom_256x256.png" />
+    <Resource Include="Resources\divinity2_256x256.png" />
     <Resource Include="Resources\factorio_64x64.png" />
     <Resource Include="Resources\quakechampions_195x195.png" />
     <Resource Include="Resources\diablo3_120x120.png" />
@@ -1999,6 +2004,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\DOOM\Control_DOOM.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Divinity2\Control_Divinity2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
