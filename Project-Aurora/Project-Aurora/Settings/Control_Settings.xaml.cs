@@ -18,6 +18,7 @@ using RazerSdkWrapper.Utils;
 using System.Net;
 using RazerSdkWrapper.Data;
 using System.Windows.Threading;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -748,232 +749,126 @@ namespace Aurora.Settings
             }
         }
 
-        #region Razer SDK Installer/Uninstaller helpers
-        private Task<int> razer_sdk_uninstall_async(bool force = false)
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                if (!force)
-                {
-                    var version = RzHelper.GetSdkVersion();
-                    if (version == new RzSdkVersion())
-                        return 0;
-                    if (RzHelper.IsSdkVersionSupported(version))
-                        return 1;
-                }
-
-                int DoUninstall(string filepath)
-                {
-                    var filename = Path.GetFileName(filepath);
-                    var path = Path.GetDirectoryName(filepath);
-                    var processInfo = new ProcessStartInfo
-                    {
-                        FileName = filename,
-                        WorkingDirectory = path,
-                        Arguments = $"/S _?={path}",
-                        ErrorDialog = true
-                    };
-
-                    var process = Process.Start(processInfo);
-                    process.WaitForExit(120000);
-                    return process.ExitCode;
-                }
-
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
-                {
-                    try
-                    {
-                        var restart = false;
-                        var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                        if (key != null)
-                        {
-                            var path = (string)key.GetValue("UninstallPath", null);
-                            var filename = (string)key.GetValue("UninstallFilename", null);
-
-                            var errorlevel = DoUninstall($@"{path}\{filename}");
-                            if (errorlevel == 3010)
-                                restart = true;
-                        }
-
-                        key = hklm.OpenSubKey(@"Software\Razer\Synapse3\PID0302MW");
-                        if (key != null)
-                        {
-                            var filepath = (string)key.GetValue("UninstallPath", null);
-                            var errorlevel = DoUninstall(filepath);
-                            if (errorlevel == 3010)
-                                restart = true;
-                        }
-
-                        key = hklm.OpenSubKey(@"Software\Razer\Synapse3\RazerChromaBroadcaster");
-                        if (key != null)
-                        {
-                            var filepath = (string)key.GetValue("UninstallerPath", null);
-                            var errorlevel = DoUninstall(filepath);
-                            if (errorlevel == 3010)
-                                restart = true;
-                        }
-
-                        return restart ? 3010 : 0;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new OperationCanceledException("Razer SDK Uninstallation failed!", ex);
-                    }
-                }
-            });
-        }
-
-        private Task<string> razer_sdk_download_async()
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
-                        client.DownloadFile(RzHelper.LatestSupportedVersionUrl, path);
-                        return path;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new OperationCanceledException("Razer SDK Downloading failed!", ex);
-                }
-            });
-        }
-
-        private Task<int> razer_sdk_install_async(string installerPath)
-        {
-            return System.Threading.Tasks.Task.Run(() =>
-            {
-                try
-                {
-                    var processInfo = new ProcessStartInfo
-                    {
-                        FileName = Path.GetFileName(installerPath),
-                        WorkingDirectory = Path.GetDirectoryName(installerPath),
-                        Arguments = "/S",
-                        ErrorDialog = true
-                    };
-
-                    var process = Process.Start(processInfo);
-                    process.WaitForExit(120000);
-                    return process.ExitCode;
-                }
-                catch (Exception ex)
-                {
-                    throw new OperationCanceledException("Razer SDK Installation failed!", ex);
-                }
-            });
-        }
-        #endregion
-
         private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
         {
-            void SetState(string name)
-                => Application.Current.Dispatcher.Invoke(() => razer_wrapper_install_button.Content = name);
+            void HandleExceptions(AggregateException ae)
+            {
+                ae.Handle(ex => {
+                    Application.Current.Dispatcher.Invoke(() =>
+                            System.Windows.MessageBox.Show(ex.ToString(), "Exception!",
+                                                        MessageBoxButton.OK, MessageBoxImage.Error));
+                    return true;
+                });
+            }
+
+            void SetButtonContent(string s)
+                => Application.Current.Dispatcher.Invoke(() => razer_wrapper_install_button.Content = s);
+
+            void ShowMessageBox(string message, string title)
+                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Exclamation));
 
             razer_wrapper_install_button.IsEnabled = false;
             razer_wrapper_uninstall_button.IsEnabled = false;
+
             System.Threading.Tasks.Task.Run(async () =>
             {
-                try
+                SetButtonContent("Uninstalling");
+                var uninstallSuccess = await RazerChromaUtils.UninstallAsync()
+                .ContinueWith(t =>
                 {
-                    SetState("Uninstalling");
-                    var errorlevel = await razer_sdk_uninstall_async();
-                    if (errorlevel == 1)
+                    if (t.Exception != null)
                     {
-                        return true;
+                        HandleExceptions(t.Exception);
+                        return false;
                     }
-                    else if (errorlevel == 3010)
+                    else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
-                            System.Windows.MessageBox.Show("The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.",
-                                                              "Restart required!", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-                        );
+                        ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.", "Restart required!");
                         return false;
                     }
 
-                    SetState("Downloading");
-                    var path = await razer_sdk_download_async();
+                    return true;
+                })
+                .ConfigureAwait(false);
 
-                    SetState("Installing");
-                    errorlevel = await razer_sdk_install_async(path);
-                    if (errorlevel == 3010)
+                if (!uninstallSuccess)
+                    return;
+
+                SetButtonContent("Downloading");
+                var downloadPath = await RazerChromaUtils.DownloadAsync()
+                .ContinueWith(t =>
+                {
+                    if (t.Exception != null)
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
-                            System.Windows.MessageBox.Show("The installer requested system restart!\nPlease reboot your pc and re-run the installation.",
-                                                              "Restart required!", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-                        );
-                        return false;
+                        HandleExceptions(t.Exception);
+                        return null;
                     }
-                }
-                catch (OperationCanceledException ex)
-                {
-                    Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"{ex.Message}:\n{ex.InnerException.ToString()}",
-                        "Exception!", MessageBoxButton.OK, MessageBoxImage.Error));
-                    return false;
-                }
 
-                return true;
-            }).ContinueWith(t =>
-            {
-                if (t.Result)
+                    return t.Result;
+                })
+                .ConfigureAwait(false);
+
+                if (downloadPath == null)
+                    return;
+
+                SetButtonContent("Installing");
+                await RazerChromaUtils.InstallAsync(downloadPath)
+                .ContinueWith(t =>
                 {
-                    SetState("Success!");
-                    Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show("Installation successful!\nPlease restart Aurora for changes to take effect.",
-                        "Success!", MessageBoxButton.OK, MessageBoxImage.Information));
-                }
-                else
-                {
-                    SetState("Failure!");
-                }
+                    if (t.Exception != null)
+                        HandleExceptions(t.Exception);
+                    else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
+                        ShowMessageBox("The installer requested system restart!\nPlease reboot your pc.", "Restart required!");
+                    else
+                    {
+                        SetButtonContent("Done!");
+                        ShowMessageBox("Installation successful!\nPlease reboot aurora for changes to take effect.", "Restart required!");
+                    }
+                })
+                .ConfigureAwait(false);
             });
         }
 
         private void razer_wrapper_uninstall_button_Click(object sender, RoutedEventArgs e)
         {
-            void SetState(string name)
-                => Application.Current.Dispatcher.Invoke(() => razer_wrapper_uninstall_button.Content = name);
+            void HandleExceptions(AggregateException ae)
+            {
+                ae.Handle(ex => {
+                    Application.Current.Dispatcher.Invoke(() =>
+                            System.Windows.MessageBox.Show(ex.ToString(), "Exception!",
+                                                        MessageBoxButton.OK, MessageBoxImage.Error));
+                    return true;
+                });
+            }
+
+            void SetButtonContent(string s)
+                => Application.Current.Dispatcher.Invoke(() => razer_wrapper_uninstall_button.Content = s);
+
+            void ShowMessageBox(string message, string title)
+                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Exclamation));
 
             razer_wrapper_install_button.IsEnabled = false;
             razer_wrapper_uninstall_button.IsEnabled = false;
+
             System.Threading.Tasks.Task.Run(async () =>
             {
-                try
+                SetButtonContent("Uninstalling");
+                await RazerChromaUtils.UninstallAsync()
+                .ContinueWith(t =>
                 {
-                    SetState("Uninstalling");
-                    var errorlevel = await razer_sdk_uninstall_async(force: true);
-                    if (errorlevel == 3010)
+                    if (t.Exception != null)
+                        HandleExceptions(t.Exception);
+                    else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
+                        ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc.", "Restart required!");
+                    else if (t.Result == (int)RazerChromaInstallerExitCode.InvalidState)
+                        ShowMessageBox("There is notting to install!", "Invalid State!");
+                    else
                     {
-                        Application.Current.Dispatcher.Invoke(() =>
-                            System.Windows.MessageBox.Show("The uninstaller requested system restart!\nPlease reboot your pc.",
-                                                              "Restart required!", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-                        );
-                        return false;
+                        SetButtonContent("Done!");
+                        ShowMessageBox("Uninstallation successful!\nPlease reboot aurora for changes to take effect.", "Restart required!");
                     }
-                }
-                catch (OperationCanceledException ex)
-                {
-                    Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show($"{ex.Message}:\n{ex.InnerException.ToString()}",
-                        "Exception!", MessageBoxButton.OK, MessageBoxImage.Error));
-                    return false;
-                }
-
-                return true;
-            }).ContinueWith(t =>
-            {
-                if (t.Result)
-                {
-                    SetState("Success!");
-                    Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show("Uninstallation successful!\nPlease restart Aurora for changes to take effect.",
-                        "Success!", MessageBoxButton.OK, MessageBoxImage.Information));
-                }
-                else
-                {
-                    SetState("Failure!");
-                }
+                })
+                .ConfigureAwait(false);
             });
         }
 
