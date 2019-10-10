@@ -753,10 +753,9 @@ namespace Aurora.Settings
         {
             void HandleExceptions(AggregateException ae)
             {
+                ShowMessageBox(ae.ToString(), "Exception!", MessageBoxImage.Error);
                 ae.Handle(ex => {
-                    Application.Current.Dispatcher.Invoke(() =>
-                            System.Windows.MessageBox.Show(ex.ToString(), "Exception!",
-                                                        MessageBoxButton.OK, MessageBoxImage.Error));
+                    Global.logger.Error(ex.ToString());
                     return true;
                 });
             }
@@ -764,8 +763,8 @@ namespace Aurora.Settings
             void SetButtonContent(string s)
                 => Application.Current.Dispatcher.Invoke(() => razer_wrapper_install_button.Content = s);
 
-            void ShowMessageBox(string message, string title)
-                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Exclamation));
+            void ShowMessageBox(string message, string title, MessageBoxImage image = MessageBoxImage.Exclamation)
+                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, image));
 
             razer_wrapper_install_button.IsEnabled = false;
             razer_wrapper_uninstall_button.IsEnabled = false;
@@ -833,19 +832,18 @@ namespace Aurora.Settings
         {
             void HandleExceptions(AggregateException ae)
             {
+                ShowMessageBox(ae.ToString(), "Exception!", MessageBoxImage.Error);
                 ae.Handle(ex => {
-                    Application.Current.Dispatcher.Invoke(() =>
-                            System.Windows.MessageBox.Show(ex.ToString(), "Exception!",
-                                                        MessageBoxButton.OK, MessageBoxImage.Error));
+                    Global.logger.Error(ex.ToString());
                     return true;
                 });
             }
 
             void SetButtonContent(string s)
                 => Application.Current.Dispatcher.Invoke(() => razer_wrapper_uninstall_button.Content = s);
-
-            void ShowMessageBox(string message, string title)
-                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Exclamation));
+            
+            void ShowMessageBox(string message, string title, MessageBoxImage image = MessageBoxImage.Exclamation)
+                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, image));
 
             razer_wrapper_install_button.IsEnabled = false;
             razer_wrapper_uninstall_button.IsEnabled = false;
