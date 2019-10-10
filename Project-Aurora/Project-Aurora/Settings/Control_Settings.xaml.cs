@@ -822,7 +822,7 @@ namespace Aurora.Settings
                     else
                     {
                         SetButtonContent("Done!");
-                        ShowMessageBox("Installation successful!\nPlease reboot aurora for changes to take effect.", "Restart required!");
+                        ShowMessageBox("Installation successful!\nPlease restart aurora for changes to take effect.", "Restart required!");
                     }
                 })
                 .ConfigureAwait(false);
@@ -861,11 +861,11 @@ namespace Aurora.Settings
                     else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
                         ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc.", "Restart required!");
                     else if (t.Result == (int)RazerChromaInstallerExitCode.InvalidState)
-                        ShowMessageBox("There is notting to install!", "Invalid State!");
+                        ShowMessageBox("There is nothing to install!", "Invalid State!");
                     else
                     {
                         SetButtonContent("Done!");
-                        ShowMessageBox("Uninstallation successful!\nPlease reboot aurora for changes to take effect.", "Restart required!");
+                        ShowMessageBox("Uninstallation successful!\nPlease restart aurora for changes to take effect.", "Restart required!");
                     }
                 })
                 .ConfigureAwait(false);
