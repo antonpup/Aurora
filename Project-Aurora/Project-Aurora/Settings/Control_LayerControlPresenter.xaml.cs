@@ -27,6 +27,7 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_LayerControlPresenter : UserControl
     {
+        private const string defaultLayerTitle = "Default Layer";
         private bool isSettingNewLayer = false;
 
         protected Layers.Layer _Layer;
@@ -54,9 +55,36 @@ namespace Aurora.Settings
             DataContext = layer;
 
             cmbLayerType.Items.Clear();
+            List<LayerHandlerEntry> layers = new List<LayerHandlerEntry>();
+            LayerHandlerEntry defaultLayer = null;
 
-            foreach(var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers))
-                cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers[layertype]);
+            foreach (var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers))
+            {
+                // Grab default layer name from constant
+                if (Global.LightingStateManager.LayerHandlers[layertype].Title.CompareTo(defaultLayerTitle) == 0)
+                {
+                    defaultLayer = Global.LightingStateManager.LayerHandlers[layertype];
+                }
+                else
+                {
+                    layers.Add(Global.LightingStateManager.LayerHandlers[layertype]);
+                }
+            }
+
+            //Add default to top of combobox
+            if (defaultLayer != null)
+            {
+                cmbLayerType.Items.Add(defaultLayer);
+            }
+
+            // Sort items before adding to combobox
+            layers.Sort((layer1, layer2) => layer1.Title.CompareTo(layer2.Title));
+
+            foreach (LayerHandlerEntry l in layers)
+            {
+                cmbLayerType.Items.Add(l);
+
+            }
 
             cmbLayerType.SelectedItem = Global.LightingStateManager.LayerHandlers[Layer.Handler.ID];
             ctrlLayerTypeConfig.Content = layer.Control;
