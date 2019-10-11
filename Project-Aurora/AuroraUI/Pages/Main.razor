@@ -2,6 +2,9 @@
 @using Aurora.Settings.Layers;
 @using AuroraUI.Utils
 @inject Aurora.AuroraCore Core
+@inject MessageBoxService Msg
+
+<MessageBox />
 
 <!-- This file contains the main layout -->
 
@@ -61,6 +64,8 @@
                             <br />
                             <InputField TValue="TestEnum" @bind-Value="TestEnumValue" />
                             <span><strong>Value:</strong> @TestEnumValue.ToString()</span>
+
+                            <button type="button" @onclick="OpenTestModal">Modal</button>
                         </SplitPanelItem>
 
                         <!-- Overview -->
@@ -92,6 +97,10 @@
     protected override void OnInitialized()
     {
         FocusedApplication = Core.LightingStateManager.DesktopProfile;
+    }
+
+    void OpenTestModal() {
+        Msg.Open("Title", @<p>Some <string>cool</string> content!</p>);
     }
 
     public enum TestEnum {
