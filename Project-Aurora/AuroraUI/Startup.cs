@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Aurora;
 using Aurora.Devices.Layout;
+using AuroraUI.Services;
 
 namespace AuroraUI {
     public class Startup
@@ -22,6 +23,7 @@ namespace AuroraUI {
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMessageBox();
             services.AddSingleton(AuroraCore.Instance);
             services.AddSingleton(GlobalDeviceLayout.Instance);
             services.AddBlazorContextMenu(opt => {

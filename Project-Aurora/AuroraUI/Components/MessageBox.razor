@@ -1,0 +1,26 @@
+﻿@inject MessageBoxService MsgService
+
+<div class="message-box-container @(isOpen ? "active" : "")">
+    <div class="message-box">
+        <div class="msg-title">@messageBox?.Title</div>
+        @if (messageBox?.CanClose == false) {
+            <a href="javascript:void(0)" class="msg-close" @onclick="() => isOpen = false">&times;</a>
+        }
+        <div class="msg-content">
+            @messageBox?.Content
+        </div>
+    </div>
+</div>
+
+@code {
+    bool isOpen;
+    MessageBoxParameters messageBox;
+
+    protected override void OnInitialized() {
+        MsgService.MessageBoxOpen += @params => {
+            isOpen = true;
+            messageBox = @params;
+            StateHasChanged();
+        };
+    }
+}

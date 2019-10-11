@@ -72,6 +72,55 @@ button::-moz-focus-inner {
 
 
 /* This stuff will be reworked into a theme CSS file. Need to determine which properties are part of the theme and which should be constantly there */
+.message-box-container {
+    position: fixed;
+    z-index: 99;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background-color: #0000;
+    pointer-events: none;
+    transition: background-color var(--transition-timing);
+}
+.message-box-container.active {
+    background-color: #0008;
+    pointer-events: all;
+}
+.message-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: #2B313A;
+    color: #F9F9F9;
+    transition: transform var(--transition-timing);
+}
+.message-box-container.active .message-box {
+    transform: translate(-50%, -50%) scale(1);
+}
+.msg-title, .msg-content {
+    padding: .75rem;
+}
+.msg-title {
+    font-size: 1.25rem;
+}
+.msg-close {
+    position: absolute;
+    top: 0;
+    right: .75rem;
+    font-size: 2rem;
+    color: inherit;
+    opacity: .3;
+    text-decoration: none;
+    transition: opacity var(--transition-timing);
+}
+.msg-close:hover {
+    opacity: .7;
+}
+.msg-content {
+
+}
+
+
 .application-list li button {
     display: flex;
     width: 100%;
