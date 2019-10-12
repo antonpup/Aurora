@@ -19,7 +19,7 @@
                         <Run Text="These mods are not authored by the main Aurora developers and any issues with these mods should not be directed at them, but posted on the relevant Nexusmods or Github site for the mod." />
                         <Run Text="You can also install the mod through the in-game Mod Browser"/>
                     </TextBlock>
-                    <Button Content="Terraria QModManager download" HorizontalAlignment="Left" Margin="0,0,0,0" Padding="10,2" Click="GoToQModManagerPage_Click" />
+                    <Button Content="TModLoader download" HorizontalAlignment="Left" Margin="0,0,0,0" Padding="10,2" Click="GoToTModLoaderPage_Click" Width="224" />
                     <Button Content="Aurora GSI Mod for Terraria download" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="10,2" Click="GoToModDownloadPage_Click" />
                 </StackPanel>
             </TabItem>

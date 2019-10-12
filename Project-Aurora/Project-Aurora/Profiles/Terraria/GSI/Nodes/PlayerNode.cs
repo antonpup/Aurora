@@ -77,7 +77,7 @@ namespace Aurora.Profiles.Terraria.GSI.Nodes {
 
             Depth = GetInt("depth");
             DepthLayer = (TerrariaDepth)GetInt("depthLayer");
-            MaxDepth = GetInt("maxDepth");
+            MaxDepth = GetInt("maxdepth");
             Biome = (TerrariaBiome)GetInt("biome");
 
             InGlowshroom = GetBool("zoneGlowshroom");

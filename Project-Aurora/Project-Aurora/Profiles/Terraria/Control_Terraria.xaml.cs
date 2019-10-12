@@ -48,7 +48,7 @@ namespace Aurora.Profiles.Terraria {
             }
         }
 
-        private void GoToQModManagerPage_Click(object sender, RoutedEventArgs e)
+        private void GoToTModLoaderPage_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(@"https://tmodloader.net/");
         }
