@@ -1,5 +1,6 @@
 ﻿using Aurora.Devices.RGBNet;
 using RGB.NET.Devices.Corsair;
+using System.IO;
 
 namespace Aurora.Devices.Corsair
 {
@@ -14,7 +15,7 @@ namespace Aurora.Devices.Corsair
         #region Constructors
         
         public CorsairDevice()
-            : base(new CorsairDeviceProviderLoader().GetDeviceProvider(), new CorsairRGBNetBrush())
+            : base(new CorsairDeviceProviderLoader().GetDeviceProvider(), new CustomRGBNetBrush(Path.Combine(Global.ExecutingDirectory, "CorsairLedMapping.txt")))
         { }
 
         #endregion
