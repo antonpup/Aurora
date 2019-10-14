@@ -1,6 +1,7 @@
 ﻿using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +14,16 @@ namespace Aurora.Devices.RGBNet
 
         public CustomRGBNetBrush(string path)
         {
+            if (!File.Exists(path))
+                return;
+
             try
             {
-                foreach (var line in System.IO.File.ReadAllLines(path).Where(d => !d.StartsWith("//") && !string.IsNullOrWhiteSpace(d)))
+                foreach (var line in File.ReadAllLines(path).Where(d => !d.StartsWith("//") && !string.IsNullOrWhiteSpace(d)))
                 {
-                    var ids = line.Split(',');
+                    var ids = line.Replace(" ","").Split(',');
                     var ledid = ids[0].Replace("LedId.", "");
-                    var devicekey = ids[1].Replace(" DeviceKeys.", "");
+                    var devicekey = ids[1].Replace("DeviceKeys.", "");
 
                     if (Enum.TryParse(ledid, out LedId led) && Enum.TryParse(devicekey, out DeviceKeys dev))
                         LedMapping.Add(led, dev);

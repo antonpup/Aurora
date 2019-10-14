@@ -15,7 +15,7 @@ namespace Aurora.Devices.Corsair
         #region Constructors
         
         public CorsairDevice()
-            : base(new CorsairDeviceProviderLoader().GetDeviceProvider(), new CustomRGBNetBrush(Path.Combine(Global.ExecutingDirectory, "CorsairLedMapping.txt")))
+            : base(new CorsairDeviceProviderLoader().GetDeviceProvider(), new CustomRGBNetBrush(Path.Combine(Global.ExecutingDirectory,"kb_layouts", "CorsairLedMapping.txt")))
         { }
 
         #endregion
