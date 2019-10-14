@@ -96,6 +96,7 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
+            devices.Add(new DeviceContainer(new Devices.Omen.OmenDevice()));                 // OMEN Device
             devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
             devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
             devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device

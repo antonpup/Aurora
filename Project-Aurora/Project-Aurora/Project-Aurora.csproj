@@ -428,8 +428,10 @@
     </Compile>
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
+
     <Compile Include="Devices\Corsair\CorsairRGBNetBrush.cs" />
     <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
+
     <Compile Include="Devices\Drevo\DrevoDevice.cs" />
     <Compile Include="Devices\Drevo\DrevoLayoutMap.cs" />
     <Compile Include="Devices\Drevo\DrevoRadiSDK.cs" />
@@ -443,6 +445,10 @@
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\NZXT\NZXTLayoutMap.cs" />
+    <Compile Include="Devices\Omen\OmenDevice.cs" />
+    <Compile Include="Devices\Omen\OmenKeyboard.cs" />
+    <Compile Include="Devices\Omen\OmenMouse.cs" />
+    <Compile Include="Devices\Omen\OmenMousePad.cs" />
     <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -464,8 +470,10 @@
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
+
     <Compile Include="Devices\Wooting\WootingDevice.cs" />
     <Compile Include="Devices\YeeLight\YeeLightDevice.cs" />
+
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -1075,7 +1083,21 @@
     <None Include="kb_layouts\Extra Features\generic_mousepad.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+
     <None Include="kb_layouts\Extra Features\wooting_two_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_outpost_plus_photon_features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_sequencer_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_sequencer_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_sequencer_features.json">
+
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\logitech_gpro_features.json">
@@ -1195,6 +1217,9 @@
     <None Include="kb_layouts\Extra Features\steelseries_rival_300_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\omen_photon_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_rival_300_hp_omen_edition_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1208,6 +1233,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\omen_sequencer.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_gpro.json">
@@ -1530,6 +1558,16 @@
     <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_outpost_outline.png" />
+    <Content Include="kb_layouts\Extra Features\images\omen_outpost_plus_photon_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_photon_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_sequencer_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\SoundBlasterX_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1568,6 +1606,7 @@
     <Content Include="Logi\LGS\LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+
     <Resource Include="Resources\ch_128x128.png" />
     <Resource Include="Resources\re2_256x256.png" />
     <Resource Include="Resources\LayerConditions_icon.png" />
@@ -1585,6 +1624,9 @@
     <Content Include="RazerSdkWrapper.dll" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OmenLightingSDK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -2520,7 +2562,7 @@
     <Error Condition="!Exists('..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets'))" />
   </Target>
   <Import Project="..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets" Condition="Exists('..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 
        Other similar extension points exist, see Microsoft.Common.targets.
 

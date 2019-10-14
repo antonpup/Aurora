@@ -748,8 +748,13 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
             else if (keyboard_preference == PreferredKeyboard.Drevo_BladeMaster)
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
+
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Sequencer)
+                layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
+
             else
             {
                 LoadNone();
@@ -854,6 +859,12 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Photon:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Outpost_Plus_Photon:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json");
                         break;
                 }
 
@@ -1068,7 +1079,7 @@ namespace Aurora.Settings
                 }
 
                 _bitmapMapInvalid = false;
-                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
+                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width)
                 Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }

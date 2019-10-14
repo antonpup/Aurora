@@ -352,14 +352,14 @@ namespace Aurora.Settings.Layers
                 case AmbilightCaptureType.SpecificProcess:
                 case AmbilightCaptureType.ForegroundApp:
                     IntPtr handle = IntPtr.Zero;
-                    //the image processing is the same for both methods, 
+                    //the image processing is the same for both methods,
                     //only the handle of the window changes,
                     //so we don't need to repeat that last part
-                    if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)                
-                        handle = User32.GetForegroundWindow();                
-                    else if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))                 
+                    if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)
+                        handle = User32.GetForegroundWindow();
+                    else if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))
                         handle = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(Properties.SpecificProcess))
-                                .Where(p => p.MainWindowHandle != IntPtr.Zero).FirstOrDefault().MainWindowHandle;                    
+                                .Where(p => p.MainWindowHandle != IntPtr.Zero).FirstOrDefault().MainWindowHandle;
 
                     if (screen != null && handle != IntPtr.Zero)
                     {
@@ -379,7 +379,7 @@ namespace Aurora.Settings.Layers
 
                         using (var graphics = Graphics.FromImage(newImage))
                             graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-                    }                   
+                    }
                     break;
                 case AmbilightCaptureType.Coordinates:
                     if (screen != null)
@@ -426,7 +426,7 @@ namespace Aurora.Settings.Layers
         private IEnumerable<(Adapter1 Adapter, Output1 Output)> GetAdapters()
         {
             using (var fac = new Factory1())
-                return fac.Adapters1.SelectMany(M => M.Outputs.Select(N => (M, N.QueryInterface<Output1>())));           
+                return fac.Adapters1.SelectMany(M => M.Outputs.Select(N => (M, N.QueryInterface<Output1>())));
         }
 
         /// <summary>
