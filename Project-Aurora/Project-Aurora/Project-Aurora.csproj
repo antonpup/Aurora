@@ -429,6 +429,7 @@
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
 
+
     <Compile Include="Devices\Corsair\CorsairRGBNetBrush.cs" />
     <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
 
@@ -470,10 +471,8 @@
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
-
     <Compile Include="Devices\Wooting\WootingDevice.cs" />
     <Compile Include="Devices\YeeLight\YeeLightDevice.cs" />
-
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -1563,6 +1562,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\omen_photon_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_photon_scrollwheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\omen_sequencer_logo.png">
