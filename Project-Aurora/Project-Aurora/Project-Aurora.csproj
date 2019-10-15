@@ -366,6 +366,7 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Omen\LightingColor.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
@@ -428,11 +429,8 @@
     </Compile>
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
-
-
     <Compile Include="Devices\Corsair\CorsairRGBNetBrush.cs" />
     <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
-
     <Compile Include="Devices\Drevo\DrevoDevice.cs" />
     <Compile Include="Devices\Drevo\DrevoLayoutMap.cs" />
     <Compile Include="Devices\Drevo\DrevoRadiSDK.cs" />
@@ -1082,7 +1080,6 @@
     <None Include="kb_layouts\Extra Features\generic_mousepad.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-
     <None Include="kb_layouts\Extra Features\wooting_two_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1096,7 +1093,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\omen_sequencer_features.json">
-
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\logitech_gpro_features.json">
@@ -1608,7 +1604,6 @@
     <Content Include="Logi\LGS\LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-
     <Resource Include="Resources\ch_128x128.png" />
     <Resource Include="Resources\re2_256x256.png" />
     <Resource Include="Resources\LayerConditions_icon.png" />
