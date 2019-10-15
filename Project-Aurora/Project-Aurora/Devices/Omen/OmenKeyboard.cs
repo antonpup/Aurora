@@ -60,14 +60,14 @@ namespace Aurora.Devices.Omen
             if (list.Count > 0)
             {
                 list.ToArray();
-				if(hKB != IntPtr.Zero)
-				{
-					int res = OmenLighting_Keyboard_SetStaticEffect(hKB, list.ToArray(), list.Count, IntPtr.Zero);
-					if (res != 0)
-					{
-						Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
-					}
-				}
+                if (hKB != IntPtr.Zero)
+                {
+                    int res = OmenLighting_Keyboard_SetStaticEffect(hKB, list.ToArray(), list.Count, IntPtr.Zero);
+                    if (res != 0)
+                    {
+                        Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
+                    }
+                }
             }
         }
 
@@ -346,8 +346,8 @@ namespace Aurora.Devices.Omen
             try
             {
                 OmenLighting_Keyboard_Close(hKB);
-				hKB = IntPtr.Zero;
-			}
+                hKB = IntPtr.Zero;
+            }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN Keyboard, Exception during Shutdown. Message: " + exc);

@@ -51,8 +51,6 @@ namespace Aurora.Devices.Omen
             MOUSE_LIGHTING_ZONE_WHEEL = 2,                          /* Wireless connection */
         }
 
-
-
         public void SetLights(DeviceKeys key, Color color)
         {
             try
@@ -72,15 +70,14 @@ namespace Aurora.Devices.Omen
             }
         }
 
-
         internal void Shutdown()
         {
             try
             {
                 OmenLighting_Mouse_Close(hMouse);
-				hMouse = IntPtr.Zero;
+                hMouse = IntPtr.Zero;
 
-			}
+            }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN Mouse, exception during shutdown: " + exc);
