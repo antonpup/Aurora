@@ -56,13 +56,13 @@ namespace Aurora.Devices.Omen
             try
             {
                 if (hMouse != IntPtr.Zero)
-			{
-				int res = OmenLighting_Mouse_SetStaticEffect(hMouse, GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
-				if (res != 0)
-				{
-					Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
-				}
-			}
+                {
+                    int res = OmenLighting_Mouse_SetStaticEffect(hMouse, GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
+                    if (res != 0)
+                    {
+                        Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
+                    }
+                }
             }
             catch (Exception exc)
             {
