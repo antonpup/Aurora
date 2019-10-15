@@ -1,13 +1,9 @@
 
 using Newtonsoft.Json;
 
-﻿using Aurora.Profiles;
+using Aurora.Profiles;
 using Aurora.Profiles.Generic_Application;
-using Aurora.Profiles.Overlays;
-using Aurora.Profiles.Overlays.SkypeOverlay;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,9 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 
-using Aurora.Profiles.Generic_Application;
-using Aurora.Profiles;
-using Newtonsoft.Json.Serialization;
 
 
 namespace Aurora.Settings
@@ -187,7 +180,7 @@ namespace Aurora.Settings
         Logitech_G810 = 102,
         [Description("Logitech - GPRO")]
         Logitech_GPRO = 103,
-		[Description("Logitech - G213")]
+        [Description("Logitech - G213")]
         Logitech_G213 = 104,
 
         //Corsair range is 200-299
@@ -252,13 +245,13 @@ namespace Aurora.Settings
         [Description("Drevo BladeMaster")]
         Drevo_BladeMaster = 1000,
 
-	    //Creative range is 1100-1199
+        //Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
         //OMEN range 1200-1299
         [Description("OMEN Sequencer")]
-        OMEN_Sequencer= 1201,
+        OMEN_Sequencer = 1201,
     }
 
     public enum PreferredKeyboardLocalization
