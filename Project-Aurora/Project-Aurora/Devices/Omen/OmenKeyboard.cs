@@ -5,17 +5,16 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static Aurora.Devices.Omen.OmenDevice;
 
 namespace Aurora.Devices.Omen
 {
     public class OmenKeyboard
     {
-        private readonly IntPtr kboardPointer;
+        private IntPtr hKB = IntPtr.Zero;
 
-        private OmenKeyboard(IntPtr kboardPointer)
+        private OmenKeyboard(IntPtr hKB)
         {
-            this.kboardPointer = kboardPointer;
+            this.hKB = hKB;
         }
 
         public static OmenKeyboard GetOmenKeyboard()
@@ -47,9 +46,6 @@ namespace Aurora.Devices.Omen
             public int col;
         }
 
-
-
-
         public void SetKeys(Dictionary<DeviceKeys, Color> keyColors)
         {
             List<StaticKeyEffect> list = new List<StaticKeyEffect>();
@@ -64,7 +60,14 @@ namespace Aurora.Devices.Omen
             if (list.Count > 0)
             {
                 list.ToArray();
-                OmenLighting_Keyboard_SetStaticEffect(kboardPointer, list.ToArray(), list.Count, IntPtr.Zero);
+                if (hKB != IntPtr.Zero)
+                {
+                    int res = OmenLighting_Keyboard_SetStaticEffect(hKB, list.ToArray(), list.Count, IntPtr.Zero);
+                    if (res != 0)
+                    {
+                        Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
+                    }
+                }
             }
         }
 
@@ -342,7 +345,8 @@ namespace Aurora.Devices.Omen
         {
             try
             {
-                OmenLighting_Keyboard_Close(kboardPointer);
+                OmenLighting_Keyboard_Close(hKB);
+                hKB = IntPtr.Zero;
             }
             catch (Exception exc)
             {
@@ -355,9 +359,6 @@ namespace Aurora.Devices.Omen
 
         [DllImport("OmenLightingSDK.dll")]
         static extern int OmenLighting_Keyboard_SetStaticEffect(IntPtr hKeyboard, StaticKeyEffect[] staticEffect, int count, IntPtr keyboardLightingEffectProperty);
-
-        //[DllImport("OmenLightingSDK.dll")]
-        //static extern bool OmenLighting_SetSingleKeyStaticEffect(IntPtr hKeyboard, StaticEffect staticEffect);
 
         [DllImport("OmenLightingSDK.dll")]
         static extern IntPtr OmenLighting_Keyboard_Open();
