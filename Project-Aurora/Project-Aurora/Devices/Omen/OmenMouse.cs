@@ -55,7 +55,9 @@ namespace Aurora.Devices.Omen
 
         public void SetLights(DeviceKeys key, Color color)
         {
-			if(hMouse != IntPtr.Zero)
+            try
+            {
+                if (hMouse != IntPtr.Zero)
 			{
 				int res = OmenLighting_Mouse_SetStaticEffect(hMouse, GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
 				if (res != 0)
@@ -63,6 +65,11 @@ namespace Aurora.Devices.Omen
 					Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
 				}
 			}
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("OMEN Mouse, exception during set lights: " + exc);
+            }
         }
 
 
@@ -76,7 +83,7 @@ namespace Aurora.Devices.Omen
 			}
             catch (Exception exc)
             {
-                Global.logger.Error("OMEN Mouse, Exception during Shutdown. Message: " + exc);
+                Global.logger.Error("OMEN Mouse, exception during shutdown: " + exc);
             }
         }
 
