@@ -51,29 +51,26 @@ namespace Aurora.Devices.Omen
             MOUSE_LIGHTING_ZONE_WHEEL = 2,                          /* Wireless connection */
         }
 
-
-
         public void SetLights(DeviceKeys key, Color color)
         {
-			if(hMouse != IntPtr.Zero)
-			{
-				int res = OmenLighting_Mouse_SetStaticEffect(hMouse, GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
-				if (res != 0)
-				{
-					Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
-				}
-			}
+            if (hMouse != IntPtr.Zero)
+            {
+                int res = OmenLighting_Mouse_SetStaticEffect(hMouse, GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
+                if (res != 0)
+                {
+                    Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
+                }
+            }
         }
-
 
         internal void Shutdown()
         {
             try
             {
                 OmenLighting_Mouse_Close(hMouse);
-				hMouse = IntPtr.Zero;
+                hMouse = IntPtr.Zero;
 
-			}
+            }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN Mouse, Exception during Shutdown. Message: " + exc);

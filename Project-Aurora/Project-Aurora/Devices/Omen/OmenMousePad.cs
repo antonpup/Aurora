@@ -32,8 +32,8 @@ namespace Aurora.Devices.Omen
             try
             {
                 OmenLighting_MousePad_Close(hMousePad);
-				hMousePad = IntPtr.Zero;
-			}
+                hMousePad = IntPtr.Zero;
+            }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN MousePad, Exception during Shutdown. Message: " + exc);
@@ -45,14 +45,14 @@ namespace Aurora.Devices.Omen
             int zone;
             zone = (key == DeviceKeys.MOUSEPADLIGHT15 ? (int)MousePadZone.MOUSE_PAD_ZONE_LOGO : (int)MousePadZone.MOUSE_PAD_ZONE_0 + ((int)key - (int)DeviceKeys.MOUSEPADLIGHT1));
 
-			if(hMousePad != IntPtr.Zero)
-			{
-				int res = OmenLighting_MousePad_SetStaticEffect(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
-				if(res != 0)
-				{
-					Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
-				}
-			}
+            if (hMousePad != IntPtr.Zero)
+            {
+                int res = OmenLighting_MousePad_SetStaticEffect(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
+                if (res != 0)
+                {
+                    Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
+                }
+            }
         }
 
         public enum MousePadZone
