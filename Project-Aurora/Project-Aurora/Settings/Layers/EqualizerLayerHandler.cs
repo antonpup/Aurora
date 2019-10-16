@@ -263,6 +263,11 @@ namespace Aurora.Settings.Layers
 
                 // The region in which to draw the equalizer.
                 var rect = Properties.Sequence.GetAffectedRegion(); //new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
+                if (rect.Width == 0 || rect.Height == 0)
+                {
+                    // No region to draw in, prevents filling log with exceptions
+                    return new EffectLayer();
+                }
 
                 if (BgEnabled)
                     equalizer_layer.Set(Properties.Sequence, Properties.DimColor);
@@ -367,7 +372,7 @@ namespace Aurora.Settings.Layers
                 return equalizer_layer;
 
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
                 return new EffectLayer();

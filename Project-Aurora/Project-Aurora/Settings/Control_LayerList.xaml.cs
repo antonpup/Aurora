@@ -215,7 +215,8 @@ namespace Aurora.Settings {
         /// </summary>
         private void UserControl_GotFocus(object sender, RoutedEventArgs e)
         {
-            if ((LayerCollection?.Count ?? 0) > 0)
+            var cur = lstLayers.SelectedItem as Layer;
+            if ((cur == null || !LayerCollection.Contains(cur)) && (LayerCollection?.Count ?? 0) > 0)
                 this.lstLayers.SelectedItem = LayerCollection[0];
         }
         #endregion
