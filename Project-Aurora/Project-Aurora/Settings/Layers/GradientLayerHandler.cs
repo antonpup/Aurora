@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace Aurora.Settings.Layers
 {
     public class GradientLayerHandlerProperties : LayerHandlerProperties2Color<GradientLayerHandlerProperties>
     {
+        [Overrides.LogicOverridable("Gradient")]
         public LayerEffectConfig _GradientConfig { get; set; }
 
         [JsonIgnore]
@@ -26,10 +28,12 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
-            this._GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()).SetAnimationType(AnimationType.None);
+            this._GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()) { AnimationType = AnimationType.None };
         }
     }
 
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientLayerHandler : LayerHandler<GradientLayerHandlerProperties>
     {
         private EffectLayer temp_layer;

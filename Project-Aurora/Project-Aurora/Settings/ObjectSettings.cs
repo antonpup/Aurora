@@ -20,8 +20,10 @@ namespace Aurora.Settings
 
         protected void SaveSettings(Type settingsType)
         {
-            if (Settings == null)
+            if (Settings == null) {
                 Settings = (T)Activator.CreateInstance(settingsType);
+                SettingsCreateHook();
+            }
 
             string dir = Path.GetDirectoryName(SettingsSavePath);
             if (!Directory.Exists(dir))
@@ -29,6 +31,9 @@ namespace Aurora.Settings
 
             File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
         }
+
+        /// <summary>A method that is called immediately after the settings being created. Can be overriden to provide specalized handling.</summary>
+        protected virtual void SettingsCreateHook() { }
 
         protected void LoadSettings()
         {

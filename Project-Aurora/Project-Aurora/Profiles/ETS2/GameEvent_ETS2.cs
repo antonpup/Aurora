@@ -53,10 +53,7 @@ namespace Aurora.Profiles.ETS2 {
             _game_state = new GameState_ETS2(default(ETS2MemoryStruct));
         }
 
-        public override void UpdateLights(EffectFrame frame) {
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
-            ETS2Profile settings = (ETS2Profile)this.Application.Profile;
-
+        public override void UpdateTick() {
             if (Process.GetProcessesByName(processName).Length > 0 && memAccessor != null) {
                 // -- Below code adapted from the ETS2 Telemetry Server by Funbit (https://github.com/Funbit/ets2-telemetry-server) --
                 IntPtr memPtr = IntPtr.Zero;
@@ -75,13 +72,6 @@ namespace Aurora.Profiles.ETS2 {
                 }
                 // -- End ETS2 Telemetry Server code --
             }
-
-            foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
-                if (layer.Enabled && layer.LogicPass)
-                    layers.Enqueue(layer.Render(_game_state));
-
-            this.Application.UpdateEffectScripts(layers);
-            frame.AddLayers(layers.ToArray());
         }
 
         public override void SetGameState(IGameState new_game_state) { }

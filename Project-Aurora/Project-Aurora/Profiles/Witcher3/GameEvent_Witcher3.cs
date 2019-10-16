@@ -1,63 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Aurora.EffectsEngine;
-using System.Diagnostics;
-using Aurora.Utils;
-using System.IO.MemoryMappedFiles;
-using System.Runtime.InteropServices;
-using Aurora.Profiles.Witcher3.GSI;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Text;
+using Aurora.EffectsEngine;
+using Aurora.Profiles.Witcher3.GSI;
 using Aurora.Profiles.Witcher3.GSI.Nodes;
 
 namespace Aurora.Profiles.Witcher3
 {
     public class GameEvent_Witcher3 : LightEvent
     {
-        private bool isInitialized = false;
-        private readonly Regex _configRegex;
         private string configContent;
-        string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3";
-        string dataPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3", "user.settings");
-        //Most of this code, and the mod was taken from https://github.com/SpoinkyNL/Artemis/, with Spoinky's permission
+        private bool isGameStateDirty = false;//used to know if we need to update the gamestate or not
+        private static readonly string artemisString = "[Artemis]";
+        private static readonly string configFolder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\The Witcher 3";
+        private static readonly string configFile = Path.Combine(configFolder, "user.settings");
+        //The mod this uses was taken from https://github.com/SpoinkyNL/Artemis/, with Spoinky's permission
         public GameEvent_Witcher3() : base()
         {
-            _configRegex = new Regex("\\[Artemis\\](.+?)\\[", RegexOptions.Singleline);
-
-            if (Directory.Exists(dataFolder))
+            if (Directory.Exists(configFolder))
             {
-                FileSystemWatcher watcher = new FileSystemWatcher();
-                watcher.Path = dataFolder;
-                watcher.Changed += dataFile_Changed;
-                watcher.EnableRaisingEvents = true;
+                FileSystemWatcher watcher = new FileSystemWatcher()
+                {
+                    Path = configFolder,
+                    Filter = "user.settings",
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    EnableRaisingEvents = true
+                };
+                watcher.Changed += OnConfigFileChanged;
+            }
 
-                ReloadData();
+            ReadConfigFile();
+        }
+
+        private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
+        {
+            ReadConfigFile();
+        }
+
+        private void ReadConfigFile()
+        {
+            if (File.Exists(configFile))
+            {
+                try
+                {
+                    using (var reader = new StreamReader(File.Open(configFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+                    {
+                        configContent = reader.ReadToEnd();
+                    }
+                    isGameStateDirty = true;
+                }
+                catch (IOException) { }//ignore read exception
             }
         }
 
-        private void dataFile_Changed(object sender, FileSystemEventArgs e)
+
+        /// <summary>
+        /// Returns each useful field parsed from the game file, or null if nothing found
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private string[] GetUsefulData(string file)
         {
-            if (e.Name.Equals("user.settings") && e.ChangeType == WatcherChangeTypes.Changed)
-                ReloadData();
+            try
+            {
+                int start = file.IndexOf(artemisString);//finds the beginning of the artemis string
+                int end = file.IndexOf("[", start + artemisString.Length);//finds the first [ after the artemis section header
+                return file.Substring(start, end - start)//obtains just the useful part of the config
+                           .Replace("\n", "")//removes all \n
+                           .Split('\r')//splits into lines
+                           .Where(s => s != string.Empty && !s.Contains("Artemis"))//removes last empty line and header
+                           .ToArray();
+            }
+            catch//if we reach the catch block, we either didnt find anything, or what we found wasnt formatted correctly
+            {//most likely the mod isnt installed properly
+                return null;
+            }
         }
 
-        private void ReloadData()
+        /// <summary>
+        /// Returns an int referring to the field identified by the name parameter
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private int GetInt(string[] data, string name)
         {
-            if (File.Exists(dataPath))
+            try
             {
-                var reader = new StreamReader(File.Open(dataPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-                configContent = reader.ReadToEnd();
-                reader.Close();
-                reader.Dispose();
-
-                isInitialized = true;
+                return int.Parse(data.FirstOrDefault(d => d.Contains(name)).Split('=')[1].Split('.')[0]);
             }
-            else
+            catch
             {
-                isInitialized = false;
+                return -1;
             }
         }
 
@@ -66,87 +102,39 @@ namespace Aurora.Profiles.Witcher3
             _game_state = new GameState_Witcher3();
         }
 
-        public new bool IsEnabled
-        {
-            get { return this.Application.Settings.IsEnabled && isInitialized; }
-        }
-
         public override void UpdateLights(EffectFrame frame)
         {
             Queue<EffectLayer> layers = new Queue<EffectLayer>();
 
-            if (File.Exists(dataPath))
+            if (File.Exists(configFile))
             {
-                if(configContent != null)
+                if (configContent != null && isGameStateDirty)
                 {
-                    var signRes = _configRegex.Match(configContent);
-                    var parts = signRes.Value.Split('\n').Skip(1).Select(v => v.Replace("\r", "")).ToList();
-                    if (parts.Count != 0)
+                    try
                     {
-                        parts.RemoveAt(parts.Count - 1);
+                        var data = GetUsefulData(configContent);
+                        if (data != null)//if this is null, no useful data was found
+                        {
+                            var player = (_game_state as GameState_Witcher3).Player;
 
-                        // Update sign
-                        var sign = parts.FirstOrDefault(p => p.Contains("ActiveSign="));
-                        if (sign != null)
-                        {
-                            var signString = sign.Split('=')[1];
-                            switch (signString)
-                            {
-                                case "ST_Aard":
-                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Aard;
-                                    break;
-                                case "ST_Yrden":
-                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Yrden;
-                                    break;
-                                case "ST_Igni":
-                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Igni;
-                                    break;
-                                case "ST_Quen":
-                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Quen;
-                                    break;
-                                case "ST_Axii":
-                                    (_game_state as GameState_Witcher3).Player.ActiveSign = WitcherSign.Axii;
-                                    break;
-                            }
-                        }
+                            player.Toxicity = GetInt(data, "Toxicity");
+                            player.Stamina = GetInt(data, "Stamina");
+                            player.MaximumHealth = GetInt(data, "MaxHealth");
+                            player.CurrentHealth = GetInt(data, "CurrHealth");
+                            if (Enum.TryParse(data.FirstOrDefault(d => d.Contains("ActiveSign")).Split('=').Last().Replace("ST_", ""), out WitcherSign sign)) ;
+                                player.ActiveSign = sign;//tries to parse the sign text into the enum
 
-                        // Update max health
-                        var maxHealth = parts.FirstOrDefault(p => p.Contains("MaxHealth="));
-                        if (maxHealth != null)
-                        {
-                            var maxHealthInt = int.Parse(maxHealth.Split('=')[1].Split('.')[0]);
-                            (_game_state as GameState_Witcher3).Player.MaximumHealth = maxHealthInt;
+                            isGameStateDirty = false;
                         }
-                        // Update health
-                        var health = parts.FirstOrDefault(p => p.Contains("CurrHealth="));
-                        if (health != null)
-                        {
-                            var healthInt = int.Parse(health.Split('=')[1].Split('.')[0]);
-                            (_game_state as GameState_Witcher3).Player.CurrentHealth = healthInt;
-                        }
-                        // Update stamina
-                        var stamina = parts.FirstOrDefault(p => p.Contains("Stamina="));
-                        if (stamina != null)
-                        {
-                            var staminaInt = int.Parse(stamina.Split('=')[1].Split('.')[0]);
-                            (_game_state as GameState_Witcher3).Player.Stamina = staminaInt;
-                        }
-                        // Update Toxicity
-                        var toxicity = parts.FirstOrDefault(p => p.Contains("Toxicity="));
-                        if (toxicity != null)
-                        {
-                            var toxicityInt = int.Parse(toxicity.Split('=')[1].Split('.')[0]);
-                            (_game_state as GameState_Witcher3).Player.Toxicity = toxicityInt;
-                        }
-                    }                   
+                    }
+                    catch
+                    { }
                 }
             }
-            //Artemis code
-
 
             foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
             {
-                if (layer.Enabled && layer.LogicPass)
+                if (layer.Enabled)
                     layers.Enqueue(layer.Render(_game_state));
             }
 

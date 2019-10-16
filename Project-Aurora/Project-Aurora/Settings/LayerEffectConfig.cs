@@ -27,6 +27,19 @@ namespace Aurora.Settings
         public bool animation_reverse;
         public EffectBrush brush;
 
+        // Added properties so we can use WPF to bind to the fields
+        // Unfortunately we CANNOT use auto-properties (and keep the correct naming convention (upper-case first letter)) because
+        // then there would be no lowercase name and the JSON would not be able to be deserialized properly, breaking all existing
+        // profiles. >:( Little bit frustrating and verbose. Perhaps we can replace this next time there is a breaking change...
+        [JsonIgnore] public Color Primary { get => primary; set => primary = value; }
+        [JsonIgnore] public Color Secondary { get => secondary; set => secondary = value; }
+        [JsonIgnore] public float Speed { get => speed; set => speed = value; }
+        [JsonIgnore] public float Angle { get => angle; set => angle = value; }
+        [JsonIgnore] public AnimationType AnimationType { get => animation_type; set => animation_type = value; }
+        [JsonIgnore] public bool AnimationReverse { get => animation_reverse; set => animation_reverse = value; }
+        [JsonIgnore] public EffectBrush Brush { get => brush; set => brush = value; }
+
+
         [JsonIgnoreAttribute]
         public float shift_amount = 0.0f;
         [JsonIgnoreAttribute]
@@ -63,34 +76,6 @@ namespace Aurora.Settings
                     }
                 }
                 );
-        }
-
-        public LayerEffectConfig SetAnimationSpeed(float speed)
-        {
-            this.speed = speed;
-
-            return this;
-        }
-
-        public LayerEffectConfig SetAnimationAngle(float angle)
-        {
-            this.angle = angle;
-
-            return this;
-        }
-
-        public LayerEffectConfig SetAnimationType(AnimationType type)
-        {
-            animation_type = type;
-
-            return this;
-        }
-
-        public LayerEffectConfig SetAnimationDirection(bool reverse)
-        {
-            animation_reverse = reverse;
-
-            return this;
         }
 
         public LayerEffectConfig(LayerEffectConfig otherConfig)

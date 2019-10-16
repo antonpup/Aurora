@@ -395,6 +395,7 @@ namespace Aurora.Devices.CoolerMaster
         private bool peripheral_updated = false;
 
         private readonly object action_lock = new object();
+        private VariableRegistry default_registry = null;
 
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
@@ -531,8 +532,23 @@ namespace Aurora.Devices.CoolerMaster
 
         private void SetOneKey(int[] key, Color color)
         {
-            color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-            CoolerMasterSDK.KEY_COLOR key_color = new CoolerMasterSDK.KEY_COLOR(color.R, color.G, color.B);
+            CoolerMasterSDK.KEY_COLOR key_color;
+            //process
+            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_monochrome_mode"))
+            {
+                //Strip alpha
+                color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+                //Get brightness
+                key_color = new CoolerMasterSDK.KEY_COLOR(ColorUtils.GetColorBrightness(color), 0, 0);
+            }
+            else
+            {
+                color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+                key_color = new CoolerMasterSDK.KEY_COLOR(color.R, color.G, color.B);
+            }
+
+
+
             color_matrix.KeyColor[key[0], key[1]] = key_color;
         }
 
@@ -576,9 +592,7 @@ namespace Aurora.Devices.CoolerMaster
 
                     DeviceKeys dev_key = key.Key;
 
-                    if (dev_key == DeviceKeys.ENTER &&
-                        (Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.us &&
-                         Global.kbLayout.Loaded_Localization != Settings.PreferredKeyboardLocalization.dvorak))
+                    if (dev_key == DeviceKeys.ENTER && !Global.kbLayout.Loaded_Localization.IsANSI())
                         dev_key = DeviceKeys.BACKSLASH;
 
                     if (Effects.possible_peripheral_keys.Contains(key.Key))
@@ -640,7 +654,12 @@ namespace Aurora.Devices.CoolerMaster
 
         public VariableRegistry GetRegisteredVariables()
         {
-            return new VariableRegistry();
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                default_registry.Register($"{devicename}_monochrome_mode", false, "Monochrome Mode");
+            }
+            return default_registry;
         }
     }
 }

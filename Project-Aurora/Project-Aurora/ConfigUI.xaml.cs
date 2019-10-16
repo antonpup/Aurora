@@ -19,17 +19,17 @@ using Aurora.Settings.Keycaps;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
 using Aurora.Profiles.Aurora_Wrapper;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora
 {
-    partial class ConfigUI : Window
+    partial class ConfigUI : Window, INotifyPropertyChanged
     {
-        Settings.Control_Settings settings_control = new Settings.Control_Settings();
-        //Profiles.Desktop.Control_Desktop desktop_control = new Profiles.Desktop.Control_Desktop();
-
-        Control_LayerControlPresenter layercontrol_presenter = new Control_LayerControlPresenter();
-        Control_ProfileControlPresenter profilecontrol_presenter = new Control_ProfileControlPresenter();
+        Control_Settings settingsControl = new Control_Settings();
+        Control_LayerControlPresenter layerPresenter = new Control_LayerControlPresenter();
+        Control_ProfileControlPresenter profilePresenter = new Control_ProfileControlPresenter();
 
         EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
 
@@ -64,7 +64,6 @@ namespace Aurora
             set
             {
                 SetValue(FocusedApplicationProperty, value);
-
                 Global.LightingStateManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
             }
         }
@@ -95,13 +94,10 @@ namespace Aurora
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
-            ctrlLayerManager.NewLayer += Layer_manager_NewLayer;
-            ctrlLayerManager.ProfileOverviewRequest += CtrlLayerManager_ProfileOverviewRequest;
-
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
             GenerateProfileStack();
-            settings_control.DataContext = this;
+            settingsControl.DataContext = this;
 
             
         }
@@ -123,24 +119,24 @@ namespace Aurora
 
         private void CtrlProfileManager_ProfileSelected(ApplicationProfile profile)
         {
-            profilecontrol_presenter.Profile = profile;
+            profilePresenter.Profile = profile;
 
             if (_selectedManager.Equals(this.ctrlProfileManager))
-                this.content_grid.Content = profilecontrol_presenter;   
+                SelectedControl = profilePresenter;   
         }
 
         private void CtrlLayerManager_ProfileOverviewRequest(UserControl profile_control)
         {
-            if (this.content_grid.Content != profile_control)
-                this.content_grid.Content = profile_control;
+            if (SelectedControl != profile_control)
+                SelectedControl = profile_control;
         }
 
         private void Layer_manager_NewLayer(Layer layer)
         {
-            layercontrol_presenter.Layer = layer;
+            layerPresenter.Layer = layer;
 
             if (_selectedManager.Equals(this.ctrlLayerManager))
-                this.content_grid.Content = layercontrol_presenter;
+                SelectedControl = layerPresenter;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -364,7 +360,7 @@ namespace Aurora
 
         private BitmapImage _visible = new BitmapImage(new Uri(@"Resources/Visible.png", UriKind.Relative));
         private BitmapImage _not_visible = new BitmapImage(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
-
+        
         private void GenerateProfileStack(string focusedKey = null)
         {
             selected_item = null;
@@ -606,8 +602,8 @@ namespace Aurora
             th.content_grid.MinHeight = ((UserControl)element).MinHeight;
             th.content_grid.Children.Add(element);
             th.content_grid.UpdateLayout();*/
-            th.content_grid.Content = value.Control;
-            th.content_grid.UpdateLayout();
+            th.SelectedControl = value.Control;
+            //th.content_grid.UpdateLayout();
 
         }
 
@@ -674,7 +670,7 @@ namespace Aurora
         private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             this.FocusedApplication = null;
-            this.content_grid.Content = settings_control;
+            SelectedControl = settingsControl;
 
             current_color = desktop_color_scheme;
             transitionamount = 0.0f;
@@ -798,28 +794,78 @@ namespace Aurora
         private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!sender.Equals(_selectedManager))
-                this.content_grid.Content = this.FocusedApplication.Profile.Layers.Count > 0 ? layercontrol_presenter : this.FocusedApplication.Control;
+                SelectedControl = this.FocusedApplication.Profile.Layers.Count > 0 ? layerPresenter : this.FocusedApplication.Control;
+            UpdateManagerStackFocus(sender);
+        }
+
+        private void ctrlOverlayLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+            if (!sender.Equals(_selectedManager))
+                SelectedControl = this.FocusedApplication.Profile.OverlayLayers.Count > 0 ? layerPresenter : this.FocusedApplication.Control;
             UpdateManagerStackFocus(sender);
         }
 
         private void ctrlProfileManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!sender.Equals(_selectedManager))
-                this.content_grid.Content = profilecontrol_presenter;
+                SelectedControl = profilePresenter;
             UpdateManagerStackFocus(sender);
         }
 
         private void brdOverview_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            this.content_grid.Content = this._selectedManager = this.FocusedApplication.Control;
+            this._selectedManager = SelectedControl = this.FocusedApplication.Control;
 
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
             UpdateManagerStackFocus(_selectedManager, true);
         }
+
+
+
+        // This new code for the layer selection has been separated from the existing code so that one day we can sort all
+        // the above out and make it more WPF with bindings and other dark magic like that.
+        #region PropertyChangedEvent and Helpers
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Call the PropertyChangedEvent for a single property.
+        /// </summary>
+        private void NotifyChanged(string prop) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+
+        /// <summary>
+        /// Sets a field and calls <see cref="NotifyChanged(string)"/> with the calling member name and any additional properties.
+        /// Designed for setting a field from a property.
+        /// </summary>
+        private void SetField<T>(ref T var, T value, string[] additional = null, [CallerMemberName] string name = null) {
+            var = value;
+            NotifyChanged(name);
+            if (additional != null)
+                foreach (var prop in additional)
+                    NotifyChanged(prop);
+        }
+        #endregion
+
+        #region Properties
+        /// <summary>A reference to the currently selected layer in either the regular or overlay layer list. When set, will update the <see cref="SelectedControl"/> property.</summary>
+        public Layer SelectedLayer {
+            get => selectedLayer;
+            set {
+                SetField(ref selectedLayer, value);
+                if (value == null)
+                    SelectedControl = FocusedApplication?.Control;
+                else {
+                    layerPresenter.Layer = value;
+                    SelectedControl = layerPresenter;
+                }
+            }
+        }
+        private Layer selectedLayer;
+
+       /// <summary>The control that is currently displayed underneath they device preview panel. This could be an overview control or a layer presenter etc.</summary>
+        public Control SelectedControl { get => selectedControl; set => SetField(ref selectedControl, value); }
+        private Control selectedControl;
+        #endregion
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

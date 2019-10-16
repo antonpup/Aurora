@@ -7,10 +7,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using HidLibrary;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace Aurora.Devices.UnifiedHID
 {
-
     class UnifiedHIDDevice : Device
     {
         private string devicename = "UnifiedHID";
@@ -19,13 +19,41 @@ namespace Aurora.Devices.UnifiedHID
         private readonly object action_lock = new object();
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
-        List<ISSDevice> AllDevices = new List<ISSDevice> {
-            new Rival100(),
-            new Rival110(),
-            new Rival300(),
-            new Rival500(),
-            new AsusPugio()
-        };
+        private VariableRegistry default_registry = null;
+
+        List<ISSDevice> AllDevices = new List<ISSDevice>();
+
+
+
+        public UnifiedHIDDevice()
+        {
+            //Copied GetLoadableTypes from https://haacked.com/archive/2012/07/23/get-all-types-in-an-assembly.aspx/
+            IEnumerable<Type> GetLoadableTypes(Assembly assembly)
+            {
+                if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+                try
+                {
+                    return assembly.GetTypes();
+                }
+                catch (ReflectionTypeLoadException e)
+                {
+                    return e.Types.Where(t => t != null);
+                }
+            }
+
+            try
+            {
+                AppDomain.CurrentDomain.GetAssemblies()
+                                       .SelectMany(assembly => GetLoadableTypes(assembly))
+                                       .Where(type => type.IsSubclassOf(typeof(UnifiedBase))).ToList()
+                                       .ForEach(class_ => AllDevices.Add((ISSDevice)Activator.CreateInstance(class_)));
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("UnifiedHID class could not be constructed: " + exc);
+            }
+        }
+
         List<ISSDevice> FoundDevices = new List<ISSDevice>();
 
         public bool Initialize()
@@ -55,8 +83,6 @@ namespace Aurora.Devices.UnifiedHID
                 return isInitialized;
             }
         }
-
-
 
         public void Shutdown()
         {
@@ -133,25 +159,44 @@ namespace Aurora.Devices.UnifiedHID
             {
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
 
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                foreach (ISSDevice device in FoundDevices)
                 {
-                    Color color = (Color)key.Value;
-                    //Apply and strip Alpha
-                    color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
                     if (e.Cancel) return false;
-                    else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
+
+                    if (!device.IsKeyboard)
                     {
-                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
+                        foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                         {
-                            foreach (ISSDevice device in FoundDevices)
-                                device.SetLEDColour(key.Key, color.R, color.G, color.B);
+                            Color color = (Color)key.Value;
+                            //Apply and strip Alpha
+                            color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+
+                            if (e.Cancel) return false;
+                            else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
+                            {
+                                if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
+                                {
+                                    device.SetLEDColour(key.Key, color.R, color.G, color.B);
+                                }
+                                peripheral_updated = true;
+                            }
+                            else
+                            {
+                                peripheral_updated = false;
+                            }
                         }
-                        peripheral_updated = true;
                     }
                     else
                     {
-                        peripheral_updated = false;
+                        if (!Global.Configuration.devices_disable_keyboard)
+                        {
+                            device.SetMultipleLEDColour(keyColors);
+                            peripheral_updated = true;
+                        }
+                        else
+                        {
+                            peripheral_updated = false;
+                        }
                     }
                 }
 
@@ -182,10 +227,10 @@ namespace Aurora.Devices.UnifiedHID
             return isInitialized;
         }
 
-
         public bool IsKeyboardConnected()
         {
-            return false;
+            return isInitialized;
+            //return false;
         }
 
         public string GetDeviceUpdatePerformance()
@@ -195,7 +240,15 @@ namespace Aurora.Devices.UnifiedHID
 
         public VariableRegistry GetRegisteredVariables()
         {
-            return new VariableRegistry();
+            if (default_registry == null)
+            {
+                default_registry = new VariableRegistry();
+                foreach (ISSDevice device in AllDevices)
+                {
+                    default_registry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {devicename}");
+                }
+            }
+            return default_registry;
         }
 
     }
@@ -203,9 +256,12 @@ namespace Aurora.Devices.UnifiedHID
     interface ISSDevice
     {
         bool IsConnected { get; }
+        bool IsKeyboard { get; }
+        string PrettyName { get; }
         bool Connect();
         bool Disconnect();
         bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue);
+        bool SetMultipleLEDColour(Dictionary<DeviceKeys, Color> keyColors);
     }
 
     abstract class UnifiedBase : ISSDevice
@@ -213,6 +269,8 @@ namespace Aurora.Devices.UnifiedHID
         protected HidDevice device;
         protected Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> deviceKeyMap;
         public bool IsConnected { get; protected set; } = false;
+        public bool IsKeyboard { get; protected set; } = false;
+        public string PrettyName { get; protected set; }
 
         protected bool Connect(int vendorID, int[] productIDs, short usagePage)
         {
@@ -220,9 +278,9 @@ namespace Aurora.Devices.UnifiedHID
 
             if (devices.Count() > 0)
             {
-                device = devices.FirstOrDefault(dev => dev.Capabilities.UsagePage == usagePage);
                 try
                 {
+                    device = devices.First(dev => dev.Capabilities.UsagePage == usagePage);
                     device.OpenDevice();
                     return (IsConnected = true);
                 }
@@ -249,255 +307,19 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
+        public virtual bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
         {
             if (this.deviceKeyMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
                 return func.Invoke(red, green, blue);
 
             return false;
         }
-    }
 
-
-    class Rival100 : UnifiedBase
-    {
-        public Rival100()
+        public virtual bool SetMultipleLEDColour(Dictionary<DeviceKeys, Color> keyColors)
         {
-            deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
-            {
-                { DeviceKeys.Peripheral_Logo, SetLogo }
-            };
+            return false;
         }
 
-        public override bool Connect()
-        {
-            return this.Connect(0x1038, new[] { 0x1702 }, unchecked((short)0xFFFFFFC0));
-        }
-
-        public bool SetLogo(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
-            report.Data[0] = 0x05;
-            report.Data[1] = 0x00;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
-            return device.WriteReport(report);
-        }
-    }
-
-
-    class Rival110 : UnifiedBase
-    {
-        public Rival110()
-        {
-            deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
-            {
-                { DeviceKeys.Peripheral_Logo, SetLogo }
-            };
-        }
-
-        public override bool Connect()
-        {
-            return this.Connect(0x1038, new[] { 0x1729 }, unchecked((short)0xFFFFFFC0));
-        }
-
-        public bool SetLogo(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
-            report.Data[0] = 0x05;
-            report.Data[1] = 0x00;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
-            report.Data[5] = 0x00;
-            report.Data[6] = 0x00;
-            report.Data[7] = 0x00;
-            report.Data[8] = 0x00;
-
-            return device.WriteReport(report);
-        }
-    }
-
-
-    class Rival300 : UnifiedBase
-    {
-        public Rival300()
-        {
-            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
-            {
-                { DeviceKeys.Peripheral_Logo, SetLogo },
-                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
-            };
-        }
-
-        public override bool Connect()
-        {
-            return this.Connect(0x1038, new[] { 0x1710, 0x171A, 0x1394, 0x1384, 0x1718, 0x1712 }, unchecked((short)0xFFFFFFC0));
-        }
-
-        public bool SetScrollWheel(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
-            report.Data[0] = 0x08;
-            report.Data[1] = 0x02;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
-            return device.WriteReport(report);
-        }
-
-        public bool SetLogo(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x02;
-            report.Data[0] = 0x08;
-            report.Data[1] = 0x01;
-            report.Data[2] = r;
-            report.Data[3] = g;
-            report.Data[4] = b;
-            return device.WriteReport(report);
-        }
-    }
-
-
-    class Rival500 : UnifiedBase
-    {
-        public Rival500()
-        {
-            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
-            {
-                { DeviceKeys.Peripheral_Logo, SetLogo },
-                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
-            };
-        }
-
-        public override bool Connect()
-        {
-            return this.Connect(0x1038, new[] { 0x170e }, unchecked((short)0xFFFFFFC0));
-        }
-
-        public bool SetScrollWheel(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x03;
-            report.Data[0] = 0x05;
-            report.Data[1] = 0x00;
-            report.Data[2] = 0x01;
-            report.Data[3] = r;
-            report.Data[4] = g;
-            report.Data[5] = b;
-            report.Data[6] = 0xFF;
-            report.Data[7] = 0x32;
-            report.Data[8] = 0xC8;
-            report.Data[9] = 0xC8;
-            report.Data[10] = 0x00;
-            report.Data[11] = 0x01;
-            report.Data[12] = 0x01;
-            return device.WriteReport(report);
-        }
-
-        public bool SetLogo(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x03;
-            report.Data[0] = 0x05;
-            report.Data[1] = 0x00;
-            report.Data[2] = 0x00;
-            report.Data[3] = r;
-            report.Data[4] = g;
-            report.Data[5] = b;
-            report.Data[6] = 0xFF;
-            report.Data[7] = 0x32;
-            report.Data[8] = 0xC8;
-            report.Data[9] = 0xC8;
-            report.Data[10] = 0x00;
-            report.Data[11] = 0x00;
-            report.Data[12] = 0x01;
-
-            return device.WriteReport(report);
-        }
-
-    }
-
-
-    class AsusPugio : UnifiedBase
-    {
-        public AsusPugio()
-        {
-            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
-            {
-                { DeviceKeys.Peripheral_Logo, SetLogo },
-                { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel },
-                { DeviceKeys.Peripheral_FrontLight, SetBottomLed }
-            };
-        }
-
-        public override bool Connect()
-        {
-            return this.Connect(0x0b05, new[] { 0x1846, 0x1847 }, unchecked((short)0xFFFFFF01));
-        }
-
-        public bool SetScrollWheel(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x00;
-            for (int i = 0; i < 64; i++)
-            {
-                report.Data[i] = 0x00;
-            }
-            report.Data[0] = 0x51;
-            report.Data[1] = 0x28;
-            report.Data[2] = 0x01;
-            report.Data[4] = 0x00;
-            report.Data[5] = 0x04;
-            report.Data[6] = r;
-            report.Data[7] = g;
-            report.Data[8] = b;
-            return device.WriteReport(report);
-        }
-
-        public bool SetLogo(byte r, byte g, byte b)
-        {
-            SetBottomLed(r,g,b);
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x00;
-            for (int i = 0; i < 64; i++)
-            {
-                report.Data[i] = 0x00;
-            }
-            report.Data[0] = 0x51;
-            report.Data[1] = 0x28;
-            report.Data[2] = 0x00;
-            report.Data[4] = 0x00;
-            report.Data[5] = 0x04;
-            report.Data[6] = r;
-            report.Data[7] = g;
-            report.Data[8] = b;
-            return device.WriteReport(report);
-        }
-
-        public bool SetBottomLed(byte r, byte g, byte b)
-        {
-            HidReport report = device.CreateReport();
-            report.ReportId = 0x00;
-            for (int i = 0; i < 64; i++)
-            {
-                report.Data[i] = 0x00;
-            }
-            report.Data[0] = 0x51;
-            report.Data[1] = 0x28;
-            report.Data[2] = 0x02;
-            report.Data[4] = 0x00;
-            report.Data[5] = 0x04;
-            report.Data[6] = r;
-            report.Data[7] = g;
-            report.Data[8] = b;
-            return device.WriteReport(report);
-        }
     }
 
 }

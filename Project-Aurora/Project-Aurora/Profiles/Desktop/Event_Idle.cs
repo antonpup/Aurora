@@ -35,7 +35,7 @@ namespace Aurora.Profiles.Desktop
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
         }
-
+        
         public override void UpdateLights(EffectFrame frame)
         {
             previoustime = currenttime;
@@ -199,6 +199,81 @@ namespace Aurora.Profiles.Desktop
 
                     layers.Enqueue(layer);
                     break;
+                case IdleEffects.RainFallSmooth:
+					layer = new EffectLayer("Idle - RainfallSmooth");
+
+					if (nextstarset < currenttime)
+					{
+						for (int x = 0; x < Global.Configuration.idle_amount; x++)
+						{
+							Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
+							if (raindrops.ContainsKey(star))
+								raindrops[star] = 1.0f;
+							else
+								raindrops.Add(star, 1.0f);
+						}
+
+						nextstarset = currenttime + (long)(1000L * Global.Configuration.idle_frequency);
+					}
+					layer.Fill(Global.Configuration.idle_effect_secondary_color);
+
+					ColorSpectrum drop_spec2 = new ColorSpectrum(
+						Global.Configuration.idle_effect_primary_color,
+						Color.FromArgb(0, Global.Configuration.idle_effect_primary_color));
+
+					var drops = raindrops.Keys.ToArray().Select(d =>
+					{
+						PointF pt = Effects.GetBitmappingFromDeviceKey(d).Center;
+						float transitionValue = 1.0f - raindrops[d];
+						float radius = transitionValue * Effects.canvas_biggest;
+						raindrops[d] -= getDeltaTime() * 0.05f * Global.Configuration.idle_speed;
+						return new Tuple<Devices.DeviceKeys, PointF, float, float>(d, pt, transitionValue, radius);
+
+					}).Where(d => d.Item3 <= 1.5).ToArray();
+
+					float circleHalfThickness = 1f;
+
+					foreach (var key in allKeys)
+					{
+						var keyInfo = Effects.GetBitmappingFromDeviceKey(key);
+
+						// For easy calculation every button considered as circle with this radius
+						var btnRadius = ((keyInfo.Width + keyInfo.Height) / 4f);
+						if (btnRadius <= 0) continue;
+
+						foreach (var raindrop in drops)
+						{
+
+							float circleInEdge = (raindrop.Item4 - circleHalfThickness);
+							float circleOutEdge = (raindrop.Item4 + circleHalfThickness);
+							circleInEdge *= circleInEdge;
+							circleOutEdge *= circleOutEdge;
+
+							float xKey = Math.Abs(keyInfo.Center.X - raindrop.Item2.X);
+							float yKey = Math.Abs(keyInfo.Center.Y - raindrop.Item2.Y);
+							float xKeyInEdge = xKey - btnRadius;
+							float xKeyOutEdge = xKey + btnRadius;
+							float yKeyInEdge = yKey - btnRadius;
+							float yKeyOutEdge = yKey + btnRadius;
+							float keyInEdge = xKeyInEdge * xKeyInEdge + yKeyInEdge * yKeyInEdge;
+							float keyOutEdge = xKeyOutEdge * xKeyOutEdge + yKeyOutEdge * yKeyOutEdge;
+
+							var btnDiameter = keyOutEdge - keyInEdge;
+							var inEdgePercent = (circleOutEdge - keyInEdge) / btnDiameter;
+							var outEdgePercent = (keyOutEdge - circleInEdge) / btnDiameter;
+							var percent = Math.Min(1, Math.Max(0, inEdgePercent))
+								+ Math.Min(1, Math.Max(0, outEdgePercent)) - 1f;
+
+							if (percent > 0)
+							{
+								layer.Set(key, (Color)EffectColor.BlendColors(
+									new EffectColor(layer.Get(key)),
+									new EffectColor(drop_spec2.GetColorAt(raindrop.Item3)), percent));
+							}
+						}
+					}
+					layers.Enqueue(layer);
+					break;
                 default:
                     break;
             }

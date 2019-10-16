@@ -188,6 +188,11 @@ namespace Aurora.Profiles
         public int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
 
         /// <summary>
+        /// The total number of milliseconds since the epoch
+        /// </summary>
+        public long MillisecondsSinceEpoch => Utils.Time.GetMillisecondsSinceEpoch();
+
+        /// <summary>
         /// Used RAM
         /// </summary>
         public long MemoryUsed { get { return PerformanceInfo.GetTotalMemoryInMiB() - PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
@@ -268,6 +273,12 @@ namespace Aurora.Profiles
         private static System.Timers.Timer cpuCounterTimer;
 
         private static MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
+        private static NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
+
+        public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
+
+        public bool DS4Charging => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Charging ?? false;
+
 
         /// <summary>
         /// Current CPU Usage
@@ -297,10 +308,22 @@ namespace Aurora.Profiles
                 Global.logger.LogLine("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
             }
 
-            // Without this, the microphone does not activate and therefore the "MicrophoneLevel" property shows 0 unless the user is using
-            // an application that makes use of the microphone.
-            try { new NAudio.Wave.WaveInEvent().StartRecording(); }
-            catch { /* Will error if there is no recording device found. */ }
+            void StartStopRecording() {
+                // We must start recording to be able to capture audio in, but only do this if the user has the option set. Allowing them
+                // to turn it off will give them piece of mind we're not spying on them and will stop the Windows 10 mic icon appearing.
+                try {
+                    if (Global.Configuration.EnableAudioCapture)
+                        waveInEvent.StartRecording();
+                    else
+                        waveInEvent.StopRecording();
+                } catch { }
+            }
+
+            StartStopRecording();
+            Global.Configuration.PropertyChanged += (sender, e) => {
+                if (e.PropertyName == "EnableAudioCapture")
+                    StartStopRecording();
+            };
         }
 
         internal LocalPCInformation() : base()
