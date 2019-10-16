@@ -369,6 +369,7 @@
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
+    <Compile Include="Profiles\Osu\GSI\Enums.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -1491,6 +1492,7 @@
     <Compile Include="Utils\KeyUtils.cs" />
     <Compile Include="Utils\MemoryReader.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
+    <Compile Include="Utils\RazerChromaUtils.cs" />
     <Compile Include="Utils\RunningProcessMonitor.cs" />
     <Compile Include="Utils\SteamUtils.cs" />
     <Compile Include="Utils\ThreadPriorityChanger.cs" />
