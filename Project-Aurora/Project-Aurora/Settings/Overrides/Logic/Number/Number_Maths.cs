@@ -15,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that performs a binary mathematical operation on two operands.
     /// </summary>
     [OverrideLogic("Arithmetic Operation", category: OverrideLogicCategory.Maths)]
-    public class NumberMathsOperation : IEvaluatableNumber {
+    public class NumberMathsOperation : IEvaluatable<double> {
 
         /// <summary>Creates a new maths operation that has no values pre-set.</summary>
         public NumberMathsOperation() { }
@@ -24,17 +24,17 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Creates a new evaluatable that returns the result of the two given numbers with the given operator.</summary>
         public NumberMathsOperation(double value1, MathsOperator op, double value2) { Operand1 = new NumberConstant(value1); Operand2 = new NumberConstant(value2); Operator = op; }
         /// <summary>Creates a new evaluatable that returns the result of the given evaluatable and given number added together.</summary>
-        public NumberMathsOperation(IEvaluatableNumber eval, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); }
+        public NumberMathsOperation(IEvaluatable<double> eval, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); }
         /// <summary>Creates a new evaluatable that returns the result of the given evaluatable and given number with the given operator.</summary>
-        public NumberMathsOperation(IEvaluatableNumber eval, MathsOperator op, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); Operator = op; }
+        public NumberMathsOperation(IEvaluatable<double> eval, MathsOperator op, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); Operator = op; }
         /// <summary>Creates a new evaluatable that returns the result of the two given evaluatables added together.</summary>
-        public NumberMathsOperation(IEvaluatableNumber eval1, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; }
+        public NumberMathsOperation(IEvaluatable<double> eval1, IEvaluatable<double> eval2) { Operand1 = eval1; Operand2 = eval2; }
         /// <summary>Creates a new evaluatable that returns the result of the two given evaluatables with the given operator.</summary>
-        public NumberMathsOperation(IEvaluatableNumber eval1, MathsOperator op, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; Operator = op; }
+        public NumberMathsOperation(IEvaluatable<double> eval1, MathsOperator op, IEvaluatable<double> eval2) { Operand1 = eval1; Operand2 = eval2; Operator = op; }
 
         // The operands and the operator
-        public IEvaluatableNumber Operand1 { get; set; } = new NumberConstant();
-        public IEvaluatableNumber Operand2 { get; set; } = new NumberConstant();
+        public IEvaluatable<double> Operand1 { get; set; } = new NumberConstant();
+        public IEvaluatable<double> Operand2 { get; set; } = new NumberConstant();
         public MathsOperator Operator { get; set; } = MathsOperator.Add;
         
         // The control allowing the user to edit the evaluatable
@@ -73,7 +73,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Creates a copy of this maths operation.</summary>
-        public IEvaluatableNumber Clone() => new NumberMathsOperation { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator };
+        public IEvaluatable<double> Clone() => new NumberMathsOperation { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
@@ -83,15 +83,15 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Returns the absolute value of the given evaluatable.
     /// </summary>
     [OverrideLogic("Absolute", category: OverrideLogicCategory.Maths)]
-    public class NumberAbsValue : IEvaluatableNumber {
+    public class NumberAbsValue : IEvaluatable<double> {
 
         /// <summary>Creates a new absolute operation with the default operand.</summary>
         public NumberAbsValue() { }
         /// <summary>Creates a new absolute evaluatable with the given operand.</summary>
-        public NumberAbsValue(IEvaluatableNumber op) { Operand = op; }
+        public NumberAbsValue(IEvaluatable<double> op) { Operand = op; }
 
         /// <summary>The operand to absolute.</summary>
-        public IEvaluatableNumber Operand { get; set; } = new NumberConstant();
+        public IEvaluatable<double> Operand { get; set; } = new NumberConstant();
 
         // Get the control allowing the user to set the operand
         [JsonIgnore]
@@ -110,7 +110,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         public void SetApplication(Application application) => Operand?.SetApplication(application);
 
-        public IEvaluatableNumber Clone() => new NumberAbsValue { Operand = Operand.Clone() };
+        public IEvaluatable<double> Clone() => new NumberAbsValue { Operand = Operand.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
@@ -120,7 +120,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that compares two numerical evaluatables and returns a boolean depending on the comparison.
     /// </summary>
     [OverrideLogic("Arithmetic Comparison", category: OverrideLogicCategory.Maths)]
-    public class BooleanMathsComparison : IEvaluatableBoolean {
+    public class BooleanMathsComparison : IEvaluatable<bool> {
 
         /// <summary>Creates a new maths comparison that has no values pre-set.</summary>
         public BooleanMathsComparison() { }
@@ -129,17 +129,17 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Creates a new evaluatable that returns the result of the two given numbers compared using the given operator.</summary>
         public BooleanMathsComparison(double value1, ComparisonOperator op, double value2) { Operand1 = new NumberConstant(value1); Operand2 = new NumberConstant(value2); Operator = op; }
         /// <summary>Creates a new evaluatable that returns whether or not the given evaluatable and given number are equal.</summary>
-        public BooleanMathsComparison(IEvaluatableNumber eval, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); }
+        public BooleanMathsComparison(IEvaluatable<double> eval, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); }
         /// <summary>Creates a new evaluatable that returns the result of the given evaluatable and given number when compared using the given operator.</summary>
-        public BooleanMathsComparison(IEvaluatableNumber eval, ComparisonOperator op, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); Operator = op; }
+        public BooleanMathsComparison(IEvaluatable<double> eval, ComparisonOperator op, double value) { Operand1 = eval; Operand2 = new NumberConstant(value); Operator = op; }
         /// <summary>Creates a new evaluatable that returns the whether or not the two given evaluatables are equal.</summary>
-        public BooleanMathsComparison(IEvaluatableNumber eval1, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; }
+        public BooleanMathsComparison(IEvaluatable<double> eval1, IEvaluatable<double> eval2) { Operand1 = eval1; Operand2 = eval2; }
         /// <summary>Creates a new evaluatable that returns the result of the two given evaluatables when compared using the given operator.</summary>
-        public BooleanMathsComparison(IEvaluatableNumber eval1, ComparisonOperator op, IEvaluatableNumber eval2) { Operand1 = eval1; Operand2 = eval2; Operator = op; }
+        public BooleanMathsComparison(IEvaluatable<double> eval1, ComparisonOperator op, IEvaluatable<double> eval2) { Operand1 = eval1; Operand2 = eval2; Operator = op; }
 
         // The operands and the operator
-        public IEvaluatableNumber Operand1 { get; set; } = new NumberConstant();
-        public IEvaluatableNumber Operand2 { get; set; } = new NumberConstant();
+        public IEvaluatable<double> Operand1 { get; set; } = new NumberConstant();
+        public IEvaluatable<double> Operand2 { get; set; } = new NumberConstant();
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
 
         // The control allowing the user to edit the evaluatable
@@ -179,39 +179,39 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Creates a copy of this mathematical comparison.</summary>
-        public IEvaluatableBoolean Clone() => new BooleanMathsComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone() };
+        public IEvaluatable<bool> Clone() => new BooleanMathsComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
 
     /// <summary>
-    /// Evaluatable that takes a number in a given range and maps it onto another range.
+    /// Evaluatable that takes a number in a given range and linearly interpolates it onto another range.
     /// </summary>
-    [OverrideLogic("Numeric Map", category: OverrideLogicCategory.Maths)]
-    public class NumberMap : IEvaluatableNumber {
+    [OverrideLogic("Lerp", category: OverrideLogicCategory.Maths)]
+    public class NumberMap : IEvaluatable<double> {
 
         /// <summary>Creates a new numeric map with the default constant parameters.</summary>
         public NumberMap() { }
         /// <summary>Creates a new numeric map to map the given value with the given constant range onto the range 0 → 1.</summary>
-        public NumberMap(IEvaluatableNumber value, double fromMin, double fromMax) : this(value, new NumberConstant(fromMin), new NumberConstant(fromMax)) { }
+        public NumberMap(IEvaluatable<double> value, double fromMin, double fromMax) : this(value, new NumberConstant(fromMin), new NumberConstant(fromMax)) { }
         /// <summary>Creates a new numeric map to map the given value with the given dynamic range onto the range 0 → 1.</summary>
-        public NumberMap(IEvaluatableNumber value, IEvaluatableNumber fromMin, IEvaluatableNumber fromMax) { Value = value; FromMin = fromMin; FromMax = fromMax; }
+        public NumberMap(IEvaluatable<double> value, IEvaluatable<double> fromMin, IEvaluatable<double> fromMax) { Value = value; FromMin = fromMin; FromMax = fromMax; }
         /// <summary>Creates a new numeric map to map the given value with the given constant from range onto the given constant to range.</summary>
-        public NumberMap(IEvaluatableNumber value, double fromMin, double fromMax, double toMin, double toMax) : this(value, new NumberConstant(fromMin), new NumberConstant(fromMax), new NumberConstant(toMin), new NumberConstant(toMax)) { }
+        public NumberMap(IEvaluatable<double> value, double fromMin, double fromMax, double toMin, double toMax) : this(value, new NumberConstant(fromMin), new NumberConstant(fromMax), new NumberConstant(toMin), new NumberConstant(toMax)) { }
         /// <summary>Creates a new numeric map to map the given value with the given dynamic from range onto the given constant to range.</summary>
-        public NumberMap(IEvaluatableNumber value, IEvaluatableNumber fromMin, IEvaluatableNumber fromMax, double toMin, double toMax) : this(value, fromMin, fromMax, new NumberConstant(toMin), new NumberConstant(toMax)) { }
+        public NumberMap(IEvaluatable<double> value, IEvaluatable<double> fromMin, IEvaluatable<double> fromMax, double toMin, double toMax) : this(value, fromMin, fromMax, new NumberConstant(toMin), new NumberConstant(toMax)) { }
         /// <summary>Creates a new numeric map to map the given value with the given dynamic from range onto the given dynamic to range.</summary>
-        public NumberMap(IEvaluatableNumber value, IEvaluatableNumber fromMin, IEvaluatableNumber fromMax, IEvaluatableNumber toMin, IEvaluatableNumber toMax) { Value = value; FromMin = fromMin; FromMax = fromMax; ToMin = toMin; ToMax = toMax; }
+        public NumberMap(IEvaluatable<double> value, IEvaluatable<double> fromMin, IEvaluatable<double> fromMax, IEvaluatable<double> toMin, IEvaluatable<double> toMax) { Value = value; FromMin = fromMin; FromMax = fromMax; ToMin = toMin; ToMax = toMax; }
 
         // The value to run through the map
-        public IEvaluatableNumber Value { get; set; } = new NumberConstant(25);
+        public IEvaluatable<double> Value { get; set; } = new NumberConstant(25);
         // The values representing the starting range of the map
-        public IEvaluatableNumber FromMin { get; set; } = new NumberConstant(0);
-        public IEvaluatableNumber FromMax { get; set; } = new NumberConstant(100);
+        public IEvaluatable<double> FromMin { get; set; } = new NumberConstant(0);
+        public IEvaluatable<double> FromMax { get; set; } = new NumberConstant(100);
         // The values representing the end range of the map
-        public IEvaluatableNumber ToMin { get; set; } = new NumberConstant(0);
-        public IEvaluatableNumber ToMax { get; set; } = new NumberConstant(1);
+        public IEvaluatable<double> ToMin { get; set; } = new NumberConstant(0);
+        public IEvaluatable<double> ToMax { get; set; } = new NumberConstant(1);
 
         // The control to edit the map parameters
         [JsonIgnore]
@@ -240,7 +240,7 @@ namespace Aurora.Settings.Overrides.Logic {
             ToMax?.SetApplication(application);
         }
 
-        public IEvaluatableNumber Clone() => new NumberMap { Value = Value.Clone(), FromMin = FromMin.Clone(), ToMin = ToMin.Clone(), FromMax = FromMax.Clone(), ToMax = ToMax.Clone() };
+        public IEvaluatable<double> Clone() => new NumberMap { Value = Value.Clone(), FromMin = FromMin.Clone(), ToMin = ToMin.Clone(), FromMax = FromMax.Clone(), ToMax = ToMax.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
@@ -250,7 +250,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that resolves to a numerical constant.
     /// </summary>
     [OverrideLogic("Number Constant", category: OverrideLogicCategory.Maths)]
-    public class NumberConstant : IEvaluatableNumber {
+    public class NumberConstant : IEvaluatable<double> {
 
         /// <summary>Creates a new constant with the zero as the constant value.</summary>
         public NumberConstant() { }
@@ -279,7 +279,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public void SetApplication(Application application) { }
 
         /// <summary>Creates a copy of this number constant</summary>
-        public IEvaluatableNumber Clone() => new NumberConstant { Value = Value };
+        public IEvaluatable<double> Clone() => new NumberConstant { Value = Value };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 }

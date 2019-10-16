@@ -2,6 +2,9 @@
 using Aurora.Profiles.Minecraft.Layers;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Aurora.Settings.Overrides;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides.Logic.Builder;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -103,14 +106,34 @@ namespace Aurora.Profiles.Minecraft {
                         _SecondaryColor = Color.FromArgb(30, 80, 25),
                         _Sequence = new KeySequence(new FreeFormObject(0, -60, 900, 128))
                     }
-                }),
+                }, 
+                new OverrideLogicBuilder()
+                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.FromArgb(125,42,123), new BooleanGSINumeric("World/DimensionID", 1))//The End
+                        .AddEntry(Color.FromArgb(255,183,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                    )
+                    .SetLookupTable("_SecondaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.FromArgb(49,0,59), new BooleanGSINumeric("World/DimensionID", 1))//The End
+                        .AddEntry(Color.FromArgb(87,83,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                    )
+                ),
 
                 new Layer("Grass Block Side", new MinecraftBackgroundLayerHandler() {
                     Properties = new MinecraftBackgroundLayerHandlerProperties() {
                         _PrimaryColor = Color.FromArgb(125, 70, 15),//(102, 59, 20),
                         _SecondaryColor = Color.FromArgb(80, 50, 25)
                     }
-                })
+                },
+                new OverrideLogicBuilder()
+                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.FromArgb(209,232,80), new BooleanGSINumeric("World/DimensionID", 1))//The End
+                        .AddEntry(Color.FromArgb(184,26,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                    )
+                    .SetLookupTable("_SecondaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.FromArgb(107,102,49), new BooleanGSINumeric("World/DimensionID", 1))//The End
+                        .AddEntry(Color.FromArgb(59,8,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                    )
+                ),
             };
         }
     }

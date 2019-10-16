@@ -55,7 +55,8 @@ namespace Aurora.Settings
 
             cmbLayerType.Items.Clear();
 
-            foreach(var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers))
+            cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers["Default"]);
+            foreach (var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers).Where(s => s != "Default").OrderBy(s => Global.LightingStateManager.LayerHandlers[s].Title))
                 cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers[layertype]);
 
             cmbLayerType.SelectedItem = Global.LightingStateManager.LayerHandlers[Layer.Handler.ID];
@@ -83,13 +84,14 @@ namespace Aurora.Settings
             {
                 LayerHandlerEntry enumVal = (LayerHandlerEntry)((sender as ComboBox).SelectedItem);
 
+                _Layer?.Dispose();
                 ResetLayer(enumVal);
             }
         }
 
         private void ResetLayer(LayerHandlerEntry type)
         {
-            if (IsLoaded && !isSettingNewLayer)
+            if (IsLoaded && !isSettingNewLayer && type != null)
             {
                 _Layer.Handler = Global.LightingStateManager.GetLayerHandlerInstance(type);
 

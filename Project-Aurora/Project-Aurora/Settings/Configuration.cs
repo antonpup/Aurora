@@ -6,8 +6,6 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using Aurora.Profiles.Generic_Application;
-using Aurora.Profiles.Overlays;
-using Aurora.Profiles.Overlays.SkypeOverlay;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
 
@@ -285,7 +283,11 @@ namespace Aurora.Settings
         [Description("Latin America")]
         la = 16,
         [Description("Spanish")]
-        es = 17
+        es = 17,
+        [Description("ISO - Automatic (Experimental)")]
+        iso = 18,
+        [Description("ANSI - Automatic (Experimental)")]
+        ansi = 19,
     }
 
     public enum PreferredMouse
@@ -412,6 +414,9 @@ namespace Aurora.Settings
         private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
 
+        private bool enableAudioCapture;
+        public bool EnableAudioCapture { get => enableAudioCapture; set { enableAudioCapture = value; InvokePropertyChanged(); } }
+
         public bool updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;
@@ -453,10 +458,6 @@ namespace Aurora.Settings
         public float idle_frequency;
 
         public VariableRegistry VarRegistry;
-
-        //Overlay Settings
-        public VolumeOverlaySettings volume_overlay_settings;
-        public SkypeOverlaySettings skype_overlay_settings;
 
         //Debug Settings
         private bool bitmapDebugTopMost;
@@ -503,6 +504,7 @@ namespace Aurora.Settings
             devices_disabled = new HashSet<Type>();
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
+            devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
             OverlaysInPreview = false;
 
             //Blackout and Night theme
@@ -528,10 +530,6 @@ namespace Aurora.Settings
             idle_amount = 5;
             idle_frequency = 2.5f;
 
-            //Overlay Settings
-            volume_overlay_settings = new VolumeOverlaySettings();
-            skype_overlay_settings = new SkypeOverlaySettings();
-
             //Debug
             bitmapDebugTopMost = false;
             httpDebugTopMost = false;
@@ -540,11 +538,26 @@ namespace Aurora.Settings
 
             VarRegistry = new VariableRegistry();
         }
+
+        
+    }
+
+    public static class ExtensionHelpers
+    {
+        public static bool IsAutomaticGeneration(this PreferredKeyboardLocalization self)
+        {
+            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.iso;
+        }
+
+        public static bool IsANSI(this PreferredKeyboardLocalization self)
+        {
+            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.dvorak || self == PreferredKeyboardLocalization.us;
+        }
     }
 
     public class ConfigManager
     {
-        private static string ConfigPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Config");
+        private static string ConfigPath = Path.Combine(Global.AppDataDirectory, "Config");
         private const string ConfigExtension = ".json";
 
         private static long _last_save_time = 0L;

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 
@@ -44,6 +45,12 @@ namespace Aurora.Profiles.GTA5.GSI
         /// </summary>
         [Description("Singleplayer - Chop")]
         PlayingSP_Chop,
+
+        /// <summary>
+        /// Player is in a multiplayer lobby
+        /// </summary>
+        [Description("Multiplayer - Lobby")]
+        PlayingMP_Lobby,
 
         /// <summary>
         /// Player is playing a multiplayer mission
@@ -128,7 +135,7 @@ namespace Aurora.Profiles.GTA5.GSI
             json = "{}";
             _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
         }
-        
+
         private byte RoundTo5(byte no)
         {
             return (byte)(Math.Round((double)no / 5) * 5);
@@ -146,31 +153,16 @@ namespace Aurora.Profiles.GTA5.GSI
             //Get Current State
             Color state_color = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.ESC / 4]);
 
-            if(state_color == Color.FromArgb(255, 175, 80, 0))
-                CurrentState = PlayerState.PlayingSP_Trevor;
-            else if (state_color == Color.FromArgb(255, 48, 255, 255))
-                CurrentState = PlayerState.PlayingSP_Michael;
-            else if (state_color == Color.FromArgb(255, 48, 255, 0))
-                CurrentState = PlayerState.PlayingSP_Franklin;
-            else if (state_color == Color.FromArgb(255, 125, 0, 0))
-                CurrentState = PlayerState.PlayingSP_Chop;
-            else if (state_color == Color.FromArgb(255, 255, 170, 0))
-                CurrentState = PlayerState.PlayingRace_Gold;
-            else if (state_color == Color.FromArgb(255, 190, 190, 190))
-                CurrentState = PlayerState.PlayingRace_Silver;
-            else if (state_color == Color.FromArgb(255, 255, 50, 0))
-                CurrentState = PlayerState.PlayingRace_Bronze;
-            else if (state_color == Color.FromArgb(255, 195, 80, 80))
-                CurrentState = PlayerState.PlayingMP_Mission;
-            else if (state_color == Color.FromArgb(255, 255, 120, 195) || state_color == Color.FromArgb(255, 155, 110, 175))
-                CurrentState = PlayerState.PlayingMP_HeistFinale;
-            else if (state_color == Color.FromArgb(255, 140, 125, 155))
-                CurrentState = PlayerState.PlayingMP_Spectator;
+            if(stateColors.TryGetValue(state_color, out var newState))
+            {
+               // Global.logger.Info("Set game state to " + newState);
+                CurrentState = newState;
+            }
             else
             {
+                Global.logger.Debug("Undefined color - " + state_color);
                 CurrentState = PlayerState.Undefined;
                 StateColor = state_color;
-                Global.logger.Debug("Undefined color - " + state_color);
             }
 
 
@@ -188,7 +180,8 @@ namespace Aurora.Profiles.GTA5.GSI
         public GameState_GTA5(GameState other_state) : base(other_state)
         {
             GameState_GTA5 gta = other_state as GameState_GTA5;
-            if (gta != null) {
+            if (gta != null)
+            {
                 this.HasCops = gta.HasCops;
                 this.LeftSirenColor = gta.LeftSirenColor;
                 this.RightSirenColor = gta.RightSirenColor;
@@ -201,5 +194,21 @@ namespace Aurora.Profiles.GTA5.GSI
         {
             return Color.FromArgb(a, r, g, b);
         }
+
+        private static readonly Dictionary<Color, PlayerState> stateColors = new Dictionary<Color, PlayerState>
+        {
+            { Color.FromArgb(255, 255, 255), PlayerState.Menu                  },
+            { Color.FromArgb(176, 80 , 0  ), PlayerState.PlayingSP_Trevor      },
+            { Color.FromArgb(48 , 255, 255), PlayerState.PlayingSP_Michael     },
+            { Color.FromArgb(48 , 255, 0  ), PlayerState.PlayingSP_Franklin    },
+            { Color.FromArgb(127, 0  , 0  ), PlayerState.PlayingSP_Chop        },
+            { Color.FromArgb(106, 191, 212), PlayerState.PlayingMP_Lobby       },
+            { Color.FromArgb(194, 80 , 80 ), PlayerState.PlayingMP_Mission     },
+            { Color.FromArgb(255, 123, 196), PlayerState.PlayingMP_HeistFinale },
+            { Color.FromArgb(0  , 0  , 0  ), PlayerState.PlayingMP_Spectator   },//not sure what to do with this one, but full black is sent from the game sometimes
+            { Color.FromArgb(255, 170, 0  ), PlayerState.PlayingRace_Gold      },
+            { Color.FromArgb(192, 192, 192), PlayerState.PlayingRace_Silver    },
+            { Color.FromArgb(255, 50 , 0  ), PlayerState.PlayingRace_Bronze    }
+        };
     }
 }

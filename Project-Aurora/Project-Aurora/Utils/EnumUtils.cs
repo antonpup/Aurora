@@ -233,12 +233,17 @@ namespace Aurora.Utils
 
     public class AmbilightCaptureToStringVC : EnumToStringVC
     {
-        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.Everything) { }
+        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.EntireMonitor) { }
     }
 
     public class AmbilightFpsToStringVC : EnumToStringVC
     {
         public AmbilightFpsToStringVC() : base(AmbilightFpsChoice.Medium) { }
+    }
+
+    public class AmbilightQualityToStringVC : EnumToStringVC
+    {
+        public AmbilightQualityToStringVC() : base(AmbilightQuality.Medium) { }
     }
 
     public class EqualizerTypeToStringVC : EnumToStringVC
@@ -249,6 +254,11 @@ namespace Aurora.Utils
     public class EqualizerPresentationTypeToStringVC : EnumToStringVC
     {
         public EqualizerPresentationTypeToStringVC() : base(EqualizerPresentationType.SolidColor) { }
+    }
+
+    public class EqualizerBackgroundModeToStringVC : EnumToStringVC
+    {
+        public EqualizerBackgroundModeToStringVC() : base(EqualizerBackgroundMode.Disabled) { }
     }
 
     public class ShortcutAssistantPresentationTypeToStringVC : EnumToStringVC
