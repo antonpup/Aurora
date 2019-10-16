@@ -89,6 +89,7 @@ namespace Aurora.Profiles
 
         private ActiveProcessMonitor processMonitor;
         private RunningProcessMonitor runningProcessMonitor;
+        public RunningProcessMonitor RunningProcessMonitor => runningProcessMonitor;
 
         public LightingStateManager()
         {

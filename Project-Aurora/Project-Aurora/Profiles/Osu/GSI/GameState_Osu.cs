@@ -26,7 +26,9 @@
 
     public class GameNode : Node<GameNode> {
 
-        public string Status;
+        public OsuStatus StatusEnum;
+        public string Status => StatusEnum.ToString(); // Only here for legacy reasons - don't wanna break any profiles that may now depend on this
+        public OsuPlayMode PlayMode;
         public float HP;
         public float Accuracy;
         public int Combo;
@@ -39,7 +41,8 @@
         public int CountMiss;
 
         internal GameNode(string json) : base(json) {
-            Status = GetString("status");
+            StatusEnum = GetEnum<OsuStatus>("status");
+            PlayMode = GetEnum<OsuPlayMode>("playMode");
             HP = GetFloat("hp");
             Accuracy = GetFloat("accuracy");
             Combo = GetInt("combo");

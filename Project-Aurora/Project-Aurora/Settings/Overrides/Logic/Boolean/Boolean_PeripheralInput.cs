@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -176,4 +177,56 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<bool> Clone() => new BooleanLockKeyActive { TargetKey = TargetKey };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
+
+
+
+    /// <summary>
+    /// An evaluatable that returns true when the specified time has elapsed without the user pressing a keyboard button or clicking the mouse.
+    /// </summary>
+    [OverrideLogic("Away Timer", category: OverrideLogicCategory.Input)]
+    public class BooleanAwayTimer : IEvaluatable<bool> {
+
+        /// <summary>Gets or sets the time before this timer starts returning true after there has been no user input.</summary>
+        public double InactiveTime { get; set; }
+        /// <summary>Gets or sets the time unit that is being used to measure the AFK time.</summary>
+        public TimeUnit TimeUnit { get; set; }
+
+        #region ctors
+        /// <summary>Create a new away timer condition with the default time (60 seconds).</summary>
+        public BooleanAwayTimer() : this(60) { }
+
+        /// <summary>Creates a new away timer with the specified number of seconds before activating.</summary>
+        public BooleanAwayTimer(double time) : this(time, TimeUnit.Seconds) { }
+
+        /// <summary>Creates a new away timer with the specified time before activating.</summary>
+        public BooleanAwayTimer(double time, TimeUnit unit) {
+            InactiveTime = time;
+            TimeUnit = unit;
+        }
+        #endregion
+
+        private Control_TimeAndUnit control;
+        public Visual GetControl(Application app) => control ?? (control = new Control_TimeAndUnit()
+            .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("InactiveTime") { Source = this, Mode = BindingMode.TwoWay })
+            .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay }));
+
+        /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
+        public bool Evaluate(IGameState gameState) {
+            var idleTime = ActiveProcessMonitor.GetTimeSinceLastInput();
+            switch (TimeUnit) {
+                case TimeUnit.Milliseconds: return idleTime.TotalMilliseconds > InactiveTime;
+                case TimeUnit.Seconds: return idleTime.TotalSeconds > InactiveTime;
+                case TimeUnit.Minutes: return idleTime.TotalMinutes > InactiveTime;
+                case TimeUnit.Hours: return idleTime.TotalHours > InactiveTime;
+                default: return false;
+            };
+        }
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        public void SetApplication(Application application) { }
+
+        public IEvaluatable<bool> Clone() => new BooleanAwayTimer { InactiveTime = InactiveTime, TimeUnit = TimeUnit };
+        IEvaluatable IEvaluatable.Clone() => Clone();
+    }
+    public enum TimeUnit { Milliseconds, Seconds, Minutes, Hours }
 }
