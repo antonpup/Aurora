@@ -58,5 +58,10 @@ namespace Aurora.Profiles.RocketLeague
         {
             Process.Start(@"https://github.com/diogotr7/AuroraGSI-RocketLeague/releases");
         }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            Process.Start(@"bakkesmod://install/45");
+        }
     }
 }
