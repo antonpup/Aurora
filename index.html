@@ -1,5 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     <title>Aurora - Unified Keyboard RGB Lighting for Logitech, Razer, and Corsair</title>
@@ -7,622 +9,832 @@
     <script type="text/javascript" src="jscripts/popcorn.min.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script> 
-    $(function(){
-      $("#includedContent").load("includes/menu.html"); 
-    });
-    </script> 
+    <script>
+        $(function () {
+            $("#includedContent").load("includes/menu.html");
+        });
+    </script>
 </head>
 
-    <body bgcolor="#000000" text="#FFFFFF" style="margin:0px;">
-     <div id="includedContent"></div>
-        <div class="contentbox" align="center" style="width: 100%; height: 100%; ">
-            <div class="content">
-                <h1>Aurora Demo Preview</h1>
-                <p>
-                    <div style="display:inline-block;width:600px;height:342px;">
-                        <div class="logikey" style="position:absolute;">
-                            <img src="images/logi.png" style="z-index: 1;width: 600px;position: absolute;"/>
-                            <video height="170" width="560" id="b" style="padding: 59px 20px 131px;position: absolute;" muted> 
-                                <source src="videos/overwatch_demo_logitech.mp4"></source>
-                            </video>
-                        </div>
-                            <div class="razrkey" style="display:none;position:absolute;">
-                            <img src="images/keyboardr.png" style="z-index: 1;width: 600px;position: absolute;"/>
-                                <video id="c" style="padding: 74px 26px 137px 29px;position: absolute;" muted="" height="150" width="545">
-                                    <source src="videos/overwatch_demo_razer.mp4"></source>
-                                </video>
-                            </div>
+<body bgcolor="#000000" text="#FFFFFF" style="margin:0px;">
+    <div id="includedContent"></div>
+    <div class="contentbox" align="center" style="width: 100%; height: 100%; ">
+        <div class="content">
+            <h1>Aurora Demo Preview</h1>
+            <p>
+                <div style="display:inline-block;width:600px;height:342px;">
+                    <div class="logikey" style="position:absolute;">
+                        <img src="images/logi.png" style="z-index: 1;width: 600px;position: absolute;" />
+                        <video height="170" width="560" id="b" style="padding: 59px 20px 131px;position: absolute;"
+                            muted>
+                            <source src="videos/overwatch_demo_logitech.mp4">
+                            </source>
+                        </video>
                     </div>
-                    <video height="340" width="600" id="a" style="padding-left: 20px;" controls loop> 
-                        <source src="videos/overwatch_demo_gameplay.mp4" ></source>
-                    </video>
-                    <br/>
-                    <div style="height: 100%;font-family:arial;width: 75%;background-color: rgba(0, 0, 0, 0.7);margin-top: 20px;padding-top: 20px;">
-                        Click a brand to switch the keyboard:<br/><br/>
-                        <img class="buttonkeylogitech" src="images/ltech.png"/>
-                        <img class="buttonkeyrazer" src="images/rzr.png"/>
-                        <br/>
-                        <br/>
-                        Click a game icon to switch demo video:<br/><br/>
-                        <img class="buttonkeygameicon" id="dota2_btn" src="images/logos/games/dota2.png" style="width:64px; height:64px"/>
-                        <img class="buttonkeygameicon" id="gta5_btn" src="images/logos/games/gta5.png" style="width:64px; height:64px"/>
-                        <img class="buttonkeygameicon" id="rocketleague_btn" src="images/logos/games/rocketleague.png" style="width:64px; height:64px"/>
-                        <img class="buttonkeygameicon" id="overwatch_btn" src="images/logos/games/overwatch.png" style="width:64px; height:64px"/>
-                        <img class="buttonkeygameicon" id="dodgeball_btn" src="images/logos/games/disco_dodgeball.png" style="width:64px; height:64px"/>
-                        
-                        <input type="range" value="0" id="scrub" style="display:none;"/>
-                        <script type="text/javascript">
-                            $(document).ready(function(){
-                                $("img.buttonkeyrazer").click(function(){
-                                    var logitech = $("div.logikey");
-                                    var razer = $("div.razrkey");
-                                    if(razer.css("display") != "block")
-                                    {
+                    <div class="razrkey" style="display:none;position:absolute;">
+                        <img src="images/keyboardr.png" style="z-index: 1;width: 600px;position: absolute;" />
+                        <video id="c" style="padding: 74px 26px 137px 29px;position: absolute;" muted="" height="150"
+                            width="545">
+                            <source src="videos/overwatch_demo_razer.mp4">
+                            </source>
+                        </video>
+                    </div>
+                </div>
+                <video height="340" width="600" id="a" style="padding-left: 20px;" controls loop>
+                    <source src="videos/overwatch_demo_gameplay.mp4">
+                    </source>
+                </video>
+                <br />
+                <div
+                    style="height: 100%;font-family:arial;width: 75%;background-color: rgba(0, 0, 0, 0.7);margin-top: 20px;padding-top: 20px;">
+                    Click a brand to switch the keyboard:<br /><br />
+                    <img class="buttonkeylogitech" src="images/ltech.png" />
+                    <img class="buttonkeyrazer" src="images/rzr.png" />
+                    <br />
+                    <br />
+                    Click a game icon to switch demo video:<br /><br />
+                    <img class="buttonkeygameicon" id="dota2_btn" src="images/logos/games/dota2.png"
+                        style="width:64px; height:64px" />
+                    <img class="buttonkeygameicon" id="gta5_btn" src="images/logos/games/gta5.png"
+                        style="width:64px; height:64px" />
+                    <img class="buttonkeygameicon" id="rocketleague_btn" src="images/logos/games/rocketleague.png"
+                        style="width:64px; height:64px" />
+                    <img class="buttonkeygameicon" id="overwatch_btn" src="images/logos/games/overwatch.png"
+                        style="width:64px; height:64px" />
+                    <img class="buttonkeygameicon" id="dodgeball_btn" src="images/logos/games/disco_dodgeball.png"
+                        style="width:64px; height:64px" />
+
+                    <input type="range" value="0" id="scrub" style="display:none;" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("img.buttonkeyrazer").click(function () {
+                                var logitech = $("div.logikey");
+                                var razer = $("div.razrkey");
+                                if (razer.css("display") != "block") {
                                     razer.fadeIn('slow');
                                     logitech.fadeOut('slow');
-                                    }
-                                    });
-                                $("img.buttonkeylogitech").click(function(){
-                                    var logitech = $("div.logikey");
-                                    var razer = $("div.razrkey");
-                                    if(logitech.css("display") != "block")
-                                    {
+                                }
+                            });
+                            $("img.buttonkeylogitech").click(function () {
+                                var logitech = $("div.logikey");
+                                var razer = $("div.razrkey");
+                                if (logitech.css("display") != "block") {
                                     logitech.fadeIn('slow');
                                     razer.fadeOut('slow');
-                                    }
-                                    });
-                                });    
-                                
-                            document.addEventListener("DOMContentLoaded", function () {
+                                }
+                            });
+                        });
+
+                        document.addEventListener("DOMContentLoaded", function () {
                             var videos = {
-                            a: Popcorn("#a"),
-                            b: Popcorn("#b"),
-                            c: Popcorn("#c"),
-                          },
-                          scrub = $("#scrub"),
-                          loadCount = 0,
-                          events = "play pause timeupdate seeking".split(/\s+/g);
+                                a: Popcorn("#a"),
+                                b: Popcorn("#b"),
+                                c: Popcorn("#c"),
+                            },
+                                scrub = $("#scrub"),
+                                loadCount = 0,
+                                events = "play pause timeupdate seeking".split(/\s+/g);
 
-                        // iterate both media sources
-                        Popcorn.forEach(videos, function(media, type) {
+                            // iterate both media sources
+                            Popcorn.forEach(videos, function (media, type) {
 
-                          // when each is ready... 
-                          media.on("canplayall", function() {
+                                // when each is ready... 
+                                media.on("canplayall", function () {
 
-                            // trigger a custom "sync" event
-                            this.emit("sync");
+                                    // trigger a custom "sync" event
+                                    this.emit("sync");
 
-                            // set the max value of the "scrubber"
-                            scrub.attr("max", this.duration());
+                                    // set the max value of the "scrubber"
+                                    scrub.attr("max", this.duration());
 
-                            // Listen for the custom sync event...    
-                          }).on("sync", function() {
+                                    // Listen for the custom sync event...    
+                                }).on("sync", function () {
 
-                            // Once both items are loaded, sync events
-                            if (++loadCount == 3) {
+                                    // Once both items are loaded, sync events
+                                    if (++loadCount == 3) {
 
-                              // Iterate all events and trigger them on the video B
-                              // whenever they occur on the video A
-                              events.forEach(function(event) {
+                                        // Iterate all events and trigger them on the video B
+                                        // whenever they occur on the video A
+                                        events.forEach(function (event) {
 
-                                videos.a.on(event, function() {
+                                            videos.a.on(event, function () {
 
-                                  // Avoid overkill events, trigger timeupdate manually
-                                  if (event === "timeupdate") {
+                                                // Avoid overkill events, trigger timeupdate manually
+                                                if (event === "timeupdate") {
 
-                                    if (!this.media.paused) {
-                                      return;
+                                                    if (!this.media.paused) {
+                                                        return;
+                                                    }
+                                                    videos.b.emit("timeupdate");
+                                                    videos.c.emit("timeupdate");
+
+                                                    // update scrubber
+                                                    scrub.val(this.currentTime());
+
+                                                    return;
+                                                }
+
+                                                if (event === "seeking") {
+                                                    videos.b.currentTime(this.currentTime());
+                                                    videos.c.currentTime(this.currentTime());
+                                                }
+
+                                                if (event === "play" || event === "pause") {
+                                                    videos.b[event]();
+                                                    videos.c[event]();
+                                                }
+                                            });
+                                        });
                                     }
-                                    videos.b.emit("timeupdate");
-                                    videos.c.emit("timeupdate");
-
-                                    // update scrubber
-                                    scrub.val(this.currentTime());
-
-                                    return;
-                                  }
-
-                                  if (event === "seeking") {
-                                    videos.b.currentTime(this.currentTime());
-                                    videos.c.currentTime(this.currentTime());
-                                  }
-
-                                  if (event === "play" || event === "pause") {
-                                    videos.b[event]();
-                                    videos.c[event]();
-                                  }
                                 });
-                              });
+                            });
+
+                            scrub.bind("change", function () {
+                                var val = this.value;
+                                videos.a.currentTime(val);
+                                videos.b.currentTime(val);
+                                videos.c.currentTime(val);
+                            });
+
+                            // With requestAnimationFrame, we can ensure that as 
+                            // frequently as the browser would allow, 
+                            // the video is resync'ed.
+                            function sync() {
+                                if (videos.b.media.readyState === 4) {
+                                    videos.b.currentTime(
+                                        videos.a.currentTime()
+                                    );
+                                }
+                                if (videos.c.media.readyState === 4) {
+                                    videos.c.currentTime(
+                                        videos.a.currentTime()
+                                    );
+                                }
+                                requestAnimationFrame(sync);
                             }
-                          });
-                        });
 
-                        scrub.bind("change", function() {
-                          var val = this.value;
-                          videos.a.currentTime(val);
-                          videos.b.currentTime(val);
-                          videos.c.currentTime(val);
-                        });
+                            sync();
+                        }, false);
 
-                        // With requestAnimationFrame, we can ensure that as 
-                        // frequently as the browser would allow, 
-                        // the video is resync'ed.
-                        function sync() {
-                          if (videos.b.media.readyState === 4) {
-                            videos.b.currentTime(
-                              videos.a.currentTime()
-                            );
-                          }
-                          if (videos.c.media.readyState === 4) {
-                            videos.c.currentTime(
-                              videos.a.currentTime()
-                            );
-                          }
-                          requestAnimationFrame(sync);
-                        }
+                        (function () {
+                            var gameplayVid = document.getElementById("a");
+                            var logiVid = document.getElementById("b");
+                            var razerVid = document.getElementById("c");
 
-                        sync();}, false);
+                            var currentSelection = "";
 
-                        (function(){
-                        var gameplayVid = document.getElementById("a");
-                        var logiVid = document.getElementById("b");
-                        var razerVid = document.getElementById("c");
+                            [].forEach.call(document.getElementsByClassName('buttonkeygameicon'), function (btn) {
+                                btn.addEventListener('click', function (e) {
 
-                        var currentSelection = "";
+                                    switch (e.target.id) {
+                                        case "overwatch_btn":
+                                            if (currentSelection != "overwatch_btn") {
+                                                gameplayVid.src = "videos/overwatch_demo_gameplay.mp4";
+                                                logiVid.src = "videos/overwatch_demo_logitech.mp4";
+                                                razerVid.src = "videos/overwatch_demo_razer.mp4";
 
-                        [].forEach.call(document.getElementsByClassName('buttonkeygameicon'), function(btn) {
-                            btn.addEventListener('click', function(e) {
+                                                currentSelection = "overwatch_btn";
+                                                gameplayVid.play();
+                                            }
+                                            break;
+                                        case "rocketleague_btn":
+                                            if (currentSelection != "rocketleague_btn") {
+                                                gameplayVid.src = "videos/Aurora_RocketLeague_website_gameplay_cut_2.mp4";
+                                                logiVid.src = "videos/Aurora_RocketLeague_website_logitech_cut_2.mp4";
+                                                razerVid.src = "videos/Aurora_RocketLeague_website_razer_cut_3.mp4";
 
-                                switch (e.target.id){
-                                    case "overwatch_btn":
-                                        if(currentSelection != "overwatch_btn")
-                                        {
-                                            gameplayVid.src = "videos/overwatch_demo_gameplay.mp4";
-                                            logiVid.src = "videos/overwatch_demo_logitech.mp4";
-                                            razerVid.src = "videos/overwatch_demo_razer.mp4";
-                                             
-                                            currentSelection = "overwatch_btn";
-                                            gameplayVid.play();
-                                        }
-                                        break;
-                                    case "rocketleague_btn":
-                                        if(currentSelection != "rocketleague_btn")
-                                        {
-                                            gameplayVid.src = "videos/Aurora_RocketLeague_website_gameplay_cut_2.mp4";
-                                            logiVid.src = "videos/Aurora_RocketLeague_website_logitech_cut_2.mp4";
-                                            razerVid.src = "videos/Aurora_RocketLeague_website_razer_cut_3.mp4";
-                                            
-                                            currentSelection = "rocketleague_btn";
-                                            gameplayVid.play();
-                                        }
-                                        break;
-                                    case "gta5_btn":
-                                        if(currentSelection != "gta5_btn")
-                                        {
-                                            gameplayVid.src = "videos/Aurora_GTA5_website_gameplay_cut.mp4";
-                                            logiVid.src = "videos/Aurora_GTA5_website_logitech_cut.mp4";
-                                            razerVid.src = "videos/Aurora_GTA5_website_razer_cut.mp4";
-                                             
-                                            currentSelection = "gta5_btn";
-                                            gameplayVid.play();
-                                        }
-                                        break;
-                                    case "dota2_btn":
-                                        if(currentSelection != "dota2_btn")
-                                        {
-                                            gameplayVid.src = "videos/Aurora_Dota2_website_gameplay_cut.mp4";
-                                            logiVid.src = "videos/Aurora_Dota2_website_logitech_cut.mp4";
-                                            razerVid.src = "videos/Aurora_Dota2_website_razer_cut.mp4";
-                                             
-                                            currentSelection = "dota2_btn";
-                                            gameplayVid.play();
-                                        }
-                                        break;
-                                    case "dodgeball_btn":
-                                        if(currentSelection != "dodgeball_btn")
-                                        {
-                                            gameplayVid.src = "videos/dodgeball_demo_gameplay.mp4";
-                                            logiVid.src = "videos/dodgeball_demo_logitech.mp4";
-                                            razerVid.src = "videos/dodgeball_demo_razer.mp4";
-                                             
-                                            currentSelection = "dodgeball_btn";
-                                            gameplayVid.play();
-                                        }
-                                        break;
-                                    default:
-                                         console.log(e.target.id);
-                                        }
-                                    })
+                                                currentSelection = "rocketleague_btn";
+                                                gameplayVid.play();
+                                            }
+                                            break;
+                                        case "gta5_btn":
+                                            if (currentSelection != "gta5_btn") {
+                                                gameplayVid.src = "videos/Aurora_GTA5_website_gameplay_cut.mp4";
+                                                logiVid.src = "videos/Aurora_GTA5_website_logitech_cut.mp4";
+                                                razerVid.src = "videos/Aurora_GTA5_website_razer_cut.mp4";
+
+                                                currentSelection = "gta5_btn";
+                                                gameplayVid.play();
+                                            }
+                                            break;
+                                        case "dota2_btn":
+                                            if (currentSelection != "dota2_btn") {
+                                                gameplayVid.src = "videos/Aurora_Dota2_website_gameplay_cut.mp4";
+                                                logiVid.src = "videos/Aurora_Dota2_website_logitech_cut.mp4";
+                                                razerVid.src = "videos/Aurora_Dota2_website_razer_cut.mp4";
+
+                                                currentSelection = "dota2_btn";
+                                                gameplayVid.play();
+                                            }
+                                            break;
+                                        case "dodgeball_btn":
+                                            if (currentSelection != "dodgeball_btn") {
+                                                gameplayVid.src = "videos/dodgeball_demo_gameplay.mp4";
+                                                logiVid.src = "videos/dodgeball_demo_logitech.mp4";
+                                                razerVid.src = "videos/dodgeball_demo_razer.mp4";
+
+                                                currentSelection = "dodgeball_btn";
+                                                gameplayVid.play();
+                                            }
+                                            break;
+                                        default:
+                                            console.log(e.target.id);
+                                    }
+                                })
                             })
                         }())
-                        </script>
-                    </p>
-                    <hr style="width:70%;"/>
-                    <h1>Natively Supported Games</h1>
-                    <p style="height: 100%;width: 75%">
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/570" target="_blank">
-				<img class="gamelogo" src="images/logos/games/dota2.png" style="height:64px" title="Dota 2"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/730" target="_blank">
-				<img class="gamelogo" src="images/logos/games/csgo.png" style="height:64px" title="Counter Strike: Global Offensive"/>
-			</a>
-			<a style="text-decoration:none" href="https://www.rockstargames.com/games/info/V" target="_blank">
-				<img class="gamelogo" src="images/logos/games/gta5.png" style="height:64px" title="Grand Theft Auto 5"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/252950" target="_blank">
-				<img class="gamelogo" src="images/logos/games/rocketleague.png" style="height:64px" title="Rocket League"/>
-			</a>
-			<a style="text-decoration:none" href="https://playoverwatch.com" target="_blank">
-				<img class="gamelogo" src="images/logos/games/overwatch.png" style="height:64px" title="Overwatch"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/218620" target="_blank">
-				<img class="gamelogo" src="images/logos/games/pd2.png" style="height:64px" title="Payday 2"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/365590" target="_blank">
-				<img class="gamelogo" src="images/logos/games/division.png" style="height:64px" title="Tom Clancy's The Division"/>
-			</a>
-			<a style="text-decoration:none" href="https://leagueoflegends.com" target="_blank">
-				<img class="gamelogo" src="images/logos/games/leagueoflegends.png" style="height:64px" title="League of Legends"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/219150" target="_blank">
-				<img class="gamelogo" src="images/logos/games/hotline.png" style="height:64px" title="Hotline Miami"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/257510" target="_blank">
-				<img class="gamelogo" src="images/logos/games/talosprinciple.png" style="height:64px" title="The Talos Principle"/>
-			</a>
-			<a style="text-decoration:none" href="https://www.origin.com/usa/en-us/store/battlefield/battlefield-3" target="_blank">
-				<img class="gamelogo" src="images/logos/games/bf3.png" style="height:64px" title="Battlefield 3"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/209870" target="_blank">
-				<img class="gamelogo" src="images/logos/games/blacklight.png" style="height:64px" title="Blacklight: Retribution"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/49470" target="_blank">
-				<img class="gamelogo" src="images/logos/games/magic_duels.png" style="height:64px" title="Magic: The Gathering - Duels of the Planeswalkers 2012"/>
-			</a>
-            <a style="text-decoration:none" href="https://store.steampowered.com/app/241930" target="_blank">
-				<img class="gamelogo" src="images/logos/games/shadow_of_mordor.png" style="height:64px" title="Middle-earth: Shadow of Mordor"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/41070" target="_blank">
-				<img class="gamelogo" src="images/logos/games/ssam3.png" style="height:64px" title="Serious Sam 3"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/270450" target="_blank">
-				<img class="gamelogo" src="images/logos/games/disco_dodgeball.png" style="height:64px" title="Robot Roller-Derby Disco Dodgeball"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/200510" target="_blank">
-				<img class="gamelogo" src="images/logos/games/xcom.png" style="height:64px" title="XCOM: Enemy Unknown"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/273350" target="_blank">
-				<img class="gamelogo" src="images/logos/games/evolve.png" style="height:64px" title="Evolve Stage 2"/>
-			</a>    
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/287390" target="_blank">
-				<img class="gamelogo" src="images/logos/games/metro_ll.png" style="height:64px" title="Metro: Last Light"/>
-			</a>
-			<a style="text-decoration:none" href="https://www.guildwars2.com" target="_blank">
-				<img class="gamelogo" src="images/logos/games/gw2.png" style="height:64px" title="Guild Wars 2"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/327030" target="_blank">
-				<img class="gamelogo" src="images/logos/games/worms_wmd.png" style="height:64px" title="Worms W.M.D"/>
-			</a>
-			<a style="text-decoration:none" href="http://www.bladeandsoul.com" target="_blank">
-				<img class="gamelogo" src="images/logos/games/bns.png" style="height:64px" title="Blade and Soul"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/49520" target="_blank">
-				<img class="gamelogo" src="images/logos/games/bl2.png" style="height:64px" title="Borderlands 2"/>
-			</a>
-            <a style="text-decoration:none" href="https://store.steampowered.com/app/227300" target="_blank">
-				<img class="gamelogo" src="images/logos/games/ets2.png" style="height:64px" title="Euro Truck Simulator 2"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/391220" target="_blank">
-				<img class="gamelogo" src="images/logos/games/rot_tombraider.png" style="height:64px" title="Rise of the Tomb Raider"/>
-			</a>
-            <a style="text-decoration:none" href="https://store.steampowered.com/app/239140/" target="_blank">
-				<img class="gamelogo" src="images/logos/games/dl.png" style="height:64px" title="Dying Light"/>
-			</a>
-			<a style="text-decoration:none" href="https://www.origin.com/usa/en-us/store/battlefield/battlefield-1" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/bf1.png" style="height:64px" title="Battlefield 1"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/205100" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/dishonored.png" style="height:64px" title="Dishonored"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/200010" target="_blank">	
-			    <img class="gamelogo" src="images/logos/games/q_conumdrum.png" style="height:64px" title="Quantum Conumdrum"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/292030" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/witcher3.png" style="height:64px" title="Witcher 3"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/323850" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/moveordie.png" style="height:64px" title="Move or Die"/>
-			</a>
-			<a style="text-decoration:none" href="https://minecraft.net"target="_blank" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/minecraft.png" style="height:64px" title="Minecraft"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/232090" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/kf2.png" style="height:64px" title="Killing Floor 2"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/379720" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/doom.png" style="height:64px" title="DOOM"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/611500" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/quakechampions.png" style="height:64px" title="Quake Champions"/>
-			</a>
-			<a style="text-decoration:none" href="https://store.steampowered.com/app/427520" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/factorio.png" style="height:64px" title="Factorio"/>
-			</a>
-			<a style="text-decoration:none" href="https://diablo3.com" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/diablo3.png" style="height:64px" title="Diablo III"/>
-            </a>
-            <a style="text-decoration:none" href="https://store.steampowered.com/app/264710/Subnautica/" target="_blank">
-			    <img class="gamelogo" src="images/logos/games/subnautica.png" style="height:64px" title="Subnautica"/>
-			</a>
+                    </script>
+            </p>
+            <hr style="width:70%;" />
+            <h1>Natively Supported Games</h1>
+            <p style="height: 100%;width: 75%">
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/570" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/dota2.png" style="height:64px" title="Dota 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/730" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/csgo.png" style="height:64px"
+                        title="Counter Strike: Global Offensive" />
+                </a>
+                <a style="text-decoration:none" href="https://www.rockstargames.com/games/info/V" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/gta5.png" style="height:64px"
+                        title="Grand Theft Auto 5" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/252950" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/rocketleague.png" style="height:64px"
+                        title="Rocket League" />
+                </a>
+                <a style="text-decoration:none" href="https://playoverwatch.com" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/overwatch.png" style="height:64px"
+                        title="Overwatch" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/218620" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/pd2.png" style="height:64px" title="Payday 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/365590" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/division.png" style="height:64px"
+                        title="Tom Clancy's The Division" />
+                </a>
+                <a style="text-decoration:none" href="https://leagueoflegends.com" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/leagueoflegends.png" style="height:64px"
+                        title="League of Legends" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/219150" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/hotline.png" style="height:64px"
+                        title="Hotline Miami" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/257510" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/talosprinciple.png" style="height:64px"
+                        title="The Talos Principle" />
+                </a>
+                <a style="text-decoration:none" href="https://www.origin.com/usa/en-us/store/battlefield/battlefield-3"
+                    target="_blank">
+                    <img class="gamelogo" src="images/logos/games/bf3.png" style="height:64px" title="Battlefield 3" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/209870" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/blacklight.png" style="height:64px"
+                        title="Blacklight: Retribution" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/49470" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/magic_duels.png" style="height:64px"
+                        title="Magic: The Gathering - Duels of the Planeswalkers 2012" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/241930" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/shadow_of_mordor.png" style="height:64px"
+                        title="Middle-earth: Shadow of Mordor" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/41070" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/ssam3.png" style="height:64px"
+                        title="Serious Sam 3" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/270450" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/disco_dodgeball.png" style="height:64px"
+                        title="Robot Roller-Derby Disco Dodgeball" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/200510" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/xcom.png" style="height:64px"
+                        title="XCOM: Enemy Unknown" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/273350" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/evolve.png" style="height:64px"
+                        title="Evolve Stage 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/287390" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/metro_ll.png" style="height:64px"
+                        title="Metro: Last Light" />
+                </a>
+                <a style="text-decoration:none" href="https://www.guildwars2.com" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/gw2.png" style="height:64px" title="Guild Wars 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/327030" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/worms_wmd.png" style="height:64px"
+                        title="Worms W.M.D" />
+                </a>
+                <a style="text-decoration:none" href="http://www.bladeandsoul.com" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/bns.png" style="height:64px" title="Blade and Soul" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/49520" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/bl2.png" style="height:64px" title="Borderlands 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/227300" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/ets2.png" style="height:64px"
+                        title="Euro Truck Simulator 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/391220" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/rot_tombraider.png" style="height:64px"
+                        title="Rise of the Tomb Raider" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/239140/" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/dl.png" style="height:64px" title="Dying Light" />
+                </a>
+                <a style="text-decoration:none" href="https://www.origin.com/usa/en-us/store/battlefield/battlefield-1"
+                    target="_blank">
+                    <img class="gamelogo" src="images/logos/games/bf1.png" style="height:64px" title="Battlefield 1" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/205100" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/dishonored.png" style="height:64px"
+                        title="Dishonored" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/200010" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/q_conumdrum.png" style="height:64px"
+                        title="Quantum Conumdrum" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/292030" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/witcher3.png" style="height:64px" title="Witcher 3" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/323850" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/moveordie.png" style="height:64px"
+                        title="Move or Die" />
+                </a>
+                <a style="text-decoration:none" href="https://minecraft.net" target="_blank" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/minecraft.png" style="height:64px"
+                        title="Minecraft" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/232090" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/kf2.png" style="height:64px"
+                        title="Killing Floor 2" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/379720" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/doom.png" style="height:64px" title="DOOM" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/611500" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/quakechampions.png" style="height:64px"
+                        title="Quake Champions" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/427520" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/factorio.png" style="height:64px" title="Factorio" />
+                </a>
+                <a style="text-decoration:none" href="https://diablo3.com" target="_blank">
+                    <img class="gamelogo" src="images/logos/games/diablo3.png" style="height:64px" title="Diablo III" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/264710/Subnautica/"
+                    target="_blank">
+                    <img class="gamelogo" src="images/logos/games/subnautica.png" style="height:64px"
+                        title="Subnautica" />
+                </a>
+                <a style="text-decoration:none" href="https://osu.ppy.sh/home"
+                    target="_blank">
+                    <img class="gamelogo" src="images/logos/games/osu.png" style="height:64px"
+                        title="Osu!" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/433340/Slime_Rancher/"
+                    target="_blank">
+                    <img class="gamelogo" src="images/logos/games/Slime_Rancher.png" style="height:64px"
+                        title="Slime Rancher" />
+                </a>
+                <a style="text-decoration:none" href="https://store.steampowered.com/app/883710/RESIDENT_EVIL_2__BIOHAZARD_RE2/"
+                    target="_blank">
+                    <img class="gamelogo" src="images/logos/games/re2.png" style="height:64px"
+                        title="Resident Evil 2" />
+                </a>
 
-                        </br></br>And many more through the <a href="https://www2.razer.com/chroma-workshop/games" target="_blank">Razer</a>, <a href="https://www.logitechg.com/en-sg/microsite/lightsync" target="_blank">Logitech</a> and <a href="https://eu.alienwarearena.com/groups/alienfx/links" target="_blank">LightFX</a> integration wrappers!
-                        <!--• Dota 2<br/>
-                        • CS:GO<br/>
-                        • Grand Theft Auto V<br/>
-                        • Rocket League<br/>
-                        • Overwatch<br/>
-                        • Payday 2<br/>
-                        • The Division<br/>
-                        • League of Legends<br/>
-                        • Hotline Miami<br/>
-                        • The Talos Principle<br/>
-                        • Battlefield 3<br/>
-                        • Blacklight: Retribution<br/>
-                        • Magic: The Gathering - Duels of the Planeswalkers 2012<br/>
-                        • Middle-earth: Shadow of Mordor<br/>
-                        • Serious Sam 3<br/>
-                        • Robot Roller-Derby Disco Dodgeball<br/>
-                        • XCOM: Enemy Unknown<br/>
-                        • Evolve Stage 2<br/>
-                        • Metro: Last Light<br/>
-                        • Guild Wars 2<br/>
-                        • Worms W.M.D<br/>
-                        • Blade and Soul<br/>
-                        • Borderlands 2<br/>
-                        • Euro Truck Simulator 2<br/>
-                        • Rise of the Tomb Raider<br/>
-                        • Dying Light<br/>
-						• Battlefield 1<br/>
-						• Dishonored<br/>
-						• Quantum Conumdrum<br/>
-						• The Witcher 3<br/>
-						• Move or Die<br/>
-						• Minecraft<br/>
-						• Killing Floor 2<br/>
-						• Quake Champions<br/>
-						• Factorio<br/>
-						• DOOM<br/>
-						• Diablo III<br/>-->
-                    </p>
-                    
-                    <hr style="width:70%;"/>
-                    <h1>Natively Supported Brands</h1>
-                    <p style="height: 100%;width: 75%">
-                        <a style="text-decoration:none" href="https://www.logitechg.com/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/logitech.png" style="max-height:64px"/>
-                        </a>
-                        <a style="text-decoration:none" href="https://www.corsair.com" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/corsair.png" style="max-height:64px"/>
-                        </a>
-                        <a style="text-decoration:none" href="https://www.razer.com" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/razer.png" style="max-height:64px"/>
-                        </a>
-                        <a style="text-decoration:none" href="http://www.clevo.com.tw" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/clevo.png" style="max-height:64px"/>
-                        </a>
-                        <a style="text-decoration:none" href="http://www.coolermaster.com/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/cooler_master.png" style="max-height:64px"/>
-                        </a>
-                        <a style="text-decoration:none" href="https://steelseries.com/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/steelseries.png" style="max-height:64px"/>
-                        </a>
-                        <a style="text-decoration:none" href="http://www.wooting.nl/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/wooting.png" style="max-height:64px"/>
-                        </a>
-						<a style="text-decoration:none" href="http://www.roccat.org/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/roccat.png" style="max-height:64px"/>
-                        </a>
-						<a style="text-decoration:none" href="https://www.dell.com/en-us/gaming/alienware" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/alienware.png" style="max-height:64px"/>
-                        </a>						
-						<a style="text-decoration:none" href="https://www.playstation.com/en-us/explore/accessories/gaming-controllers/dualshock-4/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/ds4.png" style="max-height:64px"/>
-                        </a>
-						<a style="text-decoration:none" href="https://www.drevo.net/" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/drevo.png" style="max-height:64px"/>
-                        </a>
-						<a style="text-decoration:none" href="https://us.creative.com/p/peripherals/sound-blasterx-vanguard-k08" target="_blank">
-                            <img class="devicelogo" src="images/logos/devices/soundblasterx.png" style="max-height:64px"/>
-                        </a>
-                         <br/>and AtmoOrb<br/>
-                    </p>
-                    
-                    <hr style="width:70%;"/>
-                    <h1>Screenshots</h1>
-                    <pclass="auto-style1">
-                        <a href="https://puu.sh/tfKzm/1ce3b0cd5c.png" target="_blank"><img src="https://puu.sh/tfKzm/1ce3b0cd5c.png" alt="Desktop Settings" style="max-width:80%;"></a>
-                        <a href="https://puu.sh/tfKNj/98229d2f69.png" target="_blank"><img src="https://puu.sh/tfKNj/98229d2f69.png" alt="Dota 2 Settings" style="max-width:80%;"></a>
-                        <a href="https://puu.sh/tfKRK/61f3bb3757.png" target="_blank"><img src="https://puu.sh/tfKRK/61f3bb3757.png" alt="CSGO Settings" style="max-width:80%;"></a>
-                        <a href="https://puu.sh/tfKWL/d72e10b288.png" target="_blank"><img src="https://puu.sh/tfKWL/d72e10b288.png" alt="GTA 5 Settings" style="max-width:80%;"></a>
-                        <a href="https://puu.sh/tfL4N/30f5b9cfea.png" target="_blank"><img src="https://puu.sh/tfL4N/30f5b9cfea.png" alt="Rocket League Settings" style="max-width:80%;"></a>
-                        <a href="https://puu.sh/tfLcn/4978a48199.png" target="_blank"><img src="https://puu.sh/tfLcn/4978a48199.png" alt="Payday 2 Settings" style="max-width:80%;"></a>
-                        <a href="https://puu.sh/tfLfu/57b1df348a.png" target="_blank"><img src="https://puu.sh/tfLfu/57b1df348a.png" alt="Skype Integration Settings" style="max-width:80%;"></a>
-                    </p>
-                    
-                    <hr style="width:70%;"/>
-                    <h1>Features</h1>
-                    <p class="auto-style1">
-                        <strong>General features</strong><br/>
-                        • Display volume percentage on the keyboard<br/>
-                        • Display CPU and Memory usage on the keyboard<br/>
-                        • Layering system for effects<br/>
-                        • Define custom zones with individual effects<br/>
-                        • Key selection via freeform region<br/>
-                        • Customizable “away from keyboard” effects<br/>
-                        • Set global peripheral brightness on the fly without having to leave your game<br/>
-                        • Completely turn off peripheral lights after a specific time<br/>
-                        • Interactive keyboard effects such as: Key Fade, Key Wave, and Arrow Flow<br/>
-                        • Preview lighting effects without having to launch the game<br/>
-                        • Simultaneous support for different brands of RGB peripheral devices<br/>
-                        • Support for a wide range of models from all the top brands of RGB peripherals<br/>
-                        • Support for almost any Logitech LED and Razer Chroma supported games<br/>
-                        • Add other programs to define custom lighting layers for daytime and nighttime themes<br/>
-                        • Display shortcut keys with Shortcuts Assistant<br/>
-                        • Automatic updater<br/>
-                        • Ability to select your preferred keyboard layout and brand<br/>
-                        • Ability to select your mouse, and it's orientation (left/right handed)<br/>
-                        • Import/Export for profile settings<br/>
-                        • Customizable gradient layers<br/>
-                        • Scripting support for custom lighting effects & custom devices<br/>
-                        
-                        <br/><br/><strong>Dota 2 features</strong><br/>
-                        • Team-based background lighting<br/>
-                        • Respawn effect<br/>
-                        • Killstreak effect<br/>
-                        • Health and Mana indicators<br/>
-                        • Ability and Item indicators<br/>
-                        • Hero ability effects<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>CS:GO features</strong><br/>
-                        • Team-based background lighting<br/>
-                        • Health and Ammo indicators<br/>
-						• Weapon indicators<br/>
-                        • Bomb effect<br/>
-                        • Kill indicators<br/>
-                        • Burning and Flashbang effects<br/>
-                        • Chat/Console typing keys<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
+                </br></br>And many more through the <a href="https://www2.razer.com/chroma-workshop/games"
+                    target="_blank">Razer</a>, <a href="https://www.logitechg.com/en-gb/innovation/by-game-titles.html"
+                    target="_blank">Logitech</a> and <a href="https://web.archive.org/web/20161030135221/http://alienfx.cyanlabs.net/"
+                    target="_blank">LightFX</a> integration wrappers!
+            </p>
 
-                        
-                        <br/><br/><strong>Grand Theft Auto V features</strong><br/>
-                        • Dynamic background lighting (based on current character or race position)<br/>
-                        • Custom police siren effects<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>Rocket League features</strong><br/>
-                        • Team-based background lighting<br/>
-                        • Score-split for background effect<br/>
-                        • Boost indicator<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>Overwatch features</strong><br/>
-                        • Overwatch effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>Payday 2 features</strong><br/>
-                        • Assault-based background lighting effects<br/>
-                        • Suspicion background effect<br/>
-                        • Player health and ammo indicators<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>The Division features</strong><br/>
-                        • The Division effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>League of Legends features</strong><br/>
-                        • League of Legends reacts to player HP, when damaged, healed, or killed.<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>Hotline Miami features</strong><br/>
-                        • Hotline Miami has a slowly alternating color effect.<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-                        
-                        <br/><br/><strong>The Talos Principle features</strong><br/>
-                        • The Talos Principle changes color based on the puzzle color you are in.<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Quantum Conumdrum features</strong><br/>
-                        • Quantum Conumdrum effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Battlefield 1 features</strong><br/>
-                        • Battlefield 1 effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Dishonored features</strong><br/>
-                        • Health and Mana Indicator<br/>
-						• Potions Indicator<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>The Witcher 3 features</strong><br/>
-                        • Health, Toxicity, and Stamina Indicator<br/>
-						• Currently selected Sign as background<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Move or Die features</strong><br/>
-                        • Move or Die effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Minecraft features</strong><br/>
-                        • Health, hunger, experience, and other indicators<br/>
-						• Day/Night indicator<br/>
-						• Rain and Fire indicator<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						• Key Conflict Indicator<br/>
-						
-						<br/><br/><strong>Killing Floor 2 features</strong><br/>
-                        • Killing Floor 2 effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>DOOM features</strong><br/>
-                        • DOOM effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Quake Champions features</strong><br/>
-                        • Quake Champions effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Factorio features</strong><br/>
-                        • Factorio effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
-						
-						<br/><br/><strong>Diablo III features</strong><br/>
-                        • Diablo III effects are controlled by the game itself<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
+            <hr style="width:70%;" />
+            <h1>Natively Supported Brands</h1>
+            <p style="height: 100%;width: 75%">
+                <a style="text-decoration:none" href="https://www.logitechg.com/" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/logitech.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.corsair.com" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/corsair.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.razer.com" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/razer.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="http://www.clevo.com.tw" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/clevo.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="http://www.coolermaster.com/" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/cooler_master.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://steelseries.com/" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/steelseries.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="http://www.wooting.nl/" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/wooting.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="http://www.roccat.org/" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/roccat.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.dell.com/en-us/gaming/alienware" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/alienware.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none"
+                    href="https://www.playstation.com/en-us/explore/accessories/gaming-controllers/dualshock-4/"
+                    target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/ds4.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.drevo.net/" target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/drevo.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://us.creative.com/p/peripherals/sound-blasterx-vanguard-k08"
+                    target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/soundblasterx.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.asus.com/campaign/aura/fl/index.html"
+                    target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/asus.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.yeelight.com/"
+                    target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/yeelight.png" style="max-height:64px" />
+                </a>
+                <a style="text-decoration:none" href="https://www.nzxt.com/"
+                    target="_blank">
+                    <img class="devicelogo" src="images/logos/devices/nzxt.png" style="max-height:64px" />
+                </a>
+                <br />and AtmoOrb<br />
+            </p>
 
-                        <br/><br/><strong>Subnautica features</strong><br/>
-                        • Health, hunger, oxygen, and other indicators<br/>
-						• Depth indicator<br/>
-                        • Layering system<br/>
-                        • Rearrange and add general layers<br/>
+            <hr style="width:70%;" />
+            <h1>Screenshots</h1>
+            <div class="slideshow-container box-size">
 
-                    </p>
-                    <hr style="width:70%;"/>
-                    <h1>System Specifications</h1>
-                    <p class="auto-style1">
-                        <strong>Recommended</strong>:<br/>
-                        • OS: Windows based operating system<br/>
-                        • Processor: Quad core processor<br/>
-                        • Memory: 255 MB RAM<br/>
-                        • Software : Make sure to have installed <a href="https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads" target="_blank">Visual C++ Redistributable Packages for Visual Studio 2017</a> and <a href="https://www.microsoft.com/en-gb/download/details.aspx?id=49981" target="_blank">Microsoft .NET Framework 4.6.1</a><br/>
-                        • Internet Connection: Required for automatic updates<br/>
-                        • Additional Notes: Being able to run games with stable performance<br/>
-                    </p>
+                <div class="mySlides0 fade">
+                    <div class="numbertext">1 / 11</div>
+                    <img src="images/Screenshots/Zoetato2.png" style="width:100%">
+                    <div class="text">Desktop (Zoetato)</div>
                 </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">2 / 11</div>
+                    <img src="images/Screenshots/DrMeteor1.png" style="width:100%">
+                    <div class="text">Layer Overrides (DrMeteor)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">3 / 11</div>
+                    <img src="images/Screenshots/Davato1.png" style="width:100%">
+                    <div class="text">Key Wave (Davato)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">4 / 11</div>
+                    <img src="images/Screenshots/macer1.png" style="width:100%">
+                    <div class="text">Audio Visualiser (gitmacer)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">5 / 11</div>
+                    <img src="images/Screenshots/Zoetato4.png" style="width:100%">
+                    <div class="text">Layer Overrides (Zoetato)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">6 / 11</div>
+                    <img src="images/Screenshots/Zoetato3.png" style="width:100%">
+                    <div class="text">Excluding Keys (Zoetato)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">7 / 11</div>
+                    <img src="images/Screenshots/DrMeteor2.png" style="width:100%">
+                    <div class="text">Toggle key layer (DrMeteor)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">8 / 11</div>
+                    <img src="images/Screenshots/Davato2.png" style="width:100%">
+                    <div class="text">Audio Visualiser (Davato)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">9 / 11</div>
+                    <img src="images/Screenshots/macer2.png" style="width:100%">
+                    <div class="text">Excluding Keys (gitmacer)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">10 / 11</div>
+                    <img src="images/Screenshots/Davato3.png" style="width:100%">
+                    <div class="text">Layer Overrides (Davato)</div>
+                </div>
+
+                <div class="mySlides0 fade">
+                    <div class="numbertext">11 / 11</div>
+                    <img src="images/Screenshots/Zoetato1.png" style="width:100%">
+                    <div class="text">Key Fade (Zoetato)</div>
+                </div>
+
+                <a class="prev" onclick="plusSlides(0, -1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(0, 1)">&#10095;</a>
+
             </div>
+            <br>
+
+            <div style="text-align:center">
+                <span class="dot dot0" onclick="currentSlide(0, 1)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 2)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 3)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 4)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 5)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 6)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 7)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 8)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 9)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 10)"></span>
+                <span class="dot dot0" onclick="currentSlide(0, 11)"></span>
+            </div>
+
+            <hr style="width:70%;" />
+            <h1>Video Demos</h1>
+            <div class="slideshow-container box-size">
+
+                <div class="mySlides1 fade">
+                    <div class="numbertext">1 / 6</div>
+                    <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/irBmmA_ndPY">
+                    </iframe>
+                </div>
+
+                <div class="mySlides1 fade">
+                    <div class="numbertext">2 / 6</div>
+                    <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/YMk0NwrLMF4">
+                    </iframe>
+                </div>
+
+                <div class="mySlides1 fade">
+                    <div class="numbertext">3 / 6</div>
+                    <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/iqwYU-blkhk">
+                    </iframe>
+                </div>
+
+                <div class="mySlides1 fade">
+                    <div class="numbertext">4 / 6</div>
+                    <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/8Y2hvVDQTxI">
+                    </iframe>
+                </div>
+
+                <div class="mySlides1 fade">
+                    <div class="numbertext">5 / 6</div>
+                    <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/pxx3hqoPFD8">
+                    </iframe>
+                </div>
+
+                <div class="mySlides1 fade">
+                    <div class="numbertext">6 / 6</div>
+                    <iframe width="100%" height="500"
+                    src="https://www.youtube.com/embed/XhXQt0LU520">
+                    </iframe>
+                </div>
+
+                <a class="prev" onclick="plusSlides(1, -1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1, 1)">&#10095;</a>
+
+            </div>
+            <br>
+
+            <div style="text-align:center">
+                <span class="dot dot1" onclick="currentSlide(1, 1)"></span>
+                <span class="dot dot1" onclick="currentSlide(1, 2)"></span>
+                <span class="dot dot1" onclick="currentSlide(1, 3)"></span>
+                <span class="dot dot1" onclick="currentSlide(1, 4)"></span>
+                <span class="dot dot1" onclick="currentSlide(1, 5)"></span>
+                <span class="dot dot1" onclick="currentSlide(1, 6)"></span>
+            </div>
+            <script>
+                var slideIndex = [1,1];
+                showSlides(0, slideIndex[0]);
+                showSlides(1, slideIndex[1]);
+                //showSlidesRotate();
+
+                function plusSlides(i, n) {
+                    showSlides(i, slideIndex[i] += n);
+                }
+
+                function currentSlide(i, n) {
+                    showSlides(i, slideIndex[i] = n);
+                }
+
+                function showSlides(id, n) {
+                    var i;
+                    var slides = document.getElementsByClassName("mySlides" + id + "");
+                    var dots = document.getElementsByClassName("dot" + id);
+                    if (n > slides.length) { slideIndex[id] = 1 }
+                    if (n < 1) { slideIndex[id] = slides.length }
+                    for (i = 0; i < slides.length; i++) {
+                        slides[i].style.display = "none";
+                    }
+                    for (i = 0; i < dots.length; i++) {
+                        dots[i].className = dots[i].className.replace(" active", "");
+                    }
+                    slides[slideIndex[id] - 1].style.display = "block";
+                    dots[slideIndex[id] - 1].className += " active";
+                }
+
+                function showSlidesRotate() {
+                    plusSlides(1);
+                    setTimeout(showSlides, 2000); // Change image every 2 seconds
+                }
+            </script>
+
+
+            <hr style="width:70%;" />
+            <h1>Features</h1>
+            <p class="auto-style1">
+                <strong>General</strong><br />
+                • Display volume percentage on the keyboard<br />
+                • Display CPU and Memory usage on the keyboard<br />
+                • Layering system for effects<br />
+                • Define custom layers with individual effects<br />
+                • Key selection via freeform region<br />
+                • Customizable “away from keyboard” effects<br />
+                • Set global peripheral brightness on the fly without having to leave your game<br />
+                • Completely turn off peripheral lights after a specific time<br />
+                • Interactive keyboard effects such as: Key Fade, Key Wave, and Arrow Flow<br />
+                • Preview lighting effects without having to launch the game<br />
+                • Simultaneous support for different brands of RGB peripheral devices<br />
+                • Support for a wide range of models from all the top brands of RGB peripherals<br />
+                • Support for almost any Logitech LED and Razer Chroma supported games<br />
+                • Add other programs to define custom lighting layers for daytime and nighttime themes<br />
+                • Display shortcut keys with Shortcuts Assistant<br />
+                • Automatic updater<br />
+                • Ability to select your preferred keyboard layout and brand<br />
+                • Ability to select your mouse, and it's orientation (left/right handed)<br />
+                • Import/Export for profile settings<br />
+                • Customizable gradient layers<br />
+                • Scripting support for custom lighting effects & custom devices<br />
+
+                <br /><br /><strong>Battlefield 1 features</strong><br />
+                • Flashes red when the player takes damage.<br />
+                • Lights up keybindings.<br />
+
+                <br /><br /><strong>Borderlands 2 features</strong><br />
+                • Health and Shield indicators<br />
+
+                <br /><br /><strong>Clone Hero features</strong><br />
+                • Note Streak Indicator <br />
+                • Star Power Percentage Indicator <br />
+                • Note Hit Animation <br />
+                • Fret Press Indicator <br />
+                • Star Power Activation Indicator & Color Overrides<br />
+                • FC Indicator<br />
+                • Menu Effects<br />
+                • Flashes red when a player misses a note or overstrums<br />
+
+                <br /><br /><strong>CS:GO features</strong><br />
+                • Team-based background lighting<br />
+                • Health and Ammo indicators<br />
+                • Bomb effect<br />
+                • Kill indicators<br />
+                • Burning and Flashbang effects<br />
+                • Chat/Console typing keys<br />
+
+                <br /><br /><strong>DOOM features</strong><br />
+                • Animation on kills and glory kills<br />
+                • Animation on item pickups<br />
+
+                <br /><br /><strong>Diablo III features</strong><br />
+                • Ability cooldowns<br />
+                • Health and damage indicators<br />
+                • Legendary item pickup animations<br />
+
+                <br /><br /><strong>Dishonored features</strong><br />
+                • Health and Mana indicators.<br />
+                • Potion indicators.<br />
+
+                <br /><br /><strong>Dota 2 features</strong><br />
+                • Team-based background lighting<br />
+                • Respawn effect<br />
+                • Killstreak effect<br />
+                • Health and Mana indicators<br />
+                • Ability and Item indicators<br />
+                • Hero ability effects<br />
+
+                <br /><br /><strong>Dying Light features</strong><br />
+                • Background lighting changes according to time of day, health, and flashlight<br />
+                • All keybindings with a color for each category<br />
+
+                <br /><br /><strong>Euro Truck Simulator 2 / American Truck Simulator features</strong><br />
+                • Throttle/braking indicators<br />
+                • RPM meter<br />
+                • Blinkers<br />
+                • Beacons<br />
+                • Fuel/air pressure indicators<br />
+                • Ignition indicator<br />
+
+                <br /><br /><strong>Factorio features</strong><br />
+                • Loading bar on startup<br />
+                • Health indicator<br />
+                • Research done alerts<br />
+
+                <br /><br /><strong>Grand Theft Auto V features</strong><br />
+                • Dynamic background lighting (based on current character or race position)<br />
+                • Custom police siren effects<br />
+
+                <br /><br /><strong>Hotline Miami features</strong><br />
+                • Hotline Miami has a slowly alternating color effect.<br />
+
+                <br /><br /><strong>Killing Floor 2 features</strong><br />
+                • Static red on main menu<br />
+                • Low Health and death indicators<br />
+                • Blue flash when healing<br />
+                • White during zed time<br />
+                • Red flash on incoming wave<br />
+                • Fire and Puke indicator flashes<br />
+
+                <br /><br /><strong>League of Legends features</strong><br />
+                • Teammate pings<br />
+                • Low health and Damage taken<br />
+                • Grey on death<br />
+
+                <br /><br /><strong>Minecraft features</strong><br />
+                • Healthbar<br />
+                • XP bar<br />
+                • Armor and hunger bars (not on the default profile but can easily be added)</strong><br />
+                • Flame effect when player burns<br />
+                • Raindrops when world is raining<br />
+                • Background based on time-of-day<br />
+
+                <br /><br /><strong>Move or Die features</strong><br />
+                • WASD, TFGH, IJKL and Arrows lighting up with their respective player colors.<br />
+                • Flash red followed by the player color if a player dies.<br />
+                • Round winning player colored flashes. <br />
+                • Match winning player colored pulses.<br />
+                • Rapid white flashes when leveling up.<br />
+                • Rapid red flashes while sudden death.<br />
+                • Synchronized yellow warning flashes idle warning in lobby.<br />
+                • Colored waves based on the item rarity of the unlocked item.<br />
+
+                <br /><br /><strong>Osu! features</strong><br />
+                • Health and accuracy meters<br />
+                • Animations for missing beats and losing combos<br />
+                • Animations when you hit a beat<br />
+
+                <br /><br /><strong>Overwatch features</strong><br />
+                • Different color depending on hero<br />
+                • Ability cooldown indicators<br />
+                • Ultimate indicator and animation (for certain heroes)<br />
+                • Lights up keybindings<br />
+
+                <br /><br /><strong>Payday 2 features</strong><br />
+                • Assault-based background lighting effects<br />
+                • Suspicion background effect<br />
+                • Player health and ammo indicators<br />
+
+                <br /><br /><strong>Quake Champions features</strong><br />
+                • Different color depending on chosen champion<br />
+                • Lights up keybinds with each weapons color <br />
+
+                <br /><br /><strong>Quantum Conumdrum features</strong><br />
+                • Changes color based on what dimension the player is in<br />
+
+                <br /><br /><strong>Rocket League features</strong><br />
+                • Team-based background lighting<br />
+                • Score-split for background effect<br />
+                • Boost indicator<br />
+                • Goal Explosions<br />
+
+                <br /><br /><strong>Subnautica features</strong><br />
+                • Depth indicator<br />
+                • Health, water, oxygen, and hunger indicator<br />
+                • PDA status<br />
+
+                <br /><br /><strong>The Division features</strong><br />
+                • Burn indicators<br />
+                • Ability cooldowns<br />
+                • Ammo indicator<br />
+                • Lights up keybindings<br />
+
+                <br /><br /><strong>The Talos Principle features</strong><br />
+                • Changes color based on the puzzle color the player is in<br />
+
+                <br /><br /><strong>The Witcher 3 features</strong><br />
+                • Current active sign as background<br />
+                • Health, Toxicity, and Stamina indicators
+
+            </p>
         </div>
-    </body>
+    </div>
+    </div>
+</body>
+
 </html>
