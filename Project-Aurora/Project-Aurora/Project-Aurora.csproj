@@ -54,6 +54,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>documentation\Aurora.XML</DocumentationFile>
     <WarningLevel>3</WarningLevel>
+	<LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\Build\Release\</OutputPath>
@@ -69,6 +70,7 @@
     <DocumentationFile>
     </DocumentationFile>
     <WarningLevel>3</WarningLevel>
+	<LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
