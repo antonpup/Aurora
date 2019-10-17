@@ -53,7 +53,7 @@ namespace Aurora.Devices.Hue
 
         public string GetDeviceDetails()
         {
-            return $"{GetDeviceName()} {(initialized ? "Connected to:" + conf.Name : "Connecting to:" + (bridge != null ? bridge.BridgeId : "") + " press the sync button to finalize setup.")} {(initialized ? ", controlling: " + (lights?.Count ?? 0) + " lights" : "")}";
+            return $"{GetDeviceName()} {(initialized ? "Connected to:" + conf.Name : "Connecting to:" + (bridge != null ? bridge.BridgeId : "") + " press the sync button to finalize setup.")} {(initialized ? ", controlling: " + (lights?.Count ?? 0) + " lights" : "")}"; 
         }
 
         public string GetDeviceUpdatePerformance()
