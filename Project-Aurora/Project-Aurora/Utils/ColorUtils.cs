@@ -555,6 +555,11 @@ namespace Aurora.Utils
             return new RealColor(this.Color.Clone());
         }
 
+        public override string ToString()
+        {
+            return Color.ToString();
+        }
+
         public static implicit operator System.Drawing.Color(RealColor c) => c.GetDrawingColor();
         public static implicit operator System.Windows.Media.Color(RealColor c) => c.GetMediaColor();
     }

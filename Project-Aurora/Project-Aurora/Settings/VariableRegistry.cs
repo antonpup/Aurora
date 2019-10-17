@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Aurora.Settings.Bindables;
+
 namespace Aurora.Settings
 {
     public class VariableRegistryItem
@@ -19,9 +21,59 @@ namespace Aurora.Settings
         public string Title = "";
         public string Remark = "";
         public VariableFlags Flags = VariableFlags.None;
+        
+        [JsonIgnore]
+        public IBindable Bindable { get; set; }
 
         public VariableRegistryItem()
         {
+        }
+
+        public VariableRegistryItem(IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
+        {
+            Bindable = bindable;
+            switch (Bindable)
+            {
+                case Bindable<bool> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    break;
+                case BindableNumber<double> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableNumber<float> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableNumber<int> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableNumber<long> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    Max = b.MaxValue;
+                    Min = b.MinValue;
+                    break;
+                case BindableColor b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    break;
+                case Bindable<string> b:
+                    Value = b.Value;
+                    Default = b.Default;
+                    break;
+            }
+            Title = title;
+            Remark = remark;
+            Flags = flags;
         }
 
         public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
@@ -44,29 +96,116 @@ namespace Aurora.Settings
         {
             if (this.Value != null && newvalue != null && this.Value.GetType() == newvalue.GetType())
             {
+                if (Bindable != null)
+                    switch (Bindable)
+                    {
+                        case Bindable<bool> b:
+                            b.Value = (bool)newvalue;
+                            break;
+                        case BindableNumber<double> b:
+                            b.Value = (double)newvalue;
+                            break;
+                        case BindableNumber<float> b:
+                            b.Value = (float)newvalue;
+                            break;
+                        case BindableNumber<int> b:
+                            b.Value = (int)newvalue;
+                            break;
+                        case BindableNumber<long> b:
+                            b.Value = (long)newvalue;
+                            break;
+                        case BindableColor b:
+                            b.Value = (RealColor)newvalue;
+                            break;
+                        case Bindable<string> b:
+                            b.Value = (string)newvalue;
+                            break;
+                    }
                 this.Value = newvalue;
             }
         }
 
         internal void Merge(VariableRegistryItem variableRegistryItem)
         {
-            this.Default = variableRegistryItem.Default;
-            this.Title = variableRegistryItem.Title;
-            this.Remark = variableRegistryItem.Remark;
-            this.Min = variableRegistryItem.Min;
-            this.Max = variableRegistryItem.Max;
-            Type typ = this.Value.GetType();
-            Type defaultType = variableRegistryItem.Default.GetType();
+            Default = variableRegistryItem.Default;
+                Title = variableRegistryItem.Title;
+                Remark = variableRegistryItem.Remark;
+                Min = variableRegistryItem.Min;
+                Max = variableRegistryItem.Max;
+                Bindable = variableRegistryItem.Bindable;
+                var typ = Value.GetType();
+                var defaultType = variableRegistryItem.Default.GetType();
+                if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
+                    Value = Enum.ToObject(defaultType, Value);
+                else if (!defaultType.Equals(typ) && Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
+                    Value = Convert.ChangeType(Value, defaultType);
+                else if (Value == null && !defaultType.Equals(typ))
+                    Value = variableRegistryItem.Default;
+                Flags = variableRegistryItem.Flags;
+                if (Bindable != null)
+                    switch (Bindable)
+                    {
+                        case Bindable<bool> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<double> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<float> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<int> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableNumber<long> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case BindableColor b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                        case Bindable<string> b:
+                            Value = b.Value;
+                            b.ValueChanged += _ => ValueChanged();
+                            break;
+                    }
+        }
 
-            if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
-                this.Value = Enum.ToObject(defaultType, Value);
-            else if (!defaultType.Equals(typ) && this.Value.GetType().Equals(typeof(long)) && TypeUtils.IsNumericType(defaultType))
-                this.Value = Convert.ChangeType(this.Value, defaultType);
-            else if (this.Value == null && !defaultType.Equals(typ))
-                this.Value = variableRegistryItem.Default;
-            this.Flags = variableRegistryItem.Flags;
+        internal void ValueChanged()
+        {
+            switch (Bindable)
+            {
+                case Bindable<bool> b:
+                    Value = b.Value;
+                    break;
+                case BindableNumber<double> b:
+                    Value = b.Value;
+                    break;
+                case BindableNumber<float> b:
+                    Value = b.Value;
+                    break;
+                case BindableNumber<int> b:
+                    Value = b.Value;
+                    break;
+                case BindableNumber<long> b:
+                    Value = b.Value;
+                    break;
+                case BindableColor b:
+                    Value = b.Value;
+                    break;
+                case Bindable<string> b:
+                    Value = b.Value;
+                    break;
+            }
         }
     }
+
+
 
     public enum VariableFlags
     {
@@ -122,6 +261,14 @@ namespace Aurora.Settings
         {
             if (!_variables.ContainsKey(name))
                 _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark, flags));
+        }
+
+        public void Register(string name, IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
+        {
+            if (!_variables.ContainsKey(name))
+                _variables.Add(name, new VariableRegistryItem(bindable, title, remark, flags));
+            else
+                _variables[name].Bindable = bindable;
         }
 
         public void Register(string name, VariableRegistryItem varItem)
