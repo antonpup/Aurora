@@ -88,7 +88,7 @@
             <Image Grid.Row="3" Grid.Column="2" Margin="6" ToolTip="Higher update speeds will result in a&#x0a;smoother effect and increase CPU usage." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
             <Label Content="Specific Process Name" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" />
-            <TextBox Text="{Binding Properties._SpecificProcess}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" />
+            <TextBox Text="{Binding Properties._SpecificProcess}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" TextChanged="TextBox_TextChanged" />
 
             <Label Content="Display Output Number" Grid.Row="5" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" />
             <xctk:IntegerUpDown Text="{Binding Properties._AmbilightOutputId}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Value="{Binding OutputId, Mode=TwoWay}" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" />

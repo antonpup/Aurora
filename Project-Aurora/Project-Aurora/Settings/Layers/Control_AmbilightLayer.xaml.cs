@@ -55,6 +55,11 @@ namespace Aurora.Settings.Layers
                 HeightCoordinate.Value ?? 0
             );
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            (DataContext as AmbilightLayerHandler)?.UpdateSpecificProcessHandle((e.Source as TextBox).Text);
+        }
     }
 
     public class AmbilightCaptureTypeValueConverter : IValueConverter {

@@ -1,4 +1,4 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
@@ -170,6 +170,7 @@ namespace Aurora.Settings.Layers
         private static Rectangle currentScreenBounds;
         private static bool fallback = false;//we should use the more performant DesktopDup way when possible
         public event PropertyChangedEventHandler PropertyChanged;
+        private IntPtr MainWindowHandle = IntPtr.Zero;
         public int OutputId
         {
             get { return Properties.AmbilightOutputId; }
@@ -178,7 +179,7 @@ namespace Aurora.Settings.Layers
                 if (Properties._AmbilightOutputId != value)
                 {
                     Properties._AmbilightOutputId = value;
-                    InvokePropertyChanged("OutputId");
+                    InvokePropertyChanged(nameof(OutputId));
                     this.Initialize();
                 }
             }
@@ -213,7 +214,7 @@ namespace Aurora.Settings.Layers
             if (fallback)
             {
                 var outputs = Screen.AllScreens;
-                if (Properties.AmbilightOutputId > (outputs.Count() - 1))
+                if (Properties.AmbilightOutputId > (outputs.Length - 1))
                     Properties._AmbilightOutputId = 0;
 
                 currentScreenBounds = outputs.ElementAtOrDefault(Properties.AmbilightOutputId).Bounds;
@@ -227,9 +228,10 @@ namespace Aurora.Settings.Layers
 
                 var output = outputs.ElementAtOrDefault(Properties.AmbilightOutputId);
                 var desktopbounds = output.Output.Description.DesktopBounds;
-                currentScreenBounds = new Rectangle(desktopbounds.Left, desktopbounds.Top,
-                                        desktopbounds.Right - desktopbounds.Left,
-                                        desktopbounds.Bottom - desktopbounds.Top);
+                currentScreenBounds = new Rectangle(desktopbounds.Left,
+                                                    desktopbounds.Top,
+                                                    desktopbounds.Right - desktopbounds.Left,
+                                                    desktopbounds.Bottom - desktopbounds.Top);
                 try
                 {
                     desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, currentScreenBounds);
@@ -244,6 +246,10 @@ namespace Aurora.Settings.Layers
                     {
                         fallback = true;
                         Global.logger.Fatal("Desktop Duplication is not supported on this system.\nIf you have multiple graphic cards, try running on integrated graphics.", e);
+                    }
+                    if(e.Descriptor == ResultCode.AccessLost)
+                    {
+
                     }
                     Global.logger.Debug(e, String.Format("Caught exception when trying to setup desktop duplication. Retrying in {0} ms", AmbilightLayerHandler.retryTimer.Interval));
                     captureTimer?.Stop();
@@ -315,7 +321,6 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-
             Bitmap smallScreen = new Bitmap(bigScreen.Width / Scale, bigScreen.Height / Scale);
 
             using (var graphics = Graphics.FromImage(smallScreen))
@@ -326,8 +331,7 @@ namespace Aurora.Settings.Layers
             screen = smallScreen;
 
             if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
-                // Stop if layer wasn't active for 2 seconds
-                captureTimer.Stop();
+                captureTimer.Stop();// Stop if layer wasn't active for 2 seconds
             processing = false;
         }
 
@@ -340,78 +344,67 @@ namespace Aurora.Settings.Layers
 
             Image newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
 
+            if (screen is null)
+                return new EffectLayer();
+
+            Rectangle cropRegion = default;
             switch (Properties.AmbilightCaptureType)
             {
                 case AmbilightCaptureType.EntireMonitor:
-                    if (screen != null)
-                    {
-                        using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen, 0, 0, Effects.canvas_width, Effects.canvas_height);
-                    }
+                    //we're using the whole screen, so we don't crop at all
+                    cropRegion = new Rectangle(Point.Empty, screen.Size);
                     break;
                 case AmbilightCaptureType.SpecificProcess:
                 case AmbilightCaptureType.ForegroundApp:
-                    IntPtr handle = IntPtr.Zero;
-                    //the image processing is the same for both methods, 
-                    //only the handle of the window changes,
-                    //so we don't need to repeat that last part
-                    if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)                
-                        handle = User32.GetForegroundWindow();                
-                    else if (!String.IsNullOrWhiteSpace(Properties.SpecificProcess))                 
-                        handle = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(Properties.SpecificProcess))
-                                .Where(p => p.MainWindowHandle != IntPtr.Zero).FirstOrDefault().MainWindowHandle;                    
+                    IntPtr handle = GetWindowHandle();
 
-                    if (screen != null && handle != IntPtr.Zero)
-                    {
-                        var app_rect = new User32.Rect();
+                    if (handle == IntPtr.Zero)
+                        break;
 
-                        User32.GetWindowRect(handle, ref app_rect);
-                        Screen display = Screen.FromHandle(handle);
+                    var appRect = new User32.Rect();
+                    User32.GetWindowRect(handle, ref appRect);
 
-                        if (SwitchDisplay(display.Bounds))
-                            break;
+                    var appDisplay = Screen.FromHandle(handle).Bounds;
 
-                        Rectangle scr_region = Resize(new Rectangle(
-                                app_rect.left - display.Bounds.Left,
-                                app_rect.top - display.Bounds.Top,
-                                app_rect.right - app_rect.left,
-                                app_rect.bottom - app_rect.top));
+                    if (SwitchDisplay(appDisplay))
+                        break;
 
-                        using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-                    }                   
+                    cropRegion = Resize(new Rectangle(
+                            appRect.Left - appDisplay.Left,
+                            appRect.Top - appDisplay.Top,
+                            appRect.Right - appRect.Left,
+                            appRect.Bottom - appRect.Top));
+
                     break;
                 case AmbilightCaptureType.Coordinates:
-                    if (screen != null)
-                    {
-                        if (SwitchDisplay(Screen.FromRectangle(Properties.Coordinates).Bounds))
-                            break;
+                    if (SwitchDisplay(Screen.FromRectangle(Properties.Coordinates).Bounds))
+                        break;
 
-                        Rectangle scr_region = Resize(new Rectangle(
-                                Properties.Coordinates.X - currentScreenBounds.Left,
-                                Properties.Coordinates.Y - currentScreenBounds.Top,
-                                Properties.Coordinates.Width,
-                                Properties.Coordinates.Height));
-
-                        using (var graphics = Graphics.FromImage(newImage))
-                            graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), scr_region, GraphicsUnit.Pixel);
-                    }
+                    cropRegion = Resize(new Rectangle(
+                            Properties.Coordinates.Left - currentScreenBounds.Left,
+                            Properties.Coordinates.Top - currentScreenBounds.Top,
+                            Properties.Coordinates.Width,
+                            Properties.Coordinates.Height));
                     break;
             }
-            EffectLayer ambilight_layer = new EffectLayer();
+
+            if(cropRegion != default)
+            {
+                using (var graphics = Graphics.FromImage(newImage))
+                    graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), cropRegion, GraphicsUnit.Pixel);
+            }
 
             if (Properties.SaturateImage)
                 newImage = Utils.BitmapUtils.AdjustImageSaturation(newImage, Properties.SaturationChange);
             if (Properties.BrightenImage)
                 newImage = Utils.BitmapUtils.AdjustImageBrightness(newImage, Properties.BrightnessChange);
 
+            EffectLayer ambilight_layer = new EffectLayer();
+
             if (Properties.AmbilightType == AmbilightType.Default)
             {
                 using (Graphics g = ambilight_layer.GetGraphics())
-                {
-                    if (newImage != null)
-                        g.DrawImageUnscaled(newImage, 0, 0);
-                }
+                    g.DrawImageUnscaled(newImage, 0, 0);
             }
             else if (Properties.AmbilightType == AmbilightType.AverageColor)
             {
@@ -422,11 +415,10 @@ namespace Aurora.Settings.Layers
             return ambilight_layer;
         }
 
-
         private IEnumerable<(Adapter1 Adapter, Output1 Output)> GetAdapters()
         {
             using (var fac = new Factory1())
-                return fac.Adapters1.SelectMany(M => M.Outputs.Select(N => (M, N.QueryInterface<Output1>())));           
+                return fac.Adapters1.SelectMany(M => M.Outputs.Select(N => (M, N.QueryInterface<Output1>())));
         }
 
         /// <summary>
@@ -438,7 +430,7 @@ namespace Aurora.Settings.Layers
         {
             if (fallback)
             {
-                if (!(screenWeWantToCapture == currentScreenBounds))
+                if (screenWeWantToCapture != currentScreenBounds)
                 {
                     OutputId = Array.FindIndex(Screen.AllScreens, d => d.Bounds == screenWeWantToCapture);
                     return true;
@@ -447,7 +439,7 @@ namespace Aurora.Settings.Layers
             }
             else
             {
-                if (!(screenWeWantToCapture == currentScreenBounds))
+                if (screenWeWantToCapture != currentScreenBounds)
                 {
                     var screens = GetAdapters().ToArray();
                     OutputId = Array.FindIndex(screens, d => RectangleEquals(d.Output.Description.DesktopBounds, screenWeWantToCapture));
@@ -458,14 +450,26 @@ namespace Aurora.Settings.Layers
         }
 
         /// <summary>
+        /// Gets the window handle of either the foreground window or the window of the process the user chose
+        /// </summary>
+        /// <returns></returns>
+        private IntPtr GetWindowHandle()
+        {
+            if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)
+                return User32.GetForegroundWindow();
+            else
+                return MainWindowHandle;
+        }
+
+        /// <summary>
         /// Returns true if a given Rectangle and RawRectangle have the same position and size
         /// </summary>
-        /// <param name="rec"></param>
         /// <param name="raw"></param>
+        /// <param name="rec"></param>
         /// <returns></returns>
-        private static bool RectangleEquals(RawRectangle rec, Rectangle raw)
+        private static bool RectangleEquals(RawRectangle raw, Rectangle rec)
         {
-            return ((rec.Left == raw.Left) && (rec.Top == raw.Top) && (rec.Right == raw.Right) && (rec.Bottom == raw.Bottom));
+            return (raw.Left == rec.Left) && (raw.Top == rec.Top) && (raw.Right == rec.Right) && (raw.Bottom == rec.Bottom);
         }
 
         /// <summary>
@@ -483,15 +487,22 @@ namespace Aurora.Settings.Layers
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private class User32
+        public void UpdateSpecificProcessHandle(string process)
+        {
+            MainWindowHandle = Array.Find(Process.GetProcessesByName(
+                                               System.IO.Path.GetFileNameWithoutExtension(process))
+                                               , p => p.MainWindowHandle != IntPtr.Zero)?.MainWindowHandle ?? IntPtr.Zero;
+        }
+
+        private static class User32
         {
             [StructLayout(LayoutKind.Sequential)]
             public struct Rect
             {
-                public int left;
-                public int top;
-                public int right;
-                public int bottom;
+                public int Left;
+                public int Top;
+                public int Right;
+                public int Bottom;
             }
 
             [DllImport("user32.dll")]
