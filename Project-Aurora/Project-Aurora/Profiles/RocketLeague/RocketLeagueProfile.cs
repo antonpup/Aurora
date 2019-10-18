@@ -58,7 +58,7 @@ namespace Aurora.Profiles.RocketLeague
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new FreeFormObject(0,0,700,250))
+                        _Sequence = new KeySequence(Effects.WholeCanvasFreeForm)
                     }
                 },
                 new OverrideLogicBuilder()
