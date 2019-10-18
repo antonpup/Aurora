@@ -1,5 +1,6 @@
 ﻿using Aurora.Devices.RGBNet;
 using RGB.NET.Devices.Asus;
+using System.IO;
 
 namespace Aurora.Devices.Asus
 {
@@ -14,7 +15,7 @@ namespace Aurora.Devices.Asus
         #region Constructors
 
         public AsusDevice()
-            : base(new AsusDeviceProviderLoader().GetDeviceProvider(), new AsusRGBNetBrush())
+            : base(new AsusDeviceProviderLoader().GetDeviceProvider(), new CustomRGBNetBrush(Path.Combine(Global.ExecutingDirectory, "kb_layouts", "AsusLedMapping.txt")))
         { }
 
         #endregion

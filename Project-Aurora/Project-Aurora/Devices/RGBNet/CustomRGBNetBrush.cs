@@ -10,13 +10,11 @@ namespace Aurora.Devices.RGBNet
 {
     internal class CustomRGBNetBrush : AuroraRGBNetBrush
     {
-        new protected Dictionary<LedId, DeviceKeys> LedMapping { get; } = new Dictionary<LedId, DeviceKeys>();
-
         public CustomRGBNetBrush(string path)
         {
             if (!File.Exists(path))
                 return;
-
+            LedMapping.Clear();
             try
             {
                 foreach (var line in File.ReadAllLines(path).Where(d => !d.StartsWith("//") && !string.IsNullOrWhiteSpace(d)))

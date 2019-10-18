@@ -921,6 +921,9 @@
     </Compile>
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
+    <Content Include="kb_layouts\AsusLedMapping.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\CorsairLedMapping.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
