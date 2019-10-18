@@ -32,45 +32,9 @@ namespace Aurora.Settings
         public VariableRegistryItem(IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
         {
             Bindable = bindable;
-            switch (Bindable)
-            {
-                case Bindable<bool> b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    break;
-                case BindableNumber<double> b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    Max = b.MaxValue;
-                    Min = b.MinValue;
-                    break;
-                case BindableNumber<float> b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    Max = b.MaxValue;
-                    Min = b.MinValue;
-                    break;
-                case BindableNumber<int> b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    Max = b.MaxValue;
-                    Min = b.MinValue;
-                    break;
-                case BindableNumber<long> b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    Max = b.MaxValue;
-                    Min = b.MinValue;
-                    break;
-                case BindableColor b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    break;
-                case Bindable<string> b:
-                    Value = b.Value;
-                    Default = b.Default;
-                    break;
-            }
+            var b = bindable as Bindable<object>;
+            Value = b.Value;
+            Default = b.Default;
             Title = title;
             Remark = remark;
             Flags = flags;
