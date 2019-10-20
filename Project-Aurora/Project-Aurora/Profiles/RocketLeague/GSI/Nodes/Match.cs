@@ -64,5 +64,14 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
             Playlist = (RLPlaylist)GetInt("playlist");
             RemainingSeconds = GetInt("time");
         }
+
+        public int TotalGoals { 
+            get
+            {
+                if (Blue.Goals == -1 || Orange.Goals == -1)
+                    return -1;
+                return Blue.Goals + Orange.Goals;
+            }
+        }
     }
 }

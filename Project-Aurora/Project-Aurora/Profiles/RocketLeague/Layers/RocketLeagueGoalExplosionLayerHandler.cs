@@ -56,7 +56,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
         private int previousOwnTeamGoals = 0;
         private int previousOpponentGoals = 0;
 
-        private AnimationTrack[] tracks =
+        private readonly AnimationTrack[] tracks =
         {
             new AnimationTrack("Goal Explosion Track 0", 1.0f, 0.0f),
             new AnimationTrack("Goal Explosion Track 1", 1.0f, 0.5f),
@@ -72,6 +72,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
         private const float goalEffect_animationTime = 3.0f;
 
         private bool showAnimation_Explosion = false;
+
         public RocketLeagueGoalExplosionLayerHandler() : base()
         {
             _ID = "RocketLeagueGoalExplosion";
@@ -88,39 +89,38 @@ namespace Aurora.Profiles.RocketLeague.Layers
             if (gamestate is GameState_RocketLeague)
             {
                 var state = gamestate as GameState_RocketLeague;
-                var ownTeam = state.Player.Team == 0 ? state.Match.Blue : state.Match.Orange;
-                var opponentTeam = state.Player.Team == 1 ? state.Match.Blue : state.Match.Orange;
-                if (ownTeam.Goals == -1 || opponentTeam.Goals == -1)
+
+                if (state.YourTeam.Goals == -1 || state.OpponentTeam.Goals == -1)
                 {
                     //reset goals when game ends
                     previousOwnTeamGoals = 0;
                     previousOpponentGoals = 0;
                 }
 
-                if (ownTeam.Goals > previousOwnTeamGoals)//keep track of goals even if we dont play the animation
+                if (state.YourTeam.Goals > previousOwnTeamGoals)//keep track of goals even if we dont play the animation
                 {
-                    previousOwnTeamGoals = ownTeam.Goals;
-                    if (Properties.ShowFriendlyGoalExplosion && ColorsValid(state))
-                    { 
-                        Color playerColor = GetTeamColor(ownTeam);
+                    previousOwnTeamGoals = state.YourTeam.Goals;
+                    if (Properties.ShowFriendlyGoalExplosion && state.ColorsValid())
+                    {
+                        Color playerColor = state.YourTeam.TeamColor;
                         this.SetTracks(playerColor);
                         goal_explosion_mix.Clear();
                         showAnimation_Explosion = true;
                     }
                 }
-                
-                if(opponentTeam.Goals > previousOpponentGoals)
+
+                if(state.OpponentTeam.Goals > previousOpponentGoals)
                 {
-                    previousOpponentGoals = opponentTeam.Goals;
-                    if (Properties.ShowEnemyGoalExplosion && ColorsValid(state))
+                    previousOpponentGoals = state.OpponentTeam.Goals;
+                    if (Properties.ShowEnemyGoalExplosion && state.ColorsValid())
                     {
-                        Color opponentColor = GetTeamColor(opponentTeam);
+                        Color opponentColor = state.OpponentTeam.TeamColor;
                         this.SetTracks(opponentColor);
                         goal_explosion_mix.Clear();
                         showAnimation_Explosion = true;
                     }
                 }
-                
+
                 if (showAnimation_Explosion)
                 {
                     if(Properties.Background)
@@ -149,24 +149,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
         protected override UserControl CreateControl()
         {
             return new Control_RocketLeagueGoalExplosionLayer(this);
-        }
-
-        private static bool ColorsValid(GameState_RocketLeague state)
-        {
-            return (state.Match.Orange.Red >= 0 && state.Match.Blue.Red <= 1) &&
-                   (state.Match.Orange.Green >= 0 && state.Match.Blue.Green <= 1) &&
-                   (state.Match.Orange.Blue >= 0 && state.Match.Blue.Blue <= 1) &&
-                   (state.Match.Orange.Red >= 0 && state.Match.Blue.Red <= 1) &&
-                   (state.Match.Orange.Green >= 0 && state.Match.Blue.Green <= 1) &&
-                   (state.Match.Orange.Blue >= 0 && state.Match.Blue.Blue <= 1);
-        }
-
-        private static Color GetTeamColor(Team_RocketLeague team)
-        {
-            return Color.FromArgb(
-            (int)(team.Red * 255.0f),
-            (int)(team.Green * 255.0f),
-            (int)(team.Blue * 255.0f));
         }
 
         private void SetTracks(Color playerColor)
