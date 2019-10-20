@@ -49,17 +49,17 @@ namespace Aurora.Profiles.RocketLeague
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_DownloadBakkesMod(object sender, RoutedEventArgs e)
         {
             Process.Start(@"https://bakkesmod.com/index.php");
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_GithubLink(object sender, RoutedEventArgs e)
         {
             Process.Start(@"https://github.com/diogotr7/AuroraGSI-RocketLeague/releases");
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_InstallPluginURI(object sender, RoutedEventArgs e)
         {
             Process.Start(@"bakkesmod://install/45");
         }
