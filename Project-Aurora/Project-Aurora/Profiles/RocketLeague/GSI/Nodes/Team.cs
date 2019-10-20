@@ -43,8 +43,20 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
             Blue = GetFloat("blue");
         }
 
-        public Color TeamColor => Color.FromArgb((int)(Red * 255.0f),
-                                                (int)(Green * 255.0f),
-                                                (int)(Blue * 255.0f));
+        public Color TeamColor
+        {
+            get
+            {
+                return Color.FromArgb((int)(Red * 255.0f),
+                                       (int)(Green * 255.0f),
+                                       (int)(Blue * 255.0f));
+            }
+            set
+            {
+                Red = value.R / 255.0f;
+                Green = value.G / 255.0f;
+                Blue = value.B / 255.0f;
+            }
+        }
     }
 }

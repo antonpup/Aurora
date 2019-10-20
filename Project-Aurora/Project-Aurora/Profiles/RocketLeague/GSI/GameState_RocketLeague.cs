@@ -8,10 +8,15 @@ namespace Aurora.Profiles.RocketLeague.GSI
     {
         [Description("Menu")]
         Undefined = -1,
+        [Description("Replay")]
         Replay,
+        [Description("Online Game")]
         OnlineGame,
+        [Description("Freeplay")]
         Freeplay,
+        [Description("Training")]
         Training,
+        [Description("Spectate")]
         Spectate
     };
 
