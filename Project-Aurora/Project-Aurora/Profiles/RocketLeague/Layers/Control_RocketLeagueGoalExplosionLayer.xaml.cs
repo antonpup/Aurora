@@ -31,10 +31,5 @@ namespace Aurora.Profiles.RocketLeague.Layers
             InitializeComponent();
             this.DataContext = datacontext;
         }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Loaded -= UserControl_Loaded;
-        }
     }
 }

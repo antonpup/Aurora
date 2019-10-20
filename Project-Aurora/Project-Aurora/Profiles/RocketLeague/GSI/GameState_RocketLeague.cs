@@ -35,11 +35,11 @@ namespace Aurora.Profiles.RocketLeague.GSI
         private Game_RocketLeague _Game;
 
 
-        public Player_RocketLeague Player => _Player = new Player_RocketLeague(_ParsedData["player"]?.ToString() ?? "");
+        public Player_RocketLeague Player => _Player ?? (_Player = new Player_RocketLeague(_ParsedData["player"]?.ToString() ?? ""));
 
-        public Match_RocketLeague Match => _Match ?? new Match_RocketLeague(_ParsedData["match"]?.ToString() ?? "");
+        public Match_RocketLeague Match => _Match ?? (_Match = new Match_RocketLeague(_ParsedData["match"]?.ToString() ?? ""));
 
-        public Game_RocketLeague Game => _Game ?? new Game_RocketLeague(_ParsedData["game"]?.ToString() ?? "");
+        public Game_RocketLeague Game => _Game ?? (_Game = new Game_RocketLeague(_ParsedData["game"]?.ToString() ?? ""));
 
         /// <summary>
         /// Creates a default GameState_RocketLeague instance.

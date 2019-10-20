@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Utils="clr-namespace:Aurora.Utils"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d">
     <UserControl.Resources >
         <ResourceDictionary>
             <Utils:ColorConverter x:Key="ColorConverter"/>
