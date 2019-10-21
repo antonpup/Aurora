@@ -89,6 +89,8 @@ namespace Aurora.Profiles.RocketLeague.Layers
             if (gamestate is GameState_RocketLeague)
             {
                 var state = gamestate as GameState_RocketLeague;
+                if (state.Game.Status == RLStatus.Undefined)
+                    return new EffectLayer();
 
                 if (state.YourTeam.Goals == -1 || state.OpponentTeam.Goals == -1)
                 {

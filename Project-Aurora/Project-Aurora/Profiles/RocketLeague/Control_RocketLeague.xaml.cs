@@ -21,9 +21,9 @@ namespace Aurora.Profiles.RocketLeague
 
         public Control_RocketLeague(Application profile)
         {
-            InitializeComponent();
-
             profile_manager = profile;
+
+            InitializeComponent();
 
             SetSettings();
 
@@ -45,12 +45,19 @@ namespace Aurora.Profiles.RocketLeague
                 this.preview_team.Items.Add(new { Text = "Spectator", Value = -1});
                 this.preview_team.Items.Add(new { Text = "Blue", Value = 0 });
                 this.preview_team.Items.Add(new { Text = "Orange", Value = 1 });
+                this.preview_team.SelectedIndex = 1;
             }
 
             if (!this.preview_status.HasItems)
             {
                 this.preview_status.ItemsSource = Enum.GetValues(typeof(RLStatus)).Cast<RLStatus>();
+                this.preview_status.SelectedIndex = (int)RLStatus.OnlineGame;
             }
+
+            this.ColorPicker_team1.SelectedColor = Colors.Blue;
+            this.ColorPicker_team2.SelectedColor = Colors.Orange;
+            this.preview_team1_score.Value = 0;
+            this.preview_team2_score.Value = 0;
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
@@ -67,14 +74,14 @@ namespace Aurora.Profiles.RocketLeague
             Process.Start(@"https://bakkesmod.com/index.php");
         }
 
-        private void Button_GithubLink(object sender, RoutedEventArgs e)
+        private void Button_BakkesPluginsLink(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://github.com/diogotr7/AuroraGSI-RocketLeague/releases");
+            Process.Start(@"https://bakkesplugins.com/plugins/view/53");
         }
 
         private void Button_InstallPluginURI(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"bakkesmod://install/45");
+            Process.Start(@"bakkesmod://install/53");
         }
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -100,14 +107,14 @@ namespace Aurora.Profiles.RocketLeague
 
         private void preview_team1_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
-                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.Blue.Goals = (sender as IntegerUpDown).Value.Value;
+            if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
+                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.Blue.Goals = (sender as IntegerUpDown).Value ?? 0;
         }
 
         private void preview_team2_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
-                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.Orange.Goals = (sender as IntegerUpDown).Value.Value;
+            if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
+                (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.Orange.Goals = (sender as IntegerUpDown).Value ?? 0;
         }
 
         private void ColorPicker_Team1_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

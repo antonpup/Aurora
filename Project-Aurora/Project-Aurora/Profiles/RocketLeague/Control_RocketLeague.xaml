@@ -11,10 +11,10 @@
         <TabControl>
             <TabItem Header="Overview for Rocket League">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Rocket League support works via a bakkesmod plugin. As a result, you need both Bakkesmod and the plugin installed and enabled. Follow the links below to install."/></TextBlock>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Rocket League support works via a BakkesMod plugin. As a result, you need both BakkesMod and the plugin installed and enabled. Follow the links below to install."/></TextBlock>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Rocket League" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
                     <Button Content="Download BakkesMod" HorizontalAlignment="Left" VerticalAlignment="Top" Width="172" Margin="10,80,0,0" Click="Button_DownloadBakkesMod"/>
-                    <Button Content="Download AuroraGSIPlugin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="200,80,0,0" Click="Button_GithubLink"/>
+                    <Button Content="Download AuroraGSIPlugin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="200,80,0,0" Click="Button_BakkesPluginsLink"/>
                     <Button Content="Install Plugin with BakkesMod" HorizontalAlignment="Left" VerticalAlignment="Top" Width="172" Margin="10,105,0,0" Click="Button_InstallPluginURI"/>
                 </Grid>
             </TabItem>
