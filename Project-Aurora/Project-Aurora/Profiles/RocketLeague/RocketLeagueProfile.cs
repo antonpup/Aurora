@@ -58,12 +58,14 @@ namespace Aurora.Profiles.RocketLeague
                     Properties = new PercentLayerHandlerProperties()
                     {
                         _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(Effects.WholeCanvasFreeForm)
+                        _Sequence = new KeySequence(Effects.WholeCanvasFreeForm),
+                        _VariablePath = "YourTeam/Goals",
+                        _MaxVariablePath ="Match/TotalGoals",
+                        _PrimaryColor = Color.Transparent,
+                        _SecondaryColor = Color.Transparent
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicDouble("_MaxValue", new NumberGSINumeric("Match/TotalGoals"))
-                    .SetDynamicDouble("_Value", new NumberGSINumeric("YourTeam/Goals"))
                     .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
                                                       new NumberGSINumeric("YourTeam/Red"),
                                                       new NumberGSINumeric("YourTeam/Green"),
