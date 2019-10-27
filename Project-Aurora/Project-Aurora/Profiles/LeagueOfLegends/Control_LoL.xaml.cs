@@ -62,23 +62,29 @@ namespace Aurora.Profiles.LeagueOfLegends
             {
                 lolpath = String.Empty;
             }
-
-            if (!string.IsNullOrWhiteSpace(lolpath))
+            try
             {
-                lolpath = Path.Combine(lolpath, "Game");
-                if (Directory.Exists(lolpath))
+                if (!string.IsNullOrWhiteSpace(lolpath))
                 {
-                    using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(Path.Combine(lolpath, "LightFX.dll"), FileMode.Create)))
+                    lolpath = Path.Combine(lolpath, "Game");
+                    if (Directory.Exists(lolpath))
                     {
-                        lightfx_wrapper_86.Write(Properties.Resources.Aurora_LightFXWrapper86);
+                        using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(Path.Combine(lolpath, "LightFX.dll"), FileMode.Create)))
+                        {
+                            lightfx_wrapper_86.Write(Properties.Resources.Aurora_LightFXWrapper86);
+                        }
+                        MessageBox.Show("Aurora Wrapper Patch for LightFX applied to\r\n" + lolpath);
+                        return;
                     }
-                    MessageBox.Show("Aurora Wrapper Patch for LightFX applied to\r\n" + lolpath);
-                    return;
                 }
+                MessageBox.Show("Couldn't find League of Legends path automatically, please patch manually");
+                return;
             }
-
-            MessageBox.Show("Couldn't find League of Legends path automatically, please patch manually");
-            return;
+            catch(Exception exc)
+            {
+                Global.logger.Error("Error patching League of Legends:" + exc.Message);
+                MessageBox.Show("Error patching League of Legends: " + exc.Message);
+            }
         }
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
