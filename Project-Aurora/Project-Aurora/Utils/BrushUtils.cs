@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Windows.Data;
 
 namespace Aurora.Utils
 {
@@ -242,5 +244,14 @@ namespace Aurora.Utils
                 return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)); //Return error color
             }
         }
+    }
+
+    /// <summary>
+    /// Converter that converts a <see cref="System.Windows.Media.Color"/> into a <see cref="System.Windows.Media.SolidColorBrush"/>.
+    /// Does not support converting back.
+    /// </summary>
+    public class ColorToBrushConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => new System.Windows.Media.SolidColorBrush((value as System.Windows.Media.Color?) ?? System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }
