@@ -353,7 +353,7 @@ namespace Aurora.Settings.Layers
             if (screen is null)
                 return new EffectLayer();
 
-            Rectangle cropRegion = default;
+            Rectangle cropRegion = new Rectangle();
             switch (Properties.AmbilightCaptureType)
             {
                 case AmbilightCaptureType.EntireMonitor:
@@ -394,7 +394,7 @@ namespace Aurora.Settings.Layers
                     break;
             }
 
-            if(cropRegion != default)
+            if(cropRegion.Width != 0 && cropRegion.Height != 0)
             {
                 using (var graphics = Graphics.FromImage(newImage))
                     graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), cropRegion, GraphicsUnit.Pixel);
