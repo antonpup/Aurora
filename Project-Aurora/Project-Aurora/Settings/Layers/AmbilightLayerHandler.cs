@@ -135,6 +135,11 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float SaturationChange => Logic._SaturationChange ?? _SaturationChange ?? 0.0f;
 
+        public bool? _FlipVertically { get; set; }
+
+        [JsonIgnore]
+        public bool FlipVertically => Logic._FlipVertically ?? _FlipVertically ?? false;
+
         public AmbilightLayerHandlerProperties() : base() { }
 
         public AmbilightLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -153,6 +158,7 @@ namespace Aurora.Settings.Layers
             this._BrightnessChange = 0.0f;
             this._SaturateImage = false;
             this._SaturationChange = 1.0f;
+            this._FlipVertically = false;
         }
     }
 
@@ -403,6 +409,9 @@ namespace Aurora.Settings.Layers
 
             if (Properties.AmbilightType == AmbilightType.Default)
             {
+                if(Properties.FlipVertically)
+                    newImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
                 using (Graphics g = ambilight_layer.GetGraphics())
                     g.DrawImageUnscaled(newImage, 0, 0);
             }

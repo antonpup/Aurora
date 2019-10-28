@@ -52,12 +52,15 @@
             </DataTemplate>
 
             <local:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
+
+            <local:AmbilightTypeValueConverter x:Key="AmbilightTypeValueConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal">
         <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid.RowDefinitions>
+                <RowDefinition Height="28px" />
                 <RowDefinition Height="28px" />
                 <RowDefinition Height="28px" />
                 <RowDefinition Height="28px" />
@@ -77,7 +80,7 @@
             <ComboBox SelectedItem="{Binding Properties._AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" />
 
             <Label Content="Effect Type" Grid.Row="1" VerticalAlignment="Center" />
-            <ComboBox SelectedItem="{Binding Properties._AmbilightType}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" />
+            <ComboBox SelectedItem="{Binding Properties._AmbilightType}" x:Name="EffectType" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" />
 
             <Label Content="Image Quality" Grid.Row="2" VerticalAlignment="Center" />
             <ComboBox SelectedItem="{Binding Properties._AmbilightQuality}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightQuality}}" ItemTemplate="{Binding Source={StaticResource AmbilightQualityTemplate}}" />
@@ -93,8 +96,11 @@
             <Label Content="Display Output Number" Grid.Row="5" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" />
             <xctk:IntegerUpDown Text="{Binding Properties._AmbilightOutputId}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Value="{Binding OutputId, Mode=TwoWay}" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" />
 
-            <Label Content="Coordinates" Grid.Row="6" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" />
-            <Grid Grid.Row="6" Grid.Column="1" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
+            <Label Content="Flip Image" Grid.Row="6" VerticalAlignment="Center" IsEnabled="{Binding ElementName=EffectType, Path=SelectedItem, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}"/>
+            <CheckBox Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties._FlipVertically, Mode=TwoWay}" IsEnabled="{Binding ElementName=EffectType, Path=SelectedItem, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}"/>
+
+            <Label Content="Coordinates" Grid.Row="7" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" />
+            <Grid Grid.Row="7" Grid.Column="1" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="3*" />
