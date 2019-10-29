@@ -149,8 +149,6 @@ namespace Aurora.Devices.SteelSeries
 
             try
             {
-                // workaround for heartbeat/keepalive events every 10sec
-                SendKeepalive();
 
                 if (e.Cancel) return false;
 
@@ -348,19 +346,6 @@ namespace Aurora.Devices.SteelSeries
             if (colors_mousepad.Count != 0)
             {
                 gameSenseSDK.setMousepadColor(colors_mousepad, payload);
-            }
-        }
-
-        private void SendKeepalive(bool forced = false)
-        {
-            // workaround for heartbeat/keepalive events every 10sec
-            if (!keepaliveTimer.IsRunning)
-                keepaliveTimer.Start();
-
-            if (keepaliveTimer.ElapsedMilliseconds > 10000 || forced)
-            {
-                gameSenseSDK.sendHeartbeat();
-                keepaliveTimer.Restart();
             }
         }
 

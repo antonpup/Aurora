@@ -64,10 +64,6 @@ namespace SteelSeries.GameSenseSDK
             // setup "game" meda data
             this.sseGameName = sseGameName;
             this.sseGameDisplayname = sseGameDisplayname;
-            setupGame(iconColorID);
-
-            // setup golisp handler
-            setupLISPHandlers();
         }
 
         public void setupEvent(GameSensePayloadPeripheryColorEventJSON payload)
@@ -161,15 +157,6 @@ namespace SteelSeries.GameSenseSDK
             sendPostRequest("http://" + sseAddress + "/game_event", json);
         }
 
-        public void sendHeartbeat()
-        {
-            GameSensePayloadHeartbeatJSON payload = new GameSensePayloadHeartbeatJSON();
-            payload.game = sseGameName;
-            // sending POST request
-            String json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/game_heartbeat", json);
-        }
-
         public void sendStop()
         {
             GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
@@ -178,86 +165,6 @@ namespace SteelSeries.GameSenseSDK
             // sending POST request
             String json = JsonConvert.SerializeObject(payload);
             sendPostRequest("http://" + sseAddress + "/game_event", json);
-        }
-
-        private void setupLISPHandlers()
-        {
-            String json = "";
-            GameSensePayloadLISPHandlerJSON payload = new GameSensePayloadLISPHandlerJSON();
-            payload.game = sseGameName;
-
-            // sending POST requests with golisp handler
-            payload.golisp = @"
-(handler ""COLOR""
-    (lambda (data)
-        (when (keyboard:? data)
-            (let* ((keyboard (keyboard: data))
-                   (hids (hids: keyboard))
-                   (colors (colors: keyboard)))
-                (on-device ""rgb-per-key-zones"" show-on-keys: hids colors)))
-        (when (periph:? data)
-            (let* ((periph (periph: data))
-                   (color (color: periph)))
-                (on-device ""rgb-1-zone"" show: color)
-                (on-device ""rgb-2-zone"" show: color)
-                (on-device ""rgb-3-zone"" show: color)
-                (on-device ""rgb-4-zone"" show: color)
-                (on-device ""rgb-5-zone"" show: color)
-                (on-device ""rgb-12-zone"" show: color)))
-        (when (mousepad:? data)
-            (let* ((mousepad (mousepad: data))
-                    (colors (colors: mousepad)))
-                (on-device ""rgb-12-zone"" show-on-zones: colors '(one: two: three: four: five: six: seven: eight: nine: ten: eleven: twelve:))))
-        (when (mousepadtwozone:? data)
-            (let* ((mousepadtwozone (mousepadtwozone: data))
-                    (mpone (mpone: mousepadtwozone))
-                    (mptwo (mptwo: mousepadtwozone)))
-                (on-device ""indicator"" show-on-zone: mpone one:)
-                (on-device ""indicator"" show-on-zone: mptwo two:)))
-        (when (mouse:? data)
-            (let* ((mouse (mouse: data))
-                   (color (color: mouse)))
-                (on-device ""mouse"" show: color)))
-        (when (mousewheel:? data)
-            (let* ((mousewheel (mousewheel: data))
-                   (color (color: mousewheel)))
-                (on-device ""mouse"" show-on-zone: color wheel:)))
-        (when (mouselogo:? data)
-            (let* ((mouselogo (mouselogo: data))
-                   (color (color: mouselogo)))
-                (on-device ""mouse"" show-on-zone: color logo:)))
-        (when (headset:? data)
-            (let* ((headset (headset: data))
-                   (color (color: headset)))
-                (on-device ""headset"" show-on-zone: color earcups:)))
-    )
-)
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-1-zone"")
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-2-zone"")
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-3-zone"")
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-4-zone"")
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-5-zone"")
-(add-event-zone-use-with-specifier ""COLOR"" ""all"" ""rgb-12-zone"")
-(add-event-per-key-zone-use ""COLOR"" ""all"")
-";
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);
-
-            /*payload.golisp = "(handler \"STOP\" (lambda (data)    (send Generic-Initializer deinitialize:)))";
-            // sending POST request
-            json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/load_golisp_handlers", json);*/
-        }
-
-        private void setupGame(byte iconColorID)
-        {
-            GameSensePayloadGameDataJSON payload = new GameSensePayloadGameDataJSON();
-            payload.game = sseGameName;
-            payload.game_display_name = sseGameDisplayname;
-            payload.icon_color_id = iconColorID;
-            // sending POST request
-            String json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/game_metadata", json);
         }
 
         private void sendPostRequest(String address, String payload)

@@ -35,6 +35,7 @@ namespace Aurora.Devices.SteelSeries
         public bool Initialize()
         {
             loadCoreProps();
+            baseObject.Add("game", "PROJECTAURORA");
             throw new NotImplementedException();
         }
 

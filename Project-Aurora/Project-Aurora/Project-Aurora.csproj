@@ -926,7 +926,7 @@
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
-    <None Include="Devices\SteelSeries\GoCode.lsp" />
+    <EmbeddedResource Include="Devices\SteelSeries\GoCode.lsp" />
     <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <None Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
     <Compile Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml.cs">
