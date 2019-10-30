@@ -51,7 +51,7 @@ namespace Aurora.Profiles.RocketLeague
             if (!this.preview_status.HasItems)
             {
                 this.preview_status.ItemsSource = Enum.GetValues(typeof(RLStatus)).Cast<RLStatus>();
-                this.preview_status.SelectedIndex = (int)RLStatus.OnlineGame;
+                this.preview_status.SelectedIndex = (int)RLStatus.InGame;
             }
 
             this.ColorPicker_team1.SelectedColor = Colors.Blue;

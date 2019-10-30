@@ -10,14 +10,16 @@ namespace Aurora.Profiles.RocketLeague.GSI
         Undefined = -1,
         [Description("Replay")]
         Replay,
-        [Description("Online Game")]
-        OnlineGame,
+        [Description("In Game")]
+        InGame,
         [Description("Freeplay")]
         Freeplay,
         [Description("Training")]
         Training,
         [Description("Spectate")]
-        Spectate
+        Spectate,
+        [Description("Local Match")]
+        Local
     };
 
     public class Game_RocketLeague : Node<Game_RocketLeague>
