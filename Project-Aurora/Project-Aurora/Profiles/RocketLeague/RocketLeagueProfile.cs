@@ -22,6 +22,19 @@ namespace Aurora.Profiles.RocketLeague
             base.Reset();
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
+                new Layer("Boost Indicator (Peripheral)", new PercentGradientLayerHandler()
+                {
+                    Properties = new PercentGradientLayerHandlerProperties()
+                    {
+                        _PercentType = PercentEffectType.AllAtOnce,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral, Devices.DeviceKeys.Peripheral_Logo } ),
+                        _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
+                        _BlinkThreshold = 0.0,
+                        _BlinkDirection = false,
+                        _VariablePath = "Player/Boost",
+                        _MaxVariablePath = "1"
+                    },
+                }),
                 new Layer("Boost Indicator", new PercentGradientLayerHandler()
                 {
                     Properties = new PercentGradientLayerHandlerProperties()
@@ -39,18 +52,17 @@ namespace Aurora.Profiles.RocketLeague
                         _MaxVariablePath = "1",
                     },
                 }),
-                new Layer("Boost Indicator (Peripheral)", new PercentGradientLayerHandler()
+                new Layer("Boost Background", new SolidColorLayerHandler()
                 {
-                    Properties = new PercentGradientLayerHandlerProperties()
+                    Properties = new LayerHandlerProperties()
                     {
-                        _PercentType = PercentEffectType.AllAtOnce,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Peripheral, Devices.DeviceKeys.Peripheral_Logo } ),
-                        _Gradient = new EffectsEngine.EffectBrush(new ColorSpectrum(Color.Yellow, Color.Red).SetColorAt(0.75f, Color.OrangeRed)),
-                        _BlinkThreshold = 0.0,
-                        _BlinkDirection = false,
-                        _VariablePath = "Player/Boost",
-                        _MaxVariablePath = "1"
-                    },
+                        _PrimaryColor = Color.Black,
+                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4, Devices.DeviceKeys.F5,
+                            Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9, Devices.DeviceKeys.F10,
+                            Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
+                        })
+                    }
                 }),
                 new Layer("Goal Explosion", new RocketLeagueGoalExplosionLayerHandler()),
                 new Layer("Score Split", new PercentLayerHandler()

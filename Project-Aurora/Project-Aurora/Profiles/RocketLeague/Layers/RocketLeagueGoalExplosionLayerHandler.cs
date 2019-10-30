@@ -90,9 +90,9 @@ namespace Aurora.Profiles.RocketLeague.Layers
             {
                 var state = gamestate as GameState_RocketLeague;
                 if (state.Game.Status == RLStatus.Undefined)
-                    return new EffectLayer();
+                    return layer;
 
-                if (state.YourTeam.Goals == -1 || state.OpponentTeam.Goals == -1)
+                if (state.YourTeam.Goals == -1 || state.OpponentTeam.Goals == -1 || previousOwnTeamGoals > state.YourTeam.Goals || previousOpponentGoals > state.OpponentTeam.Goals)
                 {
                     //reset goals when game ends
                     previousOwnTeamGoals = 0;
