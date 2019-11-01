@@ -8,6 +8,7 @@
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:c="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -124,15 +125,24 @@
             </Grid>
         </Grid>
 
-        <GroupBox Header="Color Adjustment" VerticalAlignment="Top" Margin="24,0,0,0">
-            <Grid Margin="0,0,0,0">
-                <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Height="17" Width="99" />
-                <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,34,0,0" Height="17" Width="99" />
-                <Slider Value="{Binding Properties._BrightnessChange}" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="109,5,0,0" Height="20" Minimum="-0.5" Maximum="0.5" />
-                <Slider Value="{Binding Properties._SaturationChange}" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="109,34,0,0" Width="100" Height="20" Minimum="0" Maximum="2" />
-                <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,30,0,-4" Width="41" Height="29" />
-                <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,1,0,0" Width="41" Height="29" />
-            </Grid>
-        </GroupBox>
+        <Grid Grid.Row="2" Grid.Column="1" Margin="10,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="82"/>
+                <RowDefinition Height="170"/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Color Adjustment" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Row="0">
+                <Grid Margin="0,0,0,0">
+                    <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Height="17" Width="99" />
+                    <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,34,0,0" Height="17" Width="99" />
+                    <Slider Value="{Binding Properties._BrightnessChange}" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="109,5,0,0" Height="20" Minimum="-0.5" Maximum="0.5" />
+                    <Slider Value="{Binding Properties._SaturationChange}" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="109,34,0,0" Width="100" Height="20" Minimum="0" Maximum="2" />
+                    <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,30,0,-4" Width="41" Height="29" />
+                    <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,1,0,0" Width="41" Height="29" />
+                </Grid>
+            </GroupBox>
+            <c:KeySequence x:Name="affectedKeys" Grid.Row="1" Title="Affected Rectangle" RecordingTag="AmbilightAffectedRect" SequenceUpdated="KeySequence_keys_SequenceUpdated" />
+
+        </Grid>
+
     </StackPanel>
 </UserControl>

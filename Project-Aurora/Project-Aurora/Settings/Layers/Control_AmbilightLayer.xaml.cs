@@ -28,6 +28,7 @@ namespace Aurora.Settings.Layers
         {
             if (this.DataContext is AmbilightLayerHandler && !settingsset)
             {
+                this.affectedKeys.Sequence = (this.DataContext as AmbilightLayerHandler).Properties._Sequence;
                 var properties = (this.DataContext as AmbilightLayerHandler).Properties;
                 this.XCoordinate.Value = properties._Coordinates.Value.Left;
                 this.YCoordinate.Value = properties._Coordinates.Value.Top;
@@ -59,6 +60,14 @@ namespace Aurora.Settings.Layers
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             (DataContext as AmbilightLayerHandler)?.UpdateSpecificProcessHandle((e.Source as TextBox).Text);
+        }
+
+        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence)
+            {
+                (this.DataContext as EqualizerLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
+            }
         }
     }
 

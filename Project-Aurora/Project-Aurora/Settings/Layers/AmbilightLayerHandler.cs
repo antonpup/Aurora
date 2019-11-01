@@ -159,6 +159,7 @@ namespace Aurora.Settings.Layers
             this._SaturateImage = false;
             this._SaturationChange = 1.0f;
             this._FlipVertically = false;
+            this._Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
 
@@ -352,6 +353,9 @@ namespace Aurora.Settings.Layers
 
             if (screen is null)
                 return new EffectLayer();
+            var region = Properties.Sequence.GetAffectedRegion();
+            if (region.Width == 0 || region.Height == 0)
+                return new EffectLayer();
 
             Rectangle cropRegion = new Rectangle();
             switch (Properties.AmbilightCaptureType)
@@ -413,11 +417,12 @@ namespace Aurora.Settings.Layers
                     newImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
                 using (Graphics g = ambilight_layer.GetGraphics())
-                    g.DrawImageUnscaled(newImage, 0, 0);
+                    g.DrawImage(newImage, Properties.Sequence.GetAffectedRegion());
+
             }
             else if (Properties.AmbilightType == AmbilightType.AverageColor)
             {
-                ambilight_layer.Fill(Utils.BitmapUtils.GetAverageColor(newImage));
+                ambilight_layer.Set(Properties.Sequence, Utils.BitmapUtils.GetAverageColor(newImage));
             }
 
             newImage.Dispose();
