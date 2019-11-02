@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -19,70 +20,86 @@ namespace Aurora.Settings.Layers {
     /// <summary>
     /// Properties for the <see cref="ParticleLayerHandler"/>.
     /// </summary>
-    public class ParticleLayerProperties : LayerHandlerProperties<ParticleLayerProperties> {
+    public class ParticleLayerProperties : LayerHandlerProperties<ParticleLayerProperties>, INotifyPropertyChanged {
 
         // The shortest time (in seconds) between particles spawning. A random time between this value and "MaxSpawnTime" will be chosen.
-        public float? _MinSpawnTime { get; set; }
+        private float? minSpawnTime;
+        public float? _MinSpawnTime { get => minSpawnTime; set => SetAndNotify(ref minSpawnTime, value); }
         [JsonIgnore] public float MinSpawnTime => Logic._MinSpawnTime ?? _MinSpawnTime ?? .5f;
 
         // The longest time (in seconds) between particles spawning. A random time from "MinSpawnTime" up to this value will be chosen.
-        public float? _MaxSpawnTime { get; set; }
+        private float? maxSpawnTime;
+        public float? _MaxSpawnTime { get => maxSpawnTime; set => SetAndNotify(ref maxSpawnTime, value); }
         [JsonIgnore] public float MaxSpawnTime => Logic._MaxSpawnTime ?? _MaxSpawnTime ?? 1f;
 
         // The smallest quantity of particles that will spawn at a time. A random value between this value and "MaxSpawnAmount" will be chosen.
-        public int? _MinSpawnAmount { get; set; }
+        private int? minSpawnAmount;
+        public int? _MinSpawnAmount { get => minSpawnAmount; set => SetAndNotify(ref minSpawnAmount, value); }
         [JsonIgnore] public int MinSpawnAmount => Logic._MinSpawnAmount ?? _MinSpawnAmount ?? 1;
 
         // The largest quantity of particles that will spawn at a time. A random value between "MinSpawnAmount" and this value will be chosen.
-        public int? _MaxSpawnAmount { get; set; }
+        private int? maxSpawnAmount;
+        public int? _MaxSpawnAmount { get => maxSpawnAmount; set => SetAndNotify(ref maxSpawnAmount, value); }
         [JsonIgnore] public int MaxSpawnAmount => Logic._MaxSpawnAmount ?? _MaxSpawnAmount ?? 1;
 
         // The smallest possible initial horizontal velocity of the spawned particles. A random value between this value and "MaxInitialVelocityX" will be chosen for each particle.
-        public float? _MinInitialVelocityX { get; set; }
+        private float? minInitialVelocityX;
+        public float? _MinInitialVelocityX { get => minInitialVelocityX; set => SetAndNotify(ref minInitialVelocityX, value); }
         [JsonIgnore] public float MinInitialVelocityX => Logic._MinInitialVelocityX ?? _MinInitialVelocityX ?? 0f;
 
         // The largest possible initial horizontal velocity of the spawned particles. A random value between "MinInitialVelocityX" and this value will be chosen for each particle.
-        public float? _MaxInitialVelocityX { get; set; }
+        private float? maxInitialVelocityX;
+        public float? _MaxInitialVelocityX { get => maxInitialVelocityX; set => SetAndNotify(ref maxInitialVelocityX, value); }
         [JsonIgnore] public float MaxInitialVelocityX => Logic._MaxInitialVelocityX ?? _MaxInitialVelocityX ?? 0f;
 
         // The smallest possible initial vertical velocity of the spawned particles. A random value between this value and "MaxInitialVelocityY" will be chosen for each particle.
-        public float? _MinInitialVelocityY { get; set; }
+        private float? minInitialVelocityY;
+        public float? _MinInitialVelocityY { get => minInitialVelocityY; set => SetAndNotify(ref minInitialVelocityY, value); }
         [JsonIgnore] public float MinInitialVelocityY => Logic._MinInitialVelocityY ?? _MinInitialVelocityY ?? 0f;
 
         // The largest possible initial vertical velocity of the spawned particles. A random value between "MinInitialVelocityY" and this value will be chosen for each particle.
-        public float? _MaxInitialVelocityY { get; set; }
+        private float? maxInitialVelocityY;
+        public float? _MaxInitialVelocityY { get => maxInitialVelocityY; set => SetAndNotify(ref maxInitialVelocityY, value); }
         [JsonIgnore] public float MaxInitialVelocityY => Logic._MaxInitialVelocityY ?? _MaxInitialVelocityY ?? 0f;
 
         // The minimum possible lifetime of the particles (in seconds). A random lifetime between this number and "MaxLifetime" will be chosen.
-        public float? _MinLifetime { get; set; }
+        private float? minLifetime;
+        public float? _MinLifetime { get => minLifetime; set => SetAndNotify(ref minLifetime, value); }
         [JsonIgnore] public float MinLifetime => Logic._MinLifetime ?? _MinLifetime ?? 3f;
 
         // The maximum possible lifetime of the particles (in seconds). A random lifetime between from "MinLifetime" up to this number will be chosen.
-        public float? _MaxLifetime { get; set; }
+        private float? maxLifetime;
+        public float? _MaxLifetime { get => maxLifetime; set => SetAndNotify(ref maxLifetime, value); }
         [JsonIgnore] public float MaxLifetime => Logic._MaxLifetime ?? _MaxLifetime ?? 3f;
 
         // The amount the speed of the particle in the horizontal direction will change per second.
-        public float? _AccelerationX { get; set; }
+        private float? accelerationX;
+        public float? _AccelerationX { get => accelerationX; set => SetAndNotify(ref accelerationX, value); }
         [JsonIgnore] public float AccelerationX => Logic._AccelerationX ?? _AccelerationX ?? 0f;
 
         // The amount the speed of the particle in the vertical direction will change per second.
-        public float? _AccelerationY { get; set; }
+        private float? accelerationY;
+        public float? _AccelerationY { get => accelerationY; set => SetAndNotify(ref accelerationY, value); }
         [JsonIgnore] public float AccelerationY => Logic._AccelerationY ?? _AccelerationY ?? -1f;
 
         // Where the particles will spawn from
-        public ParticleSpawnLocations? _SpawnLocation { get; set; }
+        private ParticleSpawnLocations? spawnLocation;
+        public ParticleSpawnLocations? _SpawnLocation { get => spawnLocation; set => SetAndNotify(ref spawnLocation, value); }
         [JsonIgnore] public ParticleSpawnLocations SpawnLocation => Logic._SpawnLocation ?? _SpawnLocation ?? ParticleSpawnLocations.BottomEdge;
 
         // The color gradient stops for the particle. Not using a linear brush here because:
         //   1) there are multithreading issues when trying to access a Media brush's gradient collection since it belongs to the UI thread
         //   2) We don't actually need the gradient as a brush since we're not drawing particles as gradients, only a solid color based on their lifetime, so we only need to access the color stops
-        public List<(Color color, float offset)> _ParticleColorStops { get; set; }
+        private List<(Color color, float offset)> particleColorStops;
+        public List<(Color color, float offset)> _ParticleColorStops { get => particleColorStops; set => SetAndNotify(ref particleColorStops, value); }
         [JsonIgnore] public List<(Color color, float offset)> ParticleColorStops => Logic._ParticleColorStops ?? _ParticleColorStops ?? defaultParticleColor;
 
         private static readonly List<(Color, float)> defaultParticleColor = new List<(Color, float)> {
             (Color.White, 0f),
             (Color.FromArgb(0, Color.White), 1f)
         };
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public ParticleLayerProperties() : base() { }
         public ParticleLayerProperties(bool empty = false) : base(empty) { }
@@ -98,6 +115,11 @@ namespace Aurora.Settings.Layers {
             _MinInitialVelocityY = _MaxInitialVelocityY = -1;
             _AccelerationY = .5f;
             _AccelerationX = 0;
+        }
+
+        private void SetAndNotify<T>(ref T field, T value, [CallerMemberName] string propName = null) {
+            field = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 
@@ -246,5 +268,31 @@ namespace Aurora.Settings.Layers {
         [Description("Bottom edge")] BottomEdge,
         [Description("Left edge")] LeftEdge,
         Random
+    }
+
+
+    /// <summary>
+    /// Class that holds some preset configurations for the ParticleLayerProperties class.
+    /// </summary>
+    public static class ParticleLayerPresets {
+        public static ReadOnlyDictionary<string, Action<ParticleLayerProperties>> Presets { get; } = new ReadOnlyDictionary<string, Action<ParticleLayerProperties>>(
+            new Dictionary<string, Action<ParticleLayerProperties>> {
+                { "Fire", p => {
+                    p._SpawnLocation = ParticleSpawnLocations.BottomEdge;
+                    p._ParticleColorStops = new List<(Color color, float offset)> {
+                        (Color.Yellow, 0f),
+                        (Color.FromArgb(128, Color.Red), 0.6f),
+                        (Color.FromArgb(0, Color.Black), 1f)
+                    };
+                    p._MinSpawnTime = p._MaxSpawnTime = .05f;
+                    p._MinSpawnAmount = 4; p._MaxSpawnAmount = 6;
+                    p._MinLifetime = .5f; p._MaxLifetime = 2;
+                    p._MinInitialVelocityX = p._MaxInitialVelocityX = 0;
+                    p._MinInitialVelocityY = -1.3f; p._MaxInitialVelocityY = -0.8f;
+                    p._AccelerationX = 0;
+                    p._AccelerationY = 0.5f;
+                } }
+            }
+        );
     }
 }

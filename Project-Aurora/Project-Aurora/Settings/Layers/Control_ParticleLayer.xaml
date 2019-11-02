@@ -32,6 +32,7 @@
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
+            <RowDefinition Height="28px" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -45,11 +46,11 @@
         <Label Content="Max" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
 
         <Label Content="Spawn time" Grid.Row="3" HorizontalAlignment="Right" />
-        <xctk:SingleUpDown Grid.Row="3" Grid.Column="1" x:Name="minSpawnTime" Value="{Binding Properties._MinSpawnTime}" Maximum="{Binding ElementName=maxSpawnTime, Path=Value}" Increment=".1" Margin="4,2" />
+        <xctk:SingleUpDown Grid.Row="3" Grid.Column="1" x:Name="minSpawnTime" Value="{Binding Properties._MinSpawnTime}" Maximum="{Binding ElementName=maxSpawnTime, Path=Value}" Minimum="0" Increment=".1" Margin="4,2" />
         <xctk:SingleUpDown Grid.Row="3" Grid.Column="2" x:Name="maxSpawnTime" Value="{Binding Properties._MaxSpawnTime}" Minimum="{Binding ElementName=minSpawnTime, Path=Value}" Increment=".1" Margin="4,2" />
 
         <Label Content="Spawn amount" Grid.Row="4" HorizontalAlignment="Right" />
-        <xctk:IntegerUpDown Grid.Row="4" Grid.Column="1" x:Name="minSpawnAmount" Value="{Binding Properties._MinSpawnAmount}" Maximum="{Binding ElementName=maxSpawnAmount, Path=Value}" Margin="4,2" />
+        <xctk:IntegerUpDown Grid.Row="4" Grid.Column="1" x:Name="minSpawnAmount" Value="{Binding Properties._MinSpawnAmount}" Maximum="{Binding ElementName=maxSpawnAmount, Path=Value}" Minimum="1" Margin="4,2" />
         <xctk:IntegerUpDown Grid.Row="4" Grid.Column="2" x:Name="maxSpawnAmount" Value="{Binding Properties._MaxSpawnAmount}" Minimum="{Binding ElementName=minSpawnAmount, Path=Value}" Margin="4,2" />
 
         <Label Content="Lifetime" Grid.Row="5" HorizontalAlignment="Right" />
@@ -70,6 +71,12 @@
         <Label Content="Vertical acceleration" Grid.Row="9" HorizontalAlignment="Right" />
         <xctk:SingleUpDown Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Value="{Binding Properties._AccelerationY}" Increment=".1" Margin="4,2" />
 
+        <Label Content="Presets" Grid.Row="10" HorizontalAlignment="Right" />
+        <DockPanel Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Margin="4,2">
+            <Button Content="Apply" DockPanel.Dock="Right" Margin="4,0,0,0" Padding="6,0" Click="ApplyButton_Click" />
+            <ComboBox x:Name="presetsCombo" DisplayMemberPath="Text" SelectedValuePath="ApplyFunc" />
+        </DockPanel>
+        
         <Label Content="Preview" Grid.Column="4" />
         <controls:Control_LayerPreview Grid.Column="4" Grid.Row="1" Grid.RowSpan="5" TargetLayer="{Binding .}" />
     </Grid>
