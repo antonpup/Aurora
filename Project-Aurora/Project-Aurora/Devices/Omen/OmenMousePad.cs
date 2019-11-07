@@ -19,11 +19,12 @@ namespace Aurora.Devices.Omen
 
         public static OmenMousePad GetOmenMousePad()
         {
-            IntPtr ptr = OmenLighting_MousePad_OpenByName("Outpost");
+            IntPtr ptr = OmenLighting_MousePad_Open();
             if (ptr != IntPtr.Zero)
             {
                 return new OmenMousePad(ptr);
             }
+
             return null;
         }
 

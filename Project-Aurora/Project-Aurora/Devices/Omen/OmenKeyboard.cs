@@ -19,7 +19,7 @@ namespace Aurora.Devices.Omen
 
         public static OmenKeyboard GetOmenKeyboard()
         {
-            IntPtr kboardPointer = OmenLighting_Keyboard_OpenByName("Sequencer");
+            IntPtr kboardPointer = OmenLighting_Keyboard_Open();
             if (kboardPointer != IntPtr.Zero)
             {
                 return new OmenKeyboard(kboardPointer);

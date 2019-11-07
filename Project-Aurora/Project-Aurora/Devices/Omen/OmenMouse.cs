@@ -19,7 +19,7 @@ namespace Aurora.Devices.Omen
 
         public static OmenMouse GetOmenMouse()
         {
-            IntPtr ptr = OmenLighting_Mouse_OpenByName("Photon");
+            IntPtr ptr = OmenLighting_Mouse_Open();
             if (ptr != IntPtr.Zero)
             {
                 return new OmenMouse(ptr);
