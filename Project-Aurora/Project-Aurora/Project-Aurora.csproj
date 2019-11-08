@@ -367,6 +367,8 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Omen\LightingColor.cs" />
+    <Compile Include="Devices\Omen\OmenChassis.cs" />
+    <Compile Include="Devices\Omen\OmenKeys.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>

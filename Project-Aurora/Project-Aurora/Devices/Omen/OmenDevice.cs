@@ -15,6 +15,8 @@ namespace Aurora.Devices.Omen
         OmenKeyboard keyboard;
         OmenMouse mouse;
         OmenMousePad mousePad;
+        OmenChassis chassis;
+
         private bool isInitialized = false;
         private readonly string devicename = "OMEN";
         private readonly object semaphoreLock = new object();
@@ -33,7 +35,8 @@ namespace Aurora.Devices.Omen
         {
             if (isInitialized)
             {
-                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : " ") + (mouse != null ? "Mouse Connected " : " ") + (mousePad != null ? "Mouse Pad Connected " : " ");
+                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : " ") 
+                    + (mouse != null ? "Mouse Connected " : " ") + (mousePad != null ? "Mouse Pad Connected " : " ") + (chassis != null ? "Chassis Connected " : " ");
             }
             else
             {
@@ -61,6 +64,7 @@ namespace Aurora.Devices.Omen
                     keyboard = OmenKeyboard.GetOmenKeyboard();
                     mouse = OmenMouse.GetOmenMouse();
                     mousePad = OmenMousePad.GetOmenMousePad();
+                    chassis = OmenChassis.GetOmenChassis();
 
                     isInitialized = true;
                 }
@@ -112,17 +116,25 @@ namespace Aurora.Devices.Omen
                     if (isInitialized)
                     {
                         Reset();
+
                         if (keyboard != null)
                         {
                             keyboard.Shutdown();
                         }
+
                         if (mouse != null)
                         {
                             mouse.Shutdown();
                         }
+
                         if (mousePad != null)
                         {
                             mousePad.Shutdown();
+                        }
+
+                        if (chassis != null)
+                        {
+                            chassis.Shutdown();
                         }
                     }
                 }
@@ -149,6 +161,7 @@ namespace Aurora.Devices.Omen
                     if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral || key.Key == DeviceKeys.Peripheral_FrontLight || key.Key == DeviceKeys.Peripheral_ScrollWheel)
                     {
                         UpdateMouse(key);
+                        UpdateChassis(key);
                     }
                     if (key.Key == DeviceKeys.Peripheral_Logo || key.Key >= DeviceKeys.MOUSEPADLIGHT1 && key.Key <= DeviceKeys.MOUSEPADLIGHT15)
                     {
@@ -196,6 +209,22 @@ namespace Aurora.Devices.Omen
             if (mousePad != null && Global.Configuration.allow_peripheral_devices)
             {
                 mousePad.SetLights(key.Key, key.Value);
+                peripheral_updated = true;
+            }
+            else
+            {
+                peripheral_updated = false;
+            }
+        }
+
+        private void UpdateChassis(KeyValuePair<DeviceKeys, Color> key)
+        {
+            if (Global.Configuration.devices_disable_mouse)
+                return;
+
+            if (chassis != null && Global.Configuration.allow_peripheral_devices)
+            {
+                chassis.SetLights(key.Key, key.Value);
                 peripheral_updated = true;
             }
             else
