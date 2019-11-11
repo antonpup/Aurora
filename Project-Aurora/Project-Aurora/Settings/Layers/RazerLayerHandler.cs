@@ -75,11 +75,11 @@ namespace Aurora.Settings.Layers
             _keyboardColors = new Color[22 * 6];
             _mousepadColors = new Color[16];
 
-            if (Global.razerManager != null)
+            if (Global.razerSdkManager != null)
             {
-                Global.razerManager.DataUpdated += OnDataUpdated;
+                Global.razerSdkManager.DataUpdated += OnDataUpdated;
 
-                var appList = Global.razerManager.GetDataProvider<RzAppListDataProvider>();
+                var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
                 appList.Update();
                 _currentAppExecutable = appList.CurrentAppExecutable;
                 _currentAppPid = appList.CurrentAppPid;
@@ -103,7 +103,7 @@ namespace Aurora.Settings.Layers
 
             if (provider is RzKeyboardDataProvider keyboard)
             {
-                for (var i = 0; i < keyboard.ZoneGrid.Height * keyboard.ZoneGrid.Width; i++)
+                for (var i = 0; i < keyboard.Grids[0].Height * keyboard.Grids[0].Width; i++)
                     _keyboardColors[i] = keyboard.GetZoneColor(i);
             }
             else if (provider is RzMouseDataProvider mouse)
@@ -112,7 +112,7 @@ namespace Aurora.Settings.Layers
             }
             else if (provider is RzMousepadDataProvider mousePad)
             {
-                for (var i = 0; i < mousePad.ZoneGrid.Height * mousePad.ZoneGrid.Width; i++)
+                for (var i = 0; i < mousePad.Grids[0].Height * mousePad.Grids[0].Width; i++)
                     _mousepadColors[i] = mousePad.GetZoneColor(i);
             }
             else if (provider is RzAppListDataProvider appList)
@@ -151,7 +151,7 @@ namespace Aurora.Settings.Layers
             var path = Path.Combine(Global.LogsDirectory, "RazerLayer");
             var filename = $"{provider.GetType().Name}_{Environment.TickCount}.bin";
             using (var file = File.Open($@"{path}\{filename}", FileMode.Create)) {
-                var data = provider.ReadData();
+                var data = provider.Read();
                 file.Write(data, 0, data.Length);
             }
         }
@@ -209,8 +209,8 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            if(Global.razerManager != null)
-                Global.razerManager.DataUpdated -= OnDataUpdated;
+            if(Global.razerSdkManager != null)
+                Global.razerSdkManager.DataUpdated -= OnDataUpdated;
 
             base.Dispose();
         }
