@@ -165,27 +165,36 @@ namespace Aurora.Settings.Layers
 
             foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
             {
-                Color color;
-                if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
-                    color = _keyboardColors[position[1] + position[0] * 22];
-                else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
-                    color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
-                else if (key == DeviceKeys.Peripheral)
-                    color = _mouseColor;
-                else
+                if (!TryGetColor(key, out Color color))
                     continue;
-
-                if (Properties.ColorPostProcessEnabled)
-                    color = PostProcessColor(color);
-
+                
                 layer.Set(key, color);
-
-                if (Properties.KeyCloneMap != null)
-                    foreach (var target in Properties.KeyCloneMap.Where(x => x.Value == key).Select(x => x.Key))
-                        layer.Set(target, color);
             }
 
+            if (Properties.KeyCloneMap != null)
+                foreach (var target in Properties.KeyCloneMap)
+                    if(TryGetColor(target.Value, out var clr))
+                        layer.Set(target.Key, clr);
+
             return layer;
+        }
+
+        private bool TryGetColor(DeviceKeys key, out Color color)
+        {
+            color = Color.Transparent;
+            if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
+                color = _keyboardColors[position[1] + position[0] * 22];
+            else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
+                color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
+            else if (key == DeviceKeys.Peripheral)
+                color = _mouseColor;
+            else
+                return false;
+
+            if (Properties.ColorPostProcessEnabled)
+                color = PostProcessColor(color);
+
+            return true;
         }
 
         private bool IsCurrentAppValid() 
