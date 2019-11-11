@@ -326,6 +326,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="Wooting.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Wooting.NET.1.0.0\lib\netstandard2.0\Wooting.NET.dll</HintPath>
+    </Reference>
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\WPFToolkit.dll</HintPath>
       <Private>True</Private>
@@ -367,6 +370,8 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
@@ -625,16 +630,13 @@
     <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
       <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueGoalExplosionLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />
@@ -2031,7 +2033,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -2517,10 +2519,6 @@
       <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
       <Name>SBAuroraReactive</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
-      <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
-      <Name>Wooting.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj">
       <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
