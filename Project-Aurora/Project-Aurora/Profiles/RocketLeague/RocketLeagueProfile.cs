@@ -10,9 +10,9 @@ using Aurora.Settings.Overrides.Logic;
 
 namespace Aurora.Profiles.RocketLeague
 {
-    public class RocketLeagueProfile : ApplicationProfile
+    public class RocketLeagueBMProfile : ApplicationProfile
     {
-        public RocketLeagueProfile() : base()
+        public RocketLeagueBMProfile() : base()
         {
 
         }

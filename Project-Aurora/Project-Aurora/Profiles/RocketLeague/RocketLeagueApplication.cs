@@ -23,7 +23,7 @@ namespace Aurora.Profiles.RocketLeague
                 Name = "Rocket League",
                 ID = "rocketleague",
                 ProcessNames = new[] { "rocketleague.exe" },
-                ProfileType = typeof(RocketLeagueProfile),
+                ProfileType = typeof(RocketLeagueBMProfile),
                 OverviewControlType = typeof(Control_RocketLeague),
                 GameStateType = typeof(GameState_RocketLeague),
                 Event = new GameEvent_Generic(),
