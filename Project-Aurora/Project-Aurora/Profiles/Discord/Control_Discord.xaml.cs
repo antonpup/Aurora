@@ -58,16 +58,30 @@ namespace Aurora.Profiles.Discord
         private void InstallPlugin()
         {
             string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string bd = Path.Combine(appdata, "BetterDiscord", "plugins", "AuroraGSI.plugin.js");
+            string pluginDirectory = Path.Combine(appdata, "BetterDiscord", "plugins");
 
-            if (!File.Exists(bd))            
-                Directory.CreateDirectory(Path.GetDirectoryName(bd));           
+            if (!Directory.Exists(pluginDirectory))
+                Directory.CreateDirectory(pluginDirectory);
 
-            using (FileStream pluginStream = File.Create(Path.Combine(bd)))
+            string pluginFile = Path.Combine(pluginDirectory, "AuroraGSI.plugin.js");
+            if (File.Exists(pluginFile))
             {
-                pluginStream.Write(Properties.Resources.DiscordGSIPlugin, 0, Properties.Resources.DiscordGSIPlugin.Length);
+                MessageBox.Show("Plugin already installed");
+                return;
             }
-            MessageBox.Show("Plugin installed successfully");
+
+            try
+            {
+                using (FileStream pluginStream = File.Create(pluginFile))
+                {
+                    pluginStream.Write(Properties.Resources.DiscordGSIPlugin, 0, Properties.Resources.DiscordGSIPlugin.Length);
+                }
+                MessageBox.Show("Plugin installed successfully");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error installng plugin: " + e.Message);
+            }
         }
 
         private void UninstallPlugin()

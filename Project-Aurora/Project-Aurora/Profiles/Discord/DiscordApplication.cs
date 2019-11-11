@@ -14,7 +14,7 @@ namespace Aurora.Profiles.Discord
         {
             Name = "Discord",
             ID = "discord",
-            ProcessNames = new[] { "Discord.exe", "DiscordPTB.exe" },
+            ProcessNames = new[] { "Discord.exe", "DiscordPTB.exe", "DiscordCanary.exe" },
             ProfileType = typeof(DiscordProfile),
             OverviewControlType = typeof(Control_Discord),
             GameStateType = typeof(GSI.GameState_Discord),
