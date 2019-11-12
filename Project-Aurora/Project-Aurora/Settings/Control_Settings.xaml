@@ -276,13 +276,14 @@
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="120"/>
-                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="100"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <Label Grid.Row="0" Grid.Column="0" Content="Supported Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                            <Label Grid.Row="0" Grid.Column="1" Content="3.5.6" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
-                                            <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="120" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
+                                            <Label Grid.Row="0" Grid.Column="0" Content="Supported Versions:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                            <Label x:Name="razer_wrapper_supported_versions_label" Grid.Row="0" Grid.Column="1" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
+                                            <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
+                                            <Button x:Name="razer_wrapper_uninstall_button" Grid.Row="0" Grid.Column="2" Content="Uninstall" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Click="razer_wrapper_uninstall_button_Click"/>
 
                                             <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
                                             <Label x:Name="razer_wrapper_installed_version_label" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>

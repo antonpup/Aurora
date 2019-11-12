@@ -4,28 +4,20 @@
     "grouped_keys": [
         {
             "tag": -1,
-            "margin_left": 15.0,
-            "margin_top": -200.0,
+            "margin_left": 25.0,
+            "margin_top": -185.0,
             "width": 200.0,
             "height": 168.0,
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
             "visualName": "Mouse Logo",
             "tag": 160,
-            "margin_left": 90.0,
-            "margin_top": -150.0,
+            "margin_left": 100.0,
+            "margin_top": -125.0,
             "width": 50.0,
             "height": 50.0,
-            "width_bits": 2,
-            "height_bits": 2,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
@@ -33,14 +25,9 @@
             "visualName": "",
             "tag": 201,
             "margin_left": 15.0,
-            "margin_top": -200.0,
+            "margin_top": -185.0,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 2,
-            "height_bits": 2,
-
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
@@ -48,14 +35,9 @@
             "visualName": "",
             "tag": 202,
             "margin_left": 15.0,
-            "margin_top": -168.0,
+            "margin_top": -151.4,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
@@ -63,14 +45,9 @@
             "visualName": "",
             "tag": 203,
             "margin_left": 15.0,
-            "margin_top": -136.0,
+            "margin_top": -117.8,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
@@ -78,14 +55,9 @@
             "visualName": "",
             "tag": 204,
             "margin_left": 15.0,
-            "margin_top": -104.0,
+            "margin_top": -84.2,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-            "height_bits": 6,
-
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
@@ -93,173 +65,109 @@
             "visualName": "",
             "tag": 205,
             "margin_left": 15.0,
-            "margin_top": -72.0,
+            "margin_top": -50.6,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-            "height_bits": 6,
-
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
             "tag": 206,
             "visualName": "",
-            "margin_left": 15.0,
-            "margin_top": -45.0,
+            "margin_left": 25.0,
+            "margin_top": -17.0,
             "width": 40.0,
             "height": 10.0,
-            "width_bits": 6,
-
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 207,
             "visualName": "",
-            "margin_left": 55.0,
-            "margin_top": -45.0,
+            "margin_left": 65.0,
+            "margin_top": -17.0,
             "width": 40.0,
             "height": 10.0,
-
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 208,
             "visualName": "",
-            "margin_left": 95.0,
-            "margin_top": -45.0,
-
+            "margin_left": 105.0,
+            "margin_top": -17.0,
             "width": 40.0,
             "height": 10.0,
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 209,
             "visualName": "",
-            "margin_left": 135.0,
-            "margin_top": -45.0,
+            "margin_left": 145.0,
+            "margin_top": -17.0,
             "width": 40.0,
             "height": 10.0,
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 210,
             "visualName": "",
-            "margin_left": 175.0,
-            "margin_top": -45.0,
+            "margin_left": 185.0,
+            "margin_top": -17.0,
             "width": 40.0,
             "height": 10.0,
-            "width_bits": 6,
-
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 211,
             "visualName": "",
-            "margin_left": 205.0,
-            "margin_top": -75.0,
+            "margin_left": 225.0,
+            "margin_top": -50.5,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 212,
             "visualName": "",
-            "margin_left": 205.0,
-            "margin_top": -107.0,
+            "margin_left": 225.0,
+            "margin_top": -84.2,
             "width": 10.0,
-
             "height": 33.6,
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 213,
             "visualName": "",
-            "margin_left": 205.0,
-            "margin_top": -139.0,
+            "margin_left": 225.0,
+            "margin_top": -117.8,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 214,
             "visualName": "",
-            "margin_left": 205.0,
-            "margin_top": -171.0,
+            "margin_left": 225.0,
+            "margin_top": -151.4,
             "width": 10.0,
             "height": 33.6,
-            "width_bits": 6,
-
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         },
         {
-
             "tag": 215,
             "visualName": "",
-            "margin_left": 205.0,
-            "margin_top": -200.0,
+            "margin_left": 225.0,
+            "margin_top": -185.0,
             "width": 10.0,
             "height": 33.6,
-
-            "width_bits": 6,
-            "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
             "enabled": true,
             "absolute_location": true
         }
