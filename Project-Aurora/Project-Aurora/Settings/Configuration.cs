@@ -178,6 +178,8 @@ namespace Aurora.Settings
         Logitech_GPRO = 103,
 		[Description("Logitech - G213")]
         Logitech_G213 = 104,
+        [Description("Logitech - G815")]
+        Logitech_G815 = 105,
 
         //Corsair range is 200-299
         [Description("Corsair - K95")]
