@@ -59,42 +59,50 @@ namespace Aurora.Profiles.Minecraft {
                         })
                     }
                 }),
-                
-                new Layer("Water keys", new ConditionalLayerHandler() {
-                    Properties = new ConditionalLayerProperties() {
-                        _ConditionPath = "Player/IsInWater",
+
+                new Layer("Water Controls", new SolidColorLayerHandler() {
+                    Properties = new LayerHandlerProperties()
+                    {
                         _PrimaryColor = Color.Blue,
-                        _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(controlKeys)
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsInWater"))
+                ),
 
-                new Layer("Sneaking Keys", new ConditionalLayerHandler() {
-                    Properties = new ConditionalLayerProperties() {
-                        _ConditionPath = "Player/IsSneaking",
+                new Layer("Sneaking Controls", new SolidColorLayerHandler() {
+                    Properties = new LayerHandlerProperties()
+                    {
                         _PrimaryColor = Color.FromArgb(45, 90, 90),
-                        _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(controlKeys)
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsSneaking"))
+                ),
 
-                new Layer("Horse keys", new ConditionalLayerHandler() {
-                    Properties = new ConditionalLayerProperties() {
-                        _ConditionPath = "Player/IsRidingHorse",
+                new Layer("Horse Controls", new SolidColorLayerHandler() {
+                    Properties = new LayerHandlerProperties()
+                    {
                         _PrimaryColor = Color.Orange,
-                        _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(controlKeys)
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsRidingHorse"))
+                ),
 
-                new Layer("Keys", new ConditionalLayerHandler() {
-                    Properties = new ConditionalLayerProperties() {
-                        _ConditionPath = "Player/InGame",
+                new Layer("Player Controls", new SolidColorLayerHandler() {
+                    Properties = new LayerHandlerProperties()
+                    {
                         _PrimaryColor = Color.White,
-                        _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(controlKeys)
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
+                ),
 
                 new Layer("On Fire", new MinecraftBurnLayerHandler()),
 
