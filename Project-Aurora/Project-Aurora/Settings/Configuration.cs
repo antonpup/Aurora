@@ -179,10 +179,13 @@ namespace Aurora.Settings
 		[Description("Logitech - G213")]
         Logitech_G213 = 104,
 <<<<<<< HEAD
+<<<<<<< HEAD
         [Description("Logitech - G815")]
         Logitech_G815 = 105,
         [Description("Logitech - G513")]
         Logitech_G513 = 106,
+=======
+>>>>>>> parent of 705f6520... Added support for Logitech G815
 =======
 >>>>>>> parent of 705f6520... Added support for Logitech G815
 
