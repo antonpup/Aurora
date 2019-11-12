@@ -45,6 +45,9 @@ namespace Aurora.Settings.Layers
 
         private void Coordinate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            if (!settingsset)
+                return;
+
             (DataContext as AmbilightLayerHandler).Properties._Coordinates = new System.Drawing.Rectangle(
                 XCoordinate.Value ?? 0, 
                 YCoordinate.Value ?? 0,

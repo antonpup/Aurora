@@ -11,21 +11,30 @@
         <TabControl>
             <TabItem Header="Overview for Rocket League">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Rocket League support works via memory reading. As a result, you do not have to apply any patches for the game to work with Aurora. However, this does mean that whenever a game update is released, Aurora's Rocket League support"/><Run Text=" would stop working. Aurora's memory reading pointers have to be updated manually, and thus Aurora will regularly check for new memory reading pointers via automatic updates. So, I apologize for any delays in Rocket League support, please inform me on Aurora's github page about a Rocket League update, and I will look into releasing a patch."/><LineBreak/><Run/><LineBreak/><Run Text="(Github link can be found under Settings -&gt; About)"/></TextBlock>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="Rocket League support works via a BakkesMod plugin. As a result, you need both BakkesMod and the plugin installed and enabled. Follow the links below to install."/></TextBlock>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Rocket League" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                    <Button Content="Download BakkesMod" HorizontalAlignment="Left" VerticalAlignment="Top" Width="172" Margin="10,80,0,0" Click="Button_DownloadBakkesMod"/>
+                    <Button Content="Download AuroraGSIPlugin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="200,80,0,0" Click="Button_BakkesPluginsLink"/>
+                    <Button Content="Install Plugin with BakkesMod" HorizontalAlignment="Left" VerticalAlignment="Top" Width="172" Margin="10,105,0,0" Click="Button_InstallPluginURI"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Preview">
                 <Grid>
                     <Label Content="Team:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="preview_team" HorizontalAlignment="Left" Margin="55,13,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_team_SelectionChanged" SelectedIndex="0"/>
-                    <Slider x:Name="preview_boost_amount" HorizontalAlignment="Left" Margin="102,45,0,0" VerticalAlignment="Top" Width="120" Maximum="100" ValueChanged="preview_boost_amount_ValueChanged"/>
+                    <Label Content="Status:" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="preview_status" HorizontalAlignment="Left" Margin="250,14,0,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="preview_status_SelectionChanged" SelectedIndex="0"/>
+                    <Slider x:Name="preview_boost_amount" HorizontalAlignment="Left" Margin="102,45,0,0" VerticalAlignment="Top" Width="120" Maximum="1" TickFrequency="0.01" ValueChanged="preview_boost_amount_ValueChanged"/>
                     <TextBlock x:Name="preview_boost_amount_label" HorizontalAlignment="Left" Margin="227,46,0,0" TextWrapping="Wrap" Text="0%" VerticalAlignment="Top"/>
                     <xctk:IntegerUpDown x:Name="preview_team1_score" HorizontalAlignment="Left" Height="24" Margin="98,73,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team1_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
                     <xctk:IntegerUpDown x:Name="preview_team2_score" HorizontalAlignment="Left" Height="24" Margin="98,104,0,0" VerticalAlignment="Top" Width="40" ValueChanged="preview_team2_score_ValueChanged" DefaultValue="0" Value="0" Minimum="0" Maximum="100"/>
                     <Label Content="Boost amount:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
                     <Label Content="Team 1 Score:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
                     <Label Content="Team 2 Score:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team 1 Color:" HorizontalAlignment="Left" Margin="161,73,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Team 2 Color:" HorizontalAlignment="Left" Margin="161,103,0,0" VerticalAlignment="Top"/>
+                    <xctk:ColorPicker x:Name="ColorPicker_team1" Margin="250,77,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Team1_SelectedColorChanged" />
+                    <xctk:ColorPicker x:Name="ColorPicker_team2" Margin="250,108,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Team2_SelectedColorChanged" />
                 </Grid>
             </TabItem>
         </TabControl>

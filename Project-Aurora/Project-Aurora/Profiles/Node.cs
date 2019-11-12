@@ -69,7 +69,7 @@ namespace Aurora.Profiles
                 return -1;
         }
 
-        internal T GetEnum<T>(string Name)
+        internal T GetEnum<T>(string Name) where T : struct
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -77,24 +77,20 @@ namespace Aurora.Profiles
             {
                 var type = typeof(T);
                 if (!type.IsEnum) throw new InvalidOperationException();
+
+                // Attempt to parse it by name or number
+                if (Enum.TryParse<T>(value.ToString(), true, out var val))
+                    return val;
+
+                // If that wasn't successful, try by DescriptionAttribute
                 foreach (var field in type.GetFields())
-                {
-                    var attribute = Attribute.GetCustomAttribute(field,
-                        typeof(DescriptionAttribute)) as DescriptionAttribute;
-                    if (attribute != null)
-                    {
-                        if (attribute.Description.ToLowerInvariant().Equals(value.ToString().ToLowerInvariant()))
+                    if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute
+                        && attribute.Description.ToLowerInvariant().Equals(value.ToString().ToLowerInvariant()))
                             return (T)field.GetValue(null);
-                    }
-
-                    if (field.Name.ToLowerInvariant().Equals(value.ToString().ToLowerInvariant()))
-                        return (T)field.GetValue(null);
-                }
-
-                return (T)Enum.Parse(typeof(T), "Undefined", true);
             }
-            else
-                return (T)Enum.Parse(typeof(T), "Undefined", true);
+
+            // If there is an "undefined" enum value, return that else just do the default(T).
+            return Enum.TryParse<T>("Undefined", true, out var u) ? u : default(T);
         }
 
         internal bool GetBool(string Name)
