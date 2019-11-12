@@ -137,17 +137,8 @@ namespace Aurora.Settings
             var rzSdkEnabled = RzHelper.IsSdkEnabled();
 
             this.razer_wrapper_installed_version_label.Content = rzVersion.ToString();
-            this.razer_wrapper_supported_versions_label.Content = $"{RzHelper.MinimumSupportedVersion}-{RzHelper.MaximumSupportedVersion}";
-            if (rzVersion < RzHelper.MaximumSupportedVersion)
-            {
-                this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
-                this.razer_wrapper_install_button.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(Colors.LightGreen);
-                this.razer_wrapper_install_button.Visibility = Visibility.Hidden;
-            }
+            this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(RzHelper.IsSdkVersionSupported(rzVersion) ? Colors.LightGreen : Colors.PaleVioletRed);
+            this.razer_wrapper_supported_versions_label.Content = $"[{RzHelper.SupportedFromVersion}-{RzHelper.SupportedToVersion})";
 
             if (rzVersion == new RzSdkVersion())
                 this.razer_wrapper_uninstall_button.Visibility = Visibility.Hidden;
@@ -155,18 +146,18 @@ namespace Aurora.Settings
             this.razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
             this.razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
 
-            if (Global.razerManager != null)
+            if (Global.razerSdkManager != null)
             {
                 this.razer_wrapper_connection_status_label.Content = "Success";
                 this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.LightGreen);
 
                 {
-                    var appList = Global.razerManager.GetDataProvider<RzAppListDataProvider>();
+                    var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
                     appList.Update();
                     this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable ?? "None"} [{appList.CurrentAppPid}]";
                 }
 
-                Global.razerManager.DataUpdated += (s, _) =>
+                Global.razerSdkManager.DataUpdated += (s, _) =>
                 {
                     if (!(s is RzAppListDataProvider appList))
                         return;
