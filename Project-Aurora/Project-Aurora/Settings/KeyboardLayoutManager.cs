@@ -700,6 +700,8 @@ namespace Aurora.Settings
                     layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G815)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g815.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G513)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g513.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)

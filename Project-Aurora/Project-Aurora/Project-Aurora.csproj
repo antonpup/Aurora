@@ -927,6 +927,9 @@
     <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\logitech_g513.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\logitech_g815.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
