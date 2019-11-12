@@ -119,7 +119,7 @@ namespace Aurora
         public static KeyboardLayoutManager kbLayout;
         public static Effects effengine;
         public static KeyRecorder key_recorder;
-        public static RzManager razerManager;
+        public static RzSdkManager razerSdkManager;
 
         /// <summary>
         /// Currently held down modifer key
@@ -326,12 +326,12 @@ namespace Aurora
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
-                Global.logger.Info("Loading RazerManager");
+                Global.logger.Info("Loading RazerSdkManager");
                 if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
                 {
                     try
                     {
-                        Global.razerManager = new RzManager()
+                        Global.razerSdkManager = new RzSdkManager()
                         {
                             KeyboardEnabled = true,
                             MouseEnabled = true,
@@ -339,17 +339,17 @@ namespace Aurora
                             AppListEnabled = true,
                         };
 
-                        Global.logger.Info("RazerManager loaded successfully!");
+                        Global.logger.Info("RazerSdkManager loaded successfully!");
                     }
                     catch (Exception exc)
                     {
-                        Global.logger.Fatal("RazerManager failed to load!");
+                        Global.logger.Fatal("RazerSdkManager failed to load!");
                         Global.logger.Fatal(exc.ToString());
                     }
                 }
                 else
                 {
-                    Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported!", RzHelper.GetSdkVersion());
+                    Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported by the RazerSdkManager!", RzHelper.GetSdkVersion());
                 }
 
                 Global.logger.Info("Loading Applications");
@@ -483,7 +483,7 @@ namespace Aurora
 
             try
             {
-                Global.razerManager?.Dispose();
+                Global.razerSdkManager?.Dispose();
             }
             catch (Exception exc)
             {

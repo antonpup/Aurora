@@ -1,7 +1,6 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -30,8 +29,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorBox", "ColorBox\ColorBox.csproj", "{40085232-ACED-4CBE-945B-90BA8153C151}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin-Example", "Plugin-Example\Plugin-Example.csproj", "{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wooting.NET", "..\Wooting.NET\Wooting.NET\Wooting.NET.csproj", "{FEA699AE-DB83-43DC-AB85-99F2E90C328F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SBAuroraReactive", "..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj", "{053A704B-5C79-4CDE-B1FC-B952051ACAA0}"
 EndProject
@@ -105,14 +102,6 @@ Global
 		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.ActiveCfg = Release|Any CPU
 		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.Build.0 = Release|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Debug|x64.Build.0 = Debug|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Release|x64.ActiveCfg = Release|Any CPU
-		{FEA699AE-DB83-43DC-AB85-99F2E90C328F}.Release|x64.Build.0 = Release|Any CPU
 		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|x64.ActiveCfg = Debug|x64
 		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|x64.Build.0 = Debug|x64
