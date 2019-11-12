@@ -1,48 +1,54 @@
 ﻿namespace Aurora.Profiles.RocketLeague.GSI.Nodes
 {
     /// <summary>
-    /// Enum list for each player team
-    /// </summary>
-    public enum PlayerTeam
-    {
-        /// <summary>
-        /// Undefined
-        /// </summary>
-        Undefined = -1,
-
-        /// <summary>
-        /// Spectator
-        /// </summary>
-        Spectator = 400021321, //4294967295
-
-        /// <summary>
-        /// Blue Team
-        /// </summary>
-        Blue = 0,
-
-        /// <summary>
-        /// Orange Team
-        /// </summary>
-        Orange = 1
-    }
-
-    /// <summary>
     /// Class representing player information
     /// </summary>
     public class Player_RocketLeague : Node<Player_RocketLeague>
     {
         /// <summary>
-        /// Player's boost amount [0.0f, 1.0f]
+        /// The Index of the team the player is on
         /// </summary>
-        public int BoostAmount = 0;
+        public int Team = -1;
 
         /// <summary>
-        /// Player's current team
+        /// Amount of boost (0-1)
         /// </summary>
-        public PlayerTeam Team = PlayerTeam.Undefined;
+        public float Boost = -1;
+
+        /// <summary>
+        /// Number of points the player has on the scoreboard
+        /// </summary>
+        public int Score = -1;
+
+        /// <summary>
+        /// Number of goals the player scored
+        /// </summary>
+        public int Goals = -1;
+
+        /// <summary>
+        /// Number of assists the player has
+        /// </summary>
+        public int Assists = -1;
+
+        /// <summary>
+        /// Number of saves the player has
+        /// </summary>
+        public int Saves = -1;
+
+        /// <summary>
+        /// Number of shots the player has
+        /// </summary>
+        public int Shots = -1;
 
         internal Player_RocketLeague(string json_data) : base(json_data)
         {
+            Boost = GetFloat("boost");
+            Score = GetInt("score");
+            Goals = GetInt("goals");
+            Assists = GetInt("assists");
+            Saves = GetInt("saves");
+            Shots = GetInt("shots");
+            Team = GetInt("team");
         }
     }
 }
