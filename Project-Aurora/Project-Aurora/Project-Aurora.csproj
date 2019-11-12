@@ -929,6 +929,9 @@
     </Compile>
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
+    <Content Include="kb_layouts\Extra Features\logitech_g815_features.json" />
+    <Content Include="kb_layouts\logitech_g513.json" />
+    <Content Include="kb_layouts\logitech_g815.json" />
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
