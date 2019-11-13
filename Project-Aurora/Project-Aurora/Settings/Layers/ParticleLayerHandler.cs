@@ -115,6 +115,7 @@ namespace Aurora.Settings.Layers {
             _MinInitialVelocityY = _MaxInitialVelocityY = -1;
             _AccelerationY = .5f;
             _AccelerationX = 0;
+            _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
 
         private void SetAndNotify<T>(ref T field, T value, [CallerMemberName] string propName = null) {
@@ -206,19 +207,24 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Creates a new single particle, whose inital settings are based on the current Properties.
         /// </summary>
-        private void SpawnParticle() => particles.Add(new Particle {
-            MaxLifetime = RandomBetween(Properties.MinLifetime, Properties.MaxLifetime),
-            VelocityX = RandomBetween(Properties.MinInitialVelocityX, Properties.MaxInitialVelocityX),
-            VelocityY = RandomBetween(Properties.MinInitialVelocityY, Properties.MaxInitialVelocityY),
-            PositionX
-                = Properties.SpawnLocation == ParticleSpawnLocations.LeftEdge ? 0 // For left edge, X should start at 0
-                : Properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.canvas_width // For right edge, X should start at maximum width
-                : (float)(rnd.NextDouble() * Effects.canvas_width), // For top, bottom or random, randomly choose an X value
-            PositionY
-                = Properties.SpawnLocation == ParticleSpawnLocations.TopEdge ? 0 // For top edge, Y should start at 0
-                : Properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.canvas_height // For bottom edge, Y should start at maximum height
-                : (float)(rnd.NextDouble() * Effects.canvas_height), // For left, right or random, randomly choose a Y value
-        });
+        private void SpawnParticle() {
+            var ar = Properties.Sequence.GetAffectedRegion();
+            particles.Add(new Particle {
+                MaxLifetime = RandomBetween(Properties.MinLifetime, Properties.MaxLifetime),
+                VelocityX = RandomBetween(Properties.MinInitialVelocityX, Properties.MaxInitialVelocityX),
+                VelocityY = RandomBetween(Properties.MinInitialVelocityY, Properties.MaxInitialVelocityY),
+                PositionX
+                    = Properties.SpawnLocation == ParticleSpawnLocations.LeftEdge ? 0 // For left edge, X should start at 0
+                    : Properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.canvas_width // For right edge, X should start at maximum width
+                    : Properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Left + (float)(rnd.NextDouble() * ar.Width)// For region, randomly choose X in region
+                    : (float)(rnd.NextDouble() * Effects.canvas_width), // For top, bottom or random, randomly choose an X value
+                PositionY
+                    = Properties.SpawnLocation == ParticleSpawnLocations.TopEdge ? 0 // For top edge, Y should start at 0
+                    : Properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.canvas_height // For bottom edge, Y should start at maximum height
+                    : Properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
+                    : (float)(rnd.NextDouble() * Effects.canvas_height), // For left, right or random, randomly choose a Y value
+            });
+        }
 
         /// <summary>
         /// Updates the velocity and position of the given particle.
@@ -262,11 +268,12 @@ namespace Aurora.Settings.Layers {
     /// <summary>
     /// An enum dictating possible spawn locations for the particles.
     /// </summary>
-    public enum ParticleSpawnLocations {
+    public enum ParticleSpawnLocations { 
         [Description("Top edge")] TopEdge,
         [Description("Right edge")] RightEdge,
         [Description("Bottom edge")] BottomEdge,
         [Description("Left edge")] LeftEdge,
+        Region,
         Random
     }
 

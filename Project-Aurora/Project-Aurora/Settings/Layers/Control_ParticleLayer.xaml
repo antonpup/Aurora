@@ -10,7 +10,11 @@
              xmlns:controls="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Loaded="UserControl_Loaded">    
+             Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <local:ParticleSpawnLocationsIsRegionConverter x:Key="ParticleSpawnLocationsIsRegionConv" />
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="140px" />
@@ -76,7 +80,10 @@
             <Button Content="Apply" DockPanel.Dock="Right" Margin="4,0,0,0" Padding="6,0" Click="ApplyButton_Click" />
             <ComboBox x:Name="presetsCombo" DisplayMemberPath="Text" SelectedValuePath="ApplyFunc" />
         </DockPanel>
-        
+
+        <!-- Note that we cannot set the visibility of this to Hidden or Collapsed, else the control will not be initialised (and therefore will not show the freeform region). It can just be moved really far offscreen instead. -->
+        <controls:KeySequence Margin="100000,100000,0,0" Title="Spawn region" Sequence="{Binding Properties._Sequence, Mode=TwoWay}" ShowOnCanvas="{Binding Properties._SpawnLocation, Mode=OneWay, Converter={StaticResource ParticleSpawnLocationsIsRegionConv}}" />
+
         <Label Content="Preview" Grid.Column="4" />
         <controls:Control_LayerPreview Grid.Column="4" Grid.Row="1" Grid.RowSpan="5" TargetLayer="{Binding .}" />
     </Grid>
