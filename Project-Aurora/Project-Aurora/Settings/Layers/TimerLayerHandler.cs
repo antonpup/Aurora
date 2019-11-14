@@ -82,6 +82,11 @@ namespace Aurora.Settings.Layers {
                     case TimerLayerAnimationType.Fade:
                         layer.Set(Properties.Sequence, ColorUtils.BlendColors(Properties.SecondaryColor, Properties.PrimaryColor, timer.InterpolationValue));
                         break;
+
+                    case TimerLayerAnimationType.Progress:
+                    case TimerLayerAnimationType.ProgressGradual:
+                        layer.PercentEffect(Properties.SecondaryColor, Properties.PrimaryColor, Properties.Sequence, timer.InterpolationValue, 1, Properties.AnimationType == TimerLayerAnimationType.Progress ? PercentEffectType.Progressive : PercentEffectType.Progressive_Gradual);
+                        break;
                 }
             } else
                 layer.Set(Properties.Sequence, Properties.PrimaryColor);
@@ -198,7 +203,9 @@ namespace Aurora.Settings.Layers {
     
     public enum TimerLayerAnimationType {
         [Description("On/Off")] OnOff,
-        Fade
+        Fade,
+        Progress,
+        [Description("Progress (Gradual)")] ProgressGradual
     }
 
     public enum TimerLayerRepeatPressAction {
