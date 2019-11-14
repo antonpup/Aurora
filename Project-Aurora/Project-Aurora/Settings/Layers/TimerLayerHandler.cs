@@ -112,7 +112,7 @@ namespace Aurora.Settings.Layers {
                             isActive = true;
                             break;
 
-                        case TimerLayerRepeatPressAction.Stop:
+                        case TimerLayerRepeatPressAction.Cancel:
                             if (isActive)
                                 timer.Stop();
                             else
@@ -211,7 +211,7 @@ namespace Aurora.Settings.Layers {
     public enum TimerLayerRepeatPressAction {
         [Description("Restart")] Reset,
         [Description("Extend")] Extend,
-        [Description("Stop")] Stop,
+        [Description("Cancel")] Cancel,
         [Description("Ignore")] Ignore
     }
 }
