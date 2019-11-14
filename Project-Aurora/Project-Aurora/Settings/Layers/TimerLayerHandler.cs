@@ -106,6 +106,14 @@ namespace Aurora.Settings.Layers {
                             timer.Extend(Properties.Duration);
                             isActive = true;
                             break;
+
+                        case TimerLayerRepeatPressAction.Stop:
+                            if (isActive)
+                                timer.Stop();
+                            else
+                                timer.Reset(Properties.Duration);
+                            isActive = !isActive;
+                            break;
                         
                         case TimerLayerRepeatPressAction.Ignore:
                             if (!isActive) {
@@ -153,6 +161,10 @@ namespace Aurora.Settings.Layers {
             max = t;
         }
 
+        public void Stop() {
+            timer.Stop();
+        }
+
         public void Extend(double t) {
             // If the timer's not running, behave like Reset
             if (!timer.Enabled)
@@ -185,16 +197,14 @@ namespace Aurora.Settings.Layers {
     }
     
     public enum TimerLayerAnimationType {
-        OnOff,
+        [Description("On/Off")] OnOff,
         Fade
     }
 
     public enum TimerLayerRepeatPressAction {
-        [Description("Reset (restarts the timer)")]
-        Reset,
-        [Description("Extend (adds duration to the timer)")]
-        Extend,
-        [Description("Ignore (ignores presses while timer is active)")]
-        Ignore
+        [Description("Restart")] Reset,
+        [Description("Extend")] Extend,
+        [Description("Stop")] Stop,
+        [Description("Ignore")] Ignore
     }
 }
