@@ -34,7 +34,10 @@ namespace Aurora.Profiles.Minecraft {
                             DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH
                         })
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
+                ),
 
                 new Layer("Experience Bar", new PercentLayerHandler() {
                     Properties = new PercentLayerHandlerProperties() {
@@ -46,7 +49,10 @@ namespace Aurora.Profiles.Minecraft {
                             DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12
                         })
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
+                ),
 
                 new Layer("Toolbar", new ToolbarLayerHandler() {
                     Properties = new ToolbarLayerHandlerProperties() {
@@ -58,7 +64,10 @@ namespace Aurora.Profiles.Minecraft {
                             DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE, DK.SIX, DK.SEVEN, DK.EIGHT, DK.NINE
                         })
                     }
-                }),
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
+                ),
 
                 new Layer("Water Controls", new SolidColorLayerHandler() {
                     Properties = new LayerHandlerProperties()
@@ -68,7 +77,9 @@ namespace Aurora.Profiles.Minecraft {
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsInWater"))
+                    .SetDynamicBoolean("_Enabled", new BooleanAnd(new List<BooleanGSIBoolean>(new[] { 
+                        new BooleanGSIBoolean("Player/IsInWater"),new BooleanGSIBoolean("Player/InGame") }
+                    )))
                 ),
 
                 new Layer("Sneaking Controls", new SolidColorLayerHandler() {
@@ -79,7 +90,9 @@ namespace Aurora.Profiles.Minecraft {
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsSneaking"))
+                    .SetDynamicBoolean("_Enabled", new BooleanAnd(new List<BooleanGSIBoolean>(new[] {
+                        new BooleanGSIBoolean("Player/IsSneaking"),new BooleanGSIBoolean("Player/InGame") }
+                    )))
                 ),
 
                 new Layer("Horse Controls", new SolidColorLayerHandler() {
@@ -90,7 +103,9 @@ namespace Aurora.Profiles.Minecraft {
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsRidingHorse"))
+                    .SetDynamicBoolean("_Enabled", new BooleanAnd(new List<BooleanGSIBoolean>(new[] {
+                        new BooleanGSIBoolean("Player/IsRidingHorse"),new BooleanGSIBoolean("Player/InGame") }
+                    )))
                 ),
 
                 new Layer("Player Controls", new SolidColorLayerHandler() {
