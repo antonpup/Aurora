@@ -476,6 +476,53 @@ namespace Aurora.EffectsEngine
         }
 
         /// <summary>
+        /// Allows drawing some arbitrary content to the sequence bounds, including translation, scaling and rotation.<para/>
+        /// Usage:<code>
+        /// someEffectLayer.DrawTransformed(Properties.Sequence, gfx => {<br/>
+        ///     gfx.FillRectangle(Brushes.Red, 0, 0, 30, 100);<br/>
+        ///     gfx.FillRectangle(Brushes.Blue, 70, 0, 30, 100);<br/>
+        /// }, new RectangleF(0, 0, 100, 100);</code>
+        /// This code will draw a red stipe and a blue stripe (with a transparent gap in between) to the target keysequence area.
+        /// </summary>
+        /// <param name="sequence">The target sequence whose bounds will be used as the target location on the drawing canvas.</param>
+        /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
+        /// <param name="sourceRegion">The source region of the rendered content. This is used when calculating the transformation matrix, so that this
+        /// rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
+        public EffectLayer DrawTransformed(KeySequence sequence, Action<Graphics> render, RectangleF sourceRegion) {
+            // The matrix represents the transformation that will be applied to the rendered content
+            var matrix = new Matrix();
+
+            // The bounds represent the target position of the render part
+            // Note that we round the X and Y off to properly imitate the above `Set(KeySequence, Color)` method. Unsure exactly why this is done, but it _is_ done to replicate behaviour properly.
+            //  Also unsure why the X and Y are rounded using math.Round but Width and Height are just truncated using an int cast??
+            var boundsRaw = sequence.GetAffectedRegion();
+            var bounds = new RectangleF((int)Math.Round(boundsRaw.X), (int)Math.Round(boundsRaw.Y), (int)boundsRaw.Width, (int)boundsRaw.Height);
+
+            using (var gfx = Graphics.FromImage(colormap)) {
+
+                // First, calculate the scaling required to transform the sourceRect's size into the bounds' size
+                float sx = bounds.Width / sourceRegion.Width, sy = bounds.Height / sourceRegion.Height;
+
+                // Perform this scale first
+                matrix.Scale(sx == 0 ? .001f : sx, sy == 0 ? .001f : sy, MatrixOrder.Append);
+
+                // Second, for freeform objects, apply the rotation. This needs to be done AFTER the scaling, else the scaling is applied to the rotated object, which skews it
+                // We rotate around the central point of the source region, but we need to take the scaling of the dimensions into account
+                if (sequence.type == KeySequenceType.FreeForm)
+                    matrix.RotateAt(sequence.freeform.Angle, new PointF((sourceRegion.Left + (sourceRegion.Width / 2f)) * sx, (sourceRegion.Top + (sourceRegion.Height / 2f)) * sy), MatrixOrder.Append);
+
+                // Finally, we can translate the matrix from the source to the target location.
+                matrix.Translate(bounds.X - sourceRegion.Left, bounds.Y - sourceRegion.Top, MatrixOrder.Append);
+
+                // Apply the matrix transform to the graphics context and then render
+                gfx.Transform = matrix;
+                render(gfx);
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Sets one DeviceKeys key with a specific color on the bitmap
         /// </summary>
         /// <param name="key">DeviceKey to be set</param>
