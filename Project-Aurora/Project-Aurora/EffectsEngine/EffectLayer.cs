@@ -504,6 +504,8 @@ namespace Aurora.EffectsEngine
                 float sx = bounds.Width / sourceRegion.Width, sy = bounds.Height / sourceRegion.Height;
 
                 // Perform this scale first
+                // Note: that if the scale is zero, when setting the graphics transform to the matrix, it throws an error, so we must have NON-ZERO values
+                // Note 2: Also tried using float.Epsilon but this also caused the exception, so a somewhat small number will have to suffice. Not noticed any visual issues with 0.001f.
                 matrix.Scale(sx == 0 ? .001f : sx, sy == 0 ? .001f : sy, MatrixOrder.Append);
 
                 // Second, for freeform objects, apply the rotation. This needs to be done AFTER the scaling, else the scaling is applied to the rotated object, which skews it
