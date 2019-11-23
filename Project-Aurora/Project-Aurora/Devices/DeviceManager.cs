@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using Microsoft.Win32;
+using System.Reflection;
 
 namespace Aurora.Devices
 {
@@ -114,10 +115,11 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
             devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
             devices.Add(new DeviceContainer(new Devices.Vulcan.VulcanDevice()));
-            devices.Add(new DeviceContainer(new Devices.Arduino.ArduinoDevice()));
+         //   devices.Add(new DeviceContainer(new Devices.Arduino.ArduinoDevice()));
 
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
+            Global.logger.Debug("hoi " + devices_scripts_path);
             if (Directory.Exists(devices_scripts_path))
             {
                 foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
@@ -153,6 +155,17 @@ namespace Aurora.Devices
                                     devices.Add(new DeviceContainer(scripted_device));
                                 }
 
+                                break;
+                            case ".dll":
+                                   System.Reflection.Assembly assembly = Assembly.LoadFrom(device_script); ;
+                                foreach (Type typ in assembly.ExportedTypes)
+                                {
+                                    dynamic script = Activator.CreateInstance(typ);
+
+                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+                                    devices.Add(new DeviceContainer(scripted_device));
+                                }
                                 break;
                             default:
                                 Global.logger.Error("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext);
