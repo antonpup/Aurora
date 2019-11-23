@@ -1,6 +1,10 @@
 using Aurora.EffectsEngine;
+using Aurora.Utils;
+using NAudio.CoreAudioApi;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,7 +40,6 @@ namespace Aurora.Settings.Layers
         public Control_EqualizerLayer(EqualizerLayerHandler datacontext)
         {
             InitializeComponent();
-
             this.DataContext = datacontext;
         }
 
@@ -273,5 +276,13 @@ namespace Aurora.Settings.Layers
                 Global.logger.Warn(ex.ToString());
             }
         }
+    }
+
+    public class DeviceNameCollectionPrependDefaultConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+            new[] { AudioUtils.DEVICE_DEFAULT } // Add a default option to the start of the list
+            .Concat((ObservableCollection<string>)value);
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }
