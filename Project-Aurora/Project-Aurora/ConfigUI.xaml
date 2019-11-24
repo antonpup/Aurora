@@ -46,6 +46,7 @@
                     <StackPanel.ContextMenu>
                         <ContextMenu x:Name="cmenuProfiles" Opened="ContextMenu_Opened" ContextMenuOpening="cmenuProfiles_ContextMenuOpening">
                             <MenuItem x:Name="mbtnEnabled" Header="Enabled" IsCheckable="True" IsChecked="{Binding Settings.IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <MenuItem Header="Overlays Enabled" IsCheckable="True" IsChecked="{Binding Settings.IsOverlayEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <MenuItem x:Name="mbtnHidden" Header="Hidden" IsCheckable="True" IsChecked="{Binding Settings.Hidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="mbtnHidden_Checked" Unchecked="mbtnHidden_Checked"/>
                         </ContextMenu>
                     </StackPanel.ContextMenu>

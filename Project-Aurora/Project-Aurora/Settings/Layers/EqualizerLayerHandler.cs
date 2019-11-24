@@ -267,6 +267,7 @@ namespace Aurora.Settings.Layers
                         break;
                 }
 
+
                 // Use the new transform render method to draw the equalizer layer
                 equalizer_layer.DrawTransformed(Properties.Sequence, g => {
                     // Here we draw the equalizer relative to our source rectangle and the DrawTransformed method handles sizing and positioning it correctly for us
@@ -368,7 +369,7 @@ namespace Aurora.Settings.Layers
                 return equalizer_layer;
 
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
                 return new EffectLayer();
