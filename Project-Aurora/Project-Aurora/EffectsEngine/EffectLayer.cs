@@ -478,17 +478,25 @@ namespace Aurora.EffectsEngine
         /// <summary>
         /// Allows drawing some arbitrary content to the sequence bounds, including translation, scaling and rotation.<para/>
         /// Usage:<code>
-        /// someEffectLayer.DrawTransformed(Properties.Sequence, gfx => {<br/>
-        ///     gfx.FillRectangle(Brushes.Red, 0, 0, 30, 100);<br/>
-        ///     gfx.FillRectangle(Brushes.Blue, 70, 0, 30, 100);<br/>
-        /// }, new RectangleF(0, 0, 100, 100);</code>
-        /// This code will draw a red stipe and a blue stripe (with a transparent gap in between) to the target keysequence area.
+        /// someEffectLayer.DrawTransformed(Properties.Sequence,<br/>
+        ///     m => {<br/>
+        ///         // We are prepending the transformations since we want the mirroring to happen BEFORE the rotation and scaling happens.<br/>
+        ///         m.Translate(100, 0, MatrixOrder.Prepend); // These two are backwards because we are Prepending (so this is prepended first)<br/>
+        ///         m.Scale(-1, 1, MatrixOrder.Prepend); // Then this is prepended before the tranlate.<br/>
+        ///     },<br/>
+        ///     gfx => {<br/>
+        ///         gfx.FillRectangle(Brushes.Red, 0, 0, 30, 100);<br/>
+        ///         gfx.FillRectangle(Brushes.Blue, 70, 0, 30, 100);<br/>
+        ///     },
+        ///     new RectangleF(0, 0, 100, 100);</code>
+        /// This code will draw an X-mirrored image of a red stipe and a blue stripe (with a transparent gap in between) to the target keysequence area.
         /// </summary>
         /// <param name="sequence">The target sequence whose bounds will be used as the target location on the drawing canvas.</param>
+        /// <param name="configureMatrix">An action that further configures the transformation matrix before render is called.</param>
         /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
         /// <param name="sourceRegion">The source region of the rendered content. This is used when calculating the transformation matrix, so that this
         /// rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
-        public EffectLayer DrawTransformed(KeySequence sequence, Action<Graphics> render, RectangleF sourceRegion) {
+        public EffectLayer DrawTransformed(KeySequence sequence, Action<Matrix> configureMatrix, Action<Graphics> render, RectangleF sourceRegion) {
             // The matrix represents the transformation that will be applied to the rendered content
             var matrix = new Matrix();
 
@@ -513,8 +521,11 @@ namespace Aurora.EffectsEngine
                 if (sequence.type == KeySequenceType.FreeForm)
                     matrix.RotateAt(sequence.freeform.Angle, new PointF((sourceRegion.Left + (sourceRegion.Width / 2f)) * sx, (sourceRegion.Top + (sourceRegion.Height / 2f)) * sy), MatrixOrder.Append);
 
-                // Finally, we can translate the matrix from the source to the target location.
+                // Third, we can translate the matrix from the source to the target location.
                 matrix.Translate(bounds.X - sourceRegion.Left, bounds.Y - sourceRegion.Top, MatrixOrder.Append);
+
+                // Finally, call the custom matrix configure action
+                configureMatrix(matrix);
 
                 // Apply the matrix transform to the graphics context and then render
                 gfx.Transform = matrix;
@@ -523,6 +534,27 @@ namespace Aurora.EffectsEngine
 
             return this;
         }
+
+        /// <summary>
+        /// Allows drawing some arbitrary content to the sequence bounds, including translation, scaling and rotation.<para/>
+        /// See <see cref="DrawTransformed(KeySequence, Action{Matrix}, Action{Graphics}, RectangleF)"/> for usage.
+        /// </summary>
+        /// <param name="sequence">The target sequence whose bounds will be used as the target location on the drawing canvas.</param>
+        /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
+        /// <param name="sourceRegion">The source region of the rendered content. This is used when calculating the transformation matrix, so that this
+        /// rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
+        public EffectLayer DrawTransformed(KeySequence sequence, Action<Graphics> render, RectangleF sourceRegion)
+            => DrawTransformed(sequence, _ => { }, render, sourceRegion);
+
+        /// <summary>
+        /// Allows drawing some arbitrary content to the sequence bounds, including translation, scaling and rotation.
+        /// Uses the full canvas size as the source region.<para/>
+        /// See <see cref="DrawTransformed(KeySequence, Action{Matrix}, Action{Graphics}, RectangleF)"/> for usage.
+        /// </summary>
+        /// <param name="sequence">The target sequence whose bounds will be used as the target location on the drawing canvas.</param>
+        /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
+        public EffectLayer DrawTransformed(KeySequence sequence, Action<Graphics> render) =>
+        DrawTransformed(sequence, render, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height));
 
         /// <summary>
         /// Sets one DeviceKeys key with a specific color on the bitmap
