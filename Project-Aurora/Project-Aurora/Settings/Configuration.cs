@@ -8,6 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -414,8 +415,16 @@ namespace Aurora.Settings
         private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
         public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
 
+        #region Audio
         private bool enableAudioCapture;
-        public bool EnableAudioCapture { get => enableAudioCapture; set { enableAudioCapture = value; InvokePropertyChanged(); } }
+        public bool EnableAudioCapture { get => enableAudioCapture; set => SetAndInvoke(ref enableAudioCapture, value); }
+
+        private string audioCaptureDeviceName = AudioUtils.DEVICE_DEFAULT;
+        public string AudioCaptureDeviceName { get => audioCaptureDeviceName; set => SetAndInvoke(ref audioCaptureDeviceName, value); }
+
+        private string audioRenderDeviceName = AudioUtils.DEVICE_DEFAULT;
+        public string AudioRenderDeviceName { get => audioRenderDeviceName; set => SetAndInvoke(ref audioRenderDeviceName, value); }
+        #endregion
 
         public bool updates_check_on_start_up;
         public bool start_silently;

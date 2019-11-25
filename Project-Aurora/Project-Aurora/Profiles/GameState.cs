@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NAudio.CoreAudioApi;
+using Aurora.Utils;
 
 namespace Aurora.Profiles
 {
@@ -212,58 +213,38 @@ namespace Aurora.Profiles
         /// </summary>
         public bool IsDesktopLocked => Utils.DesktopUtils.IsDesktopLocked;
 
-        /// <summary>
-        /// Gets the default endpoint for output (playback) devices e.g. speakers, headphones, etc.
-        /// This will return null if there are no playback devices available.
-        /// </summary>
-        private MMDevice DefaultAudioOutDevice {
-            get {
-                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); }
-                catch { return null; }
-            }
-        }
-
-        /// <summary>
-        /// Gets the default endpoint for input (recording) devices e.g. microphones.
-        /// This will return null if there are no recording devices available.
-        /// </summary>
-        private MMDevice DefaultAudioInDevice {
-            get {
-                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console); }
-                catch { return null; }
-            }
-        }
 
         /// <summary>
         /// Current system volume (as set from the speaker icon)
         /// </summary>
         // Note: Manually checks if muted to return 0 since this is not taken into account with the MasterVolumeLevelScalar.
-        public float SystemVolume => SystemVolumeIsMuted ? 0 : DefaultAudioOutDevice?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
+        public float SystemVolume => SystemVolumeIsMuted ? 0 : audioRenderDevice.Device?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the system volume is muted.
         /// </summary>
-        public bool SystemVolumeIsMuted => DefaultAudioOutDevice?.AudioEndpointVolume.Mute ?? true;
+        public bool SystemVolumeIsMuted => audioRenderDevice.Device?.AudioEndpointVolume.Mute ?? true;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone even when muted.
         /// </summary>
-        public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float MicrophoneLevel => audioCaptureDevice.Device?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being emitted by the default speaker even when muted.
         /// </summary>
-        public float SpeakerLevel => DefaultAudioOutDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float SpeakerLevel => audioRenderDevice.Device?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone if not muted.
         /// </summary>
-        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : audioCaptureDevice.Device?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the default microphone is muted.
         /// </summary>
-        public bool MicrophoneIsMuted => DefaultAudioInDevice?.AudioEndpointVolume.Mute ?? true;
+        public bool MicrophoneIsMuted => audioCaptureDevice.Device?.AudioEndpointVolume.Mute ?? true;
+
 
         private static PerformanceCounter _CPUCounter;
 
@@ -272,8 +253,8 @@ namespace Aurora.Profiles
 
         private static System.Timers.Timer cpuCounterTimer;
 
-        private static MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
-        private static NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
+        private static AudioDevice audioRenderDevice;
+        private static AudioDevice audioCaptureDevice;
 
         public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
 
@@ -308,21 +289,23 @@ namespace Aurora.Profiles
                 Global.logger.LogLine("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
             }
 
-            void StartStopRecording() {
-                // We must start recording to be able to capture audio in, but only do this if the user has the option set. Allowing them
-                // to turn it off will give them piece of mind we're not spying on them and will stop the Windows 10 mic icon appearing.
-                try {
-                    if (Global.Configuration.EnableAudioCapture)
-                        waveInEvent.StartRecording();
-                    else
-                        waveInEvent.StopRecording();
-                } catch { }
-            }
+            // Setup the audio devices
+            audioCaptureDevice = new AudioDevice(DataFlow.Capture) { EnableRecording = Global.Configuration.EnableAudioCapture, DeviceName = Global.Configuration.AudioCaptureDeviceName };
+            audioRenderDevice = new AudioDevice(DataFlow.Render) { DeviceName = Global.Configuration.AudioRenderDeviceName };
 
-            StartStopRecording();
+            // Setup a listener for when the global configuration properties change
             Global.Configuration.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == "EnableAudioCapture")
-                    StartStopRecording();
+                switch (e.PropertyName) {
+                    // If the audio recording enable checkbox changed, turn on/off the recording
+                    case nameof(Settings.Configuration.EnableAudioCapture):
+                        audioCaptureDevice.EnableRecording = Global.Configuration.EnableAudioCapture; break;
+
+                    // If the capture/render device name changed, update the AudioDevice device name
+                    case nameof(Settings.Configuration.AudioCaptureDeviceName):
+                        audioCaptureDevice.DeviceName = Global.Configuration.AudioCaptureDeviceName; break;
+                    case nameof(Settings.Configuration.AudioRenderDeviceName):
+                        audioRenderDevice.DeviceName = Global.Configuration.AudioRenderDeviceName; break;
+                }
             };
         }
 

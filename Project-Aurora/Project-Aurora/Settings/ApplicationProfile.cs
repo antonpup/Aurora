@@ -18,6 +18,13 @@ namespace Aurora.Settings
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        protected void SetAndInvoke<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+            if (!Equals(field, value)) {
+                field = value;
+                InvokePropertyChanged(propertyName);
+            }
+        }
+
         public object Clone()
         {
             string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });

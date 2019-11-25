@@ -7,17 +7,27 @@ using System.Linq;
 
 namespace Aurora.Utils {
 
+    /// <summary>
+    /// Class for dealing with the NAudio audio devices.
+    /// </summary>
+    /// <remarks>
+    /// Allows for finding a device with the given name and attaching recording events. If the device name is changed, the events are transferred onto the new device.
+    /// Additionally keeps track of whether the target device's audio waveform should be recorded or not.
+    /// </remarks>
     public class AudioDevice : IDisposable {
 
         private readonly DataFlow flow;
+        private bool enableRecording = true;
         private string deviceName;
         private WasapiLoopbackCapture waveIn;
         private EventHandler<WaveInEventArgs> waveInDataAvailable; // Store the current event listeners so when device changes, we can re-attach listeners
+
 
         public AudioDevice(DataFlow flow) {
             this.flow = flow;
         }
 
+        /// <summary>An event that is invoked when the wave recorder has data available.</summary>
         public event EventHandler<WaveInEventArgs> WaveInDataAvailable {
             add {
                 waveInDataAvailable += value; // Update stored event listeners
@@ -29,6 +39,8 @@ namespace Aurora.Utils {
             }
         }
 
+        /// <summary>Gets or sets the name of the audio device targetted by this instance.
+        /// Setting the value attempts to find the target device with the given name.</summary>
         public string DeviceName {
             get => deviceName;
             set {
@@ -38,6 +50,20 @@ namespace Aurora.Utils {
             }
         }
 
+        /// <summary>Gets or sets whether the recording on the waveform is running.</summary>
+        public bool EnableRecording {
+            get => enableRecording;
+            set {
+                if (enableRecording && !value) // If we are currently recording, but we shouldn't, stop
+                    waveIn?.StopRecording();
+                else if (!enableRecording && value) // If we're not currently recording but we should, start
+                    waveIn?.StartRecording();
+                enableRecording = value;
+            }
+        }
+
+        /// <summary>Gets the current multimedia device that is being used by this instance.
+        /// May be null if no device was found with the given <see cref="DeviceName"/>.</summary>
         public MMDevice Device { get; private set; }
 
         private void SetupDevice() {
@@ -51,9 +77,14 @@ namespace Aurora.Utils {
             // If found device, create a WaveIn for it
             if (Device != null) {
                 waveIn = new WasapiLoopbackCapture(Device);
+                
+                // If there are listeners that are currently registered, add them to the new WaveIn
                 if (waveInDataAvailable != null)
                     waveIn.DataAvailable += waveInDataAvailable;
-                waveIn.StartRecording();
+
+                // If recording is enabled, start it
+                if (enableRecording)
+                    waveIn.StartRecording();
             }
         }
 
