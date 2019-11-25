@@ -19,7 +19,7 @@ namespace Aurora.Utils {
         private readonly DataFlow flow;
         private bool enableRecording = true;
         private string deviceName;
-        private WasapiLoopbackCapture waveIn;
+        private WasapiCapture waveIn;
         private EventHandler<WaveInEventArgs> waveInDataAvailable; // Store the current event listeners so when device changes, we can re-attach listeners
 
 
@@ -76,7 +76,8 @@ namespace Aurora.Utils {
 
             // If found device, create a WaveIn for it
             if (Device != null) {
-                waveIn = new WasapiLoopbackCapture(Device);
+                // For audio output devices, we need to use a loopback capture, but for audio input devices we need a regular capture.
+                waveIn = flow == DataFlow.Render ? new WasapiLoopbackCapture(Device) : new WasapiCapture(Device);
                 
                 // If there are listeners that are currently registered, add them to the new WaveIn
                 if (waveInDataAvailable != null)

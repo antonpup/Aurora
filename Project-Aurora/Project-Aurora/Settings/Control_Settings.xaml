@@ -176,10 +176,9 @@
                     
                     <GroupBox Header="Audio Devices" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="508,39,0,0" Width="322" Height="99">
                         <Grid>
-                            <CheckBox Content="Enable Audio Capture" IsChecked="{Binding EnableAudioCapture}" ToolTip="" Margin="-2,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <CheckBox Content="Enable Audio Capture" IsChecked="{Binding EnableAudioCapture}" Margin="-2,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Note that when disabling input capture, a restart may be required" ToolTipService.InitialShowDelay="0" />
                             <TextBlock Text="Playback Device:" Margin="4,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedItem="{Binding AudioRenderDeviceName}" ItemsSource="{Binding Source={x:Static u:AudioUtils.PlaybackDevices}, Converter={StaticResource DeviceNameCollectionPrependDefaultConv}}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="96,24,0,0" Width="208" />
-
                             <TextBlock Text="Capture Device:" Margin="4,54,0,-1" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedItem="{Binding AudioCaptureDeviceName}" ItemsSource="{Binding Source={x:Static u:AudioUtils.RecordingDevices}, Converter={StaticResource DeviceNameCollectionPrependDefaultConv}}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="92,51,0,-4" Width="212" />
                         </Grid>
