@@ -40,7 +40,7 @@ LedId.Keyboard_0, DeviceKeys.ZERO
 LedId.Keyboard_MinusAndUnderscore, DeviceKeys.MINUS
 LedId.Keyboard_EqualsAndPlus, DeviceKeys.EQUALS
 LedId.Keyboard_Backspace, DeviceKeys.BACKSPACE
-LedId.Keyboard_Insert, DeviceKeys.INSERT},
+LedId.Keyboard_Insert, DeviceKeys.INSERT
 LedId.Keyboard_Home, DeviceKeys.HOME
 LedId.Keyboard_PageUp, DeviceKeys.PAGE_UP
 LedId.Keyboard_NumLock, DeviceKeys.NUM_LOCK

@@ -15,23 +15,30 @@ namespace Aurora.Devices.RGBNet
             if (!File.Exists(path))
                 return;
             LedMapping.Clear();
-            try
+            var lines = File.ReadAllLines(path).Where(line => !line.StartsWith("//") && !string.IsNullOrWhiteSpace(line)).ToArray();
+
+            for (int i = 0; i < lines.Length; i++)
             {
-                foreach (var line in File.ReadAllLines(path).Where(d => !d.StartsWith("//") && !string.IsNullOrWhiteSpace(d)))
+                try
                 {
-                    var ids = line.Replace(" ","").Split(',');
+                    var line = lines[i];
+
+                    var ids = line.Replace(" ", "").Split(',');
                     var ledid = ids[0].Replace("LedId.", "");
                     var devicekey = ids[1].Replace("DeviceKeys.", "");
 
                     if (Enum.TryParse(ledid, out LedId led) && Enum.TryParse(devicekey, out DeviceKeys dev))
                         LedMapping.Add(led, dev);
+                    else
+                        throw new FormatException();
                 }
-                Global.logger.Info("Parsed LedMappings file with " +  LedMapping.Count +  " entries");
+                catch (Exception)
+                {
+                    Global.logger.Error($"Error parsing LedMappings file in line " + i + ": " + lines[i]);
+                }
             }
-            catch(Exception e)
-            {
-                Global.logger.Error("Error parsing LedMappings file:" + e.Message);
-            }
+
+            Global.logger.Info("Parsed LedMappings file with " + LedMapping.Count + " entries");
         }
     }
 }
