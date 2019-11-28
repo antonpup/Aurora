@@ -64,7 +64,7 @@ namespace Aurora.Utils
 
                 Type temp = null;
 
-                if (prop_type.IsPrimitive || AdditionalAllowedTypes.ContainsKey(prop_type))
+                if (prop_type.IsPrimitive || prop_type.IsEnum || AdditionalAllowedTypes.ContainsKey(prop_type))
                 {
                     parameters.Add(prop.Name, new Tuple<Type, Type>(prop_type, prop_param_type));
                 }
@@ -207,6 +207,19 @@ namespace Aurora.Utils
                 } catch { }
             }
             return value;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve an enum value from the game state with the given path.
+        /// Returns null if unable to get the value from the state.
+        /// </summary>
+        public static Enum TryGetEnumFromState(IGameState state, string path) {
+            if (!string.IsNullOrWhiteSpace(path)) {
+                try {
+                    return RetrieveGameStateParameter(state, path) as Enum;
+                } catch { }
+            }
+            return null;
         }
 
 

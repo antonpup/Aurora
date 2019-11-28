@@ -102,6 +102,9 @@
     <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.2.1.0\lib\net35\HidSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.26\lib\net45\Interop.AuraServiceLib.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -325,7 +328,13 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Vulcan.NET, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vulcan.NET.1.1.2\lib\netstandard2.0\Vulcan.NET.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="Wooting.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Wooting.NET.1.0.0\lib\netstandard2.0\Wooting.NET.dll</HintPath>
+    </Reference>
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\WPFToolkit.dll</HintPath>
       <Private>True</Private>
@@ -370,6 +379,10 @@
     <Compile Include="Devices\Omen\OmenChassis.cs" />
     <Compile Include="Devices\Omen\OmenKeys.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Devices\Vulcan\Vulcan.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
+    <Compile Include="Profiles\Osu\GSI\Enums.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
       <DependentUpon>Control_Skype.xaml</DependentUpon>
     </Compile>
@@ -464,7 +477,6 @@
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
     <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
     <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
-    <Compile Include="Devices\UnifiedHID\RoccatVulcan.cs" />
     <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
@@ -631,16 +643,13 @@
     <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
       <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueGoalExplosionLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
     <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />
@@ -687,9 +696,18 @@
     <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
       <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_NumericChangeDetector.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ProcessRunning.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_TrueExtender.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIEnum.xaml.cs">
+      <DependentUpon>Control_BooleanGSIEnum.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
       <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_TimeAndUnit.xaml.cs">
+      <DependentUpon>Control_TimeAndUnit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml.cs">
       <DependentUpon>Control_IfElse.xaml</DependentUpon>
@@ -705,6 +723,7 @@
       <DependentUpon>Control_OverrideDynamicValue.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Overrides\Logic\Number\Number_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Number_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Number_Waves.cs" />
     <Compile Include="Settings\Overrides\Logic\Number\Operators.cs" />
     <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
@@ -781,6 +800,7 @@
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\DesktopDuplicator.cs" />
+    <Compile Include="Utils\FrameworkElementUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
@@ -1506,6 +1526,7 @@
     <Compile Include="Utils\KeyUtils.cs" />
     <Compile Include="Utils\MemoryReader.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
+    <Compile Include="Utils\RazerChromaUtils.cs" />
     <Compile Include="Utils\RunningProcessMonitor.cs" />
     <Compile Include="Utils\SteamUtils.cs" />
     <Compile Include="Utils\ThreadPriorityChanger.cs" />
@@ -2059,7 +2080,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -2123,6 +2144,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIEnum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2132,6 +2157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_TimeAndUnit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2537,10 +2566,6 @@
       <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
       <Name>SBAuroraReactive</Name>
       <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
-      <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
-      <Name>Wooting.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj">
       <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>

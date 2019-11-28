@@ -114,6 +114,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.YeeLight.YeeLightDevice()));         // YeeLight Device
             devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
             devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
+            devices.Add(new DeviceContainer(new Devices.Vulcan.VulcanDevice()));
             
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
