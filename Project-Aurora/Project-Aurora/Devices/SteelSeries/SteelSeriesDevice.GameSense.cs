@@ -19,7 +19,7 @@ namespace Aurora.Devices.SteelSeries
         private JObject baseObject = new JObject();
         private JObject baseColorObject = new JObject {{"Event", "AURORA"}, {"data", new JObject()}};
         private Task pingTask;
-        private CancellationTokenSource pingTaskTokenSource;
+        private CancellationTokenSource pingTaskTokenSource = new CancellationTokenSource();
         private bool loadedLisp;
         private JToken dataColorObject => baseColorObject["data"];
 
@@ -36,7 +36,6 @@ namespace Aurora.Devices.SteelSeries
                 core.Add("golisp", reader.ReadToEnd());
             }
             sendJson("/load_golisp_handlers", core);
-            pingTaskTokenSource = new CancellationTokenSource();
             pingTask = Task.Run(async () => await sendPing(pingTaskTokenSource.Token), pingTaskTokenSource.Token);
             loadedLisp = true;
         }
@@ -50,7 +49,7 @@ namespace Aurora.Devices.SteelSeries
             var reader = file.OpenText();
             var coreProps = JObject.Parse(reader.ReadToEnd());
             reader.Dispose();
-            client.BaseAddress = new Uri(coreProps["address"].ToString());
+            client.BaseAddress = new Uri("http://" + coreProps["address"]);
             sendLispCode();
         }
 
