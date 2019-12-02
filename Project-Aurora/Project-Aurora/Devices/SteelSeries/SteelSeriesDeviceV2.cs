@@ -76,13 +76,25 @@ namespace Aurora.Devices.SteelSeries
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            throw new NotImplementedException();
+            foreach (var keyValuePair in keyColors)
+            {
+                var key = keyValuePair.Key;
+                var color = keyValuePair.Value;
+                if (TryGetHid(key, out byte hid))
+                {
+
+                }
+            }
+            return true;
         }
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             var keyColors = colorComposition.keyColors;
             var mousePad = keyColors.Where(t => t.Key >= DeviceKeys.MOUSEPADLIGHT1 && t.Key <= DeviceKeys.MOUSEPADLIGHT12).ToList();
+            var mouse = keyColors.Where(t => t.Key == DeviceKeys.Peripheral_Logo || t.Key == DeviceKeys.Peripheral_ScrollWheel || t.Key >= DeviceKeys.ADDITIONALLIGHT11 && t.Key <= DeviceKeys.ADDITIONALLIGHT16).ToList();
+            UpdateDevice(keyColors, e, forced);
+
 
             return true;
         }

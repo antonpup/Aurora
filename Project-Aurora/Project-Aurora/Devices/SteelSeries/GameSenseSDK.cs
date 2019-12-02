@@ -139,16 +139,6 @@ namespace SteelSeries.GameSenseSDK
             sendPostRequest("http://" + sseAddress + "/game_event", json);
         }
 
-        public void sendStop()
-        {
-            GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
-            payload.game = sseGameName;
-            payload.Event = "STOP";
-            // sending POST request
-            String json = JsonConvert.SerializeObject(payload);
-            sendPostRequest("http://" + sseAddress + "/game_event", json);
-        }
-
         private void sendPostRequest(String address, String payload)
         {
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(address);
