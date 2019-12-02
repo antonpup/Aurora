@@ -1218,79 +1218,79 @@ namespace Aurora.Devices
         MOUSEPADLIGHT2 = 202,
 
         /// <summary>
-        /// Mousepad Light 1
+        /// Mousepad Light 3
         /// </summary>
         [Description("Mousepad Light 3")]
         MOUSEPADLIGHT3 = 203,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 4
         /// </summary>
         [Description("Mousepad Light 4")]
         MOUSEPADLIGHT4 = 204,
 
         /// <summary>
-        /// Mousepad Light 1
+        /// Mousepad Light 5
         /// </summary>
         [Description("Mousepad Light 5")]
         MOUSEPADLIGHT5 = 205,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 6
         /// </summary>
         [Description("Mousepad Light 6")]
         MOUSEPADLIGHT6 = 206,
 
         /// <summary>
-        /// Mousepad Light 1
+        /// Mousepad Light 7
         /// </summary>
         [Description("Mousepad Light 7")]
         MOUSEPADLIGHT7 = 207,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 8
         /// </summary>
         [Description("Mousepad Light 8")]
         MOUSEPADLIGHT8 = 208,
 
         /// <summary>
-        /// Mousepad Light 1
+        /// Mousepad Light 9
         /// </summary>
         [Description("Mousepad Light 9")]
         MOUSEPADLIGHT9 = 209,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 10
         /// </summary>
         [Description("Mousepad Light 10")]
         MOUSEPADLIGHT10 = 210,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 11
         /// </summary>
         [Description("Mousepad Light 11")]
         MOUSEPADLIGHT11 = 211,
 
         /// <summary>
-        /// Mousepad Light 1
+        /// Mousepad Light 12
         /// </summary>
         [Description("Mousepad Light 12")]
         MOUSEPADLIGHT12 = 212,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 13
         /// </summary>
         [Description("Mousepad Light 13")]
         MOUSEPADLIGHT13 = 213,
 
         /// <summary>
-        /// Mousepad Light 1
+        /// Mousepad Light 14
         /// </summary>
         [Description("Mousepad Light 14")]
         MOUSEPADLIGHT14 = 214,
 
         /// <summary>
-        /// Mousepad Light 2
+        /// Mousepad Light 15
         /// </summary>
         [Description("Mousepad Light 15")]
         MOUSEPADLIGHT15 = 215,
