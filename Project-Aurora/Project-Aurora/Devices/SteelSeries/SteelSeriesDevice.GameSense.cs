@@ -63,72 +63,72 @@ namespace Aurora.Devices.SteelSeries
 
         private void setOneZone(Color color)
         {
-            ((JObject) dataColorObject).Add("onezone", new JArray{color.R,color.G,color.B});
-        }
+            ((JObject)dataColorObject).Add("onezone", new JObject{{"color",new JArray {color.R, color.G, color.B}}});
+    }
 
         private void setTwoZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("twozone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("twozone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setThreeZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("threezone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("threezone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setFourZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("fourzone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("fourzone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setFiveZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("fivezone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("fivezone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setEightZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("eightzone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("eightzone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setTwelveZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("twelvezone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("twelvezone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setSeventeenZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("seventeenzone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("seventeenzone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setTwentyFourZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("twentyfourzone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("twentyfourzone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setHundredThreeZone(Color[] colors)
         {
-            ((JObject) dataColorObject).Add("hundredthreezone", colorToJson(colors));
+            ((JObject) dataColorObject).Add("hundredthreezone", new JObject{{"colors", colorToJson(colors)}});
         }
 
         private void setLogo(Color color)
         {
-            ((JObject) dataColorObject).Add("logo", new JArray{color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("logo", new JObject{{"color",new JArray {color.R, color.G, color.B}}});
         }
 
         private void setWheel(Color color)
         {
-            ((JObject) dataColorObject).Add("wheel", new JArray {color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("wheel", new JObject{{"color",new JArray {color.R, color.G, color.B}}});
         }
 
         private void setMouse(Color color)
         {
-            ((JObject) dataColorObject).Add("mouse", new JArray{color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("mouse", new JObject{{"color",new JArray {color.R, color.G, color.B}}});
         }
 
         private void setGeneric(Color color)
         {
-            ((JObject) dataColorObject).Add("periph", new JArray{color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("periph", new JObject{{"color",new JArray {color.R, color.G, color.B}}});
         }
 
         private async Task sendPing(CancellationToken token)
@@ -137,7 +137,7 @@ namespace Aurora.Devices.SteelSeries
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(10), token);
+                    await Task.Delay(TimeSpan.FromSeconds(10));
                     await sendJsonAsync("/game_heartbeat", baseObject);
                 }
                 catch (Exception e)
