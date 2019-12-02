@@ -375,9 +375,9 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Devices\SteelSeries\SteelSeriesDeviceV2.cs" />
-    <Compile Include="Devices\SteelSeries\SteelSeriesDeviceV2.GameSense.cs" />
-    <Compile Include="Devices\SteelSeries\SteelSeriesDeviceV2.HIDCodes.cs" />
+    <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
+    <Compile Include="Devices\SteelSeries\SteelSeriesDevice.GameSense.cs" />
+    <Compile Include="Devices\SteelSeries\SteelSeriesDevice.HIDCodes.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
@@ -474,7 +474,6 @@
     <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
     <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
     <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
-    <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -1025,7 +1024,6 @@
     </Compile>
     <Compile Include="Settings\ObjectSettings.cs" />
     <Compile Include="Settings\PluginManager.cs" />
-    <Compile Include="Devices\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\MouseUtils.cs" />
     <Compile Include="Utils\PointerUpdateUtils.cs" />

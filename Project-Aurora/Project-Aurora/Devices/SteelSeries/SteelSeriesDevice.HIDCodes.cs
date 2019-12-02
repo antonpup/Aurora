@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.SteelSeries
 {
-    public partial class SteelSeriesDeviceV2
+    public partial class SteelSeriesDevice
     {
         public bool TryGetHid(DeviceKeys key, out byte hid)
         {
