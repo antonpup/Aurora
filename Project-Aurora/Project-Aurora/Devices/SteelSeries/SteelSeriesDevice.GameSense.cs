@@ -58,12 +58,12 @@ namespace Aurora.Devices.SteelSeries
             if(!((JObject)dataColorObject).ContainsKey("keyboard"))
                 ((JObject) dataColorObject).Add("keyboard", new JObject {{"hids", new JArray()}, {"colors", new JArray()}});
             ((JArray) dataColorObject["keyboard"]["hids"]).Add(led);
-            ((JArray) dataColorObject["keyboard"]["colors"]).Add(new[] {color.R, color.G, color.B});
+            ((JArray) dataColorObject["keyboard"]["colors"]).Add(new JArray{color.R, color.G, color.B});
         }
 
         private void setOneZone(Color color)
         {
-            ((JObject) dataColorObject).Add("onezone", new[] {color.R,color.G,color.B});
+            ((JObject) dataColorObject).Add("onezone", new JArray{color.R,color.G,color.B});
         }
 
         private void setTwoZone(Color[] colors)
@@ -113,22 +113,22 @@ namespace Aurora.Devices.SteelSeries
 
         private void setLogo(Color color)
         {
-            ((JObject) dataColorObject).Add("logo", new[] {color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("logo", new JArray{color.R, color.G, color.B});
         }
 
         private void setWheel(Color color)
         {
-            ((JObject) dataColorObject).Add("wheel", new[] {color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("wheel", new JArray {color.R, color.G, color.B});
         }
 
         private void setMouse(Color color)
         {
-            ((JObject) dataColorObject).Add("mouse", new[] {color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("mouse", new JArray{color.R, color.G, color.B});
         }
 
         private void setGeneric(Color color)
         {
-            ((JObject) dataColorObject).Add("periph", new[] {color.R, color.G, color.B});
+            ((JObject) dataColorObject).Add("periph", new JArray{color.R, color.G, color.B});
         }
 
         private async Task sendPing(CancellationToken token)
@@ -137,7 +137,7 @@ namespace Aurora.Devices.SteelSeries
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(10));
+                    await Task.Delay(TimeSpan.FromSeconds(10), token);
                     await sendJsonAsync("/game_heartbeat", baseObject);
                 }
                 catch (Exception e)
@@ -157,7 +157,7 @@ namespace Aurora.Devices.SteelSeries
 
         private void sendJson(string endpoint, object obj)
         {
-            sendJsonAsync(endpoint, obj).GetAwaiter().GetResult();
+            var t = sendJsonAsync(endpoint, obj).GetAwaiter().GetResult();
         }
 
         private Task<HttpResponseMessage> sendJsonAsync(string endpoint, object obj)
@@ -170,7 +170,7 @@ namespace Aurora.Devices.SteelSeries
             var arr = new JArray();
             foreach (var color in colors)
             {
-                arr.Add(new[] {color.R,color.G,color.B});
+                arr.Add(new JArray{color.R,color.G,color.B});
             }
             return arr;
         }

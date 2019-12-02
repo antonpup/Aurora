@@ -44,9 +44,12 @@ namespace Aurora.Devices.SteelSeries
                         Global.Configuration.steelseries_first_time = false;
                         ConfigManager.Save(Global.Configuration);
                     }
+                    if (!baseObject.ContainsKey("game"))
+                    {
+                        baseObject.Add("game", "PROJECTAURORA");
+                        baseColorObject.Add("game", baseObject["game"]);
+                    }
                     loadCoreProps();
-                    baseObject.Add("game", "PROJECTAURORA");
-                    baseColorObject.Add("game", baseObject["game"]);
                     return true;
                 }
                 catch (Exception e)
@@ -78,10 +81,7 @@ namespace Aurora.Devices.SteelSeries
 
         public bool IsInitialized() => loadedLisp;
 
-        public bool IsConnected()
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsConnected() => loadedLisp;
 
         public bool IsKeyboardConnected()
         {
@@ -114,21 +114,26 @@ namespace Aurora.Devices.SteelSeries
             var monitor = keyColors.Where(t => t.Key >= DeviceKeys.MONITORLIGHT1 && t.Key <= DeviceKeys.MONITORLIGHT103).Select(t => t.Value).ToArray();
             if (!Global.Configuration.devices_disable_mouse || !Global.Configuration.devices_disable_headset)
             {
-                if (mouse.Length <= 1)
-                    setMouse(keyColors[DeviceKeys.Peripheral_Logo]);
-                else
+                if (!keyColors.ContainsKey(DeviceKeys.Peripheral))
                 {
-                    setLogo(keyColors[DeviceKeys.Peripheral_Logo]);
-                    setWheel(keyColors[DeviceKeys.Peripheral_ScrollWheel]);
-                    if (mouse.Length == 8)
-                        setEightZone(mouse);
+                    if (mouse.Length <= 1)
+                        setMouse(keyColors[DeviceKeys.Peripheral_Logo]);
+                    else
+                    {
+                        setLogo(keyColors[DeviceKeys.Peripheral_Logo]);
+                        setWheel(keyColors[DeviceKeys.Peripheral_ScrollWheel]);
+                        if (mouse.Length == 8)
+                            setEightZone(mouse);
+                    }
+                    if (mousePad.Length == 2)
+                        setTwoZone(mousePad);
+                    else
+                        setTwelveZone(mousePad);
+                    if (monitor.Length == 103)
+                        setHundredThreeZone(monitor);
                 }
-                if (mousePad.Length == 2)
-                    setTwoZone(mousePad);
                 else
-                    setTwelveZone(mousePad);
-                if (monitor.Length == 103)
-                    setHundredThreeZone(monitor);
+                    setGeneric(keyColors[DeviceKeys.Peripheral]);
             }
             if (!Global.Configuration.devices_disable_keyboard)
             {
