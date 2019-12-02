@@ -36,12 +36,12 @@ namespace Aurora.Devices.SteelSeries
         {
             loadCoreProps();
             baseObject.Add("game", "PROJECTAURORA");
-            throw new NotImplementedException();
+            return true;
         }
 
         public void Shutdown()
         {
-            throw new NotImplementedException();
+            pingTaskTokenSource.Cancel();
         }
 
         public void Reset()
@@ -81,7 +81,10 @@ namespace Aurora.Devices.SteelSeries
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            throw new NotImplementedException();
+            var keyColors = colorComposition.keyColors;
+            var mousePad = keyColors.Where(t => t.Key >= DeviceKeys.MOUSEPADLIGHT1 && t.Key <= DeviceKeys.MOUSEPADLIGHT12).ToList();
+
+            return true;
         }
     }
 }

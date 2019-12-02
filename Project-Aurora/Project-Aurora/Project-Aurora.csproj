@@ -377,6 +377,7 @@
     </Compile>
     <Compile Include="Devices\SteelSeries\SteelSeriesDeviceV2.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDeviceV2.GameSense.cs" />
+    <Compile Include="Devices\SteelSeries\SteelSeriesDeviceV2.HIDCodes.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />

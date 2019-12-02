@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -16,6 +17,7 @@ namespace Aurora.Devices.SteelSeries
         private HttpClient client = new HttpClient {Timeout = TimeSpan.FromSeconds(30)};
         private JObject baseObject = new JObject();
         private Task pingTask;
+        private CancellationTokenSource pingTaskTokenSource;
 
         private void sendLispCode()
         {
@@ -30,7 +32,8 @@ namespace Aurora.Devices.SteelSeries
                 core.Add("golisp", reader.ReadToEnd());
             }
             sendJson("/load_golisp_handlers", core);
-            pingTask = Task.Run(sendPing);
+            pingTaskTokenSource = new CancellationTokenSource();
+            pingTask = Task.Run(async () => await sendPing(pingTaskTokenSource.Token), pingTaskTokenSource.Token);
         }
 
         private void loadCoreProps()
@@ -46,9 +49,9 @@ namespace Aurora.Devices.SteelSeries
             sendLispCode();
         }
 
-        private async Task sendPing()
+        private async Task sendPing(CancellationToken token)
         {
-            while (true)
+            while (!token.IsCancellationRequested)
             {
                 try
                 {
@@ -58,6 +61,8 @@ namespace Aurora.Devices.SteelSeries
                 catch(Exception e)
                 {
                     Global.logger.Error(e, "Error while sending heartbeat to SteelSeries Engine");
+                    //To stop all other events from erroring
+                    Shutdown();
                 }
             }
         }

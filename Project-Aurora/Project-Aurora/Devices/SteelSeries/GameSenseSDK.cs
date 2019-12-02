@@ -18,24 +18,6 @@ namespace SteelSeries.GameSenseSDK
         public String encrypted_address { get; set; }
     }
 
-    public class GameSensePayloadLISPHandlerJSON
-    {
-        public String game { get; set; }
-        public String golisp { get; set; }
-    }
-
-    public class GameSensePayloadHeartbeatJSON
-    {
-        public String game { get; set; }
-    }
-
-    public class GameSensePayloadGameDataJSON
-    {
-        public String game { get; set; }
-        public String game_display_name { get; set; }
-        public byte icon_color_id { get; set; }
-    }
-
     public class GameSensePayloadPeripheryColorEventJSON
     {
         public String game { get; set; }
