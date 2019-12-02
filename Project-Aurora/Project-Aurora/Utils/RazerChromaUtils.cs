@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 using RazerSdkWrapper.Utils;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Aurora.Utils
 {
@@ -79,12 +81,54 @@ namespace Aurora.Utils
             }
         });
 
-        public static Task<string> DownloadAsync() => Task.Run(() =>
+        public static Task<string> GetDownloadUrlAsync() => Task.Run(() =>
         {
             using (var client = new WebClient())
             {
+                var endpoint = "prod";
+                var json = JObject.Parse(client.DownloadString("https://discovery.razerapi.com/user/endpoints"));
+                var hash = json["endpoints"].Children().FirstOrDefault(c => c.Value<string>("name") == endpoint)?.Value<string>("hash");
+
+                if (hash == null)
+                    return null;
+
+                var platformData = @"
+<PlatformRoot xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <Platform>
+    <Arch>64</Arch>
+    <Locale>en</Locale>
+    <Mfr>Generic-MFR</Mfr>
+    <Model>Generic-MDL</Model>
+    <OS>Windows</OS>
+    <OSVer>10</OSVer>
+    <SKU>Generic-SKU</SKU>
+  </Platform>
+</PlatformRoot>
+";
+
+                client.Headers.Set("Content-Type", "application/xml");
+                var xml = client.UploadString($"https://manifest.razerapi.com/api/legacy/{hash}/{endpoint}/productlist/get", platformData);
+                var doc = new XmlDocument();
+                doc.LoadXml(xml);
+
+                foreach(XmlNode node in doc.DocumentElement.SelectNodes("//Module"))
+                    if (node["Name"].InnerText == "CHROMABROADCASTER")
+                        return node["DownloadURL"].InnerText;
+
+                return null;
+            }
+        });
+
+        public static Task<string> DownloadAsync() => Task.Run(async () =>
+        {
+            var url = await GetDownloadUrlAsync();
+            if (url == null)
+                return null;
+
+            using (var client = new WebClient())
+            {
                 var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
-                client.DownloadFile(RzHelper.LatestSupportedVersionUrl, path);
+                client.DownloadFile(url, path);
                 return path;
             }
         });
