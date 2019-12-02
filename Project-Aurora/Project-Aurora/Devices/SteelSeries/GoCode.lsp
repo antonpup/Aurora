@@ -21,7 +21,7 @@
         (when (onezone:? data)
             (let* ((onezone (onezone: data))
                     (colors (colors: onezone)))
-                (on-device "rgb-1-zone" show-on-zones: colors '(one:))))
+                (on-device "rgb-1-zone" show-on-zones: colors one:)))
         (when (twozone:? data)
             (let* ((twozone (twozone: data))
                     (colors (colors: twozone)))

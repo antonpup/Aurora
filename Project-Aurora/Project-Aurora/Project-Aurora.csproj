@@ -474,7 +474,6 @@
     <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
     <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
     <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
-    <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>

@@ -50,8 +50,6 @@ namespace Aurora.Devices.SteelSeries
                 {
                     try
                     {
-                        gameSenseSDK.init("PROJECTAURORA", "Project Aurora", 7);
-
                         if (Global.Configuration.steelseries_first_time)
                         {
                             App.Current.Dispatcher.Invoke(() =>
@@ -145,88 +143,7 @@ namespace Aurora.Devices.SteelSeries
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (e.Cancel) return false;
-
-            try
-            {
-
-                if (e.Cancel) return false;
-
-                List<byte> hids = new List<byte>();
-                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-                List<Tuple<byte, byte, byte>> colorsMousepad = new List<Tuple<byte, byte, byte>>();
-                //Tuple<byte, byte, byte>[] colors_mousepad = new Tuple<byte, byte, byte>[12];
-
-                // Create a new color event, we'll pass this on to whatever should add to it
-
-                GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
-                gameSenseSDK.setupEvent(payload);
-
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
-                {
-
-
-                    if (e.Cancel) return false;
-                    //CorsairLedId localKey = ToCorsair(key.Key);
-
-                    Color color = (Color)key.Value;
-                    //Apply and strip Alpha
-                    color = Color.FromArgb(255,
-                        Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
-
-                    if (e.Cancel) return false;
-
-                    switch (key.Key)
-                    {
-                        case DeviceKeys.Peripheral:
-                            SendColorToPeripheral(color, payload, forced);
-                            break;
-                        case DeviceKeys.Peripheral_Logo:
-                        case DeviceKeys.Peripheral_FrontLight:
-                        case DeviceKeys.Peripheral_ScrollWheel:
-                            SendColorToPeripheralZone(key.Key, color, payload);
-                            break;
-                        case DeviceKeys.MOUSEPADLIGHT1:
-                        case DeviceKeys.MOUSEPADLIGHT2:
-                        case DeviceKeys.MOUSEPADLIGHT3:
-                        case DeviceKeys.MOUSEPADLIGHT4:
-                        case DeviceKeys.MOUSEPADLIGHT5:
-                        case DeviceKeys.MOUSEPADLIGHT6:
-                        case DeviceKeys.MOUSEPADLIGHT7:
-                        case DeviceKeys.MOUSEPADLIGHT8:
-                        case DeviceKeys.MOUSEPADLIGHT9:
-                        case DeviceKeys.MOUSEPADLIGHT10:
-                        case DeviceKeys.MOUSEPADLIGHT11:
-                        case DeviceKeys.MOUSEPADLIGHT12:
-                            // colors_mousepad[Convert.ToInt32(key.Key) - 201] = Tuple.Create(color.R, color.G, color.B);
-                            colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
-                            break;
-                        default:
-                            byte hid = GetHIDCode(key.Key);
-
-                            if (hid != (byte)USBHIDCodes.ERROR)
-                            {
-                                hids.Add(hid);
-                                colors.Add(Tuple.Create(color.R, color.G, color.B));
-                            }
-                            break;
-                    }
-                }
-
-                if (e.Cancel) return false;
-
-                SendColorsToKeyboard(hids, colors, payload);
-                SendColorsToMousepad(colorsMousepad, payload);
-
-                gameSenseSDK.sendFullColorRequest(payload);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
-                return false;
-            }
+            return true;
         }
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
@@ -259,94 +176,6 @@ namespace Aurora.Devices.SteelSeries
         public VariableRegistry GetRegisteredVariables()
         {
             return new VariableRegistry();
-        }
-
-        private void SendColorToPeripheral(Color color, GameSensePayloadPeripheryColorEventJSON payload, bool forced = false)
-        {
-            if ((!previous_peripheral_Color.Equals(color) || forced))
-            {
-                if (Global.Configuration.allow_peripheral_devices)
-                {
-                    if (!Global.Configuration.devices_disable_mouse && !Global.Configuration.devices_disable_headset)
-                    {
-                        gameSenseSDK.setPeripheryColor(color.R, color.G, color.B, payload);
-                    }
-                    else
-                    {
-                        if (!Global.Configuration.devices_disable_mouse)
-                        {
-                            gameSenseSDK.setMouseColor(color.R, color.G, color.B, payload);
-                        }
-
-                        if (!Global.Configuration.devices_disable_headset)
-                        {
-                            gameSenseSDK.setHeadsetColor(color.R, color.G, color.B, payload);
-                        }
-                    }
-
-                    previous_peripheral_Color = color;
-                    peripheral_updated = true;
-                }
-                else
-                {
-                    peripheral_updated = false;
-                }
-            }
-        }
-
-        private void SendColorToPeripheralZone(DeviceKeys zone, Color color, GameSensePayloadPeripheryColorEventJSON payload)
-        {
-            if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
-            {
-                if (zone == DeviceKeys.Peripheral_Logo)
-                {
-                    gameSenseSDK.setMouseLogoColor(color.R, color.G, color.B, payload);
-                }
-                else if (zone == DeviceKeys.Peripheral_ScrollWheel)
-                {
-                    gameSenseSDK.setMouseScrollWheelColor(color.R, color.G, color.B, payload);
-                }
-                //else if (zone == DeviceKeys.Peripheral_FrontLight)
-                //{
-                //NYI
-                //Global.logger.Error("SteelSeries GameSense SDK: Unknown device zone Peripheral_FrontLight: " + zone);
-                //}
-                /*else if (zone == DeviceKeys.Peripheral_Earcups || zone == DeviceKeys.Peripheral_Headset)
-                {
-                    GameSenseSDK.setHeadsetColor(color.R, color.G, color.B);
-                }*/
-
-                peripheral_updated = true;
-            }
-            else
-            {
-                peripheral_updated = false;
-            }
-        }
-
-        private void SendColorsToKeyboard(List<byte> hids, List<Tuple<byte, byte, byte>> colors, GameSensePayloadPeripheryColorEventJSON payload)
-        {
-            if (!Global.Configuration.devices_disable_keyboard)
-            {
-                if (hids.Count != 0)
-                {
-                    gameSenseSDK.setKeyboardColors(hids, colors, payload);
-                }
-                keyboard_updated = true;
-            }
-            else
-            {
-                keyboard_updated = false;
-            }
-        }
-
-        private void SendColorsToMousepad(List<Tuple<byte, byte, byte>> colors_mousepad, GameSensePayloadPeripheryColorEventJSON payload)
-        {
-            // no globals exist for mousepads being enabled but if they aren't enabled colors_mousepad won't be intialized
-            if (colors_mousepad.Count != 0)
-            {
-                gameSenseSDK.setMousepadColor(colors_mousepad, payload);
-            }
         }
 
         public static byte GetHIDCode(DeviceKeys key)
