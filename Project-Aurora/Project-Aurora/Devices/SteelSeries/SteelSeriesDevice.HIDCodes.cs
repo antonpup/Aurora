@@ -343,6 +343,9 @@ namespace Aurora.Devices.SteelSeries
                 case DeviceKeys.NUM_PERIOD:
                     hid = (byte) HidCodes.NUM_PERIOD;
                     break;
+                case DeviceKeys.FN_Key:
+                    hid = (byte) HidCodes.SS_KEY;
+                    break;
                 case DeviceKeys.G0:
                     hid = (byte) HidCodes.G0;
                     break;
