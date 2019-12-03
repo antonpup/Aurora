@@ -25,19 +25,27 @@ namespace Aurora.Devices.SteelSeries
 
         private void sendLispCode()
         {
-            var core = (JObject) baseObject.DeepClone();
-            core.Add("game_display_name", "Project Aurora");
-            core.Add("icon_color_id", 0);
-            sendJson("/game_metadata", core);
-            core.Remove("game_display_name");
-            core.Remove("icon_color_id");
-            using (StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Aurora.Devices.SteelSeries.GoCode.lsp")))
+            try
             {
-                core.Add("golisp", reader.ReadToEnd());
+                var core = (JObject)baseObject.DeepClone();
+                core.Add("game_display_name", "Project Aurora");
+                core.Add("icon_color_id", 0);
+                sendJson("/game_metadata", core);
+                core.Remove("game_display_name");
+                core.Remove("icon_color_id");
+                using (StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Aurora.Devices.SteelSeries.GoCode.lsp")))
+                {
+                    core.Add("golisp", reader.ReadToEnd());
+                }
+                sendJson("/load_golisp_handlers", core);
+                pingTask = Task.Run(async () => await sendPing(pingTaskTokenSource.Token), pingTaskTokenSource.Token);
+                loadedLisp = true;
             }
-            sendJson("/load_golisp_handlers", core);
-            pingTask = Task.Run(async () => await sendPing(pingTaskTokenSource.Token), pingTaskTokenSource.Token);
-            loadedLisp = true;
+            catch (Exception e)
+            {
+                Global.logger.Error("SteelSeries Lisp Code failed: " + e);
+                throw;
+            }
         }
 
         private void loadCoreProps()

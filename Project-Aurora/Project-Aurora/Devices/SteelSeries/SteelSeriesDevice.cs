@@ -71,27 +71,17 @@ namespace Aurora.Devices.SteelSeries
 
         public void Reset()
         {
-            throw new NotImplementedException();
         }
 
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
+        public bool Reconnect() => true;
 
         public bool IsInitialized() => loadedLisp;
 
         public bool IsConnected() => loadedLisp;
 
-        public bool IsKeyboardConnected()
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsKeyboardConnected() => IsConnected();
 
-        public bool IsPeripheralConnected()
-        {
-            throw new NotImplementedException();
-        }
+        public bool IsPeripheralConnected() => IsConnected();
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
