@@ -163,7 +163,7 @@ namespace Aurora.Devices.Omen
                         UpdateMouse(key);
                         UpdateChassis(key);
                     }
-                    if (key.Key == DeviceKeys.Peripheral_Logo || key.Key >= DeviceKeys.MOUSEPADLIGHT1 && key.Key <= DeviceKeys.MOUSEPADLIGHT15)
+                    if (key.Key >= DeviceKeys.MOUSEPADLIGHT1 && key.Key <= DeviceKeys.MOUSEPADLIGHT15)
                     {
                         UpdateMousePad(key);
                     }
