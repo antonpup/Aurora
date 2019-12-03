@@ -120,7 +120,7 @@ namespace Aurora.Devices.RGBNet
             _deviceProvider.Dispose();
         }
 
-        public VariableRegistry GetRegisteredVariables() => new VariableRegistry();
+        public virtual VariableRegistry GetRegisteredVariables() => new VariableRegistry();
 
         public bool Reconnect() => true;
         public bool IsConnected() => true;
