@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Aurora.Utils;
 using RGB.NET.Core;
 
 namespace Aurora.Devices.RGBNet
@@ -807,10 +808,13 @@ namespace Aurora.Devices.RGBNet
 
         protected override Color GetColorAtPoint(Rectangle rectangle, BrushRenderTarget renderTarget)
         {
-            if ((KeyColors != null)
-                && LedMapping.TryGetValue(renderTarget.Led.Id, out DeviceKeys key)
-                && KeyColors.TryGetValue(key, out System.Drawing.Color color))
-                return new Color(color.A, color.R, color.G, color.B);
+            if (KeyColors != null &&
+                LedMapping.TryGetValue(renderTarget.Led.Id, out DeviceKeys key) &&
+                KeyColors.TryGetValue(key, out System.Drawing.Color color))
+            {
+                var c = ColorUtils.CorrectWithAlpha(color);
+                return new Color(c.A, c.R, c.G, c.B);
+            }
 
             return Color.Transparent;
         }
