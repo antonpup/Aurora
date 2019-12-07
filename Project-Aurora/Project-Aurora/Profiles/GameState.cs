@@ -150,12 +150,12 @@ namespace Aurora.Profiles
         /// <summary>
         /// Used RAM
         /// </summary>
-        public long MemoryUsed => (long)((Utils.LibreHardwareMonitor.RAMUsed?.Value ?? 0f) * 1024f);
+        public long MemoryUsed => (long)((Utils.HardwareMonitor.RAMUsed?.Value ?? 0f) * 1024f);
 
         /// <summary>
         /// Available RAM
         /// </summary>
-        public long MemoryFree => (long)((Utils.LibreHardwareMonitor.RAMFree?.Value ?? 0f) * 1024f);
+        public long MemoryFree => (long)((Utils.HardwareMonitor.RAMFree?.Value ?? 0f) * 1024f);
 
         /// <summary>
         /// Total RAM
@@ -236,36 +236,36 @@ namespace Aurora.Profiles
         /// <summary>
         /// Current CPU Usage
         /// </summary>
-        public float CPUUsage => Utils.LibreHardwareMonitor.CPUTotalLoad?.Value ?? 0;
+        public float CPUUsage => Utils.HardwareMonitor.CPUTotalLoad?.Value ?? 0;
 
         /// <summary>
         /// Current temperature of the CPU die
         /// </summary>
-        public float CPUTemp => Utils.LibreHardwareMonitor.CPUDieTemp?.Value ?? 0;
+        public float CPUTemp => Utils.HardwareMonitor.CPUDieTemp?.Value ?? 0;
 
         /// <summary>
         /// Current power usage in watts
         /// </summary>
-        public float CPUPowerUsage => Utils.LibreHardwareMonitor.CPUPower?.Value ?? 0;
+        public float CPUPowerUsage => Utils.HardwareMonitor.CPUPower?.Value ?? 0;
 
         /// <summary>
         /// Current RPM of the CPU fan
         /// </summary>
-        public float CPUFanRPM => Utils.LibreHardwareMonitor.CPUFan?.Value ?? 0;
+        public float CPUFanRPM => Utils.HardwareMonitor.CPUFan?.Value ?? 0;
         #endregion
 
         #region GPU Properties
-        public float GPUCoreTemp => Utils.LibreHardwareMonitor.GPUCoreTemp?.Value ?? 0;
-        public float GPUFan => Utils.LibreHardwareMonitor.GPUFan?.Value ?? 0;
-        public float GPUCoreClock => Utils.LibreHardwareMonitor.GPUCoreClock?.Value ?? 0;
-        public float GPUMemoryCClock => Utils.LibreHardwareMonitor.GPUMemoryClock?.Value ?? 0;
-        public float GPUShaderClock => Utils.LibreHardwareMonitor.GPUShaderClock?.Value ?? 0;
-        public float GPUCoreLoad => Utils.LibreHardwareMonitor.GPUCoreLoad?.Value ?? 0;
-        public float GPUMemoryCLoad => Utils.LibreHardwareMonitor.GPUMemoryCLoad?.Value ?? 0;
-        public float GPUVideoEngineLoad => Utils.LibreHardwareMonitor.GPUVideoEngineLoad?.Value ?? 0;
-        public float GPUMemoryTotal => Utils.LibreHardwareMonitor.GPUMemoryTotal?.Value ?? 0;
-        public float GPUMemoryUsed => Utils.LibreHardwareMonitor.GPUMemoryUsed?.Value ?? 0;
-        public float GPUPower => Utils.LibreHardwareMonitor.GPUPower?.Value ?? 0;
+        public float GPUCoreTemp => Utils.HardwareMonitor.GPUCoreTemp?.Value ?? 0;
+        public float GPUFan => Utils.HardwareMonitor.GPUFan?.Value ?? 0;
+        public float GPUCoreClock => Utils.HardwareMonitor.GPUCoreClock?.Value ?? 0;
+        public float GPUMemoryCClock => Utils.HardwareMonitor.GPUMemoryClock?.Value ?? 0;
+        public float GPUShaderClock => Utils.HardwareMonitor.GPUShaderClock?.Value ?? 0;
+        public float GPUCoreLoad => Utils.HardwareMonitor.GPUCoreLoad?.Value ?? 0;
+        public float GPUMemoryCLoad => Utils.HardwareMonitor.GPUMemoryCLoad?.Value ?? 0;
+        public float GPUVideoEngineLoad => Utils.HardwareMonitor.GPUVideoEngineLoad?.Value ?? 0;
+        public float GPUMemoryTotal => Utils.HardwareMonitor.GPUMemoryTotal?.Value ?? 0;
+        public float GPUMemoryUsed => Utils.HardwareMonitor.GPUMemoryUsed?.Value ?? 0;
+        public float GPUPower => Utils.HardwareMonitor.GPUPower?.Value ?? 0;
         #endregion
 
         /// <summary>

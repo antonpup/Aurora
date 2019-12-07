@@ -9,7 +9,7 @@ using Computer = LibreHardwareMonitor.Hardware.Computer;
 
 namespace Aurora.Utils
 {
-    public static class LibreHardwareMonitor
+    public static class HardwareMonitor
     {
         private static readonly Computer _computer;
         private static readonly IEnumerable<IHardware> _hardware;
@@ -55,7 +55,7 @@ namespace Aurora.Utils
             }
         }
 
-        static LibreHardwareMonitor()
+        static HardwareMonitor()
         {
             try
             {
