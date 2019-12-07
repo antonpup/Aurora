@@ -409,14 +409,6 @@
     <Compile Include="Profiles\Skype\SkypeProfile.cs" />
     <Compile Include="Profiles\Skype\SkypeApplication.cs" />
     <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
-    <Compile Include="Settings\Bindables\Bindable.cs" />
-    <Compile Include="Settings\Bindables\BindableBindableDictionary.cs" />
-    <Compile Include="Settings\Bindables\BindableDictionary.cs" />
-    <Compile Include="Settings\Bindables\BindableNumber.cs" />
-    <Compile Include="Settings\Bindables\ExtraBindables.cs" />
-    <Compile Include="Settings\Bindables\InterfacesBindable.cs" />
-    <Compile Include="Settings\Bindables\LockedWeakList.cs" />
-    <Compile Include="Settings\ConfigManager.cs" />
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
     </Compile>
@@ -712,7 +704,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Settings\JsonConfigManager.cs" />
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
       <DependentUpon>Control_RazerLayer.xaml</DependentUpon>

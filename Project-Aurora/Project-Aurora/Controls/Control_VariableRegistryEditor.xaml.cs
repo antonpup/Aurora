@@ -62,6 +62,9 @@ namespace Aurora.Controls
 
             foreach (var variablename in RegisteredVariables.GetRegisteredVariableKeys())
             {
+                if(!VarRegistrySource.HasVariable(variablename))
+                    VarRegistrySource.Register(variablename, RegisteredVariables.GetVariableItem(variablename));
+
                 Control_VariableRegistryItem varItem = new Control_VariableRegistryItem {
                     VariableName = variablename,
                     VarRegistry = VarRegistrySource,

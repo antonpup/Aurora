@@ -14,19 +14,17 @@ using Q42.HueApi.ColorConverters.HSB;
 using Q42.HueApi.Interfaces;
 
 using Aurora.Settings;
-using Aurora.Settings.Bindables;
 using Aurora.Utils;
 
 using Q42.HueApi.Models.Bridge;
 
 using Color = System.Drawing.Color;
-using IBindable = Aurora.Settings.Bindables.IBindable;
 
 namespace Aurora.Devices.Hue
 {
     class HueDevice : Device
     {
-        private HueConfig config = new HueConfig();
+        private VariableRegistry registry;
         private string name = "Philips Hue";
         private bool initialized => client?.IsInitialized ?? false;
         private LocatedBridge bridge;
@@ -38,12 +36,20 @@ namespace Aurora.Devices.Hue
 
         public VariableRegistry GetRegisteredVariables()
         {
-            VariableRegistry registry = new VariableRegistry();
-            foreach (var pair in config.Store)
+            if (registry == null)
             {
-                registry.Register($"{name.ToLower().Replace(" ", "_")}_{pair.Key}", pair.Value, HueVisualNames.GetTitle(pair.Key), HueVisualNames.GetRemark(pair.Key));
+                registry = new VariableRegistry();
+                foreach (var identifier in HueVisualNames.Identifiers)
+                {
+                    registry.Register($"{name.ToLower().Replace(" ", "_")}_{identifier.Key}", identifier.Value.GetItem());
+                }
             }
             return registry;
+        }
+
+        public T GetVariable<T>(string name)
+        {
+            return registry.GetVariable<T>($"{this.name.ToLower().Replace(" ", "_")}_{name}");
         }
 
         public string GetDeviceName()
@@ -53,20 +59,20 @@ namespace Aurora.Devices.Hue
 
         public string GetDeviceDetails()
         {
-            return $"{GetDeviceName()} {(initialized ? "Connected to:" + conf.Name : "Connecting to:" + (bridge != null ? bridge.BridgeId : "") + " press the sync button to finalize setup.")} {(initialized ? ", controlling: " + (lights?.Count ?? 0) + " lights" : "")}"; 
+            return $"{GetDeviceName()} {(initialized ? "Connected to:" + conf.Name : "Connecting to:" + (bridge != null ? bridge.BridgeId : "") + " press the sync button to finalize setup.")} {(initialized ? ", controlling: " + (lights?.Count ?? 0) + " lights" : "")}";
         }
 
         public string GetDeviceUpdatePerformance()
         {
-            return $"~{config.Get<int>("send_interval")}ms";
+            return $"~{GetVariable<int>("send_interval")}ms";
         }
 
         public bool Initialize()
         {
             try
             {
-                curKey = config.Get<int>("first_key");
-                var _ip = config.Get<string>("ip");
+                curKey = GetVariable<int>("first_key");
+                var _ip = GetVariable<string>("ip");
                 if (_ip == "0.0.0.0" || !new Regex(@"\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9])\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9])\b").IsMatch(_ip))
                 {
                     IBridgeLocator bridgeLocator = new HttpBridgeLocator();
@@ -115,12 +121,10 @@ namespace Aurora.Devices.Hue
 
         public void Shutdown()
         {
-            config.Save();
         }
 
         public void Reset()
         {
-            config.Load();
         }
 
         public bool Reconnect()
@@ -150,8 +154,8 @@ namespace Aurora.Devices.Hue
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            var firstKey = config.Get<int>("first_key");
-            var lastKey = config.Get<int>("last_key");
+            var firstKey = GetVariable<int>("first_key");
+            var lastKey = GetVariable<int>("last_key");
             lights = client.GetLightsAsync().GetAwaiter().GetResult().ToList();
             if (!(firstKey <= lastKey && keyColors.Any(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey)))
                 return false;
@@ -166,34 +170,23 @@ namespace Aurora.Devices.Hue
                     curKey = 0;
                 }
             }
-            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(config.Get<int>("send_interval")))
+            if (!initialized || DateTime.Now - lastCall <= TimeSpan.FromMilliseconds(GetVariable<int>("send_interval")))
                 return false;
 
-            var defaultColor = config.GetColor("default_color").GetHueDeviceColor();
+            var defaultColor = GetVariable<RealColor>("default_color").GetHueDeviceColor();
             foreach (var light in lights)
             {
-                var lightConfigName = $"send_{light.Name.ToLower().Replace(" ", "_")}";
-                if (!config.Store.ContainsKey(lightConfigName))
+                var lightConfigName = $"{name.ToLower().Replace(" ", "_")}_send_{light.Name.ToLower().Replace(" ", "_")}";
+                if (!registry.HasVariable(lightConfigName))
                 {
-                    config.Set(lightConfigName, false);
-                }
-                else
-                {
-                    try
-                    {
-                        config.Get<bool>(lightConfigName);
-                    }
-                    catch
-                    {
-                        config.Set(lightConfigName, Convert.ToBoolean(config.Get<string>(lightConfigName)));
-                    }
+                    registry.Register(lightConfigName, false, $"Control if {light.Name} should be synced");
                 }
             }
-            var brightness = config.Get<int>("brightness");
+            var brightness = GetVariable<int>("brightness");
             var command = new LightCommand();
             var defaultCommand = new LightCommand().SetColor(defaultColor).TurnOn();
             defaultCommand.Brightness = (byte)(defaultCommand.Brightness / (double)byte.MaxValue * (brightness / (double)byte.MaxValue) * byte.MaxValue);
-            command.SetColor(config.Get<bool>("blend_keys") ? keyColors.Where(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey).Select(t => t.Value).GetHueDeviceColorMergedColor() : keyColors.Single(t => t.Key == (DeviceKeys)curKey).Value.GetHueDeviceColor());
+            command.SetColor(GetVariable<bool>("blend_keys") ? keyColors.Where(t => t.Key <= (DeviceKeys)lastKey && t.Key >= (DeviceKeys)firstKey).Select(t => t.Value).GetHueDeviceColorMergedColor() : keyColors.Single(t => t.Key == (DeviceKeys)curKey).Value.GetHueDeviceColor());
             if (brightness == 0)
             {
                 command.TurnOff();
@@ -201,7 +194,7 @@ namespace Aurora.Devices.Hue
             }
             else
             {
-                if (command.IsColorBlack() && DateTime.Now - lastCall >= TimeSpan.FromSeconds(config.Get<int>("default_delay")) || config.Get<bool>("force_default"))
+                if (command.IsColorBlack() && DateTime.Now - lastCall >= TimeSpan.FromSeconds(GetVariable<int>("default_delay")) || GetVariable<bool>("force_default"))
                 {
                     command.SetColor(defaultColor);
                     lastFrameDefault = true;
@@ -223,14 +216,14 @@ namespace Aurora.Devices.Hue
             }
             foreach (var light in lights)
             {
-                var commandToSend = config.Get<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}") ? command : defaultCommand;
+                var commandToSend = GetVariable<bool>($"send_{light.Name.ToLower().Replace(" ", "_")}") ? command : defaultCommand;
                 if (commandToSend.Brightness != light.State.Brightness || commandToSend.Saturation != light.State.Saturation || commandToSend.Hue != light.State.Hue || commandToSend.On != light.State.On)
-                    client.SendCommandAsync(commandToSend, new[] {light.Id}).GetAwaiter().GetResult();
+                    client.SendCommandAsync(commandToSend, new[] { light.Id }).GetAwaiter().GetResult();
             }
             lastCall = DateTime.Now;
             lastFrame = command;
             curItr++;
-            if (curItr > config.Get<int>("key_iteration_count") - 1)
+            if (curItr > GetVariable<int>("key_iteration_count") - 1)
             {
                 curKey++;
                 curItr = 0;
@@ -254,63 +247,43 @@ namespace Aurora.Devices.Hue
 
     static class HueVisualNames
     {
-        private static Dictionary<string, HueIdentifiers> _identifiers = new Dictionary<string, HueIdentifiers>
+        public static Dictionary<string, HueIdentifiers> Identifiers = new Dictionary<string, HueIdentifiers>
         {
-            {"default_delay", new HueIdentifiers("Delay", "The delay before sending default color in seconds")},
-            {"default_color", new HueIdentifiers("Default Color", "The default color to use to send to hue if not active")},
-            {"blend_keys", new HueIdentifiers("Blend key selection", "")},
-            {"force_default", new HueIdentifiers("Force default color", "")},
-            {"brightness", new HueIdentifiers("Brightness", "Brightness on bulbs (0-255)")},
-            {"use_default", new HueIdentifiers("Use default delay", "")},
-            {"key_iteration_count", new HueIdentifiers("Iteration count", "How many times to iterate on one key before jumping to the next one")},
-            {"first_key", new HueIdentifiers("First key selection", "The first key to iterate on (must be lower or equal than last key)")},
-            {"last_key", new HueIdentifiers("Last key selection", "The last key to iterate on (must be higher or equal than first key)")},
-            {"send_interval", new HueIdentifiers("Delay", "The delay to use to send to hue (min 100ms)")},
-            {"ip", new HueIdentifiers("IP", "The IP to try to connect to (default 0.0.0.0 witch will scan network for bridges)") }
+            {"ip", new HueIdentifiers("0.0.0.0","Bridge IP", "The IP to try to connect to (default 0.0.0.0 witch will scan network for bridges)") },
+            {"send_interval", new HueIdentifiers(100,"Delay", "The delay to use to send to hue (min 100ms)",100, int.MaxValue)},
+            {"use_default", new HueIdentifiers(true,"Use default color delay")},
+            {"default_delay", new HueIdentifiers(5,"Default color delay", "The delay before sending default color in seconds", 0, int.MaxValue)},
+            {"force_default", new HueIdentifiers(false, "Force default color")},
+            {"default_color", new HueIdentifiers(new RealColor(Color.White), "Default Color", "The default color to use to send to hue if not active")},
+            {"brightness", new HueIdentifiers(192,"Brightness", "Brightness on bulbs (0-255)",0,255)},
+            {"blend_keys", new HueIdentifiers(false, "Blend key selection", "Blends all keys from the iteration of first key to last key")},
+            {"key_iteration_count", new HueIdentifiers(10,"Iteration count", "How many times to iterate on one key before jumping to the next one",1, int.MaxValue)},
+            {"first_key", new HueIdentifiers((int)DeviceKeys.Peripheral_Logo, "First key selection", "The first key to iterate on (must be lower or equal than last key)", 0, int.MaxValue)},
+            {"last_key", new HueIdentifiers((int)DeviceKeys.Peripheral_Logo, "Last key selection", "The last key to iterate on (must be higher or equal than first key)", 0, int.MaxValue)}
         };
 
-        public static string GetTitle(string v)
+        public struct HueIdentifiers
         {
-            return !_identifiers.ContainsKey(v) ? "" : _identifiers[v].Title;
-        }
-        public static string GetRemark(string v)
-        {
-            return !_identifiers.ContainsKey(v) ? "" : _identifiers[v].Remark;
-        }
-
-        struct HueIdentifiers
-        {
+            public object Value;
             public string Title;
             public string Remark;
+            public object Max;
+            public object Min;
 
-            public HueIdentifiers(string title, string remark)
+            public HueIdentifiers(object value, string title, string remark = "", object min = null, object max = null)
             {
                 Title = title;
                 Remark = remark;
+                Value = value;
+                Min = min;
+                Max = max;
+            }
+
+            public VariableRegistryItem GetItem()
+            {
+                return new VariableRegistryItem(Value, Max, Min, Title, Remark);
             }
         }
-    }
-
-    class HueConfig : JsonConfigManager
-    {
-        public HueConfig() : base(Path.Combine(Global.AppDataDirectory, "hue.json"), null) { }
-
-        protected override void InitialiseDefaults()
-        {
-            Set("ip", "0.0.0.0");
-            Set("default_delay", 1, 1, int.MaxValue);
-            Set("default_color", new RealColor(Color.White));
-            Set("blend_keys", false);
-            Set("force_default", false);
-            Set("brightness", 255, 0, 255);
-            Set("use_default", true);
-            Set("key_iteration_count", 5, 1, int.MaxValue);
-            Set("first_key", (int)DeviceKeys.Peripheral_Logo, 0, 215);
-            Set("last_key", (int)DeviceKeys.Peripheral_Logo, 0, 215);
-            Set("send_interval", 100, 100, int.MaxValue);
-        }
-
-        public IDictionary<string, IBindable> Store => ConfigStore;
     }
 
     public static class Extension

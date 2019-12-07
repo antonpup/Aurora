@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using Aurora.Settings.Bindables;
 
 namespace Aurora.Settings
 {
@@ -24,21 +23,7 @@ namespace Aurora.Settings
         public string Remark = "";
         public VariableFlags Flags = VariableFlags.None;
 
-        [JsonIgnore]
-        public IBindable Bindable { get; set; }
-
         public VariableRegistryItem() { }
-
-        public VariableRegistryItem(IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
-        {
-            Bindable = bindable;
-            var b = bindable as Bindable<object>;
-            Value = b.Value;
-            Default = b.Default;
-            Title = title;
-            Remark = remark;
-            Flags = flags;
-        }
 
         public VariableRegistryItem(object defaultValue, object max = null, object min = null, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
         {
@@ -57,8 +42,6 @@ namespace Aurora.Settings
         {
             if (this.Value != null && newvalue != null && this.Value.GetType() == newvalue.GetType())
             {
-                if (Bindable != null)
-                    (Bindable as Bindable<object>).Value = newvalue;
                 this.Value = newvalue;
             }
         }
@@ -70,7 +53,6 @@ namespace Aurora.Settings
             Remark = variableRegistryItem.Remark;
             Min = variableRegistryItem.Min;
             Max = variableRegistryItem.Max;
-            Bindable = variableRegistryItem.Bindable;
             var typ = Value.GetType();
             var defaultType = variableRegistryItem.Default.GetType();
             if (!defaultType.Equals(typ) && typ.Equals(typeof(long)) && defaultType.IsEnum)
@@ -80,11 +62,6 @@ namespace Aurora.Settings
             else if (Value == null && !defaultType.Equals(typ))
                 Value = variableRegistryItem.Default;
             Flags = variableRegistryItem.Flags;
-            if (Bindable != null)
-            {
-                Value = (Bindable as Bindable<object>).Value;
-                (Bindable as Bindable<object>).ValueChanged += _ => Value = (Bindable as Bindable<object>).Value;
-            }
         }
     }
 
@@ -138,14 +115,6 @@ namespace Aurora.Settings
         {
             if (!_variables.ContainsKey(name))
                 _variables.Add(name, new VariableRegistryItem(defaultValue, max, min, title, remark, flags));
-        }
-
-        public void Register(string name, IBindable bindable, string title = "", string remark = "", VariableFlags flags = VariableFlags.None)
-        {
-            if (!_variables.ContainsKey(name))
-                _variables.Add(name, new VariableRegistryItem(bindable, title, remark, flags));
-            else
-                _variables[name].Bindable = bindable;
         }
 
         public void Register(string name, VariableRegistryItem varItem)
@@ -242,6 +211,16 @@ namespace Aurora.Settings
                 return _variables[name].Flags;
 
             return VariableFlags.None;
+        }
+
+        public VariableRegistryItem GetVariableItem(string name)
+        {
+            return _variables.ContainsKey(name) ? _variables[name] : null;
+        }
+
+        public bool HasVariable(string name)
+        {
+            return _variables.ContainsKey(name);
         }
 
         public void RemoveVariable(string name)
