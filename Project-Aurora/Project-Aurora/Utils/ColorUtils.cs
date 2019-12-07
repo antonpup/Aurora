@@ -139,6 +139,23 @@ namespace Aurora.Utils
         }
 
         /// <summary>
+        /// Multiplies all non-alpha values by alpha/255.
+        /// Device integrations don't support alpha values, so we correct them here
+        /// </summary>
+        /// <param name="color">Color to correct</param>
+        /// <returns>Corrected Color</returns>
+        public static System.Drawing.Color CorrectWithAlpha(System.Drawing.Color color)
+        {
+            float scalar = color.A / 255.0f;
+
+            int Red = ColorByteMultiplication(color.R, scalar);
+            int Green = ColorByteMultiplication(color.G, scalar);
+            int Blue = ColorByteMultiplication(color.B, scalar);
+
+            return System.Drawing.Color.FromArgb(255, Red, Green, Blue);
+        }
+
+        /// <summary>
         /// Multiplies a Drawing Color instance by a scalar value
         /// </summary>
         /// <param name="color">The color to be multiplied</param>
