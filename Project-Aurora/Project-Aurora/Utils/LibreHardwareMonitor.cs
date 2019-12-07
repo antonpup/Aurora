@@ -66,8 +66,7 @@ namespace Aurora.Utils
                     IsCpuEnabled = true,
                     IsGpuEnabled = true,
                     IsMemoryEnabled = true,
-                    IsMotherboardEnabled = true,
-                    IsControllerEnabled = true
+                    IsMotherboardEnabled = true
                 };
                 _computer.Open();
                 _hardware = _computer.Hardware;
@@ -89,8 +88,8 @@ namespace Aurora.Utils
                     GPUVideoEngineLoad = _GPU.FindSensor("load/2");
 
                     GPUCoreClock = _GPU.FindSensor("clock/0");
-                    GPUMemoryClock = _GPU.FindSensor("clock/0");
-                    GPUShaderClock = _GPU.FindSensor("clock/0");
+                    GPUMemoryClock = _GPU.FindSensor("clock/1");
+                    GPUShaderClock = _GPU.FindSensor("clock/2");
 
                     GPUCoreTemp = _GPU.FindSensor("temperature/0");
                     GPUFan = _GPU.FindSensor("fan/0");
@@ -115,7 +114,7 @@ namespace Aurora.Utils
 
                 _updateTimer.Start();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Global.logger.Error("Error initializing hardware monitor: " + e);
             }
