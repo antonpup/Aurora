@@ -122,6 +122,9 @@
     <Reference Include="IronPython.Wpf, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="LibreHardwareMonitorLib">
+      <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.8.2\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
@@ -1025,6 +1028,7 @@
     <Compile Include="Devices\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\MouseUtils.cs" />
+    <Compile Include="Utils\LibreHardwareMonitor.cs" />
     <Compile Include="Utils\PointerUpdateUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
