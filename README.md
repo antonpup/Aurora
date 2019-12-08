@@ -106,3 +106,4 @@ If you're a developer or just a software user you can help the project by:
 * [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
 * [HidLibrary](https://github.com/mikeobrien/HidLibrary) - Used for communication with HID devices
 * [NZXTSharp](https://github.com/akmadian/NZXTSharp) - NZXT SDK, Used for NZXT support
+* [Q42.HueApi](https://github.com/Q42/Q42.HueApi) - .NET Wrapper for Philips Hue
