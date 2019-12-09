@@ -99,10 +99,14 @@ namespace Aurora.Utils
                     GPUMemoryUsed = _GPU.FindSensor("smalldata/2");
                }
 
-                _MB = _hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard)?.SubHardware[0];
+                _MB = _hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Motherboard);
                 if(_MB != null)
                 {
-                    CPUFan = _MB.FindSensor("fan/1");
+                    if (_MB.SubHardware.Any())
+                    {
+                        var chip = _MB.SubHardware[0];
+                        CPUFan = chip.FindSensor("fan/1");
+                    }                
                 }
 
                 _RAM = _hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Memory);
