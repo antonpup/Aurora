@@ -40,8 +40,10 @@ namespace Aurora.Settings.Layers {
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e) {
             // Applies the selected preset to the layer properties
-            if (presetsCombo.SelectedValue is Action<ParticleLayerProperties> apply && MessageBox.Show("Do you wish to apply this preset? Your current configuration will be overwritten.", "Apply Preset", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            if (presetsCombo.SelectedValue is Action<ParticleLayerProperties> apply && MessageBox.Show("Do you wish to apply this preset? Your current configuration will be overwritten.", "Apply Preset", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                handler.Properties.Default();
                 apply(handler.Properties);
+            }
         }
     }
 

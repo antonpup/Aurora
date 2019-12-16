@@ -37,6 +37,8 @@
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
             <RowDefinition Height="28px" />
+            <RowDefinition Height="28px" />
+            <RowDefinition Height="28px" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -75,8 +77,14 @@
         <Label Content="Vertical acceleration" Grid.Row="9" HorizontalAlignment="Right" />
         <xctk:SingleUpDown Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Value="{Binding Properties._AccelerationY}" Increment=".1" Margin="4,2" />
 
-        <Label Content="Presets" Grid.Row="10" HorizontalAlignment="Right" />
-        <DockPanel Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Margin="4,2">
+        <Label Content="Horizontal Drag" Grid.Row="10" HorizontalAlignment="Right" />
+        <Slider Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Value="{Binding Properties._DragX}" Minimum="0" Maximum="1" Margin="4,2" />
+
+        <Label Content="Vertical Drag" Grid.Row="11" HorizontalAlignment="Right" />
+        <Slider Grid.Row="11" Grid.Column="1" Grid.ColumnSpan="2" Value="{Binding Properties._DragY}" Minimum="0" Maximum="1" Margin="4,2" />
+
+        <Label Content="Presets" Grid.Row="12" HorizontalAlignment="Right" />
+        <DockPanel Grid.Row="12" Grid.Column="1" Grid.ColumnSpan="2" Margin="4,2">
             <Button Content="Apply" DockPanel.Dock="Right" Margin="4,0,0,0" Padding="6,0" Click="ApplyButton_Click" />
             <ComboBox x:Name="presetsCombo" DisplayMemberPath="Text" SelectedValuePath="ApplyFunc" />
         </DockPanel>

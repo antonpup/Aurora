@@ -83,6 +83,16 @@ namespace Aurora.Settings.Layers {
         public float? _AccelerationY { get => accelerationY; set => SetAndNotify(ref accelerationY, value); }
         [JsonIgnore] public float AccelerationY => Logic._AccelerationY ?? _AccelerationY ?? -1f;
 
+        // The amount of velocity per second the particle loses in the horizontal direction as a percentage of its current velocity
+        private float? dragX;
+        public float? _DragX { get => dragX; set => SetAndNotify(ref dragX, value); }
+        [JsonIgnore] public float DragX => Logic._DragX ?? _DragX ?? 0;
+
+        // The amount of velocity per second the particle loses in the vertical direction as a percentage of its current velocity
+        private float? dragY;
+        public float? _DragY { get => dragY; set => SetAndNotify(ref dragY, value); }
+        [JsonIgnore] public float DragY => Logic._DragY ?? _DragY ?? 0;
+
         // Where the particles will spawn from
         private ParticleSpawnLocations? spawnLocation;
         public ParticleSpawnLocations? _SpawnLocation { get => spawnLocation; set => SetAndNotify(ref spawnLocation, value); }
@@ -119,8 +129,10 @@ namespace Aurora.Settings.Layers {
             _MinLifetime = 0; _MaxLifetime = 2;
             _MinInitialVelocityX = _MaxInitialVelocityX = 0;
             _MinInitialVelocityY = _MaxInitialVelocityY = -1;
-            _AccelerationY = .5f;
             _AccelerationX = 0;
+            _AccelerationY = .5f;
+            _DragX = 0;
+            _DragY = 0;
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
 
@@ -240,6 +252,8 @@ namespace Aurora.Settings.Layers {
         private void UpdateParticle(Particle p, double deltaTime) {
             p.VelocityX += (float)(Properties.AccelerationX * deltaTime);
             p.VelocityY += (float)(Properties.AccelerationY * deltaTime);
+            p.VelocityX *= (float)Math.Pow(1 - Properties.DragX, deltaTime); // By powering the drag to the deltaTime, we ensure that the results are fairly consistent over different time deltas.
+            p.VelocityY *= (float)Math.Pow(1 - Properties.DragY, deltaTime); // Doing it once over a second won't be 100% the same as doing it twice over a second if acceleration is present, but it should be close enough that it won't be noticed under most cicrumstances
             p.PositionX += p.VelocityX;
             p.PositionY += p.VelocityY;
         }
