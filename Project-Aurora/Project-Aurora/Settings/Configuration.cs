@@ -244,6 +244,10 @@ namespace Aurora.Settings
 	//Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
+
+        //CyberpowerPC range is 1200-1299
+        [Description("CyberpowerPC Tracer III")]
+        CyberpowerPC_Tracer_III = 1200,
     }
 
     public enum PreferredKeyboardLocalization

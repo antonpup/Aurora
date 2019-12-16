@@ -1,0 +1,50 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 2,
+  "grouped_keys": [
+    {
+      "visualName": "HOME",
+      "tag": 32,
+      "margin_left": -141.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 10.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "END",
+      "tag": 53,
+      "margin_left": -104.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 10.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "PGUP",
+      "tag": 33,
+      "margin_left": -67.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 10.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "PGDN",
+      "tag": 54,
+      "margin_left": -30.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 10.0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

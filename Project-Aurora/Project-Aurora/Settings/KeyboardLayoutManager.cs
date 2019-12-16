@@ -750,6 +750,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+            else if (keyboard_preference == PreferredKeyboard.CyberpowerPC_Tracer_III)
+                layoutConfigPath = Path.Combine(layoutsPath, "cyberpowerpc_tracer_iii.json");
             else
             {
                 LoadNone();
