@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
@@ -86,6 +87,11 @@ namespace Aurora.Settings.Layers {
         private ParticleSpawnLocations? spawnLocation;
         public ParticleSpawnLocations? _SpawnLocation { get => spawnLocation; set => SetAndNotify(ref spawnLocation, value); }
         [JsonIgnore] public ParticleSpawnLocations SpawnLocation => Logic._SpawnLocation ?? _SpawnLocation ?? ParticleSpawnLocations.BottomEdge;
+
+        // Whether or not the particles will spawn. This allows the particle system to be turned off without disabling it (thereby not hiding already spawned particles).
+        // This can only be done by the overrides system.
+        [LogicOverridable("Enable Particle Spawning")] public bool? _SpawningEnabled { get; set; }
+        [JsonIgnore] public bool SpawningEnabled => Logic._SpawningEnabled ?? true;
 
         // The color gradient stops for the particle. Not using a linear brush here because:
         //   1) there are multithreading issues when trying to access a Media brush's gradient collection since it belongs to the UI thread
@@ -187,12 +193,14 @@ namespace Aurora.Settings.Layers {
             }
 
             // Spawn new particles if required
-            nextSpawnInterval -= deltaTime;
-            if (nextSpawnInterval < 0) {
-                var count = rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1); // + 1 because max is exclusive
-                for (var i = 0; i < count; i++)
-                    SpawnParticle();
-                nextSpawnInterval = RandomBetween(Properties.MinSpawnTime, Properties.MaxSpawnTime);
+            if (Properties.SpawningEnabled) {
+                nextSpawnInterval -= deltaTime;
+                if (nextSpawnInterval < 0) {
+                    var count = rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1); // + 1 because max is exclusive
+                    for (var i = 0; i < count; i++)
+                        SpawnParticle();
+                    nextSpawnInterval = RandomBetween(Properties.MinSpawnTime, Properties.MaxSpawnTime);
+                }
             }
 
             // Remove any particles that have expired
