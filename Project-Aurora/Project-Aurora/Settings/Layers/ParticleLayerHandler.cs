@@ -320,6 +320,20 @@ namespace Aurora.Settings.Layers {
                     p._MinInitialVelocityY = -1.3f; p._MaxInitialVelocityY = -0.8f;
                     p._AccelerationX = 0;
                     p._AccelerationY = 0.5f;
+                } },
+                { "Matrix", p => {
+                    p._SpawnLocation = ParticleSpawnLocations.TopEdge;
+                    p._ParticleColorStops = new List<(Color color, float offset)> {
+                        (Color.FromArgb(0,255,0), 0f),
+                        (Color.FromArgb(0,255,0), 1f)
+                    };
+                    p._MinSpawnTime = .1f; p._MaxSpawnTime = .2f;
+                    p._MinSpawnAmount = 1; p._MaxSpawnAmount = 2;
+                    p._MinLifetime = p._MaxLifetime = 1;
+                    p._MinInitialVelocityX = p._MaxInitialVelocityX = 0;
+                    p._MinInitialVelocityY = p._MaxInitialVelocityY = 3;
+                    p._AccelerationX = 0;
+                    p._AccelerationY = 0;
                 } }
             }
         );
