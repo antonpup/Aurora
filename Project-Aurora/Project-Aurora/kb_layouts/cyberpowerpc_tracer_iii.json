@@ -10,8 +10,7 @@
     51,
     71,
     77,
-    100,
-    103
+    100
   ],
   "key_modifications": {
     "2": {
@@ -123,7 +122,7 @@
     "88": {
       "tag": 88,
       "line_break": null,
-      "width": 93
+      "width": 56
     },
     "90": {
       "margin_left": 7.0
@@ -163,29 +162,29 @@
     "101": {
       "tag": 101,
       "margin_left": 7,
-      "width": 30
+      "width": 56
+    },
+    "103": {
+      "tag": 103,
+      "margin_left": 7
+    },
+    "89": {
+      "margin_left": 7
     },
     "102": {
       "tag": 102,
-      "margin_left": 7.0,
-      "width": 24.5
-    },
-    "89": {
-      "tag": 103
-    },
-    "103": {
-      "visualName": "↑",
-      "tag": 89,
-      "height": 14,
-      "font_size": 9
+      "width": 30,
+      "margin_left": 7
     },
     "104": {
       "tag": 104,
       "line_break": null,
-      "width": 24.5
+      "margin_left": 7,
+      "width": 30
     },
     "105": {
-      "margin_left": 7.0
+      "margin_left": 7.0,
+      "width": 30
     },
     "106": {
       "line_break": true
@@ -194,7 +193,6 @@
   "included_features": [
     "cyberpowerpc_tracer_iii_right_top_features.json",
     "generic_laptop_numpad_left_bottom_features.json",
-    "generic_laptop_numpad_right_bottom_features.json",
     "generic_laptop_numpad_right_features.json"
   ]
 }
