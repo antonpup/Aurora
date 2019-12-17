@@ -150,12 +150,12 @@ namespace Aurora.Profiles
         /// <summary>
         /// Used RAM
         /// </summary>
-        public long MemoryUsed => (long)((Utils.HardwareMonitor.RAMUsed?.Value ?? 0f) * 1024f);
+        public long MemoryUsed => RAM.Used;
 
         /// <summary>
         /// Available RAM
         /// </summary>
-        public long MemoryFree => (long)((Utils.HardwareMonitor.RAMFree?.Value ?? 0f) * 1024f);
+        public long MemoryFree => RAM.Free;
 
         /// <summary>
         /// Total RAM
@@ -234,38 +234,22 @@ namespace Aurora.Profiles
 
         #region CPU Properties
         /// <summary>
-        /// Current CPU Usage
+        /// Legacy cpu usage prop
         /// </summary>
-        public float CPUUsage => Utils.HardwareMonitor.CPUTotalLoad?.Value ?? 0;
+        public float CPUUsage => CPU.Usage;
 
-        /// <summary>
-        /// Current temperature of the CPU die
-        /// </summary>
-        public float CPUTemp => Utils.HardwareMonitor.CPUDieTemp?.Value ?? 0;
+        private static CPUInfo _cpuInfo;
+        public CPUInfo CPU => _cpuInfo ?? (_cpuInfo = new CPUInfo());
+        #endregion
 
-        /// <summary>
-        /// Current power usage in watts
-        /// </summary>
-        public float CPUPowerUsage => Utils.HardwareMonitor.CPUPower?.Value ?? 0;
-
-        /// <summary>
-        /// Current RPM of the CPU fan
-        /// </summary>
-        public float CPUFanRPM => Utils.HardwareMonitor.CPUFan?.Value ?? 0;
+        #region RAM Properties
+        private static RAMInfo _ramInfo;
+        public RAMInfo RAM => _ramInfo ?? (_ramInfo = new RAMInfo());
         #endregion
 
         #region GPU Properties
-        public float GPUCoreTemp => Utils.HardwareMonitor.GPUCoreTemp?.Value ?? 0;
-        public float GPUFan => Utils.HardwareMonitor.GPUFan?.Value ?? 0;
-        public float GPUCoreClock => Utils.HardwareMonitor.GPUCoreClock?.Value ?? 0;
-        public float GPUMemoryCClock => Utils.HardwareMonitor.GPUMemoryClock?.Value ?? 0;
-        public float GPUShaderClock => Utils.HardwareMonitor.GPUShaderClock?.Value ?? 0;
-        public float GPUCoreLoad => Utils.HardwareMonitor.GPUCoreLoad?.Value ?? 0;
-        public float GPUMemoryCLoad => Utils.HardwareMonitor.GPUMemoryCLoad?.Value ?? 0;
-        public float GPUVideoEngineLoad => Utils.HardwareMonitor.GPUVideoEngineLoad?.Value ?? 0;
-        public float GPUMemoryTotal => Utils.HardwareMonitor.GPUMemoryTotal?.Value ?? 0;
-        public float GPUMemoryUsed => Utils.HardwareMonitor.GPUMemoryUsed?.Value ?? 0;
-        public float GPUPower => Utils.HardwareMonitor.GPUPower?.Value ?? 0;
+        private static GPUInfo _gpuInfo;
+        public GPUInfo GPU => _gpuInfo ?? (_gpuInfo = new GPUInfo());
         #endregion
 
         /// <summary>
@@ -291,5 +275,56 @@ namespace Aurora.Profiles
                     StartStopRecording();
             };
         }
+    }
+
+    public class CPUInfo : Node<CPUInfo>
+    {
+        /// <summary>
+        /// Represents the CPU usage from 0 to 100
+        /// </summary>
+        public float Usage => Utils.HardwareMonitor.CPU.CPUTotalLoad;
+
+        /// <summary>
+        /// Represents the temperature of the cpu die in celsius
+        /// </summary>
+        public float Temperature => Utils.HardwareMonitor.CPU.CPUDieTemp;
+
+        /// <summary>
+        /// Represents the CPU power draw in watts
+        /// </summary>
+        public float PowerUsage => Utils.HardwareMonitor.CPU.CPUPower;
+    }
+
+    public class RAMInfo : Node<RAMInfo>
+    {
+        /// <summary>
+        /// Used system memory in megabytes
+        /// </summary>
+        public long Used => (long)(Utils.HardwareMonitor.RAM.RAMUsed * 1024f);
+
+        /// <summary>
+        /// Free system memory in megabytes
+        /// </summary>
+        public long Free => (long)(Utils.HardwareMonitor.RAM.RAMFree * 1024f);
+
+        /// <summary>
+        /// Total system memory in megabytes
+        /// </summary>
+        public long Total => Free + Total;
+    }
+
+    public class GPUInfo : Node<GPUInfo>
+    {
+        public float CoreTemp => Utils.HardwareMonitor.GPU.GPUCoreTemp;
+        public float Fan => Utils.HardwareMonitor.GPU.GPUFan;
+        public float CoreClock => Utils.HardwareMonitor.GPU.GPUCoreClock;
+        public float MemoryClock => Utils.HardwareMonitor.GPU.GPUMemoryClock;
+        public float ShaderClock => Utils.HardwareMonitor.GPU.GPUShaderClock;
+        public float CoreLoad => Utils.HardwareMonitor.GPU.GPUCoreLoad;
+        public float MemoryCLoad => Utils.HardwareMonitor.GPU.GPUMemoryCLoad;
+        public float VideoEngineLoad => Utils.HardwareMonitor.GPU.GPUVideoEngineLoad;
+        public float MemoryTotal => Utils.HardwareMonitor.GPU.GPUMemoryTotal;
+        public float MemoryUsed => Utils.HardwareMonitor.GPU.GPUMemoryUsed;
+        public float PowerUsage => Utils.HardwareMonitor.GPU.GPUPower;
     }
 }
