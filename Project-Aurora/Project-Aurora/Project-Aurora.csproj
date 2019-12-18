@@ -397,6 +397,15 @@
     <Compile Include="Profiles\Skype\SkypeProfile.cs" />
     <Compile Include="Profiles\Skype\SkypeApplication.cs" />
     <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
+    <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Terraria\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
+    <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
+	<Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
+	  <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
     </Compile>
@@ -1617,6 +1626,7 @@
     <Resource Include="Resources\Slime_Rancher.png" />
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
+    <Resource Include="Resources\terraria_512x512.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1717,6 +1727,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Terraria\Control_Terraria.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

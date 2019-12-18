@@ -154,7 +154,8 @@ namespace Aurora.Profiles
                 new CloneHero.CloneHero(),
                 new Osu.Osu(),
                 new Slime_Rancher.Slime_Rancher(),
-                new Discord.Discord()
+                new Terraria.Terraria(),
+                new Discord.Discord()              
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
