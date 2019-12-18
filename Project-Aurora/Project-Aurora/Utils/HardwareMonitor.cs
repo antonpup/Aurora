@@ -70,11 +70,12 @@ namespace Aurora.Utils
                 _useTimer.Start();
             }
 
-            protected void ResetTimer()
+            protected float GetValue(ISensor sensor)
             {
                 inUse = true;
                 _useTimer.Stop();
                 _useTimer.Start();
+                return sensor.Value ?? 0;
             }
         }
 
@@ -82,37 +83,37 @@ namespace Aurora.Utils
         {
             #region Sensors
             private readonly ISensor _GPUCoreTemp;
-            public float GPUCoreTemp { get { inUse = true; return _GPUCoreTemp.Value ?? 0; } }
+            public float GPUCoreTemp => GetValue(_GPUCoreTemp);
 
             private readonly ISensor _GPUFan;
-            public float GPUFan { get { inUse = true; return _GPUFan.Value ?? 0; } }
+            public float GPUFan => GetValue(_GPUFan);
 
             private readonly ISensor _GPUCoreClock;
-            public float GPUCoreClock { get { inUse = true; return _GPUCoreClock.Value ?? 0; } }
+            public float GPUCoreClock => GetValue(_GPUCoreClock);
 
             private readonly ISensor _GPUMemoryClock;
-            public float GPUMemoryClock { get { inUse = true; return _GPUMemoryClock.Value ?? 0; } }
+            public float GPUMemoryClock => GetValue(_GPUMemoryClock);
 
             private readonly ISensor _GPUShaderClock;
-            public float GPUShaderClock { get { inUse = true; return _GPUShaderClock.Value ?? 0; } }
+            public float GPUShaderClock => GetValue(_GPUShaderClock);
 
             private readonly ISensor _GPUCoreLoad;
-            public float GPUCoreLoad { get { inUse = true; return _GPUCoreLoad.Value ?? 0; } }
+            public float GPUCoreLoad => GetValue(_GPUCoreLoad);
 
             private readonly ISensor _GPUMemoryCLoad;
-            public float GPUMemoryCLoad { get { inUse = true; return _GPUMemoryCLoad.Value ?? 0; } }
+            public float GPUMemoryCLoad => GetValue(_GPUMemoryCLoad);
 
             private readonly ISensor _GPUVideoEngineLoad;
-            public float GPUVideoEngineLoad { get { inUse = true; return _GPUVideoEngineLoad.Value ?? 0; } }
+            public float GPUVideoEngineLoad => GetValue(_GPUVideoEngineLoad);
 
             private readonly ISensor _GPUMemoryTotal;
-            public float GPUMemoryTotal { get { inUse = true; return _GPUMemoryTotal.Value ?? 0; } }
+            public float GPUMemoryTotal => GetValue(_GPUMemoryTotal);
 
             private readonly ISensor _GPUMemoryUsed;
-            public float GPUMemoryUsed { get { inUse = true; return _GPUMemoryUsed.Value ?? 0; } }
+            public float GPUMemoryUsed => GetValue(_GPUMemoryUsed);
 
             private readonly ISensor _GPUPower;
-            public float GPUPower { get { inUse = true; return _GPUPower.Value ?? 0; } }
+            public float GPUPower => GetValue(_GPUPower);
             #endregion
 
             public GPUUpdater(IHardware hardware)
@@ -142,13 +143,13 @@ namespace Aurora.Utils
         {
             #region Sensors
             private readonly ISensor _CPUDieTemp;
-            public float CPUDieTemp { get { ResetTimer(); return _CPUDieTemp.Value ?? 0; } }
+            public float CPUDieTemp => GetValue(_CPUDieTemp);
 
             private readonly ISensor _CPUTotalLoad;
-            public float CPUTotalLoad { get { ResetTimer(); return _CPUTotalLoad.Value ?? 0; } }
+            public float CPUTotalLoad => GetValue(_CPUTotalLoad);
 
             private readonly ISensor _CPUPower;
-            public float CPUPower { get { ResetTimer(); return _CPUPower.Value ?? 0; } }
+            public float CPUPower => GetValue(_CPUPower);
             #endregion
 
             public CPUUpdater(IHardware hardware)
@@ -167,10 +168,10 @@ namespace Aurora.Utils
         {
             #region Sensors
             private readonly ISensor _RAMUsed;
-            public float RAMUsed { get { inUse = true; return _RAMUsed.Value ?? 0; } }
+            public float RAMUsed => GetValue(_RAMUsed);
 
             private readonly ISensor _RAMFree;
-            public float RAMFree { get { inUse = true; return _RAMFree.Value ?? 0; } }
+            public float RAMFree => GetValue(_RAMFree);
             #endregion
 
             public RAMUpdater(IHardware hardware)
