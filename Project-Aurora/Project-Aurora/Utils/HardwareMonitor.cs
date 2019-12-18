@@ -51,23 +51,27 @@ namespace Aurora.Utils
         {
             protected IHardware hw;
             protected bool inUse;
-            private readonly Timer _useTimer = new Timer(5000);
-            private readonly Timer _updateTimer = new Timer(200);
+            public int Interval { get; }
+            private readonly Timer _useTimer;
+            private readonly Timer _updateTimer;
 
             protected HardwareUpdater()
             {
+                _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
                 {
                     inUse = false;
                     _useTimer.Stop();
                 };
+                _useTimer.Start();
+
+                _updateTimer = new Timer(Interval);
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
                         hw.Update();
                 };
                 _updateTimer.Start();
-                _useTimer.Start();
             }
 
             protected float GetValue(ISensor sensor)
@@ -76,6 +80,13 @@ namespace Aurora.Utils
                 _useTimer.Stop();
                 _useTimer.Start();
                 return sensor.Value ?? 0;
+            }
+
+            public void SetUpdateTimer(int interval)
+            {
+                _updateTimer.Interval = interval;
+                _updateTimer.Stop();
+                _updateTimer.Start();
             }
         }
 

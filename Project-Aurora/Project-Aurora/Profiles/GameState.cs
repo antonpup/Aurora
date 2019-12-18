@@ -146,23 +146,6 @@ namespace Aurora.Profiles
         public long MillisecondsSinceEpoch => Utils.Time.GetMillisecondsSinceEpoch();
         #endregion
 
-        #region Memory Properties
-        /// <summary>
-        /// Used RAM
-        /// </summary>
-        public long MemoryUsed => RAM.Used;
-
-        /// <summary>
-        /// Available RAM
-        /// </summary>
-        public long MemoryFree => RAM.Free;
-
-        /// <summary>
-        /// Total RAM
-        /// </summary>
-        public long MemoryTotal => MemoryFree + MemoryUsed;
-        #endregion
-
         #region Audio Properties
         private static readonly MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
         private static readonly NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
@@ -234,7 +217,7 @@ namespace Aurora.Profiles
 
         #region CPU Properties
         /// <summary>
-        /// Legacy cpu usage prop
+        /// Legacy cpu usage prop, DEPRECATED
         /// </summary>
         public float CPUUsage => CPU.Usage;
 
@@ -243,6 +226,21 @@ namespace Aurora.Profiles
         #endregion
 
         #region RAM Properties
+        /// <summary>
+        /// Used RAM, DEPRECATED
+        /// </summary>
+        public long MemoryUsed => RAM.Used;
+
+        /// <summary>
+        /// Available RAM, DEPRECATED
+        /// </summary>
+        public long MemoryFree => RAM.Free;
+
+        /// <summary>
+        /// Total RAM, DEPRECATED
+        /// </summary>
+        public long MemoryTotal => MemoryFree + MemoryUsed;
+
         private static RAMInfo _ramInfo;
         public RAMInfo RAM => _ramInfo ?? (_ramInfo = new RAMInfo());
         #endregion
