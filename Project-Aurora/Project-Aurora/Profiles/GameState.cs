@@ -313,16 +313,17 @@ namespace Aurora.Profiles
 
     public class GPUInfo : Node<GPUInfo>
     {
-        public float CoreTemp => Utils.HardwareMonitor.GPU.GPUCoreTemp;
-        public float Fan => Utils.HardwareMonitor.GPU.GPUFan;
+        public float Usage => Utils.HardwareMonitor.GPU.GPUCoreLoad;
+        public float Temperature => Utils.HardwareMonitor.GPU.GPUCoreTemp;
+        public float PowerUsage => Utils.HardwareMonitor.GPU.GPUPower;
+        public float FanRPM => Utils.HardwareMonitor.GPU.GPUFan;
         public float CoreClock => Utils.HardwareMonitor.GPU.GPUCoreClock;
         public float MemoryClock => Utils.HardwareMonitor.GPU.GPUMemoryClock;
         public float ShaderClock => Utils.HardwareMonitor.GPU.GPUShaderClock;
-        public float CoreLoad => Utils.HardwareMonitor.GPU.GPUCoreLoad;
-        public float MemoryCLoad => Utils.HardwareMonitor.GPU.GPUMemoryCLoad;
-        public float VideoEngineLoad => Utils.HardwareMonitor.GPU.GPUVideoEngineLoad;
-        public float MemoryTotal => Utils.HardwareMonitor.GPU.GPUMemoryTotal;
+        public float MemoryControllerUsage => Utils.HardwareMonitor.GPU.GPUMemoryCLoad;
+        public float VideoEngineUsage => Utils.HardwareMonitor.GPU.GPUVideoEngineLoad;
         public float MemoryUsed => Utils.HardwareMonitor.GPU.GPUMemoryUsed;
-        public float PowerUsage => Utils.HardwareMonitor.GPU.GPUPower;
+        public float MemoryFree => MemoryTotal - MemoryUsed;
+        public float MemoryTotal => Utils.HardwareMonitor.GPU.GPUMemoryTotal;
     }
 }

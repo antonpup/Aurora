@@ -15,13 +15,13 @@ namespace Aurora.Utils
         private static readonly IEnumerable<IHardware> _hardware;
 
         private static GPUUpdater _gpu;
-        public static GPUUpdater GPU => _gpu ?? (_gpu = new GPUUpdater(_hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.GpuAmd|| hw.HardwareType == HardwareType.GpuNvidia)));
+        public static GPUUpdater GPU => _gpu ?? (_gpu = new GPUUpdater(_hardware));
 
         private static CPUUpdater _cpu;
-        public static CPUUpdater CPU => _cpu ?? (_cpu = new CPUUpdater(_hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu)));
+        public static CPUUpdater CPU => _cpu ?? (_cpu = new CPUUpdater(_hardware));
 
         private static RAMUpdater _ram;
-        public static RAMUpdater RAM => _ram ?? (_ram = new RAMUpdater(_hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Memory)));
+        public static RAMUpdater RAM => _ram ?? (_ram = new RAMUpdater(_hardware));
 
         static HardwareMonitor()
         {
@@ -127,9 +127,10 @@ namespace Aurora.Utils
             public float GPUPower => GetValue(_GPUPower);
             #endregion
 
-            public GPUUpdater(IHardware hardware)
+            public GPUUpdater(IEnumerable<IHardware> hardware)
             {
-                hw = hardware;
+                hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.GpuAmd ||
+                                                   hw.HardwareType == HardwareType.GpuNvidia);
                 if (hw != null)
                 {
                     _GPUCoreLoad = hw.FindSensor("load/0");
@@ -163,9 +164,9 @@ namespace Aurora.Utils
             public float CPUPower => GetValue(_CPUPower);
             #endregion
 
-            public CPUUpdater(IHardware hardware)
+            public CPUUpdater(IEnumerable<IHardware> hardware)
             {
-                hw = hardware;
+                hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
                 if (hw != null)
                 {
                     _CPUDieTemp = hw.FindSensor("temperature/0");
@@ -185,9 +186,9 @@ namespace Aurora.Utils
             public float RAMFree => GetValue(_RAMFree);
             #endregion
 
-            public RAMUpdater(IHardware hardware)
+            public RAMUpdater(IEnumerable<IHardware> hws)
             {
-                hw = hardware;
+                hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Memory);
                 if (hw != null)
                 {
                     _RAMUsed = hw.FindSensor("data/0");
