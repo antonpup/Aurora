@@ -51,7 +51,7 @@ namespace Aurora.Utils
         {
             protected IHardware hw;
             protected bool inUse;
-            public int Interval { get; }
+
             private readonly Timer _useTimer;
             private readonly Timer _updateTimer;
 
@@ -65,7 +65,7 @@ namespace Aurora.Utils
                 };
                 _useTimer.Start();
 
-                _updateTimer = new Timer(Interval);
+                _updateTimer = new Timer(200);
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
