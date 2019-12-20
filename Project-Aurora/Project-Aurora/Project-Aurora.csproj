@@ -376,6 +376,17 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
+      <DependentUpon>Control_Discord.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Discord\GSI\GameState_Discord.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\VoiceNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\TextNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\GuildNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
+    <Compile Include="Profiles\Discord\DiscordApplication.cs" />
+    <Compile Include="Profiles\Discord\DiscordProfile.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
@@ -938,6 +949,7 @@
     </Compile>
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
+    <Resource Include="Profiles\Discord\GSI\AuroraGSI.plugin.js" />
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
@@ -1613,6 +1625,7 @@
     <Resource Include="Resources\Skype_300x300.png" />
     <Resource Include="Resources\Slime_Rancher.png" />
     <Content Include="RazerSdkWrapper.dll" />
+    <Resource Include="Resources\betterdiscord.png" />
     <Resource Include="Resources\terraria_512x512.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1708,6 +1721,10 @@
     <Page Include="Controls\Control_FieldPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Discord\Control_Discord.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>
