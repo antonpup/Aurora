@@ -308,7 +308,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Total system memory in megabytes
         /// </summary>
-        public long Total => Free + Total;
+        public long Total => Free + Used;
     }
 
     public class GPUInfo : Node<GPUInfo>
