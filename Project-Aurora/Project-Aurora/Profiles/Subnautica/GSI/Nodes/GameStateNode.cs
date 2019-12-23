@@ -12,17 +12,21 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         0 = Menu
         1 = Loading
         2 = Playing
+        3 = Paused
         */
-        public bool InGame;
+
         public bool InMenu;
         public bool loading;
+        public bool InGame;
+        public bool Paused;
 
         internal GameStateNode(string json) : base(json) {
 
             GameState = GetInt("game_state");
-            InGame = GameState == 2;
             InMenu = GameState == 0;
             loading = GameState == 1;
+            InGame = GameState == 2 || GameState == 3;
+            Paused = GameState == 3;
         }
     }
 }
