@@ -176,7 +176,8 @@ namespace Aurora.Devices.Omen
             catch (Exception)
             {
             }
-            return false;
+
+            return true;
         }
 
         private void UpdateKeyboard(Dictionary<DeviceKeys, Color> keyColors)
