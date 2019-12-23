@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,7 +63,21 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         */
         public bool IsPiloting;
 
-        internal PlayerNode(string json) : base(json) {
+        public int GameMode;
+        /*
+        Survival = 0,
+        Freedom = 1,
+        Hardcore = 2,
+        Creative = 3,
+        None = 4
+        */
+        public bool InSurvivalMode;
+        public bool InFreedomMode;
+        public bool InHardcoreMode;
+        public bool InCreativeMode;
+
+        internal PlayerNode(string json) : base(json)
+        {
             Biom = GetString("biom");
 
             InLifePod = Biom == "Lifepod";
@@ -109,6 +123,19 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
 
             Mode = GetInt("mode");
             IsPiloting = Mode == 1 || Mode == 2; // Mode 1 = Piloting/Mode 2 = locked Piloting
+
+            GameMode = GetInt("game_mode");
+            InSurvivalMode = GameMode == 0;
+            InFreedomMode = GameMode == 1;
+            InHardcoreMode = GameMode == 2;
+            InCreativeMode = GameMode == 3;
+        /*
+        Survival = 0,
+        Freedom = 1,
+        Hardcore = 2,
+        Creative = 3,
+        None = 4
+        */
         }
 
     }

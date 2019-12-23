@@ -15,6 +15,7 @@ namespace Aurora.Profiles.Subnautica.GSI {
         private NotificationNode _Notification;
         private WorldNode _World;
         private PlayerNode _Player;
+        private VehicleSubNode _VehicleSub;
 
         /// <summary>
         /// Provider node provides information about the data source so that Aurora can update the correct gamestate.
@@ -70,6 +71,19 @@ namespace Aurora.Profiles.Subnautica.GSI {
                 if (_Player == null)
                     _Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? "");
                 return _Player;
+            }
+        }
+
+        /// <summary>
+        /// VehicleSub node provides information about the Vehicle (e.g. Power and light status).
+        /// </summary>
+        public VehicleSubNode VehicleSub
+        {
+            get
+            {
+                if (_VehicleSub == null)
+                    _VehicleSub = new VehicleSubNode(_ParsedData["vehicle_sub"]?.ToString() ?? "");
+                return _VehicleSub;
             }
         }
 
