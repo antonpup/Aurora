@@ -21,6 +21,16 @@
                 <TextBlock Text="{Binding Converter={StaticResource AmbilightEffectsToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="AmbiLightFpsChoices" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AmbilightFpsChoice" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AmbilightFpsToStringVC x:Key="AmbilightFpsToStringVC"/>
+            <DataTemplate x:Key="AmbilightFpsTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AmbilightFpsToStringVC}}" />
+            </DataTemplate>
+
             <ObjectDataProvider x:Key="AmbilightCapture" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:AmbilightCaptureType" />
@@ -30,15 +40,93 @@
             <DataTemplate x:Key="AmbilightCaptureTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource AmbilightCaptureToStringVC}}" />
             </DataTemplate>
+
+            <ObjectDataProvider x:Key="AmbilightQuality" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:AmbilightQuality" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <EnumValueConverters:AmbilightQualityToStringVC x:Key="AmbilightQualityToStringVC"/>
+            <DataTemplate x:Key="AmbilightQualityTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource AmbilightQualityToStringVC}}" />
+            </DataTemplate>
+
+            <local:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
-        <ComboBox x:Name="combobox_ambilight_effect_type" HorizontalAlignment="Left" Margin="127,0,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" SelectionChanged="combobox_ambilight_effect_type_SelectionChanged"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Effect Type: " VerticalAlignment="Top" Margin="0,2,0,0"/>
-        <ComboBox x:Name="combobox_ambilight_capture_type" HorizontalAlignment="Left" Margin="136,27,0,0" VerticalAlignment="Top" Width="161" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" SelectionChanged="combobox_ambilight_capture_type_SelectionChanged"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ambilight Capture Type: " VerticalAlignment="Top" Margin="0,29,0,0"/>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Specific Process Name: " VerticalAlignment="Top" Margin="0,56,0,0"/>
-        <TextBox x:Name="txtBox_process_name" HorizontalAlignment="Left" Height="20" Margin="136,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="161" TextChanged="txtBox_process_name_TextChanged"/>
-    </Grid>
+    <StackPanel Orientation="Horizontal">
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28px" />
+                <RowDefinition Height="28px" />
+                <RowDefinition Height="28px" />
+                <RowDefinition Height="28px" />
+                <RowDefinition Height="28px" />
+                <RowDefinition Height="28px" />
+                <RowDefinition Height="56px" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="145px" />
+                <ColumnDefinition Width="160px" />
+                <ColumnDefinition Width="28px" />
+            </Grid.ColumnDefinitions>
+
+
+            <Label Content="Capture Type" Grid.Row="0" VerticalAlignment="Center" />
+            <ComboBox SelectedItem="{Binding Properties._AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" />
+
+            <Label Content="Effect Type" Grid.Row="1" VerticalAlignment="Center" />
+            <ComboBox SelectedItem="{Binding Properties._AmbilightType}" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" />
+
+            <Label Content="Image Quality" Grid.Row="2" VerticalAlignment="Center" />
+            <ComboBox SelectedItem="{Binding Properties._AmbilightQuality}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightQuality}}" ItemTemplate="{Binding Source={StaticResource AmbilightQualityTemplate}}" />
+            <Image Grid.Row="2" Grid.Column="2" Margin="6" ToolTip="Higher qualities should only be needed when using the&#x0a;coordinates effect type and will increase RAM usage." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
+
+            <Label Content="Updates per second" Grid.Row="3" VerticalAlignment="Center" />
+            <ComboBox SelectedItem="{Binding Properties._AmbiLightUpdatesPerSecond}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbiLightFpsChoices}}" ItemTemplate="{Binding Source={StaticResource AmbilightFpsTemplate}}" />
+            <Image Grid.Row="3" Grid.Column="2" Margin="6" ToolTip="Higher update speeds will result in a&#x0a;smoother effect and increase CPU usage." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
+
+            <Label Content="Specific Process Name" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" />
+            <TextBox Text="{Binding Properties._SpecificProcess}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" />
+
+            <Label Content="Display Output Number" Grid.Row="5" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" />
+            <xctk:IntegerUpDown Text="{Binding Properties._AmbilightOutputId}" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" Minimum="0" Value="{Binding OutputId, Mode=TwoWay}" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" />
+
+            <Label Content="Coordinates" Grid.Row="6" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" />
+            <Grid Grid.Row="6" Grid.Column="1" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <!-- Since Properties._Coordinates is a Rect (which is a struct) we cannot directly bind to the properties, so these have to use ValueChanged event -->
+                <Label Content="X" Grid.Row="0" Grid.Column="0" />
+                <xctk:IntegerUpDown x:Name="XCoordinate" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
+                <Label Content="Y" Grid.Row="0" Grid.Column="2" />
+                <xctk:IntegerUpDown x:Name="YCoordinate" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
+                <Label Content="W" Grid.Row="1" Grid.Column="0" />
+                <xctk:IntegerUpDown x:Name="WidthCoordinate" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
+                <Label Content="H" Grid.Row="1" Grid.Column="2" />
+                <xctk:IntegerUpDown x:Name="HeightCoordinate" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
+            </Grid>
+        </Grid>
+
+        <GroupBox Header="Color Adjustment" VerticalAlignment="Top" Margin="24,0,0,0">
+            <Grid Margin="0,0,0,0">
+                <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Height="17" Width="99" />
+                <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,34,0,0" Height="17" Width="99" />
+                <Slider Value="{Binding Properties._BrightnessChange}" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="109,5,0,0" Height="20" Minimum="-0.5" Maximum="0.5" />
+                <Slider Value="{Binding Properties._SaturationChange}" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="109,34,0,0" Width="100" Height="20" Minimum="0" Maximum="2" />
+                <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,30,0,-4" Width="41" Height="29" />
+                <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,1,0,0" Width="41" Height="29" />
+            </Grid>
+        </GroupBox>
+    </StackPanel>
 </UserControl>

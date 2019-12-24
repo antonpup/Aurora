@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Aurora.Profiles.ResidentEvil2.Layers.Control_ResidentEvil2HealthLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.ResidentEvil2.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <Grid Height="103">
+        <Label HorizontalAlignment="Left" Padding="0" Content="Indicator Style:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <ComboBox x:Name="status_style" HorizontalAlignment="Left" Margin="83,0,-28,0" VerticalAlignment="Top" Width="120" IsSynchronizedWithCurrentItem="True" SelectionChanged="status_style_SelectionChanged" SelectedIndex="0"/>
+    </Grid>
+</UserControl>

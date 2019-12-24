@@ -85,12 +85,13 @@ namespace Aurora.EffectsEngine.Animations
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
-            float return_val = 0.0f;
-
+            float current_duration, return_val = 0.0f;
+            
             foreach (KeyValuePair<string, AnimationTrack> track in _local)
             {
-                if (track.Value.AnimationDuration > return_val)
-                    return_val = track.Value.AnimationDuration;
+                current_duration = track.Value.GetShift() + track.Value.AnimationDuration;
+                if (current_duration > return_val)
+                    return_val = current_duration;
             }
 
             return return_val;
@@ -116,7 +117,7 @@ namespace Aurora.EffectsEngine.Animations
             return return_val;
         }
 
-        public void Draw(Graphics g, float time, float scale = 1.0f)
+        public void Draw(Graphics g, float time, float scale = 1.0f, PointF offset = default(PointF))
         {
             Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
@@ -126,7 +127,7 @@ namespace Aurora.EffectsEngine.Animations
                 {
                     try
                     {
-                        track.Value.GetFrame(time).Draw(g, scale);
+                        track.Value.GetFrame(time).Draw(g, scale, offset);
                     }
                     catch (Exception exc)
                     {

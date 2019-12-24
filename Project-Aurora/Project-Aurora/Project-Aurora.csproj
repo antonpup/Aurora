@@ -83,7 +83,8 @@
       <HintPath>..\packages\CS-Script.bin.3.28.4.0\lib\net46\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="CUE.NET, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CUE.NET.1.2.0.1\lib\net45\CUE.NET.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\CUE.NET.dll</HintPath>
     </Reference>
     <Reference Include="DotNetZip, Version=1.11.0.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\packages\DotNetZip.1.11.0\lib\net20\DotNetZip.dll</HintPath>
@@ -100,6 +101,14 @@
     </Reference>
     <Reference Include="HidLibrary, Version=3.2.46.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\hidlibrary.3.2.46.0\lib\HidLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HidSharp.2.1.0\lib\net35\HidSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.26\lib\net45\Interop.AuraServiceLib.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>True</Private>
     </Reference>
     <Reference Include="IronPython, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.dll</HintPath>
@@ -156,18 +165,42 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.5\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="Pranas.ScreenshotCapture, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Pranas.ScreenshotCapture.1.0.11\lib\net40\Pranas.ScreenshotCapture.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Octokit, Version=0.32.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Octokit.0.32.0\lib\net45\Octokit.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RGB.NET.Brushes, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Brushes.0.1.26\lib\net45\RGB.NET.Brushes.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Core, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Core.0.1.26\lib\net45\RGB.NET.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Asus, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Asus.0.1.26\lib\net45\RGB.NET.Devices.Asus.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Corsair, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Devices.Corsair.0.1.26\lib\net45\RGB.NET.Devices.Corsair.dll</HintPath>
+    </Reference>
+    <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\RazerSdkWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Groups, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RGB.NET.Groups.0.1.26\lib\net45\RGB.NET.Groups.dll</HintPath>
+    </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>.\Roccat-Talk.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SharpDX, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.0.1\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.4.0.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.4.0.1\lib\net45\SharpDX.DXGI.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.RawInput, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.RawInput.4.0.1\lib\net45\SharpDX.RawInput.dll</HintPath>
@@ -215,7 +248,11 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.IO.Ports, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.4.5.0\lib\net461\System.IO.Ports.dll</HintPath>
+    </Reference>
     <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Reflection.Metadata, Version=1.4.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reflection.Metadata.1.5.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
@@ -291,7 +328,13 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Vulcan.NET, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vulcan.NET.1.1.2\lib\netstandard2.0\Vulcan.NET.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="Wooting.NET, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Wooting.NET.1.0.0\lib\netstandard2.0\Wooting.NET.dll</HintPath>
+    </Reference>
     <Reference Include="WPFToolkit, Version=3.5.40128.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Infragistics.Themes.MetroDark.Wpf.1.0.0\lib\net40\WPFToolkit.dll</HintPath>
       <Private>True</Private>
@@ -299,6 +342,9 @@
     <Reference Include="Xceed.Wpf.Toolkit, Version=2.9.15603.14400, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
       <HintPath>..\packages\Xceed.Wpf.Toolkit.2.9.15603.14400\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="YeeLightAPI, Version=0.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YeeLightAPI_SnakePin.0.0.1\lib\netstandard2.0\YeeLightAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -308,7 +354,6 @@
     <Compile Include="ConfigUI.xaml.cs">
       <DependentUpon>ConfigUI.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ArrangeListBox.cs" />
     <Compile Include="Controls\ColorZones.xaml.cs">
       <DependentUpon>ColorZones.xaml</DependentUpon>
     </Compile>
@@ -327,6 +372,46 @@
     <Compile Include="Controls\Control_DeviceItem.xaml.cs">
       <DependentUpon>Control_DeviceItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
+      <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
+      <DependentUpon>Control_Discord.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Discord\GSI\GameState_Discord.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\VoiceNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\TextNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\GuildNode.cs" />
+    <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
+    <Compile Include="Profiles\Discord\DiscordApplication.cs" />
+    <Compile Include="Profiles\Discord\DiscordProfile.cs" />
+    <Compile Include="Devices\Vulcan\Vulcan.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
+    <Compile Include="Profiles\Osu\GSI\Enums.cs" />
+    <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
+      <DependentUpon>Control_Skype.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Skype\SkypeProfile.cs" />
+    <Compile Include="Profiles\Skype\SkypeApplication.cs" />
+    <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
+    <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Terraria\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
+    <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
+	<Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
+	  <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Control_LayerList.xaml.cs">
+      <DependentUpon>Control_LayerList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_GradientEditor.xaml.cs">
+      <DependentUpon>Control_GradientEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Control_PluginManager.xaml.cs">
       <DependentUpon>Control_PluginManager.xaml</DependentUpon>
     </Compile>
@@ -338,6 +423,9 @@
     </Compile>
     <Compile Include="Controls\Control_Ruler.xaml.cs">
       <DependentUpon>Control_Ruler.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Control_SingleKeyEditor.xaml.cs">
+      <DependentUpon>Control_SingleKeyEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Control_VariableIItem.xaml.cs">
       <DependentUpon>Control_VariableIItem.xaml</DependentUpon>
@@ -360,17 +448,24 @@
     <Compile Include="Controls\LayerEditor.xaml.cs">
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\LogicCheckEdit.xaml.cs">
-      <DependentUpon>LogicCheckEdit.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Devices\Asus\AsusDevice.cs" />
+    <Compile Include="Devices\Asus\AsusRGBNetBrush.cs" />
+    <Compile Include="Devices\NZXT\NZXTDevice.cs" />
+    <Compile Include="Controls\ReorderableListBox.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
     <Compile Include="Devices\Clevo\ClevoSetKBLED.cs" />
     <Compile Include="Devices\Clevo\ClevoDevice.cs" />
+    <Compile Include="Devices\Corsair\CorsairDevice.cs" />
     <Compile Include="Devices\Corsair\CorsairInstallInstructions.xaml.cs">
       <DependentUpon>CorsairInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\CoolerMaster\CoolerMasterDevice.cs" />
     <Compile Include="Devices\CoolerMaster\CoolerMasterSDK.cs" />
+    <Compile Include="Devices\Corsair\CorsairRGBNetBrush.cs" />
+    <Compile Include="Devices\Creative\SoundBlasterXDevice.cs" />
+    <Compile Include="Devices\Drevo\DrevoDevice.cs" />
+    <Compile Include="Devices\Drevo\DrevoLayoutMap.cs" />
+    <Compile Include="Devices\Drevo\DrevoRadiSDK.cs" />
     <Compile Include="Devices\Dualshock4\Dualshock4Device.cs" />
     <Compile Include="Devices\Dualshock4\DS4InstallInstructions.xaml.cs">
       <DependentUpon>DS4InstallInstructions.xaml</DependentUpon>
@@ -380,23 +475,29 @@
     <Compile Include="Devices\Logitech\LogitechInstallInstructions.xaml.cs">
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\NZXT\NZXTLayoutMap.cs" />
     <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Razer\RazerDevice.cs" />
     <Compile Include="Devices\Razer\RazerLayoutMap.cs" />
+    <Compile Include="Devices\RGBNet\AbstractRGBNetDevice.cs" />
+    <Compile Include="Devices\RGBNet\AuroraRGBNetBrush.cs" />
     <Compile Include="Devices\Roccat\RoccatDevice.cs" />
     <Compile Include="Devices\Roccat\RoccatInstallInstructions.xaml.cs">
       <DependentUpon>RoccatInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\ScriptedDevice\ScriptedDevice.cs" />
-    <Compile Include="Devices\SteelSeriesHID\SteelSeriesHID.cs" />
+    <Compile Include="Devices\UnifiedHID\AsusPugio.cs" />
+    <Compile Include="Devices\UnifiedHID\RivalMouses.cs" />
+    <Compile Include="Devices\UnifiedHID\UnifiedHID.cs" />
     <Compile Include="Devices\SteelSeries\GameSenseSDK.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesDevice.cs" />
     <Compile Include="Devices\SteelSeries\SteelSeriesInstallInstructions.xaml.cs">
       <DependentUpon>SteelSeriesInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Wooting\WootingDevice.cs" />
+    <Compile Include="Devices\YeeLight\YeeLightDevice.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationEllipse.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFill.cs" />
     <Compile Include="EffectsEngine\Animations\AnimationFilledCircle.cs" />
@@ -419,8 +520,35 @@
     <Compile Include="Profiles\Battlefield1\Control_Battlefield1.xaml.cs">
       <DependentUpon>Control_Battlefield1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\CloneHero\Control_CloneHero.xaml.cs">
+      <DependentUpon>Control_CloneHero.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CloneHero\CloneHeroApplication.cs" />
+    <Compile Include="Profiles\CloneHero\CloneHeroPointers.cs" />
+    <Compile Include="Profiles\CloneHero\CloneHeroProfile.cs" />
+    <Compile Include="Profiles\CloneHero\GameEvent_CloneHero.cs" />
+    <Compile Include="Profiles\CloneHero\GSI\GameState_CloneHero.cs" />
+    <Compile Include="Profiles\CloneHero\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\Generic\RazerChromaProfile.cs" />
+    <Compile Include="Profiles\MemoryReadingLightEvent.cs" />
+    <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml.cs">
+      <DependentUpon>Control_ResidentEvil2RankLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml.cs">
+      <DependentUpon>Control_ResidentEvil2HealthLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Resident Evil 2\Layers\ResidentEvil2RankLayerHandler.cs" />
+    <Compile Include="Profiles\Resident Evil 2\Layers\ResidentEvil2HealthLayerHandler.cs" />
+    <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Application.cs" />
+    <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Pointers.cs" />
+    <Compile Include="Profiles\Resident Evil 2\ResidentEvil2Profile.cs" />
+    <Compile Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml.cs">
+      <DependentUpon>Control_ResidentEvil2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Resident Evil 2\GameEvent_ResidentEvil2.cs" />
+    <Compile Include="Profiles\Resident Evil 2\GSI\GameState_ResidentEvil2.cs" />
+    <Compile Include="Profiles\Resident Evil 2\GSI\Nodes\Player.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredApplication.cs" />
-    <Compile Include="Profiles\Dishonored\DishonoredPointers.cs" />
     <Compile Include="Profiles\Dishonored\DishonoredProfile.cs" />
     <Compile Include="Profiles\Dishonored\Control_Dishonored.xaml.cs">
       <DependentUpon>Control_Dishonored.xaml</DependentUpon>
@@ -438,6 +566,13 @@
     </Compile>
     <Compile Include="Profiles\Minecraft\Layers\MinecraftKeyConflictLayer.cs" />
     <Compile Include="Profiles\Minecraft\MinecraftKeyBinding.cs" />
+    <Compile Include="Profiles\Move or Die\MoDProfile.cs" />
+    <Compile Include="Profiles\Osu\Control_Osu.xaml.cs">
+      <DependentUpon>Control_Osu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Osu\GSI\GameState_Osu.cs" />
+    <Compile Include="Profiles\Osu\OsuApplication.cs" />
+    <Compile Include="Profiles\Osu\OsuProfile.cs" />
     <Compile Include="Profiles\QuakeChampions\Control_QuakeChampions.xaml.cs">
       <DependentUpon>Control_QuakeChampions.xaml</DependentUpon>
     </Compile>
@@ -518,6 +653,37 @@
       <DependentUpon>Control_DeadCells.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\DeadCells\DeadCellsApplication.cs" />
+    <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
+      <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml.cs">
+      <DependentUpon>Control_RocketLeagueGoalExplosionLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
+    <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
+    <Compile Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\GameState_Slime_Rancher.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\LocationNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\MailNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\VacPackNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Slime Rancher\SlimeRancherApplication.cs" />
+    <Compile Include="Profiles\Slime Rancher\SlimeRancherProfile.cs" />
+    <Compile Include="Profiles\Subnautica\Control_Subnautica.xaml.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\GameState_Subnautica.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\NotificationNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Subnautica\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Subnautica\SubnauticaApplication.cs" />
+    <Compile Include="Profiles\Subnautica\SubnauticaProfile.cs" />
     <Compile Include="Profiles\Witcher3\Control_Witcher3.xaml.cs">
       <DependentUpon>Control_Witcher3.xaml</DependentUpon>
     </Compile>
@@ -535,13 +701,83 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Service\ProfileSwitcher.cs" />
-    <Compile Include="Service\ProfileSwitcherCommand.cs" />
-    <Compile Include="Service\ServiceSettingsUI.xaml.cs">
-      <DependentUpon>ServiceSettingsUI.xaml</DependentUpon>
+    <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
+      <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Service\WebSocketClient.cs" />
+    <Compile Include="Settings\Layers\BinaryCounterLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
+      <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_NumericChangeDetector.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ProcessRunning.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_TrueExtender.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIEnum.xaml.cs">
+      <DependentUpon>Control_BooleanGSIEnum.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml.cs">
+      <DependentUpon>Control_BinaryOperationHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_TimeAndUnit.xaml.cs">
+      <DependentUpon>Control_TimeAndUnit.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml.cs">
+      <DependentUpon>Control_IfElse.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Generic\IfElseIf.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml.cs">
+      <DependentUpon>Control_NumericMap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml.cs">
+      <DependentUpon>Control_NumericUnaryOpHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml.cs">
+      <DependentUpon>Control_OverrideDynamicValue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Number\Number_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Number_PeripheralInput.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Number_Waves.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Operators.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml.cs">
+      <DependentUpon>Control_OverrideLookupTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\EvaluatableRegistry.cs" />
+    <Compile Include="Settings\Overrides\Logic\IOverrideLogic.cs" />
+    <Compile Include="Settings\Overrides\Logic\Number\Number_Maths.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideDynamicValue.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLogicAttribute.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml.cs">
+      <DependentUpon>Control_BooleanGSIBoolean.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml.cs">
+      <DependentUpon>Control_BooleanGSINumeric.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml.cs">
+      <DependentUpon>Control_BooleanNot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml.cs">
+      <DependentUpon>Control_EvaluatablePresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_LogicOperators.cs" />
+    <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
+      <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
+    <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
+    <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\Operators.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\String_Constant.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\String_GameState.cs" />
+    <Compile Include="Settings\Overrides\Logic\String\String_LogicOperators.cs" />
+    <Compile Include="Settings\ProfileImporter.cs" />
+    <Compile Include="Settings\Layers\ComparisonLayerHandler.cs" />
     <Compile Include="Settings\Layers\ConditionalLayerHandler.cs" />
+    <Compile Include="Settings\Layers\Control_ComparisonLayer.xaml.cs">
+      <DependentUpon>Control_ComparisonLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\Control_ConditionalLayer.xaml.cs">
       <DependentUpon>Control_ConditionalLayer.xaml</DependentUpon>
     </Compile>
@@ -565,10 +801,21 @@
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
+    <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
+      <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Overrides\Control_OverridesEditor.xaml.cs">
+      <DependentUpon>Control_OverridesEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Converters.cs" />
+    <Compile Include="Utils\DesktopUtils.cs" />
+    <Compile Include="Utils\DesktopDuplicator.cs" />
+    <Compile Include="Utils\FrameworkElementUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
+    <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
     <Compile Include="Profiles\BF3\BF3Application.cs" />
@@ -582,7 +829,6 @@
       <DependentUpon>Control_BLight.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Borderlands 2\Borderlands2Application.cs" />
-    <Compile Include="Profiles\Borderlands 2\Borderlands2Pointers.cs" />
     <Compile Include="Profiles\Borderlands 2\Borderlands2Profile.cs" />
     <Compile Include="Profiles\Borderlands 2\Control_Borderlands2.xaml.cs">
       <DependentUpon>Control_Borderlands2.xaml</DependentUpon>
@@ -703,11 +949,12 @@
     </Compile>
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
-    <Compile Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
-    <Compile Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
-    <Compile Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
+    <Resource Include="Profiles\Discord\GSI\AuroraGSI.plugin.js" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
+    <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
+    <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
+    <None Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />
     <Compile Include="Profiles\Payday 2\Layers\Control_PD2StatesLayer.xaml.cs">
       <DependentUpon>Control_PD2StatesLayer.xaml</DependentUpon>
     </Compile>
@@ -721,13 +968,6 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\LightingStateManager.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\GameState_RocketLeague.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Match.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Player.cs" />
-    <Compile Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml.cs">
-      <DependentUpon>Control_RocketLeagueBackgroundLayer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueBackgroundLayerHandler.cs" />
     <Compile Include="Profiles\StringProperty.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
@@ -753,13 +993,6 @@
     <Compile Include="Profiles\Payday 2\GSI\Nodes\WeaponsNode.cs" />
     <Compile Include="Profiles\Payday 2\PD2Application.cs" />
     <Compile Include="Profiles\Payday 2\PD2Profile.cs" />
-    <Compile Include="Profiles\RocketLeague\Control_RocketLeague.xaml.cs">
-      <DependentUpon>Control_RocketLeague.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\RocketLeague\GameEvent_RocketLeague.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeaguePointers.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeagueApplication.cs" />
-    <Compile Include="Profiles\RocketLeague\RocketLeagueProfile.cs" />
     <Compile Include="Profiles\Serious Sam 3\Control_SSam3.xaml.cs">
       <DependentUpon>Control_SSam3.xaml</DependentUpon>
     </Compile>
@@ -813,6 +1046,7 @@
     <Compile Include="Devices\SteelSeries\USBHIDCodes.cs" />
     <Compile Include="Utils\JSONUtils.cs" />
     <Compile Include="Utils\MouseUtils.cs" />
+    <Compile Include="Utils\PointerUpdateUtils.cs" />
     <Compile Include="Utils\ProcessUtils.cs" />
     <Compile Include="Utils\ActiveProcessMonitor.cs" />
     <None Include="App.config">
@@ -831,6 +1065,9 @@
     <None Include="kb_layouts\corsair_k68.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\corsair_k70_mk2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\corsair_k70.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -846,6 +1083,12 @@
     <None Include="kb_layouts\corsair_strafe.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\asus_pugio_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\drevo_blademaster.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\clevo_touchpad_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -855,6 +1098,12 @@
     <None Include="kb_layouts\Extra Features\corsair_k68_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\corsair_k70_mk2_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\drevo_blademaster_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\generic_laptop_numpad_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -862,6 +1111,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\generic_laptop_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\generic_mousepad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\wooting_two_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\logitech_gpro_features.json">
@@ -954,6 +1209,12 @@
     <None Include="kb_layouts\Extra Features\masterkeys_pro_m_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\soundblasterx_vanguardk08_left_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\soundblasterx_vanguardk08_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_left_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -966,6 +1227,12 @@
     <None Include="kb_layouts\Extra Features\steelseries_apex_m800_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\steelseries_qck_2zone_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\steelseries_qck_prism_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_rival_300_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -973,6 +1240,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\generic_laptop_numpad.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g213.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g410.json">
@@ -988,6 +1258,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.hu.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.es.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.swiss.json">
@@ -1006,6 +1279,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\generic_laptop.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.iso.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.ansi.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\razer_blade.json">
@@ -1041,7 +1320,13 @@
     <None Include="kb_layouts\Plain Keyboard\layout.intl.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.it.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Plain Keyboard\layout.jpn.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Plain Keyboard\layout.la.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Plain Keyboard\layout.nordic.json">
@@ -1062,7 +1347,6 @@
     <Compile Include="Settings\ColorZone.cs" />
     <Compile Include="Settings\Configuration.cs" />
     <Compile Include="Devices\DeviceManager.cs" />
-    <Compile Include="Devices\Corsair\CorsairDevice.cs" />
     <Compile Include="Devices\Device.cs" />
     <Compile Include="Devices\Logitech\LogitechDevice.cs" />
     <Compile Include="EffectsEngine\EffectColor.cs" />
@@ -1197,12 +1481,6 @@
     <Compile Include="Settings\Layers\SolidFillLayerHandler.cs" />
     <Compile Include="Settings\ScriptBase.cs" />
     <Compile Include="Settings\VariableRegistry.cs" />
-    <Compile Include="Settings\Window_LayerLogicEditor.xaml.cs">
-      <DependentUpon>Window_LayerLogicEditor.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Control_LayerManager.xaml.cs">
-      <DependentUpon>Control_LayerManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Control_ProfileManager.xaml.cs">
       <DependentUpon>Control_ProfileManager.xaml</DependentUpon>
     </Compile>
@@ -1214,7 +1492,6 @@
       <DependentUpon>Control_DefaultLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Layer.cs" />
-    <Compile Include="Settings\Layers\LogicItem.cs" />
     <Compile Include="Profiles\Application.cs" />
     <Compile Include="Settings\KeyboardLayoutManager.cs" />
     <Compile Include="Settings\KeyRecorder.cs" />
@@ -1245,6 +1522,8 @@
     <Compile Include="Utils\KeyUtils.cs" />
     <Compile Include="Utils\MemoryReader.cs" />
     <Compile Include="Utils\MemoryUtils.cs" />
+    <Compile Include="Utils\RazerChromaUtils.cs" />
+    <Compile Include="Utils\RunningProcessMonitor.cs" />
     <Compile Include="Utils\SteamUtils.cs" />
     <Compile Include="Utils\ThreadPriorityChanger.cs" />
     <Compile Include="Utils\Time.cs" />
@@ -1254,7 +1533,34 @@
     <Compile Include="Utils\UIUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CorsairSDK\x64\CUESDK_2015.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CorsairSDK\x86\CUESDK_2015.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CUE.NET.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="DrevoRadi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DS4WindowsApi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Interop.AuraServiceLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_backlights.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_body.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_wheel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Logi_G502_logo.png">
@@ -1264,6 +1570,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\SoundBlasterX_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\SteelSeries_Rival_300_logo.png">
@@ -1292,12 +1601,47 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\deadcells_128x128.png" />
+    <Resource Include="Resources\Layers_Copy.png" />
+    <Resource Include="Resources\Layers_Paste.png" />
+    <Resource Include="Resources\Subnautica.png" />
+    <Content Include="Logi\GHUB\LogitechLed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Logi\LGS\LogitechLed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Resources\ch_128x128.png" />
+    <Resource Include="Resources\re2_256x256.png" />
+    <Resource Include="Resources\LayerConditions_icon.png" />
+    <Resource Include="Resources\icons8-numbers-30.png" />
+    <Resource Include="Resources\icons8-paint-palette-30.png" />
+    <Resource Include="Resources\icons8-diamonds-30.png" />
+    <Resource Include="Resources\icons8-checked-checkbox-30.png" />
+    <Resource Include="Resources\Question_Help.png" />
+    <Resource Include="Resources\icons8-keyboard-30.png" />
+    <Resource Include="Resources\osu_256x256.png" />
+    <Resource Include="Profiles\Osu\GSI\OsuSyncAuroraPlugin.dll" />
+    <Resource Include="Resources\info.png" />
+    <Resource Include="Resources\Skype_300x300.png" />
+    <Resource Include="Resources\Slime_Rancher.png" />
+    <Content Include="RazerSdkWrapper.dll" />
+    <Resource Include="Resources\betterdiscord.png" />
+    <Resource Include="Resources\terraria_512x512.png" />
+    <Content Include="RGB.NET.Devices.Asus.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Profiles\Payday 2\GSI\PD2_GSI.zip" />
     <Resource Include="Profiles\Dota 2\GSI\gamestate_integration_aurora.cfg" />
     <Resource Include="Profiles\CSGO\GSI\gamestate_integration_aurora.cfg" />
+    <None Include="kb_layouts\soundblasterx_vanguardk08.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\wooting_two.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\wooting_one.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1320,10 +1664,16 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Pointers\CloneHero.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Pointers\Dishonored.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Pointers\Borderlands2.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Pointers\ResidentEvil2.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Pointers\RocketLeague.json">
@@ -1368,6 +1718,30 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_FieldPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Discord\Control_Discord.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Skype\Control_Skype.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Terraria\Control_Terraria.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Control_LayerList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_GradientEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Control_PluginManager.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1381,6 +1755,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Control_Ruler.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Control_SingleKeyEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1424,10 +1802,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\LogicCheckEdit.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Devices\Corsair\CorsairInstallInstructions.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1467,6 +1841,14 @@
     <Page Include="Profiles\Blacklight\Control_BLight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\CloneHero\Control_CloneHero.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Resident Evil 2\Control_ResidentEvil2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Dishonored\Control_Dishonored.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1517,6 +1899,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Minecraft\Layers\Control_MinecraftKeyConflictLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Osu\Control_Osu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1656,7 +2042,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueBackgroundLayer.xaml">
+    <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2RankLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Resident Evil 2\Layers\Control_ResidentEvil2HealthLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1673,6 +2063,22 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\DyingLight\Control_DyingLight.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\RocketLeague\Control_RocketLeague.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\RocketLeague\Layers\Control_RocketLeagueGoalExplosionLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Slime Rancher\Control_Slime_Rancher.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Subnautica\Control_Subnautica.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1696,10 +2102,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\RocketLeague\Control_RocketLeague.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Profiles\Serious Sam 3\Control_SSam3.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1720,7 +2122,63 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Service\ServiceSettingsUI.xaml">
+    <Page Include="Settings\Layers\Control_RazerLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Layers\Control_BinaryCounterLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIBoolean.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSIEnum.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_TimeAndUnit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Generic\Control_IfElse.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Number\Control_NumericMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Number\Control_NumericUnaryOpHolder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_OverrideDynamicValue.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_OverrideLookupTable.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_BinaryOperationHolder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1767,6 +2225,10 @@
     <Page Include="Settings\Layers\Control_BlinkingLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_ComparisonLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_ConditionalLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1848,11 +2310,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Settings\Window_LayerLogicEditor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Control_LayerManager.xaml">
+    <Page Include="Settings\Window_GSIHttpDebug.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1869,6 +2327,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_VariableRegistryEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Overrides\Control_OverridesEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1951,6 +2413,8 @@
     <Resource Include="Resources\AddProfile_Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Profiles\Slime Rancher\Layers\" />
+    <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <ItemGroup>
@@ -2012,9 +2476,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\SteelSeries_Apex_logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\Not Visible.png" />
@@ -2087,9 +2548,14 @@
     <Content Include="Resources\RazerInstall\Step2.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Wooting.NET\Wooting.NET\Wooting.NET.csproj">
-      <Project>{fea699ae-db83-43dc-ab85-99f2e90c328f}</Project>
-      <Name>Wooting.NET</Name>
+    <ProjectReference Include="..\..\NZXTSharp\NZXTSharp\NZXTSharp.csproj">
+      <Project>{62094023-0479-4dd4-8a74-4321cc0f08dd}</Project>
+      <Name>NZXTSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
+      <Project>{053a704b-5c79-4cde-b1fc-b952051acaa0}</Project>
+      <Name>SBAuroraReactive</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj">
       <Project>{40085232-aced-4cbe-945b-90ba8153c151}</Project>
@@ -2101,13 +2567,15 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets" Condition="Exists('..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets')" />
+  <Import Project="..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets" Condition="Exists('..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CUE.NET.1.2.0.1\build\net45\CUE.NET.targets'))" />
+    <Error Condition="!Exists('..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Corsair.0.3.0.234\build\RGB.NET.Resources.Corsair.targets'))" />
+    <Error Condition="!Exists('..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets'))" />
   </Target>
+  <Import Project="..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets" Condition="Exists('..\packages\RGB.NET.Resources.Asus.0.3.0\build\RGB.NET.Resources.Asus.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -64,7 +64,7 @@ namespace Aurora.Utils
 
                 Type temp = null;
 
-                if (prop_type.IsPrimitive || AdditionalAllowedTypes.ContainsKey(prop_type))
+                if (prop_type.IsPrimitive || prop_type.IsEnum || AdditionalAllowedTypes.ContainsKey(prop_type))
                 {
                     parameters.Add(prop.Name, new Tuple<Type, Type>(prop_type, prop_param_type));
                 }
@@ -175,6 +175,51 @@ namespace Aurora.Utils
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Attempts to get a double value from the game state with the given path.
+        /// Will handle converting string literal numbers (e.g. "10") into a double.
+        /// Returns 0 if an error occurs
+        /// </summary>
+        public static double TryGetDoubleFromState(IGameState state, string path) {
+            if (!double.TryParse(path, out double value) && !string.IsNullOrWhiteSpace(path)) {
+                try {
+                    value = Convert.ToDouble(RetrieveGameStateParameter(state, path));
+                } catch (Exception exc) {
+                    value = 0;
+                    if (Global.isDebug)
+                        throw exc;
+                }
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Attempts to get a boolean value from the game state with the given path.
+        /// Returns false if an error occurs.
+        /// </summary>
+        public static bool TryGetBoolFromState(IGameState state, string path) {
+            bool value = false;
+            if (!string.IsNullOrWhiteSpace(path)) {
+                try {
+                    value = Convert.ToBoolean(RetrieveGameStateParameter(state, path));
+                } catch { }
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// Attempts to retrieve an enum value from the game state with the given path.
+        /// Returns null if unable to get the value from the state.
+        /// </summary>
+        public static Enum TryGetEnumFromState(IGameState state, string path) {
+            if (!string.IsNullOrWhiteSpace(path)) {
+                try {
+                    return RetrieveGameStateParameter(state, path) as Enum;
+                } catch { }
+            }
+            return null;
         }
 
 

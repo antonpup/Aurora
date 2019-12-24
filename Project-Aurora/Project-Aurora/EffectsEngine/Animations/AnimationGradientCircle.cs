@@ -36,9 +36,10 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush = brush;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f)
+        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
         {
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+            _scaledDimension.Offset(offset);
 
             EffectBrush _newbrush = new EffectBrush(_gradientBrush);
             _newbrush.start = new PointF(0.0f, 0.0f);

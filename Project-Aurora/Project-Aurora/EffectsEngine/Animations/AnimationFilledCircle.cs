@@ -27,7 +27,7 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f)
+        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
         {
             if (_brush == null || _invalidated)
             {
@@ -36,6 +36,7 @@ namespace Aurora.EffectsEngine.Animations
             }
 
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+            _scaledDimension.Offset(offset);
 
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);

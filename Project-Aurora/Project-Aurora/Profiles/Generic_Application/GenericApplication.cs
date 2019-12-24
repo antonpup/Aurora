@@ -47,14 +47,14 @@ namespace Aurora.Profiles.Generic_Application
 
         public override string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "AdditionalProfiles", Config.ID);
+            return Path.Combine(Global.AppDataDirectory, "AdditionalProfiles", Config.ID);
         }
 
         protected override ApplicationProfile CreateNewProfile(string profileName)
         {
             ApplicationProfile profile = (ApplicationProfile)Activator.CreateInstance(Config.ProfileType);
             profile.ProfileName = profileName;
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             return profile;
         }
     }

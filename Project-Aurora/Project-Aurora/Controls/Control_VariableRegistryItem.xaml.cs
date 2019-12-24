@@ -195,10 +195,33 @@ namespace Aurora.Controls
                 ctrl.SelectedColorChanged += colorPickerControlValueChanged;
                 grd_control.Children.Add(ctrl);
             }
+            else if (var_type == typeof(Aurora.Devices.DeviceKeys))
+            {
+                ComboBox ctrl = new ComboBox();
+                ctrl.ItemsSource = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToList();
+                ctrl.SelectedValue = VarRegistry.GetVariable<Aurora.Devices.DeviceKeys>(VariableName);
+                ctrl.SelectionChanged += CmbbxEnum_control_SelectionChanged;
+
+                grd_control.Children.Add(ctrl);
+            }
+            else if (var_type.IsEnum)
+            {
+                ComboBox cmbbxEnum_control = new ComboBox();
+                cmbbxEnum_control.ItemsSource = Enum.GetValues(var_type);
+                cmbbxEnum_control.SelectedValue = VarRegistry.GetVariable<object>(VariableName);
+                cmbbxEnum_control.SelectionChanged += CmbbxEnum_control_SelectionChanged;
+
+                grd_control.Children.Add(cmbbxEnum_control);
+            }
             //else
             //throw new Exception($"Type {var_type} is not supported!");
 
             grd_control.UpdateLayout();
+        }
+
+        private void CmbbxEnum_control_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            VarRegistry.SetVariable(VariableName, (sender as ComboBox).SelectedItem);
         }
 
         private void colorPickerControlValueChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

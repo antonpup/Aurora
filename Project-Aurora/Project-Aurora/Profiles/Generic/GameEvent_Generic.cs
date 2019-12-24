@@ -20,20 +20,6 @@ namespace Aurora.Profiles
         {
         }
 
-        public override void UpdateLights(EffectFrame frame)
-        {
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
-            ApplicationProfile settings = this.Application.Profile;
-            
-            foreach (var layer in Application.Profile.Layers.Reverse().ToArray())
-            {
-                if (layer.Enabled && layer.LogicPass)
-                    layers.Enqueue(layer.Render(_game_state));
-            }
-
-            frame.AddLayers(layers.ToArray());
-        }
-
         public override void SetGameState(IGameState new_game_state)
         {
             if (this.Application.Config.GameStateType != null && !new_game_state.GetType().Equals(this.Application.Config.GameStateType))

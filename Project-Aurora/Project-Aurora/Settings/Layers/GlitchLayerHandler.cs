@@ -1,5 +1,6 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
+    
     public class GlitchLayerHandlerProperties<TProperty> : LayerHandlerProperties2Color<TProperty> where TProperty : GlitchLayerHandlerProperties<TProperty>
     {
         public double? _UpdateInterval { get; set; }
@@ -31,6 +33,7 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             this._UpdateInterval = 1.0;
+            this._Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
 
@@ -63,7 +66,7 @@ namespace Aurora.Settings.Layers
             {
                 previoustime = currenttime;
 
-                foreach(Devices.DeviceKeys key in Enum.GetValues(typeof(Devices.DeviceKeys)))
+                foreach (Devices.DeviceKeys key in (Properties.Sequence.type == KeySequenceType.FreeForm) ? Enum.GetValues(typeof(Devices.DeviceKeys)) : Properties.Sequence.keys.ToArray())
                 {
                     Color clr = (Properties.AllowTransparency ? (randomizer.Next() % 2 == 0 ? Color.Transparent : Utils.ColorUtils.GenerateRandomColor()) : Utils.ColorUtils.GenerateRandomColor());
 
@@ -81,6 +84,7 @@ namespace Aurora.Settings.Layers
                 _GlitchLayer.Set(kvp.Key, kvp.Value);
             }
 
+            _GlitchLayer.OnlyInclude(Properties.Sequence);
             return _GlitchLayer;
         }
 
@@ -91,6 +95,9 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_SecondaryColor")]
+    [LogicOverrideIgnoreProperty("_Sequence")]
     public class GlitchLayerHandler : GlitchLayerHandler<GlitchLayerHandlerProperties>
     {
         public GlitchLayerHandler() : base()

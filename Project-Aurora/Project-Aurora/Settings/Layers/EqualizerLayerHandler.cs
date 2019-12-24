@@ -1,5 +1,6 @@
-﻿using Aurora.EffectsEngine;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using NAudio.Dsp;
@@ -54,50 +55,61 @@ namespace Aurora.Settings.Layers
         GradientVertical
     }
 
+    public enum EqualizerBackgroundMode
+    {
+        [Description("Disabled")]
+        Disabled,
+
+        [Description("Always on")]
+        AlwaysOn,
+
+        [Description("On sound")]
+        EnabledOnSound
+    }
+
     public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerLayerHandlerProperties>
     {
+        [LogicOverridable("Secondary Color")]
         public Color? _SecondaryColor { get; set; }
-
         [JsonIgnore]
         public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
 
+        [LogicOverridable("Gradient")]
         public EffectBrush _Gradient { get; set; }
-
         [JsonIgnore]
         public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear); } }
 
+        [LogicOverridable("Equalizer Type")]
         public EqualizerType? _EQType { get; set; }
-
         [JsonIgnore]
         public EqualizerType EQType { get { return Logic._EQType ?? _EQType ?? EqualizerType.PowerBars; } }
 
+        [LogicOverridable("View Type")]
         public EqualizerPresentationType? _ViewType { get; set; }
-
         [JsonIgnore]
         public EqualizerPresentationType ViewType { get { return Logic._ViewType ?? _ViewType ?? EqualizerPresentationType.SolidColor; } }
 
-        public float? _MaxAmplitude { get; set; }
+        [LogicOverridable("Background Mode")]
+        public EqualizerBackgroundMode? _BackgroundMode { get; set; }
+        [JsonIgnore]
+        public EqualizerBackgroundMode BackgroundMode { get { return Logic._BackgroundMode ?? _BackgroundMode ?? EqualizerBackgroundMode.Disabled; } }
 
+        [LogicOverridable("Max Amplitude")]
+        public float? _MaxAmplitude { get; set; }
         [JsonIgnore]
         public float MaxAmplitude { get { return Logic._MaxAmplitude ?? _MaxAmplitude ?? 20.0f; } }
 
+        [LogicOverridable("Scale with System Volume")]
         public bool? _ScaleWithSystemVolume { get; set; }
-
         [JsonIgnore]
         public bool ScaleWithSystemVolume { get { return Logic._ScaleWithSystemVolume ?? _ScaleWithSystemVolume ?? false; } }
 
-        public bool? _DimBackgroundOnSound { get; set; }
-
-        [JsonIgnore]
-        public bool DimBackgroundOnSound { get { return Logic._DimBackgroundOnSound ?? _DimBackgroundOnSound ?? false; } }
-
+        [LogicOverridable("Background Color")]
         public Color? _DimColor { get; set; }
-
         [JsonIgnore]
         public Color DimColor { get { return Logic._DimColor ?? _DimColor ?? Color.Empty; } }
 
         public SortedSet<float> _Frequencies { get; set; }
-
         [JsonIgnore]
         public SortedSet<float> Frequencies { get { return Logic._Frequencies ?? _Frequencies ?? new SortedSet<float>(); } }
 
@@ -114,15 +126,17 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
+            _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Gradient = new EffectBrush(ColorSpectrum.RainbowLoop).SetBrushType(EffectBrush.BrushType.Linear);
             _EQType = EqualizerType.PowerBars;
             _ViewType = EqualizerPresentationType.SolidColor;
             _MaxAmplitude = 20.0f;
-            _DimBackgroundOnSound = false;
+            _ScaleWithSystemVolume = false;
+            _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
-            _Frequencies = new SortedSet<float>() { 60, 170, 310, 600, 1000, 2000, 3000, 4000, 5000 };
+            _Frequencies = new SortedSet<float>() { 50, 95, 130, 180, 250, 350, 500, 620, 700, 850, 1200, 1600, 2200, 3000, 4100, 5600, 7700, 10000 };
         }
     }
 
@@ -229,46 +243,61 @@ namespace Aurora.Settings.Layers
 
                 EffectLayer equalizer_layer = new EffectLayer();
 
-                if (Properties.DimBackgroundOnSound)
+                bool BgEnabled = false;
+                switch (Properties.BackgroundMode)
                 {
-                    bool hasSound = false;
-                    foreach (var bin in _local_fft)
-                    {
-                        if (bin.X > 0.0005 || bin.X < -0.0005)
+                    case EqualizerBackgroundMode.EnabledOnSound:
+                        foreach (var bin in _local_fft)
                         {
-                            hasSound = true;
-                            break;
+                            if (bin.X > 0.0005 || bin.X < -0.0005)
+                            {
+                                BgEnabled = true;
+                                break;
+                            }
                         }
-                    }
-
-                    if (hasSound)
-                        equalizer_layer.Fill(Properties.DimColor);
+                        break;
+                    case EqualizerBackgroundMode.AlwaysOn:
+                        BgEnabled = true;
+                        break;
                 }
+
+                // The region in which to draw the equalizer.
+                var rect = Properties.Sequence.GetAffectedRegion(); //new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
+                if (rect.Width == 0 || rect.Height == 0)
+                {
+                    // No region to draw in, prevents filling log with exceptions
+                    return new EffectLayer();
+                }
+
+                if (BgEnabled)
+                    equalizer_layer.Set(Properties.Sequence, Properties.DimColor);
 
                 using (Graphics g = equalizer_layer.GetGraphics())
                 {
-                    int wave_step_amount = _local_fft.Length / Effects.canvas_width;
+                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+
+                    int wave_step_amount = _local_fft.Length / (int)rect.Width;
 
                     switch (Properties.EQType)
                     {
                         case EqualizerType.Waveform:
-                            for (int x = 0; x < Effects.canvas_width; x++)
+                            for (int x = 0; x < (int)rect.Width; x++)
                             {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
-                                Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
+                                Brush brush = GetBrush(fft_val, x, rect.Width);
 
-                                g.DrawLine(new Pen(brush), x, Effects.canvas_height_center, x, Effects.canvas_height_center - fft_val / scaled_max_amplitude * 500.0f);
+                                g.DrawLine(new Pen(brush), x + rect.X, (rect.Height / 2) + rect.Y, x + rect.X, (rect.Height / 2) + rect.Y - Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, rect.Height / 2), -rect.Height / 2));
                             }
                             break;
                         case EqualizerType.Waveform_Bottom:
-                            for (int x = 0; x < Effects.canvas_width; x++)
+                            for (int x = 0; x < (int)rect.Width; x++)
                             {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
 
-                                Brush brush = GetBrush(fft_val, x, Effects.canvas_width);
+                                Brush brush = GetBrush(fft_val, x, rect.Width);
 
-                                g.DrawLine(new Pen(brush), x, Effects.canvas_height, x, Effects.canvas_height - Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f);
+                                g.DrawLine(new Pen(brush), x + rect.X, rect.Height + rect.Y, x + rect.X, rect.Height + rect.Y - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, rect.Height));
                             }
                             break;
                         case EqualizerType.PowerBars:
@@ -311,7 +340,7 @@ namespace Aurora.Settings.Layers
 
                             //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
 
-                            float bar_width = Effects.canvas_width / (float)(freqs.Length - 1);
+                            float bar_width = rect.Width / (float)(freqs.Length - 1);
 
                             for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
                             {
@@ -322,16 +351,15 @@ namespace Aurora.Settings.Layers
                                 if (previous_freq_results[f_x] - fft_val > 0.10)
                                     fft_val = previous_freq_results[f_x] - 0.15f;
 
-                                float x = f_x * bar_width;
-                                float y = Effects.canvas_height;
-                                float width = bar_width;
-                                float height = fft_val * Effects.canvas_height;
+                                float x = (f_x * bar_width) + rect.X;
+                                float y = rect.Height + rect.Y;
+                                float height = fft_val * rect.Height;
 
                                 previous_freq_results[f_x] = fft_val;
 
                                 Brush brush = GetBrush(-(f_x % 2), f_x, freq_results.Length - 1);
 
-                                g.FillRectangle(brush, x, y - height, width, height);
+                                g.FillRectangle(brush, x, y - height, bar_width, height);
                             }
 
                             break;
@@ -344,7 +372,7 @@ namespace Aurora.Settings.Layers
                 return equalizer_layer;
 
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
                 return new EffectLayer();
@@ -392,6 +420,7 @@ namespace Aurora.Settings.Layers
 
         private Brush GetBrush(float value, float position, float max_position)
         {
+            var rect = Properties.Sequence.GetAffectedRegion();
             if (Properties.ViewType == EqualizerPresentationType.AlternatingColor)
             {
                 if (value >= 0)
@@ -404,8 +433,8 @@ namespace Aurora.Settings.Layers
             else if (Properties.ViewType == EqualizerPresentationType.GradientHorizontal)
             {
                 EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(0, 0);
-                e_brush.end = new PointF(Effects.canvas_width, 0);
+                e_brush.start = new PointF(rect.X, 0);
+                e_brush.end = new PointF(rect.Width + rect.X, 0);
 
                 return e_brush.GetDrawingBrush();
             }
@@ -414,8 +443,8 @@ namespace Aurora.Settings.Layers
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
                 EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(0, Effects.canvas_height);
-                e_brush.end = new PointF(0, 0);
+                e_brush.start = new PointF(0, rect.Height + rect.Y);
+                e_brush.end = new PointF(0, rect.Y);
 
                 return e_brush.GetDrawingBrush();
             }

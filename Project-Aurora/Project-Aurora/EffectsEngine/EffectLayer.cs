@@ -685,7 +685,7 @@ namespace Aurora.EffectsEngine
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed, blink_background);
             else
-                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed);
+                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed, blink_background);
 
             return this;
         }
@@ -740,32 +740,39 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            for (int i = 0; i < keys.Count(); i++)
-            {
-                Devices.DeviceKeys current_key = keys[i];
+            if ((percentEffectType == PercentEffectType.Highest_Key || percentEffectType == PercentEffectType.Highest_Key_Blend) && keys.Length > 0) {
+                var activeKey = (int)Math.Ceiling(value / (total / keys.Length)) - 1;
+                var col = percentEffectType == PercentEffectType.Highest_Key ? foregroundColor : Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total);
+                SetOneKey(keys[Math.Min(Math.Max(activeKey, 0), keys.Length - 1)], col);
 
-                switch (percentEffectType)
+            } else {
+                for (int i = 0; i < keys.Count(); i++)
                 {
-                    case (PercentEffectType.AllAtOnce):
-                        SetOneKey(current_key, Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total));
-                        break;
-                    case (PercentEffectType.Progressive_Gradual):
-                        if (i == (int)progress)
-                        {
-                            double percent = (double)progress - i;
-                            SetOneKey(current_key, Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, percent));
-                        }
-                        else if (i < (int)progress)
-                            SetOneKey(current_key, foregroundColor);
-                        else
-                            SetOneKey(current_key, backgroundColor);
-                        break;
-                    default:
-                        if (i < (int)progress)
-                            SetOneKey(current_key, foregroundColor);
-                        else
-                            SetOneKey(current_key, backgroundColor);
-                        break;
+                    Devices.DeviceKeys current_key = keys[i];
+
+                    switch (percentEffectType)
+                    {
+                        case (PercentEffectType.AllAtOnce):
+                            SetOneKey(current_key, Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total));
+                            break;
+                        case (PercentEffectType.Progressive_Gradual):
+                            if (i == (int)progress)
+                            {
+                                double percent = (double)progress - i;
+                                SetOneKey(current_key, Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, percent));
+                            }
+                            else if (i < (int)progress)
+                                SetOneKey(current_key, foregroundColor);
+                            else
+                                SetOneKey(current_key, backgroundColor);
+                            break;
+                        default:
+                            if (i < (int)progress)
+                                SetOneKey(current_key, foregroundColor);
+                            else
+                                SetOneKey(current_key, backgroundColor);
+                            break;
+                    }
                 }
             }
 
@@ -856,7 +863,7 @@ namespace Aurora.EffectsEngine
                     if(!blink_background)
                         foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                     if(blink_background)
-                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
 

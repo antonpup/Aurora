@@ -6,6 +6,9 @@ using System.Drawing;
 using Aurora.Profiles;
 using System.Windows.Controls;
 using Newtonsoft.Json;
+using Aurora.Devices;
+using Aurora.Settings.Overrides;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Layers
 {
@@ -32,15 +35,14 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public float ColorEnhanceColorHSVGamma { get { return Logic._ColorEnhanceColorHSVGamma ?? _ColorEnhanceColorHSVGamma ?? 0.0f; } }
 
-        public WrapperLightsLayerHandlerProperties() : base()
-        {
+        // Key cloning
+        [JsonIgnore]
+        public Dictionary<DeviceKeys, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceKeys, KeySequence>();
+        public Dictionary<DeviceKeys, KeySequence> _CloningMap { get; set; }
 
-        }
+        public WrapperLightsLayerHandlerProperties() : base() { }
 
-        public WrapperLightsLayerHandlerProperties(bool arg = false) : base(arg)
-        {
-
-        }
+        public WrapperLightsLayerHandlerProperties(bool arg = false) : base(arg) { }
 
         public override void Default()
         {
@@ -52,9 +54,12 @@ namespace Aurora.Settings.Layers
             _ColorEnhanceColorFactor = 90;
             _ColorEnhanceColorHSVSine = 0.1f;
             _ColorEnhanceColorHSVGamma = 2.5f;
+            _CloningMap = new Dictionary<DeviceKeys, KeySequence>();
         }
     }
-
+    
+    [LogicOverrideIgnoreProperty("_PrimaryColor")]
+    [LogicOverrideIgnoreProperty("_Sequence")]
     public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerProperties>
     {
         internal int[] bitmap = new int[126];
@@ -91,14 +96,33 @@ namespace Aurora.Settings.Layers
             Devices.DeviceKeys[] allkeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
             foreach (var key in allkeys)
             {
-                if(extra_keys.ContainsKey(key))
+
+                // This checks if a key is already being cloned over and thus should be prevented from being re-set by the
+                // normal wrapper. Fixes issues with some clones not working. Thanks to @Gurjot95 for finding it :)
+                if (Properties.CloningMap.Values.Any(sequence => sequence.keys.Contains(key)))
+                    continue;
+
+
+                if (extra_keys.ContainsKey(key))
+                {
                     bitmap_layer.Set(key, GetBoostedColor(extra_keys[key]));
+
+                    // Do the key cloning
+                    if (Properties.CloningMap.ContainsKey(key))
+                        bitmap_layer.Set(Properties.CloningMap[key], GetBoostedColor(extra_keys[key]));
+                }
                 else
                 {
                     Devices.Logitech.Logitech_keyboardBitmapKeys logi_key = Devices.Logitech.LogitechDevice.ToLogitechBitmap(key);
 
-                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0)
-                        bitmap_layer.Set(key, GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4])));
+                    if (logi_key != Devices.Logitech.Logitech_keyboardBitmapKeys.UNKNOWN && bitmap.Length > 0) {
+                        var color = GetBoostedColor(Utils.ColorUtils.GetColorFromInt(bitmap[(int)logi_key / 4]));
+                        bitmap_layer.Set(key, color);
+
+                        // Key cloning
+                        if (Properties.CloningMap.ContainsKey(key))
+                            bitmap_layer.Set(Properties.CloningMap[key], color);
+                    }
                 }
             }
 
@@ -164,6 +188,23 @@ namespace Aurora.Settings.Layers
             SetExtraKey(Devices.DeviceKeys.LOGO, ngw_state.Extra_Keys.logo);
             SetExtraKey(Devices.DeviceKeys.LOGO2, ngw_state.Extra_Keys.badge);
             SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+            //Reversing the mousepad lights from left to right, razer takes it from right to left
+            SetExtraKey(Devices.DeviceKeys.Peripheral, ngw_state.Extra_Keys.peripheral);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT15, ngw_state.Extra_Keys.mousepad1);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT14, ngw_state.Extra_Keys.mousepad2);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT13, ngw_state.Extra_Keys.mousepad3);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT12, ngw_state.Extra_Keys.mousepad4);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT11, ngw_state.Extra_Keys.mousepad5);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT10, ngw_state.Extra_Keys.mousepad6);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT9, ngw_state.Extra_Keys.mousepad7);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT8, ngw_state.Extra_Keys.mousepad8);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT7, ngw_state.Extra_Keys.mousepad9);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT6, ngw_state.Extra_Keys.mousepad10);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT5, ngw_state.Extra_Keys.mousepad11);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT4, ngw_state.Extra_Keys.mousepad12);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT3, ngw_state.Extra_Keys.mousepad13);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT2, ngw_state.Extra_Keys.mousepad14);
+            SetExtraKey(Devices.DeviceKeys.MOUSEPADLIGHT1, ngw_state.Extra_Keys.mousepad15);
             SetExtraKey(Devices.DeviceKeys.G1, ngw_state.Extra_Keys.G1);
             SetExtraKey(Devices.DeviceKeys.G2, ngw_state.Extra_Keys.G2);
             SetExtraKey(Devices.DeviceKeys.G3, ngw_state.Extra_Keys.G3);
@@ -378,6 +419,10 @@ namespace Aurora.Settings.Layers
             {
 
             }
+            else if (ngw_state.Command.Equals("CreateMousepadEffect"))
+            {
+
+            }
             else if (ngw_state.Command.Equals("CreateKeyboardEffect"))
             {
                 Color primary = Color.Red;
@@ -411,76 +456,6 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        public float[] RgbToHsv(Color colorRgb)
-        {
-            float R = colorRgb.R / 255.0f;
-            float G = colorRgb.G / 255.0f;
-            float B = colorRgb.B / 255.0f;
-
-            float M = Math.Max(Math.Max(R, G), B);
-            float m = Math.Min(Math.Min(R, G), B);
-            float C = M - m;
-
-            float H = 0.0f;
-            if (M == R)
-                H = (G - B) / C % 6;
-            else if (M == G)
-                H = (B - R) / C + 2;
-            else if (M == B)
-                H = (R - G) / C + 4;
-            H *= 60.0f;
-            if (H < 0.0f)
-                H += 360.0f;
-
-            float V = M;
-            float S = 0;
-            if (V != 0)
-                S = C / V;
-
-            return new float[] { H, S, V };
-        }
-
-        public Color HsvToRgb(float[] colorHsv)
-        {
-            double H = colorHsv[0] / 60.0;
-            float S = colorHsv[1];
-            float V = colorHsv[2];
-
-            float C = V * S;
-
-            float[] rgb = new float[] { 0, 0, 0 };
-
-            float X = (float)(C * (1 - Math.Abs(H % 2 - 1)));
-
-            int i = (int)Math.Floor(H);
-            switch (i)
-            {
-                case 0:
-                case 6:
-                    rgb = new float[] { C, X, 0 };
-                    break;
-                case 1:
-                    rgb = new float[] { X, C, 0 };
-                    break;
-                case 2:
-                    rgb = new float[] { 0, C, X };
-                    break;
-                case 3:
-                    rgb = new float[] { 0, X, C };
-                    break;
-                case 4:
-                    rgb = new float[] { X, 0, C };
-                    break;
-                case 5:
-                case -1:
-                    rgb = new float[] { C, 0, X };
-                    break;
-            }
-            float m = V - C;
-
-            return Color.FromArgb(Clamp((int)((rgb[0] + m) * 255 + 0.5f)), Clamp((int)((rgb[1] + m) * 255 + 0.5f)), Clamp((int)((rgb[2] + m) * 255 + 0.5f)));
-        }
-
         private int Clamp(int n)
         {
             if (n <= 0)
@@ -508,11 +483,11 @@ namespace Aurora.Settings.Layers
                     return Utils.ColorUtils.MultiplyColorByScalar(color, boost_amount);
 
                 case 1:
-                    float[] colorHsv = RgbToHsv(color);
+                    ColorUtils.ToHsv(color, out var hue, out var saturation, out var value);
                     float X = Properties.ColorEnhanceColorHSVSine;
                     float Y = 1.0f / Properties.ColorEnhanceColorHSVGamma;
-                    colorHsv[2] = (float)Math.Min(1, (double)(Math.Pow(X * Math.Sin(2 * Math.PI * colorHsv[2]) + colorHsv[2], Y)));
-                    return HsvToRgb(colorHsv);
+                    value = (float)Math.Min(1, (double)(Math.Pow(X * Math.Sin(2 * Math.PI * value) + value, Y)));
+                    return ColorUtils.FromHsv(hue, saturation, value);
 
                 default:
                     return color;

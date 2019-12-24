@@ -5,21 +5,81 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_AnimationLayer"
+             xmlns:Controls="clr-namespace:Aurora.Controls"
+    xmlns:logic="clr-namespace:Aurora.Settings.Overrides.Logic" x:Class="Aurora.Settings.Layers.Control_AnimationLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <Button x:Name="btnEditAnimation" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="85"/>
+        <GroupBox Header="Animation" Height="49" Width="590" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+                <Button x:Name="btnEditAnimation" Content="Edit Animation" HorizontalAlignment="Left" VerticalAlignment="Top" Click="btnEditAnimation_Click" Width="142" Height="23"/>
 
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="0,69,0,0" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
-        <CheckBox x:Name="chkboxForceKeySequence" Content="Display Only on Key Sequence keys" HorizontalAlignment="Left" Margin="0,27,0,0" VerticalAlignment="Top" Checked="chkboxForceKeySequence_Checked" Unchecked="chkboxForceKeySequence_Checked"/>
-        <CheckBox x:Name="chkboxScaleToKeySequence" Content="Scale to Key Sequence bounds" HorizontalAlignment="Left" Margin="0,48,0,0" VerticalAlignment="Top" Checked="chkboxScaleToKeySequence_Checked" Unchecked="chkboxScaleToKeySequence_Checked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="235,2,0,0" TextWrapping="Wrap" Text="Animation Duration:" VerticalAlignment="Top" Width="107"/>
-        <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Left" Height="20" Margin="347,0,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="0" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="412,3,0,0" TextWrapping="Wrap" Text="secs" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="235,27,0,0" TextWrapping="Wrap" Text="Repeat Animation:" VerticalAlignment="Top" Width="98"/>
-        <xctk:IntegerUpDown x:Name="updownAnimationRepeat" HorizontalAlignment="Left" Height="20" Margin="338,25,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="0" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
-        <TextBlock HorizontalAlignment="Left" Margin="403,28,0,0" TextWrapping="Wrap" Text="times" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="246,50,0,0" TextWrapping="Wrap" Text="Set to 0 to never stop the animation" VerticalAlignment="Top" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                <Label Content="Animation Duration:" Margin="0,-1,261,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="118"/>
+                <xctk:DoubleUpDown x:Name="updownAnimationDuration" HorizontalAlignment="Right" Height="20" Margin="0,2,201,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="0.1" Maximum="1024" Increment="0.1" ValueChanged="updownAnimationDuration_ValueChanged" />
+                <Label Content="secs" Margin="0,-1,169,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
 
+                <Label Content="Repeat Times:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,-1,68,0" />
+                <xctk:IntegerUpDown x:Name="updownAnimationRepeat" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,4,0" Width="60" Minimum="0" Maximum="1024" Increment="1" ValueChanged="updownAnimationRepeat_ValueChanged" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Keys" Margin="0,53,0,0" Width="242" HorizontalAlignment="Left">
+            <Grid>
+                <CheckBox x:Name="chkboxForceKeySequence" Content="Display Only on Key Sequence keys" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Checked="chkboxForceKeySequence_Checked" Unchecked="chkboxForceKeySequence_Checked"/>
+                <CheckBox x:Name="chkboxScaleToKeySequence" Content="Scale to Key Sequence bounds" HorizontalAlignment="Left" Margin="0,21,0,0" VerticalAlignment="Top" Checked="chkboxScaleToKeySequence_Checked" Unchecked="chkboxScaleToKeySequence_Checked"/>
+                <Controls:KeySequence x:Name="KeySequence_keys" Margin="0,42,0,0" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox x:Name="triggerGroupbox" Header="Trigger" Margin="257,53,0,0" Width="333" MinHeight="299" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <ScrollViewer>
+                <Grid>
+                    <Grid x:Name="triggerGridLayout">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="85px" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="28px" />
+                            <RowDefinition Height="28px" />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="160px" />
+                            <RowDefinition Height="28px" />
+                            <RowDefinition Height="28px" />
+                            <RowDefinition Height="28px" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+
+                        <Label Content="Trigger:" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        <ComboBox x:Name="triggerModeCb" Grid.Row="0" Grid.Column="1" Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" DisplayMemberPath="Key" SelectedValuePath="Value" SelectionChanged="triggerMode_SelectionChanged">
+                            <ComboBox.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" Background="#1FFF" FontWeight="Bold" Margin="0,4,0,0" Padding="4,0,4,2" />
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ComboBox.GroupStyle>
+                        </ComboBox>
+
+                        <Label Content="Trigger path:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
+                        <Label Content="Trigger expr:" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        <logic:Control_EvaluatablePresenter x:Name="triggerEvaluatable" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ExpressionChanged="triggerEvaluatable_ExpressionChanged" />
+                        <Label Content="Trigger keys:" Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Right" />
+                        <CheckBox x:Name="triggerAnyKey" Grid.Row="3" Grid.Column="1" Content="Trigger for any key" Margin="-6,6" Checked="triggerAnyKey_Checked" Unchecked="triggerAnyKey_Checked" />
+                        <Controls:KeySequence x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="3" Grid.Column="1" RecordingTag="AnimationTriggerKeys" Title="Trigger keys" FreestyleEnabled="False" SequenceUpdated="triggerKeys_SequenceUpdated" />
+                        <Label Content="Stack mode:" Grid.Row="5" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        <CheckBox x:Name="translateToKey" Grid.Row="4" Grid.Column="1" Content="Translate to pressed key" Margin="-6,6" Checked="translateToKey_Checked" Unchecked="translateToKey_Checked" />
+                        <TextBlock Text="?" Grid.Row="4" Grid.Column="4" ToolTip="Moves the top-left (0,0) of the animation to the location of the key. When using this option, ensure your animations are centered around 0,0." Cursor="Help" Opacity=".8" TextDecorations="Underline" Margin="12,6" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                        <ComboBox x:Name="stackModeCb" Grid.Row="5" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" HorizontalAlignment="Stretch" SelectionChanged="stackModeCb_SelectionChanged" DisplayMemberPath="Key" SelectedValuePath="Value" />
+                        <CheckBox x:Name="whileKeyHeldTerminate" Grid.Row="6" Grid.Column="1" Content="Stop as soon as key released" ToolTip="If true, this setting will stop the animation started by a key press as soon as that key press is released. If false, the animation started by a key will keep going until complete before stopping when the key is released." Margin="-6,6" Checked="whileKeyHeldTerminate_Checked" Unchecked="whileKeyHeldTerminate_Checked" />
+                    </Grid>
+
+                    <Button Content="  i  " Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="Open documentation page" Click="btnInfo_Click" />
+                </Grid>
+            </ScrollViewer>
+        </GroupBox>
     </Grid>
 </UserControl>

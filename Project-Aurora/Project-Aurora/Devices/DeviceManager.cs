@@ -31,7 +31,7 @@ namespace Aurora.Devices
                 {
                     if (newFrame && !Worker.IsBusy)
                         Worker.RunWorkerAsync();
-                 }
+                }
             };
             //Worker.WorkerSupportsCancellation = true;
         }
@@ -77,8 +77,8 @@ namespace Aurora.Devices
 
         private bool anyInitialized = false;
         private bool retryActivated = false;
-        private const int retryInterval = 5000;
-        private const int retryAttemps = 3;
+        private const int retryInterval = 10000;
+        private const int retryAttemps = 5;
         private int retryAttemptsLeft = retryAttemps;
         private Thread retryThread;
         private bool suspended = false;
@@ -104,10 +104,17 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
             devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
             devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeriesHID.SteelSeriesHIDDevice()));   // SteelSeriesHID Device
+            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
             devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
+            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
             devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
             devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
+            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
+            devices.Add(new DeviceContainer(new Devices.YeeLight.YeeLightDevice()));         // YeeLight Device
+            devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
+            devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
+            devices.Add(new DeviceContainer(new Devices.Vulcan.VulcanDevice()));
+            
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
@@ -161,14 +168,16 @@ namespace Aurora.Devices
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         }
-
+        bool resumed = false;
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            if (e.Reason.Equals(SessionSwitchReason.SessionUnlock) && suspended)
+            Global.logger.Info($"SessionSwitch triggered with {e.Reason}");
+            if (e.Reason.Equals(SessionSwitchReason.SessionUnlock) && (suspended || resumed))
             {
-                Global.logger.Info("Resuming Devices");
+                Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
                 suspended = false;
-                this.InitializeOnce();
+                resumed = false;
+                this.Initialize(true);
             }
         }
 
@@ -182,8 +191,11 @@ namespace Aurora.Devices
                     this.Shutdown();
                     break;
                 case PowerModes.Resume:
-                    //Global.logger.Info("Resuming Devices");
-                    //this.InitializeOnce();
+                    Global.logger.Info("Resuming Devices -- PowerModes.Resume");
+                    Thread.Sleep(TimeSpan.FromSeconds(2));
+                    resumed = true;
+                    suspended = false;
+                    this.Initialize();
                     break;
             }
         }
@@ -195,7 +207,7 @@ namespace Aurora.Devices
                 Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
         }
 
-        public void Initialize()
+        public void Initialize(bool forceRetry = false)
         {
             if (suspended)
                 return;
@@ -217,13 +229,15 @@ namespace Aurora.Devices
 
             if (anyInitialized)
             {
-                //_InitializeOnceAllowed = true;
+                _InitializeOnceAllowed = true;
                 NewDevicesInitialized?.Invoke(this, new EventArgs());
             }
 
-            if (devicesToRetryNo > 0 && !retryActivated)
+            if (devicesToRetryNo > 0 && (retryThread == null || forceRetry || retryThread?.ThreadState == System.Threading.ThreadState.Stopped))
             {
                 retryActivated = true;
+                if (forceRetry)
+                    retryThread?.Abort();
                 retryThread = new Thread(RetryInitialize);
                 retryThread.Start();
                 return;
@@ -237,6 +251,8 @@ namespace Aurora.Devices
             for (int try_count = 0; try_count < retryAttemps; try_count++)
             {
                 Global.logger.Info("Retrying Device Initialization");
+                if (suspended)
+                    continue;
                 int devicesAttempted = 0;
                 bool _anyInitialized = false;
                 foreach (DeviceContainer device in devices)
@@ -270,7 +286,7 @@ namespace Aurora.Devices
 
         public void InitializeOnce()
         {
-            if (!anyInitialized)// && _InitializeOnceAllowed)
+            if (!anyInitialized && _InitializeOnceAllowed)
                 Initialize();
         }
 
@@ -331,7 +347,7 @@ namespace Aurora.Devices
                         device.Device.Shutdown();
                         continue;
                     }
-                    
+
                     device.UpdateDevice(composition, forced);
                 }
             }

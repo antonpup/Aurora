@@ -54,8 +54,10 @@ namespace Aurora.Controls
             {
                 if (Sequence == null)
                     Sequence = new Settings.KeySequence(value.ToArray());
-                else
+                else {
                     Sequence.keys = value;
+                }
+                SequenceKeysChange?.Invoke(this, new EventArgs());
             }
         }
         private bool allowListRefresh = true;
@@ -97,6 +99,8 @@ namespace Aurora.Controls
             }
         }
 
+        public IEnumerable<Devices.DeviceKeys> SelectedItems => keys_keysequence.SelectedItems.Cast<Devices.DeviceKeys>();
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty FreestyleEnabledProperty = DependencyProperty.Register("FreestyleEnabled", typeof(bool), typeof(UserControl));
 
@@ -116,7 +120,11 @@ namespace Aurora.Controls
             }
         }
 
+        /// <summary>Fired whenever the KeySequence object is changed or re-created. Does NOT trigger when keys are changed.</summary>
         public event EventHandler SequenceUpdated;
+        /// <summary>Fired whenever keys are changed.</summary>
+        public event EventHandler SequenceKeysChange;
+        public event SelectionChangedEventHandler SelectionChanged;
 
         public KeySequence()
         {
@@ -300,7 +308,8 @@ namespace Aurora.Controls
                 this.sequence_up.IsEnabled = (bool)e.NewValue;
                 this.sequence_down.IsEnabled = (bool)e.NewValue;
                 this.sequence_remove.IsEnabled = (bool)e.NewValue;
-                this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue && FreestyleEnabled;
+                this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue;
+                //this.sequence_freestyle_checkbox.IsEnabled = (bool)e.NewValue && FreestyleEnabled;
 
                 if ((bool)e.NewValue)
                     sequence_updateToLayerEditor();
@@ -321,6 +330,9 @@ namespace Aurora.Controls
                 this.sequence_up.IsEnabled = IsEnabled && false;
                 this.sequence_down.IsEnabled = IsEnabled && false;
             }
+
+            // Bubble the selection changed event
+            SelectionChanged?.Invoke(this, e);
         }
 
         private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

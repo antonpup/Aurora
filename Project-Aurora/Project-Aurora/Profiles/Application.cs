@@ -62,6 +62,9 @@ namespace Aurora.Profiles
                 InvokePropertyChanged(old, newVal);
             }
         }
+
+        public bool EnableByDefault { get; set; } = true;
+        public bool EnableOverlaysByDefault { get; set; } = true;
     }
 
     public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
@@ -79,6 +82,7 @@ namespace Aurora.Profiles
         public string ID { get { return Config.ID; } }
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
+        public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
         public event PropertyChangedExEventHandler PropertyChanged;
         protected LightEventType type;
         public LightEventType Type
@@ -114,12 +118,20 @@ namespace Aurora.Profiles
             config.Event.Application = this;
             config.Event.ResetGameState();
             Profiles = new ObservableCollection<ApplicationProfile>();
+            Profiles.CollectionChanged += (sender, e) => {
+                if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+                    foreach (ApplicationProfile prof in e.NewItems)
+                    {
+                        prof.SetApplication(this);
+                    }
+                }
+            };
             EffectScripts = new Dictionary<string, IEffectScript>();
             if (config.GameStateType != null)
                 ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
         }
 
-        public bool Initialize()
+        public virtual bool Initialize()
         {
             if (Initialized)
                 return Initialized;
@@ -128,6 +140,11 @@ namespace Aurora.Profiles
             LoadProfiles();
             Initialized = true;
             return Initialized;
+        }
+
+        protected override void SettingsCreateHook() {
+            Settings.IsEnabled = Config.EnableByDefault;
+            Settings.IsOverlayEnabled = Config.EnableOverlaysByDefault;
         }
 
         protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
@@ -160,7 +177,7 @@ namespace Aurora.Profiles
         {
             ApplicationProfile profile = (ApplicationProfile)Activator.CreateInstance(Config.ProfileType);
             profile.ProfileName = profileName;
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             return profile;
         }
 
@@ -169,36 +186,34 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
-            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetValidFilename(profile.ProfileName) + ".json");
+            profile.ProfileFilepath = Path.Combine(GetProfileFolderPath(), GetUnusedFilename(GetProfileFolderPath(), profile.ProfileName) + ".json");
             this.Profiles.Add(profile);
         }
 
-        protected void CreateDefaultProfile()
+        protected ApplicationProfile CreateDefaultProfile()
         {
-            if (Disposed)
-                return;
-
-            ApplicationProfile _newProfile = CreateNewProfile("default");
-
-            Profiles.Add(_newProfile);
-
-            SaveProfiles();
-
-            SwitchToProfile(_newProfile);
+            return AddNewProfile($"default");
         }
 
-        public void SaveDefaultProfile()
+        public ApplicationProfile NewDefaultProfile()
+        {
+            return AddNewProfile($"Profile {Profiles.Count + 1}");
+        }
+
+        public ApplicationProfile AddNewProfile(String profileName)
         {
             if (Disposed)
-                return;
+                return null;
 
-            ApplicationProfile _newProfile = CreateNewProfile($"Profile {Profiles.Count + 1}");
+            ApplicationProfile _newProfile = CreateNewProfile(profileName);
 
             Profiles.Add(_newProfile);
 
             SaveProfiles();
 
             SwitchToProfile(_newProfile);
+
+            return _newProfile;
         }
 
         public void DeleteProfile(ApplicationProfile profile)
@@ -244,9 +259,17 @@ namespace Aurora.Profiles
             return filename;
         }
 
+        protected string GetUnusedFilename(string dir, string filename) {
+            var safeName = GetValidFilename(filename);
+            if (!File.Exists(Path.Combine(dir, safeName + ".json"))) return safeName;
+            var i = 0;
+            while (File.Exists(Path.Combine(dir, safeName + "-" + ++i + ".json")));
+            return safeName + "-" + i;
+        }
+
         public virtual string GetProfileFolderPath()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Profiles", Config.ID);
+            return Path.Combine(Global.AppDataDirectory, "Profiles", Config.ID);
         }
 
         public void ResetProfile()
@@ -269,6 +292,8 @@ namespace Aurora.Profiles
             }
         }
 
+        //hacky fix to sort out MoD profile type change
+        protected ISerializationBinder binder = Utils.JSONUtils.SerializationBinder;
         internal ApplicationProfile LoadProfile(string path)
         {
             if (Disposed)
@@ -282,41 +307,38 @@ namespace Aurora.Profiles
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
+                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = binder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
                         prof.ProfileFilepath = path;
 
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
                             prof.ProfileName = Path.GetFileNameWithoutExtension(path);
 
-                        foreach (Layer lyr in prof.Layers.ToList())
-                        {
-                            //Remove any Layers that have non-functional handlers
-                            if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID))
-                            {
-                                prof.Layers.Remove(lyr);
-                                continue;
+                        // Initalises a collection, setting the layers' profile/application property and adding events to them and the collections to save to disk.
+                        void InitialiseLayerCollection(ObservableCollection<Layer> collection) { 
+                            foreach (Layer lyr in collection.ToList()) {
+                                //Remove any Layers that have non-functional handlers
+                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
+                                    prof.Layers.Remove(lyr);
+                                    continue;
+                                }
+
+                                lyr.AnythingChanged += SaveProfilesEvent;
                             }
 
-                            lyr.AnythingChanged += this.SaveProfilesEvent;
-                            lyr.SetProfile(this);
+                            collection.CollectionChanged += (_, e) => {
+                                if (e.NewItems != null)
+                                    foreach (Layer lyr in e.NewItems)
+                                        if (lyr != null)
+                                            lyr.AnythingChanged += SaveProfilesEvent;
+                                SaveProfiles();
+                            };
                         }
 
-                        prof.Layers.CollectionChanged += (s, e) =>
-                        {
-                            if (e.NewItems != null)
-                            {
-                                foreach (Layer lyr in e.NewItems)
-                                {
-                                    if (lyr == null)
-                                        continue;
-                                    lyr.AnythingChanged += this.SaveProfilesEvent;
-                                }
-                            }
-                            this.SaveProfiles();
-                        };
+                        // Call the above setup method on the regular layers and the overlay layers.
+                        InitialiseLayerCollection(prof.Layers);
+                        InitialiseLayerCollection(prof.OverlayLayers);
 
                         prof.PropertyChanged += Profile_PropertyChanged;
-
                         return prof;
                     }
                 }
@@ -335,7 +357,6 @@ namespace Aurora.Profiles
                     }
 
                     File.Move(path, newPath);
-                    this.SaveProfile((ApplicationProfile)Activator.CreateInstance(Config.ProfileType), path);
                     MessageBox.Show($"Default profile for {this.Config.Name} could not be loaded.\nMoved to {newPath}, reset to default settings.\nException={exc.Message}", "Error loading default profile", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
@@ -343,15 +364,21 @@ namespace Aurora.Profiles
             return null;
         }
 
-        private void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        protected virtual void LoadProfilesError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
-                e.ErrorContext.Handled = true;
-
-            if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+            if (e.CurrentObject != null)
             {
-                ((Layer)e.ErrorContext.OriginalObject).Handler = null;
-                e.ErrorContext.Handled = true;
+                if (e.CurrentObject.GetType().Equals(typeof(ObservableCollection<Layer>)))
+                    e.ErrorContext.Handled = true;
+
+                if (e.CurrentObject.GetType() == typeof(Layer) && e.ErrorContext.Member.Equals("Handler"))
+                {
+                    ((Layer)e.ErrorContext.OriginalObject).Handler = null;
+                    e.ErrorContext.Handled = true;
+                }
+            } else if (e.ErrorContext.Path.Equals("$type") && e.ErrorContext.Member == null)
+            {
+                MessageBox.Show($"The profile type for {this.Config.Name} has been changed, your profile will be reset and your old one moved to have the extension '.corrupted', ignore the following error", "Profile type changed", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -385,6 +412,11 @@ namespace Aurora.Profiles
             this.Config.Event.UpdateLights(frame);
         }
 
+        public virtual void UpdateOverlayLights(EffectFrame frame) {
+            if (Disposed) return;
+            Config.Event.UpdateOverlayLights(frame);
+        }
+
         public virtual void SetGameState(IGameState state)
         {
             if (Disposed)
@@ -399,6 +431,22 @@ namespace Aurora.Profiles
                 return;
 
             Config.Event.ResetGameState();
+        }
+        
+        public virtual void OnStart()
+        {
+            if (Disposed)
+                return;
+
+            Config.Event.OnStart();
+        }
+
+        public virtual void OnStop()
+        {
+            if (Disposed)
+                return;
+
+            Config.Event.OnStop();
         }
 
         public virtual void UpdateEffectScripts(Queue<EffectLayer> layers, IGameState state = null)

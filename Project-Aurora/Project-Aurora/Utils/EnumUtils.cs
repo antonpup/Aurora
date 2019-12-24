@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
 
@@ -17,20 +18,30 @@ namespace Aurora.Utils
     {
         public static string GetDescription(this Enum enumObj)
         {
-            FieldInfo fieldInfo = enumObj.GetType().GetField(enumObj.ToString());
-
-            object[] attribArray = fieldInfo.GetCustomAttributes(false);
-
-            if (attribArray.Length == 0)
-            {
-                return enumObj.ToString();
-            }
-            else
-            {
-                DescriptionAttribute attrib = attribArray[0] as DescriptionAttribute;
-                return attrib.Description;
-            }
+            return enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(DescriptionAttribute), false) is DescriptionAttribute attr ? attr.Description : enumObj.ToString();
         }
+
+        public static string GetCategory(this Enum enumObj) {
+            return enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(CategoryAttribute), false) is CategoryAttribute attr ? attr.Category : "";
+        }
+
+        /// <summary>Takes a particular type of enum and returns all values of the enum and their associated description in a list suitable for use as an ItemsSource.
+        /// Returns an enumerable of KeyValuePairs where the key is the description/name and the value is the enum's value.</summary>
+        /// <typeparam name="T">The type of enum whose values to fetch.</typeparam>
+        public static IEnumerable<KeyValuePair<string, T>> GetEnumItemsSource<T>() =>
+            typeof(T).GetEnumValues().Cast<T>().Select(@enum => new KeyValuePair<string, T>(
+                typeof(T).GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
+                @enum
+            ));
+
+        /// <summary>Takes a particular type of enum and returns all values of the enum and their associated description in a list suitable for use as an ItemsSource.
+        /// Returns an enumerable of KeyValuePairs where the key is the description/name and the value is the enum's value.</summary>
+        /// <param name="enumType">The type of enum whose values to fetch.</param>
+        public static IEnumerable<KeyValuePair<string, object>> GetEnumItemsSource(Type enumType) =>
+            enumType.GetEnumValues().Cast<object>().Select(@enum => new KeyValuePair<string, object>(
+                enumType.GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
+                @enum
+            ));
     }
 
     public static class IValueConverterExt
@@ -205,16 +216,6 @@ namespace Aurora.Utils
         public LayerTypeToStringVC() : base(LayerType.Solid) { }
     }*/
 
-    public class LogicOperatorToStringVC : EnumToStringVC
-    {
-        public LogicOperatorToStringVC() : base(LogicOperator.GreaterThan) { }
-    }
-    
-    public class ActionTypeToStringVC : EnumToStringVC
-    {
-        public ActionTypeToStringVC() : base(ActionType.SetProperty) { }
-    }
-
     public class AppDetectionModeToStringVC : EnumToStringVC
     {
         public AppDetectionModeToStringVC() : base(ApplicationDetectionMode.WindowsEvents) { }
@@ -232,7 +233,17 @@ namespace Aurora.Utils
 
     public class AmbilightCaptureToStringVC : EnumToStringVC
     {
-        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.Everything) { }
+        public AmbilightCaptureToStringVC() : base(AmbilightCaptureType.EntireMonitor) { }
+    }
+
+    public class AmbilightFpsToStringVC : EnumToStringVC
+    {
+        public AmbilightFpsToStringVC() : base(AmbilightFpsChoice.Medium) { }
+    }
+
+    public class AmbilightQualityToStringVC : EnumToStringVC
+    {
+        public AmbilightQualityToStringVC() : base(AmbilightQuality.Medium) { }
     }
 
     public class EqualizerTypeToStringVC : EnumToStringVC
@@ -243,6 +254,11 @@ namespace Aurora.Utils
     public class EqualizerPresentationTypeToStringVC : EnumToStringVC
     {
         public EqualizerPresentationTypeToStringVC() : base(EqualizerPresentationType.SolidColor) { }
+    }
+
+    public class EqualizerBackgroundModeToStringVC : EnumToStringVC
+    {
+        public EqualizerBackgroundModeToStringVC() : base(EqualizerBackgroundMode.Disabled) { }
     }
 
     public class ShortcutAssistantPresentationTypeToStringVC : EnumToStringVC

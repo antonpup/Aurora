@@ -22,7 +22,7 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f)
+        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
         {
             if (_brush == null || _invalidated)
             {
@@ -31,18 +31,20 @@ namespace Aurora.EffectsEngine.Animations
             }
 
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
+            _scaledDimension.Offset(offset);
 
-            PointF rotatePoint = new PointF(_scaledDimension.X + (_scaledDimension.Width / 2.0f), _scaledDimension.Y + (_scaledDimension.Height / 2.0f));
+            PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
 
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
+            Matrix transformationMatrix = new Matrix();
+            transformationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
+            transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
 
             Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
+            g.Transform = transformationMatrix;
             g.FillRectangle(_brush, _scaledDimension);
             g.Transform = originalMatrix;
         }
-
+        
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
             if (!(otherAnim is AnimationFilledRectangle))
