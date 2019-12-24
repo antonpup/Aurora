@@ -72,13 +72,11 @@ namespace Aurora.Profiles.Subnautica {
         {
             if ((sender as CheckBox).IsChecked == true)
             {
-                State.GameState.GameState = 2;
-                State.GameState.InGame = true;
+                State.GameState.State = GSI.Nodes.GameState.Playing;
             }
             else
             {
-                State.GameState.GameState = 0;
-                State.GameState.InGame = false;
+                State.GameState.State = GSI.Nodes.GameState.Menu;
             }
         }
 
