@@ -5,6 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI.Nodes {
+    public enum VehicleSubs
+    {
+        None = -1,
+        Base = 0,
+        Cyclops = 1,
+        Seamoth = 2,
+        Prawn = 3
+    }
     public enum LightingStates
     {                       //Meaning in Game:
         OnNoDanger = 0,    //Operational = 0
@@ -18,12 +26,7 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         Flank = 2
     }
     public class VehicleSubNode : Node<VehicleSubNode> {
-        //Base, Cyclops, Seamoth or Prawn //Change to Enum
-        public string Type;
-        public bool InBase;
-        public bool InCyclops;
-        public bool InSeamoth;
-        public bool InPrawn;
+        public VehicleSubs In;
 
         public int Power;
         public int MaxPower;
@@ -47,13 +50,7 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         public float CyclopsNoice;
 
         internal VehicleSubNode(string json) : base(json) {
-            //Base, Cyclops, Seamoth or Prawn
-            Type = GetString("type");
-
-            InBase = Type == "Base";
-            InCyclops = Type == "Cyclops";
-            InSeamoth = Type == "Seamoth";
-            InPrawn = Type == "Prawn";
+            In = (VehicleSubs)GetInt("type");
 
             Power = GetInt("power");
             MaxPower = GetInt("max_power");
