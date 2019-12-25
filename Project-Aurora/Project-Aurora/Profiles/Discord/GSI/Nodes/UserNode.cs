@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Discord.GSI.Nodes {
-
     public enum DiscordStatus
     {
         Undefined,
@@ -15,24 +14,38 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         Invisible
     }
 
-
     public class UserNode : Node<UserNode> {
-
         public long Id = 0;
-        public string Status = "";
-        public bool SelfMute = false;
-        public bool SelfDeafen = false;
-        public bool Mentions = false;
-        public bool UnreadMessages = false;
-   
-        internal UserNode() : base() { }
+        public DiscordStatus Status;
+        public bool SelfMute;
+        public bool SelfDeafen;
+        public bool Mentions;
+        public bool UnreadMessages;
+
         internal UserNode(string json) : base(json) {
             Id = GetLong("id");
-            Status = GetString("status");
+            Status = GetStatus(GetString("status"));
             SelfMute = GetBool("self_mute");
             SelfDeafen = GetBool("self_deafen");
             Mentions = GetBool("mentions");
             UnreadMessages = GetBool("unread_messages");
+        }
+
+        private static DiscordStatus GetStatus(string status)
+        {
+            switch (status)
+            {
+                case "online":
+                    return DiscordStatus.Online;
+                case "dnd":
+                    return DiscordStatus.DoNotDisturb;
+                case "invisible":
+                    return DiscordStatus.Invisible;
+                case "idle":
+                    return DiscordStatus.Idle;
+                default:
+                    return DiscordStatus.Undefined;
+            }
         }
     }
 }

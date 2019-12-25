@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Discord.GSI.Nodes {
     public class ProviderNode : Node<ProviderNode> {
-
         public string Name;
         public int AppID;
 
