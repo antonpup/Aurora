@@ -1,5 +1,8 @@
-﻿using Aurora.Settings;
+﻿using Aurora.Profiles.CSGO.GSI.Nodes;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides.Logic.Builder;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -43,7 +46,9 @@ namespace Aurora.Profiles.CSGO
                         _MaxVariablePath = "100"
                         },
 
-                }),
+                }, new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIEnum("Round/Phase", RoundPhase.Live))
+                ),
                 new Layer("Ammo Indicator", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
@@ -61,7 +66,9 @@ namespace Aurora.Profiles.CSGO
                         _VariablePath = "Player/Weapons/ActiveWeapon/AmmoClip",
                         _MaxVariablePath = "Player/Weapons/ActiveWeapon/AmmoClipMax"
                     },
-                }),
+                }, new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIEnum("Round/Phase", RoundPhase.Live))
+                ),
                 new Layer("CSGO Bomb Effect", new Layers.CSGOBombLayerHandler()),
                 new Layer("CSGO Burning Effect", new Layers.CSGOBurningLayerHandler()),
                 new Layer("CSGO Background", new Layers.CSGOBackgroundLayerHandler())
