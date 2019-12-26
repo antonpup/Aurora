@@ -70,7 +70,7 @@ namespace Aurora.Profiles.Subnautica
                                 .SetFrame(0, new EffectsEngine.Animations.AnimationFilledRectangle(new Rectangle(0, 70, 1000, 60), Color.FromArgb(170, 0, 0, 0)))
                                 .SetFrame(.5f, new EffectsEngine.Animations.AnimationFilledRectangle(new Rectangle(0, 0, 1000, 60), Color.FromArgb(170, 0, 0, 0)))
                         }),
-                        _TriggerMode = AnimationTriggerMode.OnTrue,
+                        _TriggerMode = AnimationTriggerMode.OnEvaluatableTrue,
                         _EvaluatableTrigger = new BooleanGSIEnum("Player/PDAState", GSI.Nodes.PDAState.Opening),
                         _StackMode = AnimationStackMode.Ignore,
                         _Sequence = new KeySequence(new FreeFormObject(0, -50, 980, 280))
