@@ -49,6 +49,8 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
         public bool CyclopsEngineOn;
         public float CyclopsNoice;
 
+        public float PrawnThrust;
+
         internal VehicleSubNode(string json) : base(json) {
             In = (VehicleSubs)GetInt("type");
 
@@ -61,7 +63,7 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
 
             VehicleHealth = GetInt("vehicle_health");
             VehicleMaxHealth = GetInt("vehicle_max_health");
-            CrushDepth = GetInt("crushDepth");
+            CrushDepth = GetInt("crush_depth");
 
             CyclopsWarning = GetBool("cyclops_warning");
             CyclopsFireSuppression = GetBool("cyclops_fire_suppression_state");
@@ -72,6 +74,7 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
             CyclopsEngineOn = GetBool("cyclops_engine_on");
             CyclopsNoice = GetFloat("cyclops_noice_percent");
 
+            PrawnThrust = GetFloat("thrust");
         }
     }
 }
