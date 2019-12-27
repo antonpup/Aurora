@@ -58,12 +58,32 @@ namespace Aurora.Profiles.Move_or_Die
 
         private int GameID = 323850;
 
-        private bool InstallWrapper(string installpath = "")
+        private bool InstallWrapper()
         {
-            if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(this.GameID);
+            string installpath = System.IO.Path.Combine(Utils.SteamUtils.GetGamePath(this.GameID), "Love", "win");
 
+            if (Directory.Exists(installpath))
+            {
+                using (BinaryWriter razer_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(installpath, "RzChromaSDK.dll"), FileMode.Create)))
+                {
+                    razer_wrapper_86.Write(Properties.Resources.Aurora_RazerLEDWrapper86);
+                }
 
+                using (BinaryWriter razer_wrapper_64 = new BinaryWriter(new FileStream(System.IO.Path.Combine(installpath, "RzChromaSDK64.dll"), FileMode.Create)))
+                {
+                    razer_wrapper_64.Write(Properties.Resources.Aurora_RazerLEDWrapper64);
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private bool InstallWrapper(string installpath)
+        {
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 using (BinaryWriter razer_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(installpath, "RzChromaSDK.dll"), FileMode.Create)))
@@ -92,11 +112,20 @@ namespace Aurora.Profiles.Move_or_Die
                 string path = System.IO.Path.Combine(installpath, "RzChromaSDK.dll");
                 string path64 = System.IO.Path.Combine(installpath, "RzChromaSDK64.dll");
 
+                string enginepath = System.IO.Path.Combine(installpath, "Love", "win", "RzChromaSDK.dll");
+                string enginepath64 = System.IO.Path.Combine(installpath, "Love", "win", "RzChromaSDK64.dll");
+
                 if (File.Exists(path))
                     File.Delete(path);
 
                 if (File.Exists(path64))
                     File.Delete(path64);
+
+                if (File.Exists(enginepath))
+                    File.Delete(enginepath);
+
+                if (File.Exists(enginepath64))
+                    File.Delete(enginepath64);
 
                 return true;
             }
