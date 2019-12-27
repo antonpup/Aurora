@@ -144,5 +144,54 @@ namespace Aurora.Profiles.Move_or_Die
                 profile_manager.SaveProfiles();
             }
         }
+
+        private void patch_cue_dll_button_Click(object sender, RoutedEventArgs e)
+        {
+            string gamepath = Utils.SteamUtils.GetGamePath(this.GameID);
+            bool sucess = disable(System.IO.Path.Combine(gamepath, "Love", "win", "CUESDK.dll"));
+            bool sucess64 = disable(System.IO.Path.Combine(gamepath, "Love", "win", "CUESDK.x64.dll"));
+            if (sucess && sucess64)
+                MessageBox.Show("Sucesfully disabled MoD Corsair support.");
+            else if (sucess || sucess64)
+                MessageBox.Show("Error: Partly disabled MoD Corsair support. Is it already disabled?");
+            else
+                MessageBox.Show("Couldn't disabled MoD Corsair support. Is it already disabled?");
+        }
+
+        private bool disable(string file)
+        {
+            if (File.Exists(file))
+            {
+                File.Move(file, file + ".disabled");
+                return true;
+            }
+            else
+                return false;
+        }
+
+        private void unpatch_cue_dll_button_Click(object sender, RoutedEventArgs e)
+        {
+            string gamepath = Utils.SteamUtils.GetGamePath(this.GameID);
+            bool sucess = enable(System.IO.Path.Combine(gamepath, "Love", "win", "CUESDK.dll"));
+            bool sucess64 = enable(System.IO.Path.Combine(gamepath, "Love", "win", "CUESDK.x64.dll"));
+            if (sucess && sucess64)
+                MessageBox.Show("Sucesfully re-enabled MoD Corsair support.");
+            else if (sucess || sucess64)
+                MessageBox.Show("Error: Partly re-enabled MoD Corsair support. Is it already disabled?");
+            else
+                MessageBox.Show("Couldn't re-enabled MoD Corsair support. Is it already disabled?");
+        }
+
+        private bool enable(string file)
+        {
+            file = file + ".disabled";
+            if (File.Exists(file))
+            {
+                File.Move(file, file.Replace(".disabled", ""));
+                return true;
+            }
+            else
+                return false;
+        }
     }
 }
