@@ -162,6 +162,9 @@ namespace Aurora.Profiles.Move_or_Die
         {
             if (File.Exists(file))
             {
+                if (File.Exists(file + ".disabled"))
+                    File.Delete(file + ".disabled");
+
                 File.Move(file, file + ".disabled");
                 return true;
             }
@@ -177,17 +180,20 @@ namespace Aurora.Profiles.Move_or_Die
             if (sucess && sucess64)
                 MessageBox.Show("Sucesfully re-enabled MoD Corsair support.");
             else if (sucess || sucess64)
-                MessageBox.Show("Error: Partly re-enabled MoD Corsair support. Is it already disabled?");
+                MessageBox.Show("Error: Partly re-enabled MoD Corsair support. Is it already enabled?");
             else
-                MessageBox.Show("Couldn't re-enabled MoD Corsair support. Is it already disabled?");
+                MessageBox.Show("Couldn't re-enabled MoD Corsair support. Is it already enabled?");
         }
 
         private bool enable(string file)
         {
-            file = file + ".disabled";
             if (File.Exists(file))
+                return false;
+
+            string file_d = file + ".disabled";
+            if (File.Exists(file_d))
             {
-                File.Move(file, file.Replace(".disabled", ""));
+                File.Move(file_d, file);
                 return true;
             }
             else
