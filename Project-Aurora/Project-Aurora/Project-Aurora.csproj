@@ -376,6 +376,10 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGOWinningTeamLayer.xaml.cs">
+      <DependentUpon>Control_CSGOWinningTeamLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\CSGO\Layers\CSGOWinningTeamLayerHandler.cs" />
     <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
     </Compile>
@@ -403,8 +407,8 @@
     <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
     <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
-	<Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
-	  <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    <Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
+      <DependentUpon>Control_Terraria.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
@@ -1721,6 +1725,10 @@
     <Page Include="Controls\Control_FieldPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGOWinningTeamLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Discord\Control_Discord.xaml">
       <Generator>MSBuild:Compile</Generator>
