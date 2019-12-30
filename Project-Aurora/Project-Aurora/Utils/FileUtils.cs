@@ -74,7 +74,7 @@ namespace Aurora.Utils
             //otherwise, enable it
             try
             {
-                File.Copy(disabled, file);
+                File.Move(disabled, file);
                 return true;
             }
             catch (Exception e)
