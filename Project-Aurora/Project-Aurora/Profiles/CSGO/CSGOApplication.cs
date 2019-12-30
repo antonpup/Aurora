@@ -27,6 +27,7 @@ namespace Aurora.Profiles.CSGO
                 new LayerHandlerEntry("CSGOFlashbang", "CSGO Flashbang Layer", typeof(CSGOFlashbangLayerHandler)),
                 new LayerHandlerEntry("CSGOTyping", "CSGO Typing Layer", typeof(CSGOTypingIndicatorLayerHandler)),
                 new LayerHandlerEntry("CSGOWinningTeam", "CSGO Winning Team Effect Layer", typeof(CSGOWinningTeamLayerHandler)),
+                new LayerHandlerEntry("CSGODeathEffect", "CSGO Death Effect Layer", typeof(CSGODeathLayerHandler)),
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(extra, false);

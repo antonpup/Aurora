@@ -25,9 +25,10 @@ namespace Aurora.Profiles.CSGO
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
 
-                new Layer("CSGO Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
+                new Layer("CSGO Death Effect", new Layers.CSGODeathLayerHandler()),
                 new Layer("CSGO Kills Indicator", new Layers.CSGOKillIndicatorLayerHandler()),
                 new Layer("CSGO Winning Team Effect", new Layers.CSGOWinningTeamLayerHandler()),
+                new Layer("CSGO Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
                 new Layer("CSGO Flashbang Effect", new Layers.CSGOFlashbangLayerHandler()),
                 new Layer("Health Indicator", new PercentLayerHandler()
                 {

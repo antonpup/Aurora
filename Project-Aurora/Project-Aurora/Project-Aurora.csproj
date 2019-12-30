@@ -376,9 +376,13 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml.cs">
+      <DependentUpon>Control_CSGODeathLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\CSGO\Layers\Control_CSGOWinningTeamLayer.xaml.cs">
       <DependentUpon>Control_CSGOWinningTeamLayer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Profiles\CSGO\Layers\CSGODeathLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOWinningTeamLayerHandler.cs" />
     <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
@@ -1725,6 +1729,10 @@
     <Page Include="Controls\Control_FieldPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\CSGO\Layers\Control_CSGOWinningTeamLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
