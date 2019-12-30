@@ -97,11 +97,11 @@ namespace Aurora.Utils
 
             var disabled = file + ".disabled";
 
-            //if the disabled file is already there, delete the original
+            //if the disabled file is already there, delete the old disabled file
             if (File.Exists(disabled))
-                File.Delete(file);
+                File.Delete(disabled);
 
-            //otherwise, try to rename the original
+            //rename the original file
             try
             {
                 File.Move(file, disabled);
