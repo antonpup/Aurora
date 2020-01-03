@@ -1767,6 +1767,7 @@
     <Page Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousAnimationLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\Discord\Control_Discord.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
