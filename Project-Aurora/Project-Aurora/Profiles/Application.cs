@@ -62,6 +62,9 @@ namespace Aurora.Profiles
                 InvokePropertyChanged(old, newVal);
             }
         }
+
+        public bool EnableByDefault { get; set; } = true;
+        public bool EnableOverlaysByDefault { get; set; } = true;
     }
 
     public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
@@ -79,6 +82,7 @@ namespace Aurora.Profiles
         public string ID { get { return Config.ID; } }
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
+        public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
         public event PropertyChangedExEventHandler PropertyChanged;
         protected LightEventType type;
         public LightEventType Type
@@ -136,6 +140,11 @@ namespace Aurora.Profiles
             LoadProfiles();
             Initialized = true;
             return Initialized;
+        }
+
+        protected override void SettingsCreateHook() {
+            Settings.IsEnabled = Config.EnableByDefault;
+            Settings.IsOverlayEnabled = Config.EnableOverlaysByDefault;
         }
 
         protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
@@ -367,7 +376,7 @@ namespace Aurora.Profiles
                     ((Layer)e.ErrorContext.OriginalObject).Handler = null;
                     e.ErrorContext.Handled = true;
                 }
-            } else if (e.ErrorContext.Path.Equals("$type") && e.ErrorContext.Member == null && e.ErrorContext.Error.Message.Contains("WrapperProfile"))
+            } else if (e.ErrorContext.Path.Equals("$type") && e.ErrorContext.Member == null)
             {
                 MessageBox.Show($"The profile type for {this.Config.Name} has been changed, your profile will be reset and your old one moved to have the extension '.corrupted', ignore the following error", "Profile type changed", MessageBoxButton.OK, MessageBoxImage.Information);
             }

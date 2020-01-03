@@ -16,12 +16,12 @@ namespace Aurora.Devices.NZXT
     public class NZXTDeviceData
     {
         public byte[] Colors { get; private set; }
-        public bool Changed { get; private set; }
+        public bool Changed { get; set; }
 
         public NZXTDeviceData(int leds)
         {
             Colors = new byte[leds * 3];
-            Changed = true;
+            Changed = false;
         }
 
         public void SetColor(int index, Color clr)
@@ -197,13 +197,22 @@ namespace Aurora.Devices.NZXT
                 }
 
                 if (hueplus.Changed || forced)
+                {
                     DeviceLoader.HuePlus?.ApplyEffect(DeviceLoader.HuePlus.Both, new NZXTSharp.Fixed(hueplus.Colors));
+                    hueplus.Changed = false;
+                }
 
                 if (kraken.Changed || forced)
+                {
                     DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Ring, new NZXTSharp.Fixed(kraken.Colors));
+                    kraken.Changed = false;
+                }
 
                 if (logo.Changed || forced)
+                {
                     DeviceLoader.KrakenX?.ApplyEffect(DeviceLoader.KrakenX.Logo, new NZXTSharp.Fixed(logo.Colors));
+                    logo.Changed = false;
+                }
 
                 Thread.Sleep(16);//limiting the update speed this way for now, might fry the devices otherwise
 

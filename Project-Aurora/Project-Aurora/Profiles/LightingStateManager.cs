@@ -89,6 +89,7 @@ namespace Aurora.Profiles
 
         private ActiveProcessMonitor processMonitor;
         private RunningProcessMonitor runningProcessMonitor;
+        public RunningProcessMonitor RunningProcessMonitor => runningProcessMonitor;
 
         public LightingStateManager()
         {
@@ -153,6 +154,8 @@ namespace Aurora.Profiles
                 new CloneHero.CloneHero(),
                 new Osu.Osu(),
                 new Slime_Rancher.Slime_Rancher(),
+                new Terraria.Terraria(),
+                new Discord.Discord(),
                 new EliteDangerous.EliteDangerous()
             });
 
@@ -705,7 +708,7 @@ namespace Aurora.Profiles
         /// </summary>
         /// <returns></returns>
         public IEnumerable<ILightEvent> GetOverlayActiveProfiles() => Events.Values
-            .Where(evt => evt.IsEnabled)
+            .Where(evt => evt.IsOverlayEnabled)
             .Where(evt => evt.Config.ProcessNames == null || evt.Config.ProcessNames.Any(name => runningProcessMonitor.IsProcessRunning(name)));
             //.Where(evt => evt.Config.ProcessTitles == null || ProcessUtils.AnyProcessWithTitleExists(evt.Config.ProcessTitles));
 

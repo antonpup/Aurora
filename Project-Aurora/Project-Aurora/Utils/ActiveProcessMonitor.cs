@@ -107,7 +107,13 @@ namespace Aurora.Utils
 		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool CloseHandle(IntPtr hHandle);
 
-		private static string GetExecutablePath(Process Process)
+        public static TimeSpan GetTimeSinceLastInput() {
+            var inf = new tagLASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<tagLASTINPUTINFO>() };
+            if (!GetLastInputInfo(ref inf)) return new TimeSpan(0);
+            return new TimeSpan(0, 0, 0, 0, Environment.TickCount - (int)inf.dwTime);
+        }
+
+        private static string GetExecutablePath(Process Process)
 		{
 			//If running on Vista or later use the new function
 			if (Environment.OSVersion.Version.Major >= 6)
