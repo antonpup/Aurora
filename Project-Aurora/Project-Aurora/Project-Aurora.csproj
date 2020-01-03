@@ -779,7 +779,8 @@
     <Compile Include="Settings\Layers\Control_ParticleLayer.xaml.cs">
       <DependentUpon>Control_ParticleLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Layers\ParticleLayerHandler.cs" />
+    <Compile Include="Settings\Layers\InteractiveParticleLayerHandler.cs" />
+    <Compile Include="Settings\Layers\SimpleParticleLayerHandler.cs" />
     <Compile Include="Settings\Layers\ParticleLayerHandlerBase.cs" />
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
