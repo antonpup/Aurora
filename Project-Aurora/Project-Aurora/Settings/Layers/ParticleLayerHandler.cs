@@ -1,5 +1,6 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
@@ -19,9 +20,11 @@ using System.Windows.Controls;
 namespace Aurora.Settings.Layers {
 
     /// <summary>
-    /// Properties for the <see cref="ParticleLayerHandler"/>.
+    /// Properties for the particle layer handler that handles "simple" particles. Simple particles are ones that just support velocity,
+    /// acceleration and drag and whose alive state is determined by their life span.<para />
+    /// This class can be overriden and the subclass should pass itself as the <typeparamref name="TSelf"/> parameter.
     /// </summary>
-    public class ParticleLayerProperties : LayerHandlerProperties<ParticleLayerProperties>, INotifyPropertyChanged {
+    public class SimpleParticleLayerProperties<TSelf> : ParticleLayerPropertiesBase<TSelf> where TSelf : SimpleParticleLayerProperties<TSelf> {
 
         // The shortest time (in seconds) between particles spawning. A random time between this value and "MaxSpawnTime" will be chosen.
         private float? minSpawnTime;
@@ -98,16 +101,11 @@ namespace Aurora.Settings.Layers {
         public ParticleSpawnLocations? _SpawnLocation { get => spawnLocation; set => SetAndNotify(ref spawnLocation, value); }
         [JsonIgnore] public ParticleSpawnLocations SpawnLocation => Logic._SpawnLocation ?? _SpawnLocation ?? ParticleSpawnLocations.BottomEdge;
 
-        // Whether or not the particles will spawn. This allows the particle system to be turned off without disabling it (thereby not hiding already spawned particles).
-        // This can only be done by the overrides system.
-        [LogicOverridable("Enable Particle Spawning")] public bool? _SpawningEnabled { get; set; }
-        [JsonIgnore] public bool SpawningEnabled => Logic._SpawningEnabled ?? true;
-
-        // The color gradient stops for the particle. Not using a linear brush here because:
+        // The color gradient stops for the particle. Note this is sorted by offset when set using _ParticleColorStops. Not using a linear brush here because:
         //   1) there are multithreading issues when trying to access a Media brush's gradient collection since it belongs to the UI thread
         //   2) We don't actually need the gradient as a brush since we're not drawing particles as gradients, only a solid color based on their lifetime, so we only need to access the color stops
         private List<(Color color, float offset)> particleColorStops;
-        public List<(Color color, float offset)> _ParticleColorStops { get => particleColorStops; set => SetAndNotify(ref particleColorStops, value); }
+        public List<(Color color, float offset)> _ParticleColorStops { get => particleColorStops; set => SetAndNotify(ref particleColorStops, value.OrderBy(s => s.offset).ToList()); }
         [JsonIgnore] public List<(Color color, float offset)> ParticleColorStops => Logic._ParticleColorStops ?? _ParticleColorStops ?? defaultParticleColor;
 
         private static readonly List<(Color, float)> defaultParticleColor = new List<(Color, float)> {
@@ -115,10 +113,8 @@ namespace Aurora.Settings.Layers {
             (Color.FromArgb(0, Color.White), 1f)
         };
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ParticleLayerProperties() : base() { }
-        public ParticleLayerProperties(bool empty = false) : base(empty) { }
+        public SimpleParticleLayerProperties() : base() { }
+        public SimpleParticleLayerProperties(bool empty = false) : base(empty) { }
 
         public override void Default() {
             base.Default();
@@ -136,153 +132,118 @@ namespace Aurora.Settings.Layers {
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
 
-        private void SetAndNotify<T>(ref T field, T value, [CallerMemberName] string propName = null) {
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
+        /// <summary>
+        /// Returns the color at the specified offset for the current <see cref="_ParticleColorStops"/>.
+        /// </summary>
+        /// <param name="offset">A value between 0 and 1. At 0, the left-most color is returned, at 1, the rightmost is.</param>
+        /// <returns></returns>
+        public Color ColorAt(float offset) {
+            // Check if any GradientStops are exactly at the requested offset. If so, return that
+            var exact = particleColorStops.Where(s => s.offset == offset);
+            if (exact.Count() == 1) return exact.Single().color;
+
+            // Check if the requested offset is outside of bounds of the offset range. If so, return the nearest offset
+            if (offset <= particleColorStops.First().offset) return particleColorStops.First().color;
+            if (offset >= particleColorStops.Last().offset) return particleColorStops.Last().color;
+
+            // Find the two stops either side of the requsted offset
+            var left = particleColorStops.Last(s => s.offset < offset);
+            var right = particleColorStops.First(s => s.offset > offset);
+
+            // Return the blended color that is the correct ratio between left and right
+            return ColorUtils.BlendColors(left.color, right.color, (offset - left.offset) / (right.offset - left.offset));
         }
     }
 
 
     /// <summary>
-    /// A layer that constantly renders randomised particles.
+    /// Properties for the particle layer handler that handles "simple" particles. Simple particles are ones that just support velocity,
+    /// acceleration and drag and whose alive state is determined by their life span.
     /// </summary>
-    public class ParticleLayerHandler : LayerHandler<ParticleLayerProperties>, INotifyRender {
+    public class SimpleParticleLayerProperties : SimpleParticleLayerProperties<SimpleParticleLayerProperties> {
+        public SimpleParticleLayerProperties() : base() { }
+        public SimpleParticleLayerProperties(bool empty = false) : base(empty) { }
+    }
 
-        private static readonly Random rnd = new Random();
-        private readonly Stopwatch stopwatch = new Stopwatch(); // Stopwatch to determine time difference since last render
-        private readonly List<Particle> particles = new List<Particle>(); // All the currently active "alive" particles
-        private double nextSpawnInterval = 0; // How many seconds until the next set of particles should spawn
 
-        public event EventHandler<Bitmap> LayerRender; // Fires whenever the layer is rendered
+    /// <summary>
+    /// Layer handler for the simple particles. It uses time-based spawning and despawning logic.
+    /// </summary>
+    public class SimpleParticleLayerHandler : ParticleLayerHandlerBase<SimpleParticle, SimpleParticleLayerProperties> {
 
-        public ParticleLayerHandler() {
-            _ID = "Particle";
-        }
-
+        private double nextSpawnInterval = 0; // How many seconds until next set of particle spawns
+        
+        public SimpleParticleLayerHandler() => _ID = "Particle";
         protected override UserControl CreateControl() => new Control_ParticleLayer(this);
 
-        public override EffectLayer Render(IGameState gamestate) {
-            var layer = new EffectLayer();
-
-            // Get elapsed time since last render
-            var deltaTime = stopwatch.ElapsedMilliseconds / 1000d;
-            stopwatch.Restart();
-            
-            if (particles.Count > 0) {
-                // Order all the gradient stops of the current particle color
-                var stops = Properties.ParticleColorStops.OrderBy(s => s.offset).ToArray();
-
-                // Gets the color of a given particle, based on the current particle brush.
-                Color GetParticleColor(Particle p) {
-                    var offset = p.Lifetime / p.MaxLifetime;
-
-                    // Check if any GradientStops are exactly at the requested offset. If so, return that
-                    var exact = stops.Where(s => s.offset == offset);
-                    if (exact.Count() == 1) return exact.Single().color;
-
-                    // Check if the requested offset is outside of bounds of the offset range. If so, return the nearest offset
-                    if (offset <= stops.First().offset) return stops.First().color;
-                    if (offset >= stops.Last().offset) return stops.Last().color;
-
-                    // Find the two stops either side of the requsted offset
-                    var left = stops.Last(s => s.offset < offset);
-                    var right = stops.First(s => s.offset > offset);
-
-                    // Return the blended color that is the correct ratio between left and right
-                    return ColorUtils.BlendColors(left.color, right.color, (offset - left.offset) / (right.offset - left.offset));
-                }
-
-                // Update and render all the current particles
-                using (var gfx = layer.GetGraphics()) {
-                    foreach (var particle in particles) {
-                        particle.Lifetime += deltaTime;
-                        if (particle.Lifetime < particle.MaxLifetime) { // Only bother to render particle if less than max life. (Cannot delete yet as it causes an exception due to the collection being modified)
-                            UpdateParticle(particle, deltaTime);
-                            gfx.FillEllipse(new SolidBrush(GetParticleColor(particle)), particle.DrawRect);
-                        }
-                    }
-                }
-            }
-
-            // Spawn new particles if required
+        protected override void SpawnParticles(double dt) {
             if (Properties.SpawningEnabled) {
-                nextSpawnInterval -= deltaTime;
+                nextSpawnInterval -= dt;
                 if (nextSpawnInterval < 0) {
-                    var count = rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1); // + 1 because max is exclusive
+                    var count = rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1);
                     for (var i = 0; i < count; i++)
                         SpawnParticle();
                     nextSpawnInterval = RandomBetween(Properties.MinSpawnTime, Properties.MaxSpawnTime);
                 }
             }
+        }
+    }
 
-            // Remove any particles that have expired
-            particles.RemoveAll(p => p.Lifetime > p.MaxLifetime);
 
-            // Call the render event
-            LayerRender?.Invoke(this, layer.GetBitmap());
+    /// <summary>
+    /// Particle definition that handles "simple" particles. Simple particles are ones that just support velocity,
+    /// acceleration and drag and whose alive state is determined by their life span.
+    /// </summary>
+    public class SimpleParticle : IParticle<SimpleParticleLayerProperties> {
 
-            return layer;
+        private static readonly Random rnd = new Random();
+
+        public float PositionX { get; set; }
+        public float PositionY { get; set; }
+        public float VelocityX { get; set; }
+        public float VelocityY { get; set; }
+        public double Lifetime { get; set; }
+        public double MaxLifetime { get; set; }
+
+        /// <summary>
+        /// When the particle is created, randomise it's position and velocity according to the properties and canvas size.
+        /// </summary>
+        public SimpleParticle(SimpleParticleLayerProperties properties) {
+            var ar = properties.Sequence.GetAffectedRegion();
+            MaxLifetime = (float)((rnd.NextDouble() * (properties.MaxLifetime - properties.MinLifetime)) + properties.MinLifetime);
+            VelocityX = (float)((rnd.NextDouble() * (properties.MaxInitialVelocityX - properties.MinInitialVelocityX)) + properties.MinInitialVelocityX);
+            VelocityY = (float)((rnd.NextDouble() * (properties.MaxInitialVelocityY - properties.MinInitialVelocityY)) + properties.MinInitialVelocityY);
+            PositionX
+                = properties.SpawnLocation == ParticleSpawnLocations.LeftEdge ? 0 // For left edge, X should start at 0
+                : properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.canvas_width // For right edge, X should start at maximum width
+                : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Left + (float)(rnd.NextDouble() * ar.Width)// For region, randomly choose X in region
+                : (float)(rnd.NextDouble() * Effects.canvas_width); // For top, bottom or random, randomly choose an X value
+            PositionY
+                = properties.SpawnLocation == ParticleSpawnLocations.TopEdge ? 0 // For top edge, Y should start at 0
+                : properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.canvas_height // For bottom edge, Y should start at maximum height
+                : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
+                : (float)(rnd.NextDouble() * Effects.canvas_height); // For left, right or random, randomly choose a Y value
         }
 
         /// <summary>
-        /// Creates a new single particle, whose inital settings are based on the current Properties.
+        /// The particle's life is based on it's <see cref="Lifetime"/> and <see cref="MaxLifetime"/> properties.
         /// </summary>
-        private void SpawnParticle() {
-            var ar = Properties.Sequence.GetAffectedRegion();
-            particles.Add(new Particle {
-                MaxLifetime = RandomBetween(Properties.MinLifetime, Properties.MaxLifetime),
-                VelocityX = RandomBetween(Properties.MinInitialVelocityX, Properties.MaxInitialVelocityX),
-                VelocityY = RandomBetween(Properties.MinInitialVelocityY, Properties.MaxInitialVelocityY),
-                PositionX
-                    = Properties.SpawnLocation == ParticleSpawnLocations.LeftEdge ? 0 // For left edge, X should start at 0
-                    : Properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.canvas_width // For right edge, X should start at maximum width
-                    : Properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Left + (float)(rnd.NextDouble() * ar.Width)// For region, randomly choose X in region
-                    : (float)(rnd.NextDouble() * Effects.canvas_width), // For top, bottom or random, randomly choose an X value
-                PositionY
-                    = Properties.SpawnLocation == ParticleSpawnLocations.TopEdge ? 0 // For top edge, Y should start at 0
-                    : Properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.canvas_height // For bottom edge, Y should start at maximum height
-                    : Properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
-                    : (float)(rnd.NextDouble() * Effects.canvas_height), // For left, right or random, randomly choose a Y value
-            });
-        }
+        public bool IsAlive(SimpleParticleLayerProperties properties, IGameState gameState) => Lifetime < MaxLifetime;
+
+        public void Render(Graphics gfx, SimpleParticleLayerProperties properties, IGameState gameState) =>
+            gfx.FillEllipse(new SolidBrush(properties.ColorAt((float)(Lifetime / MaxLifetime))), new RectangleF(PositionX - 3, PositionY - 3, 6, 6));
 
         /// <summary>
-        /// Updates the velocity and position of the given particle.
+        /// Update the velocity of the particle based on the acceleration and drag. Then, update the position based on the velocity.
         /// </summary>
-        private void UpdateParticle(Particle p, double deltaTime) {
-            p.VelocityX += (float)(Properties.AccelerationX * deltaTime);
-            p.VelocityY += (float)(Properties.AccelerationY * deltaTime);
-            p.VelocityX *= (float)Math.Pow(1 - Properties.DragX, deltaTime); // By powering the drag to the deltaTime, we ensure that the results are fairly consistent over different time deltas.
-            p.VelocityY *= (float)Math.Pow(1 - Properties.DragY, deltaTime); // Doing it once over a second won't be 100% the same as doing it twice over a second if acceleration is present, but it should be close enough that it won't be noticed under most cicrumstances
-            p.PositionX += p.VelocityX;
-            p.PositionY += p.VelocityY;
-        }
-
-        /// <summary>
-        /// Picks a random floating point number between the two given numbers.
-        /// </summary>
-        private static float RandomBetween(float a, float b) => (float)((rnd.NextDouble() * (b - a)) + a);
-
-
-        /// <summary>
-        /// A class that holds the data for a single particle.
-        /// </summary>
-        private class Particle {
-
-            public float PositionX { get; set; }
-            public float PositionY { get; set; }
-            public float VelocityX { get; set; }
-            public float VelocityY { get; set; }
-
-            /// <summary>The rectangle that bounds the rendered particle's circle.</summary>
-            // TODO: Add resize options for particles
-            public RectangleF DrawRect => new RectangleF(PositionX - 3, PositionY - 3, 6, 6);
-
-            /// <summary>Current lifetime.</summary>
-            public double Lifetime { get; set; }
-
-            /// <summary>Target maximum lifetime.</summary>
-            public double MaxLifetime { get; set; }
+        public void Update(double deltaTime, SimpleParticleLayerProperties properties, IGameState gameState) {
+            Lifetime += deltaTime;
+            VelocityX += (float)(properties.AccelerationX * deltaTime);
+            VelocityY += (float)(properties.AccelerationY * deltaTime);
+            VelocityX *= (float)Math.Pow(1 - properties.DragX, deltaTime); // By powering the drag to the deltaTime, we ensure that the results are fairly consistent over different time deltas.
+            VelocityY *= (float)Math.Pow(1 - properties.DragY, deltaTime); // Doing it once over a second won't be 100% the same as doing it twice over a second if acceleration is present, but it should be close enough that it won't be noticed under most cicrumstances
+            PositionX += VelocityX;
+            PositionY += VelocityY;
         }
     }
 
@@ -290,7 +251,7 @@ namespace Aurora.Settings.Layers {
     /// <summary>
     /// An enum dictating possible spawn locations for the particles.
     /// </summary>
-    public enum ParticleSpawnLocations { 
+    public enum ParticleSpawnLocations {
         [Description("Top edge")] TopEdge,
         [Description("Right edge")] RightEdge,
         [Description("Bottom edge")] BottomEdge,
@@ -304,8 +265,8 @@ namespace Aurora.Settings.Layers {
     /// Class that holds some preset configurations for the ParticleLayerProperties class.
     /// </summary>
     public static class ParticleLayerPresets {
-        public static ReadOnlyDictionary<string, Action<ParticleLayerProperties>> Presets { get; } = new ReadOnlyDictionary<string, Action<ParticleLayerProperties>>(
-            new Dictionary<string, Action<ParticleLayerProperties>> {
+        public static ReadOnlyDictionary<string, Action<SimpleParticleLayerProperties>> Presets { get; } = new ReadOnlyDictionary<string, Action<SimpleParticleLayerProperties>>(
+            new Dictionary<string, Action<SimpleParticleLayerProperties>> {
                 { "Fire", p => {
                     p._SpawnLocation = ParticleSpawnLocations.BottomEdge;
                     p._ParticleColorStops = new List<(Color color, float offset)> {

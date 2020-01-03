@@ -15,9 +15,9 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public partial class Control_ParticleLayer : UserControl {
 
-        private readonly ParticleLayerHandler handler;
+        private readonly SimpleParticleLayerHandler handler;
 
-        public Control_ParticleLayer(ParticleLayerHandler context) {
+        public Control_ParticleLayer(SimpleParticleLayerHandler context) {
             InitializeComponent();
             DataContext = handler = context;
             presetsCombo.ItemsSource = ParticleLayerPresets.Presets.Select(kvp => new { Text = kvp.Key, ApplyFunc = kvp.Value });
@@ -40,7 +40,7 @@ namespace Aurora.Settings.Layers {
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e) {
             // Applies the selected preset to the layer properties
-            if (presetsCombo.SelectedValue is Action<ParticleLayerProperties> apply && MessageBox.Show("Do you wish to apply this preset? Your current configuration will be overwritten.", "Apply Preset", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+            if (presetsCombo.SelectedValue is Action<SimpleParticleLayerProperties> apply && MessageBox.Show("Do you wish to apply this preset? Your current configuration will be overwritten.", "Apply Preset", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
                 handler.Properties.Default();
                 apply(handler.Properties);
             }

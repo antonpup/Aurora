@@ -776,6 +776,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ParticleLayer.xaml.cs">
+      <DependentUpon>Control_ParticleLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\ParticleLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ParticleLayerHandlerBase.cs" />
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
       <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
@@ -2584,6 +2589,7 @@
     <Folder Include="Profiles\Slime Rancher\Layers\" />
     <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />
+    <Folder Include="Settings\Overrides\Logic\Special\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\RemoveProfile_Icon.png" />
