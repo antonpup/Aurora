@@ -282,8 +282,8 @@ namespace Aurora.Profiles.EliteDangerous
 
                     if (bind.mappings.Any())
                     {
-                        commandToBind.Add(command.Name, bind);
-                        bindToCommand.Add(bind, command.Name);
+                        commandToBind[command.Name] = bind;
+                        bindToCommand[bind] = command.Name;
                     }
                 }
             }
