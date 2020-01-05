@@ -821,6 +821,7 @@
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\DesktopDuplicator.cs" />
+    <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\FrameworkElementUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MathUtils.cs" />
