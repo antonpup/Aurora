@@ -21,7 +21,7 @@ namespace Aurora.Profiles.EliteDangerous
     public class GameEvent_EliteDangerous : GameEvent_Generic
     {
         readonly DelayedMethodCaller delayedFileRead = new DelayedMethodCaller(1);
-        private FileSystemWatcher bindWatcher = null;
+        private FileSystemWatcher bindWatcher = null, newJournalWatcher = null;
 
         private string currentBindFile, currentJournalFile;
         private FileWatcher statusFileWatcher, journalFileWatcher;
@@ -109,6 +109,59 @@ namespace Aurora.Profiles.EliteDangerous
                 FileWatcher.ReadFileLines(logFile, JournalReadCallback);
             }
             (_game_state as GameState_EliteDangerous).Journal.initialJournalRead = false;
+        }
+
+        private void SwitchToNewJournalFile(object sender, FileSystemEventArgs e)
+        {
+            if (currentJournalFile == null || currentJournalFile.Equals(e.FullPath))
+            {
+                return;
+            }
+            
+            FileInfo currentInfo = new FileInfo(currentJournalFile);
+            FileInfo newInfo = new FileInfo(e.FullPath);
+                
+            if (newInfo.LastWriteTime > currentInfo.LastWriteTime)
+            { 
+                Global.logger.Info("A newer journal file was created: " + e.FullPath);
+                currentJournalFile = e.FullPath;
+                FileWatcher.ReadFileLines(currentJournalFile, JournalReadCallback);
+                WatchJournalFile();
+            }
+        }
+        
+        private void OnNewJournalFile(object sender, FileSystemEventArgs e)
+        {
+            /*
+             * This event can fire multiple times in a row. We need to make sure to read the file only after
+             * the last event is fired to avoid running into a locked file
+             */
+            delayedFileRead.CallMethod(() => SwitchToNewJournalFile(sender, e));
+        }
+        
+        public void WatchNewJournalFiles()
+        {
+            StopWatchingNewJournalFiles();
+            if (Directory.Exists(EliteConfig.JOURNAL_API_DIR))
+            {
+                newJournalWatcher = new FileSystemWatcher()
+                {
+                    Path = EliteConfig.JOURNAL_API_DIR,
+                    NotifyFilter = NotifyFilters.LastWrite,
+                    Filter = "*.log",
+                    EnableRaisingEvents = true
+                };
+                newJournalWatcher.Changed += OnNewJournalFile;
+            }
+        }
+
+        public void StopWatchingNewJournalFiles()
+        {
+            if (newJournalWatcher != null)
+            {
+                newJournalWatcher.Dispose();
+                newJournalWatcher = null;
+            }
         }
 
         public void WatchBindFiles()
@@ -321,11 +374,13 @@ namespace Aurora.Profiles.EliteDangerous
             statusFileWatcher.Start();
             ReadAllJournalFiles();
             WatchJournalFile();
+            WatchNewJournalFiles();
             //TODO: Enable Journal API reading
         }
 
         public override void OnStop()
         {
+            StopWatchingNewJournalFiles();
             StopWatchingBindFiles();
             StopWatchingJournalFile();
             statusFileWatcher.Stop();
