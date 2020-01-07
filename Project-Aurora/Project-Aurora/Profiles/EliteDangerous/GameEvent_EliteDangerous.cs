@@ -286,7 +286,6 @@ namespace Aurora.Profiles.EliteDangerous
 
         private void ParseBindFile()
         {
-            //TODO: Parse configuration XML
             Global.logger.Error("Current bind file: " + currentBindFile);
 
             HashSet<string> modifierKeys = new HashSet<string>();
@@ -301,8 +300,6 @@ namespace Aurora.Profiles.EliteDangerous
                 XmlNodeList commands = doc.DocumentElement.ChildNodes;
                 foreach (XmlNode command in commands)
                 {
-//                    if(command.HasChildNodes && command.SelectSingleNode("Deadzone") == null)
-//                        Global.logger.Info("public const string " + command.Name + " = \"" + command.Name + "\";");
                     Bind bind = new Bind(command.Name);
                     foreach (XmlNode xmlMapping in command.ChildNodes)
                     {
@@ -375,7 +372,6 @@ namespace Aurora.Profiles.EliteDangerous
             ReadAllJournalFiles();
             WatchJournalFile();
             WatchNewJournalFiles();
-            //TODO: Enable Journal API reading
         }
 
         public override void OnStop()
@@ -384,7 +380,6 @@ namespace Aurora.Profiles.EliteDangerous
             StopWatchingBindFiles();
             StopWatchingJournalFile();
             statusFileWatcher.Stop();
-            //TODO: Disable Journal API reading
         }
     }
 }
