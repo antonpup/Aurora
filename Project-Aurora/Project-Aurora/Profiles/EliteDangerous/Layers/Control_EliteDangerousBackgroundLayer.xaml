@@ -7,7 +7,20 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
-        <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
-        <Label HorizontalAlignment="Left" Margin="0,0,0,0" Padding="0" Content="Default Color:" VerticalAlignment="Top"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="24"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <Label Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Content="Combat Mode:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="0" x:Name="ColorPicker_CombatMode" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_CombatMode_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Left" Content="Discovery Mode:"/>
+        <xctk:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColorPicker_DiscoveryMode" Height="20" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_DiscoveryMode_SelectedColorChanged" UsingAlphaChannel="True" />
     </Grid>
 </UserControl>
