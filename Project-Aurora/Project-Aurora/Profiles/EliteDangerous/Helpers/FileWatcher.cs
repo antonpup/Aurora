@@ -92,6 +92,11 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
 
         public bool Start()
         {
+            if (!File.Exists(filename))
+            {
+                return false;
+            }
+            
             if (watcherThread == null)
             {
                 watcherThread = new Thread(TailFile);

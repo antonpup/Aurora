@@ -101,6 +101,11 @@ namespace Aurora.Profiles.EliteDangerous
 
         private void ReadAllJournalFiles()
         {
+            if (!Directory.Exists(EliteConfig.JOURNAL_API_DIR))
+            {
+                return;
+            }
+            
             (_game_state as GameState_EliteDangerous).Journal.initialJournalRead = true;
             foreach (string logFile in Directory.GetFiles(EliteConfig.JOURNAL_API_DIR, "*.log")
                 .OrderBy(p => new FileInfo(p).CreationTime))
