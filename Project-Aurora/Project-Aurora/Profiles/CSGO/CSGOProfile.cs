@@ -25,11 +25,11 @@ namespace Aurora.Profiles.CSGO
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
 
-                new Layer("CSGO Death Effect", new Layers.CSGODeathLayerHandler()),
-                new Layer("CSGO Kills Indicator", new Layers.CSGOKillIndicatorLayerHandler()),
-                new Layer("CSGO Winning Team Effect", new Layers.CSGOWinningTeamLayerHandler()),
-                new Layer("CSGO Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
-                new Layer("CSGO Flashbang Effect", new Layers.CSGOFlashbangLayerHandler()),
+                new Layer("Death Effect", new Layers.CSGODeathLayerHandler()),
+                new Layer("Kills Indicator", new Layers.CSGOKillIndicatorLayerHandler()),
+                new Layer("Winning Team Effect", new Layers.CSGOWinningTeamLayerHandler()),
+                new Layer("Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
+                new Layer("Flashbang Effect", new Layers.CSGOFlashbangLayerHandler()),
                 new Layer("Health Indicator", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
@@ -71,9 +71,9 @@ namespace Aurora.Profiles.CSGO
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIEnum("Round/Phase", RoundPhase.Live))
                 ),
-                new Layer("CSGO Bomb Effect", new Layers.CSGOBombLayerHandler()),
-                new Layer("CSGO Burning Effect", new Layers.CSGOBurningLayerHandler()),
-                new Layer("CSGO Background", new Layers.CSGOBackgroundLayerHandler())
+                new Layer("Bomb Effect", new Layers.CSGOBombLayerHandler()),
+                new Layer("Burning Effect", new Layers.CSGOBurningLayerHandler()),
+                new Layer("Background", new Layers.CSGOBackgroundLayerHandler())
             };
         }
     }
