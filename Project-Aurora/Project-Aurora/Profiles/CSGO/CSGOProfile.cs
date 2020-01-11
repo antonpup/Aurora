@@ -40,8 +40,8 @@ namespace Aurora.Profiles.CSGO
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIEnum("Player/Activity", PlayerActivity.TextInput))
                 ),
-                new Layer("Death Effect", new Layers.CSGODeathLayerHandler()),
                 new Layer("Winning Team Effect", new Layers.CSGOWinningTeamLayerHandler()),
+                new Layer("Death Effect", new Layers.CSGODeathLayerHandler()),
                 new Layer("Kills Indicator", new Layers.CSGOKillIndicatorLayerHandler()),
                 new Layer("Flashbang Effect", new SolidFillLayerHandler() {
                     Properties = new SolidFillLayerHandlerProperties()
