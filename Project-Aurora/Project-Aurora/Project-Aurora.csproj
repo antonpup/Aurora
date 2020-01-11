@@ -403,8 +403,8 @@
     <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
     <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
-	<Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
-	  <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    <Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
+      <DependentUpon>Control_Terraria.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
@@ -813,6 +813,7 @@
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\DesktopDuplicator.cs" />
+    <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\FrameworkElementUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
     <Compile Include="Utils\MathUtils.cs" />
