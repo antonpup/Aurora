@@ -24,12 +24,26 @@ namespace Aurora.Profiles.CSGO
             base.Reset();
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-
+                new Layer("Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
                 new Layer("Death Effect", new Layers.CSGODeathLayerHandler()),
                 new Layer("Kills Indicator", new Layers.CSGOKillIndicatorLayerHandler()),
                 new Layer("Winning Team Effect", new Layers.CSGOWinningTeamLayerHandler()),
-                new Layer("Typing Indicator", new Layers.CSGOTypingIndicatorLayerHandler()),
-                new Layer("Flashbang Effect", new Layers.CSGOFlashbangLayerHandler()),
+                new Layer("Flashbang Effect", new SolidFillLayerHandler() {
+                    Properties = new SolidFillLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.FromArgb(255, 255, 255)
+                    }
+                }, new OverrideLogicBuilder()
+                    .SetDynamicFloat("_LayerOpacity", new NumberMathsOperation(new NumberGSINumeric("Player/State/Flashed"), MathsOperator.Div, 255))
+                ),
+                new Layer("Smoke Effect", new SolidFillLayerHandler() {
+                    Properties = new SolidFillLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.FromArgb(255, 255, 255)
+                    }
+                }, new OverrideLogicBuilder()
+                    .SetDynamicFloat("_LayerOpacity", new NumberMathsOperation(new NumberGSINumeric("Player/State/Smoked"), MathsOperator.Div, 255))
+                ),
                 new Layer("Health Indicator", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
