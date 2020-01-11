@@ -54,7 +54,7 @@ namespace Aurora.Profiles.CSGO
                 new Layer("Smoke Effect", new SolidFillLayerHandler() {
                     Properties = new SolidFillLayerHandlerProperties()
                     {
-                        _PrimaryColor = Color.FromArgb(255, 255, 255)
+                        _PrimaryColor = Color.FromArgb(200, 200, 200)
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicFloat("_LayerOpacity", new NumberMathsOperation(new NumberGSINumeric("Player/State/Smoked"), MathsOperator.Div, 255))
