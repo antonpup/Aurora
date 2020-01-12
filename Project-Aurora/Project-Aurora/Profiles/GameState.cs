@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NAudio.CoreAudioApi;
+using Aurora.Utils;
 
 namespace Aurora.Profiles
 {
@@ -44,9 +45,12 @@ namespace Aurora.Profiles
         String GetNode(string name);
     }
 
-    public class GameState<T> : StringProperty<T>, IGameState where T : GameState<T>
+    public class GameState<TSelf> : StringProperty<TSelf>, IGameState where TSelf : GameState<TSelf>
     {
         private static LocalPCInformation _localpcinfo;
+
+        // Holds a cache of the child nodes on this gamestate
+        private readonly Dictionary<string, object> childNodes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Information about the local system
@@ -92,11 +96,17 @@ namespace Aurora.Profiles
         {
             Newtonsoft.Json.Linq.JToken value;
 
-            if (_ParsedData.TryGetValue(name, out value))
+            if (_ParsedData.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out value))
                 return value.ToString();
             else
                 return "";
         }
+
+        /// <summary>
+        /// Use this method to more-easily lazily return the child node of the given name that exists on this AutoNode.
+        /// </summary>
+        protected TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
+            => (TNode)(childNodes.TryGetValue(name, out var n) ? n : (childNodes[name] = Instantiator<TNode, string>.Create(_ParsedData[name]?.ToString() ?? "")));
 
         /// <summary>
         /// Displays the JSON, representative of the GameState data

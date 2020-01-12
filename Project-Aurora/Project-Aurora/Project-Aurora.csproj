@@ -391,6 +391,7 @@
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
+    <Compile Include="Profiles\AutoJsonNode.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
@@ -819,6 +820,7 @@
     <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\FrameworkElementUtils.cs" />
     <Compile Include="Utils\InputEvents.cs" />
+    <Compile Include="Utils\Instantiator.cs" />
     <Compile Include="Utils\MathUtils.cs" />
     <Compile Include="Utils\MessagePumpThread.cs" />
     <Compile Include="Utils\InputInterceptor.cs" />
