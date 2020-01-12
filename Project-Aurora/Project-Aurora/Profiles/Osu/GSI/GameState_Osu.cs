@@ -1,4 +1,6 @@
-﻿namespace Aurora.Profiles.Osu.GSI {
+﻿using Aurora.Profiles.Generic.GSI.Nodes;
+
+namespace Aurora.Profiles.Osu.GSI {
 
     public class GameState_Osu : GameState<GameState_Osu> {
 
@@ -11,17 +13,6 @@
         public GameState_Osu() : base() { }
         public GameState_Osu(string JSONstring) : base(JSONstring) { }
         public GameState_Osu(IGameState other) : base(other) { }
-    }
-
-    public class ProviderNode : Node<ProviderNode> {
-
-        public string Name;
-        public int AppID;
-
-        internal ProviderNode(string json) : base(json) {
-            Name = GetString("name");
-            AppID = GetInt("appid");
-        }
     }
 
     public class GameNode : Node<GameNode> {

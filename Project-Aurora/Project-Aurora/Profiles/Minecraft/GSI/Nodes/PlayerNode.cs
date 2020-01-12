@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Minecraft.GSI.Nodes {
 
-    public class PlayerNode : Node<PlayerNode> {
+    public class PlayerNode : AutoJsonNode<PlayerNode> {
 
         public bool InGame;
 
@@ -32,34 +32,8 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
         public bool IsBurning;
         public bool IsInWater;
 
-        private PlayerEffectsNode _playerEffects;
-        public PlayerEffectsNode PlayerEffects {
-            get {
-                _playerEffects = _playerEffects ?? new PlayerEffectsNode(_ParsedData["playerEffects"]?.ToString() ?? "");
-                return _playerEffects;
-            }
-        }
+        public PlayerEffectsNode PlayerEffects => NodeFor<PlayerEffectsNode>("playerEffects");
         
-        internal PlayerNode(string json) : base(json) {
-            InGame = GetBool("inGame");
-
-            Health = GetFloat("health");
-            HealthMax = GetFloat("maxHealth");
-            Absorption = GetFloat("absorption");
-            IsDead = GetBool("isDead");
-            Armor = GetInt("armor");
-
-            ExperienceLevel = GetInt("experienceLevel");
-            Experience = GetFloat("experience");
-
-            FoodLevel = GetInt("foodLevel");
-            SaturationLevel = GetFloat("saturationLevel");
-
-            IsSneaking = GetBool("isSneaking");
-            IsRidingHorse = GetBool("isRidingHorse");
-            IsBurning = GetBool("isBurning");
-            IsInWater = GetBool("isInWater");
-        }
-
+        internal PlayerNode(string json) : base(json) { }
     }
 }
