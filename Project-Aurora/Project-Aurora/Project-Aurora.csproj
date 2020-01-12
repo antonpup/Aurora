@@ -400,6 +400,16 @@
     <Compile Include="Profiles\Skype\SkypeProfile.cs" />
     <Compile Include="Profiles\Skype\SkypeApplication.cs" />
     <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Spotify\Control_Spotify.xaml.cs">
+      <DependentUpon>Control_Spotify.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Spotify\GSI\GameState_Spotify.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\ColorNode.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\ColorsNode.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Spotify\SpotifyApplication.cs" />
+    <Compile Include="Profiles\Spotify\SpotifyProfile.cs" />
     <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
     <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Terraria\GSI\Nodes\ProviderNode.cs" />
@@ -1629,9 +1639,11 @@
     <Resource Include="Resources\info.png" />
     <Resource Include="Resources\Skype_300x300.png" />
     <Resource Include="Resources\Slime_Rancher.png" />
+    <Resource Include="Profiles\Spotify\GSI\AuroraSpotify.js" />
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
     <Resource Include="Resources\terraria_512x512.png" />
+    <Resource Include="Resources\spotify.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1734,6 +1746,10 @@
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Spotify\Control_Spotify.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Terraria\Control_Terraria.xaml">
       <Generator>MSBuild:Compile</Generator>

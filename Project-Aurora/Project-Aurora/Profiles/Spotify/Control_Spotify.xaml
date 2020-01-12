@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="Aurora.Profiles.Spotify.Control_Spotify" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"  
+             xmlns:local="clr-namespace:Aurora.Profiles.Spotify" 
+             mc:Ignorable="d"  
+             d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Spotify">
+                <StackPanel Margin="10">
+                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Spotify. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824"> 
+                        <Run Text="Support for Spotify requires Spicetify-CLI and a plugin so that Aurora is able to fetch the variables from the app." />
+                    </TextBlock>
+                    <Button x:Name="patchButton" Content="Install Spicetify Plugin" HorizontalAlignment="Left" Width="140" Margin="0,0,0,0" Click="PatchButton_Click"/>
+                    <Button x:Name="unpatchButton" Content="Uninstall Spicetify Plugin" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="0,10,0,0" Click="UnpatchButton_Click"/>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
