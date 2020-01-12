@@ -27,13 +27,13 @@ namespace Aurora.Profiles {
             var selfParam = Parameter(typeof(TSelf));
 
             // Find all the fields
-            foreach (var field in fields) {
+            foreach (var field in fields.Where(f => f.GetCustomAttribute<AutoJsonIgnoreAttribute>() == null)) {
                 if (TryGetMethodForType(field.FieldType, out var getter))
                     // If a relevant Getter method exists for this field, add an assignment to the ctor body for this (e.g. adding `this.SomeField = GetString("SomeField");` )
                     body.Add(
                         Assign(
                             Field(selfParam, field),
-                            Call(selfParam, getter, Constant(field.Name))
+                            Call(selfParam, getter, Constant(field.GetCustomAttribute<AutoJsonPropertyNameAttribute>()?.Path ?? field.Name))
                         )
                     );
                 else
@@ -77,4 +77,24 @@ namespace Aurora.Profiles {
         }
         #endregion
     }
+
+
+    #region Attributes
+    /// <summary>
+    /// Attribute to mark a field to indicate that the <see cref="AutoJsonNode{TSelf}"/> should use a different path when accessing the JSON.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    public class AutoJsonPropertyNameAttribute : Attribute {
+        public string Path { get; set; }
+        public AutoJsonPropertyNameAttribute(string path) {
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+        }
+    }
+
+    /// <summary>
+    /// Attribute to mark a field to indicate that the <see cref="AutoJsonNode{TSelf}"/> should ignore this field when populating the class members.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    public class AutoJsonIgnoreAttribute : Attribute { }
+    #endregion
 }
