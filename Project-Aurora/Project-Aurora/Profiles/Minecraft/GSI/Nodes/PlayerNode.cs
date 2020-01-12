@@ -11,7 +11,7 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
         public bool InGame;
 
         public float Health;
-        public float HealthMax;
+        [AutoJsonPropertyName("maxHealth")] public float HealthMax;
         public float Absorption;
         public float AbsorptionMax = 20;
         public bool IsDead;
