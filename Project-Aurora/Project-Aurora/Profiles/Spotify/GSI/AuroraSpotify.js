@@ -52,11 +52,11 @@ class AuroraSpotify {
                     "b":-1
                 }
             },
-			"track":{
-				"album": "",
-				"title": "",
-				"artist":""
-			}
+	    "track": {
+		"album": "",
+		"title": "",
+		"artist":""
+	    }
         }
     }
 
@@ -64,17 +64,17 @@ class AuroraSpotify {
         this.updatetimer = setInterval(() => {
         var self = this;
 
-        self.json.player.duration = Math.round(Spicetify.Player.getDuration());
-        self.json.player.progress = Math.round(Spicetify.Player.getProgress());
+        self.json.player.duration = Math.round(Spicetify.Player.getDuration()/1000);
+        self.json.player.progress = Math.round(Spicetify.Player.getProgress()/1000);
         self.json.player.mute = Spicetify.Player.getMute();
         self.json.player.repeat = Spicetify.Player.getRepeat();
         self.json.player.shuffle = Spicetify.Player.getShuffle();
         self.json.player.heart = Spicetify.Player.getHeart();
         self.json.player.volume = Math.round(Spicetify.Player.getVolume()*100);
         self.json.player.playing = Spicetify.Player.isPlaying();
-		self.json.track.album = Spicetify.Player.data.track.metadata.album_title;
-		self.json.track.artist = Spicetify.Player.data.track.metadata.artist_name;
-		self.json.track.title = Spicetify.Player.data.track.metadata.title;
+	self.json.track.album = Spicetify.Player.data.track.metadata.album_title;
+	self.json.track.artist = Spicetify.Player.data.track.metadata.artist_name;
+	self.json.track.title = Spicetify.Player.data.track.metadata.title;
         Spicetify.getAblumArtColors(Spicetify.Player.data.track.metadata.album_uri)
         .then((colors) => {
             self.json.colors.desaturated = this.hexToRGB(colors.DESATURATED);;
@@ -86,7 +86,7 @@ class AuroraSpotify {
 
         this.sendJsonToAurora (this.json);
 
-        }, 500);
+        }, 1000);
     }
 
     async sendJsonToAurora(json) {
