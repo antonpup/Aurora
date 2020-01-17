@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_RocketLeague : Node<Player_RocketLeague>
+    public class Player_RocketLeague : AutoJsonNode<Player_RocketLeague>
     {
         /// <summary>
         /// The Index of the team the player is on
@@ -40,15 +40,6 @@
         /// </summary>
         public int Shots = -1;
 
-        internal Player_RocketLeague(string json_data) : base(json_data)
-        {
-            Boost = GetFloat("boost");
-            Score = GetInt("score");
-            Goals = GetInt("goals");
-            Assists = GetInt("assists");
-            Saves = GetInt("saves");
-            Shots = GetInt("shots");
-            Team = GetInt("team");
-        }
+        internal Player_RocketLeague(string json_data) : base(json_data) { }
     }
 }
