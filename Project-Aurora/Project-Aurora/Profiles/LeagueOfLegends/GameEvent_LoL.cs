@@ -21,7 +21,6 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         public override void UpdateTick()
         {
-
             if (!Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("league of legends.exe"))
                 return;
 
@@ -34,9 +33,8 @@ namespace Aurora.Profiles.LeagueOfLegends
                         jsonData = res.Content.ReadAsStringAsync().Result;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Global.logger.Info(e);
                 return;
             }
 
@@ -44,8 +42,8 @@ namespace Aurora.Profiles.LeagueOfLegends
                 return;
 
             gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
-            var playerState = (_game_state as GameState_LoL).Player;
             var player = Array.Find(gameData.allplayers, p => p.summonerName == gameData.activePlayer.SummonerName);
+            var playerState = (_game_state as GameState_LoL).Player;
 
             #region ActivePlayer stats
             playerState.ChampionStats.AbilityPower = gameData.activePlayer.championStats.AbilityPower;

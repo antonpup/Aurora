@@ -394,6 +394,7 @@
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\SpellNode.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\StatsNode.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />

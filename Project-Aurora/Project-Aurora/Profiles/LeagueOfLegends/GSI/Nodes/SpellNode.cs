@@ -9,16 +9,17 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
     public enum SummonerSpell
     {
         Undefined = -1,
-        Exhaust,
-        Flash,
-        Ghost,
-        Heal,
-        Smite,
-        Teleport,
-        Clarity,
-        Ignite,
-        Barrier,
-        Mark
+        Exhaust,//210
+        Flash,//300
+        Ghost,//180
+        Heal,//240
+        Smite,//oof
+        Teleport,//260
+        Clarity,//240
+        Ignite,//180
+        Barrier,//180
+        Mark,//80
+        Dash//0
     }
 
     public class SpellNode : Node<SpellNode>
