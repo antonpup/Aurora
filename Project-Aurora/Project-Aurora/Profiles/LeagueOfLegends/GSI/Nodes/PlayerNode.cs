@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
+    enum Champion
+    {
+
+    }
     public class PlayerNode : Node<PlayerNode>
     {
-        public StatsNode Stats = new StatsNode();
+        public StatsNode ChampionStats = new StatsNode();
         public int Level;
-        public float Gold;
+        public float CurrentGold;
+        public string SummonerName;
+        public bool IsDead;
     }
 }
