@@ -166,29 +166,16 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Chaos
     }
 
-    public enum SummonerSpell
-    {
-        Undefined = -1,
-        Exhaust,
-        Flash,
-        Ghost,
-        Heal,
-        Smite,
-        Teleport,
-        Clarity,
-        Ignite,
-        Barrier,
-        Mark
-    }
-
     public class PlayerNode : Node<PlayerNode>
     {
         public StatsNode ChampionStats = new StatsNode();
-        public int Level;
-        public float Gold;
-        public string SummonerName;
-        public bool IsDead;
+        public SpellNode SpellD = new SpellNode();
+        public SpellNode SpellF = new SpellNode();
         public Champion Champion;
+        public string SummonerName;
+        public int Level;
+        public float Gold;       
+        public bool IsDead;   
         public int Kills;
         public int Deaths;
         public int Assists;
@@ -196,7 +183,5 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         public float WardScore;
         public float RespawnTimer;
         public Team Team;
-        public SummonerSpell SpellD;
-        public SummonerSpell SpellF;
     }
 }

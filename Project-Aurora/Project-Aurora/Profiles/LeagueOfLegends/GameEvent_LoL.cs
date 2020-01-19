@@ -17,7 +17,7 @@ namespace Aurora.Profiles.LeagueOfLegends
     {
         private readonly HttpClient client = new HttpClient();
         private const string URI = "https://localhost:2999/liveclientdata/allgamedata";
-        private data gameData;
+        private GameData gameData;
 
         public override void UpdateTick()
         {
@@ -43,12 +43,11 @@ namespace Aurora.Profiles.LeagueOfLegends
             if (string.IsNullOrWhiteSpace(jsonData) || jsonData.Contains("error"))
                 return;
 
-            gameData = JsonConvert.DeserializeObject<data>(jsonData);
-            var player = Array.Find(gameData.allplayers, p => p.summonerName == gameData.activePlayer.SummonerName);
+            gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
             var playerState = (_game_state as GameState_LoL).Player;
+            var player = Array.Find(gameData.allplayers, p => p.summonerName == gameData.activePlayer.SummonerName);
 
-            //fill in data here
-            #region ugly stats setting
+            #region ActivePlayer stats
             playerState.ChampionStats.AbilityPower = gameData.activePlayer.championStats.AbilityPower;
             playerState.ChampionStats.Armor = gameData.activePlayer.championStats.Armor;
             playerState.ChampionStats.ArmorPenetrationFlat = gameData.activePlayer.championStats.ArmorPenetrationFlat;
@@ -77,32 +76,35 @@ namespace Aurora.Profiles.LeagueOfLegends
             playerState.ChampionStats.ResourceCurrent = gameData.activePlayer.championStats.ResourceValue;
             playerState.ChampionStats.SpellVamp = gameData.activePlayer.championStats.SpellVamp;
             playerState.ChampionStats.Tenacity = gameData.activePlayer.championStats.Tenacity;
-            #endregion
-
             playerState.Gold = gameData.activePlayer.CurrentGold;
             playerState.Level = gameData.activePlayer.Level;
             playerState.SummonerName = gameData.activePlayer.SummonerName;
-            playerState.IsDead = player.isDead;
+            #endregion
 
-            if (Enum.TryParse<Champion>(player.championName.Replace(" ","").Replace("'","").Replace(".", ""), true, out var c))
-                playerState.Champion = c;
-
-            if (Enum.TryParse<Team>(player.team, true, out var t))
-                playerState.Team = t;
-
-            if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellOne.displayname, out var ss1))
-                playerState.SpellD = ss1;
-
-            if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellTwo.displayname, out var ss2))
-                playerState.SpellF = ss2;
-
+            #region player stats
             playerState.Assists = player.scores.assists;
             playerState.Kills = player.scores.kills;
             playerState.Deaths = player.scores.deaths;
             playerState.WardScore = player.scores.wardScore;
             playerState.CreepScore = player.scores.creepScore;
             playerState.RespawnTimer = player.respawnTimer;
-            
+            playerState.IsDead = player.isDead;
+            #endregion
+
+            #region Enum parsing
+            if (Enum.TryParse<Champion>(player.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, out var c))
+                playerState.Champion = c;
+
+            if (Enum.TryParse<Team>(player.team, true, out var t))
+                playerState.Team = t;
+
+            if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellOne.displayname, out var ss1))
+                playerState.SpellD.Spell = ss1;
+
+            if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellTwo.displayname, out var ss2))
+                playerState.SpellF.Spell = ss2;
+            #endregion
+
         }
 
         public override void ResetGameState()
@@ -116,32 +118,33 @@ namespace Aurora.Profiles.LeagueOfLegends
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
         }
 
-        private struct data
+        #region Structs
+        private struct GameData
         {
-            public activeplayer activePlayer;
-            public playersdata[] allplayers;
-            public lolevents events;
-            public gamedata gameData;
+            public ActivePlayer activePlayer;
+            public Player[] allplayers;
+            public LolEvents events;
+            public Match gameData;
         }
-        private struct playersdata
+        private struct Player
         {
             public string championName;
             public bool isBot;
             public bool isDead;
-            public item[] items;
+            public Item[] items;
 
             public int level;
 
             public float respawnTimer;
 
-            public stats scores;
+            public Stats scores;
 
             public string summonerName;
-            public spells summonerSpells;
+            public Spells summonerSpells;
 
             public string team;
         }
-        private struct stats
+        private struct Stats
         {
             public int assists;
             public int creepScore;
@@ -149,31 +152,31 @@ namespace Aurora.Profiles.LeagueOfLegends
             public int kills;
             public float wardScore;
         }
-        private struct spells
+        private struct Spells
         {
-            public spell summonerSpellOne;
-            public spell summonerSpellTwo;
+            public Spell summonerSpellOne;
+            public Spell summonerSpellTwo;
         }
-        private struct spell
+        private struct Spell
         {
             public string displayname;
         }
-        private struct item
+        private struct Item
         {
             public bool canUse;
             public bool consumable;
             public string displayName;
             public int slot;
         }
-        private struct activeplayer
+        private struct ActivePlayer
         {
-            public abilities abilities;
-            public championStats championStats;
+            public Abilities abilities;
+            public ChampionStats championStats;
             public float CurrentGold;
             public int Level;
             public string SummonerName;
         }
-        private struct championStats
+        private struct ChampionStats
         {
             public float AbilityPower;
             public float Armor;
@@ -204,34 +207,35 @@ namespace Aurora.Profiles.LeagueOfLegends
             public float SpellVamp;
             public float Tenacity;
         }
-        private struct ability
+        private struct Ability
         {
             public int abilityLevel;
             public string displayName;
             public string id;
         }
-        private struct abilities
+        private struct Abilities
         {
-            public ability passive;
-            public ability q;
-            public ability w;
-            public ability e;
-            public ability r;
+            public Ability passive;
+            public Ability q;
+            public Ability w;
+            public Ability e;
+            public Ability r;
         }
-        private struct lolevent
+        private struct LolEvent
         {
             public int eventID;
             public string eventname;
             public float eventtime;
         }
-        private struct lolevents
+        private struct LolEvents
         {
-            public lolevent[] events;
+            public LolEvent[] events;
         }
-        private struct gamedata
+        private struct Match
         {
             public string gamemode;
             public float gameTime;
         }
+        #endregion
     }
 }
