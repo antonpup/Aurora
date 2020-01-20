@@ -10,6 +10,8 @@ using System.Net;
 using Aurora.Profiles.LeagueOfLegends.GSI;
 using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using System.Timers;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {
@@ -18,8 +20,102 @@ namespace Aurora.Profiles.LeagueOfLegends
         private readonly HttpClient client = new HttpClient();
         private const string URI = "https://localhost:2999/liveclientdata/allgamedata";
         private GameData gameData;
+        private Timer updateTimer;
+        private bool updated = false;
+
+        public GameEvent_LoL() : base()
+        {
+            //ignore ssl errors
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            updateTimer = new Timer(100);
+            updateTimer.Elapsed += (sender, e) => { UpdateData(); };
+        }
+
+        public override void ResetGameState()
+        {
+            _game_state = new GameState_LoL();
+        }
+
+        public override void OnStart() => updateTimer.Start();
+
+        public override void OnStop() => updateTimer.Stop();
 
         public override void UpdateTick()
+        {
+            if (!updated)
+                return;
+
+            try
+            {
+                var player = Array.Find(gameData.allplayers, p => p.summonerName == gameData.activePlayer.SummonerName);
+                var playerState = (_game_state as GameState_LoL).Player;
+
+                #region ActivePlayer stats
+                playerState.ChampionStats.AbilityPower = gameData.activePlayer.championStats.AbilityPower;
+                playerState.ChampionStats.Armor = gameData.activePlayer.championStats.Armor;
+                playerState.ChampionStats.ArmorPenetrationFlat = gameData.activePlayer.championStats.ArmorPenetrationFlat;
+                playerState.ChampionStats.ArmorPenetrationPercent = gameData.activePlayer.championStats.ArmorPenetrationPercent;
+                playerState.ChampionStats.AttackDamage = gameData.activePlayer.championStats.AttackDamage;
+                playerState.ChampionStats.AttackRange = gameData.activePlayer.championStats.AttackRange;
+                playerState.ChampionStats.AttackSpeed = gameData.activePlayer.championStats.AttackSpeed;
+                playerState.ChampionStats.BonusArmorPenetrationPercent = gameData.activePlayer.championStats.BonusArmorPenetrationPercent;
+                playerState.ChampionStats.BonusMagicPenetrationPercent = gameData.activePlayer.championStats.BonusMagicPenetrationPercent;
+                playerState.ChampionStats.CooldownReduction = gameData.activePlayer.championStats.CooldownReduction;
+                playerState.ChampionStats.CritChance = gameData.activePlayer.championStats.CritChance;
+                playerState.ChampionStats.CritDamagePercent = gameData.activePlayer.championStats.CritDamage;
+                playerState.ChampionStats.HealthCurrent = gameData.activePlayer.championStats.CurrentHealth;
+                playerState.ChampionStats.HealthRegenRate = gameData.activePlayer.championStats.HealthRegenRate;
+                playerState.ChampionStats.LifeSteal = gameData.activePlayer.championStats.LifeSteal;
+                playerState.ChampionStats.MagicLethality = gameData.activePlayer.championStats.MagicLethality;
+                playerState.ChampionStats.MagicPenetrationFlat = gameData.activePlayer.championStats.MagicPenetrationFlat;
+                playerState.ChampionStats.MagicPenetrationPercent = gameData.activePlayer.championStats.MagicPenetrationPercent;
+                playerState.ChampionStats.MagicResist = gameData.activePlayer.championStats.MagicResist;
+                playerState.ChampionStats.HealthMax = gameData.activePlayer.championStats.MaxHealth;
+                playerState.ChampionStats.MoveSpeed = gameData.activePlayer.championStats.MoveSpeed;
+                playerState.ChampionStats.PhysicalLethality = gameData.activePlayer.championStats.PhysicalLethality;
+                playerState.ChampionStats.ResourceMax = gameData.activePlayer.championStats.ResourceMax;
+                playerState.ChampionStats.ResourceRegenRate = gameData.activePlayer.championStats.ResourceRegenRate;
+                playerState.ChampionStats.ResourceType = gameData.activePlayer.championStats.ResourceType;
+                playerState.ChampionStats.ResourceCurrent = gameData.activePlayer.championStats.ResourceValue;
+                playerState.ChampionStats.SpellVamp = gameData.activePlayer.championStats.SpellVamp;
+                playerState.ChampionStats.Tenacity = gameData.activePlayer.championStats.Tenacity;
+                playerState.Gold = gameData.activePlayer.CurrentGold;
+                playerState.Level = gameData.activePlayer.Level;
+                playerState.SummonerName = gameData.activePlayer.SummonerName;
+                #endregion
+
+                #region player stats
+                playerState.Assists = player.scores.assists;
+                playerState.Kills = player.scores.kills;
+                playerState.Deaths = player.scores.deaths;
+                playerState.WardScore = player.scores.wardScore;
+                playerState.CreepScore = player.scores.creepScore;
+                playerState.RespawnTimer = player.respawnTimer;
+                playerState.IsDead = player.isDead;
+                #endregion
+
+                #region Enum parsing
+                if (Enum.TryParse<Champion>(player.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, out var c))
+                    playerState.Champion = c;
+
+                if (Enum.TryParse<Team>(player.team, true, out var t))
+                    playerState.Team = t;
+
+                if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellOne.displayname, out var ss1))
+                    playerState.SpellD.Spell = ss1;
+
+                if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellTwo.displayname, out var ss2))
+                    playerState.SpellF.Spell = ss2;
+                #endregion
+            }
+            catch
+            {
+
+            }
+
+        }
+
+        private void UpdateData()
         {
             if (!Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("league of legends.exe"))
                 return;
@@ -42,78 +138,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 return;
 
             gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
-            var player = Array.Find(gameData.allplayers, p => p.summonerName == gameData.activePlayer.SummonerName);
-            var playerState = (_game_state as GameState_LoL).Player;
-
-            #region ActivePlayer stats
-            playerState.ChampionStats.AbilityPower = gameData.activePlayer.championStats.AbilityPower;
-            playerState.ChampionStats.Armor = gameData.activePlayer.championStats.Armor;
-            playerState.ChampionStats.ArmorPenetrationFlat = gameData.activePlayer.championStats.ArmorPenetrationFlat;
-            playerState.ChampionStats.ArmorPenetrationPercent = gameData.activePlayer.championStats.ArmorPenetrationPercent;
-            playerState.ChampionStats.AttackDamage = gameData.activePlayer.championStats.AttackDamage;
-            playerState.ChampionStats.AttackRange = gameData.activePlayer.championStats.AttackRange;
-            playerState.ChampionStats.AttackSpeed = gameData.activePlayer.championStats.AttackSpeed;
-            playerState.ChampionStats.BonusArmorPenetrationPercent = gameData.activePlayer.championStats.BonusArmorPenetrationPercent;
-            playerState.ChampionStats.BonusMagicPenetrationPercent = gameData.activePlayer.championStats.BonusMagicPenetrationPercent;
-            playerState.ChampionStats.CooldownReduction = gameData.activePlayer.championStats.CooldownReduction;
-            playerState.ChampionStats.CritChance = gameData.activePlayer.championStats.CritChance;
-            playerState.ChampionStats.CritDamagePercent = gameData.activePlayer.championStats.CritDamage;
-            playerState.ChampionStats.HealthCurrent = gameData.activePlayer.championStats.CurrentHealth;
-            playerState.ChampionStats.HealthRegenRate = gameData.activePlayer.championStats.HealthRegenRate;
-            playerState.ChampionStats.LifeSteal = gameData.activePlayer.championStats.LifeSteal;
-            playerState.ChampionStats.MagicLethality = gameData.activePlayer.championStats.MagicLethality;
-            playerState.ChampionStats.MagicPenetrationFlat = gameData.activePlayer.championStats.MagicPenetrationFlat;
-            playerState.ChampionStats.MagicPenetrationPercent = gameData.activePlayer.championStats.MagicPenetrationPercent;
-            playerState.ChampionStats.MagicResist = gameData.activePlayer.championStats.MagicResist;
-            playerState.ChampionStats.HealthMax = gameData.activePlayer.championStats.MaxHealth;
-            playerState.ChampionStats.MoveSpeed = gameData.activePlayer.championStats.MoveSpeed;
-            playerState.ChampionStats.PhysicalLethality = gameData.activePlayer.championStats.PhysicalLethality;
-            playerState.ChampionStats.ResourceMax = gameData.activePlayer.championStats.ResourceMax;
-            playerState.ChampionStats.ResourceRegenRate = gameData.activePlayer.championStats.ResourceRegenRate;
-            playerState.ChampionStats.ResourceType = gameData.activePlayer.championStats.ResourceType;
-            playerState.ChampionStats.ResourceCurrent = gameData.activePlayer.championStats.ResourceValue;
-            playerState.ChampionStats.SpellVamp = gameData.activePlayer.championStats.SpellVamp;
-            playerState.ChampionStats.Tenacity = gameData.activePlayer.championStats.Tenacity;
-            playerState.Gold = gameData.activePlayer.CurrentGold;
-            playerState.Level = gameData.activePlayer.Level;
-            playerState.SummonerName = gameData.activePlayer.SummonerName;
-            #endregion
-
-            #region player stats
-            playerState.Assists = player.scores.assists;
-            playerState.Kills = player.scores.kills;
-            playerState.Deaths = player.scores.deaths;
-            playerState.WardScore = player.scores.wardScore;
-            playerState.CreepScore = player.scores.creepScore;
-            playerState.RespawnTimer = player.respawnTimer;
-            playerState.IsDead = player.isDead;
-            #endregion
-
-            #region Enum parsing
-            if (Enum.TryParse<Champion>(player.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, out var c))
-                playerState.Champion = c;
-
-            if (Enum.TryParse<Team>(player.team, true, out var t))
-                playerState.Team = t;
-
-            if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellOne.displayname, out var ss1))
-                playerState.SpellD.Spell = ss1;
-
-            if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellTwo.displayname, out var ss2))
-                playerState.SpellF.Spell = ss2;
-            #endregion
-
-        }
-
-        public override void ResetGameState()
-        {
-            _game_state = new GameState_LoL();
-        }
-
-        public GameEvent_LoL() : base()
-        {
-            //ignore ssl errors
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            updated = true;
         }
 
         #region Structs
