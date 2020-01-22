@@ -246,6 +246,10 @@ namespace Aurora.Settings
 	//Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
+
+        //Ducky range is 1200-1299
+        [Description("Ducky Shine 7")]
+        Ducky_Shine_7 = 1200,
     }
 
     public enum PreferredKeyboardLocalization
