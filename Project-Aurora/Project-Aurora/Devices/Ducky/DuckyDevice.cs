@@ -15,7 +15,8 @@ namespace Aurora.Devices.Ducky
     class DuckyDevice : Device
     {
         private static readonly int PACKET_NUM = 0;
-        private static readonly int OFFSET_NUM = 1;
+        private static readonly int OFFSET_NUM = 1;//These are helper numbers to make the code more readable.
+
         private Dictionary<DeviceKeys, int[]> packetOffsetMap = new Dictionary<DeviceKeys, int[]>
         {
             {DeviceKeys.ESC, new int[] {1, 24}},
@@ -80,8 +81,8 @@ namespace Aurora.Devices.Ducky
             {DeviceKeys.O, new int[] {4, 12}},
             {DeviceKeys.L, new int[] {4, 15}},
             {DeviceKeys.COMMA, new int[] {4, 18}},
-            {DeviceKeys.F8, new int[] {4, 21}},
-          //{DeviceKeys.????, new int[] {4, 24}}, Could be the JPN_HIRAGANA_KATAKANA key.
+          //{DeviceKeys.????, new int[] {4, 21}}, Could be the JPN_HIRAGANA_KATAKANA key.
+            {DeviceKeys.F8, new int[] {4, 24}}, 
             {DeviceKeys.ZERO, new int[] {4, 27}},
             {DeviceKeys.P, new int[] {4, 30}},
             {DeviceKeys.SEMICOLON, new int[] {4, 33}}, // Could be different depending on what ISO layout you have (scandanavians have UmlautO here, UK stays the same)
@@ -166,6 +167,7 @@ namespace Aurora.Devices.Ducky
         private int[] currentOffset;
         private bool writeSuccess;
 
+        private DuckyRGBAPI duckyAPI = new DuckyRGBAPI();
         HidDevice Shine7Keyboard;
         HidStream packetStream;
         byte[] colourMessage = new byte[640];
@@ -217,12 +219,35 @@ namespace Aurora.Devices.Ducky
             colourMessage[Packet(9) + 5] = 0xFF;
 
             Shine7Keyboard = DeviceList.Local.GetHidDevices(0x04D9, 0x0348).SingleOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
-            isInitialized = Shine7Keyboard.TryOpen(out packetStream);
+            try
+            {
+                isInitialized = Shine7Keyboard.TryOpen(out packetStream);
+                //This uses a monstrous 501 packets to initialize the keyboard in to letting the LEDs be controlled over USB HID.
+                foreach (byte[] controlPacket in duckyAPI.getControlCommand("Shine_7_Takeover"))
+                {
+                    packetStream.Write(controlPacket);
+                }
+            }
+            catch
+            {
+                isInitialized = false;
+            }
+            
             return isInitialized;
         }
 
         public void Shutdown()
         {
+            //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
+            //You can tell both the takeover and release work because the keyboard will flash the same as switching to profile 1. (The same lights when you push FN + 1)
+            foreach (byte[] controlPacket in duckyAPI.getControlCommand("Shine_7_Release"))
+            {
+                try
+                {
+                    packetStream.Write(controlPacket);
+                }
+                catch { }
+            }
             packetStream.Dispose();
             packetStream.Close();
             isInitialized = false;
@@ -263,7 +288,11 @@ namespace Aurora.Devices.Ducky
         {
             foreach (KeyValuePair<DeviceKeys, Color> kc in keyColors)
             {
+                //This keyboard doesn't take alpha (transparency) values, so we do this:
                 processedColor = ColorUtils.CorrectWithAlpha(kc.Value);
+
+                //This if statement grabs the packet offset from the key that Aurora wants to set, using packetOffsetMap.
+                //It also checks whether the key exists in the Dictionary, and if not, doesn't try and set the key colour.
                 if(!packetOffsetMap.TryGetValue(kc.Key, out currentOffset)){
                     continue;
                 }
@@ -282,9 +311,27 @@ namespace Aurora.Devices.Ducky
                 }
             }
 
+            //Everything previous to setting the colours actually just write the colour data to the ColourMessage byte array.
+            /*
+             The keyboard is only set up to change all key colours at once, using 10 USB HID packets. They consist of:
+             One initializing packet
+             Eight colour packets (although the eighth one isn't used at all)
+             and one terminate packet
+             
+             These packets are 64 bytes each (technically 65 but the first byte is just padding, which is why there's the .Take(65) there)
+             Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the packetOffsetMap
+             The colour packets also have a header. (You might be able to send these packets out of order, and the headers will tell the keyboard where it should be, but IDK)*/
             for (int i = 0; i < 10; i++)
             {
-                packetStream.Write(colourMessage.Skip(Packet(i)).Take(65).ToArray());
+                try
+                {
+                    packetStream.Write(colourMessage.Skip(Packet(i)).Take(65).ToArray());
+                }
+                catch
+                {
+                    Shutdown();
+                    return false;
+                }
             }
             return true;
         }
