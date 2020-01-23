@@ -261,17 +261,15 @@ namespace Aurora.Devices.Ducky
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            writeSuccess = true;
             foreach (KeyValuePair<DeviceKeys, Color> kc in keyColors)
             {
                 processedColor = ColorUtils.CorrectWithAlpha(kc.Value);
-                writeSuccess = packetOffsetMap.TryGetValue(kc.Key, out currentOffset);
-                if (!writeSuccess)
-                {
-                    return false;
+                if(!packetOffsetMap.TryGetValue(kc.Key, out currentOffset)){
+                    continue;
                 }
+                //The colours are encoded using RGB bytes consecutively throughout the 10 packets, which are offset with packetOffsetMap.
                 colourMessage[Packet(currentOffset[PACKET_NUM]) + currentOffset[OFFSET_NUM] + 1] = processedColor.R;
-                //To account for the 
+                //To account for the headers in the next packet, the offset is pushed a further four bytes (only required if the R byte starts on the last byte of a packet).
                 if (currentOffset[OFFSET_NUM] == 63)
                 {
                     colourMessage[Packet(currentOffset[PACKET_NUM]) + currentOffset[OFFSET_NUM] + 6] = processedColor.G;
