@@ -610,9 +610,9 @@ new byte[] {0x00, 0x52, 0x28, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x
 
         public byte[][] getControlCommand(string cc)
         {
-            byte[][] out_cc;
-            controlCommands.TryGetValue(cc, out out_cc);
-            return out_cc;
+            byte[][] outCC;
+            controlCommands.TryGetValue(cc, out outCC);
+            return outCC;
         }
     }
 }

@@ -165,10 +165,9 @@ namespace Aurora.Devices.Ducky
         private readonly Stopwatch watch = new Stopwatch();
         private Color processedColor;
         private int[] currentOffset;
-        private bool writeSuccess;
 
         private DuckyRGBAPI duckyAPI = new DuckyRGBAPI();
-        HidDevice Shine7Keyboard;
+        HidDevice shine7Keyboard;
         HidStream packetStream;
         byte[] colourMessage = new byte[640];
         static byte[] startingPacket = { 0x56, 0x81, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0xAA, 0xAA, 0xAA, 0xAA };
@@ -218,10 +217,10 @@ namespace Aurora.Devices.Ducky
             colourMessage[Packet(9) + 2] = 0x28;
             colourMessage[Packet(9) + 5] = 0xFF;
 
-            Shine7Keyboard = DeviceList.Local.GetHidDevices(0x04D9, 0x0348).SingleOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
+            shine7Keyboard = DeviceList.Local.GetHidDevices(0x04D9, 0x0348).SingleOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
             try
             {
-                isInitialized = Shine7Keyboard.TryOpen(out packetStream);
+                isInitialized = shine7Keyboard.TryOpen(out packetStream);
                 //This uses a monstrous 501 packets to initialize the keyboard in to letting the LEDs be controlled over USB HID.
                 foreach (byte[] controlPacket in duckyAPI.getControlCommand("Shine_7_Takeover"))
                 {
