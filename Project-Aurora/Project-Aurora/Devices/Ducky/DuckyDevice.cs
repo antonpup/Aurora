@@ -324,7 +324,15 @@ namespace Aurora.Devices.Ducky
             {
                 try
                 {
-                    packetStream.Write(colourMessage.Skip(Packet(i)).Take(65).ToArray());
+                    if (i < 9)
+                    {
+                        packetStream.Write(colourMessage, Packet(i), 65);
+                    }
+                    else
+                    {
+                        //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
+                        packetStream.Write(colourMessage, Packet(i), 64);
+                    }
                 }
                 catch
                 {
