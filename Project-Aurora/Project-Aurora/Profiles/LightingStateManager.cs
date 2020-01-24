@@ -187,6 +187,7 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("BinaryCounter", "Binary Counter Layer", typeof(BinaryCounterLayerHandler)),
                 new LayerHandlerEntry("Particle", "Particle Layer", typeof(SimpleParticleLayerHandler)),
                 new LayerHandlerEntry("InteractiveParticle", "Interactive Particle Layer", typeof(InteractiveParticleLayerHandler))
+                new LayerHandlerEntry("Radial", "Radial Layer", typeof(RadialLayerHandler))
             }, true);
 
             RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);

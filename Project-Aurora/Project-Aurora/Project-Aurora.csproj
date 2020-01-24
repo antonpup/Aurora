@@ -417,6 +417,7 @@
     </Compile>
     <Compile Include="Profiles\CSGO\Layers\CSGODeathLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOWinningTeamLayerHandler.cs" />
+    <Compile Include="EffectsEngine\SegmentedRadialBrushFactory.cs" />
     <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
     </Compile>
@@ -782,6 +783,10 @@
     <Compile Include="Settings\Layers\InteractiveParticleLayerHandler.cs" />
     <Compile Include="Settings\Layers\SimpleParticleLayerHandler.cs" />
     <Compile Include="Settings\Layers\ParticleLayerHandlerBase.cs" />
+    <Compile Include="Settings\Layers\Control_RadialLayer.xaml.cs">
+      <DependentUpon>Control_RadialLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\RadialLayerHandler.cs" />
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
       <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
@@ -2295,6 +2300,10 @@
     <Page Include="Settings\Layers\Control_ParticleLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Layers\Control_RadialLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Layers\Control_RazerLayer.xaml">
       <SubType>Designer</SubType>
