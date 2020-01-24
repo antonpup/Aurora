@@ -13,7 +13,7 @@ namespace Aurora.Settings.Layers {
     public class RadialLayerProperties : LayerHandlerProperties<RadialLayerProperties> {
 
         public SegmentedRadialBrushFactory _Brush { get; set; }
-        [JsonIgnore] public SegmentedRadialBrushFactory Brush => _Brush ?? Logic._Brush ?? new SegmentedRadialBrushFactory(new[] { Color.Magenta, Color.Yellow, Color.Cyan });
+        [JsonIgnore] public SegmentedRadialBrushFactory Brush => _Brush ?? Logic._Brush ?? new SegmentedRadialBrushFactory(new[] { Color.Magenta, Color.Yellow, Color.Cyan }) { EasingAmount = 3 };
 
         public RadialLayerProperties() : base() { }
         public RadialLayerProperties(bool empty = false) : base(empty) { }
@@ -33,7 +33,7 @@ namespace Aurora.Settings.Layers {
 
         public override EffectLayer Render(IGameState gamestate) {
             var area = Properties.Sequence.GetAffectedRegion();
-            var brush = Properties.Brush.GetBrush(area);
+            var brush = Properties.Brush.GetBrush(area, keepAspectRatio: false);
             return new EffectLayer().Set(Properties.Sequence, brush);
         }
     }

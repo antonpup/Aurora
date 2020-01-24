@@ -1,4 +1,5 @@
-﻿using System;
+using Aurora.Utils;
+using System;
 using System.Collections;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -21,6 +22,7 @@ namespace Aurora.EffectsEngine {
         private static SolidBrush fallback = new SolidBrush(Color.Transparent);
 
         private Color[] colors;
+        private int easingAmount;
         private TextureBrush baseBrush;
 
         public SegmentedRadialBrushFactory(Color[] colors) {
@@ -45,9 +47,23 @@ namespace Aurora.EffectsEngine {
         }
 
         /// <summary>
+        /// Determines the number of auto-generated colors between each of the colors defined in the <see cref="Colors"/> array.
+        /// </summary>
+        public int EasingAmount {
+            get => easingAmount;
+            set {
+                if (easingAmount != value) {
+                    easingAmount = value;
+                    CreateBaseTextureBrush();
+                }
+            }
+        }
+
+        /// <summary>
         /// Creates a new base brush from the current properties.
         /// </summary>
         private void CreateBaseTextureBrush() {
+            var colors = GetBrushColors();
             var angle = (float)(360 / colors.Length);
 
             // Draw the texture to be used for the brush. This is made up of circular segments 
@@ -61,11 +77,32 @@ namespace Aurora.EffectsEngine {
         }
 
         /// <summary>
+        /// Generates the colors array to be used for building the brush. This will also generate interpolated colors between defined stops if required.
+        /// </summary>
+        private Color[] GetBrushColors() {
+            // Simply return the colors array if easing is disabled.
+            if (easingAmount <= 0) return colors;
+
+            // For each color, easingAmount many times, generate the interpolated color between the 'i'th color and the 'i + 1'th color.
+            var interpolatedColors = new Color[colors.Length * (easingAmount + 1)];
+            var easeAmountScale = 1f / (easingAmount + 1);
+            for (var i = 0; i < colors.Length; i++) {
+                var s = i * (easingAmount + 1); // The start index for this color group
+                interpolatedColors[s] = colors[i];
+                for (var j = 0; j < easingAmount; j++)
+                    interpolatedColors[s + j + 1] = ColorUtils.BlendColors(colors[i], colors[(i + 1) % colors.Length], (j + 1) * easeAmountScale);
+            }
+
+            return interpolatedColors;
+        }
+
+        /// <summary>
         /// Gets the brush that will be centered on and sized for the specified region.
         /// </summary>
-        /// <param name="region"></param>
-        /// <param name="angle">The</param>
+        /// <param name="region">The region which defines where the brush will be drawn and where the brush will be centered.</param>
+        /// <param name="angle">The angle which the brush will be rendered at.</param>
         /// <param name="keepAspectRatio">If <c>true</c>, the scale transformation will have the same value in x as it does in y. If <c>false</c>, the scale in each dimension may be different.
+        /// When <c>true</c>, the sizes/areas of each color may appear different (due to being cut off), however when <c>false</c>, they appear more consistent.
         /// If the brush is animated, <c>true</c> will make the speeed appear constant whereas <c>false</c> will cause the rotation to appear slower on the shorter side.</param>
         public Brush GetBrush(RectangleF region, float angle = 0, bool keepAspectRatio = true) {
             // Check if the region has a 0 size. If so, just return a blank brush instead (the matrix becomes invalid with 0 size scaling).
