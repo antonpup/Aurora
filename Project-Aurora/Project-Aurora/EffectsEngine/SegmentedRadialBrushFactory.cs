@@ -1,4 +1,4 @@
-using Aurora.Utils;
+﻿using Aurora.Utils;
 using System;
 using System.Collections;
 using System.Drawing;
@@ -14,10 +14,10 @@ namespace Aurora.EffectsEngine {
     /// colours gradually fade to another colour in the centre. Since the points on the path would need to be equidistant from the centre to preserve the angle and gradients,
     /// it means that some of the brush is cut off and the colours appear washed out. All round, not ideal for this use case, so that is the reason I have created this instead.
     /// </remarks>
-    public class SegmentedRadialBrushFactory {
+    public class SegmentedRadialBrushFactory : ICloneable {
 
         // The resolution of the base texture size.
-        private const int textureSize = 50;
+        private const int textureSize = 200;
         private static readonly Rectangle renderArea = new Rectangle(0, 0, textureSize, textureSize);
         private static SolidBrush fallback = new SolidBrush(Color.Transparent);
 
@@ -136,5 +136,10 @@ namespace Aurora.EffectsEngine {
             brush.Transform = mtx;
             return brush;
         }
+
+        /// <summary>
+        /// Creates a clone of this factory.
+        /// </summary>
+        public object Clone() => new SegmentedRadialBrushFactory((Color[])colors.Clone()) { EasingAmount = EasingAmount };
     }
 }
