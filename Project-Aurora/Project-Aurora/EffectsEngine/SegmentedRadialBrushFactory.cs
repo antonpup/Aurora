@@ -64,7 +64,7 @@ namespace Aurora.EffectsEngine {
         /// </summary>
         private void CreateBaseTextureBrush() {
             var colors = GetBrushColors();
-            var angle = (float)(360 / colors.Length);
+            var angle = 360f / colors.Length;
 
             // Draw the texture to be used for the brush. This is made up of circular segments 
             var texture = new Bitmap(textureSize, textureSize);
