@@ -430,18 +430,14 @@ namespace Aurora.Settings
 
         public Dictionary<DeviceKeys, string> KeyText { get { return virtualKeyboardGroup.KeyText; } }
 
-        public Grid Virtual_keyboard
-        {
-            get
-            {
+        public Grid Virtual_keyboard {
+            get {
                 return _virtualKeyboard;
             }
         }
 
-        public Grid AbstractVirtualKeyboard
-        {
-            get
-            {
+        public Grid AbstractVirtualKeyboard {
+            get {
                 return CreateUserControl(true);
             }
         }
@@ -460,10 +456,8 @@ namespace Aurora.Settings
 
         private PreferredKeyboardLocalization _loaded_localization = PreferredKeyboardLocalization.None;
 
-        public PreferredKeyboardLocalization Loaded_Localization
-        {
-            get
-            {
+        public PreferredKeyboardLocalization Loaded_Localization {
+            get {
                 return _loaded_localization;
             }
         }
@@ -696,8 +690,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-			else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
@@ -710,6 +704,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE_MK2)
+                layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe_mk2.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
             else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
