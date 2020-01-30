@@ -30,7 +30,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             //ignore ssl errors
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             updateTimer = new Timer(250);
-            updateTimer.Elapsed += (sender, e) => { UpdateData(); };
+            updateTimer.Elapsed += UpdateData;
         }
 
         public override void ResetGameState()
@@ -158,9 +158,8 @@ namespace Aurora.Profiles.LeagueOfLegends
             }
             catch(Exception e)
             {
-                Global.logger.Error(e);
+                //Global.logger.Error(e);
             }
-
         }
 
         private void SetItem(AllPlayer p, ref ItemNode itemNode, int id)
@@ -171,7 +170,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 itemNode = new ItemNode();
         }
 
-        private void UpdateData()
+        private async void UpdateData(object sender, ElapsedEventArgs e)
         {
             if (!Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("league of legends.exe"))
                 return;
@@ -179,15 +178,15 @@ namespace Aurora.Profiles.LeagueOfLegends
             string jsonData = "";
             try
             {
-                using (var res = client.GetAsync(URI).Result)
+                using (var res = await client.GetAsync(URI))
                 {
                     if (res.IsSuccessStatusCode)
-                        jsonData = res.Content.ReadAsStringAsync().Result;
+                        jsonData = await res.Content.ReadAsStringAsync();
                 }
             }
-            catch(Exception e)
+            catch(Exception exc)
             {
-                Global.logger.Error(e);
+               // Global.logger.Error(exc);
                 return;
             }
 

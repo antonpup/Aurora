@@ -125,14 +125,6 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _MaxVariablePath = "Player/ChampionStats/ResourceMax"
                     }
                 }),
-                new Layer("Actions", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = System.Drawing.Color.Blue,
-                        _Sequence = new KeySequence(new DK[] { DK.Q, DK.W, DK.E, DK.R })
-                    }
-                }),
                 new Layer("Background", new SolidFillLayerHandler()
                 {
                      Properties = new SolidFillLayerHandlerProperties
