@@ -17,17 +17,19 @@ namespace Aurora.Profiles.LeagueOfLegends
 {
     public class GameEvent_LoL : LightEvent
     {
+        private const string URI = "https://127.0.0.1:2999/liveclientdata/allgamedata";
+
         private readonly HttpClient client = new HttpClient();
-        private const string URI = "https://localhost:2999/liveclientdata/allgamedata";
-        private GameData gameData;
-        private Timer updateTimer;
-        private bool updated = false;
+        private readonly Timer updateTimer;
+
+        private RootGameData allGameData;
+        private bool updatedOnce = false;
 
         public GameEvent_LoL() : base()
         {
             //ignore ssl errors
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            updateTimer = new Timer(100);
+            updateTimer = new Timer(250);
             updateTimer.Elapsed += (sender, e) => { UpdateData(); };
         }
 
@@ -42,77 +44,131 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         public override void UpdateTick()
         {
-            if (!updated)
+            if (!updatedOnce)
                 return;
 
+            var s = _game_state as GameState_LoL;
+
+            if (allGameData == null)
+                return;
             try
             {
-                var player = Array.Find(gameData.allplayers, p => p.summonerName == gameData.activePlayer.SummonerName);
-                var playerState = (_game_state as GameState_LoL).Player;
-
-                #region ActivePlayer stats
-                playerState.ChampionStats.AbilityPower = gameData.activePlayer.championStats.AbilityPower;
-                playerState.ChampionStats.Armor = gameData.activePlayer.championStats.Armor;
-                playerState.ChampionStats.ArmorPenetrationFlat = gameData.activePlayer.championStats.ArmorPenetrationFlat;
-                playerState.ChampionStats.ArmorPenetrationPercent = gameData.activePlayer.championStats.ArmorPenetrationPercent;
-                playerState.ChampionStats.AttackDamage = gameData.activePlayer.championStats.AttackDamage;
-                playerState.ChampionStats.AttackRange = gameData.activePlayer.championStats.AttackRange;
-                playerState.ChampionStats.AttackSpeed = gameData.activePlayer.championStats.AttackSpeed;
-                playerState.ChampionStats.BonusArmorPenetrationPercent = gameData.activePlayer.championStats.BonusArmorPenetrationPercent;
-                playerState.ChampionStats.BonusMagicPenetrationPercent = gameData.activePlayer.championStats.BonusMagicPenetrationPercent;
-                playerState.ChampionStats.CooldownReduction = gameData.activePlayer.championStats.CooldownReduction;
-                playerState.ChampionStats.CritChance = gameData.activePlayer.championStats.CritChance;
-                playerState.ChampionStats.CritDamagePercent = gameData.activePlayer.championStats.CritDamage;
-                playerState.ChampionStats.HealthCurrent = gameData.activePlayer.championStats.CurrentHealth;
-                playerState.ChampionStats.HealthRegenRate = gameData.activePlayer.championStats.HealthRegenRate;
-                playerState.ChampionStats.LifeSteal = gameData.activePlayer.championStats.LifeSteal;
-                playerState.ChampionStats.MagicLethality = gameData.activePlayer.championStats.MagicLethality;
-                playerState.ChampionStats.MagicPenetrationFlat = gameData.activePlayer.championStats.MagicPenetrationFlat;
-                playerState.ChampionStats.MagicPenetrationPercent = gameData.activePlayer.championStats.MagicPenetrationPercent;
-                playerState.ChampionStats.MagicResist = gameData.activePlayer.championStats.MagicResist;
-                playerState.ChampionStats.HealthMax = gameData.activePlayer.championStats.MaxHealth;
-                playerState.ChampionStats.MoveSpeed = gameData.activePlayer.championStats.MoveSpeed;
-                playerState.ChampionStats.PhysicalLethality = gameData.activePlayer.championStats.PhysicalLethality;
-                playerState.ChampionStats.ResourceMax = gameData.activePlayer.championStats.ResourceMax;
-                playerState.ChampionStats.ResourceRegenRate = gameData.activePlayer.championStats.ResourceRegenRate;
-                playerState.ChampionStats.ResourceType = gameData.activePlayer.championStats.ResourceType;
-                playerState.ChampionStats.ResourceCurrent = gameData.activePlayer.championStats.ResourceValue;
-                playerState.ChampionStats.SpellVamp = gameData.activePlayer.championStats.SpellVamp;
-                playerState.ChampionStats.Tenacity = gameData.activePlayer.championStats.Tenacity;
-                playerState.Gold = gameData.activePlayer.CurrentGold;
-                playerState.Level = gameData.activePlayer.Level;
-                playerState.SummonerName = gameData.activePlayer.SummonerName;
+                #region Match
+                s.Match.GameMode = allGameData.gameData.gameMode;
+                s.Match.GameTime = allGameData.gameData.gameTime;
                 #endregion
 
-                #region player stats
-                playerState.Assists = player.scores.assists;
-                playerState.Kills = player.scores.kills;
-                playerState.Deaths = player.scores.deaths;
-                playerState.WardScore = player.scores.wardScore;
-                playerState.CreepScore = player.scores.creepScore;
-                playerState.RespawnTimer = player.respawnTimer;
-                playerState.IsDead = player.isDead;
+                #region Player
+
+                var ap = allGameData.activePlayer;
+                s.Player.Level = ap.level;
+                s.Player.Gold = ap.currentGold;
+                s.Player.SummonerName = ap.summonerName;
+
+                #region Abilities
+                s.Player.Abilities.Q.Level = ap.abilities.Q.abilityLevel;
+                s.Player.Abilities.Q.Name = ap.abilities.Q.displayName;
+                s.Player.Abilities.W.Level = ap.abilities.W.abilityLevel;
+                s.Player.Abilities.W.Name = ap.abilities.W.displayName;
+                s.Player.Abilities.E.Level = ap.abilities.E.abilityLevel;
+                s.Player.Abilities.E.Name = ap.abilities.E.displayName;
+                s.Player.Abilities.R.Level = ap.abilities.R.abilityLevel;
+                s.Player.Abilities.R.Name = ap.abilities.R.displayName;
                 #endregion
 
-                #region Enum parsing
-                if (Enum.TryParse<Champion>(player.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, out var c))
-                    playerState.Champion = c;
+                #region Stats
+                s.Player.ChampionStats.AbilityPower = ap.championStats.abilityPower;
+                s.Player.ChampionStats.Armor = ap.championStats.armor;
+                s.Player.ChampionStats.ArmorPenetrationFlat = ap.championStats.armorPenetrationFlat;
+                s.Player.ChampionStats.ArmorPenetrationPercent = ap.championStats.armorPenetrationPercent;
+                s.Player.ChampionStats.AttackDamage = ap.championStats.attackDamage;
+                s.Player.ChampionStats.AttackRange = ap.championStats.attackRange;
+                s.Player.ChampionStats.AttackSpeed = ap.championStats.attackSpeed;
+                s.Player.ChampionStats.BonusArmorPenetrationPercent = ap.championStats.bonusArmorPenetrationPercent;
+                s.Player.ChampionStats.BonusMagicPenetrationPercent = ap.championStats.bonusMagicPenetrationPercent;
+                s.Player.ChampionStats.CooldownReduction = ap.championStats.cooldownReduction;
+                s.Player.ChampionStats.CritChance = ap.championStats.critChance;
+                s.Player.ChampionStats.CritDamagePercent = ap.championStats.critDamage;
+                s.Player.ChampionStats.HealthCurrent = ap.championStats.currentHealth;
+                s.Player.ChampionStats.HealthRegenRate = ap.championStats.healthRegenRate;
+                s.Player.ChampionStats.LifeSteal = ap.championStats.lifeSteal;
+                s.Player.ChampionStats.MagicLethality = ap.championStats.magicLethality;
+                s.Player.ChampionStats.MagicPenetrationFlat = ap.championStats.magicPenetrationFlat;
+                s.Player.ChampionStats.MagicPenetrationPercent = ap.championStats.magicPenetrationPercent;
+                s.Player.ChampionStats.MagicResist = ap.championStats.magicResist;
+                s.Player.ChampionStats.HealthMax = ap.championStats.maxHealth;
+                s.Player.ChampionStats.MoveSpeed = ap.championStats.moveSpeed;
+                s.Player.ChampionStats.PhysicalLethality = ap.championStats.physicalLethality;
+                s.Player.ChampionStats.ResourceMax = ap.championStats.resourceMax;
+                s.Player.ChampionStats.ResourceRegenRate = ap.championStats.resourceRegenRate;
+                if(Enum.TryParse(ap.championStats.resourceType, out ResourceType type))
+                    s.Player.ChampionStats.ResourceType = type;
+                s.Player.ChampionStats.ResourceCurrent = ap.championStats.resourceValue;
+                s.Player.ChampionStats.SpellVamp = ap.championStats.spellVamp;
+                s.Player.ChampionStats.Tenacity = ap.championStats.tenacity;
+                #endregion
 
-                if (Enum.TryParse<Team>(player.team, true, out var t))
-                    playerState.Team = t;
+                #region Runes
+                //TODO
+                #endregion
 
-                if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellOne.displayname, out var ss1))
-                    playerState.SpellD.Spell = ss1;
+                #region allPlayer data
+                //there's some data in allPlayers about the user that is not contained in activePlayer...
+                var p = allGameData.allPlayers.FirstOrDefault(a => a.summonerName == ap.summonerName);
+                if (p == null)
+                    return;
 
-                if (Enum.TryParse<SummonerSpell>(player.summonerSpells.summonerSpellTwo.displayname, out var ss2))
-                    playerState.SpellF.Spell = ss2;
+                if (Enum.TryParse(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, out Champion c))
+                    s.Player.Champion = c;//we remove space, period, and apostrophe because those are the only non-letter characters in champion names
+
+                if (Enum.TryParse(p.summonerSpells.summonerSpellOne.displayName, out SummonerSpell ss1))
+                    s.Player.SpellD = ss1;
+
+                if (Enum.TryParse(p.summonerSpells.summonerSpellTwo.displayName, out SummonerSpell ss2))
+                    s.Player.SpellF = ss2;
+
+                if (Enum.TryParse(p.team, out Team t))
+                    s.Player.Team = t;
+
+                s.Player.IsDead = p.isDead;
+                s.Player.RespawnTimer = p.respawnTimer;
+                s.Player.Kills = p.scores.kills;
+                s.Player.Deaths = p.scores.deaths;
+                s.Player.Assists = p.scores.assists;
+                s.Player.CreepScore = p.scores.creepScore;
+                s.Player.WardScore = p.scores.wardScore;
+                #endregion
+
+                #region Events
+                //TODO
+                #endregion
+
+                #region Items
+                //I know this is ugly, but i cant think of a much better way to do it ¯\_(ツ)_/¯
+                SetItem(p, ref s.Player.Items.Slot1, 0);
+                SetItem(p, ref s.Player.Items.Slot2, 1);
+                SetItem(p, ref s.Player.Items.Slot3, 2);
+                SetItem(p, ref s.Player.Items.Slot4, 3);
+                SetItem(p, ref s.Player.Items.Slot5, 4);
+                SetItem(p, ref s.Player.Items.Slot6, 5);
+                SetItem(p, ref s.Player.Items.Trinket, 6);
+                #endregion
+
                 #endregion
             }
-            catch
+            catch(Exception e)
             {
-
+                Global.logger.Error(e);
             }
 
+        }
+
+        private void SetItem(AllPlayer p, ref ItemNode itemNode, int id)
+        {
+            if (p.items.TryGet(asd => asd.slot == id, out Item r))
+                itemNode = new ItemNode(r);
+            else
+                itemNode = new ItemNode();
         }
 
         private void UpdateData()
@@ -129,136 +185,34 @@ namespace Aurora.Profiles.LeagueOfLegends
                         jsonData = res.Content.ReadAsStringAsync().Result;
                 }
             }
-            catch
+            catch(Exception e)
             {
+                Global.logger.Error(e);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(jsonData) || jsonData.Contains("error"))
                 return;
 
-            gameData = JsonConvert.DeserializeObject<GameData>(jsonData);
-            updated = true;
+            allGameData = JsonConvert.DeserializeObject<RootGameData>(jsonData);
+            updatedOnce = true;
         }
+    }
 
-        #region Structs
-        private struct GameData
+    public static class Extension
+    {
+        public static bool TryGet<T>(this IList<T> list, Predicate<T> match, out T ret)
         {
-            public ActivePlayer activePlayer;
-            public Player[] allplayers;
-            public LolEvents events;
-            public Match gameData;
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (match(list[i]))
+                {
+                    ret = list[i];
+                    return true;
+                }
+            }
+            ret = default;
+            return false;
         }
-        private struct Player
-        {
-            public string championName;
-            public bool isBot;
-            public bool isDead;
-            public Item[] items;
-
-            public int level;
-
-            public float respawnTimer;
-
-            public Stats scores;
-
-            public string summonerName;
-            public Spells summonerSpells;
-
-            public string team;
-        }
-        private struct Stats
-        {
-            public int assists;
-            public int creepScore;
-            public int deaths;
-            public int kills;
-            public float wardScore;
-        }
-        private struct Spells
-        {
-            public Spell summonerSpellOne;
-            public Spell summonerSpellTwo;
-        }
-        private struct Spell
-        {
-            public string displayname;
-        }
-        private struct Item
-        {
-            public bool canUse;
-            public bool consumable;
-            public string displayName;
-            public int slot;
-        }
-        private struct ActivePlayer
-        {
-            public Abilities abilities;
-            public ChampionStats championStats;
-            public float CurrentGold;
-            public int Level;
-            public string SummonerName;
-        }
-        private struct ChampionStats
-        {
-            public float AbilityPower;
-            public float Armor;
-            public float ArmorPenetrationFlat;
-            public float ArmorPenetrationPercent;
-            public float AttackDamage;
-            public float AttackRange;
-            public float AttackSpeed;
-            public float BonusArmorPenetrationPercent;
-            public float BonusMagicPenetrationPercent;
-            public float CooldownReduction;
-            public float CritChance;
-            public float CritDamage;
-            public float CurrentHealth;
-            public float HealthRegenRate;
-            public float LifeSteal;
-            public float MagicLethality;
-            public float MagicPenetrationFlat;
-            public float MagicPenetrationPercent;
-            public float MagicResist;
-            public float MaxHealth;
-            public float MoveSpeed;
-            public float PhysicalLethality;
-            public float ResourceMax;
-            public float ResourceRegenRate;
-            public GSI.Nodes.ResourceType ResourceType;
-            public float ResourceValue;
-            public float SpellVamp;
-            public float Tenacity;
-        }
-        private struct Ability
-        {
-            public int abilityLevel;
-            public string displayName;
-            public string id;
-        }
-        private struct Abilities
-        {
-            public Ability passive;
-            public Ability q;
-            public Ability w;
-            public Ability e;
-            public Ability r;
-        }
-        private struct LolEvent
-        {
-            public int eventID;
-            public string eventname;
-            public float eventtime;
-        }
-        private struct LolEvents
-        {
-            public LolEvent[] events;
-        }
-        private struct Match
-        {
-            public string gamemode;
-            public float gameTime;
-        }
-        #endregion
     }
 }

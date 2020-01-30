@@ -392,9 +392,14 @@
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\GameData.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\AbilitiesNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\AbilityNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\InventoryNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\ItemNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\MatchNode.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\SpellNode.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\StatsNode.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
@@ -947,7 +952,7 @@
       <DependentUpon>Control_LoL.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\LeagueOfLegends\LoLApplication.cs" />
-    <Compile Include="Profiles\LeagueOfLegends\LoLProfile.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\LoLGSIProfile.cs" />
     <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
       <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>

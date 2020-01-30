@@ -12,6 +12,9 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         private PlayerNode player;
         public PlayerNode Player => player ?? (player = new PlayerNode());
 
+        private MatchNode match;
+        public MatchNode Match => match ?? (match = new MatchNode());
+
         public GameState_LoL() : base()
         {
 

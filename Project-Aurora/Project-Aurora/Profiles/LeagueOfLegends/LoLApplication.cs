@@ -16,14 +16,13 @@ namespace Aurora.Profiles.LeagueOfLegends
                 Name = "League of Legends",
                 ID = "league_of_legends",
                 ProcessNames = new[] { "league of legends.exe" },
-                ProfileType = typeof(LoLProfile),
+                ProfileType = typeof(LoLGSIProfile),
                 OverviewControlType = typeof(Control_LoL),
                 GameStateType = typeof(GSI.GameState_LoL),
                 Event = new GameEvent_LoL(),
                 IconURI = "Resources/leagueoflegends_48x48.png"
             })
         {
-            Config.ExtraAvailableLayers.Add("WrapperLights");
         }
     }
 }
