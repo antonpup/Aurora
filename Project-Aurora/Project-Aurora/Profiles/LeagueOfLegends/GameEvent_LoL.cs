@@ -40,7 +40,11 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         public override void OnStart() => updateTimer.Start();
 
-        public override void OnStop() => updateTimer.Stop();
+        public override void OnStop()
+        {
+            updateTimer.Stop();
+            client.CancelPendingRequests();
+        }
 
         public override void UpdateTick()
         {
@@ -50,10 +54,15 @@ namespace Aurora.Profiles.LeagueOfLegends
             var s = _game_state as GameState_LoL;
 
             if (allGameData == null)
+            {
+                s.Match.InGame = true;
                 return;
+            }
+
             try
             {
                 #region Match
+                s.Match.InGame = true;
                 s.Match.GameMode = allGameData.gameData.gameMode;
                 s.Match.GameTime = allGameData.gameData.gameTime;
                 #endregion
@@ -101,8 +110,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 s.Player.ChampionStats.PhysicalLethality = ap.championStats.physicalLethality;
                 s.Player.ChampionStats.ResourceMax = ap.championStats.resourceMax;
                 s.Player.ChampionStats.ResourceRegenRate = ap.championStats.resourceRegenRate;
-                if(Enum.TryParse(ap.championStats.resourceType, out ResourceType type))
-                    s.Player.ChampionStats.ResourceType = type;
+                s.Player.ChampionStats.ResourceType = TryParseOr(ap.championStats.resourceType, ResourceType.Undefined);
                 s.Player.ChampionStats.ResourceCurrent = ap.championStats.resourceValue;
                 s.Player.ChampionStats.SpellVamp = ap.championStats.spellVamp;
                 s.Player.ChampionStats.Tenacity = ap.championStats.tenacity;
@@ -117,18 +125,12 @@ namespace Aurora.Profiles.LeagueOfLegends
                 var p = allGameData.allPlayers.FirstOrDefault(a => a.summonerName == ap.summonerName);
                 if (p == null)
                     return;
+                //if we can't find it, skip
 
-                if (Enum.TryParse(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, out Champion c))
-                    s.Player.Champion = c;//we remove space, period, and apostrophe because those are the only non-letter characters in champion names
-
-                if (Enum.TryParse(p.summonerSpells.summonerSpellOne.displayName, out SummonerSpell ss1))
-                    s.Player.SpellD = ss1;
-
-                if (Enum.TryParse(p.summonerSpells.summonerSpellTwo.displayName, out SummonerSpell ss2))
-                    s.Player.SpellF = ss2;
-
-                if (Enum.TryParse(p.team, out Team t))
-                    s.Player.Team = t;
+                s.Player.Champion = TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), Champion.Undefined);
+                s.Player.SpellD = TryParseOr(p.summonerSpells.summonerSpellOne.displayName, SummonerSpell.Undefined);
+                s.Player.SpellF = TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, SummonerSpell.Undefined);
+                s.Player.Team = TryParseOr(p.team, Team.Undefined);
 
                 s.Player.IsDead = p.isDead;
                 s.Player.RespawnTimer = p.respawnTimer;
@@ -144,36 +146,65 @@ namespace Aurora.Profiles.LeagueOfLegends
                 #endregion
 
                 #region Items
-                //I know this is ugly, but i cant think of a much better way to do it ¯\_(ツ)_/¯
-                SetItem(p, ref s.Player.Items.Slot1, 0);
-                SetItem(p, ref s.Player.Items.Slot2, 1);
-                SetItem(p, ref s.Player.Items.Slot3, 2);
-                SetItem(p, ref s.Player.Items.Slot4, 3);
-                SetItem(p, ref s.Player.Items.Slot5, 4);
-                SetItem(p, ref s.Player.Items.Slot6, 5);
-                SetItem(p, ref s.Player.Items.Trinket, 6);
+                s.Player.Items.Slot1 = GetItem(p, 0);
+                s.Player.Items.Slot2 = GetItem(p, 1);
+                s.Player.Items.Slot3 = GetItem(p, 2);
+                s.Player.Items.Slot4 = GetItem(p, 3);
+                s.Player.Items.Slot5 = GetItem(p, 4);
+                s.Player.Items.Slot6 = GetItem(p, 5);
+                s.Player.Items.Trinket = GetItem(p, 6);
                 #endregion
 
                 #endregion
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 //Global.logger.Error(e);
             }
         }
 
-        private void SetItem(AllPlayer p, ref ItemNode itemNode, int id)
+        /// <summary>
+        /// Tries to parse a string into a given enum. Returns the parsed enum if successful, and <paramref name="defaultValue"/> if not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        private static T TryParseOr<T>(string value, T defaultValue) where T : struct, IConvertible
         {
-            if (p.items.TryGet(asd => asd.slot == id, out Item r))
-                itemNode = new ItemNode(r);
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException("T must be an enum");
+
+            if (Enum.TryParse<T>(value, true, out var res))
+                return res;
             else
-                itemNode = new ItemNode();
+                return defaultValue;
+        }
+
+        /// <summary>
+        /// Tries to find an item from the nth <paramref name="slot"/>. Returns the item if it finds it, or an empty item otherwise.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <param name="slot"></param>
+        /// <returns></returns>
+        private static ItemNode GetItem(AllPlayer p, int slot)
+        {
+            var newItem = p.items.FirstOrDefault(item => item.slot == slot);
+
+            if (newItem == null)
+                return new ItemNode();
+            else
+                return new ItemNode(newItem);
         }
 
         private async void UpdateData(object sender, ElapsedEventArgs e)
         {
             if (!Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("league of legends.exe"))
+            {
+                allGameData = null;
                 return;
+            }
+
 
             string jsonData = "";
             try
@@ -184,34 +215,21 @@ namespace Aurora.Profiles.LeagueOfLegends
                         jsonData = await res.Content.ReadAsStringAsync();
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
-               // Global.logger.Error(exc);
+                // Global.logger.Error(exc);
+                allGameData = null;
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(jsonData) || jsonData.Contains("error"))
+            {
+                allGameData = null;
                 return;
+            }
 
             allGameData = JsonConvert.DeserializeObject<RootGameData>(jsonData);
             updatedOnce = true;
-        }
-    }
-
-    public static class Extension
-    {
-        public static bool TryGet<T>(this IList<T> list, Predicate<T> match, out T ret)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (match(list[i]))
-                {
-                    ret = list[i];
-                    return true;
-                }
-            }
-            ret = default;
-            return false;
         }
     }
 }

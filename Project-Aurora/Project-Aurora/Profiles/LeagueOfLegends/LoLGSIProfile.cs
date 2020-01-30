@@ -113,7 +113,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _VariablePath = "Player/ChampionStats/HealthCurrent",
                         _MaxVariablePath = "Player/ChampionStats/HealthMax"
                     }
-                }),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",new BooleanGSIBoolean("Match/InGame"))),
                 new Layer("Resource", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
@@ -124,7 +124,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _VariablePath = "Player/ChampionStats/ResourceCurrent",
                         _MaxVariablePath = "Player/ChampionStats/ResourceMax"
                     }
-                }),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",new BooleanGSIBoolean("Match/InGame"))),
                 new Layer("Background", new SolidFillLayerHandler()
                 {
                      Properties = new SolidFillLayerHandlerProperties

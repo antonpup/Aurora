@@ -11,5 +11,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         public string GameMode;
 
         public float GameTime;
+
+        public bool InGame;
     }
 }

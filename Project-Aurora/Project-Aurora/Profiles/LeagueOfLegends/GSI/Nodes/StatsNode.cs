@@ -8,21 +8,22 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public enum ResourceType
     {
-        MANA,
-        ENERGY,
-        NONE,
-        SHIELD,
-        BATTLEFURY,
-        DRAGONFURY,
-        RAGE,
-        HEAT,
-        GNARFURY,
-        FEROCITY,
-        BLOODWELL,
-        WIND,
-        AMMO,
-        OTHER,
-        MAX
+        Undefined = -1,
+        Mana,
+        Energy,
+        None,
+        Shield,
+        Battlefury,
+        Dragonfury,
+        Rage,
+        Heat,
+        Gnarfury,
+        Ferocity,
+        Bloodwell,
+        Wind,
+        Ammo,
+        Other,
+        Max
     }
 
     public class StatsNode : Node<StatsNode>
