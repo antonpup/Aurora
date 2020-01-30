@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.Serialization;
+using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
 using DK = Aurora.Devices.DeviceKeys;
 
 
@@ -15,7 +16,7 @@ namespace Aurora.Profiles.LeagueOfLegends
     {
         public LoLGSIProfile() : base()
         {
-            
+
         }
 
         public override void Reset()
@@ -30,6 +31,36 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.FromArgb(200,0,0,0)
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",new BooleanGSIBoolean("Player/IsDead"))),
+                new Layer("Spell D", new SolidColorLayerHandler()
+                {
+                    Properties = new LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Transparent,
+                        _Sequence = new KeySequence(new DK[] { DK.D})
+                    }
+                }, new OverrideLogicBuilder()
+                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.Yellow, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Flash))
+                        .AddEntry(Color.Red, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Ignite))
+                        .AddEntry(Color.Green, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Heal))
+                        .AddEntry(Color.Purple, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Teleport))
+                        .AddEntry(Color.Orange, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Barrier))
+                )),
+                new Layer("Spell F", new SolidColorLayerHandler()
+                {
+                    Properties = new LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Transparent,
+                        _Sequence = new KeySequence(new DK[] { DK.F})
+                    }
+                }, new OverrideLogicBuilder()
+                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.Yellow, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Flash))
+                        .AddEntry(Color.Red, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Ignite))
+                        .AddEntry(Color.Green, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Heal))
+                        .AddEntry(Color.Purple, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Teleport))
+                        .AddEntry(Color.Orange, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Barrier))
+                )),
                 new Layer("Ability Q", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -93,7 +124,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Red,
                         _Sequence = new KeySequence(new DK[] { DK.FOUR})
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Slot6/ItemID", ComparisonOperator.NEQ, 0))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Trinket/ItemID", ComparisonOperator.NEQ, 0))),
                 new Layer("Item 4", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -128,7 +159,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _VariablePath = "Player/ChampionStats/HealthCurrent",
                         _MaxVariablePath = "Player/ChampionStats/HealthMax"
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",new BooleanGSIBoolean("Match/InGame"))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Match/InGame"))),
                 new Layer("Resource", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
@@ -139,7 +170,15 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _VariablePath = "Player/ChampionStats/ResourceCurrent",
                         _MaxVariablePath = "Player/ChampionStats/ResourceMax"
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",new BooleanGSIBoolean("Match/InGame"))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Match/InGame"))),
+                new Layer("Recall", new SolidColorLayerHandler()
+                {
+                    Properties = new LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.FromArgb(79, 234, 255),
+                        _Sequence = new KeySequence(new DK[] { DK.B})
+                    }
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Match/InGame"))),
                 new Layer("Background", new SolidFillLayerHandler()
                 {
                      Properties = new SolidFillLayerHandlerProperties

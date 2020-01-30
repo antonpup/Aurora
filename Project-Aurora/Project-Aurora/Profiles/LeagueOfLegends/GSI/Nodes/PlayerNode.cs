@@ -169,6 +169,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
     public enum SummonerSpell
     {
         Undefined = -1,
+        Cleanse,//210
         Exhaust,//210
         Flash,//300
         Ghost,//180
