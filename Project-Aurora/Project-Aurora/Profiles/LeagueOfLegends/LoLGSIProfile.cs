@@ -23,6 +23,13 @@ namespace Aurora.Profiles.LeagueOfLegends
             base.Reset();
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
+                new Layer("Dead", new SolidFillLayerHandler()
+                {
+                    Properties = new SolidFillLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.FromArgb(200,0,0,0)
+                    }
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",new BooleanGSIBoolean("Player/IsDead"))),
                 new Layer("Ability Q", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -79,12 +86,20 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _Sequence = new KeySequence(new DK[] { DK.THREE})
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Slot3/ItemID", ComparisonOperator.NEQ, 0))),
-                new Layer("Item 4", new SolidColorLayerHandler()
+                new Layer("Trinket", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
                         _Sequence = new KeySequence(new DK[] { DK.FOUR})
+                    }
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Slot6/ItemID", ComparisonOperator.NEQ, 0))),
+                new Layer("Item 4", new SolidColorLayerHandler()
+                {
+                    Properties = new LayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Red,
+                        _Sequence = new KeySequence(new DK[] { DK.FIVE})
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Slot4/ItemID", ComparisonOperator.NEQ, 0))),
                 new Layer("Item 5", new SolidColorLayerHandler()
@@ -92,7 +107,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new DK[] { DK.FIVE})
+                        _Sequence = new KeySequence(new DK[] { DK.SIX})
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Slot5/ItemID", ComparisonOperator.NEQ, 0))),
                 new Layer("Item 6", new SolidColorLayerHandler()
@@ -100,7 +115,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new DK[] { DK.SIX})
+                        _Sequence = new KeySequence(new DK[] { DK.SEVEN})
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Items/Slot6/ItemID", ComparisonOperator.NEQ, 0))),
                 new Layer("Health", new PercentLayerHandler()
