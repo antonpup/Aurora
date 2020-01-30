@@ -55,7 +55,7 @@ namespace Aurora.Profiles.LeagueOfLegends
 
             if (allGameData == null)
             {
-                s.Match.InGame = true;
+                s.Match.InGame = false;
                 return;
             }
 
