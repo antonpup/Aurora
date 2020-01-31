@@ -188,10 +188,10 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         public StatsNode ChampionStats = new StatsNode();
         public AbilitiesNode Abilities = new AbilitiesNode();
         public InventoryNode Items = new InventoryNode();
-        public SummonerSpell SpellD;
-        public SummonerSpell SpellF;
-        public Champion Champion;
-        public Team Team;
+        public SummonerSpell SpellD = SummonerSpell.Undefined;
+        public SummonerSpell SpellF = SummonerSpell.Undefined;
+        public Champion Champion = Champion.Undefined;
+        public Team Team = Team.Undefined;
         public string SummonerName;
         public int Level;
         public float Gold;       

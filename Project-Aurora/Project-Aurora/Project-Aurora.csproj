@@ -401,6 +401,11 @@
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\MatchNode.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\StatsNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Layers\DefaultChampionColors.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Layers\LoLBackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Layers\Control_LoLBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_LoLBackgroundLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
@@ -1740,6 +1745,10 @@
     <Page Include="Profiles\Discord\Control_Discord.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\LeagueOfLegends\Layers\Control_LoLBackgroundLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>

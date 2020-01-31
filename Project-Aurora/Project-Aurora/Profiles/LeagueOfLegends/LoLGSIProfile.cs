@@ -179,13 +179,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _Sequence = new KeySequence(new DK[] { DK.B})
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Match/InGame"))),
-                new Layer("Background", new SolidFillLayerHandler()
-                {
-                     Properties = new SolidFillLayerHandlerProperties
-                     {
-                         _PrimaryColor = Color.White
-                     }
-                }),
+                new Layer("Background", new Layers.LoLBackgroundLayerHandler()),
             };
         }
     }
