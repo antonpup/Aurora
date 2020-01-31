@@ -170,7 +170,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _VariablePath = "Player/ChampionStats/ResourceCurrent",
                         _MaxVariablePath = "Player/ChampionStats/ResourceMax"
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Match/InGame"))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanAnd(new IEvaluatable<bool>[] { new BooleanGSIBoolean("Match/InGame"), new BooleanNot( new BooleanGSIEnum("Player/ChampionStats/ResourceType", ResourceType.None)) }))),
                 new Layer("Recall", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
