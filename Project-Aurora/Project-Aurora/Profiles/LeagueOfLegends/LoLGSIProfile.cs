@@ -44,7 +44,9 @@ namespace Aurora.Profiles.LeagueOfLegends
                         .AddEntry(Color.Purple, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Teleport))
                         .AddEntry(Color.Orange, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Barrier))
                         .AddEntry(Color.DarkOrange, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Smite))
-                        .AddEntry(Color.LightGoldenrodYellow, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Exhaust ))
+                        .AddEntry(Color.LightGoldenrodYellow, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Exhaust))
+                        .AddEntry(Color.LightSkyBlue, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Ghost))
+                        .AddEntry(Color.LightBlue, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Cleanse ))
                 )),
                 new Layer("Spell F", new SolidColorLayerHandler()
                 {
@@ -60,7 +62,9 @@ namespace Aurora.Profiles.LeagueOfLegends
                         .AddEntry(Color.Purple, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Teleport))
                         .AddEntry(Color.Orange, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Barrier))
                         .AddEntry(Color.DarkOrange, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Smite))
-                        .AddEntry(Color.LightGoldenrodYellow, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Exhaust ))
+                        .AddEntry(Color.LightGoldenrodYellow, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Exhaust))
+                        .AddEntry(Color.LightSkyBlue, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Ghost))
+                        .AddEntry(Color.LightBlue, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Cleanse ))
                 )),
                 new Layer("Ability Q", new SolidColorLayerHandler()
                 {
