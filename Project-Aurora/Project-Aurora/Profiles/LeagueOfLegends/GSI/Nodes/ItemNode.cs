@@ -6,29 +6,33 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class ItemNode : Node<ItemNode>
+    public class SlotNode : Node<SlotNode>
     {
+        public bool HasItem;
         public bool CanUse;
         public bool Consumable;
         public int Count;
         public string Name = "";
-        public ItemID ItemID = ItemID.None;
+        public ItemID Item = ItemID.None;
 
-        public ItemNode()
+        public SlotNode()
         {
 
         }
 
-        public ItemNode(Item item)
+        public SlotNode(_Item item)
         {
             CanUse = item.canUse;
             Consumable = item.consumable;
             Count = item.count;
             Name = item.displayName;
+
             if (Enum.IsDefined(typeof(ItemID), item.itemID))
-                ItemID = (ItemID)item.itemID;
+                Item = (ItemID)item.itemID;
             else
                 Console.WriteLine(item.itemID);
+
+            HasItem = Item != ItemID.None;
         }
     }
 

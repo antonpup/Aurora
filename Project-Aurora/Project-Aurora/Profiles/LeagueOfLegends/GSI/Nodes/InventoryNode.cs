@@ -8,12 +8,12 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public class InventoryNode : Node<InventoryNode>
     {
-        public ItemNode Slot1 = new ItemNode();
-        public ItemNode Slot2 = new ItemNode();
-        public ItemNode Slot3 = new ItemNode();
-        public ItemNode Slot4 = new ItemNode();
-        public ItemNode Slot5 = new ItemNode();
-        public ItemNode Slot6 = new ItemNode();
-        public ItemNode Trinket = new ItemNode();
+        public SlotNode Slot1 = new SlotNode();
+        public SlotNode Slot2 = new SlotNode();
+        public SlotNode Slot3 = new SlotNode();
+        public SlotNode Slot4 = new SlotNode();
+        public SlotNode Slot5 = new SlotNode();
+        public SlotNode Slot6 = new SlotNode();
+        public SlotNode Trinket = new SlotNode();
     }
 }

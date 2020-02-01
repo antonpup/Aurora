@@ -8,14 +8,14 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
 {
     //Mostly auto generated with jsonutils.com
 
-    public class Passive
+    public class _Passive
     {
         public string displayName { get; set; }
         public string rawDescription { get; set; }
         public string rawDisplayName { get; set; }
     }
 
-    public class Ability
+    public class _Ability
     {
         public int abilityLevel { get; set; }
         public string displayName { get; set; }
@@ -24,16 +24,16 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public string rawDisplayName { get; set; }
     }
 
-    public class Abilities
+    public class _Abilities
     {
-        public Passive Passive { get; set; }
-        public Ability Q { get; set; }
-        public Ability W { get; set; }
-        public Ability E { get; set; }
-        public Ability R { get; set; }
+        public _Passive Passive { get; set; }
+        public _Ability Q { get; set; }
+        public _Ability W { get; set; }
+        public _Ability E { get; set; }
+        public _Ability R { get; set; }
     }
 
-    public class ChampionStats
+    public class _ChampionStats
     {
         public float abilityPower { get; set; }
         public float armor { get; set; }
@@ -65,7 +65,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public float tenacity { get; set; }
     }
 
-    public class Rune
+    public class _Rune
     {
         public string displayName { get; set; }
         public int id { get; set; }
@@ -73,32 +73,32 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public string rawDisplayName { get; set; }
     }
 
-    public class StatRune
+    public class _StatRune
     {
         public int id { get; set; }
         public string rawDescription { get; set; }
     }
 
-    public class FullRunes
+    public class _FullRunes
     {
-        public IList<Rune> generalRunes { get; set; }
-        public Rune keystone { get; set; }
-        public Rune primaryRuneTree { get; set; }
-        public Rune secondaryRuneTree { get; set; }
-        public IList<StatRune> statRunes { get; set; }
+        public IList<_Rune> generalRunes { get; set; }
+        public _Rune keystone { get; set; }
+        public _Rune primaryRuneTree { get; set; }
+        public _Rune secondaryRuneTree { get; set; }
+        public IList<_StatRune> statRunes { get; set; }
     }
 
-    public class ActivePlayer
+    public class _ActivePlayer
     {
-        public Abilities abilities { get; set; }
-        public ChampionStats championStats { get; set; }
+        public _Abilities abilities { get; set; }
+        public _ChampionStats championStats { get; set; }
         public float currentGold { get; set; }
-        public FullRunes fullRunes { get; set; }
+        public _FullRunes fullRunes { get; set; }
         public int level { get; set; }
         public string summonerName { get; set; }
     }
 
-    public class Item
+    public class _Item
     {
         public bool canUse { get; set; }
         public bool consumable { get; set; }
@@ -111,14 +111,14 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public int slot { get; set; }
     }
 
-    public class Runes
+    public class _Runes
     {
-        public Rune keystone { get; set; }
-        public Rune primaryRuneTree { get; set; }
-        public Rune secondaryRuneTree { get; set; }
+        public _Rune keystone { get; set; }
+        public _Rune primaryRuneTree { get; set; }
+        public _Rune secondaryRuneTree { get; set; }
     }
 
-    public class Scores
+    public class _Scores
     {
         public int assists { get; set; }
         public int creepScore { get; set; }
@@ -127,57 +127,57 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public float wardScore { get; set; }
     }
 
-    public class SummonerSpellOne
+    public class _SummonerSpellOne
     {
         public string displayName { get; set; }
         public string rawDescription { get; set; }
         public string rawDisplayName { get; set; }
     }
 
-    public class SummonerSpellTwo
+    public class _SummonerSpellTwo
     {
         public string displayName { get; set; }
         public string rawDescription { get; set; }
         public string rawDisplayName { get; set; }
     }
 
-    public class SummonerSpells
+    public class _SummonerSpells
     {
-        public SummonerSpellOne summonerSpellOne { get; set; }
-        public SummonerSpellTwo summonerSpellTwo { get; set; }
+        public _SummonerSpellOne summonerSpellOne { get; set; }
+        public _SummonerSpellTwo summonerSpellTwo { get; set; }
     }
 
-    public class AllPlayer
+    public class _AllPlayer
     {
         public string championName { get; set; }
         public bool isBot { get; set; }
         public bool isDead { get; set; }
-        public IList<Item> items { get; set; }
+        public IList<_Item> items { get; set; }
         public int level { get; set; }
         public string position { get; set; }
         public string rawChampionName { get; set; }
         public float respawnTimer { get; set; }
-        public Runes runes { get; set; }
-        public Scores scores { get; set; }
+        public _Runes runes { get; set; }
+        public _Scores scores { get; set; }
         public int skinID { get; set; }
         public string summonerName { get; set; }
-        public SummonerSpells summonerSpells { get; set; }
+        public _SummonerSpells summonerSpells { get; set; }
         public string team { get; set; }
     }
 
-    public class Event
+    public class _Event
     {
         public int EventID { get; set; }
         public string EventName { get; set; }
         public float EventTime { get; set; }
     }
 
-    public class EventList
+    public class _EventList
     {
-        public IList<Event> Events { get; set; }
+        public IList<_Event> Events { get; set; }
     }
 
-    public class GameData
+    public class _GameData
     {
         public string gameMode { get; set; }
         public float gameTime { get; set; }
@@ -186,11 +186,11 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public string mapTerrain { get; set; }
     }
 
-    public class RootGameData
+    public class _RootGameData
     {
-        public ActivePlayer activePlayer { get; set; }
-        public IList<AllPlayer> allPlayers { get; set; }
-        public EventList events { get; set; }
-        public GameData gameData { get; set; }
+        public _ActivePlayer activePlayer { get; set; }
+        public IList<_AllPlayer> allPlayers { get; set; }
+        public _EventList events { get; set; }
+        public _GameData gameData { get; set; }
     }
 }

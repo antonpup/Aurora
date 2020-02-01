@@ -22,7 +22,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         private readonly HttpClient client = new HttpClient();
         private readonly Timer updateTimer;
 
-        private RootGameData allGameData;
+        private _RootGameData allGameData;
         private bool updatedOnce = false;
 
         public GameEvent_LoL() : base()
@@ -187,14 +187,14 @@ namespace Aurora.Profiles.LeagueOfLegends
         /// <param name="p"></param>
         /// <param name="slot"></param>
         /// <returns></returns>
-        private static ItemNode GetItem(AllPlayer p, int slot)
+        private static SlotNode GetItem(_AllPlayer p, int slot)
         {
             var newItem = p.items.FirstOrDefault(item => item.slot == slot);
 
             if (newItem == null)
-                return new ItemNode();
+                return new SlotNode();
             else
-                return new ItemNode(newItem);
+                return new SlotNode(newItem);
         }
 
         private async void UpdateData(object sender, ElapsedEventArgs e)
@@ -228,7 +228,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 return;
             }
 
-            allGameData = JsonConvert.DeserializeObject<RootGameData>(jsonData);
+            allGameData = JsonConvert.DeserializeObject<_RootGameData>(jsonData);
             updatedOnce = true;
         }
     }
