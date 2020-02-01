@@ -8,7 +8,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public class SlotNode : Node<SlotNode>
     {
-        public bool HasItem;
+        public bool HasItem => Item != ItemID.None;
         public bool CanUse;
         public bool Consumable;
         public int Count;
@@ -31,8 +31,6 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
                 Item = (ItemID)item.itemID;
             else
                 Console.WriteLine(item.itemID);
-
-            HasItem = Item != ItemID.None;
         }
     }
 

@@ -37,8 +37,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Transparent,
                         _Sequence = new KeySequence(new DK[] { DK.D})
                     }
-                }, new OverrideLogicBuilder()
-                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                }, new OverrideLogicBuilder().SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.FromArgb(255, 204, 0), new BooleanGSIEnum("Player/SpellD", SummonerSpell.Flash))
                         .AddEntry(Color.Red, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Ignite))
                         .AddEntry(Color.Green, new BooleanGSIEnum("Player/SpellD", SummonerSpell.Heal))
@@ -54,8 +53,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Transparent,
                         _Sequence = new KeySequence(new DK[] { DK.F})
                     }
-                }, new OverrideLogicBuilder()
-                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                }, new OverrideLogicBuilder().SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.FromArgb(255, 204, 0), new BooleanGSIEnum("Player/SpellF", SummonerSpell.Flash))
                         .AddEntry(Color.Red, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Ignite))
                         .AddEntry(Color.Green, new BooleanGSIEnum("Player/SpellF", SummonerSpell.Heal))
@@ -71,7 +69,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Orange,
                         _Sequence = new KeySequence(new DK[] { DK.Q})
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Abilities/Q/Level", ComparisonOperator.NEQ, 0))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Abilities/Q/Learned"))),
                 new Layer("Ability W", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -79,7 +77,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Orange,
                         _Sequence = new KeySequence(new DK[] { DK.W})
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Abilities/W/Level", ComparisonOperator.NEQ, 0))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Abilities/W/Learned"))),
                 new Layer("Ability E", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -87,7 +85,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Orange,
                         _Sequence = new KeySequence(new DK[] { DK.E})
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Abilities/E/Level", ComparisonOperator.NEQ, 0))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Abilities/E/Learned"))),
                 new Layer("Ability R", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -95,7 +93,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Orange,
                         _Sequence = new KeySequence(new DK[] { DK.R})
                     }
-                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSINumeric("Player/Abilities/R/Level", ComparisonOperator.NEQ, 0))),
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Abilities/R/Learned"))),
                 new Layer("Item 1", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
@@ -103,10 +101,10 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _PrimaryColor = Color.Black,
                         _Sequence = new KeySequence(new DK[] { DK.ONE})
                     }
-                }, new OverrideLogicBuilder()
+                }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Match/InGame"))
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Slot1/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Slot1/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Slot1/HasItem"))
                 )),
                 new Layer("Item 2", new SolidColorLayerHandler()
                 {
@@ -118,7 +116,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Slot2/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Slot2/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Slot2/HasItem"))
                 )),
                 new Layer("Item 3", new SolidColorLayerHandler()
                 {
@@ -130,7 +128,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Slot3/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Slot3/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Slot3/HasItem"))
                 )),
                 new Layer("Trinket", new SolidColorLayerHandler()
                 {
@@ -142,7 +140,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Trinket/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Trinket/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Trinket/HasItem"))
                 )),
                 new Layer("Item 4", new SolidColorLayerHandler()
                 {
@@ -154,7 +152,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Slot4/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Slot4/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Slot4/HasItem"))
                 )),
                 new Layer("Item 5", new SolidColorLayerHandler()
                 {
@@ -166,19 +164,19 @@ namespace Aurora.Profiles.LeagueOfLegends
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Slot5/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Slot5/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Slot5/HasItem"))
                 )),
                 new Layer("Item 6", new SolidColorLayerHandler()
                 {
                     Properties = new LayerHandlerProperties()
                     {
-                        _PrimaryColor = Color.White,
+                        _PrimaryColor = Color.Black,
                         _Sequence = new KeySequence(new DK[] { DK.SEVEN})
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.White, new BooleanGSIBoolean("Player/Items/Slot6/CanUse"))
-                        .AddEntry(Color.FromArgb(100,100,100), new BooleanGSINumeric("Player/Items/Slot6/ItemID", ComparisonOperator.NEQ, 0))
+                        .AddEntry(Color.FromArgb(75,75,75), new BooleanGSIBoolean("Player/Items/Slot6/HasItem"))
                 )),
                 new Layer("Recall", new SolidColorLayerHandler()
                 {

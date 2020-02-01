@@ -8,6 +8,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public class AbilityNode : Node<AbilityNode>
     {
+        public bool Learned => Level != 0;
         public int Level;
         public string Name;
 
