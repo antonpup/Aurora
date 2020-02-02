@@ -29,7 +29,7 @@ namespace Aurora.Devices.Ducky
             {DeviceKeys.ONE, new int[] {1, 45}},
             {DeviceKeys.Q, new int[] {1, 48}},
             {DeviceKeys.A, new int[] {1, 51}},
-          //{DeviceKeys.BACKSLASH_UK, new int[] {1, 54}}, This is almost certain to be the backslash/'<' key for ISO layouts.
+            {DeviceKeys.BACKSLASH_UK, new int[] {1, 54}}, //This is almost certain to be the backslash/'<' key for ISO layouts.
             {DeviceKeys.LEFT_WINDOWS, new int[] {1,57}},
             {DeviceKeys.F1, new int[] {1,60}},
             {DeviceKeys.TWO, new int[] {1, 63}},
@@ -98,7 +98,7 @@ namespace Aurora.Devices.Ducky
             {DeviceKeys.EQUALS, new int[] {4, 63}}, //some ISO layouts have Accute Accent or minus here.
 
             {DeviceKeys.CLOSE_BRACKET, new int[] {5, 6}}, // Some ISO layouts have this as another Umlaut key
-          //{DeviceKeys., new int[] {5, 9}}, Could be the " ' " (apostrphe) key in ISO.
+            {DeviceKeys.HASHTAG, new int[] {5, 9}}, //Could be the " ' " (apostrphe) key in ISO.
           //{DeviceKeys., new int[] {5, 12}}, Probably nothing
             {DeviceKeys.RIGHT_WINDOWS, new int[] {5, 15}},
             {DeviceKeys.F11, new int[] {5, 18}},
