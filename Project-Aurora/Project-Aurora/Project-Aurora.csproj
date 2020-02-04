@@ -379,7 +379,7 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Ducky\DuckyDevice.cs" />
-    <Compile Include="Devices\Ducky\DuckyRGBAPI.cs" />
+    <Compile Include="Devices\Ducky\DuckyRGBMappings.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
