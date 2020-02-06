@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using HidSharp;
 using Aurora.Utils;
+using System.Threading;
 
 namespace Aurora.Devices.Ducky
 {
@@ -23,7 +24,7 @@ namespace Aurora.Devices.Ducky
 
         HidDevice shine7Keyboard;
         HidStream packetStream;
-        byte[] colourMessage = new byte[640];
+        byte[] colourMessage = new byte[640], prevColourMessage = new byte[640];
         byte[] colourHeader = { 0x56, 0x83, 0x00 };
 
         public VariableRegistry GetRegisteredVariables()
@@ -89,7 +90,10 @@ namespace Aurora.Devices.Ducky
                 {
                     packetStream.Write(controlPacket);
                 }
-                catch { }
+                catch
+                {
+                    break;
+                }
             }
             packetStream.Dispose();
             packetStream.Close();
@@ -155,35 +159,41 @@ namespace Aurora.Devices.Ducky
                 }
             }
 
-            //Everything previous to setting the colours actually just write the colour data to the ColourMessage byte array.
-            /*
-             The keyboard is only set up to change all key colours at once, using 10 USB HID packets. They consist of:
-             One initializing packet
-             Eight colour packets (although the eighth one isn't used at all)
-             and one terminate packet
-             
-             These packets are 64 bytes each (technically 65 but the first byte is just padding, which is why there's the .Take(65) there)
-             Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the Shine7ColourOffsetMap
-             The colour packets also have a header. (You might be able to send these packets out of order, and the headers will tell the keyboard where it should be, but IDK)*/
-            for (int i = 0; i < 10; i++)
+            if (!prevColourMessage.SequenceEqual(colourMessage) && IsInitialized())
             {
-                try
+                //Everything previous to setting the colours actually just write the colour data to the ColourMessage byte array.
+                /*
+                 The keyboard is only set up to change all key colours at once, using 10 USB HID packets. They consist of:
+                 One initializing packet
+                 Eight colour packets (although the eighth one isn't used at all)
+                 and one terminate packet
+             
+                 These packets are 64 bytes each (technically 65 but the first byte is just padding, which is why there's the .Take(65) there)
+                 Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the Shine7ColourOffsetMap
+                 The colour packets also have a header. (You might be able to send these packets out of order, and the headers will tell the keyboard where it should be, but IDK)*/
+                for (int i = 0; i < 10; i++)
                 {
-                    if (i < 9)
+                    try
                     {
-                        packetStream.Write(colourMessage, Packet(i), 65);
+                        if (i < 9)
+                        {
+                            packetStream.Write(colourMessage, Packet(i), 65);
+                        }
+                        else
+                        {
+                            //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
+                            packetStream.Write(colourMessage, Packet(i), 64);
+                        }
                     }
-                    else
+                    catch
                     {
-                        //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
-                        packetStream.Write(colourMessage, Packet(i), 64);
+                        Reset();
+                        return false;
                     }
+                    Thread.Sleep(2);
                 }
-                catch
-                {
-                    Reset();
-                    return false;
-                }
+                colourMessage.CopyTo(prevColourMessage, 0);
+                return true;
             }
             return true;
         }
