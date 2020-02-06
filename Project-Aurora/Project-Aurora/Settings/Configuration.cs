@@ -421,9 +421,9 @@ namespace Aurora.Settings
         public bool start_silently;
         public AppExitMode close_mode;
         public MouseOrientationType mouse_orientation;
-        public PreferredKeyboard keyboard_brand;
+        public string keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
-        public PreferredMouse mouse_preference;
+        public string mouse_preference;
         public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
@@ -491,9 +491,9 @@ namespace Aurora.Settings
             start_silently = false;
             close_mode = AppExitMode.Ask;
             mouse_orientation = MouseOrientationType.RightHanded;
-            keyboard_brand = PreferredKeyboard.None;
+            keyboard_brand = "";
             keyboard_localization = PreferredKeyboardLocalization.None;
-            mouse_preference = PreferredMouse.None;
+            mouse_preference = "";
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();

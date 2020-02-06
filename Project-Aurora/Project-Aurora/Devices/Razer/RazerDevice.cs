@@ -169,7 +169,7 @@ namespace Aurora.Devices.Razer
         {
             Dictionary<DeviceKeys, int[]> layout = RazerLayoutMap.GenericKeyboard;
 
-            if (Global.Configuration.keyboard_brand == PreferredKeyboard.Razer_Blade)
+            if (Global.Configuration.keyboard_brand == "razer_blade")
                 layout = RazerLayoutMap.Blade;
 
             if (layout.ContainsKey(key))

@@ -362,7 +362,7 @@ namespace Aurora.Devices.Logitech
         {
             try
             {
-                bool isZoneKeyboard = (Global.Configuration.keyboard_brand == PreferredKeyboard.Logitech_G213);
+                bool isZoneKeyboard = (Global.Configuration.keyboard_brand == "logitech_g213");
 
                 if (!Global.Configuration.devices_disable_keyboard && !isZoneKeyboard)
                 {

@@ -50,26 +50,6 @@
                 <TextBlock Text="{Binding Converter={StaticResource KbLayoutToStringVC}}" />
             </DataTemplate>
 
-            <ObjectDataProvider x:Key="KbBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboard" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
-            <DataTemplate x:Key="KbBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredMouse" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
-            <DataTemplate x:Key="MouseBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
-            </DataTemplate>
-
             <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:MouseOrientationType" />
@@ -233,8 +213,8 @@
                             </StackPanel>
                             <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
                                 <ComboBox x:Name="devices_kb_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbLayout}}" ItemTemplate="{Binding Source={StaticResource KbLayoutTemplate}}" SelectionChanged="devices_kb_layout_SelectionChanged"/>
-                                <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
-                                <ComboBox x:Name="devices_mouse_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseBrand}}" ItemTemplate="{Binding Source={StaticResource MouseBrandTemplate}}" SelectionChanged="devices_mouse_brand_SelectionChanged"/>
+                                <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" SelectionChanged="devices_kb_brand_SelectionChanged"/>
+                                <ComboBox x:Name="devices_mouse_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" SelectionChanged="devices_mouse_brand_SelectionChanged"/>
                                 <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                                 <ComboBox x:Name="devices_mouse_orientation" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseOrientation}}" ItemTemplate="{Binding Source={StaticResource MouseOrientationTemplate}}" SelectionChanged="devices_mouse_orientation_SelectionChanged"/>
                                 <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
