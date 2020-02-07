@@ -746,6 +746,19 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard101)
+                layoutConfigPath = Path.Combine(layoutsPath, "keyboard101.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard102)
+                layoutConfigPath = Path.Combine(layoutsPath, "keyboard102.json");
+            //keyboare 2.1
+            else if (keyboard_preference == PreferredKeyboard.Keyboard21us)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard21us.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard21uk)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard21uk.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard21br)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard21br.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard21jp)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard21jp.json");
             else
             {
                 LoadNone();
