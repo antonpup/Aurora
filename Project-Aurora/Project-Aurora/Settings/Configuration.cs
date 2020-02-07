@@ -8,7 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
-
+using keyboard;
 namespace Aurora.Settings
 {
     /// <summary>
@@ -244,6 +244,21 @@ namespace Aurora.Settings
 	//Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
+
+
+        [Description("Keyboard101")]
+        Keyboard101 = 2101,
+        [Description("Keyboard102")]
+        Keyboard102 = 2102,
+
+        [Description("Keyboard21 UK")]
+        Keyboard21uk = 2103,
+        [Description("Keyboard21 US")]
+        Keyboard21us = 2104,
+        [Description("Keyboard21 BR")]
+        Keyboard21br = 2105,
+        [Description("Keyboard21 JP")]
+        Keyboard21jp = 2106,
     }
 
     public enum PreferredKeyboardLocalization

@@ -77,7 +77,21 @@ namespace Aurora.Utils
 
             if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
                 return DefaultEnum.GetDescription();
-            return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+
+
+            if (EnumType == typeof(PreferredKeyboard))
+            {
+                string oemstring = keyboard.KeyboardFactory.GetOEMName();
+                if ((this.StringToEnum(EnumType, value.ToString())).GetDescription().Contains("Keyboard"))
+                    return oemstring + " " + (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+                else
+                    return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+            }
+            else
+            {
+
+                return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+            }
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
