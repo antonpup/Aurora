@@ -108,7 +108,86 @@ namespace Aurora.Utils
 
             DeviceKeys key = (DeviceKeys)value;
 
-            return Global.kbLayout.KeyText.ContainsKey(key) ? Global.kbLayout.KeyText[key] : key.GetDescription();
+            //Better description for these keys by using the DeviceKeys description instead
+            switch (key)
+            {
+                case DeviceKeys.NUM_ASTERISK:
+                case DeviceKeys.NUM_EIGHT:
+                case DeviceKeys.NUM_ENTER:
+                case DeviceKeys.NUM_FIVE:
+                case DeviceKeys.NUM_FOUR:
+                case DeviceKeys.NUM_MINUS:
+                case DeviceKeys.NUM_NINE:
+                case DeviceKeys.NUM_ONE:
+                case DeviceKeys.NUM_PERIOD:
+                case DeviceKeys.NUM_PLUS:
+                case DeviceKeys.NUM_SEVEN:
+                case DeviceKeys.NUM_SIX:
+                case DeviceKeys.NUM_SLASH:
+                case DeviceKeys.NUM_THREE:
+                case DeviceKeys.NUM_TWO:
+                case DeviceKeys.NUM_ZERO:
+                case DeviceKeys.NUM_ZEROZERO:
+                case DeviceKeys.ADDITIONALLIGHT1:
+                case DeviceKeys.ADDITIONALLIGHT2:
+                case DeviceKeys.ADDITIONALLIGHT3:
+                case DeviceKeys.ADDITIONALLIGHT4:
+                case DeviceKeys.ADDITIONALLIGHT5:
+                case DeviceKeys.ADDITIONALLIGHT6:
+                case DeviceKeys.ADDITIONALLIGHT7:
+                case DeviceKeys.ADDITIONALLIGHT8:
+                case DeviceKeys.ADDITIONALLIGHT9:
+                case DeviceKeys.ADDITIONALLIGHT10:
+                case DeviceKeys.ADDITIONALLIGHT11:
+                case DeviceKeys.ADDITIONALLIGHT12:
+                case DeviceKeys.ADDITIONALLIGHT13:
+                case DeviceKeys.ADDITIONALLIGHT14:
+                case DeviceKeys.ADDITIONALLIGHT15:
+                case DeviceKeys.ADDITIONALLIGHT16:
+                case DeviceKeys.ADDITIONALLIGHT17:
+                case DeviceKeys.ADDITIONALLIGHT18:
+                case DeviceKeys.ADDITIONALLIGHT19:
+                case DeviceKeys.ADDITIONALLIGHT20:
+                case DeviceKeys.ADDITIONALLIGHT21:
+                case DeviceKeys.ADDITIONALLIGHT22:
+                case DeviceKeys.ADDITIONALLIGHT23:
+                case DeviceKeys.ADDITIONALLIGHT24:
+                case DeviceKeys.ADDITIONALLIGHT25:
+                case DeviceKeys.ADDITIONALLIGHT26:
+                case DeviceKeys.ADDITIONALLIGHT27:
+                case DeviceKeys.ADDITIONALLIGHT28:
+                case DeviceKeys.ADDITIONALLIGHT29:
+                case DeviceKeys.ADDITIONALLIGHT30:
+                case DeviceKeys.ADDITIONALLIGHT31:
+                case DeviceKeys.ADDITIONALLIGHT32:
+                case DeviceKeys.LEFT_CONTROL:
+                case DeviceKeys.LEFT_WINDOWS:
+                case DeviceKeys.LEFT_ALT:
+                case DeviceKeys.LEFT_SHIFT:
+                case DeviceKeys.RIGHT_ALT:
+                case DeviceKeys.FN_Key:
+                case DeviceKeys.RIGHT_WINDOWS:
+                case DeviceKeys.RIGHT_CONTROL:
+                case DeviceKeys.RIGHT_SHIFT:
+                case DeviceKeys.MOUSEPADLIGHT1:
+                case DeviceKeys.MOUSEPADLIGHT2:
+                case DeviceKeys.MOUSEPADLIGHT3:
+                case DeviceKeys.MOUSEPADLIGHT4:
+                case DeviceKeys.MOUSEPADLIGHT5:
+                case DeviceKeys.MOUSEPADLIGHT6:
+                case DeviceKeys.MOUSEPADLIGHT7:
+                case DeviceKeys.MOUSEPADLIGHT8:
+                case DeviceKeys.MOUSEPADLIGHT9:
+                case DeviceKeys.MOUSEPADLIGHT10:
+                case DeviceKeys.MOUSEPADLIGHT11:
+                case DeviceKeys.MOUSEPADLIGHT12:
+                case DeviceKeys.MOUSEPADLIGHT13:
+                case DeviceKeys.MOUSEPADLIGHT14:
+                case DeviceKeys.MOUSEPADLIGHT15:
+                    return key.GetDescription();
+            }
+
+            return Global.kbLayout.GetVisualName(key) ?? key.GetDescription();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
