@@ -55,17 +55,21 @@ namespace Aurora.Devices.Uni
             {
                 GamingCenterType = 0;
             }
-            try
+            if(GamingCenterType==0)
             {
-                //GCU
-                string m_sRegPathI = @"\OEM\GamingCenter2\RGBKeyboard";
-                string Control = (string)RegistrySoftwareKeyRead(RegistryHive.LocalMachine, m_sRegPathI, "AuroraSwitch", "0");
-                GamingCenterType = 2;
+                try
+                {
+                    //GCU
+                    string m_sRegPathI = @"\OEM\GamingCenter2\RGBKeyboard";
+                    string Control = (string)RegistrySoftwareKeyRead(RegistryHive.LocalMachine, m_sRegPathI, "AuroraSwitch", "0");
+                    GamingCenterType = 2;
+                }
+                catch (Exception ex)
+                {
+                    GamingCenterType = 0;
+                }
             }
-            catch (Exception ex)
-            {
-                GamingCenterType = 0;
-            }
+           
             if(GamingCenterType == 1)
             {
                 RegistryMonitor monitor = new RegistryMonitor(@"HKEY_LOCAL_MACHINE\SOFTWARE\OEM\GamingCenter\RGBKeyboardView");
