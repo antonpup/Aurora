@@ -23,7 +23,7 @@ namespace Aurora.Devices.Asus
         public string GetDeviceName() => DeviceName;
 
         /// <inheritdoc />
-        public string GetDeviceDetails() => DeviceName + asusHandler?.GetDevicePerformance();
+        public string GetDeviceDetails() => $"{DeviceName}: {asusHandler?.GetDevicePerformance()}";
 
         /// <inheritdoc />
         public string GetDeviceUpdatePerformance()

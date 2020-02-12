@@ -76,7 +76,7 @@ namespace Aurora.Devices.Asus
                 if (i != 0)
                     stringBuilder.Append(", ");
                 
-                stringBuilder.Append(device.Name).Append(" ").Append(device.LastUpdateMillis);
+                stringBuilder.Append(device.Name).Append(" ").Append(device.LastUpdateMillis).Append("ms");
             }
 
             return stringBuilder.ToString();
