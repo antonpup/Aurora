@@ -13,5 +13,13 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         public float GameTime;
 
         public bool InGame;
+
+        public int DragonsKilled;
+
+        public int TurretsKilled;
+
+        public int BaronsKilled;
+
+        public int HeraldsKilled;
     }
 }

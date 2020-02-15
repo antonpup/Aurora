@@ -142,7 +142,10 @@ namespace Aurora.Profiles.LeagueOfLegends
                 #endregion
 
                 #region Events
-                //TODO
+                s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("BaronKill"));
+                s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("HeraldKill"));
+                s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("DragonKill"));
+                s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("TurretKilled"));
                 #endregion
 
                 #region Items
