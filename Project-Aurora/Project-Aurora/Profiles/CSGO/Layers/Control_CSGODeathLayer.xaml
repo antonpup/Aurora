@@ -1,0 +1,17 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.CSGO.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.CSGO.Layers.Control_CSGODeathLayer"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <Grid>
+        <xctk:ColorPicker x:Name="ColorPicker_DeathColor" Margin="71,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="151" UsingAlphaChannel="True" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_DeathColor_SelectedColorChanged" />
+        <Label HorizontalAlignment="Left" Padding="0" Content="Death Color:" VerticalAlignment="Top" Margin="0,2,0,0"/>
+        <Label HorizontalAlignment="Left" Margin="0,28,0,0" Padding="0" Content="Fade out after:" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="IntegerUpDown_FadeOutAfter" HorizontalAlignment="Left" Height="24" Margin="81,25,0,0" VerticalAlignment="Top" Width="50" Value="3" Maximum="20" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="IntegerUpDown_FadeOutAfter_ValueChanged"/>
+        <Label HorizontalAlignment="Left" Margin="136,28,0,0" Padding="0" Content="sec" VerticalAlignment="Top"/>
+    </Grid>
+</UserControl>
