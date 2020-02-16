@@ -22,7 +22,7 @@ namespace Aurora.Devices.Ducky
         private Color processedColor;
         private (int PacketNum, int OffsetNum) currentKeyOffset;
 
-        HidDevice shine7Keyboard;
+        HidDevice duckyKeyboard;
         HidStream packetStream;
         byte[] colourMessage = new byte[640], prevColourMessage = new byte[640];
         byte[] colourHeader = { 0x56, 0x83, 0x00 };
@@ -50,7 +50,7 @@ namespace Aurora.Devices.Ducky
         public bool Initialize()
         {
             //Sets the initialize colour change packet
-            DuckyRGBMappings.Shine7StartingPacket.CopyTo(colourMessage, Packet(0) + 1);
+            DuckyRGBMappings.DuckyStartingPacket.CopyTo(colourMessage, Packet(0) + 1);
             //Headers for each colour packet
             for (byte i = 0; i < 8; i++)
             {
@@ -58,16 +58,22 @@ namespace Aurora.Devices.Ducky
                 colourHeader.CopyTo(colourMessage, Packet(i + 1) + 1);
             }
             //First colour packet has extra data
-            DuckyRGBMappings.Shine7InitColourBytes.CopyTo(colourMessage, Packet(1) + 5);
+            DuckyRGBMappings.DuckyInitColourBytes.CopyTo(colourMessage, Packet(1) + 5);
             //Sets terminate colour packet
-            DuckyRGBMappings.Shine7TerminateColourBytes.CopyTo(colourMessage, Packet(9) + 1);
+            DuckyRGBMappings.DuckyTerminateColourBytes.CopyTo(colourMessage, Packet(9) + 1);
 
-            shine7Keyboard = DeviceList.Local.GetHidDevices(0x04D9, 0x0348).SingleOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
+            //Change this block to a for loop if more devices are added.
+            duckyKeyboard = GetDuckyKeyboard(0x04D9, 0x0348); //Shine 7 & One 2 RGB Full-size
+            if (duckyKeyboard == null)
+            {
+                duckyKeyboard = GetDuckyKeyboard(0x04D9, 0x0356); //One 2 RGB TKL
+            }
+
             try
             {
-                isInitialized = shine7Keyboard.TryOpen(out packetStream);
+                isInitialized = duckyKeyboard.TryOpen(out packetStream);
                 //This uses a monstrous 501 packets to initialize the keyboard in to letting the LEDs be controlled over USB HID.
-                foreach (byte[] controlPacket in DuckyRGBMappings.Shine7Takeover)
+                foreach (byte[] controlPacket in DuckyRGBMappings.DuckyTakeover)
                 {
                     packetStream.Write(controlPacket);
                 }
@@ -84,7 +90,7 @@ namespace Aurora.Devices.Ducky
         {
             //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
             //You can tell both the takeover and release work because the keyboard will flash the same as switching to profile 1. (The same lights when you push FN + 1)
-            foreach (byte[] controlPacket in DuckyRGBMappings.Shine7Release)
+            foreach (byte[] controlPacket in DuckyRGBMappings.DuckyRelease)
             {
                 try
                 {
@@ -140,7 +146,7 @@ namespace Aurora.Devices.Ducky
 
                 //This if statement grabs the packet offset from the key that Aurora wants to set, using Shine7ColourOffsetMap.
                 //It also checks whether the key exists in the Dictionary, and if not, doesn't try and set the key colour.
-                if(!DuckyRGBMappings.Shine7ColourOffsetMap.TryGetValue(kc.Key, out currentKeyOffset)){
+                if(!DuckyRGBMappings.DuckyColourOffsetMap.TryGetValue(kc.Key, out currentKeyOffset)){
                     continue;
                 }
 
@@ -211,5 +217,7 @@ namespace Aurora.Devices.Ducky
         }
 
         private int Packet(int packetNum) => packetNum * 64;
+
+        private HidDevice GetDuckyKeyboard(int VID, int PID) => DeviceList.Local.GetHidDevices(VID, PID).SingleOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
     }
 }

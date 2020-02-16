@@ -248,8 +248,10 @@ namespace Aurora.Settings
         SoundBlasterX_Vanguard_K08 = 1100,
 
         //Ducky range is 1200-1299
-        [Description("Ducky Shine 7")]
+        [Description("Ducky Shine 7/One 2 RGB")]
         Ducky_Shine_7 = 1200,
+        [Description("Ducky One 2 RGB TKL")]
+        Ducky_One_2_RGB_TKL = 1201,
     }
 
     public enum PreferredKeyboardLocalization
