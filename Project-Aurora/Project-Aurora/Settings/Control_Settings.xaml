@@ -171,6 +171,11 @@
                     <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Minimum="0" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
                     <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
                     <CheckBox Content="Enable Audio Capture (for gamestates)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
+                    <TextBlock HorizontalAlignment="Left" Margin="12,283,0,0" TextWrapping="Wrap" Text="Frame rate:" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="frame_rate_updown" HorizontalAlignment="Left" Height="24" Margin="116,278,0,0" VerticalAlignment="Top" Width="50" Maximum="200" Minimum="1" MouseWheelActiveOnFocus="True" Value="30" ValueChanged="frame_rate_updown_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="180,283,0,0" TextWrapping="Wrap" Text="Fps" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="profile_change_animation_Checkbox" Content="Profile change animation" HorizontalAlignment="Left" Margin="224,284,0,0" VerticalAlignment="Top" Checked="chkProfileChangeAnimation_IsCheckedChanged" Unchecked="chkProfileChangeAnimation_IsCheckedChanged"/>
+
                 </Grid>
             </TabItem>
             <TabItem Header="Volume Overlay">

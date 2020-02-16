@@ -8,12 +8,6 @@ using System.Runtime.CompilerServices;
 
 namespace Aurora.Profiles
 {
-    public enum LightEventType
-    {
-        Normal,
-        Underlay,
-        Overlay
-    }
 
     public interface ILightEvent : IInit
     {

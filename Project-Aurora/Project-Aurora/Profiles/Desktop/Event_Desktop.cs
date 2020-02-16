@@ -25,7 +25,6 @@ namespace Aurora.Profiles.Desktop
         public override void UpdateLights(EffectFrame frame)
         {
             var layers = new Queue<EffectLayer>(Application.Profile.Layers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
-            var overlayLayers = new Queue<EffectLayer>(Application.Profile.OverlayLayers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
 
             //Scripts before interactive and shortcut assistant layers
             //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);
@@ -43,6 +42,11 @@ namespace Aurora.Profiles.Desktop
             }
 
             frame.AddLayers(layers.ToArray());
+        }
+        public override void UpdateOverlayLights(EffectFrame frame)
+        {
+            var overlayLayers = new Queue<EffectLayer>(Application.Profile.OverlayLayers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
+
             frame.AddOverlayLayers(overlayLayers.ToArray());
         }
 

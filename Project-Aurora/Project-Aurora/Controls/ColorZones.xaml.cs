@@ -168,7 +168,8 @@ namespace Aurora.Controls
             if (cz_list.SelectedItem != null)
             {
                 EffectSettingsWindow effect_settings = new EffectSettingsWindow(((ColorZone)cz_list.SelectedItem).effect_config);
-                effect_settings.preview_key = Global.LightingStateManager.PreviewProfileKey;
+                
+                effect_settings.preview_key = ((ConfigUI)System.Windows.Application.Current.MainWindow).preview_key;
                 effect_settings.EffectConfigUpdated += Effect_settings_EffectConfigUpdated;
 
                 effect_settings.ShowDialog();

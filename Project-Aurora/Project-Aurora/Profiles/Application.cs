@@ -44,24 +44,10 @@ namespace Aurora.Profiles
 
         public LightEvent Event { get; set; }
 
-        public int? UpdateInterval { get; set; } = null;
-
         public string IconURI { get; set; }
 
         public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
 
-        protected LightEventType? type = LightEventType.Normal;
-        public LightEventType? Type
-        {
-            get { return type; }
-            set
-            {
-                object old = type;
-                object newVal = value;
-                type = value;
-                InvokePropertyChanged(old, newVal);
-            }
-        }
 
         public bool EnableByDefault { get; set; } = true;
         public bool EnableOverlaysByDefault { get; set; } = true;
@@ -84,18 +70,7 @@ namespace Aurora.Profiles
         public bool IsEnabled { get { return Settings.IsEnabled; } }
         public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
         public event PropertyChangedExEventHandler PropertyChanged;
-        protected LightEventType type;
-        public LightEventType Type
-        {
-            get { return type; }
-            protected set
-            {
-                object old = type;
-                object newVal = value;
-                type = value;
-                InvokePropertyChanged(old, newVal);
-            }
-        }
+
         #endregion
 
         #region Internal Properties

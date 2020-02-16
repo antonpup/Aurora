@@ -1,5 +1,7 @@
 ﻿using Aurora.Profiles;
 using Aurora.Utils;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -22,7 +24,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay }));
 
         public bool Evaluate(IGameState gameState)
-            => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
+        => Process.GetProcessesByName(Path.GetFileNameWithoutExtension(ProcessName)).Length > 0;
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public void SetApplication(Application application) { }
