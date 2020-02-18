@@ -246,18 +246,18 @@ namespace Aurora.Settings
         SoundBlasterX_Vanguard_K08 = 1100,
 
 
-        [Description("Keyboard101")]
+        [Description("UNIWILL2ND (ANSI)")]
         Keyboard101 = 2101,
-        [Description("Keyboard102")]
+        [Description("UNIWILL2ND (ISO)")]
         Keyboard102 = 2102,
 
-        [Description("Keyboard21 UK")]
+        [Description("UNIWILL2P1 (ISO)")]
         Keyboard21uk = 2103,
-        [Description("Keyboard21 US")]
+        [Description("UNIWILL2P1 (ANSI)")]
         Keyboard21us = 2104,
-        [Description("Keyboard21 BR")]
+        [Description("UNIWILL2P1 (ABNT)")]
         Keyboard21br = 2105,
-        [Description("Keyboard21 JP")]
+        [Description("UNIWILL2P1 (JIS)")]
         Keyboard21jp = 2106,
     }
 

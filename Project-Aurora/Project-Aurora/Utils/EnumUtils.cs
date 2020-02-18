@@ -82,10 +82,28 @@ namespace Aurora.Utils
             if (EnumType == typeof(PreferredKeyboard))
             {
                 string oemstring = keyboard.KeyboardFactory.GetOEMName();
-                if ((this.StringToEnum(EnumType, value.ToString())).GetDescription().Contains("Keyboard"))
-                    return oemstring + " " + (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+                string descriptionString = (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+                if (descriptionString.Contains("UNIWILL") )
+                {
+                    if(oemstring.Equals("XMG"))
+                    {
+                        if (descriptionString.Contains("UNIWILL2P1"))
+                            return descriptionString.Replace("UNIWILL2P1", oemstring + " FUSION");
+                        else if(descriptionString.Contains("UNIWILL2ND"))
+                            return descriptionString.Replace("UNIWILL2ND", oemstring + " NEO");
+                    }
+                    else
+                    {
+                        if (descriptionString.Contains("UNIWILL2P1"))
+                            return descriptionString.Replace("UNIWILL2P1", oemstring);
+                        else if (descriptionString.Contains("UNIWILL2ND"))
+                            return descriptionString.Replace("UNIWILL2ND", oemstring);
+                    }
+                    return descriptionString;
+                }
+                  
                 else
-                    return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+                    return descriptionString;
             }
             else
             {
