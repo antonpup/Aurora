@@ -62,11 +62,10 @@ namespace Aurora.Devices.Ducky
             //Sets terminate colour packet
             DuckyRGBMappings.DuckyTerminateColourBytes.CopyTo(colourMessage, Packet(9) + 1);
 
-            //Change this block to a for loop if more devices are added.
-            duckyKeyboard = GetDuckyKeyboard(0x04D9, 0x0348); //Shine 7 & One 2 RGB Full-size
-            if (duckyKeyboard == null)
+            foreach (int keyboardID in DuckyRGBMappings.KeyboardIDs)
             {
-                duckyKeyboard = GetDuckyKeyboard(0x04D9, 0x0356); //One 2 RGB TKL
+                duckyKeyboard = GetDuckyKeyboard(DuckyRGBMappings.DuckyID, keyboardID);
+                if (duckyKeyboard != null) { break; }
             }
 
             try
@@ -144,13 +143,13 @@ namespace Aurora.Devices.Ducky
                 //This keyboard doesn't take alpha (transparency) values, so we do this:
                 processedColor = ColorUtils.CorrectWithAlpha(kc.Value);
 
-                //This if statement grabs the packet offset from the key that Aurora wants to set, using Shine7ColourOffsetMap.
+                //This if statement grabs the packet offset from the key that Aurora wants to set, using DuckyColourOffsetMap.
                 //It also checks whether the key exists in the Dictionary, and if not, doesn't try and set the key colour.
                 if(!DuckyRGBMappings.DuckyColourOffsetMap.TryGetValue(kc.Key, out currentKeyOffset)){
                     continue;
                 }
 
-                //The colours are encoded using RGB bytes consecutively throughout the 10 packets, which are offset with Shine7ColourOffsetMap.
+                //The colours are encoded using RGB bytes consecutively throughout the 10 packets, which are offset with DuckyColourOffsetMap.
                 colourMessage[Packet(currentKeyOffset.PacketNum) + currentKeyOffset.OffsetNum + 1] = processedColor.R;
                 //To account for the headers in the next packet, the offset is pushed a further four bytes (only required if the R byte starts on the last byte of a packet).
                 if (currentKeyOffset.OffsetNum == 63)
@@ -175,7 +174,7 @@ namespace Aurora.Devices.Ducky
                  and one terminate packet
              
                  These packets are 64 bytes each (technically 65 but the first byte is just padding, which is why there's the .Take(65) there)
-                 Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the Shine7ColourOffsetMap
+                 Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the DuckyColourOffsetMap
                  The colour packets also have a header. (You might be able to send these packets out of order, and the headers will tell the keyboard where it should be, but IDK)*/
                 for (int i = 0; i < 10; i++)
                 {
@@ -218,6 +217,6 @@ namespace Aurora.Devices.Ducky
 
         private int Packet(int packetNum) => packetNum * 64;
 
-        private HidDevice GetDuckyKeyboard(int VID, int PID) => DeviceList.Local.GetHidDevices(VID, PID).SingleOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
+        private HidDevice GetDuckyKeyboard(int VID, int PID) => DeviceList.Local.GetHidDevices(VID, PID).FirstOrDefault(HidDevice => HidDevice.GetMaxInputReportLength() == 65);
     }
 }
