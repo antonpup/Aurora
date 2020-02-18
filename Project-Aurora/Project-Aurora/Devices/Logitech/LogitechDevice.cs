@@ -358,7 +358,7 @@ namespace Aurora.Devices.Logitech
                 , (int)Math.Round((double)(100 * blue) / 255.0f));
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -366,14 +366,14 @@ namespace Aurora.Devices.Logitech
 
                 if (!Global.Configuration.devices_disable_keyboard && !isZoneKeyboard)
                 {
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (KeyValuePair<int, Color> key in keyColors)
                     {
                         if (e.Cancel) return false;
 
-                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
+                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap((DeviceKeys)key.Key);
 
                         if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN &&
-                            (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral))
+                            ((DeviceKeys)key.Key == DeviceKeys.Peripheral_Logo || (DeviceKeys)key.Key == DeviceKeys.Peripheral))
                         {
                             if (!Global.Configuration.devices_disable_mouse ||
                                 !Global.Configuration.devices_disable_headset)
@@ -389,7 +389,7 @@ namespace Aurora.Devices.Logitech
                             if (!Global.Configuration.devices_disable_keyboard)
                             {
                                 LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
-                                switch (key.Key)
+                                switch ((DeviceKeys)key.Key)
                                 {
                                     case DeviceKeys.OEM8:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt,
@@ -461,14 +461,14 @@ namespace Aurora.Devices.Logitech
                     List<Color> arrowColor = new List<Color>();
                     List<Color> numpadColor = new List<Color>();
 
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (KeyValuePair<int, Color> key in keyColors)
                     {
                         if (e.Cancel) return false;
 
-                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap(key.Key);
+                        Logitech_keyboardBitmapKeys localKey = ToLogitechBitmap((DeviceKeys)key.Key);
 
                         if (localKey == Logitech_keyboardBitmapKeys.UNKNOWN &&
-                            (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral))
+                            ((DeviceKeys)key.Key == DeviceKeys.Peripheral_Logo || (DeviceKeys)key.Key == DeviceKeys.Peripheral))
                         {
                             if (!Global.Configuration.devices_disable_mouse ||
                                 !Global.Configuration.devices_disable_headset)
@@ -484,7 +484,7 @@ namespace Aurora.Devices.Logitech
                             if (!Global.Configuration.devices_disable_keyboard)
                             {
                                 LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
-                                switch (key.Key)
+                                switch ((DeviceKeys)key.Key)
                                 {
                                     case DeviceKeys.OEM8:
                                         LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(220, red_amt, green_amt,
@@ -973,9 +973,9 @@ namespace Aurora.Devices.Logitech
                 case (DeviceKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.UNKNOWN;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.TILDE):
                     return Logitech_keyboardBitmapKeys.TILDE;
@@ -1098,9 +1098,9 @@ namespace Aurora.Devices.Logitech
                 case (DeviceKeys.LEFT_SHIFT):
                     return Logitech_keyboardBitmapKeys.LEFT_SHIFT;
                 case (DeviceKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.OEM102;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
                 case (DeviceKeys.Z):
                     return Logitech_keyboardBitmapKeys.Z;

@@ -84,15 +84,15 @@ namespace Aurora.Devices.Vulcan
             VulcanKeyboard.Disconnect();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!isInitialized)
                 return false;
 
-            foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+            foreach (KeyValuePair<int, Color> key in keyColors)
             {
                 Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
-                if (KeyMap.TryGetValue(key.Key, out var vulcanKey))
+                if (KeyMap.TryGetValue((DeviceKeys)key.Key, out var vulcanKey))
                     VulcanKeyboard.SetKeyColor(vulcanKey, clr);                
             }
 

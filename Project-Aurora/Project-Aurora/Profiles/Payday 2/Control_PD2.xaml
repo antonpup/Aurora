@@ -57,11 +57,6 @@
             <DataTemplate x:Key="PD2_GameStateTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource PD2_GameStateTypeToStringVC}}" />
             </DataTemplate>
-
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 

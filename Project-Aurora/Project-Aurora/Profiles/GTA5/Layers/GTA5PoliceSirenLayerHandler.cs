@@ -56,11 +56,11 @@ namespace Aurora.Profiles.GTA5.Layers
             this._LeftSirenColor = Color.FromArgb(255, 0, 0);
             this._RightSirenColor = Color.FromArgb(0, 0, 255);
             this._SirenType = GTA5_PoliceEffects.Default;
-            this._LeftSirenSequence = new KeySequence(new Devices.DeviceKeys[] {
+            this._LeftSirenSequence = new KeySequence(new DeviceKey[] {
                 Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3,
                 Devices.DeviceKeys.F4, Devices.DeviceKeys.F5, Devices.DeviceKeys.F6
             });
-            this._RightSirenSequence = new KeySequence(new Devices.DeviceKeys[] {
+            this._RightSirenSequence = new KeySequence(new DeviceKey[] {
                 Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9,
                 Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
             });

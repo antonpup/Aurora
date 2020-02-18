@@ -575,7 +575,7 @@ namespace Aurora.Devices.CoolerMaster
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -584,18 +584,18 @@ namespace Aurora.Devices.CoolerMaster
                 if (CoolerMasterKeys.KeyboardLayoutMapping.ContainsKey(CurrentDevice))
                     coords = CoolerMasterKeys.KeyboardLayoutMapping[CurrentDevice];
                 
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                foreach (KeyValuePair<int, Color> key in keyColors)
                 {
                     if (e.Cancel) return false;
 
                     int[] coordinates = new int[2];
 
-                    DeviceKeys dev_key = key.Key;
+                    DeviceKeys dev_key = (DeviceKeys)key.Key;
 
-                    if (dev_key == DeviceKeys.ENTER && !Global.kbLayout.Loaded_Localization.IsANSI())
-                        dev_key = DeviceKeys.BACKSLASH;
+                    /*if (dev_key == DeviceKeys.ENTER && !Global.kbLayout.Loaded_Localization.IsANSI())
+                        dev_key = DeviceKeys.BACKSLASH;*/
 
-                    if (Effects.possible_peripheral_keys.Contains(key.Key))
+                    if (Effects.possible_peripheral_keys.Contains(dev_key))
                     {
                         //Temp until mice support is added
                         continue;

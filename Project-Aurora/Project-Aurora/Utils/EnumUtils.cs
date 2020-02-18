@@ -90,12 +90,12 @@ namespace Aurora.Utils
         }
     }
 
-    public class DeviceKeysToStringVC : IValueConverter
+    public class DeviceKeyToStringVC : IValueConverter
     {
         protected Type EnumType = typeof(DeviceKeys);
         protected Enum DefaultEnum = DeviceKeys.NONE;
 
-        public DeviceKeysToStringVC() { }
+        public DeviceKeyToStringVC() { }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -106,7 +106,7 @@ namespace Aurora.Utils
             if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
                 return DefaultEnum.GetDescription();
 
-            DeviceKeys key = (DeviceKeys)value;
+            DeviceKeys key = (DeviceKeys)((DeviceKey)value).Tag;
 
             //Better description for these keys by using the DeviceKeys description instead
             switch (key)
@@ -186,8 +186,8 @@ namespace Aurora.Utils
                 case DeviceKeys.MOUSEPADLIGHT15:
                     return key.GetDescription();
             }
-
-            return Global.kbLayout.GetVisualName(key) ?? key.GetDescription();
+            //TODO
+            return key.GetDescription();//Global.kbLayout.GetVisualName(key) ?? key.GetDescription();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

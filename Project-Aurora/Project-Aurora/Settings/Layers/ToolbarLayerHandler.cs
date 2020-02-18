@@ -40,7 +40,7 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public class ToolbarLayerHandler : LayerHandler<ToolbarLayerHandlerProperties> {
 
-        private DeviceKeys activeKey = DeviceKeys.NONE;
+        private DeviceKey activeKey = DeviceKeys.NONE;
 
         public ToolbarLayerHandler() {
             _ID = "Toolbar";

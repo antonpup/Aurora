@@ -9,7 +9,7 @@
              mc:Ignorable="d" Loaded="OnUserControlLoaded">
     <UserControl.Resources>
         <ResourceDictionary>
-            <utils:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
+            <utils:DeviceKeyToStringVC x:Key="DeviceKeysToStringVC"/>
             <ObjectDataProvider x:Key="DeviceKeysEnum" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="devices:DeviceKeys"/>

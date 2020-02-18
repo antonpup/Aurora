@@ -1309,7 +1309,7 @@ namespace Aurora.Devices
     public class DeviceColorComposition
     {
         public readonly object bitmapLock = new object();
-        public Dictionary<DeviceKeys, Color> keyColors;
+        public Dictionary<int, Color> keyColors;
         public Bitmap keyBitmap;
     }
 
@@ -1394,7 +1394,7 @@ namespace Aurora.Devices
         /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
+        bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false);
 
         /// <summary>
         /// Updates the device with a specified color composition.

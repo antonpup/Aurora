@@ -47,11 +47,11 @@ namespace Aurora.Profiles.Slime_Rancher
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_Sequence", new OverrideLookupTableBuilder<KeySequence>()
-                        .AddEntry(new KeySequence(new[] {DK.ONE}), new BooleanGSINumeric("VacPack/SellectedSlot",1))
-                        .AddEntry(new KeySequence(new[] {DK.TWO}), new BooleanGSINumeric("VacPack/SellectedSlot",2))
-                        .AddEntry(new KeySequence(new[] {DK.THREE}), new BooleanGSINumeric("VacPack/SellectedSlot",3))
-                        .AddEntry(new KeySequence(new[] {DK.FOUR}), new BooleanGSINumeric("VacPack/SellectedSlot",4))
-                        .AddEntry(new KeySequence(new[] {DK.FIVE}), new BooleanGSINumeric("VacPack/SellectedSlot",5))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.ONE}), new BooleanGSINumeric("VacPack/SellectedSlot",1))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.TWO}), new BooleanGSINumeric("VacPack/SellectedSlot",2))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.THREE}), new BooleanGSINumeric("VacPack/SellectedSlot",3))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.FOUR}), new BooleanGSINumeric("VacPack/SellectedSlot",4))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.FIVE}), new BooleanGSINumeric("VacPack/SellectedSlot",5))
                     )
                     .SetLookupTable("_Enabled", new OverrideLookupTableBuilder<bool>()
                         .AddEntry(false, new BooleanGSIBoolean("VacPack/InGadgetMode"))
@@ -65,11 +65,11 @@ namespace Aurora.Profiles.Slime_Rancher
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_Sequence", new OverrideLookupTableBuilder<KeySequence>()
-                        .AddEntry(new KeySequence(new[] {DK.ONE}), new BooleanGSINumeric("VacPack/UseableSlots",1))
-                        .AddEntry(new KeySequence(new[] {DK.ONE, DK.TWO}), new BooleanGSINumeric("VacPack/UseableSlots",2))
-                        .AddEntry(new KeySequence(new[] {DK.ONE, DK.TWO, DK.THREE}), new BooleanGSINumeric("VacPack/UseableSlots",3))
-                        .AddEntry(new KeySequence(new[] {DK.ONE, DK.TWO, DK.THREE, DK.FOUR}), new BooleanGSINumeric("VacPack/UseableSlots",4))
-                        .AddEntry(new KeySequence(new[] {DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE}), new BooleanGSINumeric("VacPack/UseableSlots",ComparisonOperator.GTE,5))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.ONE}), new BooleanGSINumeric("VacPack/UseableSlots",1))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.ONE, DK.TWO}), new BooleanGSINumeric("VacPack/UseableSlots",2))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.ONE, DK.TWO, DK.THREE}), new BooleanGSINumeric("VacPack/UseableSlots",3))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.ONE, DK.TWO, DK.THREE, DK.FOUR}), new BooleanGSINumeric("VacPack/UseableSlots",4))
+                        .AddEntry(new KeySequence(new DeviceKey[] {DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE}), new BooleanGSINumeric("VacPack/UseableSlots",ComparisonOperator.GTE,5))
                     )
                     .SetLookupTable("_Enabled", new OverrideLookupTableBuilder<bool>()
                         .AddEntry(false, new BooleanGSIBoolean("VacPack/InGadgetMode"))
@@ -88,7 +88,7 @@ namespace Aurora.Profiles.Slime_Rancher
                         _MaxVariablePath = "Player/Health/Max",
                         _PrimaryColor = Color.FromArgb(255, 17, 17),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.Q, DK.W, DK.E, DK.R, DK.T, DK.Y, DK.U, DK.I, DK.O, DK.P, DK.OPEN_BRACKET, DK.CLOSE_BRACKET
                         })
                     }
@@ -100,7 +100,7 @@ namespace Aurora.Profiles.Slime_Rancher
                         _MaxVariablePath = "Player/Energy/Max",
                         _PrimaryColor = Color.FromArgb(9, 173, 233),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.A, DK.S, DK.D, DK.F, DK.G, DK.H, DK.J, DK.K, DK.L, DK.SEMICOLON, DK.APOSTROPHE
                         })
                     }
@@ -112,7 +112,7 @@ namespace Aurora.Profiles.Slime_Rancher
                         _MaxVariablePath = "Player/Radiation/Max",
                         _PrimaryColor = Color.FromArgb(60, 233, 118),
                         _SecondaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH
                         })
                     }

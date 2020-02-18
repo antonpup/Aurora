@@ -29,7 +29,7 @@ namespace Aurora.Profiles.Skype
                 {
                     Properties = new BreathingLayerHandlerProperties()
                     {
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                                 Devices.DeviceKeys.PRINT_SCREEN, Devices.DeviceKeys.SCROLL_LOCK, Devices.DeviceKeys.PAUSE_BREAK
                             }),
                         _PrimaryColor = Color.Orange,
@@ -42,7 +42,7 @@ namespace Aurora.Profiles.Skype
                 {
                     Properties = new BreathingLayerHandlerProperties()
                     {
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                                 Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP,
                                 Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN
                             }),

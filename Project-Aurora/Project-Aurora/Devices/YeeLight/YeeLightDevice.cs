@@ -176,7 +176,7 @@ namespace Aurora.Devices.YeeLight
             {
                 Color targetColor = colorComposition.keyColors.FirstOrDefault(pair =>
                     {
-                        return pair.Key == Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
+                        return (DeviceKeys)pair.Key == Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
                     }).Value;
 
                 light.SetColor(targetColor.R, targetColor.G, targetColor.B);
@@ -194,7 +194,7 @@ namespace Aurora.Devices.YeeLight
             return true;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             throw new NotImplementedException();
         }

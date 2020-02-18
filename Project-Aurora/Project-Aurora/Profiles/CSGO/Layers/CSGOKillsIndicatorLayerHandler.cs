@@ -35,7 +35,7 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.G1, Devices.DeviceKeys.G2, Devices.DeviceKeys.G3, Devices.DeviceKeys.G4, Devices.DeviceKeys.G5 });
+            this._Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.G1, Devices.DeviceKeys.G2, Devices.DeviceKeys.G3, Devices.DeviceKeys.G4, Devices.DeviceKeys.G5 });
             this._RegularKillColor = Color.FromArgb(0, 255, 0);
             this._HeadshotKillColor = Color.FromArgb(255, 80, 0);
         }

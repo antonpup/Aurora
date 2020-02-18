@@ -69,8 +69,8 @@ namespace Aurora.Utils
         {
             DeviceKeys key = getDeviceKey(forms_key, scanCode, isExtendedKey);
             //Global.logger.LogLine(key.ToString() + ":" + ((int)key).ToString());
-            if (Global.kbLayout.LayoutKeyConversion.ContainsKey(key))
-                return Global.kbLayout.LayoutKeyConversion[key];
+            /*if (Global.kbLayout.LayoutKeyConversion.ContainsKey(key))
+                return Global.kbLayout.LayoutKeyConversion[key];*/
 
             return key;
         }
@@ -102,8 +102,8 @@ namespace Aurora.Utils
             {7, DeviceKeys.SIX},
             {8, DeviceKeys.SEVEN},
             {9, DeviceKeys.EIGHT},
-            {10, DeviceKeys.NINE},
-            {11, DeviceKeys.ZERO},*/
+            {10, DeviceKeys.NINE},*/
+            {11, DeviceKeys.ZERO},
             {12, DeviceKeys.MINUS},
             {13, DeviceKeys.EQUALS},
             /*{14, DeviceKeys.BACKSPACE},
@@ -233,7 +233,7 @@ namespace Aurora.Utils
             // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
             bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
             bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
-            if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
+            if ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102))
             {
                 uint thread = GetWindowThreadProcessId(ActiveProcessMonitor.GetForegroundWindow(), IntPtr.Zero);
                 var layout = GetKeyboardLayout(thread);
@@ -884,9 +884,9 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="formsKeys">Array of Forms.Keys to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys[] GetDeviceKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
+        public static DeviceKey[] GetDeviceKeys(Keys[] formsKeys, bool extendedKeys = false, bool getBoth = false)
         {
-            HashSet<DeviceKeys> _returnKeys = new HashSet<DeviceKeys>();
+            HashSet<DeviceKey> _returnKeys = new HashSet<DeviceKey>();
 
             for (int i = 0; i < formsKeys.Length; i++)
             {

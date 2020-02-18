@@ -87,7 +87,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Item Slot 1 Key", sender as TextBlock, item1_keys_callback);
         }
 
-        private void item1_keys_callback(DeviceKeys[] resulting_keys)
+        private void item1_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= item1_keys_callback;
 
@@ -112,7 +112,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Item Slot 2 Key", sender as TextBlock, item2_keys_callback);
         }
 
-        private void item2_keys_callback(DeviceKeys[] resulting_keys)
+        private void item2_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= item2_keys_callback;
 
@@ -137,7 +137,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Item Slot 3 Key", sender as TextBlock, item3_keys_callback);
         }
 
-        private void item3_keys_callback(DeviceKeys[] resulting_keys)
+        private void item3_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= item3_keys_callback;
 
@@ -162,7 +162,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Item Slot 4 Key", sender as TextBlock, item4_keys_callback);
         }
 
-        private void item4_keys_callback(DeviceKeys[] resulting_keys)
+        private void item4_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= item4_keys_callback;
 
@@ -187,7 +187,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Item Slot 5 Key", sender as TextBlock, item5_keys_callback);
         }
 
-        private void item5_keys_callback(DeviceKeys[] resulting_keys)
+        private void item5_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= item5_keys_callback;
 
@@ -212,7 +212,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Item Slot 6 Key", sender as TextBlock, item6_keys_callback);
         }
 
-        private void item6_keys_callback(DeviceKeys[] resulting_keys)
+        private void item6_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= item6_keys_callback;
 
@@ -237,7 +237,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Stash Slot 1 Key", sender as TextBlock, stash1_keys_callback);
         }
 
-        private void stash1_keys_callback(DeviceKeys[] resulting_keys)
+        private void stash1_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= stash1_keys_callback;
 
@@ -262,7 +262,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Stash Slot 2 Key", sender as TextBlock, stash2_keys_callback);
         }
 
-        private void stash2_keys_callback(DeviceKeys[] resulting_keys)
+        private void stash2_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= stash2_keys_callback;
 
@@ -287,7 +287,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Stash Slot 3 Key", sender as TextBlock, stash3_keys_callback);
         }
 
-        private void stash3_keys_callback(DeviceKeys[] resulting_keys)
+        private void stash3_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= stash3_keys_callback;
 
@@ -312,7 +312,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Stash Slot 4 Key", sender as TextBlock, stash4_keys_callback);
         }
 
-        private void stash4_keys_callback(DeviceKeys[] resulting_keys)
+        private void stash4_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= stash4_keys_callback;
 
@@ -337,7 +337,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Stash Slot 5 Key", sender as TextBlock, stash5_keys_callback);
         }
 
-        private void stash5_keys_callback(DeviceKeys[] resulting_keys)
+        private void stash5_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= stash5_keys_callback;
 
@@ -362,7 +362,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             RecordSingleKey("Dota 2 - Stash Slot 6 Key", sender as TextBlock, stash6_keys_callback);
         }
 
-        private void stash6_keys_callback(DeviceKeys[] resulting_keys)
+        private void stash6_keys_callback(DeviceKey[] resulting_keys)
         {
             Global.key_recorder.FinishedRecording -= stash6_keys_callback;
 

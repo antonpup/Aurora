@@ -334,7 +334,7 @@ namespace Aurora.Devices.LightFX
 
         bool NumLock = (((ushort)LightFXSDK.GetKeyState(0x90)) & 0xffff) != 0;
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
             List<Color> leftColor = new List<Color>();
@@ -402,38 +402,38 @@ namespace Aurora.Devices.LightFX
                     LightFXSDK.LFX_Reset();
                 }
 
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors) {
+                foreach (KeyValuePair<int, Color> key in keyColors) {
                     if (e.Cancel) return false;
                     if (isInitialized) {
                         //left
-                        if (Array.Exists(leftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(leftZoneKeys, s => s == (DeviceKeys)key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             leftColor.Add(key.Value);
 
                         } //middle left
-                        if (Array.Exists(midLeftZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(midLeftZoneKeys, s => s == (DeviceKeys)key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midleftColor.Add(key.Value);
 
                         }//middle right
-                        if (Array.Exists(midRightZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(midRightZoneKeys, s => s == (DeviceKeys)key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             midRightColor.Add(key.Value);
 
                         }//right */
-                        if (Array.Exists(rightZoneKeys, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(rightZoneKeys, s => s == (DeviceKeys)key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             rightColor.Add(key.Value);
 
                         }
 
-                        if (Array.Exists(numpadZone, s => s == key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
+                        if (Array.Exists(numpadZone, s => s == (DeviceKeys)key.Key) && (key.Value.R > 0 || key.Value.G > 0 || key.Value.B > 0)) {
 
                             numpadColor.Add(key.Value);
 
                         }
 
-                        if (key.Key == DeviceKeys.Peripheral_Logo) {
+                        if ((DeviceKeys)key.Key == DeviceKeys.Peripheral_Logo) {
 
                             setColor(1, (int)BITMASK.AlienFrontLogo, key.Value.R, key.Value.G, key.Value.B);
                             if (!usingHID) {

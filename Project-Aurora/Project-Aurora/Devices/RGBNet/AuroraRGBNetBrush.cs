@@ -8,7 +8,7 @@ namespace Aurora.Devices.RGBNet
     {
         #region Properties & Fields
 
-        public Dictionary<DeviceKeys, System.Drawing.Color> KeyColors { get; set; }
+        public Dictionary<int, System.Drawing.Color> KeyColors { get; set; }
 
         protected Dictionary<LedId, DeviceKeys> LedMapping { get; } = new Dictionary<LedId, DeviceKeys>
         {
@@ -810,7 +810,7 @@ namespace Aurora.Devices.RGBNet
         {
             if (KeyColors != null &&
                 LedMapping.TryGetValue(renderTarget.Led.Id, out DeviceKeys key) &&
-                KeyColors.TryGetValue(key, out System.Drawing.Color color))
+                KeyColors.TryGetValue((int)key, out System.Drawing.Color color))
             {
                 var c = ColorUtils.CorrectWithAlpha(color);
                 return new Color(c.A, c.R, c.G, c.B);

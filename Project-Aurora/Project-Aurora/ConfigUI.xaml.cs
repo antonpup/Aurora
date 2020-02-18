@@ -48,13 +48,7 @@ namespace Aurora
 
         private Timer virtual_keyboard_timer;
         private Stopwatch recording_stopwatch = new Stopwatch();
-        private Grid virtial_kb = new Grid();
 
-        private readonly double virtual_keyboard_width;
-        private readonly double virtual_keyboard_height;
-
-        private readonly double width;
-        private readonly double height;
 
         public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register("FocusedApplication", typeof(Profiles.Application), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
@@ -67,8 +61,6 @@ namespace Aurora
                 Global.LightingStateManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
             }
         }
-
-        LayerEditor layer_editor = new LayerEditor();
 
         private bool _ShowHidden = false;
 
@@ -86,19 +78,11 @@ namespace Aurora
         {
             InitializeComponent();
 
-            virtual_keyboard_height = this.keyboard_grid.Height;
-            virtual_keyboard_width = this.keyboard_grid.Width;
-
-            width = Width;
-            height = Height;
-
-            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
-
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
             GenerateProfileStack();
             settingsControl.DataContext = this;
-
+            deviceLayerPresenter.IsLayoutMoveEnabled = true;
             
         }
 
@@ -139,28 +123,7 @@ namespace Aurora
                 SelectedControl = layerPresenter;
         }
 
-        private void KbLayout_KeyboardLayoutUpdated(object sender)
-        {
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
-
-            keyboard_grid.Children.Clear();
-            keyboard_grid.Children.Add(virtial_kb);
-            keyboard_grid.Children.Add(new LayerEditor());
-
-            keyboard_grid.Width = virtial_kb.Width;
-            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
-
-            keyboard_grid.Height = virtial_kb.Height;
-            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
-
-            keyboard_grid.UpdateLayout();
-
-            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
-            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
-            keyboard_viewbox.UpdateLayout();
-
-            this.UpdateLayout();
-        }
+  
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -169,34 +132,15 @@ namespace Aurora
             if (!settingsloaded)
             {
                 virtual_keyboard_timer = new Timer(100);
-                virtual_keyboard_timer.Elapsed += new ElapsedEventHandler(virtual_keyboard_timer_Tick);
+                virtual_keyboard_timer.Elapsed += new ElapsedEventHandler(LayoutRenderTimerTick);
                 virtual_keyboard_timer.Start();
 
                 settingsloaded = true;
             }
 
-            this.keyboard_record_message.Visibility = Visibility.Hidden;
-
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
-
-            keyboard_grid.Children.Clear();
-            keyboard_grid.Children.Add(virtial_kb);
-            keyboard_grid.Children.Add(new LayerEditor());
-
-            keyboard_grid.Width = virtial_kb.Width;
-            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
-
-            keyboard_grid.Height = virtial_kb.Height;
-            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
-
-            keyboard_grid.UpdateLayout();
-
-            keyboard_viewbox.MaxWidth = virtial_kb.Width + 50;
-            keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
-            keyboard_viewbox.UpdateLayout();
 
             UpdateManagerStackFocus(ctrlLayerManager);
 
@@ -231,7 +175,7 @@ namespace Aurora
         [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, SetLastError = true)]
         private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
-        private void virtual_keyboard_timer_Tick(object sender, EventArgs e)
+        private void LayoutRenderTimerTick(object sender, EventArgs e)
         {
             if (!ApplicationIsActivated())
                 return;
@@ -247,19 +191,10 @@ namespace Aurora
                                 bg_grid.UpdateLayout();
                             }
 
-
-                            Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
-
                             if (IsActive)
                             {
-                                keylights = Global.effengine.GetKeyboardLights();
-                                Global.kbLayout.SetKeyboardColors(keylights);
+                                deviceLayerPresenter.Refresh();
                             }
-
-                            if (Global.key_recorder.IsRecording())
-                                this.keyboard_record_message.Visibility = Visibility.Visible;
-                            else
-                                this.keyboard_record_message.Visibility = Visibility.Hidden;
 
                         });
         }

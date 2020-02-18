@@ -86,8 +86,8 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
                 if (hasConflict)
                     foreach (var affectedKey in bind.AffectedKeys) // For each key that is affected by this keybind
-                        keys[affectedKey] = keys.ContainsKey(affectedKey) // Check if this key is already flagged as a conflict
-                            ? keys[affectedKey] && isOnlyModifierConflict // If so, ensure it shows full conflicts over modifier conflicts 
+                        keys[(DeviceKeys)affectedKey.Tag] = keys.ContainsKey((DeviceKeys)affectedKey.Tag) // Check if this key is already flagged as a conflict
+                            ? keys[(DeviceKeys)affectedKey.Tag] && isOnlyModifierConflict // If so, ensure it shows full conflicts over modifier conflicts 
                             : isOnlyModifierConflict; // Else if not already flagged, simply set it.
             }
             return keys;

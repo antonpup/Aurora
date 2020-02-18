@@ -153,7 +153,7 @@ namespace Aurora.Devices.Drevo
         }
 
         /// Updates the device with a specified color arrangement.
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
             try
@@ -164,11 +164,11 @@ namespace Aurora.Devices.Drevo
                 bitmap[2] = 0x00;
                 bitmap[3] = 0x7F;
                 int index = 0;
-                foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
+                foreach (KeyValuePair<int, System.Drawing.Color> key in keyColors)
                 {
                     if (e.Cancel) return false;
 
-                    index = DrevoRadiSDK.ToDrevoBitmap((int)key.Key);
+                    index = DrevoRadiSDK.ToDrevoBitmap(key.Key);
                     if (index != -1)
                     {
                         index = index * 3 + 4;

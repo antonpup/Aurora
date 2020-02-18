@@ -420,7 +420,6 @@ namespace Aurora.Settings
         public bool updates_check_on_start_up;
         public bool start_silently;
         public AppExitMode close_mode;
-        public MouseOrientationType mouse_orientation;
         public string keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public string mouse_preference;
@@ -490,7 +489,6 @@ namespace Aurora.Settings
             updates_check_on_start_up = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
-            mouse_orientation = MouseOrientationType.RightHanded;
             keyboard_brand = "";
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = "";

@@ -299,7 +299,7 @@ namespace Aurora.Devices.Roccat
 
         byte[] stateStruct = new byte[110];
         Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
-        public bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (RyosTalkFX == null || !RyosInitialized)
                 return false;
@@ -316,10 +316,10 @@ namespace Aurora.Devices.Roccat
                 else if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.jpn)
                     layout = DeviceLayout.JP;
 
-                foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
+                foreach (KeyValuePair<int, System.Drawing.Color> key in keyColors)
                 {
                     if (e.Cancel) return false;
-                    DeviceKeys dev_key = key.Key;
+                    DeviceKeys dev_key = (DeviceKeys)key.Key;
                     //Solution to slightly different mapping rather than giving a whole different dictionary
                     if (layout == DeviceLayout.ANSI)
                     {
@@ -333,7 +333,7 @@ namespace Aurora.Devices.Roccat
                     if (Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_enable_generic") == true)
                     {
                         generic_deactivated_first_time = true;
-                        if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
+                        if ((DeviceKeys)key.Key == DeviceKeys.Peripheral_Logo || (DeviceKeys)key.Key == DeviceKeys.Peripheral)
                         {
                             //Send to generic roccat device if color not equal or 1. time after generic got enabled
                             if (!previous_peripheral_Color.Equals(key.Value) || generic_activated_first_time == true)

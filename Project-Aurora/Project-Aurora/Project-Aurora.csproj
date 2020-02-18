@@ -681,6 +681,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\DeviceLayoutManager.cs" />
+    <Compile Include="Settings\Keycaps\Control_DeviceConfig.xaml.cs">
+      <DependentUpon>Control_DeviceConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\Control_DeviceLayout.xaml.cs">
+      <DependentUpon>Control_DeviceLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\Control_DeviceLayoutPresenter.xaml.cs">
+      <DependentUpon>Control_DeviceLayoutPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Keycaps\Control_Keycap.xaml.cs">
+      <DependentUpon>Control_Keycap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
       <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
@@ -1013,9 +1026,6 @@
       <DependentUpon>Control_GlitchLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\GlitchLayerHandler.cs" />
-    <Compile Include="Settings\Keycaps\Control_GhostKeycap.xaml.cs">
-      <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Layers\AnimationLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_AnimationLayer.xaml.cs">
       <DependentUpon>Control_AnimationLayer.xaml</DependentUpon>
@@ -1092,21 +1102,6 @@
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\IInit.cs" />
-    <Compile Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
-      <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_ColorizedKeycap.xaml.cs">
-      <DependentUpon>Control_ColorizedKeycap.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_DefaultKeycapBackglowOnly.xaml.cs">
-      <DependentUpon>Control_DefaultKeycapBackglowOnly.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_DefaultKeycapBackglow.xaml.cs">
-      <DependentUpon>Control_DefaultKeycapBackglow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Settings\Keycaps\Control_DefaultKeycap.xaml.cs">
-      <DependentUpon>Control_DefaultKeycap.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Keycaps\IKeycap.cs" />
     <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
     <Compile Include="Settings\Layers\BlinkingLayerHandler.cs" />
@@ -1752,6 +1747,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Keycaps\Control_DeviceConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_DeviceLayout.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_DeviceLayoutPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\Keycaps\Control_Keycap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Settings\Layers\Control_RazerLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1823,30 +1834,6 @@
     <Page Include="Settings\Control_ScriptManager.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_ColorizedKeycapBlank.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_ColorizedKeycap.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_DefaultKeycapBackglowOnly.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_DefaultKeycapBackglow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_DefaultKeycap.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Keycaps\Control_GhostKeycap.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\Layers\Control_AnimationLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -2044,8 +2031,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DeviceLayouts\Images\" />
-	<Folder Include="DeviceLayouts\Keyboard\" />
-	<Folder Include="DeviceLayouts\Mouse\" />
+    <Folder Include="DeviceLayouts\Keyboard\" />
+    <Folder Include="DeviceLayouts\Mouse\" />
     <Folder Include="Profiles\Slime Rancher\Layers\" />
     <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />

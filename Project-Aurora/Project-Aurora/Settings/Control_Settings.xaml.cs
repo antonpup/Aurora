@@ -121,20 +121,9 @@ namespace Aurora.Settings
             this.idle_effects_amount.Value = Global.Configuration.idle_amount;
             this.idle_effects_frequency.Value = (int)Global.Configuration.idle_frequency;
 
-            this.devices_kb_brand.ItemsSource = GetBrandsName("Keyboard");
-            this.devices_kb_brand.SelectedItem = Global.Configuration.keyboard_brand;
-
-            this.devices_mouse_brand.ItemsSource = GetBrandsName("Mouse");
-            this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
-
-            this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
-            
-            this.devices_mouse_orientation.SelectedItem = Global.Configuration.mouse_orientation;
             this.ComboBox_virtualkeyboard_keycap_type.SelectedItem = Global.Configuration.virtualkeyboard_keycap_type;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
-            this.devices_disable_keyboard_lighting.IsChecked = Global.Configuration.devices_disable_keyboard;
-            this.devices_disable_mouse_lighting.IsChecked = Global.Configuration.devices_disable_mouse;
-            this.devices_disable_headset_lighting.IsChecked = Global.Configuration.devices_disable_headset;
+
 
             this.updates_autocheck_on_start.IsChecked = Global.Configuration.updates_check_on_start_up;
 
@@ -177,16 +166,6 @@ namespace Aurora.Settings
                 this.razer_wrapper_connection_status_label.Content = "Failure";
                 this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
             }
-        }
-        private List<string> GetBrandsName(string dicName)
-        {
-            string layoutsPath = Path.Combine(Global.ExecutingDirectory, "DeviceLayouts", dicName);
-            List<string> FilesName = new List<string>() {"None"};
-            foreach (var name in Directory.GetFiles(layoutsPath))
-            {
-                FilesName.Add(name.Split('\\').Last().Split('.').First());
-            }
-            return FilesName;
         }
 
         private void OnLayerRendered(System.Drawing.Bitmap map)
@@ -368,7 +347,7 @@ namespace Aurora.Settings
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceKey[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {
@@ -658,49 +637,6 @@ namespace Aurora.Settings
             }
         }
 
-        private void devices_kb_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.keyboard_localization = (PreferredKeyboardLocalization)Enum.Parse(typeof(PreferredKeyboardLocalization), this.devices_kb_layout.SelectedIndex.ToString());
-                ConfigManager.Save(Global.Configuration);
-
-                Global.kbLayout.LoadBrandDefault();
-            }
-        }
-
-        private void devices_kb_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.keyboard_brand = this.devices_kb_brand.SelectedItem.ToString();
-                ConfigManager.Save(Global.Configuration);
-
-                Global.kbLayout.LoadBrandDefault();
-            }
-        }
-
-        private void devices_mouse_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.mouse_preference = this.devices_mouse_brand.SelectedItem.ToString();
-                ConfigManager.Save(Global.Configuration);
-
-                Global.kbLayout.LoadBrandDefault();
-            }
-        }
-
-        private void devices_mouse_orientation_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.mouse_orientation = (MouseOrientationType)Enum.Parse(typeof(MouseOrientationType), this.devices_mouse_orientation.SelectedItem.ToString());
-                ConfigManager.Save(Global.Configuration);
-
-                Global.kbLayout.LoadBrandDefault();
-            }
-        }
 
         private void ComboBox_virtualkeyboard_keycap_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -708,41 +644,6 @@ namespace Aurora.Settings
             {
                 Global.Configuration.virtualkeyboard_keycap_type = (KeycapType)Enum.Parse(typeof(KeycapType), this.ComboBox_virtualkeyboard_keycap_type.SelectedItem.ToString());
                 ConfigManager.Save(Global.Configuration);
-
-                Global.kbLayout.LoadBrandDefault();
-            }
-        }
-
-        private void devices_disable_keyboard_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_keyboard = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
-
-        private void devices_disable_mouse_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_mouse = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
-            }
-        }
-
-        private void devices_disable_headset_lighting_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox)
-            {
-                Global.Configuration.devices_disable_headset = ((sender as CheckBox).IsChecked.HasValue) ? (sender as CheckBox).IsChecked.Value : false;
-                ConfigManager.Save(Global.Configuration);
-
-                Global.dev_manager.ResetDevices();
             }
         }
         

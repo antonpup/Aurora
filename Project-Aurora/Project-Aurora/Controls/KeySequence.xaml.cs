@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Aurora.Settings;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -41,25 +43,6 @@ namespace Aurora.Controls
             }
         }
 
-        public List<Devices.DeviceKeys> List
-        {
-            get
-            {
-                if (Sequence == null)
-                    Sequence = new Settings.KeySequence();
-
-                return Sequence.keys;
-            }
-            set
-            {
-                if (Sequence == null)
-                    Sequence = new Settings.KeySequence(value.ToArray());
-                else {
-                    Sequence.keys = value;
-                }
-                SequenceKeysChange?.Invoke(this, new EventArgs());
-            }
-        }
         private bool allowListRefresh = true;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -87,9 +70,9 @@ namespace Aurora.Controls
 
                 if (allowListRefresh)
                 {
-                    this.keys_keysequence.Items.Clear();
+                    SelectedDeviceKeyList.Clear();
                     foreach (var key in value.keys)
-                        this.keys_keysequence.Items.Add(key);
+                        SelectedDeviceKeyList.Add(key);
                 }
 
                 this.sequence_freestyle_checkbox.IsChecked = (value.type == Settings.KeySequenceType.FreeForm ? true : false);
@@ -99,7 +82,9 @@ namespace Aurora.Controls
             }
         }
 
-        public IEnumerable<Devices.DeviceKeys> SelectedItems => keys_keysequence.SelectedItems.Cast<Devices.DeviceKeys>();
+        public IEnumerable<DeviceKey> SelectedItems => keys_keysequence.SelectedItems.Cast<DeviceKey>();
+
+        private int SelectedItemIndex => keys_keysequence.SelectedIndex;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty FreestyleEnabledProperty = DependencyProperty.Register("FreestyleEnabled", typeof(bool), typeof(UserControl));
@@ -125,90 +110,86 @@ namespace Aurora.Controls
         /// <summary>Fired whenever keys are changed.</summary>
         public event EventHandler SequenceKeysChange;
         public event SelectionChangedEventHandler SelectionChanged;
+        public ObservableCollection<DeviceKey> SelectedDeviceKeyList { get; set; }
+
+        public List<DeviceKey> SelectedDeviceKeys => SelectedDeviceKeyList.ToList();
+
 
         public KeySequence()
         {
             InitializeComponent();
             this.DataContext = this;
+            SelectedDeviceKeyList = new ObservableCollection<DeviceKey>();
         }
 
         private void sequence_remove_keys_Click(object sender, RoutedEventArgs e)
         {
-            if (Utils.UIUtils.ListBoxRemoveSelected(this.keys_keysequence))
+            var selectedKeys = SelectedItems.ToList();
+            foreach (var item in selectedKeys)
             {
-                allowListRefresh = false;
-                List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
+                if(SelectedDeviceKeyList.Contains(item))
+                    SelectedDeviceKeyList.Remove(item);          
             }
         }
 
         private void sequence_up_keys_Click(object sender, RoutedEventArgs e)
         {
-            if (Utils.UIUtils.ListBoxMoveSelectedUp(this.keys_keysequence))
-            {
-                allowListRefresh = false;
-                List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
-            }
+            var selectedKey = SelectedDeviceKeyList[SelectedItemIndex];
+            var selectedIndex = SelectedItemIndex;
+            SelectedDeviceKeyList[selectedIndex] = SelectedDeviceKeyList[selectedIndex - 1];
+            SelectedDeviceKeyList[selectedIndex - 1] = selectedKey;
+            keys_keysequence.SelectedItem = selectedKey;
         }
 
         private void sequence_down_keys_Click(object sender, RoutedEventArgs e)
         {
-            if (Utils.UIUtils.ListBoxMoveSelectedDown(this.keys_keysequence))
-            {
-                allowListRefresh = false;
-                List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
-            }
+            var selectedKey = SelectedDeviceKeyList[SelectedItemIndex];
+            var selectedIndex = SelectedItemIndex;
+            SelectedDeviceKeyList[selectedIndex] = SelectedDeviceKeyList[selectedIndex + 1];
+            SelectedDeviceKeyList[selectedIndex + 1] = selectedKey;
+            keys_keysequence.SelectedItem = selectedKey;
         }
 
         private void btnReverseOrder_Click(object sender, RoutedEventArgs e)
         {
-            if (Utils.UIUtils.ListBoxReverseOrder(this.keys_keysequence))
+            int totalCount = SelectedDeviceKeyList.Count;
+            for (int i = totalCount - 1; i > 0; i--)
             {
-                allowListRefresh = false;
-                List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
+                DeviceKey key = SelectedDeviceKeyList[totalCount - 1];
+                SelectedDeviceKeyList.RemoveAt(totalCount - 1);
+                SelectedDeviceKeyList.Insert((totalCount - 1) - i, key);
             }
-
         }
 
         private void sequence_record_keys_Click(object sender, RoutedEventArgs e)
         {
-            RecordKeySequence(RecordingTag, (sender as Button), this.keys_keysequence);
-            allowListRefresh = false;
-            List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-            allowListRefresh = true;
-        }
-
-        private void RecordKeySequence(string whoisrecording, Button button, ListBox sequence_listbox)
-        {
             if (Global.key_recorder.IsRecording())
             {
-                if (Global.key_recorder.GetRecordingType().Equals(whoisrecording))
+                if (Global.key_recorder.GetRecordingType().Equals(RecordingTag))
                 {
                     Global.key_recorder.StopRecording();
 
-                    button.Content = "Assign Keys";
+                    (sender as Button).Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceKey[] recorded_keys = Global.key_recorder.GetKeys();
 
-                    if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
+                    if (SelectedItemIndex > 0 && SelectedItemIndex < (SelectedDeviceKeyList.Count - 1))
                     {
-                        int insertpos = sequence_listbox.SelectedIndex;
+                        int insertpos = SelectedItemIndex;
                         foreach (var key in recorded_keys)
                         {
-                            sequence_listbox.Items.Insert(insertpos, key);
+                            SelectedDeviceKeyList.Insert(insertpos, key);
                             insertpos++;
                         }
                     }
                     else
                     {
                         foreach (var key in recorded_keys)
-                            sequence_listbox.Items.Add(key);
+                            SelectedDeviceKeyList.Add(key);
                     }
-
                     Global.key_recorder.Reset();
+                    Sequence.keys = SelectedDeviceKeyList.ToList();
+                    //SequenceKeysChange.Invoke(this, e);
                 }
                 else
                 {
@@ -217,8 +198,8 @@ namespace Aurora.Controls
             }
             else
             {
-                Global.key_recorder.StartRecording(whoisrecording);
-                button.Content = "Stop Assigning";
+                Global.key_recorder.StartRecording(RecordingTag);
+                (sender as Button).Content = "Stop Assigning";
             }
         }
 
@@ -305,15 +286,15 @@ namespace Aurora.Controls
 
         private void keys_keysequence_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(keys_keysequence.SelectedItems.Count <= 1)
+            this.sequence_up.IsEnabled = false;
+            this.sequence_down.IsEnabled = false;
+
+            if (SelectedItems.Count() == 1)
             {
-                this.sequence_up.IsEnabled = IsEnabled && true;
-                this.sequence_down.IsEnabled = IsEnabled && true;
-            }
-            else
-            {
-                this.sequence_up.IsEnabled = IsEnabled && false;
-                this.sequence_down.IsEnabled = IsEnabled && false;
+                if (SelectedItemIndex != 0)
+                    this.sequence_up.IsEnabled = IsEnabled && true;
+                if (SelectedItemIndex != SelectedDeviceKeyList.Count() - 1)
+                    this.sequence_down.IsEnabled = IsEnabled && true;
             }
 
             // Bubble the selection changed event
@@ -330,9 +311,9 @@ namespace Aurora.Controls
                     if (Sequence != null)
                     {
                         //this.keys_keysequence.InvalidateVisual();
-                        this.keys_keysequence.Items.Clear();
+                        SelectedDeviceKeyList.Clear();
                         foreach (var key in Sequence.keys)
-                            this.keys_keysequence.Items.Add(key);
+                            SelectedDeviceKeyList.Add(key);
                     }
                 }
                 else

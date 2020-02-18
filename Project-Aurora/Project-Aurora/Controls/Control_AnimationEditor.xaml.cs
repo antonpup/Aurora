@@ -1,5 +1,6 @@
 ﻿using Aurora.Devices;
 using Aurora.EffectsEngine.Animations;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,9 +58,16 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            UpdateVirtualKeyboard();
+            //UpdateVirtualKeyboard();
 
-            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+            //Global.devicesLayout.DeviceLayoutNumberChanged += KbLayout_KeyboardLayoutUpdated;
+            deviceLayerPresenter.SizeChanged += KbLayout_KeyboardLayoutUpdated2;
+
+        }
+
+        private void KbLayout_KeyboardLayoutUpdated2(object sender, SizeChangedEventArgs e)
+        {
+            UpdateVirtualKeyboard();
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -73,7 +81,7 @@ namespace Aurora.Controls
 
         private void UpdateVirtualKeyboard()
         {
-            Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
+            /*Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
@@ -82,21 +90,21 @@ namespace Aurora.Controls
             keyboard_grid.Width = virtial_kb.Width;
             keyboard_grid.Height = virtial_kb.Height;
 
-            keyboard_grid.UpdateLayout();
-
-            viewbxAnimationView.MaxWidth = virtial_kb.Width + 50;
-            viewbxAnimationView.MaxHeight = virtial_kb.Height + 50;
+            keyboard_grid.UpdateLayout();*/
+            deviceLayerPresenter.UpdateLayout();
+            viewbxAnimationView.MaxWidth = deviceLayerPresenter.MaxWidth + 15;
+            viewbxAnimationView.MaxHeight = deviceLayerPresenter.MaxHeight + 15;
             viewbxAnimationView.UpdateLayout();
 
             this.UpdateLayout();
 
             //Generate a new mapping
-            foreach (FrameworkElement Child in virtial_kb.Children)
+            foreach (Settings.Keycaps.Control_Keycap key in deviceLayerPresenter.Keycaps)
             {
-                if (Child is Settings.Keycaps.IKeycap && (Child as Settings.Keycaps.IKeycap).GetKey() != DeviceKeys.NONE)
+                if (key.GetKey() != DeviceKeys.NONE)
                 {
-                    Child.PreviewMouseLeftButtonDown += KeyboardKey_PreviewMouseLeftButtonDown;
-                    Child.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
+                    key.PreviewMouseLeftButtonDown += KeyboardKey_PreviewMouseLeftButtonDown;
+                    key.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
                 }
             }
         }
@@ -121,7 +129,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void SetKeyColor(DeviceKeys key, System.Drawing.Color color)
+        private void SetKeyColor(DeviceKey key, System.Drawing.Color color)
         {
             if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame)
             {
@@ -443,7 +451,7 @@ namespace Aurora.Controls
                 {
                     AnimationManualColorFrame frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationManualColorFrame);
 
-                    frame.SetBitmapColors(new Dictionary<DeviceKeys, System.Drawing.Color>());
+                    frame.SetBitmapColors(new Dictionary<DeviceKey, System.Drawing.Color>());
 
                     this.animMixer.UpdatePlaybackTime();
                 }

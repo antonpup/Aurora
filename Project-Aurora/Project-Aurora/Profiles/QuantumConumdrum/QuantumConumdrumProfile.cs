@@ -32,7 +32,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DodgerBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE})
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE})
                     }
                 }
                 ),
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Pink,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.Q})
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.Q})
                     }
                 }
                 ),
@@ -50,7 +50,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.E})
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.E})
                     }
                 }
                 ),
@@ -59,7 +59,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.ONE})
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.ONE})
                     }
                 }
                 ),
@@ -68,7 +68,7 @@ namespace Aurora.Profiles.QuantumConumdrum
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Green,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.THREE})
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.THREE})
                     }
                 }
                 ),

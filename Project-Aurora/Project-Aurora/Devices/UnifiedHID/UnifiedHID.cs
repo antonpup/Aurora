@@ -152,7 +152,7 @@ namespace Aurora.Devices.UnifiedHID
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
             try
@@ -165,7 +165,7 @@ namespace Aurora.Devices.UnifiedHID
 
                     if (!device.IsKeyboard)
                     {
-                        foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                        foreach (KeyValuePair<int, Color> key in keyColors)
                         {
                             Color color = (Color)key.Value;
                             //Apply and strip Alpha
@@ -174,9 +174,9 @@ namespace Aurora.Devices.UnifiedHID
                             if (e.Cancel) return false;
                             else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
                             {
-                                if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
+                                if ((DeviceKeys)key.Key == DeviceKeys.Peripheral_Logo || (DeviceKeys)key.Key == DeviceKeys.Peripheral_ScrollWheel || (DeviceKeys)key.Key == DeviceKeys.Peripheral_FrontLight)
                                 {
-                                    device.SetLEDColour(key.Key, color.R, color.G, color.B);
+                                    device.SetLEDColour((DeviceKeys)key.Key, color.R, color.G, color.B);
                                 }
                                 peripheral_updated = true;
                             }
@@ -261,7 +261,7 @@ namespace Aurora.Devices.UnifiedHID
         bool Connect();
         bool Disconnect();
         bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue);
-        bool SetMultipleLEDColour(Dictionary<DeviceKeys, Color> keyColors);
+        bool SetMultipleLEDColour(Dictionary<int, Color> keyColors);
     }
 
     abstract class UnifiedBase : ISSDevice
@@ -315,7 +315,7 @@ namespace Aurora.Devices.UnifiedHID
             return false;
         }
 
-        public virtual bool SetMultipleLEDColour(Dictionary<DeviceKeys, Color> keyColors)
+        public virtual bool SetMultipleLEDColour(Dictionary<int, Color> keyColors)
         {
             return false;
         }

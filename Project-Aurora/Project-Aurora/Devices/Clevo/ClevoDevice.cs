@@ -143,7 +143,7 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
         {
             throw new NotImplementedException();
         }
@@ -154,16 +154,16 @@ namespace Aurora.Devices.Clevo
             watch.Restart();
             bool update_result = false;
 
-            Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
+            Dictionary<int, Color> keyColors = colorComposition.keyColors;
             if (e.Cancel) return false;
             try
             {
-                foreach (KeyValuePair<DeviceKeys, Color> pair in keyColors)
+                foreach (KeyValuePair<int, Color> pair in keyColors)
                 {
                     if (e.Cancel) return false;
                     if (useGlobalPeriphericColors)
                     {
-                        if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
+                        if (pair.Key == (int)DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
                         {
                             ColorKBLeft = pair.Value;
                             ColorKBCenter = pair.Value;
@@ -175,7 +175,7 @@ namespace Aurora.Devices.Clevo
                     else
                     {
                         // TouchPad (It would be nice to have a Touchpad Peripheral)
-                        if (pair.Key == DeviceKeys.Peripheral)
+                        if (pair.Key == (int)DeviceKeys.Peripheral)
                         {
                             ColorTouchpad = pair.Value;
                             ColorUpdated = true;

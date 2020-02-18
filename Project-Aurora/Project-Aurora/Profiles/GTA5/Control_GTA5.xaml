@@ -35,11 +35,6 @@
             <DataTemplate x:Key="GTA5_PoliceEffectsTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource GTA5_PoliceEffectsToStringVC}}" />
             </DataTemplate>
-
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 

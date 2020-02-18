@@ -346,7 +346,7 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, MouseOrientationType.LeftHanded);
             });
         }
         private PreferredKeyboardLocalization GetSystemKeyboardCulture()
@@ -632,14 +632,12 @@ namespace Aurora.Settings
                                 cur_height = y;
                         }
                     }
-                    if (br_x > width_max) width_max = br_x;
-                    if (br_y > height_max) height_max = br_y;
                 }
 
                 _bitmapMapInvalid = false;
                 //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
                 Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
-                Global.effengine.SetBitmapping(this.bitmap_map);
+                //Global.effengine.SetBitmapping(this.bitmap_map);
             }
 
         }
@@ -722,11 +720,11 @@ namespace Aurora.Settings
                 UserControl keycap;
 
                 //Ghost keycap is used for abstract representation of keys
-                if (abstractKeycaps)
+                /*if (abstractKeycaps)
                     keycap = new Control_GhostKeycap(key, image_path);
-                else
+                else*/
                 {
-                    switch (Global.Configuration.virtualkeyboard_keycap_type)
+                    /*switch (Global.Configuration.virtualkeyboard_keycap_type)
                     {
                         case KeycapType.Default_backglow:
                             keycap = new Control_DefaultKeycapBackglow(key, image_path);
@@ -741,26 +739,26 @@ namespace Aurora.Settings
                             keycap = new Control_ColorizedKeycapBlank(key, image_path);
                             break;
                         default:
-                            keycap = new Control_DefaultKeycap(key, image_path);
+                            keycap = null;// new Control_DefaultKeycap(key, image_path);
                             break;
-                    }
+                    }*/
                 }
 
-                new_virtual_keyboard.Children.Add(keycap);
+                //new_virtual_keyboard.Children.Add(keycap);
 
-                if (key.tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
-                    _virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
+                //if (key.tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
+                //    _virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
 
-                if (key.absolute_location.Value)
+                /*if (key.absolute_location.Value)
                     keycap.Margin = new Thickness(key.margin_left.Value, key.margin_top.Value, 0, 0);
                 else
                     keycap.Margin = new Thickness(current_width + key.margin_left.Value, current_height + key.margin_top.Value, 0, 0);
-
+                    
                 if (key.tag == DeviceKeys.ESC)
                 {
                     baseline_x = keycap.Margin.Left;
                     baseline_y = keycap.Margin.Top;
-                }
+                }*/
 
                 if (!key.absolute_location.Value)
                 {
@@ -1053,7 +1051,7 @@ namespace Aurora.Settings
                 if (keylights.ContainsKey(kvp.Key))
                 {
                     System.Drawing.Color key_color = keylights[kvp.Key];
-                    kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
+                    //kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
                 }
             }
         }

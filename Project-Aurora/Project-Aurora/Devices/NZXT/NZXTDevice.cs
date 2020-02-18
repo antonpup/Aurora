@@ -169,28 +169,28 @@ namespace Aurora.Devices.NZXT
             throw new NotImplementedException();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keycolors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keycolors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
             try
             {
-                foreach (KeyValuePair<DeviceKeys, Color> key in keycolors)
+                foreach (KeyValuePair<int, Color> key in keycolors)
                 {
                     int index;
                     if (e.Cancel) return false;
 
-                    if (key.Key == DeviceKeys.Peripheral_Logo)
+                    if ((DeviceKeys)key.Key == DeviceKeys.Peripheral_Logo)
                     {
                         logo.SetColor(0, key.Value);
                     }
 
-                    if((index = GetLedIndex(NZXTLayoutMap.HuePlus, key.Key)) != -1)
+                    if((index = GetLedIndex(NZXTLayoutMap.HuePlus, (DeviceKeys)key.Key)) != -1)
                     {
                         hueplus.SetColor(index, key.Value);
                     }
 
-                    if ((index = GetLedIndex(NZXTLayoutMap.KrakenX, key.Key)) != -1)
+                    if ((index = GetLedIndex(NZXTLayoutMap.KrakenX, (DeviceKeys)key.Key)) != -1)
                     {
                         kraken.SetColor(index, key.Value);
                     }

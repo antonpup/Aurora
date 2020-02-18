@@ -36,8 +36,8 @@ namespace Aurora.Profiles.ETS2.Layers {
         public override void Default() {
             base.Default();
 
-            this._LeftBlinkerSequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4 });
-            this._RightBlinkerSequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12 });
+            this._LeftBlinkerSequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4 });
+            this._RightBlinkerSequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12 });
             this._BlinkerOffColor = Color.Empty;
             this._BlinkerOnColor = Color.FromArgb(255, 127, 0);
         }

@@ -314,7 +314,7 @@ namespace Aurora.Devices.Creative
             return (sbKeyboard != null || sbMouse != null);
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             uint maxKbLength = 0;
             Dictionary<Color, List<Keyboard_LEDIndex>> kbIndices = null;
@@ -322,13 +322,13 @@ namespace Aurora.Devices.Creative
                 kbIndices = new Dictionary<Color, List<Keyboard_LEDIndex>>();
 
             LedColour[] mouseColors = null;
-            foreach (KeyValuePair<DeviceKeys, Color> kv in keyColors)
+            foreach (KeyValuePair<int, Color> kv in keyColors)
             {
                 if (e.Cancel) return false;
 
                 if (kbIndices != null)
                 {
-                    var kbLedIdx = GetKeyboardMappingLedIndex(kv.Key);
+                    var kbLedIdx = GetKeyboardMappingLedIndex((DeviceKeys)kv.Key);
                     if (kbLedIdx != Keyboard_LEDIndex.NotApplicable)
                     {
                         if (!kbIndices.ContainsKey(kv.Value))
@@ -342,7 +342,7 @@ namespace Aurora.Devices.Creative
                 }
                 if (sbMouse != null)
                 {
-                    int moosIdx = GetMouseMappingIndex(kv.Key);
+                    int moosIdx = GetMouseMappingIndex((DeviceKeys)kv.Key);
                     if (moosIdx >= 0 && moosIdx <= MouseMapping.Length)
                     {
                         if (mouseColors == null)

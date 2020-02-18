@@ -1,4 +1,5 @@
 ﻿using Aurora.Devices;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,9 @@ namespace Aurora.Profiles.Minecraft {
         /// <summary>
         /// Gets the keys for this binding, including modifiers.
         /// </summary>
-        public DeviceKeys[] AffectedKeys {
+        public DeviceKey[] AffectedKeys {
             get {
-                HashSet<DeviceKeys> keys = new HashSet<DeviceKeys>();
+                HashSet<DeviceKey> keys = new HashSet<DeviceKey>();
                 keys.Add(DeviceKey);
                 if (modifier == "SHIFT") {
                     keys.Add(DeviceKeys.LEFT_SHIFT); keys.Add(DeviceKeys.RIGHT_SHIFT);

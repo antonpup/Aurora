@@ -25,11 +25,6 @@
                 <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
             </DataTemplate>
 
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
-
             <ObjectDataProvider x:Key="InteractiveEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="EnumInteractiveEffects:InteractiveEffects" />

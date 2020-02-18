@@ -113,7 +113,7 @@ namespace Aurora.Devices.Wooting
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -123,13 +123,13 @@ namespace Aurora.Devices.Wooting
                     if (!this.isInitialized)
                         return false;
 
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (KeyValuePair<int, Color> key in keyColors)
                     {
                         if (e.Cancel) return false;
 
 
                         Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
-                        WootingKey.Keys devKey = DeviceKeyToWootingKey(key.Key);
+                        WootingKey.Keys devKey = DeviceKeyToWootingKey((DeviceKeys)key.Key);
                         if (devKey == WootingKey.Keys.None)
                             continue;
                         //(byte row, byte column) coordinates = WootingRgbControl.KeyMap[devKey];

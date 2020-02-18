@@ -201,17 +201,17 @@ namespace Aurora.Devices.Dualshock
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
             try
             {
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                foreach (KeyValuePair<int, Color> key in keyColors)
                 {
 
                     if (e.Cancel) return false;
 
-                    if (key.Key == newkey)
+                    if ((DeviceKeys)key.Key == newkey)
                     {
                         //Apply and strip Alpha
                         newColor = (Color)key.Value;

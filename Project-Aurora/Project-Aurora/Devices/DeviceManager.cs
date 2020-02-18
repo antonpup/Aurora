@@ -335,7 +335,7 @@ namespace Aurora.Devices
             }
         }
 
-        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
+        public void UpdateDevices(Dictionary<int, DeviceColorComposition> composition, bool forced = false)
         {
             foreach (DeviceContainer device in devices)
             {
@@ -347,8 +347,8 @@ namespace Aurora.Devices
                         device.Device.Shutdown();
                         continue;
                     }
-
-                    device.UpdateDevice(composition, forced);
+                    //if (composition.Count != 0)
+                    //    device.UpdateDevice(composition[-1], forced);
                 }
             }
         }

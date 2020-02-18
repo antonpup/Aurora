@@ -41,10 +41,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         [JsonIgnore]
         public Color ItemNoChargersColor { get { return Logic._ItemNoChargersColor ?? _ItemNoChargersColor ?? Color.Empty; } }
 
-        public List<Devices.DeviceKeys> _ItemKeys { get; set; }
+        public List<DeviceKey> _ItemKeys { get; set; }
 
         [JsonIgnore]
-        public List<Devices.DeviceKeys> ItemKeys { get { return Logic._ItemKeys ?? _ItemKeys ?? new List<Devices.DeviceKeys>(); } }
+        public List<DeviceKey> ItemKeys { get { return Logic._ItemKeys ?? _ItemKeys ?? new List<DeviceKey>(); } }
 
         public Dota2ItemLayerHandlerProperties() : base() { }
 
@@ -59,7 +59,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             this._ItemCooldownColor = Color.FromArgb(0, 0, 0);
             this._ItemNoChargersColor = Color.FromArgb(150, 150, 150);
             this._UseItemColors = true;
-            this._ItemKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN };
+            this._ItemKeys = new List<DeviceKey>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN };
         }
 
     }
@@ -360,7 +360,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     for (int index = 0; index < dota2state.Items.InventoryCount; index++)
                     {
                         Item item = dota2state.Items.GetInventoryAt(index);
-                        Devices.DeviceKeys key = Properties.ItemKeys[index];
+                        DeviceKey key = Properties.ItemKeys[index];
 
                         if (item.Name.Equals("empty"))
                             items_layer.Set(key, Properties.EmptyItemColor);
@@ -391,7 +391,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     for (int index = 0; index < dota2state.Items.StashCount; index++)
                     {
                         Item item = dota2state.Items.GetStashAt(index);
-                        Devices.DeviceKeys key = Properties.ItemKeys[6 + index];
+                        DeviceKey key = Properties.ItemKeys[6 + index];
 
                         if (item.Name.Equals("empty"))
                         {

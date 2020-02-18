@@ -143,7 +143,7 @@ namespace Aurora.Devices.SteelSeries
             return this.isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -164,7 +164,7 @@ namespace Aurora.Devices.SteelSeries
                 GameSensePayloadPeripheryColorEventJSON payload = new GameSensePayloadPeripheryColorEventJSON();
                 gameSenseSDK.setupEvent(payload);
 
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                foreach (KeyValuePair<int, Color> key in keyColors)
                 {
 
 
@@ -178,7 +178,7 @@ namespace Aurora.Devices.SteelSeries
 
                     if (e.Cancel) return false;
 
-                    switch (key.Key)
+                    switch ((DeviceKeys)key.Key)
                     {
                         case DeviceKeys.Peripheral:
                             SendColorToPeripheral(color, payload, forced);
@@ -186,7 +186,7 @@ namespace Aurora.Devices.SteelSeries
                         case DeviceKeys.Peripheral_Logo:
                         case DeviceKeys.Peripheral_FrontLight:
                         case DeviceKeys.Peripheral_ScrollWheel:
-                            SendColorToPeripheralZone(key.Key, color, payload);
+                            SendColorToPeripheralZone((DeviceKeys)key.Key, color, payload);
                             break;
                         case DeviceKeys.MOUSEPADLIGHT1:
                         case DeviceKeys.MOUSEPADLIGHT2:
@@ -204,7 +204,7 @@ namespace Aurora.Devices.SteelSeries
                             colorsMousepad.Add(Tuple.Create(color.R, color.G, color.B));
                             break;
                         default:
-                            byte hid = GetHIDCode(key.Key);
+                            byte hid = GetHIDCode((DeviceKeys)key.Key);
 
                             if (hid != (byte)USBHIDCodes.ERROR)
                             {
@@ -420,9 +420,9 @@ namespace Aurora.Devices.SteelSeries
                 case (DeviceKeys.JPN_HALFFULLWIDTH):
                     return (byte)USBHIDCodes.TILDE;
                 case (DeviceKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return (byte)USBHIDCodes.ERROR;
-                    else
+                    else*/
                         return (byte)USBHIDCodes.TILDE;
                 case (DeviceKeys.TILDE):
                     return (byte)USBHIDCodes.TILDE;
@@ -545,9 +545,9 @@ namespace Aurora.Devices.SteelSeries
                 case (DeviceKeys.LEFT_SHIFT):
                     return (byte)USBHIDCodes.LEFT_SHIFT;
                 case (DeviceKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return (byte)USBHIDCodes.ERROR;
-                    else
+                    else*/
                         return (byte)USBHIDCodes.BACKSLASH_UK;
                 case (DeviceKeys.Z):
                     return (byte)USBHIDCodes.Z;
