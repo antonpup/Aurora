@@ -23,74 +23,70 @@ namespace Aurora.Devices.Uni
             private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
             private long lastUpdateTime = 0;
 
+         
+
         List<AuroraInterface> DeviceList = new List<AuroraInterface>();
         //  Controll Class
         private AuroraInterface keyboard = null;
         /// 
         //private AuroraInterface keyboard  = null;
 
-        //private AuroraInterface lightbar = KeyboardFactory.CreateHIDDevice("hidlightbar");
+        //private AuroraInterface lightbar = KeyboardFactory.CreateHIDDevice("hidlightbar");.
+
+        System.Timers.Timer _CheckControlCenter = new System.Timers.Timer();
+
         int GamingCenterType = 0;
         public KeyboardDevice()
         {
-            devicename = KeyboardFactory.GetOEMName()+ " keyboard";
+            devicename = KeyboardFactory.GetOEMName();
             ChoiceGamingCenter();
+
+            //_CheckControlCenter.Start();
+            //_CheckControlCenter.Interval = 1000;
+            //_CheckControlCenter.Elapsed += _CheckControlCenter_Elapsed;
+           
  
+        }
+
+        private void _CheckControlCenter_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+           
         }
 
         private void ChoiceGamingCenter()
         {
-
+            GamingCenterType = CheckGC();
+             
+            if (GamingCenterType == 1)
+            {
+                RegistryMonitor monitor = new RegistryMonitor(@"HKEY_LOCAL_MACHINE\SOFTWARE\OEM\Aurora");
+                monitor.RegChangeNotifyFilter = RegChangeNotifyFilter.Value;
+                monitor.RegChanged += new EventHandler(OnRegChanged);
+                monitor.Start();
+            }
            
+      
 
+        }
+
+        private int CheckGC()
+        {
             try
             {
                 //CCI
-                string m_sRegPathI = @"\OEM\GamingCenter\RGBKeyboardView";
+                string m_sRegPathI = @"\OEM\Aurora";
                 int Control = (int)RegistrySoftwareKeyRead(RegistryHive.LocalMachine, m_sRegPathI, "AuroraSwitch", 0);
-                GamingCenterType = 1;
 
+                GamingCenterType = 1;
             }
             catch (Exception ex)
             {
                 GamingCenterType = 0;
             }
-            if(GamingCenterType==0)
-            {
-                try
-                {
-                    //GCU
-                    string m_sRegPathI = @"\OEM\GamingCenter2\RGBKeyboard";
-                    string Control = (string)RegistrySoftwareKeyRead(RegistryHive.LocalMachine, m_sRegPathI, "AuroraSwitch", "0");
-                    GamingCenterType = 2;
-                }
-                catch (Exception ex)
-                {
-                    GamingCenterType = 0;
-                }
-            }
-           
-            if(GamingCenterType == 1)
-            {
-                RegistryMonitor monitor = new RegistryMonitor(@"HKEY_LOCAL_MACHINE\SOFTWARE\OEM\GamingCenter\RGBKeyboardView");
-                monitor.RegChangeNotifyFilter = RegChangeNotifyFilter.Value;
-                monitor.RegChanged += new EventHandler(OnRegChanged);
-                monitor.Start();
-            }
-            else if(GamingCenterType ==2)
-            {
-                RegistryMonitor gcumonitor = new RegistryMonitor(@"HKEY_LOCAL_MACHINE\SOFTWARE\OEM\GamingCenter2\RGBKeyboard");
-                gcumonitor.RegChangeNotifyFilter = RegChangeNotifyFilter.Value;
-                gcumonitor.RegChanged += new EventHandler(OnRegChanged);
-                gcumonitor.Start();
-
-            }
-
-
-
+            return GamingCenterType;
         }
 
-
+        
 
         public static object RegistrySoftwareKeyRead(RegistryHive hKey, string SubKey, string Name, object defaultvalue)
         {
@@ -105,22 +101,14 @@ namespace Aurora.Devices.Uni
         {
            if(GamingCenterType==1)
            {
-                string m_sRegPathI = @"\OEM\GamingCenter\RGBKeyboardView";
+                string m_sRegPathI = @"\OEM\Aurora";
                 int Control = (int)RegistrySoftwareKeyRead(RegistryHive.LocalMachine, m_sRegPathI, "AuroraSwitch", 0);
                 if (Control == 0)
                     return false;
                 else
                     return true;
             }
-            else if (GamingCenterType==2)
-            {
-                string m_sRegPathI = @"\OEM\GamingCenter2\RGBKeyboard";
-                string Control = (string)RegistrySoftwareKeyRead(RegistryHive.LocalMachine, m_sRegPathI, "AuroraSwitch", "0");
-                if (Convert.ToInt32(Control) == 0)
-                    return false;
-                else
-                    return true;
-            }
+            
             else 
               return true;
         }

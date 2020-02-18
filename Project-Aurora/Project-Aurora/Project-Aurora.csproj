@@ -383,7 +383,8 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
- <Compile Include="Devices\Uni\KeyboardDevice.cs" />    <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
+    <Compile Include="Devices\Uniwill\KeyboardDevice.cs" />
+ <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Discord\GSI\GameState_Discord.cs" />
@@ -393,8 +394,8 @@
     <Compile Include="Profiles\Discord\GSI\Nodes\GuildNode.cs" />
     <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
-    <Compile Include="Profiles\Discord\DiscordProfile.cs" />    <Compile Include="Devices\Vulcan\Vulcan.cs" />
-    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
+    <Compile Include="Profiles\Discord\DiscordProfile.cs" /> 
+     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
