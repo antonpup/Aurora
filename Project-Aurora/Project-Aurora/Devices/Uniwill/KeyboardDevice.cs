@@ -251,23 +251,36 @@ namespace Aurora.Devices.Uni
                  return isInitialized;
            }
             bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
-            public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
+        {
+            if (e.Cancel) return false;
+
+            bool update_result = false;
+
+            watch.Restart();
+
+
+            //Alpha necessary for Global Brightness modifier
+            List<DeviceKeys> KeysList = new List<DeviceKeys>();
+
+            foreach (var key in keyColors.Keys) KeysList.Add(key);
+
+            foreach (var item in KeysList)
             {
-                if (e.Cancel) return false;
+                keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item], keyColors[item].A / 255.0D));
+            }
 
-                bool update_result = false;
-              
-                watch.Restart();
-                keyboard?.SetEffect(0x64, 0x00, bRefreshOnce, keyColors, e);
 
-                bRefreshOnce = false;
-                watch.Stop();
+            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, keyColors, e);
 
-                lastUpdateTime = watch.ElapsedMilliseconds;
+            bRefreshOnce = false;
+            watch.Stop();
 
-                return update_result;
-           }
-         
+            lastUpdateTime = watch.ElapsedMilliseconds;
+
+            return update_result;
+        }
+
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
@@ -276,7 +289,18 @@ namespace Aurora.Devices.Uni
              
             watch.Restart();
             Dictionary<DeviceKeys, Color> keyColors = colorComposition.keyColors;
-            keyboard?.SetEffect(0x64, 0x00, bRefreshOnce, keyColors, e);
+
+            //Alpha necessary for Global Brightness modifier
+            List<DeviceKeys> KeysList = new List<DeviceKeys>();
+
+            foreach (var key in keyColors.Keys) KeysList.Add(key);
+ 
+            foreach (var item in KeysList)
+            {
+                keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item], keyColors[item].A / 255.0D));
+            }
+
+            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, keyColors, e);
 
             bRefreshOnce = false;
             Thread.Sleep(1);
