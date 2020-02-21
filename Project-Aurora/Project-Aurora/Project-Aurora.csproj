@@ -946,16 +946,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\keyboard21br_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\keyboard21jp_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\keyboard21us_numpad_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\keyboard21_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\keyboard_numpad_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
