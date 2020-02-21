@@ -7,30 +7,18 @@ namespace Aurora.Devices.Asus
 {
     public class AuraSyncKeyboardDevice : AuraSyncDevice
     {
-        private IAuraSyncKeyboard keyboard;
-        
-        // private readonly Dictionary<ushort, DeviceKeys> idToDeviceKey
-        //     = new Dictionary<ushort, DeviceKeys>();
+        private readonly IAuraSyncKeyboard keyboard;
         
         private readonly Dictionary<ushort, IAuraRgbKey> idToKey
             = new Dictionary<ushort, IAuraRgbKey>();
         
         /// <inheritdoc />
-        public AuraSyncKeyboardDevice(IAuraSyncKeyboard device, int frameRate = 30) : base(device, frameRate)
+        public AuraSyncKeyboardDevice(AsusHandler asusHandler, IAuraSyncKeyboard device, int frameRate = 30) : base(asusHandler, device, frameRate)
         {
             keyboard = device;
 
             foreach (IAuraRgbKey key in device.Keys)
                 idToKey[key.Code] = key;
-            
-            // foreach (var deviceKey in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
-            // {
-            //     var keyId = DeviceKeyToAuraKeyboardKeyId(deviceKey);
-            //     Log($"I'm not sure what key keyId:{keyId} is, let the devs know!");
-            //     
-            //     if (keyId != 0x0000)
-            //         idToDeviceKey[keyId] = deviceKey;
-            // }
         }
 
         /// <inheritdoc />

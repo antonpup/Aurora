@@ -17,14 +17,21 @@ namespace Aurora.Devices.Asus
         public AsusHandler.AsusDeviceType DeviceType => (AsusHandler.AsusDeviceType)device.Type;
         
         private readonly IAuraSyncDevice device;
+        private readonly AsusHandler asusHandler;
         private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly int frameRateMillis;
         private const DeviceKeys DefaultKey = DeviceKeys.Peripheral_Logo;
-        private Stopwatch stopwatch = new Stopwatch();
+        private readonly Stopwatch stopwatch = new Stopwatch();
 
-        public AuraSyncDevice(IAuraSyncDevice device, int frameRate = 30)
+        private const int DiscountLimit = 2500;
+        private const int DiscountTries = 3;
+        private int disconnectCounter = 0;
+        
+        
+        public AuraSyncDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 30)
         {
+            this.asusHandler = asusHandler;
             this.device = device;
             frameRateMillis = (int)((1f/frameRate) * 1000f);
         }
@@ -45,7 +52,10 @@ namespace Aurora.Devices.Asus
                 tokenSource.Cancel();
                 
             tokenSource = new CancellationTokenSource();
-            Thread(tokenSource.Token);
+            // create a scary parallel thread
+            var parallelOptions = new ParallelOptions();
+            parallelOptions.CancellationToken = tokenSource.Token;
+            Parallel.Invoke(parallelOptions, () => Thread(tokenSource.Token));
             Active = true;
         }
 
@@ -57,17 +67,50 @@ namespace Aurora.Devices.Asus
 
         private async void Thread(CancellationToken token)
         {
+            // continue until our token has been cancelled
             while (!token.IsCancellationRequested)
             {
-                await Task.Delay(frameRateMillis, token);
-                // wait for the next tick before drawing
-                var colors = GetLatestColors();
-                if (colors == null) continue;
-                
-                stopwatch.Restart();
-                ApplyColors(colors);
-                LastUpdateMillis = stopwatch.ElapsedMilliseconds;
-                stopwatch.Stop();
+                try
+                {
+                    await Task.Delay(frameRateMillis, token);
+                    // wait for the next tick before drawing
+                    var colors = GetLatestColors();
+                    if (colors == null) continue;
+
+                    stopwatch.Restart();
+                    ApplyColors(colors);
+                    LastUpdateMillis = stopwatch.ElapsedMilliseconds;
+                    stopwatch.Stop();
+                    
+                    // If the device did not take long to update, continue
+                    if (stopwatch.ElapsedMilliseconds < DiscountLimit)
+                    {
+                        disconnectCounter = 0;
+                        continue;
+                    }
+                    
+                    Log($"Device {Name} took too long to update {stopwatch.ElapsedMilliseconds}ms");
+                    // penalize the device if it took too long to update
+                    disconnectCounter++;
+                    
+                    // disconnect device if it takes too long to update
+                    if (disconnectCounter < DiscountTries)
+                        continue;
+                    
+                    asusHandler.DisconnectDevice(this);
+                    return;
+                }
+                catch(TaskCanceledException)
+                {
+                    asusHandler.DisconnectDevice(this);
+                    return;
+                }
+                catch(Exception exception)
+                {
+                    Log($"ERROR {exception}");
+                    asusHandler.DisconnectDevice(this);
+                    return;
+                }
             }
         }
 

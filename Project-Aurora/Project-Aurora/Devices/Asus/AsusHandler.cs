@@ -10,6 +10,9 @@ namespace Aurora.Devices.Asus
     {
         private IAuraSdk2 auraSdk;
         private readonly List<AuraSyncDevice> devices = new List<AuraSyncDevice>();
+        private object deviceLock = new object();
+        
+        public int DeviceCount => devices.Count;
         
         public bool Start()
         {
@@ -34,14 +37,10 @@ namespace Aurora.Devices.Asus
                 switch (deviceType)
                 {
                     case AsusDeviceType.Keyboard:
-                        devices.Add(new AuraSyncKeyboardDevice((IAuraSyncKeyboard)device));
-                        break;
-                    case AsusDeviceType.All:
-                    case AsusDeviceType.Mouse:
-                        // ignore these devices
+                        devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard)device));
                         break;
                     default:
-                        // devices.Add(new AuraSyncDevice(device));
+                        devices.Add(new AuraSyncDevice(this, device));
                         break;
                 }
             }
@@ -54,29 +53,39 @@ namespace Aurora.Devices.Asus
 
         public void Stop()
         {
-            foreach (var device in devices)
-                device.Stop();
+            lock (deviceLock)
+            {
+                foreach (var device in devices)
+                    device.Stop();
             
-            devices.Clear();
-            auraSdk.ReleaseControl(0);
+                devices.Clear();
+                auraSdk.ReleaseControl(0);
+            }
         }
-
+        
         public void UpdateColors(Dictionary<DeviceKeys, Color> colors)
         {
-            foreach (var device in devices)
-                device.UpdateColors(colors);
+            lock (deviceLock)
+            {
+                foreach (var device in devices)
+                    device.UpdateColors(colors);
+            }
         }
 
         public string GetDevicePerformance()
         {
             StringBuilder stringBuilder = new StringBuilder();
-            for (var i = 0; i < devices.Count; i++)
+
+            lock (deviceLock)
             {
-                var device = devices[i];
-                if (i != 0)
-                    stringBuilder.Append(", ");
-                
-                stringBuilder.Append(device.Name).Append(" ").Append(device.LastUpdateMillis).Append("ms");
+                for (var i = 0; i < devices.Count; i++)
+                {
+                    var device = devices[i];
+                    if (i != 0)
+                        stringBuilder.Append(", ");
+
+                    stringBuilder.Append(device.Name).Append(" ").Append(device.LastUpdateMillis).Append("ms");
+                }
             }
 
             return stringBuilder.ToString();
@@ -84,10 +93,13 @@ namespace Aurora.Devices.Asus
 
         public bool KeyboardActive()
         {
-            foreach (var device in devices)
+            lock (deviceLock)
             {
-                if (device.DeviceType == AsusDeviceType.Keyboard && device.Active)
-                    return true;
+                foreach (var device in devices)
+                {
+                    if (device.DeviceType == AsusDeviceType.Keyboard && device.Active)
+                        return true;
+                }
             }
 
             return false;
@@ -95,13 +107,26 @@ namespace Aurora.Devices.Asus
 
         public bool MouseActive()
         {
-            foreach (var device in devices)
+            lock (deviceLock)
             {
-                if (device.DeviceType == AsusDeviceType.Mouse && device.Active)
-                    return true;
+                foreach (var device in devices)
+                {
+                    if (device.DeviceType == AsusDeviceType.Mouse && device.Active)
+                        return true;
+                }
             }
 
             return false;
+        }
+
+        public void DisconnectDevice(AuraSyncDevice device)
+        {
+            lock (deviceLock)
+            {
+                Log($"Device {device.Name} was disconnected");
+                device.Stop();
+                devices.Remove(device);
+            }
         }
         
         public static void Log(string text)

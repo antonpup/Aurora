@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using Aurora.Devices.RGBNet;
 using Aurora.Settings;
-using RGB.NET.Devices.Asus;
 
 namespace Aurora.Devices.Asus
 {
@@ -23,8 +21,19 @@ namespace Aurora.Devices.Asus
         public string GetDeviceName() => DeviceName;
 
         /// <inheritdoc />
-        public string GetDeviceDetails() => $"{DeviceName}: {asusHandler?.GetDevicePerformance()}";
+        public string GetDeviceDetails() => $"{DeviceName}: {GetDeviceStatus()}";
 
+        private string GetDeviceStatus()
+        {
+            if (!isActive)
+                return "Not initialized";
+            
+            if (asusHandler.DeviceCount == 0)
+                return "Not devices connected";
+
+            return asusHandler?.GetDevicePerformance();
+        }
+        
         /// <inheritdoc />
         public string GetDeviceUpdatePerformance()
         {
@@ -69,19 +78,19 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public bool IsKeyboardConnected()
         {
-            return true;
+            return asusHandler?.KeyboardActive() ?? false;
         }
 
         /// <inheritdoc />
         public bool IsPeripheralConnected()
         {
-            return true;
+            return asusHandler?.MouseActive() ?? false;
         }
 
         /// <inheritdoc />
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            // asusHandler.UpdateColors(keyColors);
+            asusHandler.UpdateColors(keyColors);
             return true;
         }
 
