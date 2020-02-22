@@ -29,7 +29,7 @@ namespace Aurora.Devices.Asus
                 return "Not initialized";
             
             if (asusHandler.DeviceCount == 0)
-                return "Not devices connected";
+                return "No devices connected";
 
             return asusHandler?.GetDevicePerformance();
         }

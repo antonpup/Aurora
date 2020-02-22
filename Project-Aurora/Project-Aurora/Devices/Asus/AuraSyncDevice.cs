@@ -21,7 +21,7 @@ namespace Aurora.Devices.Asus
         private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly int frameRateMillis;
-        private const DeviceKeys DefaultKey = DeviceKeys.Peripheral_Logo;
+        private const DeviceKeys DefaultKey = DeviceKeys.Peripheral;
         private readonly Stopwatch stopwatch = new Stopwatch();
 
         private const int DiscountLimit = 2500;

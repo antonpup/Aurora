@@ -28,25 +28,34 @@ namespace Aurora.Devices.Asus
             if (auraSdk == null)
                 return false;
 
-            auraSdk.ReleaseControl(0);
-            auraSdk.SwitchMode();
-            foreach (IAuraSyncDevice device in auraSdk.Enumerate((uint)AsusDeviceType.All))
+            try
             {
-                var deviceType = (AsusDeviceType)device.Type;
-                Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
-                switch (deviceType)
+
+                auraSdk.ReleaseControl(0);
+                auraSdk.SwitchMode();
+                foreach (IAuraSyncDevice device in auraSdk.Enumerate((uint) AsusDeviceType.All))
                 {
-                    case AsusDeviceType.Keyboard:
-                        devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard)device));
-                        break;
-                    default:
-                        devices.Add(new AuraSyncDevice(this, device));
-                        break;
+                    var deviceType = (AsusDeviceType) device.Type;
+                    Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
+                    switch (deviceType)
+                    {
+                        case AsusDeviceType.Keyboard:
+                            devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
+                            break;
+                        default:
+                            devices.Add(new AuraSyncDevice(this, device));
+                            break;
+                    }
                 }
+
+                foreach (AuraSyncDevice device in devices)
+                    device.Start();
             }
-            
-            foreach (AuraSyncDevice device in  devices)
-                device.Start();
+            catch (Exception e)
+            {
+                Log($"ERROR: Are you using \"Lighting_Control_1.07.71\"? \r\n{e}");
+                return false;
+            }
 
             return true;
         }
