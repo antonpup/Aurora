@@ -32,8 +32,6 @@ namespace Aurora.Devices.Asus
                 
                 SetRgbLight(light, keyPair.Value);
             }
-            
-            keyboard.Apply();
         }
 
         /// <summary>

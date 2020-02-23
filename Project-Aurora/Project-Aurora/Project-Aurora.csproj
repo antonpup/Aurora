@@ -377,8 +377,16 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Asus\AsusHandler.cs" />
+    <Compile Include="Devices\Asus\AsusSyncConfiguredDevice.cs" />
     <Compile Include="Devices\Asus\AuraSyncDevice.cs" />
     <Compile Include="Devices\Asus\AuraSyncKeyboardDevice.cs" />
+    <Compile Include="Devices\Asus\Config\AsusConfig.cs" />
+    <Compile Include="Devices\Asus\Config\AsusConfigWindow.xaml.cs">
+      <DependentUpon>AsusConfigWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Asus\Config\AsusKeyToDeviceKeyControl.xaml.cs">
+      <DependentUpon>AsusKeyToDeviceKeyControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
@@ -1736,6 +1744,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Control_FieldPresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Asus\Config\AsusConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Asus\Config\AsusKeyToDeviceKeyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

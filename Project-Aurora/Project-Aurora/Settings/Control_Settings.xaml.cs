@@ -18,6 +18,7 @@ using RazerSdkWrapper.Utils;
 using System.Net;
 using RazerSdkWrapper.Data;
 using System.Windows.Threading;
+using Aurora.Devices.Asus.Config;
 using Aurora.Utils;
 
 namespace Aurora.Settings
@@ -949,6 +950,12 @@ namespace Aurora.Settings
                 Global.logger.Error("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc);
                 System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
+        }
+
+        private void wrapper_asus_configure_devices_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AsusConfigWindow();
+            window.Show();
         }
 
         private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)

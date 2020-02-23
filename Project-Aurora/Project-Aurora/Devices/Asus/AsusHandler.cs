@@ -3,58 +3,84 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using AuraServiceLib;
+using Aurora.Devices.Asus.Config;
 
 namespace Aurora.Devices.Asus
 {
     public class AsusHandler
     {
-        private IAuraSdk2 auraSdk;
+        public IAuraSdk2 AuraSdk { get;}
         private readonly List<AuraSyncDevice> devices = new List<AuraSyncDevice>();
-        private object deviceLock = new object();
+        private readonly object deviceLock = new object();
         
+        /// <summary>
+        /// The number of registered devices
+        /// </summary>
         public int DeviceCount => devices.Count;
-        
-        public bool Start()
+        /// <summary>
+        /// Does this user have the Aura SDK installed?
+        /// </summary>
+        public bool HasSdk => AuraSdk != null;
+
+        public AsusHandler()
         {
             try
             {
-                auraSdk = new AuraSdk() as IAuraSdk2;
+                AuraSdk = new AuraSdk() as IAuraSdk2;
             }
             catch
             {
                 Log("AuraSDK not installed!");
-                auraSdk = null;
+                AuraSdk = null;
             }
-            if (auraSdk == null)
+        }
+
+        public bool Start()
+        {
+            if (AuraSdk == null)
                 return false;
 
-            try
+            lock (deviceLock)
             {
-
-                auraSdk.ReleaseControl(0);
-                auraSdk.SwitchMode();
-                foreach (IAuraSyncDevice device in auraSdk.Enumerate((uint) AsusDeviceType.All))
+                try
                 {
-                    var deviceType = (AsusDeviceType) device.Type;
-                    Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
-                    switch (deviceType)
-                    {
-                        case AsusDeviceType.Keyboard:
-                            devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
-                            break;
-                        default:
-                            devices.Add(new AuraSyncDevice(this, device));
-                            break;
-                    }
-                }
+                    AuraSdk.ReleaseControl(0);
+                    AuraSdk.SwitchMode();
 
-                foreach (AuraSyncDevice device in devices)
-                    device.Start();
-            }
-            catch (Exception e)
-            {
-                Log($"ERROR: Are you using \"Lighting_Control_1.07.71\"? \r\n{e}");
-                return false;
+                    var config = AsusConfig.LoadConfig();
+                
+                    foreach (IAuraSyncDevice device in AuraSdk.Enumerate((uint) AsusDeviceType.All))
+                    {
+                        var deviceType = (AsusDeviceType) device.Type;
+                        Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
+
+                        var configIndex = config.Devices.IndexOf(new AsusConfig.AsusConfigDevice(device));
+
+                        if (configIndex >= 0)
+                        {
+                            devices.Add(new AsusSyncConfiguredDevice(this, device, config.Devices[configIndex]));
+                            continue;
+                        }
+                    
+                        switch (deviceType)
+                        {
+                            case AsusDeviceType.Keyboard:
+                                devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
+                                break;
+                            default:
+                                devices.Add(new AuraSyncDevice(this, device));
+                                break;
+                        }
+                    }
+
+                    foreach (AuraSyncDevice device in devices)
+                        device.Start();
+                }
+                catch (Exception e)
+                {
+                    Log($"ERROR: Are you using \"Lighting_Control_1.07.71\"? \r\n{e}");
+                    return false;
+                }
             }
 
             return true;
@@ -68,7 +94,7 @@ namespace Aurora.Devices.Asus
                     device.Stop();
             
                 devices.Clear();
-                auraSdk.ReleaseControl(0);
+                AuraSdk.ReleaseControl(0);
             }
         }
         

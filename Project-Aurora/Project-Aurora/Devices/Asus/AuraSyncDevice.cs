@@ -9,7 +9,7 @@ using AuraServiceLib;
 
 namespace Aurora.Devices.Asus
 {
-    public class AuraSyncDevice
+    public class AuraSyncDevice : IDisposable
     {
         public string Name => device.Name;
         public long LastUpdateMillis { get; private set; }
@@ -21,13 +21,12 @@ namespace Aurora.Devices.Asus
         private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly int frameRateMillis;
-        private const DeviceKeys DefaultKey = DeviceKeys.Peripheral;
+        private readonly DeviceKeys[] defaultKeys = { DeviceKeys.Peripheral, DeviceKeys.Peripheral_Logo, DeviceKeys.SPACE };
         private readonly Stopwatch stopwatch = new Stopwatch();
 
         private const int DiscountLimit = 2500;
         private const int DiscountTries = 3;
         private int disconnectCounter = 0;
-        
         
         public AuraSyncDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 30)
         {
@@ -79,6 +78,7 @@ namespace Aurora.Devices.Asus
 
                     stopwatch.Restart();
                     ApplyColors(colors);
+                    device.Apply();
                     LastUpdateMillis = stopwatch.ElapsedMilliseconds;
                     stopwatch.Stop();
                     
@@ -112,6 +112,8 @@ namespace Aurora.Devices.Asus
                     return;
                 }
             }
+            
+            Dispose();
         }
 
         /// <summary>
@@ -121,11 +123,15 @@ namespace Aurora.Devices.Asus
         protected virtual void ApplyColors(Dictionary<DeviceKeys, Color> colors)
         {
             // simple implementation is to assign all colors to DefaultKey
-            var color = colors[DefaultKey];
-            foreach (IAuraRgbLight light in device.Lights)
-                SetRgbLight(light, color);
-            
-            device.Apply();
+            foreach (var defaultKey in defaultKeys)
+            {
+                if (!colors.TryGetValue(defaultKey, out Color color)) continue;
+                
+                foreach (IAuraRgbLight light in device.Lights)
+                    SetRgbLight(light, color);
+                    
+                break;
+            }
         }
 
         //0x00BBGGRR
@@ -139,6 +145,12 @@ namespace Aurora.Devices.Asus
         {
             rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16); 
         }
+        
+        protected void SetRgbLight(int index, Color color)
+        {
+            SetRgbLight(device.Lights[index], color);
+        }
+
 
         private Dictionary<DeviceKeys, Color> GetLatestColors()
         {
@@ -152,6 +164,12 @@ namespace Aurora.Devices.Asus
         protected void Log(string text)
         {
             Global.logger.Info($"[ASUS] [{device.Name}] {text}");
+        }
+
+        /// <inheritdoc />
+        public virtual void Dispose()
+        {
+            tokenSource?.Dispose();
         }
     }
 }
