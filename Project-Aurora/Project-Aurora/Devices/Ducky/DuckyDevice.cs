@@ -100,8 +100,12 @@ namespace Aurora.Devices.Ducky
                     break;
                 }
             }
-            packetStream.Dispose();
-            packetStream.Close();
+            
+            if(packetStream != null)
+            {
+                packetStream.Dispose();
+                packetStream.Close();
+            }
             isInitialized = false;
         }
 
