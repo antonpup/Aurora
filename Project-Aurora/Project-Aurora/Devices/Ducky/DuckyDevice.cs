@@ -1,4 +1,4 @@
-﻿using Aurora.Settings;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -87,6 +87,9 @@ namespace Aurora.Devices.Ducky
 
         public void Shutdown()
         {
+            if (!isInitialized)
+                return;
+
             //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
             //You can tell both the takeover and release work because the keyboard will flash the same as switching to profile 1. (The same lights when you push FN + 1)
             foreach (byte[] controlPacket in DuckyRGBMappings.DuckyRelease)
@@ -100,8 +103,9 @@ namespace Aurora.Devices.Ducky
                     break;
                 }
             }
-            packetStream.Dispose();
-            packetStream.Close();
+            
+            packetStream?.Dispose();
+            packetStream?.Close();
             isInitialized = false;
         }
 
