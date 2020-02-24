@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Aurora.Utils
 {
@@ -42,6 +43,47 @@ namespace Aurora.Utils
                 enumType.GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
                 @enum
             ));
+
+        /// <summary>Returns the attribute of the given type for this enum.</summary>
+        public static TAttr GetCustomAttribute<TAttr>(this Enum enumObj) where TAttr : Attribute =>
+            enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(TAttr), false) as TAttr;
+    }
+
+    /// <summary>
+    /// Markup Extension that takes an enum type and returns a collection of anonymous objects containing all the enum values, with "Text"
+    /// as the <see cref="DescriptionAttribute"/> of the enum item, "Value" as the enum value itself and "Group" as the <see cref="CategoryAttribute"/>.
+    /// <para>Set the <see cref="System.Windows.Controls.ItemsControl.DisplayMemberPath"/> to "Text" and
+    /// <see cref="System.Windows.Controls.Primitives.Selector.SelectedValuePath"/> to "Value".</para>
+    /// </summary>
+    public class EnumToItemsSourceExtension : MarkupExtension {
+
+        private readonly Type enumType;
+
+        public bool DoGroup { get; set; } = false;
+
+        public EnumToItemsSourceExtension(Type enumType) {
+            this.enumType = enumType;
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider) => enumType == null ? (object)new { } : GetListFor(enumType, DoGroup);
+
+        /// <summary>
+        /// Creates a <see cref="ListCollectionView"/> for the given enum type. The items in the collection have properties: 'Text', 'Value',
+        /// 'Group', 'LocalizationKey' and 'LocalizationPackage'.
+        /// </summary>
+        public static ListCollectionView GetListFor(Type enumType, bool doGroup = false) {
+            var lcv = new ListCollectionView(Enum.GetValues(enumType)
+                .Cast<Enum>()
+                .Select(e => new {
+                    Text = e.GetDescription(),
+                    Value = e,
+                    Group = e.GetCustomAttribute<CategoryAttribute>()?.Category ?? ""
+                })
+                .ToList()
+            );
+            if (doGroup) lcv.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
+            return lcv;
+        }
     }
 
     public static class IValueConverterExt

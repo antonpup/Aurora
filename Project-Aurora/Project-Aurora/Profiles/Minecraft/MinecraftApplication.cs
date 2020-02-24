@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Minecraft {
             Name = "Minecraft",
             ID = "minecraft",
             //ProcessNames = new[] { "java.exe", "javaw.exe" },
-            ProcessTitles = new[] { @"^Minecraft [0-9.]*$" }, // Match anything that has a title like "Minecraft 1.12.2" or "Minecraft 1.5")
+            ProcessTitles = new[] { @"^Minecraft\*? [0-9.]*" }, // Match anything that has a title like "Minecraft* 1.12.2" or "Minecraft 1.5"
             ProfileType = typeof(MinecraftProfile),
             OverviewControlType = typeof(Control_Minecraft),
             GameStateType = typeof(GSI.GameState_Minecraft),

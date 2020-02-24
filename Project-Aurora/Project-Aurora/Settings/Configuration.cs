@@ -197,8 +197,10 @@ namespace Aurora.Settings
         [Description("Corsair - K68")]
         Corsair_K68 = 205,
         [Description("Corsair - K70 MK2")]
-        Corsair_K70MK2 = 206
-            ,
+        Corsair_K70MK2 = 206,
+        [Description("Corsair - STRAFE MK2")]
+        Corsair_STRAFE_MK2 = 207,
+
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
         Razer_Blackwidow = 300,
@@ -248,6 +250,12 @@ namespace Aurora.Settings
         //Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
+
+        //Ducky range is 1200-1299
+        [Description("Ducky Shine 7/One 2 RGB")]
+        Ducky_Shine_7 = 1200,
+        [Description("Ducky One 2 RGB TKL")]
+        Ducky_One_2_RGB_TKL = 1201,
 
         //OMEN range 1200-1299
         [Description("OMEN Sequencer")]
