@@ -56,7 +56,7 @@ namespace Aurora.Devices.Omen
             {
                 if (hMouse != IntPtr.Zero)
                 {
-                    int res = OmenLighting_Mouse_SetStaticEffect(hMouse, (int)GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
+                    int res = OmenLighting_Mouse_SetStatic(hMouse, (int)GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
                     if (res != 0)
                     {
                         Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
@@ -92,6 +92,6 @@ namespace Aurora.Devices.Omen
         static extern void OmenLighting_Mouse_Close(IntPtr hMouse);
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern int OmenLighting_Mouse_SetStaticEffect(IntPtr hMouse, int zone, LightingColor color, IntPtr property);
+        static extern int OmenLighting_Mouse_SetStatic(IntPtr hMouse, int zone, LightingColor color, IntPtr property);
     }
 }

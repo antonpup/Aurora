@@ -44,7 +44,7 @@ namespace Aurora.Devices.Omen
         {
             if (hChassis != IntPtr.Zero)
             {
-                int res = OmenLighting_Chassis_SetStaticEffect(hChassis, (int)GetZone(key), LightingColor.FromColor(color), IntPtr.Zero);
+                int res = OmenLighting_Chassis_SetStatic(hChassis, (int)GetZone(key), LightingColor.FromColor(color), IntPtr.Zero);
                 if (res != 0)
                 {
                     Global.logger.Error("OMEN Chassis, Set static effect fail: " + res);
@@ -91,6 +91,6 @@ namespace Aurora.Devices.Omen
         static extern void OmenLighting_Chassis_Close(IntPtr hMouse);
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern int OmenLighting_Chassis_SetStaticEffect(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
+        static extern int OmenLighting_Chassis_SetStatic(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
     }
 }

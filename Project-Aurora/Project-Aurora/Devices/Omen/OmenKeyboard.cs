@@ -50,7 +50,7 @@ namespace Aurora.Devices.Omen
                 list.ToArray();
                 if (hKB != IntPtr.Zero)
                 {
-                    int res = OmenLighting_Keyboard_SetStaticEffect(hKB, list.ToArray(), list.Count, IntPtr.Zero);
+                    int res = OmenLighting_Keyboard_SetStatic(hKB, list.ToArray(), list.Count, IntPtr.Zero);
                     if (res != 0)
                     {
                         Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
@@ -86,7 +86,7 @@ namespace Aurora.Devices.Omen
         static extern void OmenLighting_Keyboard_Close(IntPtr hKeyboard);
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern int OmenLighting_Keyboard_SetStaticEffect(IntPtr hKeyboard, StaticKeyEffect[] staticEffect, int count, IntPtr keyboardLightingEffectProperty);
+        static extern int OmenLighting_Keyboard_SetStatic(IntPtr hKeyboard, StaticKeyEffect[] staticEffect, int count, IntPtr keyboardLightingEffectProperty);
 
         [DllImport("OmenLightingSDK.dll")]
         static extern IntPtr OmenLighting_Keyboard_Open();

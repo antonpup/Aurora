@@ -48,7 +48,7 @@ namespace Aurora.Devices.Omen
 
             if (hMousePad != IntPtr.Zero)
             {
-                int res = OmenLighting_MousePad_SetStaticEffect(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
+                int res = OmenLighting_MousePad_SetStatic(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
                 if (res != 0)
                 {
                     Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
@@ -77,6 +77,6 @@ namespace Aurora.Devices.Omen
         static extern void OmenLighting_MousePad_Close(IntPtr hMouse);
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern int OmenLighting_MousePad_SetStaticEffect(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
+        static extern int OmenLighting_MousePad_SetStatic(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
     }
 }
