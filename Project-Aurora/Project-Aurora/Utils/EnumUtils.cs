@@ -137,9 +137,9 @@ namespace Aurora.Utils
                     else
                     {
                         if (descriptionString.Contains("UNIWILL2P1"))
-                            return descriptionString.Replace("UNIWILL2P1", oemstring);
+                            return descriptionString.Replace("UNIWILL2P1", oemstring + " 550");
                         else if (descriptionString.Contains("UNIWILL2ND"))
-                            return descriptionString.Replace("UNIWILL2ND", oemstring);
+                            return descriptionString.Replace("UNIWILL2ND", oemstring + " 35X");
                     }
                     return descriptionString;
                 }
