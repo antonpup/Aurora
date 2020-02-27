@@ -1,17 +1,14 @@
 
 using Newtonsoft.Json;
-
-using Aurora.Profiles;
-using Aurora.Profiles.Generic_Application;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
-
-
+using Aurora.Profiles;
+using Aurora.Profiles.Generic_Application;
+using Newtonsoft.Json.Serialization;
 
 namespace Aurora.Settings
 {
@@ -257,9 +254,9 @@ namespace Aurora.Settings
         [Description("Ducky One 2 RGB TKL")]
         Ducky_One_2_RGB_TKL = 1201,
 
-        //OMEN range 1200-1299
+        //OMEN range 1300-1399
         [Description("OMEN Sequencer")]
-        OMEN_Sequencer = 1201,
+        OMEN_Sequencer = 1301,
     }
 
     public enum PreferredKeyboardLocalization
