@@ -352,9 +352,9 @@ namespace Aurora.Settings
 
         //OMEN range is 1000-1099
         [Description("OMEN Photon")]
-        OMEN_Photon = 901,
+        OMEN_Photon = 1001,
         [Description("OMEN Outpost + Photon")]
-        OMEN_Outpost_Plus_Photon = 902
+        OMEN_Outpost_Plus_Photon = 1002
     }
 
     public enum KeycapType

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
@@ -19,7 +20,15 @@ namespace Aurora.Devices.Omen
 
         public static OmenMouse GetOmenMouse()
         {
-            IntPtr ptr = OmenLighting_Mouse_Open();
+            IntPtr ptr = IntPtr.Zero;
+            switch (Global.Configuration.mouse_preference)
+            {
+                case PreferredMouse.OMEN_Photon:
+                case PreferredMouse.OMEN_Outpost_Plus_Photon:
+                    ptr = OmenLighting_Mouse_OpenByName("Photon");
+                    break;
+            }
+  
             if (ptr != IntPtr.Zero)
             {
                 return new OmenMouse(ptr);

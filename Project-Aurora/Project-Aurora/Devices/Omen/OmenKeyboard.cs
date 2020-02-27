@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
@@ -19,7 +20,14 @@ namespace Aurora.Devices.Omen
 
         public static OmenKeyboard GetOmenKeyboard()
         {
-            IntPtr kboardPointer = OmenLighting_Keyboard_Open();
+            IntPtr kboardPointer = IntPtr.Zero;
+            switch (Global.Configuration.keyboard_brand)
+            {
+                case PreferredKeyboard.OMEN_Sequencer:
+                    kboardPointer = OmenLighting_Keyboard_OpenByName("Sequencer");
+                    break;
+            }
+
             if (kboardPointer != IntPtr.Zero)
             {
                 return new OmenKeyboard(kboardPointer);
