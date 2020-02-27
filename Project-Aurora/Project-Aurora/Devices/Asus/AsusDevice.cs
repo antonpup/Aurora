@@ -2,13 +2,14 @@
 using System.ComponentModel;
 using System.Drawing;
 using Aurora.Settings;
+using Microsoft.Win32;
 
 namespace Aurora.Devices.Asus
 {
     public class AsusDevice : Device
     {
         private const string DeviceName = "Asus";
-        private readonly AsusHandler asusHandler = new AsusHandler();
+        private AsusHandler asusHandler = new AsusHandler();
         private bool isActive = false;
         
         /// <inheritdoc />
@@ -43,6 +44,9 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public bool Initialize()
         {
+            asusHandler?.Stop();
+            
+            asusHandler = new AsusHandler();
             isActive = asusHandler.Start();
             return isActive;
         }
