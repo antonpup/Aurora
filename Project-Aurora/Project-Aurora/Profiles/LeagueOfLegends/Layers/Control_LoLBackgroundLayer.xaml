@@ -19,27 +19,44 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Grid>
+    <Grid Height="Auto" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label
+            Grid.Column="0"
+            Grid.Row="0"
+            Content="Champion:"
+        />
         <ComboBox 
             x:Name="championPicker"
+            Grid.Column="1" 
+            Grid.Row="0"
             Width="100" 
             Height="20" 
-            Grid.Column="0" 
+            Margin="2"
             ItemsSource="{Binding Source={StaticResource LoL_Champions}}"
             SelectionChanged="championPicker_SelectionChanged">
         </ComboBox>
+        <Label
+            Grid.Column="0"
+            Grid.Row="1"
+            Content="Color:"
+        />
         <xctk:ColorPicker 
             x:Name="colorPicker"
+            Grid.Column="1" 
+            Grid.Row="1"
             Width="100" 
             Height="20" 
-            Grid.Column="1" 
+            Margin="2"
             ColorMode="ColorCanvas"
             SelectedColorChanged="colorPicker_SelectedColorChanged">
-            
         </xctk:ColorPicker>
     </Grid>
 </UserControl>

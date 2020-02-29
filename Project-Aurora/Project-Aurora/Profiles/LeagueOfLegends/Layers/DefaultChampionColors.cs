@@ -10,6 +10,10 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
 {
     public static class DefaultChampionColors
     {
+        /// <summary>
+        /// Default colors for the champions. generated with vibrant-js and the icons for the champions
+        /// </summary>
+        /// <returns></returns>
         public static Dictionary<Champion, Color> GetDictionary() => new Dictionary<Champion, Color>()
         {
             [Champion.Undefined] = Color.FromArgb(120,120,120),

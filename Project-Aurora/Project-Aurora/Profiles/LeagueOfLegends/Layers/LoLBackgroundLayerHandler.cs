@@ -37,9 +37,19 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             _ID = "LoLBackgroundLayer";
         }
 
+        private readonly EffectLayer layer = new EffectLayer();
+        private Champion last;
+
         public override EffectLayer Render(IGameState gamestate)
         {
-            return new EffectLayer().Fill(Properties.ChampionColors[(gamestate as GSI.GameState_LoL).Player.Champion]);
+            var current = (gamestate as GSI.GameState_LoL).Player.Champion;
+            if (current != last)
+            {
+                last = current;
+                layer.Fill(Properties.ChampionColors[current]);
+            }
+
+            return layer;
         }
 
         protected override UserControl CreateControl()
