@@ -12,13 +12,13 @@
             <Grid DockPanel.Dock="Top">
                 <DockPanel>
                     <GroupBox x:Name="grpbxProperties" Header="Properties" BorderThickness="1" Margin="0,0,2,0" Width="200" MinWidth="200" DockPanel.Dock="Right"/>
-                    <Viewbox x:Name="viewbxAnimationView" StretchDirection="Both" Margin="0,0,7,0" >
-                        <Grid>
+                    <Viewbox x:Name="viewbxAnimationView" MaxHeight="500" MaxWidth="1200" StretchDirection="Both" Margin="0,0,7,0" >
+                        <Grid>                            
+                            <Image x:Name="keyboard_overlayPreview" RenderOptions.BitmapScalingMode="HighQuality" SizeChanged="keyboard_overlayPreview_SizeChanged" Margin="15,15,0,0" Stretch="Fill" />
+                            <DeviceLayout:Control_DeviceLayoutPresenter x:Name="deviceLayerPresenter" IsLayoutMoveEnabled="False" Margin="0,0,7,0" Opacity="0.8"/>
                             <Rectangle Margin="0" Width="15" Height="15" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="White"/>
-                            <DeviceLayout:Control_DeviceLayoutPresenter x:Name="deviceLayerPresenter" Margin="0,0,7,0" Opacity="0.8"/>
                             <local:Control_Ruler x:Name="rulerHorizontalPixels" Height="15" Margin="15,0,0,0" Background="White" VerticalAlignment="Top" Foreground="Black" />
                             <local:Control_Ruler x:Name="rulerVerticalPixels" Width="15" Margin="0,15,0,0" Background="White" IsVertical="True" HorizontalAlignment="Left" Foreground="Black" />
-                            <Image x:Name="keyboard_overlayPreview" RenderOptions.BitmapScalingMode="HighQuality" SizeChanged="keyboard_overlayPreview_SizeChanged" Margin="15,15,0,0" Stretch="Fill" />
                         </Grid>
                     </Viewbox>
                 </DockPanel>

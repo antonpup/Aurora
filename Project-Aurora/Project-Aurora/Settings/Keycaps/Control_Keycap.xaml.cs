@@ -22,9 +22,13 @@ namespace Aurora.Settings.Keycaps
     /// </summary>
     public partial class Control_Keycap : UserControl, IKeycap
     {
-        private Color current_color = Color.FromArgb(0, 0, 0, 0);
-        private DeviceKey associatedKey = DeviceKeys.NONE;
-        private bool isImage = false;
+        private Color currentColor = Color.FromArgb(0, 0, 0, 0);
+        private DeviceKey AssociatedKey = DeviceKeys.NONE;
+        private bool IsImage = false;
+        public bool IsKeyMoveEnabled = false;
+        private System.Windows.Point _positionInBlock;
+        private DeviceKeyConfiguration Config;
+        public System.Windows.Point Offset = new System.Windows.Point();
         public Control_Keycap()
         {
             InitializeComponent();
@@ -34,7 +38,8 @@ namespace Aurora.Settings.Keycaps
         {
             InitializeComponent();
 
-            associatedKey = key.Key;
+            Config = key;
+            AssociatedKey = key.Key;
 
             this.Width = key.Region.Width;
             this.Height = key.Region.Height;
@@ -54,7 +59,7 @@ namespace Aurora.Settings.Keycaps
 
             if (string.IsNullOrWhiteSpace(key.Image))
             {
-                keyCap.Text = associatedKey.VisualName;
+                keyCap.Text = AssociatedKey.VisualName;
                 //keyCap.Tag = associatedKey.Tag;
                 if (key.FontSize != null)
                     keyCap.FontSize = key.FontSize.Value;
@@ -82,7 +87,7 @@ namespace Aurora.Settings.Keycaps
                         keyBorder.OpacityMask = new ImageBrush(image);
                     }
 
-                    isImage = true;
+                    IsImage = true;
                 }
             }
 
@@ -91,7 +96,7 @@ namespace Aurora.Settings.Keycaps
 
         public DeviceKey GetKey()
         {
-            return associatedKey;
+            return AssociatedKey;
         }
 
         public void SetColor(Color key_color)
@@ -99,7 +104,7 @@ namespace Aurora.Settings.Keycaps
             //key_color = Color.FromArgb(255, 255, 255, 255); //No colors allowed!
             if (keyBorder.IsEnabled)
             {
-                if (!isImage)
+                if (!IsImage)
                 {
                     switch (Global.Configuration.virtualkeyboard_keycap_type)
                     {
@@ -129,7 +134,7 @@ namespace Aurora.Settings.Keycaps
                 }
                 else
                 {
-                    if (associatedKey.Tag != (int)DeviceKeys.NONE)
+                    if (AssociatedKey.Tag != (int)DeviceKeys.NONE)
                         keyBorder.Background = new SolidColorBrush(key_color);
                 }
             }
@@ -140,7 +145,7 @@ namespace Aurora.Settings.Keycaps
             }
             
 
-            if (Global.key_recorder.HasRecorded(associatedKey))
+            if (Global.key_recorder.HasRecorded(AssociatedKey))
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
             if (Global.Configuration.virtualkeyboard_keycap_type == KeycapType.Colorized_blank)
             {
@@ -171,7 +176,7 @@ namespace Aurora.Settings.Keycaps
         private void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
+                virtualkeyboard_key_selected(AssociatedKey);
         }
 
         private void keyBorder_MouseMove(object sender, MouseEventArgs e)
@@ -196,8 +201,9 @@ namespace Aurora.Settings.Keycaps
         private void keyBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
+                virtualkeyboard_key_selected(AssociatedKey);
         }
+
         public void UpdateText()
         {
             //if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration())
@@ -207,7 +213,7 @@ namespace Aurora.Settings.Keycaps
                 //    return;
 
                 StringBuilder sb = new StringBuilder(2);
-                var scan_code = KeyUtils.GetScanCode((DeviceKeys)associatedKey.Tag);
+                var scan_code = KeyUtils.GetScanCode((DeviceKeys)AssociatedKey.Tag);
                 if (scan_code == -1)
                     return;
                 /*var key = KeyUtils.GetFormsKey((KeyboardKeys)associatedKey.LedID);
@@ -216,6 +222,65 @@ namespace Aurora.Settings.Keycaps
                 int ret = KeyUtils.GetKeyNameTextW((uint)scan_code << 16, sb, 2);
                 keyCap.Text = sb.ToString().ToUpper();
             }
+        }
+
+        private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (IsKeyMoveEnabled)
+            {
+                // when the mouse is down, get the position within the current control. (so the control top/left doesn't move to the mouse position)
+                _positionInBlock = Mouse.GetPosition(this);
+
+                // capture the mouse (so the mouse move events are still triggered (even when the mouse is not above the control)
+                this.CaptureMouse();
+            }
+
+        }
+
+        private void UserControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            // if the mouse is captured. you are moving it. (there is your 'real' boolean)
+            if (this.IsMouseCaptured)
+            {
+                // get the parent container
+                var container = VisualTreeHelper.GetParent(this) as UIElement;
+
+                // get the position within the container
+                var mousePosition = e.GetPosition(container);
+
+                // move the usercontrol.
+                this.RenderTransform = new TranslateTransform(mousePosition.X - _positionInBlock.X, mousePosition.Y - _positionInBlock.Y);
+
+            }
+        }
+
+        private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            // release this control.
+            this.ReleaseMouseCapture();
+
+            //DeviceLayoutUpdated?.Invoke(this);
+
+            /*if (this.RenderTransform is TranslateTransform)
+            {
+                DeviceConfig.Offset.X = (this.RenderTransform as TranslateTransform).X;
+                DeviceConfig.Offset.Y = (this.RenderTransform as TranslateTransform).Y;
+                DeviceConfig.Save();
+            }*/
+            //SaveLayoutPosition(TranslatePoint(new Point(0, 0), VisualTreeHelper.GetParent(this) as UIElement));
+        }
+
+        internal DeviceKeyConfiguration GetConfiguration()
+        {
+            var offset = this.TranslatePoint(new Point(0, 0), VisualTreeHelper.GetParent(this) as UIElement) - Offset;
+            const int epsilon = 3;
+            if (Config.Region.X < offset.X - epsilon || Config.Region.X > offset.X + epsilon || Config.Region.Y < offset.Y - epsilon || Config.Region.Y > offset.Y + epsilon)
+            {
+                Config.Region.X = (int)offset.X;// - (int)Offset.X;
+                Config.Region.Y = (int)offset.Y;// - (int)Offset.Y;
+            }
+
+            return Config;
         }
     }
 }

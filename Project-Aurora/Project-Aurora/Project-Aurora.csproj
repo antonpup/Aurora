@@ -682,8 +682,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\DeviceLayoutManager.cs" />
-    <Compile Include="Settings\Keycaps\Control_DeviceConfig.xaml.cs">
-      <DependentUpon>Control_DeviceConfig.xaml</DependentUpon>
+    <Compile Include="Settings\Keycaps\Window_DeviceConfig.xaml.cs">
+      <DependentUpon>Window_DeviceConfig.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Keycaps\Control_DeviceLayout.xaml.cs">
       <DependentUpon>Control_DeviceLayout.xaml</DependentUpon>
@@ -1747,7 +1747,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Keycaps\Control_DeviceConfig.xaml">
+    <Page Include="Settings\Keycaps\Window_DeviceConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

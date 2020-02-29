@@ -58,43 +58,15 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            //UpdateVirtualKeyboard();
-
-            //Global.devicesLayout.DeviceLayoutNumberChanged += KbLayout_KeyboardLayoutUpdated;
-            deviceLayerPresenter.SizeChanged += KbLayout_KeyboardLayoutUpdated2;
+            Global.devicesLayout.DeviceLayoutNumberChanged += Layout_DevicesNumberChanged;
 
         }
-
-        private void KbLayout_KeyboardLayoutUpdated2(object sender, SizeChangedEventArgs e)
+        private void Layout_DevicesNumberChanged(object sender)
         {
-            UpdateVirtualKeyboard();
-        }
-
-        private void KbLayout_KeyboardLayoutUpdated(object sender)
-        {
-            UpdateVirtualKeyboard();
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void UpdateVirtualKeyboard()
-        {
-            /*Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
-
-            keyboard_grid.Children.Clear();
-            keyboard_grid.Children.Add(virtial_kb);
-            keyboard_grid.Children.Add(new LayerEditor());
-
-            keyboard_grid.Width = virtial_kb.Width;
-            keyboard_grid.Height = virtial_kb.Height;
-
-            keyboard_grid.UpdateLayout();*/
             deviceLayerPresenter.UpdateLayout();
-            viewbxAnimationView.MaxWidth = deviceLayerPresenter.MaxWidth + 15;
-            viewbxAnimationView.MaxHeight = deviceLayerPresenter.MaxHeight + 15;
-            viewbxAnimationView.UpdateLayout();
+            //deviceLayerPresenter.MaxWidth = deviceLayerPresenter.MaxWidth + 15;
+            //deviceLayerPresenter.MaxHeight = deviceLayerPresenter.MaxHeight + 15;
+            //viewbxAnimationView.UpdateLayout();
 
             this.UpdateLayout();
 
@@ -107,6 +79,10 @@ namespace Aurora.Controls
                     key.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
                 }
             }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
         }
 
         private void KeyboardKey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

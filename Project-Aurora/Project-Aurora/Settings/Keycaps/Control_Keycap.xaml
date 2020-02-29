@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Keycaps"
              mc:Ignorable="d" 
+             MouseDown="keyBorder_MouseDown" MouseMove="keyBorder_MouseMove" MouseLeave="keyBorder_MouseLeave" MouseEnter="keyBorder_MouseEnter"
              d:DesignHeight="30" d:DesignWidth="30" HorizontalAlignment="Left" VerticalAlignment="Top">
     <Grid>
         <Grid x:Name="grid_backglow" Margin="-5" Background="Black">
@@ -12,7 +13,7 @@
                 <ImageBrush ImageSource="/Aurora;component/Resources/keycap_backglow.png"/>
             </Grid.OpacityMask>
         </Grid>
-        <Border x:Name="keyBorder" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Background="#FF191919" MouseDown="keyBorder_MouseDown" MouseMove="keyBorder_MouseMove" MouseLeave="keyBorder_MouseLeave" MouseEnter="keyBorder_MouseEnter">
+        <Border x:Name="keyBorder" BorderBrush="Gray" BorderThickness="1" CornerRadius="5" Background="#FF191919">
             <TextBlock x:Name="keyCap" TextWrapping="Wrap" Text="Key" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontFamily="Calibri" TextAlignment="Center"/>
         </Border>
     </Grid>

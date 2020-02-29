@@ -1,6 +1,7 @@
 ﻿using Aurora.Controls;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -23,13 +24,28 @@ namespace Aurora.Settings.Keycaps
     public partial class Control_DeviceLayoutPresenter : UserControl
     {
         List<Control_DeviceLayout> DeviceLayouts = new List<Control_DeviceLayout>();
+        private System.Windows.Point _positionInBlock;
 
         public List<Control_Keycap> Keycaps => DeviceLayouts.SelectMany(dl => dl.KeyboardMap.Values).ToList();
-        public bool IsLayoutMoveEnabled { get; set; }
+        public static readonly DependencyProperty IsLayoutMoveEnabledProperty = DependencyProperty.Register("IsLayoutMoveEnabled",
+                                                                                                typeof(bool),
+                                                                                                typeof(Control_DeviceLayoutPresenter));
+
+        public bool IsLayoutMoveEnabled
+        {
+            get { return (bool)GetValue(IsLayoutMoveEnabledProperty); }
+            set { SetValue(IsLayoutMoveEnabledProperty, value); }
+        }
+        
+        private void enableEditLayout_Click(object sender, RoutedEventArgs e)
+        {
+            IsLayoutMoveEnabled = !IsLayoutMoveEnabled;
+        }
 
         public Control_DeviceLayoutPresenter()
         {
             InitializeComponent();
+            DataContext = this;
             Global.devicesLayout.DeviceLayoutNumberChanged += DeviceLayoutNumberChanged;
             Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
             this.keyboard_record_message.Visibility = Visibility.Hidden;
@@ -59,6 +75,18 @@ namespace Aurora.Settings.Keycaps
             {
                 CalculateBitmap();
             }
+        }
+        private void AddNewDeviceLayout(object sender, RoutedEventArgs e)
+        {
+            Global.devicesLayout.AddNewDevice();
+            //DeviceLayoutNumberChanged(this);
+        }
+        
+        private void OpenEnableMenu(object sender, RoutedEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("enableMenu") as ContextMenu;
+            cm.PlacementTarget = sender as Button;
+            cm.IsOpen = true;
         }
         private void Layout_DeviceLayoutUpdated(object sender)
         {
@@ -90,36 +118,40 @@ namespace Aurora.Settings.Keycaps
 
                 if (offset.Y + layout.Height - baseline_y > current_height)
                     current_height = offset.Y + layout.Height - baseline_y;*/
-                //layout.RenderTransform = new TranslateTransform(offset
-                //layout.Margin = new Thickness(offset.X - baseline_x, offset.Y - baseline_y, 0, 0);
-               /* layout.RenderTransform = new TranslateTransform(offset.X - baseline_x, offset.Y - baseline_y);
-                if (layout is Control_DeviceLayout)
-                    (layout as Control_DeviceLayout).SaveLayoutPosition(offset);
-            }*/
+            //layout.RenderTransform = new TranslateTransform(offset
+            //layout.Margin = new Thickness(offset.X - baseline_x, offset.Y - baseline_y, 0, 0);
+            /* layout.RenderTransform = new TranslateTransform(offset.X - baseline_x, offset.Y - baseline_y);
+             if (layout is Control_DeviceLayout)
+                 (layout as Control_DeviceLayout).SaveLayoutPosition(offset);
+         }*/
 
             layouts_grid.Width = current_width - baseline_x;
             //this.Width = width + (keyboard_grid.Width - virtual_keyboard_width);
 
             layouts_grid.Height = current_height - baseline_y;
-            layouts_grid.RenderTransform = new TranslateTransform(-baseline_x, -baseline_y);
-            //keyboard_grid.Clip = new RectangleGeometry(new Rect(baseline_x, baseline_x, current_width - baseline_x, current_height - baseline_y));
-            //this.Height = height + (keyboard_grid.Height - virtual_keyboard_height);
-            Effects.grid_baseline_x = 0;
-            Effects.grid_baseline_y = 0;
-            Effects.grid_width = (float)layouts_grid.Width;
-            Effects.grid_height = (float)layouts_grid.Height;
+            foreach (UIElement layout in layouts_grid.Children)
+            {
+                Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
+                layout.RenderTransform = new TranslateTransform(offset.X - baseline_x, offset.Y - baseline_y);
+                layout.UpdateLayout();
+            }
+             //layouts_grid.RenderTransform = new TranslateTransform(-baseline_x, -baseline_y);
+             //keyboard_grid.Clip = new RectangleGeometry(new Rect(baseline_x, baseline_x, current_width - baseline_x, current_height - baseline_y));
+             //this.Height = height + (keyboard_grid.Height - virtual_keyboard_height);
+             Effects.grid_baseline_x = 0;// (float)-baseline_x;
+             Effects.grid_baseline_y = 0;// (float)-baseline_y;
+             Effects.grid_width = (float)layouts_grid.Width;
+             Effects.grid_height = (float)layouts_grid.Height;
 
 
-            //keyboard_grid.Margin = new Thickness(-baseline_x, -baseline_y, 0, 0);
-            //layout2.LayoutTransform = new TranslateTransform(layout2.Region.X, layout2.Region.Y);
-            layouts_viewbox.MaxWidth = current_width;
-            layouts_viewbox.MaxHeight = current_height;
-            MaxWidth = current_width + 50;// + 50;
-            MaxHeight = current_height + 50;// + 50;
-            layouts_grid.UpdateLayout();
-            layouts_viewbox.UpdateLayout();
-            this.UpdateLayout();
-            CalculateBitmap();
+             //keyboard_grid.Margin = new Thickness(-baseline_x, -baseline_y, 0, 0);
+             //layout2.LayoutTransform = new TranslateTransform(layout2.Region.X, layout2.Region.Y);
+             layouts_viewbox.MaxWidth = layouts_grid.Width;
+             layouts_viewbox.MaxHeight = layouts_grid.Height;
+             layouts_grid.UpdateLayout();
+             layouts_viewbox.UpdateLayout();
+             this.UpdateLayout();
+             CalculateBitmap();
 
         }
         public void CalculateBitmap()
@@ -138,12 +170,76 @@ namespace Aurora.Settings.Keycaps
             //keyboard_grid.ClipToBounds = true;
 
             layouts_grid.Children.Clear();
-            DeviceLayouts.ForEach(d => layouts_grid.Children.Add(d));
-            DeviceLayouts.ForEach(d => d.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated);
+            foreach (var layout in DeviceLayouts)
+            {
+                layouts_grid.Children.Add(layout);
+                layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
+                layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
+                layout.MouseDown += DeviceLayout_MouseDown;
+                layout.MouseMove += DeviceLayout_MouseMove;
+                layout.MouseUp += DeviceLayout_MouseUp;
+            }
             layouts_grid.Children.Add(new LayerEditor(layouts_grid));
+        }
+        private void DeviceLayout_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (IsLayoutMoveEnabled)
+            {
+                var layout = sender as Control_DeviceLayout;
+                layout.ReleaseMouseCapture();
+                Window_DeviceConfig configWindow = new Window_DeviceConfig(layout.DeviceConfig);
+                configWindow.Show();
+            }
 
-            DeviceLayouts.ForEach(l => l.IsLayoutMoveEnabled = IsLayoutMoveEnabled);
+        }
+        private void DeviceLayout_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var layout = sender as Control_DeviceLayout;
+            if (e.ClickCount < 2 && IsLayoutMoveEnabled)
+            {
+                // when the mouse is down, get the position within the current control. (so the control top/left doesn't move to the mouse position)
+                _positionInBlock = Mouse.GetPosition(layout);
+
+                // capture the mouse (so the mouse move events are still triggered (even when the mouse is not above the control)
+                layout.CaptureMouse();
+            }
+
+        }
+
+        private void DeviceLayout_MouseMove(object sender, MouseEventArgs e)
+        {
+            var layout = sender as Control_DeviceLayout;
+            // if the mouse is captured. you are moving it. (there is your 'real' boolean)
+            if (layout.IsMouseCaptured)
+            {
+                // get the parent container
+                var container = VisualTreeHelper.GetParent(layout) as UIElement;
+
+                // get the position within the container
+                var mousePosition = e.GetPosition(container);
+
+                // move the usercontrol.
+                layout.RenderTransform = new TranslateTransform(mousePosition.X - _positionInBlock.X, mousePosition.Y - _positionInBlock.Y);
+
+            }
+        }
+
+        private void DeviceLayout_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var layout = sender as Control_DeviceLayout;
+            if (layout.IsMouseCaptured)
+            {
+                // release this control.
+                layout.ReleaseMouseCapture();
+
+                if (layout.RenderTransform is TranslateTransform)
+                {
+                    layout.DeviceConfig.Offset.X = (layout.RenderTransform as TranslateTransform).X;
+                    layout.DeviceConfig.Offset.Y = (layout.RenderTransform as TranslateTransform).Y;
+                    layout.DeviceConfig.Save();
+                }
+            }
         }
 
     }
-}
+ }

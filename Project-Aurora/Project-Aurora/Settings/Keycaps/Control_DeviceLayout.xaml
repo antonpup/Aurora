@@ -5,15 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Keycaps"
              mc:Ignorable="d" 
-             Loaded="UserControl_Loaded"
-             MouseDown="UserControl_MouseDown" MouseUp="UserControl_MouseUp" MouseMove="UserControl_MouseMove" MouseDoubleClick="UserControl_MouseDoubleClick">
+             Loaded="UserControl_Loaded">
     <Viewbox x:Name="device_viewbox" StretchDirection="Both" Margin="0,0,0,0" MinHeight="100" MinWidth="100"  VerticalAlignment="Top" HorizontalAlignment="Left">
         <Border Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A51E1E1E" CornerRadius="8">
-            <Grid x:Name="device_grid" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                <Grid.CacheMode>
+            <Canvas x:Name="device_grid" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Canvas.CacheMode>
                     <BitmapCache EnableClearType="True"/>
-                </Grid.CacheMode>
-            </Grid>
+                </Canvas.CacheMode>
+            </Canvas>
         </Border>
     </Viewbox>
 </UserControl>

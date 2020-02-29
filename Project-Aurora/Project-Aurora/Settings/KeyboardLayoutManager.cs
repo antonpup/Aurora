@@ -100,7 +100,7 @@ namespace Aurora.Settings
     {
         public string group_tag;
 
-        public KeyboardRegion origin_region;
+        public KeyboardRegion? origin_region;
 
         public List<KeyboardKey> grouped_keys = new List<KeyboardKey>();
 
@@ -126,7 +126,7 @@ namespace Aurora.Settings
             //NormalizeKeys();
         }
 
-        public void AddFeature(KeyboardKey[] keys, KeyboardRegion insertion_region = KeyboardRegion.TopLeft)
+        public void AddFeature(KeyboardKey[] keys, KeyboardRegion? insertion_region = KeyboardRegion.TopLeft)
         {
             double location_x = 0.0D;
             double location_y = 0.0D;
@@ -435,7 +435,7 @@ namespace Aurora.Settings
             return layout.ToString();
 
         }
-        public void LoadBrand(string keyboard_preference = "", string mouse_preference = "", MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
+        public void LoadBrand(string keyboard_preference = "", string mouse_preference = "", MouseOrientationType? mouse_orientation = MouseOrientationType.RightHanded)
         {
 #if !DEBUG
             try

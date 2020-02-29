@@ -75,7 +75,7 @@
             </Grid.RowDefinitions>
 
             <ContentPresenter Margin="6,4,7,6" Grid.Row="1" Content="{Binding SelectedControl}" />
-            <DeviceLayout:Control_DeviceLayoutPresenter x:Name="deviceLayerPresenter" Margin="0,0,7,0"/>
+            <DeviceLayout:Control_DeviceLayoutPresenter x:Name="deviceLayerPresenter" Margin="0,0,7,0" MaxHeight="500" MinHeight="200"/>
         </Grid>
     </DockPanel>
 </Window>
