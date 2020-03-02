@@ -979,6 +979,18 @@
     <None Include="kb_layouts\Extra Features\keyboard21_numpad_left_bottom_features.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\keyboard22br_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22jp_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22usuk_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22us_numpad_right_features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\keyboard_numpad_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -999,6 +1011,18 @@
     </None>
     <None Include="kb_layouts\keyboard21us.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\keyboard22br.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\keyboard22jp.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\keyboard22uk.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\keyboard22us.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
     <None Include="Profiles\Overlays\VolumeOverlay\VolumeOverlaySettings.cs" />

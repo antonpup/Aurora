@@ -759,6 +759,15 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "Keyboard21br.json");
             else if (keyboard_preference == PreferredKeyboard.Keyboard21jp)
                 layoutConfigPath = Path.Combine(layoutsPath, "Keyboard21jp.json");
+            //keyboare 2.2
+            else if (keyboard_preference == PreferredKeyboard.Keyboard22us)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard22us.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard22uk)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard22uk.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard22br)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard22br.json");
+            else if (keyboard_preference == PreferredKeyboard.Keyboard22jp)
+                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard22jp.json");
             else
             {
                 LoadNone();

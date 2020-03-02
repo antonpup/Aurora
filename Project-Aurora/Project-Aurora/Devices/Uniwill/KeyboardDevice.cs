@@ -300,7 +300,7 @@ namespace Aurora.Devices.Uni
                 keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item], keyColors[item].A / 255.0D));
             }
 
-            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, keyColors, e);
+            keyboard?.SetEffect(0x64, 0x00, bRefreshOnce, keyColors, e);
 
             bRefreshOnce = false;
             Thread.Sleep(1);

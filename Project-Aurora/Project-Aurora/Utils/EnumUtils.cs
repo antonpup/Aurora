@@ -133,6 +133,8 @@ namespace Aurora.Utils
                             return descriptionString.Replace("UNIWILL2P1", oemstring + " FUSION");
                         else if(descriptionString.Contains("UNIWILL2ND"))
                             return descriptionString.Replace("UNIWILL2ND", oemstring + " NEO");
+                        else if (descriptionString.Contains("UNIWILL2P2"))
+                            return descriptionString.Replace("UNIWILL2P2", oemstring + " NEO");
                     }
                     else
                     {
@@ -140,6 +142,8 @@ namespace Aurora.Utils
                             return descriptionString.Replace("UNIWILL2P1", oemstring + " 550");
                         else if (descriptionString.Contains("UNIWILL2ND"))
                             return descriptionString.Replace("UNIWILL2ND", oemstring + " 35X");
+                        else if (descriptionString.Contains("UNIWILL2P2"))
+                            return descriptionString.Replace("UNIWILL2P2", oemstring + " 650");
                     }
                     return descriptionString;
                 }
