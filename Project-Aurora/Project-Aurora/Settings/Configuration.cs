@@ -259,6 +259,17 @@ namespace Aurora.Settings
         Keyboard21br = 2105,
         [Description("UNIWILL2P1 (JIS)")]
         Keyboard21jp = 2106,
+
+
+        [Description("UNIWILL2P2 (ISO)")]
+        Keyboard22uk = 2107,
+        [Description("UNIWILL2P2 (ANSI)")]
+        Keyboard22us = 2108,
+        [Description("UNIWILL2P2 (ABNT)")]
+        Keyboard22br = 2109,
+        [Description("UNIWILL2P2 (JIS)")]
+        Keyboard22jp = 2110,
+
     }
 
     public enum PreferredKeyboardLocalization
