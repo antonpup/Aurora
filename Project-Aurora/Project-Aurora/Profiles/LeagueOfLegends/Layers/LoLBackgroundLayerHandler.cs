@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Aurora.EffectsEngine;
+using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
+using Aurora.Settings.Layers;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using Aurora.EffectsEngine;
-using Aurora.Settings.Layers;
-using System.Drawing;
-using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
-using Newtonsoft.Json;
 
 namespace Aurora.Profiles.LeagueOfLegends.Layers
 {
@@ -38,15 +38,20 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         }
 
         private readonly EffectLayer layer = new EffectLayer();
-        private Champion last;
+        private Champion lastChampion = Champion.Undefined;
+        private Color lastColor = Color.Transparent;
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            var current = (gamestate as GSI.GameState_LoL).Player.Champion;
-            if (current != last)
+            var currentChampion = (gamestate as GSI.GameState_LoL)?.Player.Champion ?? Champion.Undefined;
+            var currentColor = Properties.ChampionColors[currentChampion];
+            //if the player changes champion
+            //or if the color is adjusted in the UI
+            if (currentChampion != lastChampion || currentColor != lastColor)
             {
-                last = current;
-                layer.Fill(Properties.ChampionColors[current]);
+                lastChampion = currentChampion;
+                lastColor = currentColor;
+                layer.Fill(lastColor);
             }
 
             return layer;
