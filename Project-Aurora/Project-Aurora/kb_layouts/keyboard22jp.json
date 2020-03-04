@@ -14,7 +14,7 @@
    
     58,
 
-    77,
+    
     93,
     99,
     100,
@@ -81,7 +81,7 @@
       "width": 30,
       "margin_left": 7.0
     },
-   
+
 
     //Number lock
     "34": {
@@ -158,11 +158,12 @@
     "75": {
       "line_break": true
     },
+ 
     "76": {
       "tag": 76,
       "margin_left": 0.0,
       "margin_top": 0.0,
-      "width": 78.0,
+      "width": 70.0,
       "height": 30.0,
       "font_size": 12.0
     },
@@ -171,7 +172,7 @@
       "tag": 88,
       "line_break": null,
       "width": 30,
-      "margin_left": 37
+      "margin_left": 7
     },
 
     //"↑"
