@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Aurora.Devices.RGBNet;
 using Aurora.Settings;
 using keyboard;
@@ -44,8 +45,41 @@ namespace Aurora.Devices.Uni
             //_CheckControlCenter.Start();
             //_CheckControlCenter.Interval = 1000;
             //_CheckControlCenter.Elapsed += _CheckControlCenter_Elapsed;
-           
+            SetBrightness();
  
+        }
+        InputInterceptor InputInterceptor;
+        private void SetBrightness()
+        {
+
+            InputInterceptor = new InputInterceptor();
+            InputInterceptor.Input += InputInterceptor_Input;
+         
+        }
+        bool Fnkey = false;
+        private void InputInterceptor_Input(object sender, InputInterceptor.InputEventData e)
+        {
+            var keys = (int)e.Data.VirtualKeyCode;
+            if(keys.Equals(Convert.ToInt32(Keys.LButton | Keys.OemClear)))
+            {
+                if (e.KeyDown)
+                    Fnkey = true;
+                else if(e.KeyUp)
+                    Fnkey = false;
+            }
+
+            if (Fnkey)
+            {
+                float brightness = Global.Configuration.GlobalBrightness;
+                if ((Keys)e.Data.VirtualKeyCode == Keys.F6)
+                    brightness -= 0.25f;
+                if ((Keys)e.Data.VirtualKeyCode == Keys.F7)
+                    brightness += 0.25f;
+                Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
+                ConfigManager.Save(Global.Configuration);
+            }
+
+           
         }
 
         private void _CheckControlCenter_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
