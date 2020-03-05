@@ -37,6 +37,7 @@ namespace Aurora.Devices.Uni
         System.Timers.Timer _CheckControlCenter = new System.Timers.Timer();
 
         int GamingCenterType = 0;
+        byte Brightness = 0x32;
         public KeyboardDevice()
         {
             devicename = KeyboardFactory.GetOEMName();
@@ -45,16 +46,24 @@ namespace Aurora.Devices.Uni
             //_CheckControlCenter.Start();
             //_CheckControlCenter.Interval = 1000;
             //_CheckControlCenter.Elapsed += _CheckControlCenter_Elapsed;
-            SetBrightness();
- 
+           
+
         }
         InputInterceptor InputInterceptor;
         private void SetBrightness()
         {
 
             InputInterceptor = new InputInterceptor();
+            InputInterceptor.Input -= InputInterceptor_Input;
             InputInterceptor.Input += InputInterceptor_Input;
          
+        }
+        private void UnloadBrightness()
+        {
+
+            InputInterceptor = new InputInterceptor();
+            InputInterceptor.Input -= InputInterceptor_Input;
+
         }
         bool Fnkey = false;
         private void InputInterceptor_Input(object sender, InputInterceptor.InputEventData e)
@@ -75,6 +84,9 @@ namespace Aurora.Devices.Uni
                     brightness -= 0.25f;
                 if ((Keys)e.Data.VirtualKeyCode == Keys.F7)
                     brightness += 0.25f;
+                //Test  
+                //Brightness = Convert.ToByte (50*  Math.Max(0f, Math.Min(1f, brightness)));
+
                 Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
                 ConfigManager.Save(Global.Configuration);
             }
@@ -160,6 +172,7 @@ namespace Aurora.Devices.Uni
                 bRefreshOnce = true;
                 isInitialized = false;
                 Shutdown();
+             
             }
             
         }
@@ -193,10 +206,11 @@ namespace Aurora.Devices.Uni
                         keyboard =   KeyboardFactory.CreateHIDDevice("hidkeyboard");
                    
                     if (keyboard!=null)
-                        {
+                    {
                             isInitialized = true;
-                            return true;
-                        }
+                           SetBrightness();
+                           return true;
+                      }
                            
                     
                     isInitialized = false;
@@ -253,6 +267,7 @@ namespace Aurora.Devices.Uni
 
                     bRefreshOnce = true;
                     isInitialized = false;
+                   
                 }
             }
 
@@ -265,7 +280,8 @@ namespace Aurora.Devices.Uni
 
                  bRefreshOnce = true;
                  isInitialized = false;
-               }
+                
+                }
                    
             }
 
@@ -305,7 +321,7 @@ namespace Aurora.Devices.Uni
             }
 
 
-            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, keyColors, e);
+            keyboard?.SetEffect(Brightness, 0x00, bRefreshOnce, keyColors, e);
 
             bRefreshOnce = false;
             watch.Stop();
