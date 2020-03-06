@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,16 +38,17 @@ namespace Aurora.Devices.Uni
         System.Timers.Timer _CheckControlCenter = new System.Timers.Timer();
 
         int GamingCenterType = 0;
-        byte Brightness = 0x32;
+     
+        float brightness = 1f;
         public KeyboardDevice()
         {
             devicename = KeyboardFactory.GetOEMName();
             ChoiceGamingCenter();
-
+          
             //_CheckControlCenter.Start();
             //_CheckControlCenter.Interval = 1000;
             //_CheckControlCenter.Elapsed += _CheckControlCenter_Elapsed;
-           
+
 
         }
         InputInterceptor InputInterceptor;
@@ -79,16 +81,14 @@ namespace Aurora.Devices.Uni
 
             if (Fnkey)
             {
-                float brightness = Global.Configuration.GlobalBrightness;
                 if ((Keys)e.Data.VirtualKeyCode == Keys.F6)
                     brightness -= 0.25f;
                 if ((Keys)e.Data.VirtualKeyCode == Keys.F7)
                     brightness += 0.25f;
-                //Test  
-                //Brightness = Convert.ToByte (50*  Math.Max(0f, Math.Min(1f, brightness)));
 
-                Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
-                ConfigManager.Save(Global.Configuration);
+                //Internal brightness modify.
+                brightness = Math.Max(0f, Math.Min(1f, brightness));
+                //ConfigManager.Save(Global.Configuration);
             }
 
            
@@ -208,8 +208,8 @@ namespace Aurora.Devices.Uni
                     if (keyboard!=null)
                     {
                             isInitialized = true;
-                           SetBrightness();
-                           return true;
+                        SetBrightness();
+                        return true;
                       }
                            
                     
@@ -300,7 +300,7 @@ namespace Aurora.Devices.Uni
             {
                  return isInitialized;
            }
-            bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
+        bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
         {
             if (e.Cancel) return false;
@@ -317,11 +317,11 @@ namespace Aurora.Devices.Uni
 
             foreach (var item in KeysList)
             {
-                keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item], keyColors[item].A / 255.0D));
+                keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item],  (keyColors[item].A / 255.0D) * brightness));
             }
 
 
-            keyboard?.SetEffect(Brightness, 0x00, bRefreshOnce, keyColors, e);
+            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, keyColors, e);
 
             bRefreshOnce = false;
             watch.Stop();
@@ -347,10 +347,10 @@ namespace Aurora.Devices.Uni
  
             foreach (var item in KeysList)
             {
-                keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item], keyColors[item].A / 255.0D));
+                keyColors[item] = System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(keyColors[item],  (keyColors[item].A / 255.0D ) * brightness));
             }
 
-            keyboard?.SetEffect(0x64, 0x00, bRefreshOnce, keyColors, e);
+            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, keyColors, e);
 
             bRefreshOnce = false;
             Thread.Sleep(1);
