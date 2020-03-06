@@ -51,48 +51,42 @@ namespace Aurora.Devices.Uni
 
 
         }
-        InputInterceptor InputInterceptor;
-        private void SetBrightness()
-        {
+        //InputInterceptor InputInterceptor;
+        //private void SetBrightness()
+        //{
 
-            InputInterceptor = new InputInterceptor();
-            InputInterceptor.Input -= InputInterceptor_Input;
-            InputInterceptor.Input += InputInterceptor_Input;
+        //    InputInterceptor = new InputInterceptor();
+        //    InputInterceptor.Input -= InputInterceptor_Input;
+        //    InputInterceptor.Input += InputInterceptor_Input;
          
-        }
-        private void UnloadBrightness()
-        {
+        //}
+    
+        //bool Fnkey = false;
+        //private void InputInterceptor_Input(object sender, InputInterceptor.InputEventData e)
+        //{
+        //    var keys = (int)e.Data.VirtualKeyCode;
+        //    if(keys.Equals(Convert.ToInt32(Keys.LButton | Keys.OemClear)))
+        //    {
+        //        if (e.KeyDown)
+        //            Fnkey = true;
+        //        else if(e.KeyUp)
+        //            Fnkey = false;
+        //    }
 
-            InputInterceptor = new InputInterceptor();
-            InputInterceptor.Input -= InputInterceptor_Input;
+        //    if (Fnkey)
+        //    {
+        //        if ((Keys)e.Data.VirtualKeyCode == Keys.F6)
+        //            brightness -= 0.25f;
+        //        if ((Keys)e.Data.VirtualKeyCode == Keys.F7)
+        //            brightness += 0.25f;
 
-        }
-        bool Fnkey = false;
-        private void InputInterceptor_Input(object sender, InputInterceptor.InputEventData e)
-        {
-            var keys = (int)e.Data.VirtualKeyCode;
-            if(keys.Equals(Convert.ToInt32(Keys.LButton | Keys.OemClear)))
-            {
-                if (e.KeyDown)
-                    Fnkey = true;
-                else if(e.KeyUp)
-                    Fnkey = false;
-            }
-
-            if (Fnkey)
-            {
-                if ((Keys)e.Data.VirtualKeyCode == Keys.F6)
-                    brightness -= 0.25f;
-                if ((Keys)e.Data.VirtualKeyCode == Keys.F7)
-                    brightness += 0.25f;
-
-                //Internal brightness modify.
-                brightness = Math.Max(0f, Math.Min(1f, brightness));
-                //ConfigManager.Save(Global.Configuration);
-            }
+        //        //Internal brightness modify.
+        //        brightness = Math.Max(0f, Math.Min(1f, brightness));
+        //        //ConfigManager.Save(Global.Configuration);
+        //    }
 
            
-        }
+        //}
 
         private void _CheckControlCenter_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -208,7 +202,7 @@ namespace Aurora.Devices.Uni
                     if (keyboard!=null)
                     {
                             isInitialized = true;
-                        SetBrightness();
+                        //SetBrightness();
                         return true;
                       }
                            
