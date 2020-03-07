@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
@@ -183,6 +184,17 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Dash//0
     }
 
+    public enum Position
+    {
+        Undefined,
+        Top,
+        Jungle,
+        Middle,
+        Bot,
+        [JsonProperty("UTILITY")]
+        Support
+    }
+
     public class PlayerNode : Node<PlayerNode>
     {
         public StatsNode ChampionStats = new StatsNode();
@@ -192,6 +204,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         public SummonerSpell SpellF = SummonerSpell.Undefined;
         public Champion Champion = Champion.Undefined;
         public Team Team = Team.Undefined;
+        public Position Position = Position.Undefined;
         public string SummonerName;
         public int Level;
         public float Gold;       

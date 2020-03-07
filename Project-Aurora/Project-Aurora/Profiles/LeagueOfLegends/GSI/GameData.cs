@@ -154,7 +154,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public bool isDead { get; set; }
         public IList<_Item> items { get; set; }
         public int level { get; set; }
-        //public string position { get; set; }
+        public string position { get; set; }
         public string rawChampionName { get; set; }
         public float respawnTimer { get; set; }
         public _Runes runes { get; set; }

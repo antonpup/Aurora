@@ -29,7 +29,7 @@ namespace Aurora.Profiles.LeagueOfLegends
         {
             //ignore ssl errors
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            updateTimer = new Timer(250);
+            updateTimer = new Timer(100);
             updateTimer.Elapsed += UpdateData;
         }
 
@@ -131,6 +131,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 s.Player.SpellD = TryParseOr(p.summonerSpells.summonerSpellOne.displayName, SummonerSpell.Undefined);
                 s.Player.SpellF = TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, SummonerSpell.Undefined);
                 s.Player.Team = TryParseOr(p.team, Team.Undefined);
+                s.Player.Position = TryParseOr(p.position, Position.Undefined);
 
                 s.Player.IsDead = p.isDead;
                 s.Player.RespawnTimer = p.respawnTimer;
