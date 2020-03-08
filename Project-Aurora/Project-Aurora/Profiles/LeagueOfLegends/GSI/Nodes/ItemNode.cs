@@ -30,7 +30,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
             if (Enum.IsDefined(typeof(ItemID), item.itemID))
                 Item = (ItemID)item.itemID;
             else
-                Console.WriteLine(item.itemID);
+                Item = ItemID.None;
         }
     }
 

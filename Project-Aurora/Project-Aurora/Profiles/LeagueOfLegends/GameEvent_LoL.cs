@@ -111,7 +111,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 s.Player.ChampionStats.PhysicalLethality = ap.championStats.physicalLethality;
                 s.Player.ChampionStats.ResourceMax = ap.championStats.resourceMax;
                 s.Player.ChampionStats.ResourceRegenRate = ap.championStats.resourceRegenRate;
-                s.Player.ChampionStats.ResourceType = TryParseOr(ap.championStats.resourceType, ResourceType.Undefined);
+                s.Player.ChampionStats.ResourceType = EnumUtils.TryParseOr(ap.championStats.resourceType, true, ResourceType.Undefined);
                 s.Player.ChampionStats.ResourceCurrent = ap.championStats.resourceValue;
                 s.Player.ChampionStats.SpellVamp = ap.championStats.spellVamp;
                 s.Player.ChampionStats.Tenacity = ap.championStats.tenacity;
