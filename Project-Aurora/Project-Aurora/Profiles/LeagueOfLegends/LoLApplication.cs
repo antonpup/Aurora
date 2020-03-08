@@ -27,7 +27,6 @@ namespace Aurora.Profiles.LeagueOfLegends
             var extra = new List<LayerHandlerEntry>
             {
                 new LayerHandlerEntry("LoLBackgroundLayer", "League of Legends Background Layer", typeof(Layers.LoLBackgroundLayerHandler))
-
             };
 
             Global.LightingStateManager.RegisterLayerHandlers(extra, false);

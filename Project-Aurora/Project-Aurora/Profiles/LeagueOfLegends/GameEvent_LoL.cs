@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Aurora.Profiles;
+using Aurora.Profiles.LeagueOfLegends.GSI;
+using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
+using Aurora.Utils;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Aurora.Profiles;
-using System.Net;
-using Aurora.Profiles.LeagueOfLegends.GSI;
-using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
-using Newtonsoft.Json.Linq;
-using System.Diagnostics;
 using System.Timers;
 
 namespace Aurora.Profiles.LeagueOfLegends
@@ -127,11 +128,11 @@ namespace Aurora.Profiles.LeagueOfLegends
                     return;
                 //if we can't find it, skip
 
-                s.Player.Champion = TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), Champion.Undefined);
-                s.Player.SpellD = TryParseOr(p.summonerSpells.summonerSpellOne.displayName, SummonerSpell.Undefined);
-                s.Player.SpellF = TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, SummonerSpell.Undefined);
-                s.Player.Team = TryParseOr(p.team, Team.Undefined);
-                s.Player.Position = TryParseOr(p.position, Position.Undefined);
+                s.Player.Champion = EnumUtils.TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, Champion.Undefined);
+                s.Player.SpellD = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellOne.displayName, true, SummonerSpell.Undefined);
+                s.Player.SpellF = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, true, SummonerSpell.Undefined);
+                s.Player.Team = EnumUtils.TryParseOr(p.team, true, Team.Undefined);
+                s.Player.Position = EnumUtils.TryParseOr(p.position, true, Position.Undefined);
 
                 s.Player.IsDead = p.isDead;
                 s.Player.RespawnTimer = p.respawnTimer;
@@ -165,24 +166,6 @@ namespace Aurora.Profiles.LeagueOfLegends
             {
                 //Global.logger.Error(e);
             }
-        }
-
-        /// <summary>
-        /// Tries to parse a string into a given enum. Returns the parsed enum if successful, and <paramref name="defaultValue"/> if not.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <param name="defaultValue"></param>
-        /// <returns></returns>
-        private static T TryParseOr<T>(string value, T defaultValue) where T : struct, IConvertible
-        {
-            if (!typeof(T).IsEnum)
-                throw new ArgumentException("T must be an enum");
-
-            if (Enum.TryParse<T>(value, true, out var res))
-                return res;
-            else
-                return defaultValue;
         }
 
         /// <summary>
