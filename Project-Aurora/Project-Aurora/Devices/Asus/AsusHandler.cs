@@ -99,7 +99,7 @@ namespace Aurora.Devices.Asus
                     device.Stop();
             
                 devices.Clear();
-                AuraSdk.ReleaseControl(0);
+                AuraSdk?.ReleaseControl(0);
             }
         }
         

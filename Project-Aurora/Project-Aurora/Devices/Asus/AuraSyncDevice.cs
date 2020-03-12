@@ -84,7 +84,6 @@ namespace Aurora.Devices.Asus
                     LastUpdateMillis = stopwatch.ElapsedMilliseconds;
                     stopwatch.Stop();
 
-
                     // If the device did not take long to update, continue
                     if (stopwatch.ElapsedMilliseconds < DiscountLimit)
                     {
