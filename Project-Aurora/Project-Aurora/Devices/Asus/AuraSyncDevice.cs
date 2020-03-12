@@ -15,24 +15,26 @@ namespace Aurora.Devices.Asus
         public long LastUpdateMillis { get; private set; }
         public bool Active { get; private set; }
         public AsusHandler.AsusDeviceType DeviceType => (AsusHandler.AsusDeviceType)device.Type;
-        
+
         private readonly IAuraSyncDevice device;
         private readonly AsusHandler asusHandler;
         private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly int frameRateMillis;
         private readonly DeviceKeys[] defaultKeys = { DeviceKeys.Peripheral, DeviceKeys.Peripheral_Logo, DeviceKeys.SPACE };
+
         private readonly Stopwatch stopwatch = new Stopwatch();
 
         private const int DiscountLimit = 2500;
         private const int DiscountTries = 3;
         private int disconnectCounter = 0;
-        
+
+
         public AuraSyncDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 30)
         {
             this.asusHandler = asusHandler;
             this.device = device;
-            frameRateMillis = (int)((1f/frameRate) * 1000f);
+            frameRateMillis = (int)((1f / frameRate) * 1000f);
         }
 
         public void UpdateColors(Dictionary<DeviceKeys, Color> colors)
@@ -40,7 +42,7 @@ namespace Aurora.Devices.Asus
             //empty queue
             while (!colorQueue.IsEmpty)
                 colorQueue.TryDequeue(out _);
-            
+
             // queue a clone of the colors
             colorQueue.Enqueue(new Dictionary<DeviceKeys, Color>(colors));
         }
@@ -49,7 +51,7 @@ namespace Aurora.Devices.Asus
         {
             if (!tokenSource.IsCancellationRequested)
                 tokenSource.Cancel();
-                
+
             tokenSource = new CancellationTokenSource();
             // create a scary parallel thread
             var parallelOptions = new ParallelOptions();
@@ -81,38 +83,39 @@ namespace Aurora.Devices.Asus
                     device.Apply();
                     LastUpdateMillis = stopwatch.ElapsedMilliseconds;
                     stopwatch.Stop();
-                    
+
+
                     // If the device did not take long to update, continue
                     if (stopwatch.ElapsedMilliseconds < DiscountLimit)
                     {
                         disconnectCounter = 0;
                         continue;
                     }
-                    
+
                     Log($"Device {Name} took too long to update {stopwatch.ElapsedMilliseconds}ms");
                     // penalize the device if it took too long to update
                     disconnectCounter++;
-                    
+
                     // disconnect device if it takes too long to update
                     if (disconnectCounter < DiscountTries)
                         continue;
-                    
+
                     asusHandler.DisconnectDevice(this);
                     return;
                 }
-                catch(TaskCanceledException)
+                catch (TaskCanceledException)
                 {
                     asusHandler.DisconnectDevice(this);
                     return;
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     Log($"ERROR {exception}");
                     asusHandler.DisconnectDevice(this);
                     return;
                 }
             }
-            
+
             Dispose();
         }
 
@@ -126,10 +129,10 @@ namespace Aurora.Devices.Asus
             foreach (var defaultKey in defaultKeys)
             {
                 if (!colors.TryGetValue(defaultKey, out Color color)) continue;
-                
+
                 foreach (IAuraRgbLight light in device.Lights)
                     SetRgbLight(light, color);
-                    
+
                 break;
             }
         }
@@ -137,20 +140,19 @@ namespace Aurora.Devices.Asus
         //0x00BBGGRR
         protected void SetRgbLight(IAuraRgbKey rgbLight, Color color)
         {
-            rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16); 
+            rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16);
         }
-        
+
         //0x00BBGGRR
         protected void SetRgbLight(IAuraRgbLight rgbLight, Color color)
         {
-            rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16); 
+            rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16);
         }
-        
+
         protected void SetRgbLight(int index, Color color)
         {
             SetRgbLight(device.Lights[index], color);
         }
-
 
         private Dictionary<DeviceKeys, Color> GetLatestColors()
         {
@@ -160,7 +162,7 @@ namespace Aurora.Devices.Asus
 
             return colors;
         }
-        
+
         protected void Log(string text)
         {
             Global.logger.Info($"[ASUS] [{device.Name}] {text}");

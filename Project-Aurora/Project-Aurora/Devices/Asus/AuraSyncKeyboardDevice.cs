@@ -11,7 +11,10 @@ namespace Aurora.Devices.Asus
         
         private readonly Dictionary<ushort, IAuraRgbKey> idToKey
             = new Dictionary<ushort, IAuraRgbKey>();
-        
+
+        private readonly Dictionary<DeviceKeys, ushort> deviceKeyToKeyId
+            = new Dictionary<DeviceKeys, ushort>();
+
         /// <inheritdoc />
         public AuraSyncKeyboardDevice(AsusHandler asusHandler, IAuraSyncKeyboard device, int frameRate = 30) : base(asusHandler, device, frameRate)
         {
@@ -19,6 +22,15 @@ namespace Aurora.Devices.Asus
 
             foreach (IAuraRgbKey key in device.Keys)
                 idToKey[key.Code] = key;
+
+            foreach (var deviceKey in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
+            {
+                var key = DeviceKeyToAuraKeyboardKeyId(deviceKey);
+                if (key == 0)
+                    continue;
+
+                deviceKeyToKeyId[deviceKey] = key;
+            }
         }
 
         /// <inheritdoc />
@@ -26,10 +38,12 @@ namespace Aurora.Devices.Asus
         {
             foreach (var keyPair in colors)
             {
-                var deviceKey = DeviceKeyToAuraKeyboardKeyId(keyPair.Key);
-                if (!idToKey.TryGetValue(deviceKey, out var light))
+                if (!deviceKeyToKeyId.TryGetValue(keyPair.Key, out ushort keyId))
                     continue;
-                
+            
+                if (!idToKey.TryGetValue(keyId, out var light))
+                    continue;
+            
                 SetRgbLight(light, keyPair.Value);
             }
         }

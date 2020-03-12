@@ -44,12 +44,12 @@ namespace Aurora.Devices.Asus
             {
                 try
                 {
-                    AuraSdk.ReleaseControl(0);
                     AuraSdk.SwitchMode();
 
                     var config = AsusConfig.LoadConfig();
-                
-                    foreach (IAuraSyncDevice device in AuraSdk.Enumerate((uint) AsusDeviceType.All))
+
+                    var allDevices = AuraSdk.Enumerate((uint)AsusDeviceType.All);
+                    foreach (IAuraSyncDevice device in allDevices)
                     {
                         var deviceType = (AsusDeviceType) device.Type;
                         Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
@@ -66,6 +66,11 @@ namespace Aurora.Devices.Asus
                         {
                             case AsusDeviceType.Keyboard:
                                 devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
+                                break;
+                            // ignore whatever this is
+                            case AsusDeviceType.All:
+                            // ignore terminal for now, there are 270 lights :0
+                            case AsusDeviceType.Terminal:
                                 break;
                             default:
                                 devices.Add(new AuraSyncDevice(this, device));
@@ -178,7 +183,7 @@ namespace Aurora.Devices.Asus
             Motherboard = 0x00010000,
             MotherboardLedStrip = 0x00011000,
             AllInOnePc = 0x00012000,
-            Vga = 0x00020000,
+            Vga = 131072,
             Display = 0x00030000,
             Headset = 0x00040000,
             Microphone = 0x00050000,
@@ -191,6 +196,7 @@ namespace Aurora.Devices.Asus
             Mouse = 0x00090000,
             Chassis = 0x000B0000,
             Projector = 0x000C0000,
+            Terminal = 0x000E0000,
         }
     }
 }
