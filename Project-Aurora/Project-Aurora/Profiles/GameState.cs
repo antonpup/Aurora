@@ -218,9 +218,7 @@ namespace Aurora.Profiles
         /// </summary>
         private MMDevice DefaultAudioOutDevice {
             get {
-                try { 
-
-                    return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); }
+                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); }
                 catch { return null; }
             }
         }
