@@ -16,6 +16,7 @@ namespace Aurora.Devices.Omen
         OmenMouse mouse;
         OmenMousePad mousePad;
         OmenChassis chassis;
+        OmenSpeaker speaker;
 
         private bool isInitialized = false;
         private readonly string devicename = "OMEN";
@@ -65,6 +66,7 @@ namespace Aurora.Devices.Omen
                     mouse = OmenMouse.GetOmenMouse();
                     mousePad = OmenMousePad.GetOmenMousePad();
                     chassis = OmenChassis.GetOmenChassis();
+                    speaker = OmenSpeaker.GetOmenSpeaker();
 
                     isInitialized = true;
                 }
@@ -117,34 +119,24 @@ namespace Aurora.Devices.Omen
                     {
                         Reset();
 
-                        if (keyboard != null)
-                        {
-                            keyboard.Shutdown();
-                        }
-
-                        if (mouse != null)
-                        {
-                            mouse.Shutdown();
-                        }
-
-                        if (mousePad != null)
-                        {
-                            mousePad.Shutdown();
-                        }
-
-                        if (chassis != null)
-                        {
-                            chassis.Shutdown();
-                        }
+                        keyboard?.Shutdown();
+                        mouse?.Shutdown();
+                        mousePad?.Shutdown();
+                        chassis?.Shutdown();
+                        speaker?.Shutdown();
                     }
                 }
-                catch (Exception exc)
+                catch (Exception e)
                 {
-                    Global.logger.Error("OMEN device, Exception during Shutdown. Message: " + exc);
+                    Global.logger.Error("OMEN device, Exception during Shutdown. Message: " + e);
                 }
+
                 isInitialized = false;
                 mouse = null;
                 keyboard = null;
+                mousePad = null;
+                chassis = null;
+                speaker = null;
             }
         }
 
@@ -154,7 +146,6 @@ namespace Aurora.Devices.Omen
             {
                 if (e.Cancel) return false;
 
-
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
                     if (e.Cancel) return false;
@@ -162,6 +153,10 @@ namespace Aurora.Devices.Omen
                     {
                         UpdateMouse(key);
                         UpdateChassis(key);
+                        if(key.Key == DeviceKeys.Peripheral_Logo)
+                        {
+                            UpdateSpeaker(key);
+                        }
                     }
                     if (key.Key >= DeviceKeys.MOUSEPADLIGHT1 && key.Key <= DeviceKeys.MOUSEPADLIGHT15)
                     {
@@ -173,8 +168,9 @@ namespace Aurora.Devices.Omen
                 UpdateKeyboard(keyColors);
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Global.logger.Error("OMEN device, Exception during update device. Message: " + ex);
             }
 
             return true;
@@ -220,12 +216,22 @@ namespace Aurora.Devices.Omen
 
         private void UpdateChassis(KeyValuePair<DeviceKeys, Color> key)
         {
-            if (Global.Configuration.devices_disable_mouse)
-                return;
-
             if (chassis != null && Global.Configuration.allow_peripheral_devices)
             {
                 chassis.SetLights(key.Key, key.Value);
+                peripheral_updated = true;
+            }
+            else
+            {
+                peripheral_updated = false;
+            }
+        }
+
+        private void UpdateSpeaker(KeyValuePair<DeviceKeys, Color> key)
+        {
+            if (chassis != null && Global.Configuration.allow_peripheral_devices)
+            {
+                speaker.SetLights(key.Key, key.Value);
                 peripheral_updated = true;
             }
             else

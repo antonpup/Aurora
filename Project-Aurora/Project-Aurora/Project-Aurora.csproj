@@ -383,6 +383,7 @@
     <Compile Include="Devices\Omen\LightingColor.cs" />
     <Compile Include="Devices\Omen\OmenChassis.cs" />
     <Compile Include="Devices\Omen\OmenKeys.cs" />
+    <Compile Include="Devices\Omen\OmenSpeaker.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml.cs">
       <DependentUpon>Control_CSGODeathLayer.xaml</DependentUpon>

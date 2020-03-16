@@ -88,9 +88,9 @@ namespace Aurora.Devices.Omen
         static extern IntPtr OmenLighting_Chassis_Open();
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern void OmenLighting_Chassis_Close(IntPtr hMouse);
+        static extern void OmenLighting_Chassis_Close(IntPtr hChassis);
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern int OmenLighting_Chassis_SetStatic(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
+        static extern int OmenLighting_Chassis_SetStatic(IntPtr hChassis, int zone, LightingColor color, IntPtr property);
     }
 }

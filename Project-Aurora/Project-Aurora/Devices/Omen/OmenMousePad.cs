@@ -82,7 +82,7 @@ namespace Aurora.Devices.Omen
         static extern IntPtr OmenLighting_MousePad_OpenByName([MarshalAsAttribute(UnmanagedType.LPWStr)] string deviceName);
 
         [DllImport("OmenLightingSDK.dll")]
-        static extern void OmenLighting_MousePad_Close(IntPtr hMouse);
+        static extern void OmenLighting_MousePad_Close(IntPtr hMousePad);
 
         [DllImport("OmenLightingSDK.dll")]
         static extern int OmenLighting_MousePad_SetStatic(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
