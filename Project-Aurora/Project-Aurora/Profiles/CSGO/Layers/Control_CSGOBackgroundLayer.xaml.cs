@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -46,6 +47,7 @@ namespace Aurora.Profiles.CSGO.Layers
                 this.Checkbox_DimEnabled.IsChecked = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimEnabled;
                 this.TextBox_DimValue.Content = (int)(this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay + "s";
                 this.Slider_DimSelector.Value = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay.Value;
+                this.IntegerUpDown_DimAmount.Value = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimAmount.Value;
 
                 settingsset = true;
             }
@@ -99,6 +101,14 @@ namespace Aurora.Profiles.CSGO.Layers
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay = (sender as Slider).Value;
 
                 this.TextBox_DimValue.Content = (int)(sender as Slider).Value + "s";
+            }
+        }
+
+        private void IntegerUpDown_DimAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is IntegerUpDown)
+            {
+                (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimAmount = (sender as IntegerUpDown).Value;
             }
         }
     }
