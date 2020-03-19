@@ -176,7 +176,7 @@ namespace Aurora.Settings
         Logitech_G810 = 102,
         [Description("Logitech - GPRO")]
         Logitech_GPRO = 103,
-		[Description("Logitech - G213")]
+        [Description("Logitech - G213")]
         Logitech_G213 = 104,
 
         //Corsair range is 200-299
@@ -218,6 +218,8 @@ namespace Aurora.Settings
         Masterkeys_Pro_M = 502,
         [Description("Cooler Master - Masterkeys MK750")]
         Masterkeys_MK750 = 503,
+        [Description("Cooler Master - Masterkeys MK730")]
+        Masterkeys_MK730 = 504,
 
         //Roccat range is 600-699
         [Description("Roccat Ryos")]
@@ -243,7 +245,7 @@ namespace Aurora.Settings
         [Description("Drevo BladeMaster")]
         Drevo_BladeMaster = 1000,
 
-	//Creative range is 1100-1199
+        //Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
@@ -547,7 +549,7 @@ namespace Aurora.Settings
             VarRegistry = new VariableRegistry();
         }
 
-        
+
     }
 
     public static class ExtensionHelpers
