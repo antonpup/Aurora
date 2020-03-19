@@ -54,7 +54,7 @@ namespace Aurora.Devices.Omen
 
         public enum MouseLightingZone
         {
-            MOUSE_LIGHTING_ZONE_ALL = 0,                     /* All zone. Only for set lighting effect. */
+            MOUSE_LIGHTING_ZONE_ALL = 0,                            /* All zone. Only for set lighting effect. */
             MOUSE_LIGHTING_ZONE_LOGO = 1,                           /* Logo zone */
             MOUSE_LIGHTING_ZONE_WHEEL = 2,                          /* Wheel zone */
         }

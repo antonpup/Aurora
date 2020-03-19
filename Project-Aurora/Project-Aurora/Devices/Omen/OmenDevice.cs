@@ -229,7 +229,7 @@ namespace Aurora.Devices.Omen
 
         private void UpdateSpeaker(KeyValuePair<DeviceKeys, Color> key)
         {
-            if (chassis != null && Global.Configuration.allow_peripheral_devices)
+            if (speaker != null && Global.Configuration.allow_peripheral_devices)
             {
                 speaker.SetLights(key.Key, key.Value);
                 peripheral_updated = true;
