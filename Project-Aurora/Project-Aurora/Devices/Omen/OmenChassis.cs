@@ -70,18 +70,7 @@ namespace Aurora.Devices.Omen
 
         private static ChassisZone GetZone(DeviceKeys key)
         {
-            ChassisZone zone = ChassisZone.CHASSIS_ZONE_ALL;
-            switch (key)
-            {
-                case (DeviceKeys.Peripheral_Logo):
-                    return ChassisZone.CHASSIS_ZONE_0;
-                case (DeviceKeys.Peripheral_FrontLight):
-                    return ChassisZone.CHASSIS_ZONE_0;
-                case (DeviceKeys.Peripheral_ScrollWheel):
-                    return ChassisZone.CHASSIS_ZONE_1;
-                default:
-                    return zone;
-            }
+            return ChassisZone.CHASSIS_ZONE_ALL;
         }
 
         [DllImport("OmenLightingSDK.dll")]
