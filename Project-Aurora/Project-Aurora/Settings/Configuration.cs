@@ -247,28 +247,28 @@ namespace Aurora.Settings
 
 
         [Description("UNIWILL2ND (ANSI)")]
-        Keyboard101 = 2101,
+        Uniwill2ND_35X_1 = 2101,
         [Description("UNIWILL2ND (ISO)")]
-        Keyboard102 = 2102,
+        Uniwill2ND_35X_2 = 2102,
 
         [Description("UNIWILL2P1 (ISO)")]
-        Keyboard21uk = 2103,
+        Uniwill2P1_550_UK = 2103,
         [Description("UNIWILL2P1 (ANSI)")]
-        Keyboard21us = 2104,
+        Uniwill2P1_550_US = 2104,
         [Description("UNIWILL2P1 (ABNT)")]
-        Keyboard21br = 2105,
+        Uniwill2P1_550_BR = 2105,
         [Description("UNIWILL2P1 (JIS)")]
-        Keyboard21jp = 2106,
+        Uniwill2P1_550_JP = 2106,
 
 
         [Description("UNIWILL2P2 (ISO)")]
-        Keyboard22uk = 2107,
+        Uniwill2P2_650_UK = 2107,
         [Description("UNIWILL2P2 (ANSI)")]
-        Keyboard22us = 2108,
+        Uniwill2P2_650_US = 2108,
         [Description("UNIWILL2P2 (ABNT)")]
-        Keyboard22br = 2109,
+        Uniwill2P2_650_BR = 2109,
         [Description("UNIWILL2P2 (JIS)")]
-        Keyboard22jp = 2110,
+        Uniwill2P2_650_JP = 2110,
 
     }
 
