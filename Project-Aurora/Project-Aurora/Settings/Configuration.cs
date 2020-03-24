@@ -467,13 +467,43 @@ namespace Aurora.Settings
 
         public VariableRegistry VarRegistry;
 
-        //Debug Settings
+        //BitmapDebug Data
         private bool bitmapDebugTopMost;
         public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
 
+        private double bitmapDebugTop;
+        public double BitmapDebugTop { get { return bitmapDebugTop; } set { bitmapDebugTop = value; InvokePropertyChanged(); } }
+
+        private double bitmapDebugLeft;
+        public double BitmapDebugLeft { get { return bitmapDebugLeft; } set { bitmapDebugLeft = value; InvokePropertyChanged(); } }
+        
+        private double bitmapDebugHeight;
+        public double BitmapDebugHeight { get { return bitmapDebugHeight; } set { bitmapDebugHeight = value; InvokePropertyChanged(); } }
+        
+        private double bitmapDebugWidth;
+        public double BitmapDebugWidth { get { return bitmapDebugWidth; } set { bitmapDebugWidth = value; InvokePropertyChanged(); } }
+        
+        private System.Windows.WindowState bitmapDebugWindowState;
+        public System.Windows.WindowState BitmapDebugWindowState { get { return bitmapDebugWindowState; } set { bitmapDebugWindowState = value; InvokePropertyChanged(); } }
+
+        //httpDebug Data
         private bool httpDebugTopMost;
         public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
 
+        private double httpDebugTop;
+        public double HttpDebugTop { get { return httpDebugTop; } set { httpDebugTop = value; InvokePropertyChanged(); } }
+        
+        private double httpDebugLeft;
+        public double HttpDebugLeft { get { return httpDebugLeft; } set { httpDebugLeft = value; InvokePropertyChanged(); } }
+        
+        private double httpDebugHeight = 450;
+        public double HttpDebugHeight { get { return httpDebugHeight; } set { httpDebugHeight = value; InvokePropertyChanged(); } }
+        
+        private double httpDebugWidth = 800;
+        public double HttpDebugWidth { get { return httpDebugWidth; } set { httpDebugWidth = value; InvokePropertyChanged(); } }
+
+        private System.Windows.WindowState httpDebugWindowState;
+        public System.Windows.WindowState HttpDebugWindowState { get { return httpDebugWindowState; } set { httpDebugWindowState = value; InvokePropertyChanged(); } }
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 

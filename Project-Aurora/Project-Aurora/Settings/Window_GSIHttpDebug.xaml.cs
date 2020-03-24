@@ -14,8 +14,14 @@ namespace Aurora.Settings {
         private DateTime? lastRequestTime = null;
 
         public Window_GSIHttpDebug() {
+            this.SourceInitialized += RestoreWindow;
             InitializeComponent();
             DataContext = Global.Configuration;
+        }
+
+        private void RestoreWindow(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("RestoreWindow");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {

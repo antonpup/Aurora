@@ -966,6 +966,11 @@ namespace Aurora.Settings
                 winBitmapView.ResizeMode = ResizeMode.CanResize;
 
                 winBitmapView.SetBinding(Window.TopmostProperty, new Binding("BitmapDebugTopMost") { Source = Global.Configuration });
+                winBitmapView.SetBinding(Window.TopProperty, new Binding("BitmapDebugTop") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
+                winBitmapView.SetBinding(Window.LeftProperty, new Binding("BitmapDebugLeft") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
+                winBitmapView.SetBinding(Window.HeightProperty, new Binding("BitmapDebugHeight") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
+                winBitmapView.SetBinding(Window.WidthProperty, new Binding("BitmapDebugWidth") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
+                winBitmapView.SetBinding(Window.WindowStateProperty, new Binding("BitmapDebugWindowState") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
 
                 //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
