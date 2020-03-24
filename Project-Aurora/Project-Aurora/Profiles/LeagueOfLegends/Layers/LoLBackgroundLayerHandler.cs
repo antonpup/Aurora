@@ -40,6 +40,8 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         private readonly EffectLayer layer = new EffectLayer();
         private Champion lastChampion = Champion.Undefined;
         private Color lastColor = Color.Transparent;
+        private int lastWidth;
+        private int lastHeight;
 
         public override EffectLayer Render(IGameState gamestate)
         {
@@ -47,13 +49,18 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             var currentColor = Properties.ChampionColors[currentChampion];
             //if the player changes champion
             //or if the color is adjusted in the UI
-            if (currentChampion != lastChampion || currentColor != lastColor)
+            //or if the canvas size changes due to the layout being changed
+            if (currentChampion != lastChampion || currentColor != lastColor || 
+              lastWidth != Effects.canvas_width || lastHeight != Effects.canvas_height)
             {
                 lastChampion = currentChampion;
                 lastColor = currentColor;
+                lastHeight = Effects.canvas_height;
+                lastWidth = Effects.canvas_width;
                 layer.Fill(lastColor);
+                //then we fill the layer again
             }
-
+            //otherwise, we can just return the same layer as it's mostly static
             return layer;
         }
 

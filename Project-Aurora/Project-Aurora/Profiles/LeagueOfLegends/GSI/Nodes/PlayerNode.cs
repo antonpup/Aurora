@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,7 +84,6 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Maokai,
         MasterYi,
         MissFortune,
-        MonkeyKing,
         Mordekaiser,
         Morgana,
         Nami,
@@ -149,6 +149,8 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Xayah,
         Xerath,
         XinZhao,
+        [JsonProperty("MonkeyKing")]
+        Wukong,
         Yasuo,
         Yorick,
         Yuumi,
