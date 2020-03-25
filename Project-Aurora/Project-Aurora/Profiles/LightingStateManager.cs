@@ -155,7 +155,8 @@ namespace Aurora.Profiles
                 new Osu.Osu(),
                 new Slime_Rancher.Slime_Rancher(),
                 new Terraria.Terraria(),
-                new Discord.Discord()              
+                new Discord.Discord(),
+                new EliteDangerous.EliteDangerous()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -391,6 +392,31 @@ namespace Aurora.Profiles
 
                 //SaveSettings();
             }
+        }
+
+        // Used to match a process's name and optional window title to a profile
+        public ILightEvent GetProfileFromProcessData(string processName, string processTitle = null)
+        {
+            var processNameProfile = GetProfileFromProcessName(processName);
+
+            if (processNameProfile == null)
+                return null;
+
+            // Is title matching required?
+            if (processNameProfile.Config.ProcessTitles != null)
+            {
+                var processTitleProfile = GetProfileFromProcessTitle(processTitle);
+
+                if (processTitleProfile != null && processTitleProfile.Equals(processNameProfile))
+                {
+                    return processTitleProfile;
+                }
+            } else
+            {
+                return processNameProfile;
+            }
+
+            return null;
         }
 
         public ILightEvent GetProfileFromProcessName(string process)
@@ -686,7 +712,7 @@ namespace Aurora.Profiles
             preview = false;
 
             //TODO: GetProfile that checks based on event type
-            if ((((tempProfile = GetProfileFromProcessName(process_name)) != null) || ((tempProfile = GetProfileFromProcessTitle(process_title)) != null)) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+            if ((tempProfile = GetProfileFromProcessData(process_name, process_title)) != null && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
                 profile = tempProfile;
             else if ((tempProfile = GetProfileFromProcessName(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
             {
