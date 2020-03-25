@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aurora.Profiles.Terraria.GSI.Nodes {
+namespace Aurora.Profiles.Terraria.GSI.Nodes
+{
     public enum TerrariaBiome
     {
         None = -1,
@@ -25,7 +26,8 @@ namespace Aurora.Profiles.Terraria.GSI.Nodes {
         Sky = 4
     }
 
-    public class PlayerNode : Node<PlayerNode> {
+    public class PlayerNode : AutoJsonNode<PlayerNode>
+    {
         public bool InGame;
 
         #region Stats
@@ -44,57 +46,27 @@ namespace Aurora.Profiles.Terraria.GSI.Nodes {
         #endregion
 
         #region Microbiomes
-        public bool InGlowshroom;
-        public bool InUndergroundDesert;
-        public bool InSandstorm;
-        public bool InMeteor;
-        public bool InDungeon;
+        [AutoJsonPropertyName("zoneGlowshroom")] public bool InGlowshroom;
+        [AutoJsonPropertyName("zoneUndergroundDesert")] public bool InUndergroundDesert;
+        [AutoJsonPropertyName("zoneSandstorm")] public bool InSandstorm;
+        [AutoJsonPropertyName("zoneMeteor")] public bool InMeteor;
+        [AutoJsonPropertyName("zoneDungeon")] public bool InDungeon;
         #endregion
 
         #region Local Events
-        public bool InTowerSolar;
-        public bool InTowerVortex;
-        public bool InTowerNebula;
-        public bool InTowerStardust;
-        public bool InOldOneArmy;
+        [AutoJsonPropertyName("zoneTowerSolar")] public bool InTowerSolar;
+        [AutoJsonPropertyName("zoneTowerVortex")] public bool InTowerVortex;
+        [AutoJsonPropertyName("zoneTowerNebula")] public bool InTowerNebula;
+        [AutoJsonPropertyName("zoneTowerStardust")] public bool InTowerStardust;
+        [AutoJsonPropertyName("zoneOldOneArmy")] public bool InOldOneArmy;
         #endregion
 
         #region Local Corruption Status
-        public bool InCorruption;
-        public bool InCrimson;
-        public bool InHalllow;
+        [AutoJsonPropertyName("zoneCorrupt")] public bool InCorruption;
+        [AutoJsonPropertyName("zoneCrimson")] public bool InCrimson;
+        [AutoJsonPropertyName("zoneHoly")] public bool InHalllow;
         #endregion
 
-        internal PlayerNode(string json) : base(json)
-        {
-            InGame = GetBool("inGame");
-
-            Health = GetInt("health");
-            MaxHealth = GetInt("maxHealth");
-            Mana = GetInt("mana");
-            MaxMana = GetInt("maxMana");
-            Defense = GetInt("defense");
-
-            Depth = GetInt("depth");
-            DepthLayer = (TerrariaDepth)GetInt("depthLayer");
-            MaxDepth = GetInt("maxdepth");
-            Biome = (TerrariaBiome)GetInt("biome");
-
-            InGlowshroom = GetBool("zoneGlowshroom");
-            InUndergroundDesert = GetBool("zoneUndergroundDesert");
-            InSandstorm = GetBool("zoneSandstorm");
-            InMeteor = GetBool("zoneMeteor");
-            InDungeon = GetBool("zoneDungeon");
-
-            InTowerSolar = GetBool("zoneTowerSolar");
-            InTowerVortex = GetBool("zoneTowerVortex");
-            InTowerNebula = GetBool("zoneTowerNebula");
-            InTowerStardust = GetBool("zoneTowerStardust");
-            InOldOneArmy = GetBool("zoneOldOneArmy");
-
-            InCorruption = GetBool("zoneCorrupt");
-            InCrimson = GetBool("zoneCrimson");
-            InHalllow = GetBool("zoneHoly");
-        }
+        internal PlayerNode(string json) : base(json){ }
     }
 }

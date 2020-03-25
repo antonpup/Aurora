@@ -25,7 +25,7 @@ namespace Aurora.Profiles.Terraria.GSI.Nodes {
         MoonLord = 14
     }
 
-    public class WorldNode : Node<WorldNode> {
+    public class WorldNode : AutoJsonNode<WorldNode> {
         public double Time;
         public bool Raining;
         public bool HardMode;
@@ -37,17 +37,6 @@ namespace Aurora.Profiles.Terraria.GSI.Nodes {
         public bool SlimeRain;
         public TerrariaBoss Boss;
 
-        internal WorldNode(string json) : base(json) {
-            Eclipse = GetBool("eclipse");
-            HardMode = GetBool("hardMode");
-            ExpertMode = GetBool("expertMode");
-            Time = GetFloat("time");
-            BloodMoon = GetBool("bloodMoon");
-            PumpkinMoon = GetBool("pumpkinMoon");
-            SnowMoon = GetBool("snowMoon");
-            Raining = GetBool("raining");
-            SlimeRain = GetBool("slimeRain");
-            Boss = (TerrariaBoss)GetInt("boss");
-        }
+        internal WorldNode(string json) : base(json) {}
     }
 }

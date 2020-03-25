@@ -22,14 +22,11 @@ namespace Aurora.Profiles.RocketLeague.GSI
         Local
     };
 
-    public class Game_RocketLeague : Node<Game_RocketLeague>
+    public class Game_RocketLeague : AutoJsonNode<Game_RocketLeague>
     {
         public RLStatus Status;
 
-        internal Game_RocketLeague(string json_data) : base(json_data)
-        {
-            Status = (RLStatus)GetInt("status");
-        }
+        internal Game_RocketLeague(string json_data) : base(json_data) { }
     }
 
     /// <summary>
@@ -37,47 +34,26 @@ namespace Aurora.Profiles.RocketLeague.GSI
     /// </summary>
     public class GameState_RocketLeague : GameState<GameState_RocketLeague>
     {
-        private Player_RocketLeague _Player;
-        private Match_RocketLeague _Match;
-        private Game_RocketLeague _Game;
-
-        /// <summary>
-        /// Contains information referring to the Player
-        /// </summary>
-        public Player_RocketLeague Player => _Player ?? (_Player = new Player_RocketLeague(_ParsedData["player"]?.ToString() ?? ""));
-
-        /// <summary>
-        /// Contains information referring to the match the player is in
-        /// </summary>
-        public Match_RocketLeague Match => _Match ?? (_Match = new Match_RocketLeague(_ParsedData["match"]?.ToString() ?? ""));
-
-        /// <summary>
-        ///  Contains information referring to the general state of the game
-        /// </summary>
-        public Game_RocketLeague Game => _Game ?? (_Game = new Game_RocketLeague(_ParsedData["game"]?.ToString() ?? ""));
+        public Match_RocketLeague Match => NodeFor<Match_RocketLeague>("match");
+        public Player_RocketLeague Player => NodeFor<Player_RocketLeague>("player");
+        public Game_RocketLeague Game => NodeFor<Game_RocketLeague>("game");
 
         /// <summary>
         /// Creates a default GameState_RocketLeague instance.
         /// </summary>
-        public GameState_RocketLeague() : base()
-        {
-        }
+        public GameState_RocketLeague() : base() { }
 
         /// <summary>
         /// Creates a GameState instance based on the passed json data.
         /// </summary>
         /// <param name="json_data">The passed json data</param>
-        public GameState_RocketLeague(string json_data) : base(json_data)
-        {
-        }
+        public GameState_RocketLeague(string json_data) : base(json_data) { }
 
         /// <summary>
         /// A copy constructor, creates a GameState_RocketLeague instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_RocketLeague(IGameState other_state) : base(other_state)
-        {
-        }
+        public GameState_RocketLeague(IGameState other_state) : base(other_state) { }
 
         /// <summary>
         /// Returns true if all the color values for both teams are between zero and one.
