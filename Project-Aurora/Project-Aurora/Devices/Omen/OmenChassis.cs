@@ -52,7 +52,7 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        /* Zone ground of mouse pad */
+        /* Zone ground of chassis */
         public enum ChassisZone
         {
             CHASSIS_ZONE_ALL = 0,                                   /* All zone */

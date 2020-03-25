@@ -43,38 +43,29 @@ namespace Aurora.Devices.Omen
             public LightingColor lightingColor;
             public int key;
 
+            public StaticKeyEffect(KeyValuePair<DeviceKeys, Color> key)
+            {
+                lightingColor = LightingColor.FromColor(key.Value);
+                this.key = OmenKeys.GetKey(key.Key);
+            }
         }
 
         public void SetKeys(Dictionary<DeviceKeys, Color> keyColors)
         {
-            List<StaticKeyEffect> list = new List<StaticKeyEffect>();
-            foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+            if(hKB != IntPtr.Zero && keyColors.Count > 0)
             {
-                StaticKeyEffect staticEffect = CreateStaticEffect(key.Key, key.Value);
-                list.Add(staticEffect);
-            }
-            if (list.Count > 0)
-            {
-                list.ToArray();
-                if (hKB != IntPtr.Zero)
+                List<StaticKeyEffect> list = new List<StaticKeyEffect>();
+                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    int res = OmenLighting_Keyboard_SetStatic(hKB, list.ToArray(), list.Count, IntPtr.Zero);
-                    if (res != 0)
-                    {
-                        Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
-                    }
+                    list.Add(new StaticKeyEffect(key));
+                }
+
+                int res = OmenLighting_Keyboard_SetStatic(hKB, list.ToArray(), list.Count, IntPtr.Zero);
+                if (res != 0)
+                {
+                    Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
                 }
             }
-        }
-
-        private static StaticKeyEffect CreateStaticEffect(DeviceKeys key, Color color)
-        {
-            double alpha_amt = (color.A / 255.0);
-
-            LightingColor c = LightingColor.FromColor(color);
-            StaticKeyEffect staticEffect = new StaticKeyEffect() { key = OmenKeys.GetKey(key), lightingColor = c };
-            return staticEffect;
-
         }
 
         internal void Shutdown()
