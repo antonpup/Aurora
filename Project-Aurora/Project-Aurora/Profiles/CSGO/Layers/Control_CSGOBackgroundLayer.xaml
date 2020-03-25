@@ -17,5 +17,8 @@
         <Label HorizontalAlignment="Left" Margin="0,93,0,-41" Padding="0" Content="Dim delay:" VerticalAlignment="Top"/>
         <Slider x:Name="Slider_DimSelector" HorizontalAlignment="Left" Margin="61,93,0,-43" VerticalAlignment="Top" Width="130" Maximum="120" ValueChanged="Slider_DimSelector_ValueChanged" Value="15"/>
         <Label x:Name="TextBox_DimValue" HorizontalAlignment="Left" Margin="196,93,0,-41" Padding="0" Content="15s" VerticalAlignment="Top"/>
+        <Label HorizontalAlignment="Left" Margin="0,116,0,0" Padding="0" Content="Dim amount:" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="IntegerUpDown_DimAmount" HorizontalAlignment="Left" Height="24" Margin="74,112,0,0" VerticalAlignment="Top" Width="50" Value="100" Maximum="100" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="IntegerUpDown_DimAmount_ValueChanged"/>
+        <Label HorizontalAlignment="Left" Margin="129,116,0,0" Padding="0" Content="%" VerticalAlignment="Top" RenderTransformOrigin="0.6,0.542"/>
     </Grid>
 </UserControl>
