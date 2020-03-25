@@ -149,7 +149,6 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Xayah,
         Xerath,
         XinZhao,
-        [JsonProperty("MonkeyKing")]
         Wukong,
         Yasuo,
         Yorick,
