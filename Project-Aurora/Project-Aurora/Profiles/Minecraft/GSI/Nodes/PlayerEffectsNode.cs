@@ -5,31 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Minecraft.GSI.Nodes {
-    public class PlayerEffectsNode : Node<PlayerEffectsNode> {
+    public class PlayerEffectsNode : AutoJsonNode<PlayerEffectsNode> {
 
-        public bool HasAbsorption;
-        public bool HasBlindness;
-        public bool HasFireResistance;
-        public bool HasInvisibility;
-        public bool HasNausea;
-        public bool HasPoison;
-        public bool HasRegeneration;
-        public bool HasSlowness;
-        public bool HasSpeed;
-        public bool HasWither;
+        [AutoJsonPropertyName("absorption")] public bool HasAbsorption;
+        [AutoJsonPropertyName("blindness")] public bool HasBlindness;
+        [AutoJsonPropertyName("fireResistance")] public bool HasFireResistance;
+        [AutoJsonPropertyName("invisibility")] public bool HasInvisibility;
+        [AutoJsonPropertyName("confusion")] public bool HasNausea;
+        [AutoJsonPropertyName("poison")] public bool HasPoison;
+        [AutoJsonPropertyName("regeneration")] public bool HasRegeneration;
+        [AutoJsonPropertyName("moveSlowdown")] public bool HasSlowness;
+        [AutoJsonPropertyName("moveSpeed")] public bool HasSpeed;
+        [AutoJsonPropertyName("wither")] public bool HasWither;
 
         internal PlayerEffectsNode() : base() { }
-        internal PlayerEffectsNode(string json) : base(json) {
-            HasAbsorption = GetBool("absorption");
-            HasBlindness = GetBool("blindness");
-            HasFireResistance = GetBool("fireResistance");
-            HasInvisibility = GetBool("invisibility");
-            HasNausea = GetBool("confusion");
-            HasPoison = GetBool("poison");
-            HasRegeneration = GetBool("regeneration");
-            HasSlowness = GetBool("moveSlowdown");
-            HasSpeed = GetBool("moveSpeed");
-            HasWither = GetBool("wither");
-        }
+        internal PlayerEffectsNode(string json) : base(json) { }
     }
 }
