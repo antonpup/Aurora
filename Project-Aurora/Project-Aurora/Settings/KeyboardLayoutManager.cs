@@ -755,8 +755,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_US.json");
             else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_UK)
                 layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_UK.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_BR)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_BR.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_BR)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_BR.json");
             else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_JP)
                 layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_JP.json");
             //keyboare 2.2

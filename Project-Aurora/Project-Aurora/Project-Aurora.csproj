@@ -125,9 +125,11 @@
     <Reference Include="keyboard, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\keyboard.dll</HintPath>
-    </Reference>   <Reference Include="LibreHardwareMonitorLib">
+    </Reference>
+    <Reference Include="LibreHardwareMonitorLib">
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
-    </Reference>    <Reference Include="Microsoft.CodeAnalysis, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.8.2\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -385,7 +387,8 @@
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Devices\Uniwill\KeyboardDevice.cs" />
- <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
+    <Compile Include="Devices\Vulcan\Vulcan.cs" />
+    <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Discord\GSI\GameState_Discord.cs" />
@@ -395,8 +398,8 @@
     <Compile Include="Profiles\Discord\GSI\Nodes\GuildNode.cs" />
     <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
-    <Compile Include="Profiles\Discord\DiscordProfile.cs" /> 
-     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
+    <Compile Include="Profiles\Discord\DiscordProfile.cs" />
+    <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
     <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
@@ -1156,7 +1159,7 @@
     <None Include="kb_layouts\corsair_strafe.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-	<None Include="kb_layouts\corsair_strafe_mk2.json">
+    <None Include="kb_layouts\corsair_strafe_mk2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\asus_pugio_features.json">
@@ -2530,7 +2533,7 @@
     <Content Include="kb_layouts\Extra Features\images\Corsair_strafe_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="kb_layouts\Extra Features\images\Corsair_strafe_mk2_logo.png">
+    <Content Include="kb_layouts\Extra Features\images\Corsair_strafe_mk2_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Logi_G810_logo.png">

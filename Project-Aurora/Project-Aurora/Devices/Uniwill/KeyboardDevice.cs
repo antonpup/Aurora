@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Aurora.Devices.RGBNet;
 using Aurora.Settings;
+using Aurora.Utils;
+using IronPython.Runtime.Operations;
 using keyboard;
 using Microsoft.Win32;
 using RegistryUtils;
 
 namespace Aurora.Devices.Uni
 {
-     
+    
     public class KeyboardDevice : Device
     {
         
@@ -43,50 +47,12 @@ namespace Aurora.Devices.Uni
         public KeyboardDevice()
         {
             devicename = KeyboardFactory.GetOEMName();
-            ChoiceGamingCenter();
           
-            //_CheckControlCenter.Start();
-            //_CheckControlCenter.Interval = 1000;
-            //_CheckControlCenter.Elapsed += _CheckControlCenter_Elapsed;
-
-
+            ChoiceGamingCenter();
+ 
         }
-        //InputInterceptor InputInterceptor;
-        //private void SetBrightness()
-        //{
-
-        //    InputInterceptor = new InputInterceptor();
-        //    InputInterceptor.Input -= InputInterceptor_Input;
-        //    InputInterceptor.Input += InputInterceptor_Input;
-         
-        //}
-    
-        //bool Fnkey = false;
-        //private void InputInterceptor_Input(object sender, InputInterceptor.InputEventData e)
-        //{
-        //    var keys = (int)e.Data.VirtualKeyCode;
-        //    if(keys.Equals(Convert.ToInt32(Keys.LButton | Keys.OemClear)))
-        //    {
-        //        if (e.KeyDown)
-        //            Fnkey = true;
-        //        else if(e.KeyUp)
-        //            Fnkey = false;
-        //    }
-
-        //    if (Fnkey)
-        //    {
-        //        if ((Keys)e.Data.VirtualKeyCode == Keys.F6)
-        //            brightness -= 0.25f;
-        //        if ((Keys)e.Data.VirtualKeyCode == Keys.F7)
-        //            brightness += 0.25f;
-
-        //        //Internal brightness modify.
-        //        brightness = Math.Max(0f, Math.Min(1f, brightness));
-        //        //ConfigManager.Save(Global.Configuration);
-        //    }
-
-           
-        //}
+ 
+     
 
         private void _CheckControlCenter_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -104,9 +70,7 @@ namespace Aurora.Devices.Uni
                 monitor.RegChanged += new EventHandler(OnRegChanged);
                 monitor.Start();
             }
-           
-      
-
+    
         }
 
         private int CheckGC()
