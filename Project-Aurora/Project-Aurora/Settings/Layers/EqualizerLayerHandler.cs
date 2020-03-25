@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -152,6 +153,11 @@ namespace Aurora.Settings.Layers
         private IWaveIn waveIn;
         private static int fftLength = 1024; // NAudio fft wants powers of two! was 8192
 
+        // Base rectangle that defines the region that is used to render the audio output
+        // Higher values mean a higher initial resolution, but may increase memory usage (looking at you, waveform).
+        // KEEP X AND Y AT 0
+        private static readonly RectangleF sourceRect = new RectangleF(0, 0, 40, 40);
+
         private SampleAggregator sampleAggregator = new SampleAggregator(fftLength);
         private Complex[] _ffts = { };
         private Complex[] _ffts_prev = { };
@@ -261,54 +267,44 @@ namespace Aurora.Settings.Layers
                         break;
                 }
 
-                // The region in which to draw the equalizer.
-                var rect = Properties.Sequence.GetAffectedRegion(); //new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
-                if (rect.Width == 0 || rect.Height == 0)
-                {
-                    // No region to draw in, prevents filling log with exceptions
-                    return new EffectLayer();
-                }
 
-                if (BgEnabled)
-                    equalizer_layer.Set(Properties.Sequence, Properties.DimColor);
+                // Use the new transform render method to draw the equalizer layer
+                equalizer_layer.DrawTransformed(Properties.Sequence, g => {
+                    // Here we draw the equalizer relative to our source rectangle and the DrawTransformed method handles sizing and positioning it correctly for us
 
-                using (Graphics g = equalizer_layer.GetGraphics())
-                {
-                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    // Draw a rectangle background over the entire source rect if bg is enabled
+                    if (BgEnabled)
+                        g.FillRectangle(new SolidBrush(Properties.DimColor), sourceRect);
 
-                    int wave_step_amount = _local_fft.Length / (int)rect.Width;
+                    g.CompositingMode = CompositingMode.SourceCopy;
+                    
+                    int wave_step_amount = _local_fft.Length / (int)sourceRect.Width;
 
-                    switch (Properties.EQType)
-                    {
+                    switch (Properties.EQType) {
                         case EqualizerType.Waveform:
-                            for (int x = 0; x < (int)rect.Width; x++)
-                            {
+                            var halfHeight = sourceRect.Height / 2f;
+                            for (int x = 0; x < (int)sourceRect.Width; x++) {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-
-                                Brush brush = GetBrush(fft_val, x, rect.Width);
-
-                                g.DrawLine(new Pen(brush), x + rect.X, (rect.Height / 2) + rect.Y, x + rect.X, (rect.Height / 2) + rect.Y - Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, rect.Height / 2), -rect.Height / 2));
+                                Brush brush = GetBrush(fft_val, x, sourceRect.Width);
+                                var yOff = -Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, halfHeight), -halfHeight);
+                                g.DrawLine(new Pen(brush), x, halfHeight, x, halfHeight + yOff);
                             }
                             break;
+
                         case EqualizerType.Waveform_Bottom:
-                            for (int x = 0; x < (int)rect.Width; x++)
-                            {
+                            for (int x = 0; x < (int)sourceRect.Width; x++) {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-
-                                Brush brush = GetBrush(fft_val, x, rect.Width);
-
-                                g.DrawLine(new Pen(brush), x + rect.X, rect.Height + rect.Y, x + rect.X, rect.Height + rect.Y - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, rect.Height));
+                                Brush brush = GetBrush(fft_val, x, sourceRect.Width);
+                                g.DrawLine(new Pen(brush), x, sourceRect.Height, x, sourceRect.Height - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, sourceRect.Height));
                             }
                             break;
-                        case EqualizerType.PowerBars:
 
+                        case EqualizerType.PowerBars:
                             //Perform FFT again to get frequencies
                             FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
 
                             while (flux_array.Count < freqs.Length)
-                            {
                                 flux_array.Add(0.0f);
-                            }
 
                             int startF = 0;
                             int endF = 0;
@@ -340,7 +336,7 @@ namespace Aurora.Settings.Layers
 
                             //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
 
-                            float bar_width = rect.Width / (float)(freqs.Length - 1);
+                            float bar_width = sourceRect.Width / (float)(freqs.Length - 1);
 
                             for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
                             {
@@ -351,9 +347,9 @@ namespace Aurora.Settings.Layers
                                 if (previous_freq_results[f_x] - fft_val > 0.10)
                                     fft_val = previous_freq_results[f_x] - 0.15f;
 
-                                float x = (f_x * bar_width) + rect.X;
-                                float y = rect.Height + rect.Y;
-                                float height = fft_val * rect.Height;
+                                float x = f_x * bar_width;
+                                float y = sourceRect.Height;
+                                float height = fft_val * sourceRect.Height;
 
                                 previous_freq_results[f_x] = fft_val;
 
@@ -361,10 +357,11 @@ namespace Aurora.Settings.Layers
 
                                 g.FillRectangle(brush, x, y - height, bar_width, height);
                             }
-
                             break;
                     }
-                }
+
+                }, sourceRect);
+                
 
                 var hander = NewLayerRender;
                 if (hander != null)
@@ -420,7 +417,6 @@ namespace Aurora.Settings.Layers
 
         private Brush GetBrush(float value, float position, float max_position)
         {
-            var rect = Properties.Sequence.GetAffectedRegion();
             if (Properties.ViewType == EqualizerPresentationType.AlternatingColor)
             {
                 if (value >= 0)
@@ -432,9 +428,10 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position));
             else if (Properties.ViewType == EqualizerPresentationType.GradientHorizontal)
             {
-                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(rect.X, 0);
-                e_brush.end = new PointF(rect.Width + rect.X, 0);
+                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum()) {
+                    start = PointF.Empty,
+                    end = new PointF(sourceRect.Width, 0)
+                };
 
                 return e_brush.GetDrawingBrush();
             }
@@ -442,9 +439,10 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000));
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
-                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(0, rect.Height + rect.Y);
-                e_brush.end = new PointF(0, rect.Y);
+                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum()) {
+                    start = new PointF(0, sourceRect.Height),
+                    end = PointF.Empty
+                };
 
                 return e_brush.GetDrawingBrush();
             }

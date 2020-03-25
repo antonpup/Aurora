@@ -12,8 +12,8 @@ namespace Aurora.Profiles.Minecraft {
         public Minecraft() : base(new LightEventConfig {
             Name = "Minecraft",
             ID = "minecraft",
-            //ProcessNames = new[] { "java.exe", "javaw.exe" },
-            ProcessTitles = new[] { @"^Minecraft [0-9.]*$" }, // Match anything that has a title like "Minecraft 1.12.2" or "Minecraft 1.5")
+            ProcessNames = new[] { "javaw.exe" }, // Require the process to a Java application
+            ProcessTitles = new[] { @"^Minecraft" }, // Match any window title that starts with Minecraft
             ProfileType = typeof(MinecraftProfile),
             OverviewControlType = typeof(Control_Minecraft),
             GameStateType = typeof(GSI.GameState_Minecraft),

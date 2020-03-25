@@ -1,0 +1,24 @@
+﻿{
+  "keys_to_remove": [
+  ],
+  "key_modifications": {
+    "100": {
+      "visualName": "FN",
+      "tag": 107,
+      "line_break": null,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    }
+  },
+  "included_features": [
+    "ducky_shine_7_features.json"
+  ]
+}
