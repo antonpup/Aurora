@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Threading;
 using System.Windows;
@@ -21,7 +21,7 @@ namespace Aurora.Settings {
 
         private void RestoreWindow(object sender, EventArgs e)
         {
-            System.Console.WriteLine("RestoreWindow");
+            Utils.WindowPlacement.SetPlacement(this, Global.Configuration.HttpDebugPlacement);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -40,7 +40,11 @@ namespace Aurora.Settings {
             }), null, 0, 50);
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Save current window Placement
+            Global.Configuration.HttpDebugPlacement = Utils.WindowPlacement.GetPlacement(this);
+
             // When the window closes, we need to clean up our listener, otherwise it'll keep listening and
             // this window will never get garbage collected.
             Global.net_listener.NewGameState -= Net_listener_NewGameState;

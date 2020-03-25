@@ -962,15 +962,12 @@ namespace Aurora.Settings
                 }
 
                 winBitmapView = new Window();
+                winBitmapView.SourceInitialized += WinBitmapView_SourceInitialized;
+                winBitmapView.Closing += WinBitmapView_Closing;
                 winBitmapView.Closed += WinBitmapView_Closed;
                 winBitmapView.ResizeMode = ResizeMode.CanResize;
 
                 winBitmapView.SetBinding(Window.TopmostProperty, new Binding("BitmapDebugTopMost") { Source = Global.Configuration });
-                winBitmapView.SetBinding(Window.TopProperty, new Binding("BitmapDebugTop") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
-                winBitmapView.SetBinding(Window.LeftProperty, new Binding("BitmapDebugLeft") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
-                winBitmapView.SetBinding(Window.HeightProperty, new Binding("BitmapDebugHeight") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
-                winBitmapView.SetBinding(Window.WidthProperty, new Binding("BitmapDebugWidth") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
-                winBitmapView.SetBinding(Window.WindowStateProperty, new Binding("BitmapDebugWindowState") { Source = Global.Configuration, Mode = BindingMode.TwoWay });
 
                 //winBitmapView.SizeToContent = SizeToContent.WidthAndHeight;
 
@@ -1025,6 +1022,15 @@ namespace Aurora.Settings
             {
                 Global.logger.Warn(ex.ToString());
             }
+        }
+        private void WinBitmapView_SourceInitialized(object sender, EventArgs e)
+        {
+            Utils.WindowPlacement.SetPlacement(this.winBitmapView, Global.Configuration.BitmapPlacement);
+        }
+
+        private void WinBitmapView_Closing(object sender, EventArgs e)
+        {
+            Global.Configuration.BitmapPlacement = Aurora.Utils.WindowPlacement.GetPlacement(this.winBitmapView);
         }
 
         private void WinBitmapView_Closed(object sender, EventArgs e)
