@@ -419,6 +419,21 @@
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\GameData.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\AbilitiesNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\AbilityNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\InventoryNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\ItemNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\MatchNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\GSI\Nodes\StatsNode.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Layers\DefaultChampionColors.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Layers\LoLBackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\Layers\Control_LoLBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_LoLBackgroundLayer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\AutoJsonNode.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
@@ -991,7 +1006,7 @@
       <DependentUpon>Control_LoL.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\LeagueOfLegends\LoLApplication.cs" />
-    <Compile Include="Profiles\LeagueOfLegends\LoLProfile.cs" />
+    <Compile Include="Profiles\LeagueOfLegends\LoLGSIProfile.cs" />
     <Compile Include="Profiles\Aurora Wrapper\GameEvent_Aurora_Wrapper.cs" />
     <Compile Include="Profiles\Magic_Duels_2012\Control_MagicDuels2012.xaml.cs">
       <DependentUpon>Control_MagicDuels2012.xaml</DependentUpon>
@@ -1810,6 +1825,10 @@
     <Page Include="Profiles\Discord\Control_Discord.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\LeagueOfLegends\Layers\Control_LoLBackgroundLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>
