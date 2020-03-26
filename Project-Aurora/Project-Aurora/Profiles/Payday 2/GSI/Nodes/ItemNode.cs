@@ -1,17 +1,12 @@
 ﻿namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class ItemNode : Node<ItemNode>
+    public class ItemNode : AutoJsonNode<ItemNode>
     {
         public ItemType Type;
         public string ID;
         public int Count;
 
-        internal ItemNode(string JSON) : base(JSON)
-        {
-            Type = GetEnum<ItemType>("type");
-            ID = GetString("id");
-            Count = GetInt("count");
-        }
+        internal ItemNode(string JSON) : base(JSON) { }
     }
 
     public enum ItemType

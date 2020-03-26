@@ -40,11 +40,8 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             if (this.DataContext is CSGOBombLayerHandler && !settingsset)
             {
-                this.ColorPicker_CT.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOBombLayerHandler).Properties._CTColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_T.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOBombLayerHandler).Properties._TColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Flash.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOBombLayerHandler).Properties._FlashColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_Primed.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as CSGOBombLayerHandler).Properties._PrimedColor ?? System.Drawing.Color.Empty);
-                this.Checkbox_DisplayWinningTeam.IsChecked = (this.DataContext as CSGOBombLayerHandler).Properties._DisplayWinningTeamColor;
                 this.Checkbox_GradualEffect.IsChecked = (this.DataContext as CSGOBombLayerHandler).Properties._GradualEffect;
                 this.Checkbox_DisplayOnPeripherals.IsChecked = (this.DataContext as CSGOBombLayerHandler).Properties._PeripheralUse;
                 this.KeySequence_keys.Sequence = (this.DataContext as CSGOBombLayerHandler).Properties._Sequence;
@@ -70,18 +67,6 @@ namespace Aurora.Profiles.CSGO.Layers
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_CT_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as CSGOBombLayerHandler).Properties._CTColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void ColorPicker_T_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as CSGOBombLayerHandler).Properties._TColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
         private void ColorPicker_Flash_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
@@ -92,12 +77,6 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOBombLayerHandler).Properties._PrimedColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void Checkbox_DisplayWinningTeam_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-                (this.DataContext as CSGOBombLayerHandler).Properties._DisplayWinningTeamColor = (sender as CheckBox).IsChecked.Value;
         }
 
         private void Checkbox_GradualEffect_Checked(object sender, RoutedEventArgs e)
