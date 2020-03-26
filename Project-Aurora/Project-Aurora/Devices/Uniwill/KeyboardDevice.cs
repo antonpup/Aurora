@@ -29,7 +29,7 @@ namespace Aurora.Devices.Uni
             private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
             private long lastUpdateTime = 0;
 
-         
+        bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
 
         List<AuroraInterface> DeviceList = new List<AuroraInterface>();
         //  Controll Class
@@ -120,14 +120,13 @@ namespace Aurora.Devices.Uni
 
         private void OnRegChanged(object sender, EventArgs e)
         {
-            
+            bRefreshOnce = true;
             if (CheckGCPower())
             {
                 Initialize();
             } 
             else
             {
-                bRefreshOnce = true;
                 isInitialized = false;
                 Shutdown();
              
@@ -160,7 +159,7 @@ namespace Aurora.Devices.Uni
                 {
                     try
                     {
-                     
+                        bRefreshOnce = true;
                         keyboard =   KeyboardFactory.CreateHIDDevice("hidkeyboard");
                    
                     if (keyboard!=null)
@@ -258,7 +257,7 @@ namespace Aurora.Devices.Uni
             {
                  return isInitialized;
            }
-        bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
+       
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) // Is this necessary?
         {
             if (e.Cancel) return false;
