@@ -863,7 +863,7 @@
     <Compile Include="Settings\Window_ProcessSelection.xaml.cs">
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Window Restore.cs" />
+    <Compile Include="Utils\WindowPlacement.cs" />
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
     <Compile Include="Utils\DesktopDuplicator.cs" />

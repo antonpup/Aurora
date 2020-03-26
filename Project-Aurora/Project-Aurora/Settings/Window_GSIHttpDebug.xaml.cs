@@ -14,12 +14,12 @@ namespace Aurora.Settings {
         private DateTime? lastRequestTime = null;
 
         public Window_GSIHttpDebug() {
-            this.SourceInitialized += RestoreWindow;
+            this.SourceInitialized += Window_SetPlacement;
             InitializeComponent();
             DataContext = Global.Configuration;
         }
 
-        private void RestoreWindow(object sender, EventArgs e)
+        private void Window_SetPlacement(object sender, EventArgs e)
         {
             Utils.WindowPlacement.SetPlacement(this, Global.Configuration.HttpDebugPlacement);
         }

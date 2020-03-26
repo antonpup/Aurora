@@ -406,6 +406,12 @@ namespace Aurora
 
                 MainWindow = new ConfigUI();
                 ((ConfigUI)MainWindow).Display();
+
+                //Debug Windows on Startup
+                if (Global.Configuration.BitmapWindowOnStartUp)
+                    new Control_Settings().btnShowBitmapWindow_Click(this, null);
+                if (Global.Configuration.HttpWindowOnStartUp)
+                    new Window_GSIHttpDebug().Show();
             }
             else
             {

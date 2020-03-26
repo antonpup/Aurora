@@ -474,12 +474,18 @@ namespace Aurora.Settings
         private string bitmapPlacement;
         public string BitmapPlacement { get { return bitmapPlacement; } set { bitmapPlacement = value; InvokePropertyChanged(); } }
 
+        private bool bitmapWindowOnStartUp;
+        public bool BitmapWindowOnStartUp { get { return bitmapWindowOnStartUp; } set { bitmapWindowOnStartUp = value; InvokePropertyChanged(); } }
+
         //httpDebug Data
         private bool httpDebugTopMost;
         public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
 
         private string httpDebugPlacement;
         public string HttpDebugPlacement { get { return httpDebugPlacement; } set { httpDebugPlacement = value; InvokePropertyChanged(); } }
+
+        private bool httpWindowOnStartUp;
+        public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 

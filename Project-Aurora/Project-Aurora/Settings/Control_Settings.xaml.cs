@@ -951,7 +951,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)
+        public void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e)
         {
             if (winBitmapView == null)
             {
