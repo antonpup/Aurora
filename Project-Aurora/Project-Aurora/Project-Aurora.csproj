@@ -451,7 +451,7 @@
     <Compile Include="Profiles\Spotify\GSI\Nodes\ColorNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\ColorsNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\Spotify\GSI\Nodes\ProviderNode.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\TrackNode.cs" />
     <Compile Include="Profiles\Spotify\SpotifyApplication.cs" />
     <Compile Include="Profiles\Spotify\SpotifyProfile.cs" />
     <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />

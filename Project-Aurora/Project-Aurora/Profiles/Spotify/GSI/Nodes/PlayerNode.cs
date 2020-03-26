@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Spotify.GSI.Nodes
 {
-    public class PlayerNode : Node<PlayerNode>
+    public class PlayerNode : AutoJsonNode<PlayerNode>
     {
         public long Duration = 0;
         public long Progress = 0;
@@ -17,16 +17,6 @@ namespace Aurora.Profiles.Spotify.GSI.Nodes
         public int Volume = 0;
         public bool Playing = false;
 
-        internal PlayerNode(string json) : base(json)
-        {
-            Duration = GetLong("duration");
-            Progress = GetLong("progress");
-            Mute = GetBool("mute");
-            Repeat = GetInt("repeat");
-            Shuffle = GetBool("shuffle");
-            Heart = GetBool("heart");
-            Volume = GetInt("volume");
-            Playing = GetBool("playing");
-        }
+        internal PlayerNode(string json) : base(json) { }
     }
 }

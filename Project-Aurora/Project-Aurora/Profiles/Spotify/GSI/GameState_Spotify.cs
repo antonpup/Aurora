@@ -1,4 +1,5 @@
-﻿using Aurora.Profiles.Spotify.GSI.Nodes;
+﻿using Aurora.Profiles.Generic.GSI.Nodes;
+using Aurora.Profiles.Spotify.GSI.Nodes;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,13 @@ namespace Aurora.Profiles.Spotify.GSI
 {
     public class GameState_Spotify : GameState<GameState_Spotify>
     {
+        public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
-        private ProviderNode _Provider;
-        private PlayerNode _Player;
-        private ColorsNode _Colors;
+        public PlayerNode Player => NodeFor<PlayerNode>("player");
 
-        public ProviderNode Provider => _Provider ?? (_Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? ""));
+        public ColorsNode Colors => NodeFor<ColorsNode>("colors");
 
-        public PlayerNode Player => _Player ?? (_Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? ""));
-
-        public ColorsNode Colors => _Colors ?? (_Colors = new ColorsNode(_ParsedData["colors"]?.ToString() ?? ""));
+        public TrackNode Track => NodeFor<TrackNode>("track");
 
         public GameState_Spotify() : base() { }
 

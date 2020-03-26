@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Spotify.GSI.Nodes
 {
-    public class ColorNode : Node<ColorNode>
+    public class ColorNode : AutoJsonNode<ColorNode>
     {
+        [AutoJsonPropertyName("r")]
         public float Red;
+        [AutoJsonPropertyName("g")]
         public float Green;
+        [AutoJsonPropertyName("b")]
         public float Blue;
 
-        public ColorNode(string json) : base(json)
-        {
-            Red = GetFloat("r");
-            Green = GetFloat("g");
-            Blue = GetFloat("b");
-        }
+        public ColorNode(string json) : base(json) { }
     }
 }
