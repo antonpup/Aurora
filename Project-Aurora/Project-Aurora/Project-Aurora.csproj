@@ -407,10 +407,8 @@
     <Compile Include="Devices\Ducky\DuckyDevice.cs" />
     <Compile Include="Devices\Ducky\DuckyRGBMappings.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
- 
     <Compile Include="Devices\Uniwill\KeyboardDevice.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
- 
     <Compile Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml.cs">
       <DependentUpon>Control_CSGODeathLayer.xaml</DependentUpon>
     </Compile>
@@ -419,7 +417,6 @@
     </Compile>
     <Compile Include="Profiles\CSGO\Layers\CSGODeathLayerHandler.cs" />
     <Compile Include="Profiles\CSGO\Layers\CSGOWinningTeamLayerHandler.cs" />
- 
     <Compile Include="Profiles\Discord\Control_Discord.xaml.cs">
       <DependentUpon>Control_Discord.xaml</DependentUpon>
     </Compile>
@@ -430,8 +427,6 @@
     <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
- 
-    <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameData.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
@@ -448,7 +443,6 @@
       <DependentUpon>Control_LoLBackgroundLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\AutoJsonNode.cs" />
- 
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
@@ -1035,7 +1029,6 @@
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
- 
     <None Include="kb_layouts\Extra Features\keyboard101_numpad_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
