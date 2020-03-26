@@ -8,6 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -471,8 +472,8 @@ namespace Aurora.Settings
         private bool bitmapDebugTopMost;
         public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
 
-        private string bitmapPlacement;
-        public string BitmapPlacement { get { return bitmapPlacement; } set { bitmapPlacement = value; InvokePropertyChanged(); } }
+        private WINDOWPLACEMENT bitmapPlacement;
+        public WINDOWPLACEMENT BitmapPlacement { get { return bitmapPlacement; } set { bitmapPlacement = value; InvokePropertyChanged(); } }
 
         private bool bitmapWindowOnStartUp;
         public bool BitmapWindowOnStartUp { get { return bitmapWindowOnStartUp; } set { bitmapWindowOnStartUp = value; InvokePropertyChanged(); } }
@@ -481,8 +482,8 @@ namespace Aurora.Settings
         private bool httpDebugTopMost;
         public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
 
-        private string httpDebugPlacement;
-        public string HttpDebugPlacement { get { return httpDebugPlacement; } set { httpDebugPlacement = value; InvokePropertyChanged(); } }
+        private WINDOWPLACEMENT httpDebugPlacement;
+        public WINDOWPLACEMENT HttpDebugPlacement { get { return httpDebugPlacement; } set { httpDebugPlacement = value; InvokePropertyChanged(); } }
 
         private bool httpWindowOnStartUp;
         public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }

@@ -4,10 +4,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Interop;
-using System.Xml;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
-//Code from https://engy.us/blog/2010/03/08/saving-window-size-and-location-in-wpf-and-winforms/
+//Based on https://engy.us/blog/2010/03/08/saving-window-size-and-location-in-wpf-and-winforms/
 namespace Aurora.Utils
 {
     // RECT structure required by WINDOWPLACEMENT structure
@@ -59,9 +58,6 @@ namespace Aurora.Utils
 
     public static class WindowPlacement
     {
-        private static Encoding encoding = new UTF8Encoding();
-        private static XmlSerializer serializer = new XmlSerializer(typeof(WINDOWPLACEMENT));
-
         [DllImport("user32.dll")]
         private static extern bool SetWindowPlacement(IntPtr hWnd, [In] ref WINDOWPLACEMENT lpwndpl);
 
@@ -71,58 +67,32 @@ namespace Aurora.Utils
         private const int SW_SHOWNORMAL = 1;
         private const int SW_SHOWMINIMIZED = 2;
 
-        public static void SetPlacement(IntPtr windowHandle, string placementXml)
+        public static void SetPlacement(this Window window, WINDOWPLACEMENT placement)
         {
-            if (string.IsNullOrEmpty(placementXml))
-            {
+            WindowPlacement.SetPlacement(new WindowInteropHelper(window).Handle, placement);
+        }
+        public static void SetPlacement(IntPtr windowHandle, WINDOWPLACEMENT placement)
+        {
+            //If no values are saved do not setthem
+            if (placement.Equals(new WINDOWPLACEMENT()))
                 return;
-            }
 
-            WINDOWPLACEMENT placement;
-            byte[] xmlBytes = encoding.GetBytes(placementXml);
-
-            try
-            {
-                using (MemoryStream memoryStream = new MemoryStream(xmlBytes))
-                {
-                    placement = (WINDOWPLACEMENT)serializer.Deserialize(memoryStream);
-                }
-
-                placement.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-                placement.flags = 0;
-                placement.showCmd = (placement.showCmd == SW_SHOWMINIMIZED ? SW_SHOWNORMAL : placement.showCmd);
-                SetWindowPlacement(windowHandle, ref placement);
-            }
-            catch (InvalidOperationException)
-            {
-                // Parsing placement XML failed. Fail silently.
-            }
+            placement.length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
+            placement.flags = 0;
+            placement.showCmd = (placement.showCmd == SW_SHOWMINIMIZED ? SW_SHOWNORMAL : placement.showCmd);
+            SetWindowPlacement(windowHandle, ref placement);
         }
 
-        public static string GetPlacement(IntPtr windowHandle)
+        public static WINDOWPLACEMENT GetPlacement(this Window window)
+        {
+            return WindowPlacement.GetPlacement(new WindowInteropHelper(window).Handle);
+        }
+
+        public static WINDOWPLACEMENT GetPlacement(IntPtr windowHandle)
         {
             WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
             GetWindowPlacement(windowHandle, out placement);
-
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8))
-                {
-                    serializer.Serialize(xmlTextWriter, placement);
-                    byte[] xmlBytes = memoryStream.ToArray();
-                    return encoding.GetString(xmlBytes);
-                }
-            }
-        }
-
-        public static void SetPlacement(this Window window, string placementXml)
-        {
-            WindowPlacement.SetPlacement(new WindowInteropHelper(window).Handle, placementXml);
-        }
-
-        public static string GetPlacement(this Window window)
-        {
-            return WindowPlacement.GetPlacement(new WindowInteropHelper(window).Handle);
+            return placement;
         }
     }
 }
