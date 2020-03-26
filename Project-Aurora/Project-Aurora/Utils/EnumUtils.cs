@@ -47,6 +47,24 @@ namespace Aurora.Utils
         /// <summary>Returns the attribute of the given type for this enum.</summary>
         public static TAttr GetCustomAttribute<TAttr>(this Enum enumObj) where TAttr : Attribute =>
             enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(TAttr), false) as TAttr;
+
+        /// <summary>
+        /// Tries to parse a string into a given enum. Returns the parsed enum if successful, and <paramref name="defaultValue"/> if not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static T TryParseOr<T>(string value, bool ignoreCase, T defaultValue) where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException("T must be an enum");
+
+            if (Enum.TryParse<T>(value, ignoreCase, out var res))
+                return res;
+            else
+                return defaultValue;
+        }
     }
 
     /// <summary>

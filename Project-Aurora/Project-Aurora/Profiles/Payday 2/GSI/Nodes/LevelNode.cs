@@ -5,11 +5,12 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about the level
     /// </summary>
-    public class LevelNode : Node<LevelNode>
+    public class LevelNode : AutoJsonNode<LevelNode>
     {
         /// <summary>
         /// Level ID
         /// </summary>
+        [AutoJsonPropertyName("level_id")]
         public string LevelID;
 
         /// <summary>
@@ -20,14 +21,10 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         /// <summary>
         /// Counter for point of no return
         /// </summary>
+        [AutoJsonPropertyName("no_return_timer")]
         public int NoReturnTime;
 
-        internal LevelNode(string JSON) : base(JSON)
-        {
-            LevelID = GetString("level_id");
-            Phase = GetEnum<LevelPhase>("phase");
-            NoReturnTime = (int)GetFloat("no_return_timer");
-        }
+        internal LevelNode(string JSON) : base(JSON) { }
     }
 
     /// <summary>
