@@ -189,7 +189,7 @@ namespace Aurora.Settings.Layers
                 {
                     Properties._AmbilightOutputId = value;
                     InvokePropertyChanged(nameof(OutputId));
-                    screenCapture.Initialize(Properties.AmbilightOutputId);
+                    screenCapture.SetDisplay(Properties.AmbilightOutputId);
                 }
             }
         }
@@ -202,16 +202,16 @@ namespace Aurora.Settings.Layers
             try
             {
                 screenCapture = new DXScreenCapture();
-                screenCapture.Initialize(Properties.AmbilightOutputId);
-
-
+                screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                Global.logger.Info("Initialized with DX Screen Capture");
             }
             catch (SharpDXException e)
             {
                 screenCapture = new GDIScreenCapture();
-                screenCapture.Initialize(Properties.AmbilightOutputId);
-
+                screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                Global.logger.Info("Initialized with GDI Screen Capture");
             }
+
             //TODO: Add option to initialize screenCapture
             //as either the more stable GDI, or the more
             //performant DX version.
@@ -241,7 +241,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            last_use_time = Utils.Time.GetMillisecondsSinceEpoch();
+            last_use_time = Time.GetMillisecondsSinceEpoch();
 
             if (!captureTimer.Enabled) // Static timer isn't running, start it!
                 captureTimer.Start();
@@ -273,7 +273,7 @@ namespace Aurora.Settings.Layers
                     },
                     g =>
                     {
-                        var matrix = MathUtils.MatrixMultiply(
+                        var matrix = BitmapUtils.ColorMatrixMultiply(
                             BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0),
                             BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
                         );
@@ -421,7 +421,7 @@ namespace Aurora.Settings.Layers
         /// Initializes an IScreenCapture taking the displayID
         /// </summary>
         /// <param name="screen"></param>
-        void Initialize(int screen);
+        void SetDisplay(int screen);
 
         /// <summary>
         /// Using the target coordinates, switches to capture the correct display if needed
@@ -440,7 +440,7 @@ namespace Aurora.Settings.Layers
     {
         public Rectangle CurrentScreenBounds { get; set; }
 
-        public void Initialize(int screen)
+        public void SetDisplay(int screen)
         {
             var outputs = Screen.AllScreens;
 
@@ -469,7 +469,7 @@ namespace Aurora.Settings.Layers
             if (targetDisplay == -1)
                 return;
 
-            Initialize(targetDisplay);
+            SetDisplay(targetDisplay);
         }
     }
 
@@ -512,10 +512,10 @@ namespace Aurora.Settings.Layers
             if (targetDisplay == -1)
                 return;
 
-            Initialize(targetDisplay);
+            SetDisplay(targetDisplay);
         }
 
-        public void Initialize(int screen)
+        public void SetDisplay(int screen)
         {
             desktopDuplicator?.Dispose();
 
