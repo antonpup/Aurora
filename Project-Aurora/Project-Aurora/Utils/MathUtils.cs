@@ -19,5 +19,32 @@ namespace Aurora.Utils {
 
         /// <summary>Constrains the given value 'v' so that it is within 'min' and 'max'.</summary>
         public static double Clamp(double v, double min, double max) => Math.Min(Math.Max(v, min), max);
+
+        public static float[][] MatrixMultiply(float[][] f1, float[][] f2)
+        {
+            float[][] X = new float[5][];
+            for (int d = 0; d < 5; d++)
+                X[d] = new float[5];
+            int size = 5;
+            float[] column = new float[5];
+            for (int j = 0; j < 5; j++)
+            {
+                for (int k = 0; k < 5; k++)
+                {
+                    column[k] = f1[k][j];
+                }
+                for (int i = 0; i < 5; i++)
+                {
+                    float[] row = f2[i];
+                    float s = 0;
+                    for (int k = 0; k < size; k++)
+                    {
+                        s += row[k] * column[k];
+                    }
+                    X[i][j] = s;
+                }
+            }
+            return X;
+        }
     }
 }

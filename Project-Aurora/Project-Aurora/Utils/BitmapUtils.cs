@@ -71,7 +71,7 @@ namespace Aurora.Utils
         /// <param name="img"></param>
         /// <param name="mtx"></param>
         /// <returns></returns>
-        public static Image ApplyColorMatrix(Image img, ColorMatrix mtx)
+        public static void ApplyColorMatrix(Image img, ColorMatrix mtx)
         {
             using (var att = new ImageAttributes())
             {
@@ -88,7 +88,6 @@ namespace Aurora.Utils
                                 att);
                 }
             }
-            return img;
         }
 
         /// <summary>
@@ -97,31 +96,43 @@ namespace Aurora.Utils
         /// <param name="bmp"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Image AdjustImageBrightness(Image bmp, float b)
-        {
-            //https://docs.rainmeter.net/tips/colormatrix-guide/
-
-            float[][] colorMatrix ={
-                new float[] {1, 0, 0, 0, 0},//red
-                new float[] {0, 1, 0, 0, 0},//green
-                new float[] {0, 0, 1, 0, 0},//blue
-                new float[] {0, 0, 0, 1, 0},//alpha
-                new float[] {b, b, b, 0, 1}
-            };
-
-            return ApplyColorMatrix(bmp, new ColorMatrix(colorMatrix));
-        }
+        public static void AdjustBrightness(this Image bmp, float b) => 
+            ApplyColorMatrix(bmp, new ColorMatrix(GetBrightnessMatrix(b)));
 
         /// <summary>
         /// Adjusts the saturation of an image using a color matrix. Uses a value between 0 (grayscale) and ~2
         /// </summary>
         /// <param name="bmp"></param>
-        /// <param name="b"></param>
+        /// <param name="s"></param>
         /// <returns></returns>
-        public static Image AdjustImageSaturation(Image bmp, float s)
-        {
-            //https://docs.rainmeter.net/tips/colormatrix-guide/
+        public static void AdjustSaturation(this Image bmp, float s) => 
+            ApplyColorMatrix(bmp, new ColorMatrix(GetSaturationMatrix(s)));
 
+        public static Color GetAverageColor(Image screenshot)
+        {
+            var scaled_down_image = new Bitmap(16, 16);
+
+            using (var graphics = Graphics.FromImage(scaled_down_image))
+                graphics.DrawImage(screenshot, 0, 0, 16, 16);
+
+            Color avg = Utils.ColorUtils.GetAverageColor(scaled_down_image);
+
+            scaled_down_image?.Dispose();
+
+            return avg;
+        }
+
+        //https://docs.rainmeter.net/tips/colormatrix-guide/
+        public static float[][] GetBrightnessMatrix(float b) => new float[][] {
+                new float[] {1, 0, 0, 0, 0},//red
+                new float[] {0, 1, 0, 0, 0},//green
+                new float[] {0, 0, 1, 0, 0},//blue
+                new float[] {0, 0, 0, 1, 0},//alpha
+                new float[] {b, b, b, 0, 1}
+        };
+
+        public static float[][] GetSaturationMatrix(float s)
+        {
             const float lumR = 0.3086f;
             const float lumG = 0.6094f;
             const float lumB = 0.0820f;
@@ -136,22 +147,7 @@ namespace Aurora.Utils
                 new float[] {0,      0,      0,      1, 0},
                 new float[] {0,      0,      0,      0, 1}
             };
-
-            return ApplyColorMatrix(bmp, new ColorMatrix(colorMatrix));
-        }
-
-        public static Color GetAverageColor(Image screenshot)
-        {
-            var scaled_down_image = new Bitmap(16, 16);
-
-            using (var graphics = Graphics.FromImage(scaled_down_image))
-                graphics.DrawImage(screenshot, 0, 0, 16, 16);
-
-            Color avg = Utils.ColorUtils.GetAverageColor(scaled_down_image);
-
-            scaled_down_image?.Dispose();
-
-            return avg;
+            return colorMatrix;
         }
     }
 }

@@ -1,6 +1,7 @@
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
+using Aurora.Utils;
 using Newtonsoft.Json;
 using SharpDX;
 using SharpDX.DXGI;
@@ -174,7 +175,7 @@ namespace Aurora.Settings.Layers
         private readonly Timer captureTimer;
         private Image screen;
         private long last_use_time = 0;
-        private IntPtr MainWindowHandle = IntPtr.Zero;
+        private IntPtr specificProcessHandle = IntPtr.Zero;
 
         private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
         private int Scale => (int)Math.Pow(2, 4 - (int)Properties.AmbilightQuality);
@@ -232,14 +233,57 @@ namespace Aurora.Settings.Layers
             if (!captureTimer.Enabled) // Static timer isn't running, start it!
                 captureTimer.Start();
 
-            Image newImage = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-
             if (screen is null)
                 return new EffectLayer();
+
             var region = Properties.Sequence.GetAffectedRegion();
             if (region.Width == 0 || region.Height == 0)
                 return new EffectLayer();
 
+            Rectangle cropRegion = GetCropRegion();
+            if (cropRegion.Width == 0 || cropRegion.Height == 0)
+                return new EffectLayer();
+
+            EffectLayer ambilight_layer = new EffectLayer();
+
+            switch (Properties.AmbilightType)
+            {
+                case AmbilightType.Default:
+                    ambilight_layer.DrawTransformed(Properties.Sequence, m => 
+                    {
+                        var matrix = MathUtils.MatrixMultiply(
+                            BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0), 
+                            BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
+                        );
+                        var att = new ImageAttributes();
+                        att.SetColorMatrix(new ColorMatrix(matrix));
+                        m.DrawImage(
+                            screen,
+                            new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height),
+                            cropRegion.X,
+                            cropRegion.Y,
+                            cropRegion.Width,
+                            cropRegion.Height,
+                            GraphicsUnit.Pixel,
+                            att); 
+                    });
+                    break;
+
+                case AmbilightType.AverageColor:
+                    ambilight_layer.Set(Properties.Sequence, BitmapUtils.GetAverageColor(screen));
+                    break;
+            }
+
+            return ambilight_layer;
+        }
+
+        /// <summary>
+        /// Gets the region to crop based on user preference and current display.
+        /// Switches display if the desired coordinates are offscreen.
+        /// </summary>
+        /// <returns></returns>
+        private Rectangle GetCropRegion()
+        {
             Rectangle cropRegion = new Rectangle();
             switch (Properties.AmbilightCaptureType)
             {
@@ -249,20 +293,27 @@ namespace Aurora.Settings.Layers
                     break;
                 case AmbilightCaptureType.SpecificProcess:
                 case AmbilightCaptureType.ForegroundApp:
-                    IntPtr handle = GetWindowHandle();
+                    IntPtr handle;
+
+                    if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)
+                        handle = User32.GetForegroundWindow();
+                    else
+                        handle = specificProcessHandle;
 
                     if (handle == IntPtr.Zero)
+                    {
+                        Global.logger.Error("[Ambilight]: IntPtr was zero, investigate why");
                         break;
+                    }
 
                     var appRect = new User32.Rect();
                     User32.GetWindowRect(handle, ref appRect);
 
                     var appDisplay = Screen.FromHandle(handle).Bounds;
 
-                    if (screenCapture.SwitchDisplay(appDisplay))
-                        break;
+                    screenCapture.SwitchDisplay(appDisplay);
 
-                    cropRegion = Resize(new Rectangle(
+                    cropRegion = GetResized(new Rectangle(
                             appRect.Left - appDisplay.Left,
                             appRect.Top - appDisplay.Top,
                             appRect.Right - appRect.Left,
@@ -270,10 +321,9 @@ namespace Aurora.Settings.Layers
 
                     break;
                 case AmbilightCaptureType.Coordinates:
-                    if (screenCapture.SwitchDisplay(Screen.FromRectangle(Properties.Coordinates).Bounds))
-                        break;
+                    screenCapture.SwitchDisplay(Screen.FromRectangle(Properties.Coordinates).Bounds);
 
-                    cropRegion = Resize(new Rectangle(
+                    cropRegion = GetResized(new Rectangle(
                             Properties.Coordinates.Left - screenCapture.CurrentScreenBounds.Left,
                             Properties.Coordinates.Top - screenCapture.CurrentScreenBounds.Top,
                             Properties.Coordinates.Width,
@@ -281,38 +331,7 @@ namespace Aurora.Settings.Layers
                     break;
             }
 
-            if (cropRegion.Width == 0 || cropRegion.Height == 0)
-                return new EffectLayer();
-
-            using (var graphics = Graphics.FromImage(newImage))
-                graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), cropRegion, GraphicsUnit.Pixel);
-
-
-            if (Properties.FlipVertically)
-                newImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            if (Properties.SaturateImage)
-                newImage = Utils.BitmapUtils.AdjustImageSaturation(newImage, Properties.SaturationChange);
-            if (Properties.BrightenImage)
-                newImage = Utils.BitmapUtils.AdjustImageBrightness(newImage, Properties.BrightnessChange);
-
-            EffectLayer ambilight_layer = new EffectLayer();
-
-            switch (Properties.AmbilightType)
-            {
-                case AmbilightType.Default:
-                    ambilight_layer.DrawTransformed(Properties.Sequence, m =>
-                    {
-                        m.DrawImage(newImage, 0, 0);
-                    });
-                    break;
-
-                case AmbilightType.AverageColor:
-                    ambilight_layer.Set(Properties.Sequence, Utils.BitmapUtils.GetAverageColor(newImage));
-                    break;
-            }
-
-            newImage.Dispose();
-            return ambilight_layer;
+            return cropRegion;
         }
 
         /// <summary>
@@ -320,14 +339,14 @@ namespace Aurora.Settings.Layers
         /// </summary>
         /// <param name="r"></param>
         /// <returns></returns>
-        private Rectangle Resize(Rectangle r)
+        private Rectangle GetResized(Rectangle r)
         {
             return new Rectangle(r.X / Scale, r.Y / Scale, r.Width / Scale, r.Height / Scale);
         }
 
         public void UpdateSpecificProcessHandle(string process)
         {
-            MainWindowHandle = Array.Find(Process.GetProcessesByName(
+            specificProcessHandle = Array.Find(Process.GetProcessesByName(
                                                System.IO.Path.GetFileNameWithoutExtension(process))
                                                , p => p.MainWindowHandle != IntPtr.Zero)?.MainWindowHandle ?? IntPtr.Zero;
         }
@@ -355,14 +374,6 @@ namespace Aurora.Settings.Layers
             [System.Runtime.InteropServices.DllImport("user32.dll")]
             public static extern IntPtr GetForegroundWindow();
         }
-
-        private IntPtr GetWindowHandle()
-        {
-            if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)
-                return User32.GetForegroundWindow();
-            else
-                return MainWindowHandle;
-        }
         #endregion
 
         #region PropertyChanged
@@ -374,9 +385,27 @@ namespace Aurora.Settings.Layers
 
     internal interface IScreenCapture
     {
+        /// <summary>
+        /// Represents the bounds of the screen currently being captured.
+        /// </summary>
         Rectangle CurrentScreenBounds { get; set; }
+
+        /// <summary>
+        /// Initializes an IScreenCapture taking the displayID
+        /// </summary>
+        /// <param name="screen"></param>
         void Initialize(int screen);
-        bool SwitchDisplay(Rectangle target);
+
+        /// <summary>
+        /// Using the target coordinates, switches to capture the correct display if needed
+        /// </summary>
+        /// <param name="target"></param>
+        void SwitchDisplay(Rectangle target);
+
+        /// <summary>
+        /// Captures a screenshot of the full screen, returning a full resolution bitmap
+        /// </summary>
+        /// <returns></returns>
         Bitmap Capture();
     }
 
@@ -404,17 +433,16 @@ namespace Aurora.Settings.Layers
             return bigScreen;
         }
 
-        public bool SwitchDisplay(Rectangle target)
+        public void SwitchDisplay(Rectangle target)
         {
             if (CurrentScreenBounds == target)
-                return false;
+                return;
 
             int targetDisplay = Array.FindIndex(Screen.AllScreens, d => d.Bounds == target);
             if (targetDisplay == -1)
-                return false;
+                return;
 
             Initialize(targetDisplay);
-            return true;
         }
     }
 
@@ -447,18 +475,17 @@ namespace Aurora.Settings.Layers
             return bigScreen;
         }
 
-        public bool SwitchDisplay(Rectangle target)
+        public void SwitchDisplay(Rectangle target)
         {
             if (CurrentScreenBounds == target)
-                return false;
+                return;
 
             var screens = GetAdapters().ToArray();
             var targetDisplay = Array.FindIndex(screens, d => RectangleEquals(d.Output.Description.DesktopBounds, target));
             if (targetDisplay == -1)
-                return false;
+                return;
 
             Initialize(targetDisplay);
-            return true;
         }
 
         public void Initialize(int screen)
