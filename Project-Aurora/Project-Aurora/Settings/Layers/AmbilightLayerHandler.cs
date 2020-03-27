@@ -198,18 +198,30 @@ namespace Aurora.Settings.Layers
         public AmbilightLayerHandler()
         {
             _ID = "Ambilight";
-            screenCapture = new GDIScreenCapture();
+            try
+            {
+                screenCapture = new DXScreenCapture();
+                screenCapture.Initialize(Properties.AmbilightOutputId);
+
+
+            }
+            catch (SharpDXException e)
+            {
+                screenCapture = new GDIScreenCapture();
+                screenCapture.Initialize(Properties.AmbilightOutputId);
+
+            }
             //TODO: Add option to initialize screenCapture
             //as either the more stable GDI, or the more
             //performant DX version.
-            screenCapture.Initialize(Properties.AmbilightOutputId);
+            //screenCapture.Initialize(Properties.AmbilightOutputId);
             captureTimer = new Timer(Interval);
             captureTimer.Elapsed += CaptureTimer_Elapsed;
         }
 
         private void CaptureTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
+            if (Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
                 captureTimer.Stop();
 
             var bigScreen = screenCapture.Capture();
@@ -249,10 +261,10 @@ namespace Aurora.Settings.Layers
             switch (Properties.AmbilightType)
             {
                 case AmbilightType.Default:
-                    ambilight_layer.DrawTransformed(Properties.Sequence, m => 
+                    ambilight_layer.DrawTransformed(Properties.Sequence, m =>
                     {
                         var matrix = MathUtils.MatrixMultiply(
-                            BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0), 
+                            BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0),
                             BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
                         );
                         var att = new ImageAttributes();
@@ -265,7 +277,7 @@ namespace Aurora.Settings.Layers
                             cropRegion.Width,
                             cropRegion.Height,
                             GraphicsUnit.Pixel,
-                            att); 
+                            att);
                     });
                     break;
 
@@ -302,7 +314,7 @@ namespace Aurora.Settings.Layers
 
                     if (handle == IntPtr.Zero)
                     {
-                        Global.logger.Error("[Ambilight]: IntPtr was zero, investigate why");
+                        //should never happen
                         break;
                     }
 
@@ -346,9 +358,13 @@ namespace Aurora.Settings.Layers
 
         public void UpdateSpecificProcessHandle(string process)
         {
-            specificProcessHandle = Array.Find(Process.GetProcessesByName(
-                                               System.IO.Path.GetFileNameWithoutExtension(process))
-                                               , p => p.MainWindowHandle != IntPtr.Zero)?.MainWindowHandle ?? IntPtr.Zero;
+            var a = Array.Find(Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process))
+                                               , p => p.MainWindowHandle != IntPtr.Zero);
+
+            if (a != null && a.MainWindowHandle != IntPtr.Zero)
+            {
+                specificProcessHandle = a.MainWindowHandle;
+            }
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()
@@ -449,8 +465,8 @@ namespace Aurora.Settings.Layers
     internal class DXScreenCapture : IScreenCapture
     {
         public Rectangle CurrentScreenBounds { get; set; }
-        private DesktopDuplicator desktopDuplicator;
-        private bool processing = false;
+        private static DesktopDuplicator desktopDuplicator;//there can only be one
+        private static bool processing = false;
 
         public Bitmap Capture()
         {
