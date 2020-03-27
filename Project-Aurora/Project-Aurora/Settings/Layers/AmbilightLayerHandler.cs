@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -261,15 +262,25 @@ namespace Aurora.Settings.Layers
             switch (Properties.AmbilightType)
             {
                 case AmbilightType.Default:
-                    ambilight_layer.DrawTransformed(Properties.Sequence, m =>
+                    ambilight_layer.DrawTransformed(Properties.Sequence,
+                    m =>
+                    {
+                        if (Properties.FlipVertically)
+                        {
+                            m.Scale(1, -1, MatrixOrder.Prepend);
+                            m.Translate(0, -Effects.canvas_height, MatrixOrder.Prepend);
+                        }
+                    },
+                    g =>
                     {
                         var matrix = MathUtils.MatrixMultiply(
                             BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0),
                             BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
                         );
                         var att = new ImageAttributes();
-                        att.SetColorMatrix(new ColorMatrix(matrix));
-                        m.DrawImage(
+                        att.SetColorMatrix(new ColorMatrix(matrix)); 
+
+                        g.DrawImage(
                             screen,
                             new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height),
                             cropRegion.X,
@@ -278,7 +289,7 @@ namespace Aurora.Settings.Layers
                             cropRegion.Height,
                             GraphicsUnit.Pixel,
                             att);
-                    });
+                    }, new Rectangle(0,0, Effects.canvas_width, Effects.canvas_height));
                     break;
 
                 case AmbilightType.AverageColor:
