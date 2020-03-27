@@ -71,8 +71,8 @@
                 <RowDefinition Height="56px" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="145px" />
-                <ColumnDefinition Width="160px" />
+                <ColumnDefinition Width="135px" />
+                <ColumnDefinition Width="170px" />
                 <ColumnDefinition Width="28px" />
             </Grid.ColumnDefinitions>
 
@@ -101,12 +101,12 @@
             <CheckBox Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties._FlipVertically, Mode=TwoWay}" IsEnabled="{Binding ElementName=EffectType, Path=SelectedItem, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}"/>
 
             <Label Content="Coordinates" Grid.Row="7" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" />
-            <Grid Grid.Row="7" Grid.Column="1" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
+            <Grid Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Grid.IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -114,13 +114,13 @@
                 </Grid.RowDefinitions>
 
                 <!-- Since Properties._Coordinates is a Rect (which is a struct) we cannot directly bind to the properties, so these have to use ValueChanged event -->
-                <Label Content="X" Grid.Row="0" Grid.Column="0" />
+                <Label Content="X:" Grid.Row="0" Grid.Column="0" />
                 <xctk:IntegerUpDown x:Name="XCoordinate" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
-                <Label Content="Y" Grid.Row="0" Grid.Column="2" />
+                <Label Content="Y:" Grid.Row="0" Grid.Column="2" />
                 <xctk:IntegerUpDown x:Name="YCoordinate" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
-                <Label Content="W" Grid.Row="1" Grid.Column="0" />
+                <Label Content="Width:" Grid.Row="1" Grid.Column="0" />
                 <xctk:IntegerUpDown x:Name="WidthCoordinate" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
-                <Label Content="H" Grid.Row="1" Grid.Column="2" />
+                <Label Content="Height:" Grid.Row="1" Grid.Column="2" />
                 <xctk:IntegerUpDown x:Name="HeightCoordinate" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
             </Grid>
         </Grid>

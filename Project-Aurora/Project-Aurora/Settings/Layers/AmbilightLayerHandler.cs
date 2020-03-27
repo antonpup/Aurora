@@ -191,13 +191,13 @@ namespace Aurora.Settings.Layers
                 }
             }
         }
-        
+
 
 
         public AmbilightLayerHandler()
         {
             _ID = "Ambilight";
-            screenCapture = new DXScreenCapture();
+            screenCapture = new GDIScreenCapture();
             //TODO: Add option to initialize screenCapture
             //as either the more stable GDI, or the more
             //performant DX version.
@@ -208,6 +208,9 @@ namespace Aurora.Settings.Layers
 
         private void CaptureTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            if (Utils.Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
+                captureTimer.Stop();
+
             var bigScreen = screenCapture.Capture();
             if (bigScreen is null)
                 return;
@@ -278,12 +281,15 @@ namespace Aurora.Settings.Layers
                     break;
             }
 
-            if(cropRegion.Width != 0 && cropRegion.Height != 0)
-            {
-                using (var graphics = Graphics.FromImage(newImage))
-                    graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), cropRegion, GraphicsUnit.Pixel);
-            }
+            if (cropRegion.Width == 0 || cropRegion.Height == 0)
+                return new EffectLayer();
 
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(screen, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), cropRegion, GraphicsUnit.Pixel);
+
+
+            if (Properties.FlipVertically)
+                newImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
             if (Properties.SaturateImage)
                 newImage = Utils.BitmapUtils.AdjustImageSaturation(newImage, Properties.SaturationChange);
             if (Properties.BrightenImage)
@@ -294,12 +300,10 @@ namespace Aurora.Settings.Layers
             switch (Properties.AmbilightType)
             {
                 case AmbilightType.Default:
-                    if (Properties.FlipVertically)
-                        newImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
-                    using (Graphics g = ambilight_layer.GetGraphics())
-                        g.DrawImage(newImage, Properties.Sequence.GetAffectedRegion());
-
+                    ambilight_layer.DrawTransformed(Properties.Sequence, m =>
+                    {
+                        m.DrawImage(newImage, 0, 0);
+                    });
                     break;
 
                 case AmbilightType.AverageColor:
