@@ -854,6 +854,7 @@
       <DependentUpon>Control_ROTTombRaider.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\ROT Tomb Raider\ROTTombRaiderApplication.cs" />
+    <Compile Include="Settings\Window_BitmapView.cs" />
     <Compile Include="Settings\Window_GSIHttpDebug.xaml.cs">
       <DependentUpon>Window_GSIHttpDebug.xaml</DependentUpon>
     </Compile>

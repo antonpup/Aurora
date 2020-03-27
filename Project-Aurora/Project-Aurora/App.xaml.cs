@@ -409,9 +409,9 @@ namespace Aurora
 
                 //Debug Windows on Startup
                 if (Global.Configuration.BitmapWindowOnStartUp)
-                    new Control_Settings().btnShowBitmapWindow_Click(this, null);
+                    Window_BitmapView.Open();
                 if (Global.Configuration.HttpWindowOnStartUp)
-                    new Window_GSIHttpDebug().Show();
+                    Window_GSIHttpDebug.Open();
             }
             else
             {

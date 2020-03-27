@@ -8,13 +8,32 @@ namespace Aurora.Settings {
     /// <summary>
     /// A window that logs the latest new game state recieved via HTTP, regardless of the provider.
     /// </summary>
-    public partial class Window_GSIHttpDebug : Window {
+    public partial class Window_GSIHttpDebug : Window
+    {
+        static Window_GSIHttpDebug HttpDebugWindow = null;
+        /// <summary>
+        /// Opens the HttpDebugWindow if not already opened. If opened bring it to the foreground. 
+        /// </summary>
+        public static void Open()
+        {
+            if (HttpDebugWindow == null)
+            {
+                HttpDebugWindow = new Window_GSIHttpDebug();
+                HttpDebugWindow.Show();
+            }
+            else
+            {
+                HttpDebugWindow.Activate();
+            }
+        }
 
         private Timer timeDisplayTimer;
         private DateTime? lastRequestTime = null;
 
-        public Window_GSIHttpDebug() {
+        private Window_GSIHttpDebug()
+        {
             this.SourceInitialized += Window_SetPlacement;
+            this.Closed += Window_Closed;
             InitializeComponent();
             DataContext = Global.Configuration;
         }
@@ -53,7 +72,15 @@ namespace Aurora.Settings {
             timeDisplayTimer.Dispose();
         }
 
-        private void Net_listener_NewGameState(Profiles.IGameState gamestate) {
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            //Set the HttpDebugWindow instance to null if it got closed.
+            if (HttpDebugWindow != null && HttpDebugWindow.Equals(this))
+                HttpDebugWindow = null;
+        }
+
+        private void Net_listener_NewGameState(Profiles.IGameState gamestate)
+        {
             // This needs to be invoked due to the UI thread being different from the networking thread.
             // Without this, an exception is thrown trying to update the text box.
             Dispatcher.Invoke(() => SetJsonText(gamestate.json));
