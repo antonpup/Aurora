@@ -69,6 +69,7 @@
                 <RowDefinition Height="28px" />
                 <RowDefinition Height="28px" />
                 <RowDefinition Height="56px" />
+                <RowDefinition Height="28px" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="135px" />
@@ -123,6 +124,11 @@
                 <Label Content="Height:" Grid.Row="1" Grid.Column="2" />
                 <xctk:IntegerUpDown x:Name="HeightCoordinate" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
             </Grid>
+
+            <Label Content="Experimental Mode" Grid.Row="8" Grid.Column="0"></Label>
+            <CheckBox Grid.Row="8" Grid.Column="1" IsChecked="{Binding UseDX, Mode=TwoWay}"></CheckBox>
+            <Image Grid.Row="8" Grid.Column="2" Margin="6" ToolTip="Experimental mode offers better performance but can be unstable on some systems. Use with care." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
+
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="10,0,0,0">

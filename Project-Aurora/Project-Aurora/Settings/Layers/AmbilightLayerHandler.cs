@@ -144,6 +144,11 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool FlipVertically => Logic._FlipVertically ?? _FlipVertically ?? false;
 
+        public bool? _ExperimentalMode { get; set; }
+
+        [JsonIgnore]
+        public bool ExperimentalMode => Logic._ExperimentalMode ?? _ExperimentalMode ?? false;
+
         public AmbilightLayerHandlerProperties() : base() { }
 
         public AmbilightLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -163,6 +168,7 @@ namespace Aurora.Settings.Layers
             this._SaturateImage = false;
             this._SaturationChange = 1.0f;
             this._FlipVertically = false;
+            this._ExperimentalMode = false;
             this._Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
@@ -182,7 +188,7 @@ namespace Aurora.Settings.Layers
         private int Scale => (int)Math.Pow(2, 4 - (int)Properties.AmbilightQuality);
         public int OutputId
         {
-            get { return Properties.AmbilightOutputId; }
+            get => Properties.AmbilightOutputId;
             set
             {
                 if (Properties._AmbilightOutputId != value)
@@ -194,30 +200,56 @@ namespace Aurora.Settings.Layers
             }
         }
 
-
+        public bool UseDX
+        {
+            get => Properties.ExperimentalMode;
+            set
+            {
+                if (Properties._ExperimentalMode != value)
+                {
+                    Properties._ExperimentalMode = value;
+                    InvokePropertyChanged(nameof(UseDX));
+                    Initialize();
+                }
+            }
+        }
 
         public AmbilightLayerHandler()
         {
             _ID = "Ambilight";
-            try
+            Initialize();
+            captureTimer = new Timer(Interval);
+            captureTimer.Elapsed += CaptureTimer_Elapsed;
+        }
+
+        public void Initialize()
+        {
+            if (Properties.ExperimentalMode)
             {
                 screenCapture = new DXScreenCapture();
-                screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                Global.logger.Info("Initialized with DX Screen Capture");
+                try
+                {
+                    //this won't work on some systems
+                    screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                    Console.WriteLine("yes");
+                }
+                catch (SharpDXException e)
+                {
+                    Global.logger.Error("Error using experimental ambilight mode: " + e);
+                    Properties._ExperimentalMode = false;
+                    InvokePropertyChanged(nameof(UseDX));
+
+                    screenCapture = new GDIScreenCapture();
+                    screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                    Console.WriteLine("oof");
+                }
             }
-            catch (SharpDXException e)
+            else
             {
                 screenCapture = new GDIScreenCapture();
                 screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                Global.logger.Info("Initialized with GDI Screen Capture");
+                Console.WriteLine("no");
             }
-
-            //TODO: Add option to initialize screenCapture
-            //as either the more stable GDI, or the more
-            //performant DX version.
-            //screenCapture.Initialize(Properties.AmbilightOutputId);
-            captureTimer = new Timer(Interval);
-            captureTimer.Elapsed += CaptureTimer_Elapsed;
         }
 
         private void CaptureTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -238,7 +270,7 @@ namespace Aurora.Settings.Layers
 
             screen = smallScreen;
         }
-
+        
         public override EffectLayer Render(IGameState gamestate)
         {
             last_use_time = Time.GetMillisecondsSinceEpoch();
@@ -263,33 +295,35 @@ namespace Aurora.Settings.Layers
             {
                 case AmbilightType.Default:
                     ambilight_layer.DrawTransformed(Properties.Sequence,
-                    m =>
-                    {
-                        if (Properties.FlipVertically)
+                        m =>
                         {
-                            m.Scale(1, -1, MatrixOrder.Prepend);
-                            m.Translate(0, -Effects.canvas_height, MatrixOrder.Prepend);
-                        }
-                    },
-                    g =>
-                    {
-                        var matrix = BitmapUtils.ColorMatrixMultiply(
-                            BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0),
-                            BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
-                        );
-                        var att = new ImageAttributes();
-                        att.SetColorMatrix(new ColorMatrix(matrix)); 
+                            if (Properties.FlipVertically)
+                            {
+                                m.Scale(1, -1, MatrixOrder.Prepend);
+                                m.Translate(0, -Effects.canvas_height, MatrixOrder.Prepend);
+                            }
+                        },
+                        g =>
+                        {
+                            var matrix = BitmapUtils.ColorMatrixMultiply(
+                                BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0),
+                                BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
+                            );
+                            var att = new ImageAttributes();
+                            att.SetColorMatrix(new ColorMatrix(matrix)); 
 
-                        g.DrawImage(
-                            screen,
-                            new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height),
-                            cropRegion.X,
-                            cropRegion.Y,
-                            cropRegion.Width,
-                            cropRegion.Height,
-                            GraphicsUnit.Pixel,
-                            att);
-                    }, new Rectangle(0,0, Effects.canvas_width, Effects.canvas_height));
+                            g.DrawImage(
+                                screen,
+                                new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height),
+                                cropRegion.X,
+                                cropRegion.Y,
+                                cropRegion.Width,
+                                cropRegion.Height,
+                                GraphicsUnit.Pixel,
+                                att);
+                        },
+                        new Rectangle(0,0, Effects.canvas_width, Effects.canvas_height)
+                    );
                     break;
 
                 case AmbilightType.AverageColor:
@@ -481,7 +515,9 @@ namespace Aurora.Settings.Layers
 
         public Bitmap Capture()
         {
-            //might be a good idea to implement the processing thing here
+            if (CurrentScreenBounds.Width == 0 || CurrentScreenBounds.Height == 0)
+                return null;
+
             var bigScreen = new Bitmap(CurrentScreenBounds.Width, CurrentScreenBounds.Height);
             if (processing)
             {
