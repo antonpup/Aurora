@@ -515,8 +515,8 @@ namespace Aurora.Settings.Layers
     internal class DXScreenCapture : IScreenCapture
     {
         public Rectangle CurrentScreenBounds { get; set; }
-        private static DesktopDuplicator desktopDuplicator;//there can only be one
-        private static bool processing = false;
+        private DesktopDuplicator desktopDuplicator;//there can only be one
+        private bool processing = false;
 
         public Bitmap Capture()
         {
