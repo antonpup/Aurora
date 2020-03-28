@@ -231,24 +231,26 @@ namespace Aurora.Settings.Layers
                 {
                     //this won't work on some systems
                     screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                    Console.WriteLine("yes");
+                    //Console.WriteLine("Started experimental ambilight mode");
+                    Global.logger.Info("Started experimental ambilight mode");
                 }
                 catch (SharpDXException e)
                 {
+                    //Console.WriteLine("Error using experimental ambilight mode: " + e);
                     Global.logger.Error("Error using experimental ambilight mode: " + e);
                     Properties._ExperimentalMode = false;
                     InvokePropertyChanged(nameof(UseDX));
 
                     screenCapture = new GDIScreenCapture();
                     screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                    Console.WriteLine("oof");
                 }
             }
             else
             {
                 screenCapture = new GDIScreenCapture();
                 screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                Console.WriteLine("no");
+                Global.logger.Info("Started regular ambilight mode");
+                //Console.WriteLine("Started regular ambilight mode");
             }
         }
 
@@ -486,6 +488,9 @@ namespace Aurora.Settings.Layers
 
         public Bitmap Capture()
         {
+            if (CurrentScreenBounds.Width == 0 || CurrentScreenBounds.Height == 0)
+                return null;
+
             var bigScreen = new Bitmap(CurrentScreenBounds.Width, CurrentScreenBounds.Height);
 
             using (var g = Graphics.FromImage(bigScreen))
@@ -517,13 +522,12 @@ namespace Aurora.Settings.Layers
         {
             if (CurrentScreenBounds.Width == 0 || CurrentScreenBounds.Height == 0)
                 return null;
+            if (desktopDuplicator is null)
+                return null;
+            if (processing)
+                return null;
 
             var bigScreen = new Bitmap(CurrentScreenBounds.Width, CurrentScreenBounds.Height);
-            if (processing)
-            {
-                bigScreen.Dispose();
-                return null;
-            }
 
             try
             {
