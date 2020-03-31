@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Collections.Concurrent;
 using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
@@ -13,6 +14,8 @@ namespace Aurora.Devices.Omen
     public class OmenMousePad
     {
         private IntPtr hMousePad = IntPtr.Zero;
+
+        ConcurrentDictionary<int, Color> cachedColors = new ConcurrentDictionary<int, Color>();
 
         private OmenMousePad(IntPtr hMousePad)
         {
@@ -62,15 +65,25 @@ namespace Aurora.Devices.Omen
 
             if (hMousePad != IntPtr.Zero)
             {
-                Task.Run(() => {
+                cachedColors.AddOrUpdate(zone, color, (_, oldValue) => color);
+
+                Task.Run(() =>
+                {
                     if (Monitor.TryEnter(this))
                     {
                         try
                         {
-                            int res = OmenLighting_MousePad_SetStatic(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
-                            if (res != 0)
+                            foreach (var item in cachedColors)
                             {
-                                Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
+                                LightingColor c = LightingColor.FromColor(item.Value);
+                                int res = OmenLighting_MousePad_SetStatic(hMousePad, item.Key, c, IntPtr.Zero);
+                                if (res != 0)
+                                {
+                                    Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
+                                }
+
+                                Color outColor;
+                                cachedColors.TryRemove(item.Key, out outColor);
                             }
                         }
                         finally

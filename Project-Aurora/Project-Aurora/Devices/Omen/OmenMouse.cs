@@ -7,12 +7,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
+using System.Collections.Concurrent;
 
 namespace Aurora.Devices.Omen
 {
     public class OmenMouse
     {
         private IntPtr hMouse = IntPtr.Zero;
+
+        ConcurrentDictionary<int, Color> cachedColors = new ConcurrentDictionary<int, Color>();
 
         private OmenMouse(IntPtr hMouse)
         {
@@ -64,15 +67,25 @@ namespace Aurora.Devices.Omen
         {
             if (hMouse != IntPtr.Zero)
             {
-                Task.Run(() => {
+                int zone = (int)GetMouseLightingZone(key);
+                cachedColors.AddOrUpdate(zone, color, (_, oldValue) => color);
+                Task.Run(() =>
+                {
                     if (Monitor.TryEnter(this))
                     {
                         try
                         {
-                            int res = OmenLighting_Mouse_SetStatic(hMouse, (int)GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
-                            if (res != 0)
+                            foreach(var item in cachedColors)
                             {
-                                Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
+                                LightingColor c = LightingColor.FromColor(item.Value);
+                                int res = OmenLighting_Mouse_SetStatic(hMouse, item.Key, c, IntPtr.Zero);
+                                if (res != 0)
+                                {
+                                    Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
+                                }
+
+                                Color outColor;
+                                cachedColors.TryRemove(item.Key, out outColor);
                             }
                         }
                         catch (Exception exc)
