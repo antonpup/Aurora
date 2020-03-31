@@ -272,26 +272,30 @@ namespace Aurora.Settings.Layers
 
             screen = smallScreen;
         }
-        
+
         public override EffectLayer Render(IGameState gamestate)
         {
+            var ambilight_layer = new EffectLayer();
+
             last_use_time = Time.GetMillisecondsSinceEpoch();
 
-            if (!captureTimer.Enabled) // Static timer isn't running, start it!
+            if (!captureTimer.Enabled)
                 captureTimer.Start();
 
+            if (captureTimer.Interval != Interval)
+                captureTimer.Interval = Interval;
+
             if (screen is null)
-                return new EffectLayer();
+                return ambilight_layer;
 
             var region = Properties.Sequence.GetAffectedRegion();
             if (region.Width == 0 || region.Height == 0)
-                return new EffectLayer();
+                return ambilight_layer;
 
             Rectangle cropRegion = GetCropRegion();
             if (cropRegion.Width == 0 || cropRegion.Height == 0)
-                return new EffectLayer();
+                return ambilight_layer;
 
-            EffectLayer ambilight_layer = new EffectLayer();
 
             switch (Properties.AmbilightType)
             {
@@ -312,7 +316,7 @@ namespace Aurora.Settings.Layers
                                 BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
                             );
                             var att = new ImageAttributes();
-                            att.SetColorMatrix(new ColorMatrix(matrix)); 
+                            att.SetColorMatrix(new ColorMatrix(matrix));
 
                             g.DrawImage(
                                 screen,
@@ -324,7 +328,7 @@ namespace Aurora.Settings.Layers
                                 GraphicsUnit.Pixel,
                                 att);
                         },
-                        new Rectangle(0,0, Effects.canvas_width, Effects.canvas_height)
+                        new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height)
                     );
                     break;
 
