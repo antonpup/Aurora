@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Aurora.Devices.Omen
@@ -31,6 +32,7 @@ namespace Aurora.Devices.Omen
         {
             try
             {
+                Monitor.Enter(this);
                 OmenLighting_Chassis_Close(hChassis);
                 hChassis = IntPtr.Zero;
             }
@@ -38,17 +40,33 @@ namespace Aurora.Devices.Omen
             {
                 Global.logger.Error("OMEN Chassis, Exception during Shutdown. Message: " + exc);
             }
+            finally
+            {
+                Monitor.Exit(this);
+            }
         }
 
         public void SetLights(DeviceKeys key, Color color)
         {
             if (hChassis != IntPtr.Zero)
             {
-                int res = OmenLighting_Chassis_SetStatic(hChassis, (int)GetZone(key), LightingColor.FromColor(color), IntPtr.Zero);
-                if (res != 0)
-                {
-                    Global.logger.Error("OMEN Chassis, Set static effect fail: " + res);
-                }
+                Task.Run(() => {
+                    if (Monitor.TryEnter(this))
+                    {
+                        try
+                        {
+                            int res = OmenLighting_Chassis_SetStatic(hChassis, (int)GetZone(key), LightingColor.FromColor(color), IntPtr.Zero);
+                            if (res != 0)
+                            {
+                                Global.logger.Error("OMEN Chassis, Set static effect fail: " + res);
+                            }
+                        }
+                        finally
+                        {
+                            Monitor.Exit(this);
+                        }
+                    }
+                });
             }
         }
 

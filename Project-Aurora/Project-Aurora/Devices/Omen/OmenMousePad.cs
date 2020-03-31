@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Drawing;
@@ -40,12 +41,17 @@ namespace Aurora.Devices.Omen
         {
             try
             {
+                Monitor.Enter(this);
                 OmenLighting_MousePad_Close(hMousePad);
                 hMousePad = IntPtr.Zero;
             }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN MousePad, Exception during Shutdown. Message: " + exc);
+            }
+            finally
+            {
+                Monitor.Exit(this);
             }
         }
 
@@ -56,11 +62,23 @@ namespace Aurora.Devices.Omen
 
             if (hMousePad != IntPtr.Zero)
             {
-                int res = OmenLighting_MousePad_SetStatic(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
-                if (res != 0)
-                {
-                    Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
-                }
+                Task.Run(() => {
+                    if (Monitor.TryEnter(this))
+                    {
+                        try
+                        {
+                            int res = OmenLighting_MousePad_SetStatic(hMousePad, zone, LightingColor.FromColor(color), IntPtr.Zero);
+                            if (res != 0)
+                            {
+                                Global.logger.Error("OMEN MousePad, Set static effect fail: " + res);
+                            }
+                        }
+                        finally
+                        {
+                            Monitor.Exit(this);
+                        }
+                    }
+                });
             }
         }
 

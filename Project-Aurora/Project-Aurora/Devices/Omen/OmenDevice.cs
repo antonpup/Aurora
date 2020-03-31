@@ -242,13 +242,14 @@ namespace Aurora.Devices.Omen
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-
             watch.Restart();
 
             bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
+
+            Global.logger.Info($"OMEN device, Update cost {lastUpdateTime} ms ");
 
             return update_result;
         }

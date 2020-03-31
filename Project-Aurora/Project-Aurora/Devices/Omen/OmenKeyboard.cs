@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 
@@ -60,11 +61,23 @@ namespace Aurora.Devices.Omen
                     list.Add(new StaticKeyEffect(key));
                 }
 
-                int res = OmenLighting_Keyboard_SetStatic(hKB, list.ToArray(), list.Count, IntPtr.Zero);
-                if (res != 0)
-                {
-                    Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
-                }
+                Task.Run(() => {
+                    if (Monitor.TryEnter(this))
+                    {
+                        try
+                        {
+                            int res = OmenLighting_Keyboard_SetStatic(hKB, list.ToArray(), list.Count, IntPtr.Zero);
+                            if (res != 0)
+                            {
+                                Global.logger.Error("OMEN Keyboard, Set static effect fail: " + res);
+                            }
+                        }
+                        finally
+                        {
+                            Monitor.Exit(this);
+                        }
+                    }
+                });
             }
         }
 
@@ -72,12 +85,17 @@ namespace Aurora.Devices.Omen
         {
             try
             {
+                Monitor.Enter(this);
                 OmenLighting_Keyboard_Close(hKB);
                 hKB = IntPtr.Zero;
             }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN Keyboard, Exception during Shutdown. Message: " + exc);
+            }
+            finally
+            {
+                Monitor.Exit(this);
             }
         }
 

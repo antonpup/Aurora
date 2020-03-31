@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 
@@ -61,33 +62,48 @@ namespace Aurora.Devices.Omen
 
         public void SetLights(DeviceKeys key, Color color)
         {
-            try
+            if (hMouse != IntPtr.Zero)
             {
-                if (hMouse != IntPtr.Zero)
-                {
-                    int res = OmenLighting_Mouse_SetStatic(hMouse, (int)GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
-                    if (res != 0)
+                Task.Run(() => {
+                    if (Monitor.TryEnter(this))
                     {
-                        Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
+                        try
+                        {
+                            int res = OmenLighting_Mouse_SetStatic(hMouse, (int)GetMouseLightingZone(key), LightingColor.FromColor(color), IntPtr.Zero);
+                            if (res != 0)
+                            {
+                                Global.logger.Error("OMEN Mouse, Set static effect fail: " + res);
+                            }
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("OMEN Mouse, exception during set lights: " + exc);
+                        }
+                        finally
+                        {
+                            Monitor.Exit(this);
+                        }
                     }
-                }
+                });
             }
-            catch (Exception exc)
-            {
-                Global.logger.Error("OMEN Mouse, exception during set lights: " + exc);
-            }
+
         }
 
         internal void Shutdown()
         {
             try
             {
+                Monitor.Enter(this);
                 OmenLighting_Mouse_Close(hMouse);
                 hMouse = IntPtr.Zero;
             }
             catch (Exception exc)
             {
                 Global.logger.Error("OMEN Mouse, exception during shutdown: " + exc);
+            }
+            finally
+            {
+                Monitor.Exit(this);
             }
         }
 
