@@ -1,3 +1,4 @@
+using Aurora.Profiles.Generic.GSI.Nodes;
 using Aurora.Profiles.Terraria.GSI.Nodes;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,15 +9,11 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Terraria.GSI {
     public class GameState_Terraria : GameState<GameState_Terraria> {
-        private ProviderNode _Provider;
-        private WorldNode _World;
-        private PlayerNode _Player;
+        public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
-        public ProviderNode Provider => _Provider ?? (_Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? ""));
+        public WorldNode World => NodeFor<WorldNode>("world");
 
-        public WorldNode World => _World ?? (_World = new WorldNode(_ParsedData["world"]?.ToString() ?? ""));
-
-        public PlayerNode Player => _Player ?? (_Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? ""));
+        public PlayerNode Player => NodeFor<PlayerNode>("player");
 
         public GameState_Terraria() : base() { }
 
