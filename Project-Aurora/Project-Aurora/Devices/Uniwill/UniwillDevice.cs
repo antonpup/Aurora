@@ -28,7 +28,7 @@ namespace Aurora.Devices.Uniwill
     {
         
        // Generic Variables
-        private string devicename = "keyboard";
+        private string devicename = "Uniwill";
         private bool isInitialized = false;
 
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
@@ -63,8 +63,9 @@ namespace Aurora.Devices.Uniwill
             if (GamingCenterType == GAMECENTERTYPE.GAMINGTCENTER)
             {
                 regTimer = new System.Timers.Timer();
-                regTimer.Interval = 1000;
+                regTimer.Interval = 300;
                 regTimer.Elapsed += OnRegChanged;
+                regTimer.Stop();
                 regTimer.Start();
      
             }
@@ -76,13 +77,10 @@ namespace Aurora.Devices.Uniwill
         {
             try
             {
-                int Control = (int)Registry.GetValue(keyName, "AuroraSwitch", 0);
-                if(Control==1)
-                {
-                    GamingCenterType = GAMECENTERTYPE.GAMINGTCENTER;
-                    SwitchOn = Control;
-                }
-           
+                int Control = (int)Registry.GetValue(keyName, "AuroraSwitch",null);
+                GamingCenterType = GAMECENTERTYPE.GAMINGTCENTER;
+                SwitchOn = Control;
+         
             }
             catch (Exception ex)
             {

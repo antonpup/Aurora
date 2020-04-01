@@ -177,9 +177,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="RegistryUtils">
-      <HintPath>.\RegistryUtils.dll</HintPath>
-    </Reference>
     <Reference Include="RGB.NET.Brushes, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RGB.NET.Brushes.0.1.26\lib\net45\RGB.NET.Brushes.dll</HintPath>
     </Reference>

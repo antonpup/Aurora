@@ -167,7 +167,7 @@ namespace Aurora.Utils
              
             try
             {
-                string oemstring = keyboard.KeyboardFactory.GetOEMName();
+                string oemstring = UniwillSDKDLL.KeyboardFactory.GetOEMName();
                 if (oemstring.Equals("XMG"))
                 {
                     if (descriptionString.Contains("UNIWILL2P1"))
