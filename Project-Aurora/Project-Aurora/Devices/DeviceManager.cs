@@ -114,7 +114,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
             devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
             devices.Add(new DeviceContainer(new Devices.Vulcan.VulcanDevice()));
-            devices.Add(new DeviceContainer(new Devices.Uni.KeyboardDevice()));
+            devices.Add(new DeviceContainer(new Devices.Uniwill.UniwillDevice()));
             devices.Add(new DeviceContainer(new Devices.Ducky.DuckyDevice()));              //Ducky Device
             
  

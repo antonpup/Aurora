@@ -338,6 +338,10 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="UniwillSDKDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\UniwillSDKDLL.dll</HintPath>
+    </Reference>
     <Reference Include="Vulcan.NET, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Vulcan.NET.1.1.3\lib\netstandard2.0\Vulcan.NET.dll</HintPath>
     </Reference>
@@ -385,6 +389,7 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\DockFighter.cs" />
@@ -407,7 +412,6 @@
     <Compile Include="Devices\Ducky\DuckyDevice.cs" />
     <Compile Include="Devices\Ducky\DuckyRGBMappings.cs" />
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
-    <Compile Include="Devices\Uniwill\KeyboardDevice.cs" />
     <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml.cs">
       <DependentUpon>Control_CSGODeathLayer.xaml</DependentUpon>

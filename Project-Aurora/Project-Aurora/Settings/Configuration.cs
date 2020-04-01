@@ -8,7 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
-using keyboard;
+
 namespace Aurora.Settings
 {
     /// <summary>
