@@ -122,10 +122,6 @@
     <Reference Include="IronPython.Wpf, Version=2.7.8.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.8.1\lib\net45\IronPython.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="keyboard, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\keyboard.dll</HintPath>
-    </Reference>
     <Reference Include="LibreHardwareMonitorLib">
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
