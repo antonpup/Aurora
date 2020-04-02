@@ -39,12 +39,9 @@ namespace Aurora.Devices.Uniwill
         const string subkey = @"SOFTWARE\OEM\Aurora";
         const string keyName = Root + "\\" + subkey;
         int SwitchOn = 0;
-        List<AuroraInterface> DeviceList = new List<AuroraInterface>();
-     
+       
         private AuroraInterface keyboard = null;
      
-        System.Timers.Timer _CheckControlCenter = new System.Timers.Timer();
-
         GAMECENTERTYPE GamingCenterType = 0;
      
         float brightness = 1f;
