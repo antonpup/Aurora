@@ -3,7 +3,7 @@
     /// <summary>
     /// Information about the provider of this GameState
     /// </summary>
-    public class ProviderNode : Node<ProviderNode>
+    public class ProviderNode : AutoJsonNode<ProviderNode>
     {
         /// <summary>
         /// Game name
@@ -33,17 +33,9 @@
         /// <summary>
         /// Index ID of the local player
         /// </summary>
+        [AutoJsonPropertyName("local_peer_id")]
         public int LocalID;
 
-        internal ProviderNode(string JSON)
-            : base(JSON)
-        {
-            Name = GetString("name");
-            AppID = GetInt("appid");
-            Version = GetInt("version");
-            SteamID = GetString("steamid");
-            TimeStamp = GetFloat("timestamp");
-            LocalID = GetInt("local_peer_id");
-        }
+        internal ProviderNode(string JSON) : base(JSON) { }
     }
 }
