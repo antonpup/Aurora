@@ -23,13 +23,19 @@ namespace Aurora.Utils
         private static RAMUpdater _ram;
         public static RAMUpdater RAM => _ram ?? (_ram = new RAMUpdater(_hardware));
 
+        private static NETUpdater _net;
+        public static NETUpdater NET => _net ?? (_net = new NETUpdater(_hardware));
+
+#pragma warning disable CA1810 // Initialize reference type static fields inline
         static HardwareMonitor()
+#pragma warning restore CA1810 // Initialize reference type static fields inline
         {
             _computer = new Computer()
             {
                 IsCpuEnabled = true,
                 IsGpuEnabled = true,
-                IsMemoryEnabled = true
+                IsMemoryEnabled = true,
+                IsNetworkEnabled = true
             };
             try
             {
@@ -79,7 +85,7 @@ namespace Aurora.Utils
                 inUse = true;
                 _useTimer.Stop();
                 _useTimer.Start();
-                return sensor.Value ?? 0;
+                return sensor?.Value ?? 0;
             }
 
             public void SetUpdateTimer(int interval)
@@ -90,7 +96,7 @@ namespace Aurora.Utils
             }
         }
 
-        public class GPUUpdater : HardwareUpdater
+        public sealed class GPUUpdater : HardwareUpdater
         {
             #region Sensors
             private readonly ISensor _GPUCoreTemp;
@@ -151,7 +157,7 @@ namespace Aurora.Utils
             }
         }
 
-        public class CPUUpdater : HardwareUpdater
+        public sealed class CPUUpdater : HardwareUpdater
         {
             #region Sensors
             private readonly ISensor _CPUDieTemp;
@@ -176,7 +182,7 @@ namespace Aurora.Utils
             }
         }
 
-        public class RAMUpdater : HardwareUpdater
+        public sealed class RAMUpdater : HardwareUpdater
         {
             #region Sensors
             private readonly ISensor _RAMUsed;
@@ -193,6 +199,23 @@ namespace Aurora.Utils
                 {
                     _RAMUsed = hw.FindSensor("data/0");
                     _RAMFree = hw.FindSensor("data/1");
+                }
+            }
+        }
+
+        public sealed class NETUpdater : HardwareUpdater
+        {
+            #region Sensors
+            private readonly ISensor _BandwidthUsed;
+            public float BandwidthUsed => GetValue(_BandwidthUsed);
+            #endregion
+
+            public NETUpdater(IEnumerable<IHardware> hws)
+            {
+                hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Network);
+                if (hw != null)
+                {
+                    _BandwidthUsed = hw.FindSensor("load");
                 }
             }
         }
