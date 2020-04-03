@@ -170,48 +170,9 @@ namespace Aurora.Settings
             }
         }
 
-        private void OnLayerRendered(System.Drawing.Bitmap map)
-        {
-            try
-            {
-                Dispatcher.Invoke(
-                            () =>
-                            {
-                                using (MemoryStream memory = new MemoryStream())
-                                {
-                                    //Fix conflict with AtomOrb due to async
-                                    lock (map)
-                                    {
-                                        map.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                                    }
-                                    memory.Position = 0;
-                                    BitmapImage bitmapimage = new BitmapImage();
-                                    bitmapimage.BeginInit();
-                                    bitmapimage.StreamSource = memory;
-                                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                                    bitmapimage.EndInit();
-
-                                    this.debug_bitmap_preview.Width = 4 * bitmapimage.Width;
-                                    this.debug_bitmap_preview.Height = 4 * bitmapimage.Height;
-                                    this.debug_bitmap_preview.Source = bitmapimage;
-                                }
-                            });
-            }
-            catch (Exception ex)
-            {
-                Global.logger.Warn(ex.ToString());
-            }
-        }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Global.effengine.NewLayerRender += OnLayerRendered;
             this.ctrlPluginManager.Host = Global.PluginManager;
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Global.effengine.NewLayerRender -= OnLayerRendered;
         }
 
         private void app_exit_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)

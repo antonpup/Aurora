@@ -61,7 +61,7 @@
                             </ItemsPanelTemplate>
                         </ContextMenu.ItemsPanel>
                         <MenuItem x:Name="cmbtnOpenBitmap" Header="Open Bitmap Window" Click="cmbtnOpenBitmapWindow_Clicked" Foreground="White"/>
-                        <MenuItem x:Name="cmbtnOpenhttpDebug" Header="Open GSI/HTTP window" Click="cmbtnOpenHttpDebugWindow_Clicked" Foreground="White"/>
+                        <MenuItem x:Name="cmbtnOpenhttpDebug" Header="Open GSI/HTTP Window" Click="cmbtnOpenHttpDebugWindow_Clicked" Foreground="White"/>
                     </ContextMenu>
                 </Image.ContextMenu>
             </Image>
