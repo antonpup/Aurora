@@ -71,7 +71,7 @@ namespace Aurora.Utils
                 };
                 _useTimer.Start();
 
-                _updateTimer = new Timer(200);
+                _updateTimer = new Timer(Global.Configuration.HardwareMonitorUpdateRate);
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)

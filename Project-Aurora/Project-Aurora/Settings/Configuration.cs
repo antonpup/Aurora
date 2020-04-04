@@ -466,6 +466,9 @@ namespace Aurora.Settings
         public int idle_amount;
         public float idle_frequency;
 
+        //Hardware Monitor
+        public int HardwareMonitorUpdateRate;
+
         public VariableRegistry VarRegistry;
 
         //BitmapDebug Data
@@ -550,6 +553,8 @@ namespace Aurora.Settings
             idle_effect_secondary_color = Color.FromArgb(0, 0, 0);
             idle_amount = 5;
             idle_frequency = 2.5f;
+
+            HardwareMonitorUpdateRate = 200;
 
             //Debug
             bitmapDebugTopMost = false;
