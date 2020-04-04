@@ -156,7 +156,8 @@ namespace Aurora.Profiles
                 new Slime_Rancher.Slime_Rancher(),
                 new Terraria.Terraria(),
                 new Discord.Discord(),
-                new EliteDangerous.EliteDangerous()
+                new EliteDangerous.EliteDangerous(),
+                new StardewValley.StardewValley()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {

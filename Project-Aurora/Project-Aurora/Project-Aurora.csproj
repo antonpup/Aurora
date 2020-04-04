@@ -444,6 +444,16 @@
     <Compile Include="Profiles\Skype\SkypeProfile.cs" />
     <Compile Include="Profiles\Skype\SkypeApplication.cs" />
     <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
+    <Compile Include="Profiles\Stardew Valley\Control_StardewValley.xaml.cs">
+      <DependentUpon>Control_StardewValley.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Stardew Valley\GSI\GameState_StardewValley.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\JournalNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\StardewValleyApplication.cs" />
+    <Compile Include="Profiles\Stardew Valley\StardewValleyProfile.cs" />
     <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
     <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
@@ -1717,6 +1727,7 @@
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
     <Resource Include="Resources\terraria_512x512.png" />
+    <Resource Include="Resources\stardew_valley_32x32.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1833,6 +1844,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\Stardew Valley\Control_StardewValley.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
