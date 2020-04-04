@@ -617,11 +617,14 @@ namespace Aurora
                 {
                     if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                     {
-                        var eventList = Global.Configuration.ProfileOrder;
-                        string prevProfile = eventList[eventList.FindIndex(s => s.Equals(name)) - 1];
+                        var eventList = Global.Configuration.ProfileOrder
+                            .ToDictionary(x => x, x => Global.LightingStateManager.Events[x])
+                            .Where(x => ShowHidden || !(x.Value as Profiles.Application).Settings.Hidden)
+                            .ToList();
+                        var idx = Math.Max(eventList.FindIndex(x => x.Key == name), 0);
                         Global.LightingStateManager.RemoveGenericProfile(name);
                         //ConfigManager.Save(Global.Configuration);
-                        this.GenerateProfileStack(prevProfile);
+                        this.GenerateProfileStack(eventList[idx].Key);
                     }
                 }
             }
@@ -667,7 +670,7 @@ namespace Aurora
             }
         }
 
-        private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void DesktopControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.FocusedApplication = null;
             SelectedControl = settingsControl;
@@ -677,6 +680,9 @@ namespace Aurora
 
             UpdateProfileStackBackground(sender as FrameworkElement);
         }
+        private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
+        private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open();
+
 
         private void UpdateProfileStackBackground(FrameworkElement item)
         {

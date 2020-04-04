@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="Aurora.Profiles.LeagueOfLegends.Layers.LoLBackgroundLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:EnumLoL="clr-namespace:Aurora.Profiles.LeagueOfLegends.GSI.Nodes"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:local="clr-namespace:Aurora.Profiles.LeagueOfLegends.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="LoL_Champions" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="EnumLoL:Champion" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+    <Grid Height="Auto" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label
+            Grid.Column="0"
+            Grid.Row="0"
+            Content="Champion:"
+        />
+        <ComboBox 
+            x:Name="championPicker"
+            Grid.Column="1" 
+            Grid.Row="0"
+            Width="120" 
+            Height="20" 
+            Margin="2"
+            ItemsSource="{Binding Source={StaticResource LoL_Champions}}"
+            SelectionChanged="championPicker_SelectionChanged">
+        </ComboBox>
+        <Label
+            Grid.Column="0"
+            Grid.Row="1"
+            Content="Color:"
+        />
+        <xctk:ColorPicker 
+            x:Name="colorPicker"
+            Grid.Column="1" 
+            Grid.Row="1"
+            Width="120" 
+            Height="20" 
+            Margin="2"
+            ColorMode="ColorCanvas"
+            SelectedColorChanged="colorPicker_SelectedColorChanged">
+        </xctk:ColorPicker>
+    </Grid>
+</UserControl>

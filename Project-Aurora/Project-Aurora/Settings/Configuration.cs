@@ -8,6 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -193,8 +194,10 @@ namespace Aurora.Settings
         [Description("Corsair - K68")]
         Corsair_K68 = 205,
         [Description("Corsair - K70 MK2")]
-        Corsair_K70MK2 = 206
-            ,
+        Corsair_K70MK2 = 206,
+        [Description("Corsair - STRAFE MK2")]
+        Corsair_STRAFE_MK2 = 207,
+
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
         Razer_Blackwidow = 300,
@@ -244,6 +247,12 @@ namespace Aurora.Settings
 	//Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
+
+        //Ducky range is 1200-1299
+        [Description("Ducky Shine 7/One 2 RGB")]
+        Ducky_Shine_7 = 1200,
+        [Description("Ducky One 2 RGB TKL")]
+        Ducky_One_2_RGB_TKL = 1201,
     }
 
     public enum PreferredKeyboardLocalization
@@ -459,13 +468,25 @@ namespace Aurora.Settings
 
         public VariableRegistry VarRegistry;
 
-        //Debug Settings
+        //BitmapDebug Data
         private bool bitmapDebugTopMost;
         public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
 
+        private WINDOWPLACEMENT bitmapPlacement;
+        public WINDOWPLACEMENT BitmapPlacement { get { return bitmapPlacement; } set { bitmapPlacement = value; InvokePropertyChanged(); } }
+
+        private bool bitmapWindowOnStartUp;
+        public bool BitmapWindowOnStartUp { get { return bitmapWindowOnStartUp; } set { bitmapWindowOnStartUp = value; InvokePropertyChanged(); } }
+
+        //httpDebug Data
         private bool httpDebugTopMost;
         public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
 
+        private WINDOWPLACEMENT httpDebugPlacement;
+        public WINDOWPLACEMENT HttpDebugPlacement { get { return httpDebugPlacement; } set { httpDebugPlacement = value; InvokePropertyChanged(); } }
+
+        private bool httpWindowOnStartUp;
+        public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
