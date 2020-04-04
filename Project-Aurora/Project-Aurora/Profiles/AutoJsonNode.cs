@@ -41,7 +41,7 @@ namespace Aurora.Profiles {
             }
 
             // Compile and return the action
-            return Lambda<Action<TSelf>>(Block(body), selfParam).Compile();
+            return Lambda<Action<TSelf>>(body.Count == 0 ? (Expression)Empty() : Block(body), selfParam).Compile();
         });
         #endregion
 
