@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.StardewValley.GSI {
     public class GameState_StardewValley : GameState<GameState_StardewValley> {
-        public ProviderNode Provider => NodeFor<ProviderNode>("provider");
+        public ProviderNode Provider => NodeFor<ProviderNode>("Provider");
 
-        public WorldNode World => NodeFor<WorldNode>("world");
+        public WorldNode World => NodeFor<WorldNode>("World");
+        public PlayerNode Player => NodeFor<PlayerNode>("Player");
+        public InventoryNode Inv => NodeFor<InventoryNode>("Inv");
 
-        public PlayerNode Player => NodeFor<PlayerNode>("player");
-        public JournalNode Journal => NodeFor<JournalNode>("journal");
-        public GameStateNode GameState => NodeFor<GameStateNode>("game_state");
+        public JournalNode Journal => NodeFor<JournalNode>("Journal");
+        public GameStateNode GameState => NodeFor<GameStateNode>("GameState");
 
         public GameState_StardewValley() : base() { }
 
