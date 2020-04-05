@@ -555,24 +555,27 @@ namespace Aurora.Devices.CoolerMaster
                     {
                         foreach (CoolerMasterSDK.DEVICE_INDEX device in Enum.GetValues(typeof(CoolerMasterSDK.DEVICE_INDEX)))
                         {
-                            if (device != CoolerMasterSDK.DEVICE_INDEX.None)
+                            switch(device)
                             {
-                                try
-                                {
-                                    bool init = SwitchToDevice(device);
-                                    if (init)
-                                    {
-                                        InitializedDevices.Add(device);
-                                        isInitialized = true;
-                                        break;
-                                    }
-                                }
-                                catch (Exception exc)
-                                {
-                                    Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
-                                }
+                                case CoolerMasterSDK.DEVICE_INDEX.None:
+                                case CoolerMasterSDK.DEVICE_INDEX.DEV_DEFAULT:
+                                    continue;
                             }
 
+                            try
+                            {
+                                bool init = SwitchToDevice(device);
+                                if (init)
+                                {
+                                    InitializedDevices.Add(device);
+                                    isInitialized = true;
+                                    break;
+                                }
+                            }
+                            catch (Exception exc)
+                            {
+                                Global.logger.Error("Exception while loading Cooler Master device: " + device.GetDescription() + ". Exception:" + exc);
+                            }
                         }
 
                         List<CoolerMasterSDK.DEVICE_INDEX> devices = InitializedDevices.FindAll(x => CoolerMasterSDK.Keyboards.Contains(x));
@@ -619,6 +622,14 @@ namespace Aurora.Devices.CoolerMaster
                     CoolerMasterSDK.EnableLedControl(false);
                     isInitialized = false;
                 }
+
+                foreach (var device in InitializedDevices)
+                {
+                    CoolerMasterSDK.EnableLedControl(false, device);
+                }
+
+                CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.None);
+                InitializedDevices.Clear();
             }
         }
 
@@ -681,8 +692,6 @@ namespace Aurora.Devices.CoolerMaster
                 color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
                 key_color = new CoolerMasterSDK.KEY_COLOR(color.R, color.G, color.B);
             }
-
-
 
             color_matrix.KeyColor[key[0], key[1]] = key_color;
         }
