@@ -617,19 +617,16 @@ namespace Aurora.Devices.CoolerMaster
         {
             lock (action_lock)
             {
-                if (isInitialized)
-                {
-                    CoolerMasterSDK.EnableLedControl(false);
-                    isInitialized = false;
-                }
-
                 foreach (var device in InitializedDevices)
                 {
                     CoolerMasterSDK.EnableLedControl(false, device);
                 }
 
+                CoolerMasterSDK.EnableLedControl(false);
                 CoolerMasterSDK.SetControlDevice(CoolerMasterSDK.DEVICE_INDEX.None);
                 InitializedDevices.Clear();
+
+                isInitialized = false;
             }
         }
 
@@ -664,6 +661,8 @@ namespace Aurora.Devices.CoolerMaster
                 keyboard_updated = false;
                 peripheral_updated = false;
             }
+
+
         }
 
         public bool Reconnect()
