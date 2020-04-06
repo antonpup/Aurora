@@ -69,8 +69,8 @@ namespace Aurora.Settings.Layers
                 float x_pos = (float)Math.Round((Properties.Sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                 float y_pos = (float)Math.Round((Properties.Sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
 
-                float width = (float)Math.Round((double)(10500.0f - ((Properties.GradientConfig.gradient_size) * 100f)) * Effects.editor_to_canvas_width);
-                float height = (float)Math.Round((double)(10500.0f - ((Properties.GradientConfig.gradient_size) * 100f)) * Effects.editor_to_canvas_height);
+                float width = (float)Math.Round((double)(Properties.Sequence.freeform.Width * Effects.editor_to_canvas_width));
+                float height = (float)Math.Round((double)(Properties.Sequence.freeform.Height * Effects.editor_to_canvas_height));
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
