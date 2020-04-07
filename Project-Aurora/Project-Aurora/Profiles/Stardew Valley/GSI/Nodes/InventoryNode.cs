@@ -16,7 +16,7 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes {
     {
         public int Number;
         public string ItemName;
-        public SellectedSlotColorNode CategoryColor => NodeFor<SellectedSlotColorNode>("SellectedSlotColor");
+        public SellectedSlotColorNode CategoryColor => NodeFor<SellectedSlotColorNode>("CategoryColor");
 
         internal SellectedSlotNode(string JSON) : base(JSON) { }
     }

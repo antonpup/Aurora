@@ -9,9 +9,9 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes
 
     public class PlayerNode : AutoJsonNode<PlayerNode>
     {
-        public HealthNode Health => NodeFor<HealthNode>("health");
+        public HealthNode Health => NodeFor<HealthNode>("Health");
         public bool HealthBarActive;
-        public EnergyNode Energy => NodeFor<EnergyNode>("energy");
+        public EnergyNode Energy => NodeFor<EnergyNode>("Energy");
 
         internal PlayerNode(string json) : base(json){ }
         

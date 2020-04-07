@@ -16,16 +16,36 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes {
         Midnight
     }
 
+    public enum Seasons
+    {
+        Unknown = -1,
+        Spring,
+        Summer,
+        Fall,
+        Winter
+    }
+
     public class WorldNode : AutoJsonNode<WorldNode> {
-        public string CurrentSeason;
+        public Seasons Season;
         public string CurrentLocation;
-        public bool IsRaining;
-        public bool IsSnowing;
+
         public bool TimePaused;
         public int CurrentHour;
         public int CurrentMin;
         public TimeRange TimeRange;
+        public WeatherNode Weather => NodeFor<WeatherNode>("Weather");
+
 
         internal WorldNode(string json) : base(json) {}
+    }
+    public class WeatherNode : AutoJsonNode<WeatherNode>
+    {
+        public bool IsSnowing;
+        public bool IsRaining;
+        public bool IsDebrisWeather;
+        public bool WeddingToday;
+        public bool IsLightning;
+
+        internal WeatherNode(string JSON) : base(JSON) { }
     }
 }
