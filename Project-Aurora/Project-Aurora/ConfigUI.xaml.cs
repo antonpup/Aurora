@@ -670,7 +670,7 @@ namespace Aurora
             }
         }
 
-        private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void DesktopControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.FocusedApplication = null;
             SelectedControl = settingsControl;
@@ -680,6 +680,9 @@ namespace Aurora
 
             UpdateProfileStackBackground(sender as FrameworkElement);
         }
+        private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
+        private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open();
+
 
         private void UpdateProfileStackBackground(FrameworkElement item)
         {
