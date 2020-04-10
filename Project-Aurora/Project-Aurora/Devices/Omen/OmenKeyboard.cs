@@ -25,7 +25,7 @@ namespace Aurora.Devices.Omen
             switch (Global.Configuration.keyboard_brand)
             {
                 case PreferredKeyboard.OMEN_Sequencer:
-                    kboardPointer = OmenLighting_Keyboard_OpenByName("Sequencer");
+                    kboardPointer = OmenLighting_Keyboard_OpenByName("Woodstock");
                     break;
             }
 
@@ -55,17 +55,17 @@ namespace Aurora.Devices.Omen
         {
             if(hKB != IntPtr.Zero && keyColors.Count > 0)
             {
-                List<StaticKeyEffect> list = new List<StaticKeyEffect>();
-                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
-                {
-                    list.Add(new StaticKeyEffect(key));
-                }
-
                 Task.Run(() => {
                     if (Monitor.TryEnter(this))
                     {
                         try
                         {
+                            List<StaticKeyEffect> list = new List<StaticKeyEffect>();
+                            foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                            {
+                                list.Add(new StaticKeyEffect(key));
+                            }
+
                             int res = OmenLighting_Keyboard_SetStatic(hKB, list.ToArray(), list.Count, IntPtr.Zero);
                             if (res != 0)
                             {
