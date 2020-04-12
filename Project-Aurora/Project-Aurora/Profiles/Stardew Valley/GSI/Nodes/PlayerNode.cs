@@ -11,6 +11,7 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes
     {
         public HealthNode Health => NodeFor<HealthNode>("Health");
         public bool HealthBarActive;
+        public string CurrentLocation;
         public EnergyNode Energy => NodeFor<EnergyNode>("Energy");
 
         internal PlayerNode(string json) : base(json){ }

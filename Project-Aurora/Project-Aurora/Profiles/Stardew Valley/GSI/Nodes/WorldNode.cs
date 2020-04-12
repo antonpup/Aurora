@@ -27,7 +27,6 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes {
 
     public class WorldNode : AutoJsonNode<WorldNode> {
         public Seasons Season;
-        public string CurrentLocation;
 
         public bool TimePaused;
         public int CurrentHour;
