@@ -35,7 +35,7 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
     /// <summary>
     /// Class representing match information
     /// </summary>
-    public class Match_RocketLeague : Node<Match_RocketLeague>
+    public class Match_RocketLeague : AutoJsonNode<Match_RocketLeague>
     {
         /// <summary>
         /// The current mode being played
@@ -45,25 +45,19 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
         /// <summary>
         /// The Blue team playing in the match
         /// </summary>
-        public Team_RocketLeague Blue;
+        public Team_RocketLeague Blue => NodeFor<Team_RocketLeague>("team_0");
 
         /// <summary>
         /// The Blue team playing in the match
         /// </summary>
-        public Team_RocketLeague Orange;
+        public Team_RocketLeague Orange => NodeFor<Team_RocketLeague>("team_1");
 
         /// <summary>
         /// Remaining seconds in the match
         /// </summary>
-        public int RemainingSeconds = 0;
+        [AutoJsonPropertyName("time")] public int RemainingSeconds;
 
-        internal Match_RocketLeague(string json_data) : base(json_data)
-        {
-            Blue = new Team_RocketLeague(_ParsedData["team_0"]?.ToString() ?? "");
-            Orange = new Team_RocketLeague(_ParsedData["team_1"]?.ToString() ?? "");
-            Playlist = (RLPlaylist)GetInt("playlist");
-            RemainingSeconds = GetInt("time");
-        }
+        internal Match_RocketLeague(string json_data) : base(json_data) { }
 
         public int TotalGoals { 
             get

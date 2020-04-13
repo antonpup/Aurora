@@ -5,17 +5,14 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about the game
     /// </summary>
-    public class GameNode : Node<GameNode>
+    public class GameNode : AutoJsonNode<GameNode>
     {
         /// <summary>
         /// The game state
         /// </summary>
         public GameStates State;
 
-        internal GameNode(string JSON) : base(JSON)
-        {
-            State = GetEnum<GameStates>("state");
-        }
+        internal GameNode(string JSON) : base(JSON) { }
     }
 
     /// <summary>

@@ -1,0 +1,8 @@
+{
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "included_features": [
+    "corsair_strafe_mk2_left_features.json",
+    "corsair_strafe_mk2_right_features.json"
+  ]
+}
