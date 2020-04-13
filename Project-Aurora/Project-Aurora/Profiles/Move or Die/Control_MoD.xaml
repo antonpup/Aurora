@@ -26,12 +26,17 @@
                 <Grid>
                     <StackPanel>
                         <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Move or Die" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                        <TextBlock Margin="10,10,64,0" Text="In order for Move or Die support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Move or Die&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch Move or Die Manually&quot; button and navigate to the Move or Die install directory. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it." VerticalAlignment="Top" TextWrapping="Wrap"/>
-                        <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Move or Die support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Move or Die&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch Move or Die Manually&quot; button and navigate to the "/><Run Text="["/><Run Text="Move or Die install directory"/><Run Text="]"/><Run Text="\Love\win. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it."/></TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                             <Button x:Name="patch_button" Content="Patch Move or Die" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_button_Click"/>
                             <Button x:Name="patch_button_manually" Content="Patch Move or Die Manually" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_manually_Click"/>
                         </StackPanel>
                         <Button x:Name="unpatch_button" Content="Unpatch Move or Die" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                        <TextBlock Margin="10,10,0,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="Optional: "/><Run Text="Move or Die's own Corsair implementation is overriding Aurora's"/><Run Text="."/><Run Text=" "/><Run Text="T"/><Run Text="his patch d"/><Run Text="isable"/><Run Text="s"/><Run Text=" "/><Run Text="RGB "/><Run Text="support for "/><Run Text="Corsair."/></TextBlock>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                        <Button x:Name="patch_cue_dll" Content="Disable Corsair MoD RGB support" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_cue_dll_button_Click" Margin="10,0,0,0"/>
+                        <Button x:Name="unpatch_cue_dll" Content="Re-enable Corsair MoD RGB support" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="unpatch_cue_dll_button_Click" Margin="10,0,0,0"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </TabItem>

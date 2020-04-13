@@ -107,7 +107,7 @@ namespace Aurora.Settings.Layers
             _DimBackground = true;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
             _PresentationType = ShortcutAssistantPresentationType.Default;
-            _MergeModifierKey = true;
+            _MergeModifierKey = false;
         }
     }
 
@@ -129,8 +129,6 @@ namespace Aurora.Settings.Layers
 
             Keys[] heldKeys = Global.InputEvents.PressedKeys;
 
-            
-
             Tree<Keys> _childKeys = Properties.ShortcutKeysTree;
             foreach (var key in heldKeys)
             {
@@ -149,11 +147,19 @@ namespace Aurora.Settings.Layers
 
                 if(shortcutKeys.Length > 0)
                 {
-                    if (Properties.DimBackground)
-                        sc_assistant_layer.Fill(Properties.DimColor);
 
-                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(shortcutKeys, true, !Console.NumberLock), Properties.PrimaryColor);
-                    sc_assistant_layer.Set(Utils.KeyUtils.GetDeviceKeys(heldKeys, true), Properties.PrimaryColor);
+                    Devices.DeviceKeys[] selectedKeys = Utils.KeyUtils.GetDeviceKeys(shortcutKeys, true, !Console.NumberLock)
+                        .Concat(Utils.KeyUtils.GetDeviceKeys(heldKeys, true)).ToArray();
+
+                    if (Properties.DimBackground)
+                    {
+                        Devices.DeviceKeys[] backgroundKeys = Utils.KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
+                        sc_assistant_layer.Set(backgroundKeys, Properties.DimColor);
+                        //sc_assistant_layer.Fill(Properties.DimColor);
+                    }
+
+                    sc_assistant_layer.Set(selectedKeys, Properties.PrimaryColor);
+                   
                 }
             }
 

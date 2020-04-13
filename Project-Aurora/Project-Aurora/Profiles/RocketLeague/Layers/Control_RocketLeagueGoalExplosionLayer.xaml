@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="Aurora.Profiles.RocketLeague.Layers.Control_RocketLeagueGoalExplosionLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.RocketLeague.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:Utils="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d">
+    <UserControl.Resources >
+        <ResourceDictionary>
+            <Utils:ColorConverter x:Key="ColorConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <CheckBox x:Name="Checkbox_ShowFriendlyGoalExplosion" Content="Show friendly goal explosions" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding Properties._ShowFriendlyGoalExplosion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox x:Name="Checkbox_ShowEnemyExplosion" Content="Show enemy goal explosions" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" IsChecked="{Binding Properties._ShowEnemyGoalExplosion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <CheckBox x:Name="Checkbox_BackgroundEnabled" Content="Enable background" HorizontalAlignment="Left" Margin="0,42,0,0" IsChecked="{Binding Properties._Background, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <xctk:ColorPicker x:Name="BackgroundColorPicker" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,40,0,0" Width="100" ColorMode="ColorCanvas" SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource ColorConverter},  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+    </Grid>
+</UserControl>
