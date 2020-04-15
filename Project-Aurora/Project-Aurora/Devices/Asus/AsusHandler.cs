@@ -65,6 +65,8 @@ namespace Aurora.Devices.Asus
                         switch (deviceType)
                         {
                             case AsusDeviceType.Keyboard:
+                            case AsusDeviceType.NotebookKeyboard:
+                            case AsusDeviceType.NotebookKeyboard4ZoneType:
                                 devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
                                 break;
                             // ignore whatever this is
