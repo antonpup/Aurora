@@ -82,6 +82,11 @@ namespace Aurora.Settings.Layers {
                     case TimerLayerAnimationType.Fade:
                         layer.Set(Properties.Sequence, ColorUtils.BlendColors(Properties.SecondaryColor, Properties.PrimaryColor, timer.InterpolationValue));
                         break;
+
+                    case TimerLayerAnimationType.Progress:
+                    case TimerLayerAnimationType.ProgressGradual:
+                        layer.PercentEffect(Properties.SecondaryColor, Properties.PrimaryColor, Properties.Sequence, timer.InterpolationValue, 1, Properties.AnimationType == TimerLayerAnimationType.Progress ? PercentEffectType.Progressive : PercentEffectType.Progressive_Gradual);
+                        break;
                 }
             } else
                 layer.Set(Properties.Sequence, Properties.PrimaryColor);
@@ -105,6 +110,14 @@ namespace Aurora.Settings.Layers {
                         case TimerLayerRepeatPressAction.Extend:
                             timer.Extend(Properties.Duration);
                             isActive = true;
+                            break;
+
+                        case TimerLayerRepeatPressAction.Cancel:
+                            if (isActive)
+                                timer.Stop();
+                            else
+                                timer.Reset(Properties.Duration);
+                            isActive = !isActive;
                             break;
                         
                         case TimerLayerRepeatPressAction.Ignore:
@@ -153,6 +166,10 @@ namespace Aurora.Settings.Layers {
             max = t;
         }
 
+        public void Stop() {
+            timer.Stop();
+        }
+
         public void Extend(double t) {
             // If the timer's not running, behave like Reset
             if (!timer.Enabled)
@@ -185,16 +202,16 @@ namespace Aurora.Settings.Layers {
     }
     
     public enum TimerLayerAnimationType {
-        OnOff,
-        Fade
+        [Description("On/Off")] OnOff,
+        Fade,
+        Progress,
+        [Description("Progress (Gradual)")] ProgressGradual
     }
 
     public enum TimerLayerRepeatPressAction {
-        [Description("Reset (restarts the timer)")]
-        Reset,
-        [Description("Extend (adds duration to the timer)")]
-        Extend,
-        [Description("Ignore (ignores presses while timer is active)")]
-        Ignore
+        [Description("Restart")] Reset,
+        [Description("Extend")] Extend,
+        [Description("Cancel")] Cancel,
+        [Description("Ignore")] Ignore
     }
 }

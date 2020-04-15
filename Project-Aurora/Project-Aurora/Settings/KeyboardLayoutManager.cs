@@ -696,8 +696,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-			else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
@@ -710,6 +710,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE_MK2)
+                layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe_mk2.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
             else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
@@ -728,6 +730,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
+                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -750,6 +754,10 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+            else if (keyboard_preference == PreferredKeyboard.Ducky_Shine_7)
+                layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
+            else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
+                layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
             else
             {
                 LoadNone();

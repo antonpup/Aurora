@@ -82,7 +82,8 @@ namespace Aurora.Controls
             else
             {
                 Global.Configuration.devices_disabled.Add(Device.Device.GetType());
-                Device.Device.Shutdown();
+                if(Device.Device.IsInitialized())
+                    Device.Device.Shutdown();
             }
 
             UpdateControls();

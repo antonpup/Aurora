@@ -30,17 +30,21 @@
     <Grid>
         <Controls:KeySequence x:Name="KeySequence_keys" Margin="265,0,0,24" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>
         <ncore:ColorBox x:Name="gradient_editor" HorizontalAlignment="Left" Height="80" Margin="0,21,0,0" VerticalAlignment="Top" Width="260" BrushChanged="Gradient_editor_BrushChanged"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,133,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
-        <Slider x:Name="effect_speed_slider" HorizontalAlignment="Left" Margin="80,133,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="10" ValueChanged="effect_speed_slider_ValueChanged"/>
-        <TextBlock x:Name="effect_speed_label" HorizontalAlignment="Left" Margin="225,133,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,132,0,0" TextWrapping="Wrap" Text="Wave Size: " VerticalAlignment="Top"/>
+        <Slider x:Name="wave_size_slider" HorizontalAlignment="Left" Margin="80,132,0,0" VerticalAlignment="Top" Width="140" Minimum="0" SmallChange="1" SelectionStart="100" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="100" ValueChanged="wave_size_slider_ValueChanged"/>
+        <TextBlock x:Name="wave_size_label" HorizontalAlignment="Left" Margin="225,132,0,0" TextWrapping="Wrap" Text="100 %" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,156,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
+        <Slider x:Name="effect_speed_slider" HorizontalAlignment="Left" Margin="80,156,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="10" ValueChanged="effect_speed_slider_ValueChanged"/>
+        <TextBlock x:Name="effect_speed_label" HorizontalAlignment="Left" Margin="225,156,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Gradient: " VerticalAlignment="Top"/>
         <Button x:Name="Button_SetGradientRainbow" Content="Set to Rainbow" HorizontalAlignment="Left" Margin="0,106,0,0" VerticalAlignment="Top" Click="Button_SetGradientRainbow_Click"/>
         <Button x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Margin="91,106,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="145" Click="Button_SetGradientRainbowLoop_Click"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,160,0,0" TextWrapping="Wrap" Text="Effect Angle: " VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="139,160,0,0" TextWrapping="Wrap" Text="degrees" VerticalAlignment="Top"/>
-        <xctk:IntegerUpDown x:Name="effect_angle" HorizontalAlignment="Left" Height="20" Margin="74,160,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="-360" Maximum="360" Increment="1" ValueChanged="effect_angle_ValueChanged"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,188,0,0" TextWrapping="Wrap" Text="Animation Type: " VerticalAlignment="Top"/>
-        <ComboBox x:Name="effect_animation_type" HorizontalAlignment="Left" Margin="94,185,0,0" VerticalAlignment="Top" Width="155" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource AnimationType}}" ItemTemplate="{Binding Source={StaticResource AnimationTypeTemplate}}" SelectionChanged="effect_animation_type_SelectionChanged"/>
-        <CheckBox x:Name="effect_animation_reversed" Content="Reverse animation direction" HorizontalAlignment="Left" Margin="0,212,0,0" VerticalAlignment="Top" Checked="effect_animation_reversed_Checked" Unchecked="effect_animation_reversed_Checked"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,183,0,0" TextWrapping="Wrap" Text="Effect Angle: " VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="139,183,0,0" TextWrapping="Wrap" Text="degrees" VerticalAlignment="Top"/>
+        <xctk:IntegerUpDown x:Name="effect_angle" HorizontalAlignment="Left" Height="20" Margin="74,183,0,0" VerticalAlignment="Top" Width="60" Value="0" Minimum="-360" Maximum="360" Increment="1" ValueChanged="effect_angle_ValueChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,211,0,0" TextWrapping="Wrap" Text="Animation Type: " VerticalAlignment="Top"/>
+        <ComboBox x:Name="effect_animation_type" HorizontalAlignment="Left" Margin="94,208,0,-3" VerticalAlignment="Top" Width="155" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource AnimationType}}" ItemTemplate="{Binding Source={StaticResource AnimationTypeTemplate}}" SelectionChanged="effect_animation_type_SelectionChanged"/>
+        <CheckBox x:Name="effect_animation_reversed" Content="Reverse animation direction" HorizontalAlignment="Left" Margin="0,235,0,-23" VerticalAlignment="Top" Checked="effect_animation_reversed_Checked" Unchecked="effect_animation_reversed_Checked"/>
+
     </Grid>
 </UserControl>
