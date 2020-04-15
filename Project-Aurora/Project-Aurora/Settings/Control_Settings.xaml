@@ -12,7 +12,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" x:Name="ctrlSettings">
+             d:DesignHeight="400" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" x:Name="ctrlSettings">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -362,14 +362,69 @@
             </TabItem>
             <TabItem Header="Debug">
                 <Grid>
-                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Current Keyboard bitmap:" VerticalAlignment="Top"/>
-                    <Image x:Name="debug_bitmap_preview" HorizontalAlignment="Left" Margin="152,10,0,0" VerticalAlignment="Top" MaxWidth="400" MaxHeight="400"/>
-                    <Button x:Name="btnShowBitmapWindow" Content="Show Bitmap Window" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="btnShowBitmapWindow_Click"/>
-                    <CheckBox x:Name="chkBitmapTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button x:Name="btnShowLogsFolder" Content="Show Logs Folder" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Click="btnShowLogsFolder_Click"/>
-                    <Button x:Name="btnShowGSILog" Content="Show GSI HTTP requests" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Click="btnShowGSILog_Click" />
-                    <CheckBox x:Name="chkHttpDebugTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top" IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Record" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" IsEnabled="False" Visibility="Collapsed"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                        <Button 
+                            x:Name="btnShowBitmapWindow" 
+                            Content="Show Bitmap Window" 
+                            Click="btnShowBitmapWindow_Click"
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                        <CheckBox 
+                            x:Name="chkBitmapTopMost" 
+                            Content="Always on top" 
+                            IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                        <CheckBox 
+                            x:Name="chkBitmapStartUp" 
+                            Content="Open at startup"  
+                            IsChecked="{Binding BitmapWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Button 
+                            x:Name="btnShowGSILog" 
+                            Content="Show GSI HTTP requests"
+                            Click="btnShowGSILog_Click" 
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                        <CheckBox 
+                            x:Name="chkHttpDebugTopMost" 
+                            Content="Always on top" 
+                            IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                        <CheckBox 
+                            x:Name="chkHttpStartUp" 
+                            Content="Open at startup" 
+                            IsChecked="{Binding HttpWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        Margin="0,10,0,0"
+
+                        />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Button 
+                            x:Name="btnShowLogsFolder" 
+                            Content="Show Logs Folder" 
+                            Click="btnShowLogsFolder_Click"
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>

@@ -8,6 +8,7 @@ using System.Text;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -176,7 +177,7 @@ namespace Aurora.Settings
         Logitech_G810 = 102,
         [Description("Logitech - GPRO")]
         Logitech_GPRO = 103,
-		[Description("Logitech - G213")]
+        [Description("Logitech - G213")]
         Logitech_G213 = 104,
 
         //Corsair range is 200-299
@@ -218,6 +219,8 @@ namespace Aurora.Settings
         Masterkeys_Pro_M = 502,
         [Description("Cooler Master - Masterkeys MK750")]
         Masterkeys_MK750 = 503,
+        [Description("Cooler Master - Masterkeys MK730")]
+        Masterkeys_MK730 = 504,
 
         //Roccat range is 600-699
         [Description("Roccat Ryos")]
@@ -243,7 +246,7 @@ namespace Aurora.Settings
         [Description("Drevo BladeMaster")]
         Drevo_BladeMaster = 1000,
 
-	//Creative range is 1100-1199
+        //Creative range is 1100-1199
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
@@ -467,13 +470,25 @@ namespace Aurora.Settings
 
         public VariableRegistry VarRegistry;
 
-        //Debug Settings
+        //BitmapDebug Data
         private bool bitmapDebugTopMost;
         public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
 
+        private WINDOWPLACEMENT bitmapPlacement;
+        public WINDOWPLACEMENT BitmapPlacement { get { return bitmapPlacement; } set { bitmapPlacement = value; InvokePropertyChanged(); } }
+
+        private bool bitmapWindowOnStartUp;
+        public bool BitmapWindowOnStartUp { get { return bitmapWindowOnStartUp; } set { bitmapWindowOnStartUp = value; InvokePropertyChanged(); } }
+
+        //httpDebug Data
         private bool httpDebugTopMost;
         public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
 
+        private WINDOWPLACEMENT httpDebugPlacement;
+        public WINDOWPLACEMENT HttpDebugPlacement { get { return httpDebugPlacement; } set { httpDebugPlacement = value; InvokePropertyChanged(); } }
+
+        private bool httpWindowOnStartUp;
+        public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
@@ -547,7 +562,7 @@ namespace Aurora.Settings
             VarRegistry = new VariableRegistry();
         }
 
-        
+
     }
 
     public static class ExtensionHelpers
