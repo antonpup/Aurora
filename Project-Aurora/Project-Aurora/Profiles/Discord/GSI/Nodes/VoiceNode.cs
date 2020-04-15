@@ -12,15 +12,11 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         VoiceChannel = 2,
     }
 
-    public class VoiceNode : Node<VoiceNode> {
+    public class VoiceNode : AutoJsonNode<VoiceNode> {
         public long Id = 0;
         public string Name;
         public DiscordVoiceType Type;
 
-        internal VoiceNode(string json) : base(json) {
-            Id = GetLong("id");
-            Name = GetString("name");
-            Type = (DiscordVoiceType)GetInt("type");
-        }
+        internal VoiceNode(string json) : base(json) { }
     }
 }

@@ -14,21 +14,16 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         Invisible
     }
 
-    public class UserNode : Node<UserNode> {
+    public class UserNode : AutoJsonNode<UserNode> {
         public long Id = 0;
-        public DiscordStatus Status;
-        public bool SelfMute;
-        public bool SelfDeafen;
+        [AutoJsonIgnore] public DiscordStatus Status;
+        [AutoJsonPropertyName("self_mute")] public bool SelfMute;
+        [AutoJsonPropertyName("self_deafen")] public bool SelfDeafen;
         public bool Mentions;
-        public bool UnreadMessages;
+        [AutoJsonPropertyName("unread_messages")] public bool UnreadMessages;
 
         internal UserNode(string json) : base(json) {
-            Id = GetLong("id");
             Status = GetStatus(GetString("status"));
-            SelfMute = GetBool("self_mute");
-            SelfDeafen = GetBool("self_deafen");
-            Mentions = GetBool("mentions");
-            UnreadMessages = GetBool("unread_messages");
         }
 
         private static DiscordStatus GetStatus(string status)

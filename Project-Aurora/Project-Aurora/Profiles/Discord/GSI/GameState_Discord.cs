@@ -11,24 +11,15 @@ namespace Aurora.Profiles.Discord.GSI
 {
     public class GameState_Discord : GameState<GameState_Discord>
     {
-        private ProviderNode _Provider;
-        private UserNode _User;
-        private GuildNode _Guild;
-        private TextNode _Text;
-        private VoiceNode _Voice;
+        public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
-        /// <summary>
-        /// Provider node provides information about the data source so that Aurora can update the correct gamestate.
-        /// </summary>
-        public ProviderNode Provider => _Provider ?? (_Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? ""));
+        public UserNode User => NodeFor<UserNode>("user");
 
-        public UserNode User => _User ?? (_User = new UserNode(_ParsedData["user"]?.ToString() ?? ""));
+        public GuildNode Guild => NodeFor<GuildNode>("guild");
 
-        public GuildNode Guild => _Guild ?? (_Guild = new GuildNode(_ParsedData["guild"]?.ToString() ?? ""));
+        public TextNode Text => NodeFor<TextNode>("text");
 
-        public TextNode Text => _Text ?? (_Text = new TextNode(_ParsedData["text"]?.ToString() ?? ""));
-
-        public VoiceNode Voice => _Voice ?? (_Voice = new VoiceNode(_ParsedData["voice"]?.ToString() ?? ""));
+        public VoiceNode Voice => NodeFor<VoiceNode>("voice");
 
         /// <summary>
         /// Creates a default GameState_Discord instance.

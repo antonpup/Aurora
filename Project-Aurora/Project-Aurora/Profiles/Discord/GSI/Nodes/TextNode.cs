@@ -13,15 +13,11 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         GroupChat = 3
     }
 
-    public class TextNode : Node<TextNode> {
+    public class TextNode : AutoJsonNode<TextNode> {
         public long Id = 0;
         public string Name;
         public DiscordTextType Type;
 
-        internal TextNode(string json) : base(json) {
-            Id = GetLong("id");
-            Name = GetString("name");
-            Type = (DiscordTextType)GetInt("type");
-        }
+        internal TextNode(string json) : base(json) { }
     }
 }
