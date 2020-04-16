@@ -149,6 +149,15 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool ExperimentalMode => Logic._ExperimentalMode ?? _ExperimentalMode ?? false;
 
+        public bool? _HueShiftImage { get; set; }
+
+        [JsonIgnore]
+        public bool HueShiftImage { get { return Logic._HueShiftImage ?? _HueShiftImage ?? false; } }
+
+        public float? _HueShiftAngle { get; set; }
+        [JsonIgnore]
+        public float HueShiftAngle => Logic._HueShiftAngle ?? _HueShiftAngle ?? 0.0f;
+
         public AmbilightLayerHandlerProperties() : base() { }
 
         public AmbilightLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
@@ -169,6 +178,8 @@ namespace Aurora.Settings.Layers
             this._SaturationChange = 1.0f;
             this._FlipVertically = false;
             this._ExperimentalMode = false;
+            this._HueShiftImage = false;
+            this._HueShiftAngle = 0.0f;
             this._Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
@@ -311,12 +322,18 @@ namespace Aurora.Settings.Layers
                         },
                         g =>
                         {
-                            var matrix = BitmapUtils.ColorMatrixMultiply(
-                                BitmapUtils.GetBrightnessMatrix(Properties.BrightenImage ? Properties.BrightnessChange : 0),
-                                BitmapUtils.GetSaturationMatrix(Properties.SaturateImage ? Properties.SaturationChange : 1)
-                            );
+                            var mtx = BitmapUtils.GetEmptyColorMatrix();
+                            if (Properties.BrightenImage)
+                                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetBrightnessColorMatrix(Properties.BrightnessChange));
+
+                            if (Properties.SaturateImage)
+                                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetSaturationColorMatrix(Properties.SaturationChange));
+
+                            if (Properties.HueShiftImage)
+                                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetHueShiftColorMatrix(Properties.HueShiftAngle));
+
                             var att = new ImageAttributes();
-                            att.SetColorMatrix(new ColorMatrix(matrix));
+                            att.SetColorMatrix(new ColorMatrix(mtx));
 
                             g.DrawImage(
                                 screen,

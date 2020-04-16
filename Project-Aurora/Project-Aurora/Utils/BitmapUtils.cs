@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -96,8 +97,8 @@ namespace Aurora.Utils
         /// <param name="bmp"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static void AdjustBrightness(this Image bmp, float b) => 
-            ApplyColorMatrix(bmp, new ColorMatrix(GetBrightnessMatrix(b)));
+        public static void AdjustBrightness(this Image bmp, float b) =>
+            ApplyColorMatrix(bmp, new ColorMatrix(GetBrightnessColorMatrix(b)));
 
         /// <summary>
         /// Adjusts the saturation of an image using a color matrix. Uses a value between 0 (grayscale) and ~2
@@ -105,8 +106,8 @@ namespace Aurora.Utils
         /// <param name="bmp"></param>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static void AdjustSaturation(this Image bmp, float s) => 
-            ApplyColorMatrix(bmp, new ColorMatrix(GetSaturationMatrix(s)));
+        public static void AdjustSaturation(this Image bmp, float s) =>
+            ApplyColorMatrix(bmp, new ColorMatrix(GetSaturationColorMatrix(s)));
 
         public static Color GetAverageColor(Image screenshot)
         {
@@ -123,7 +124,7 @@ namespace Aurora.Utils
         }
 
         //https://docs.rainmeter.net/tips/colormatrix-guide/
-        public static float[][] GetBrightnessMatrix(float b) => new float[][] {
+        public static float[][] GetBrightnessColorMatrix(float b) => new float[][] {
                 new float[] {1, 0, 0, 0, 0},//red
                 new float[] {0, 1, 0, 0, 0},//green
                 new float[] {0, 0, 1, 0, 0},//blue
@@ -131,7 +132,7 @@ namespace Aurora.Utils
                 new float[] {b, b, b, 0, 1}
         };
 
-        public static float[][] GetSaturationMatrix(float s)
+        public static float[][] GetSaturationColorMatrix(float s)
         {
             const float lumR = 0.3086f;
             const float lumG = 0.6094f;
@@ -150,20 +151,61 @@ namespace Aurora.Utils
             return colorMatrix;
         }
 
+        public static float[][] GetHueShiftColorMatrix(float d)
+        {
+            //adapted from
+            //https://stackoverflow.com/questions/25856660/rotate-hue-in-c-sharp
+            float theta = d / 360 * 2 * (float)Math.PI;
+            float c = (float)Math.Cos(theta);
+            float s = (float)Math.Sin(theta);
+
+            float A00 = 0.213f + 0.787f * c - 0.213f * s;
+            float A01 = 0.213f - 0.213f * c + 0.413f * s;
+            float A02 = 0.213f - 0.213f * c - 0.787f * s;
+
+            float A10 = 0.715f - 0.715f * c - 0.715f * s;
+            float A11 = 0.715f + 0.285f * c + 0.140f * s;
+            float A12 = 0.715f - 0.715f * c + 0.715f * s;
+
+            float A20 = 0.072f - 0.072f * c + 0.928f * s;
+            float A21 = 0.072f - 0.072f * c - 0.283f * s;
+            float A22 = 0.072f + 0.928f * c + 0.072f * s;
+
+            return new float[][] {
+                new float[] { A00, A01, A02, 0, 0},
+                new float[] { A10, A11, A12, 0, 0},
+                new float[] { A20, A21, A22, 0, 0},
+                new float[] { 0,     0,   0, 1, 0},
+                new float[] { 0,     0,   0, 0, 1}
+            };
+        }
+
+        public static float[][] GetEmptyColorMatrix() => new float[][] {
+                new float[] {1, 0, 0, 0, 0},//red
+                new float[] {0, 1, 0, 0, 0},//green
+                new float[] {0, 0, 1, 0, 0},//blue
+                new float[] {0, 0, 0, 1, 0},//alpha
+                new float[] {0, 0, 0, 0, 1}
+        };
+
         public static float[][] ColorMatrixMultiply(float[][] f1, float[][] f2)
         {
-            float[][] X = new float[5][];
-            for (int d = 0; d < 5; d++)
-                X[d] = new float[5];
-            int size = 5;
-            float[] column = new float[5];
-            for (int j = 0; j < 5; j++)
+            const int size = 5;
+            if (f1.Length != size || f2.Length != size)
+                throw new ArgumentException();
+
+            float[][] result = new float[size][];
+            for (int d = 0; d < size; d++)
+                result[d] = new float[size];
+
+            float[] column = new float[size];
+            for (int j = 0; j < size; j++)
             {
-                for (int k = 0; k < 5; k++)
+                for (int k = 0; k < size; k++)
                 {
                     column[k] = f1[k][j];
                 }
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < size; i++)
                 {
                     float[] row = f2[i];
                     float s = 0;
@@ -171,10 +213,12 @@ namespace Aurora.Utils
                     {
                         s += row[k] * column[k];
                     }
-                    X[i][j] = s;
+                    result[i][j] = s;
                 }
             }
-            return X;
+            return result;
         }
+
+
     }
 }

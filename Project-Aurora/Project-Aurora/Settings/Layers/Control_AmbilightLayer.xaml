@@ -135,17 +135,32 @@
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="10,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="82"/>
-                <RowDefinition Height="170"/>
+                <RowDefinition Height="111"/>
+                <RowDefinition Height="169"/>
             </Grid.RowDefinitions>
-            <GroupBox Header="Color Adjustment" VerticalAlignment="Top" Margin="0,0,0,0" Grid.Row="0">
+            <GroupBox Header="Color Adjustment" Margin="2,2,2,2" Grid.Row="0">
                 <Grid Margin="0,0,0,0">
-                    <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,0,0" Height="17" Width="99" />
-                    <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,34,0,0" Height="17" Width="99" />
-                    <Slider Value="{Binding Properties._BrightnessChange}" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="109,5,0,0" Height="20" Minimum="-0.5" Maximum="0.5" />
-                    <Slider Value="{Binding Properties._SaturationChange}" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="109,34,0,0" Width="100" Height="20" Minimum="0" Maximum="2" />
-                    <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,30,0,-4" Width="41" Height="29" />
-                    <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="209,1,0,0" Width="41" Height="29" />
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="84*"/>
+                        <ColumnDefinition Width="113*"/>
+                        <ColumnDefinition Width="17*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" Grid.Row="0" Grid.Column="0"/>
+                    <Slider Value="{Binding Properties._BrightnessChange}" x:Name="BrightnessSlider" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" Minimum="-0.5" Maximum="0.5" TickFrequency="0.1" Grid.Row="0" Grid.Column="1"/>
+                    <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" ContentStringFormat="N2" Grid.Row="0" Grid.Column="2" />
+
+                    <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:"  Grid.Row="1" Grid.Column="0"/>
+                    <Slider Value="{Binding Properties._SaturationChange}" x:Name="SaturationSlider" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}" Minimum="0" Maximum="4" TickFrequency="0.1" Grid.Row="1" Grid.Column="1"/>
+                    <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" ContentStringFormat="N2" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="2"/>
+
+                    <CheckBox IsChecked="{Binding Properties._HueShiftImage}" x:Name="EnableHueMod" Content="Hue:" Grid.Row="2" Grid.Column="0"/>
+                    <Slider Value="{Binding Properties._HueShiftAngle}" x:Name="HueAngleSlider" IsEnabled="{Binding ElementName=EnableHueMod, Path=IsChecked}" Minimum="0" Maximum="360" TickFrequency="1" Grid.Row="2" Grid.Column="1"/>
+                    <Label Content="{Binding ElementName=HueAngleSlider, Path=Value}" ContentStringFormat="N2" Grid.Row="2" Grid.Column="2"/>
                 </Grid>
             </GroupBox>
             <c:KeySequence x:Name="affectedKeys" Grid.Row="1" Title="Affected Rectangle" RecordingTag="AmbilightAffectedRect" SequenceUpdated="KeySequence_keys_SequenceUpdated" />
