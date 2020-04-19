@@ -50,7 +50,13 @@ namespace Aurora.Utils
 
         private static ISensor FindSensor(this IHardware hardware, string identifier)
         {
-            return Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
+            var result = Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
+            if(result == null)
+            {
+                Global.logger.Error(
+                    $"[Hardware Monitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
+            }
+            return result;
         }
 
         public abstract class HardwareUpdater
