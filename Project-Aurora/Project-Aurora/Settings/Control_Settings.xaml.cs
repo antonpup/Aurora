@@ -134,7 +134,7 @@ namespace Aurora.Settings
 
             this.razer_wrapper_installed_version_label.Content = rzVersion.ToString();
             this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(RzHelper.IsSdkVersionSupported(rzVersion) ? Colors.LightGreen : Colors.PaleVioletRed);
-            this.razer_wrapper_supported_versions_label.Content = $"[{RzHelper.SupportedFromVersion}-{RzHelper.SupportedToVersion})";
+            this.razer_wrapper_supported_versions_label.Content = $"[{RzHelper.SupportedFromVersion}-{RzHelper.SupportedToVersion}]";
 
             if (rzVersion == new RzSdkVersion())
                 this.razer_wrapper_uninstall_button.Visibility = Visibility.Hidden;

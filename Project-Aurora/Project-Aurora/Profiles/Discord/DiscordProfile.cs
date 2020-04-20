@@ -14,11 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Discord {
-
     public class DiscordProfile : ApplicationProfile {
-
-        public DiscordProfile() : base() { }
-
         public override void Reset() {
             base.Reset();
 
@@ -59,8 +55,6 @@ namespace Aurora.Profiles.Discord {
                         _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.PRINT_SCREEN, DeviceKeys.SCROLL_LOCK, DeviceKeys.PAUSE_BREAK })
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/UnreadMessages"))),
-
-
             };
         }
     }
