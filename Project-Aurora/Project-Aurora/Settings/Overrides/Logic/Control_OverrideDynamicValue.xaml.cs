@@ -14,13 +14,13 @@ namespace Aurora.Settings.Overrides.Logic {
     public partial class Control_OverrideDynamicValue : UserControl {
 
         public OverrideDynamicValue Context { get; }
-        public List<Tuple<string, EvaluatableType, IEvaluatable, string>> Parameters { get; }
+        public List<Tuple<string, Type, IEvaluatable, string>> Parameters { get; }
 
         public Control_OverrideDynamicValue(OverrideDynamicValue context) {
             InitializeComponent();
             Context = context;
             // Get a list that contains the label (string), the type of evaluatable (to restrict the list box), the evaluatable itself and the description.
-            Parameters = context.ConstructorParameters.Select(kvp => new Tuple<string, EvaluatableType, IEvaluatable, string>(
+            Parameters = context.ConstructorParameters.Select(kvp => new Tuple<string, Type, IEvaluatable, string>(
                 kvp.Key,
                 OverrideDynamicValue.typeDynamicDefMap[context.VarType].constructorParameters.First(p => p.name == kvp.Key).type,
                 kvp.Value,

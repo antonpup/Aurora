@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
              xmlns:utils="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
@@ -14,7 +15,7 @@
         <!-- Controls -->
         <ComboBox ItemsSource="{Binding OperatorList}" SelectedValue="{Binding SelectedOperator}" Visibility="{Binding OperatorList, Converter={StaticResource NullableToVisConv}}" SelectedValuePath="Value" DisplayMemberPath="Key" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" />
         <TextBlock Text="{Binding StaticOperator}" TextAlignment="Right" Visibility="{Binding StaticOperator, Converter={StaticResource NullableToVisConv}}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="96" />
-        <local:Control_EvaluatablePresenter Expression="{Binding Operand, Mode=TwoWay}" EvalType="Number" Margin="119,0,19,0" />
+        <local:Control_EvaluatablePresenter Expression="{Binding Operand, Mode=TwoWay}" EvalType="{x:Type sys:Double}" Margin="119,0,19,0" />
 
         <!-- Left bracket -->
         <Ellipse Width="30" Stroke="White" StrokeThickness="3" HorizontalAlignment="Left" Margin="102,0,0,0">

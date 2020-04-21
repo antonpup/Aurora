@@ -20,7 +20,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public bool CaseInsensitive { get; set; } = false;
 
         // Control allowing the user to edit the comparison
-        public Visual GetControl() => new Control_BinaryOperationHolder(EvaluatableType.String, typeof(StringComparisonOperator))
+        public Visual GetControl() => new Control_BinaryOperationHolder(typeof(string), typeof(StringComparisonOperator))
             .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
             .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
             .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });

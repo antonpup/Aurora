@@ -17,8 +17,8 @@ namespace Aurora.Settings.Overrides.Logic
         /// </summary>
         public ObservableCollection<Branch> Cases { get; set; } = CreateDefaultCases(
             new BooleanConstant(), // Condition
-            (IEvaluatable<T>)EvaluatableTypeResolver.GetDefault(EvaluatableTypeResolver.GetEvaluatableType(typeof(IEvaluatable<T>))), // True
-            (IEvaluatable<T>)EvaluatableTypeResolver.GetDefault(EvaluatableTypeResolver.GetEvaluatableType(typeof(IEvaluatable<T>))) // False
+            EvaluatableDefaults.Get<T>(), // True
+            EvaluatableDefaults.Get<T>() // False
         );
 
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>

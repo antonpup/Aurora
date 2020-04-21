@@ -26,6 +26,22 @@ namespace Aurora.Utils {
             return null;
         }
 
+        /// <summary>Tests to see if the given 'parent' object is a parent of the given 'child' object (as according to
+        /// <see cref="VisualTreeHelper.GetParent(DependencyObject)"/>).</summary>
+        /// <param name="parent">The parent element. Will return true if 'child' is inside this.</param>
+        /// <param name="child">The child element. Will return true if this is inside 'parent'.</param>
+        public static bool IsParentOf(this DependencyObject parent, DependencyObject child) {
+            var cur = child; // Starting at the child,
+            while (cur != null) { // Continuing until we run out of elements
+                if (cur == parent) // If the current item is the parent, return true
+                    return true;
+                cur = VisualTreeHelper.GetParent(cur); // Move on to the parent of the current element
+            }
+            return false; // If we ran out of elements, 'parent' is not a parent of 'child'.
+        }
+
+
+        #region Fluent Helper Methods
         /// <summary>
         /// Tiny extension for the FrameworkElement that allows to set a binding on an element and return that element (so it can be chained).
         /// Used in the TypeControlMap to shorten the code.
@@ -62,5 +78,6 @@ namespace Aurora.Utils {
             self.Children.Add(child);
             return self;
         }
+        #endregion
     }
 }

@@ -15,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Creates a new numeric binary operation holder control.
         /// </summary>
-        public Control_BinaryOperationHolder(EvaluatableType evalType) {
+        public Control_BinaryOperationHolder(Type evalType) {
             InitializeComponent();
             EvalType = evalType;
             DataContext = this;
@@ -24,11 +24,11 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Creates a new numeric binary operation holder control using the values of the specified enum as the operators item source.
         /// </summary>
-        public Control_BinaryOperationHolder(EvaluatableType evalType, Type enumType) : this(evalType) {
+        public Control_BinaryOperationHolder(Type evalType, Type enumType) : this(evalType) {
             operatorSelection.ItemsSource = Utils.EnumUtils.GetEnumItemsSource(enumType);
         }
 
-        public EvaluatableType EvalType { get; set; }
+        public Type EvalType { get; set; }
 
         #region Dependency Properties
         public static readonly DependencyProperty Operand1Property = DependencyProperty.Register("Operand1", typeof(IEvaluatable), typeof(Control_BinaryOperationHolder), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender));

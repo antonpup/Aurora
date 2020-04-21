@@ -38,7 +38,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<double> Operand2 { get; set; } = new NumberConstant();
         public MathsOperator Operator { get; set; } = MathsOperator.Add;
         
-        public Visual GetControl() => new Control_BinaryOperationHolder(EvaluatableType.Number, typeof(MathsOperator))
+        public Visual GetControl() => new Control_BinaryOperationHolder(typeof(double), typeof(MathsOperator))
             .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
             .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
             .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
@@ -51,8 +51,8 @@ namespace Aurora.Settings.Overrides.Logic {
                 case MathsOperator.Add: return op1 + op2;
                 case MathsOperator.Sub: return op1 - op2;
                 case MathsOperator.Mul: return op1 * op2;
-                case MathsOperator.Div: return op2 == 0 ? 0 : op1 / op2; // Return 0 if user tried to divide by zero. Easier than having to deal with Infinity (which C# returns).
-                case MathsOperator.Mod: return op2 == 0 ? 0 : op1 % op2;
+                case MathsOperator.Div when op2 != 0: return op1 / op2; // Return 0 if user tried to divide by zero.
+                case MathsOperator.Mod when op2 != 0: return op1 % op2;
                 default: return 0;
             }
         }
@@ -120,7 +120,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
 
         // The control allowing the user to edit the evaluatable
-        public Visual GetControl() => new Control_BinaryOperationHolder(EvaluatableType.Number, typeof(ComparisonOperator))
+        public Visual GetControl() => new Control_BinaryOperationHolder(typeof(double), typeof(ComparisonOperator))
             .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
             .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
             .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });

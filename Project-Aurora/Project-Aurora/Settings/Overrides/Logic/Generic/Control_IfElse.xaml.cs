@@ -28,14 +28,14 @@ namespace Aurora.Settings.Overrides.Logic {
         public Control_Ternary(IfElseGeneric<T> context) : base() {
             DataContext = this.context = new Control_Ternary_Context<T> {
                 ParentCondition = context,
-                EvaluatableType = EvaluatableTypeResolver.GetEvaluatableType(typeof(IEvaluatable<T>))
+                EvaluatableType = typeof(T)
             };
         }
 
         protected override void AddElseIfCase_Click(object sender, RoutedEventArgs e) {
             context.ParentCondition.Cases.Insert(
                 context.ParentCondition.Cases.Count - (HasElseCase ? 2 : 1), // If there is an "Else" case, we need to insert this Else-If before that
-                new IfElseGeneric<T>.Branch(new BooleanConstant(), (IEvaluatable<T>)EvaluatableTypeResolver.GetDefault(context.EvaluatableType))
+                new IfElseGeneric<T>.Branch(new BooleanConstant(), EvaluatableDefaults.Get<T>())
             );
         }
 
@@ -81,7 +81,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     internal class Control_Ternary_Context<T> {
         public IfElseGeneric<T> ParentCondition { get; set; }
-        public EvaluatableType EvaluatableType { get; set; }
+        public Type EvaluatableType { get; set; }
     }
 
 
