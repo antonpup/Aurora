@@ -1,5 +1,6 @@
 ﻿using Aurora.Profiles;
 using Aurora.Utils;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -10,15 +11,31 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that returns true/false depending on whether the given process name is running.
     /// </summary>
     [OverrideLogic("Process Running", category: OverrideLogicCategory.Misc)]
-    public class BooleanProcessRunning : IEvaluatable<bool> {
+    public class BooleanProcessRunning : IEvaluatable<bool>, INotifyPropertyChanged {
 
         public string ProcessName { get; set; } = "";
 
         public BooleanProcessRunning() { }
         public BooleanProcessRunning(string processName) { ProcessName = processName; }
 
-        public Visual GetControl() => new TextBox { MinWidth = 80 }
-            .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay });
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Visual GetControl() {
+            var selectButton = new Button { Content = "Select", Padding = new System.Windows.Thickness(8, 0, 8, 0), Margin = new System.Windows.Thickness(8, 0, 0, 0) };
+            DockPanel.SetDock(selectButton, Dock.Right);
+            selectButton.Click += (sender, e) => {
+                var wnd = new Window_ProcessSelection { ButtonLabel = "Select" };
+                if (wnd.ShowDialog() == true && !string.IsNullOrWhiteSpace(wnd.ChosenExecutableName)) {
+                    ProcessName = wnd.ChosenExecutableName;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ProcessName)));
+                }
+            };
+
+            return new DockPanel { LastChildFill = true }
+                .WithChild(selectButton)
+                .WithChild(new TextBox { MinWidth = 80 }
+                    .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay }));
+        }
 
         public bool Evaluate(IGameState gameState)
             => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
