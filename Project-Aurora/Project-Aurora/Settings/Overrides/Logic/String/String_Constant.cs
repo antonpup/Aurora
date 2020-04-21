@@ -15,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public string Value { get; set; } = "";
 
         /// <summary>A control for setting the string value</summary>
-        public Visual GetControl() => new TextBox { Margin = new System.Windows.Thickness(0, 0, 0, 6) }
+        public Visual GetControl() => new TextBox { MinWidth = 40 }
             .WithBinding(TextBox.TextProperty, new Binding("Value") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Simply return the constant value.</summary>

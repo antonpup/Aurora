@@ -27,9 +27,7 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public ObservableCollection<IEvaluatable<bool>> SubConditions { get; set; } = new ObservableCollection<IEvaluatable<bool>>();
 
-        [JsonIgnore]
-        private Control_SubconditionHolder control;
-        public Visual GetControl() => control ?? (control = new Control_SubconditionHolder(this, "Require atleast one of the following is true..."));
+        public Visual GetControl() => new Control_SubconditionHolder(this, "Or");
 
         public bool Evaluate(IGameState gameState) => SubConditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
@@ -55,9 +53,7 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public ObservableCollection<IEvaluatable<bool>> SubConditions { get; set; } = new ObservableCollection<IEvaluatable<bool>>();
 
-        [JsonIgnore]
-        private Control_SubconditionHolder control;
-        public Visual GetControl() => control ?? (control = new Control_SubconditionHolder(this, "Require all of the following are true..."));
+        public Visual GetControl() => new Control_SubconditionHolder(this, "And");
 
         public bool Evaluate(IGameState gameState) => SubConditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);

@@ -6,15 +6,9 @@
              xmlns:c="clr-namespace:Aurora.Controls"
              xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" d:DesignWidth="400">
-    <Grid Margin="0,0,0,6">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="62px" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-
-        <c:GameStateParameterPicker x:Name="x" SelectedPath="{Binding Operand1Path}" Application="{u:AttachedApplicationBinding}" PropertyType="Number" Grid.Column="0" />
-        <ComboBox x:Name="OperatorCb" SelectedValue="{Binding Operator}" SelectedValuePath="Value" DisplayMemberPath="Key" Grid.Column="1" Margin="6,0" />
-        <c:GameStateParameterPicker SelectedPath="{Binding Operand2Path}" Application="{u:AttachedApplicationBinding}" PropertyType="Number" Grid.Column="2" />
-    </Grid>
+    <StackPanel Orientation="Horizontal">
+        <c:GameStateParameterPicker SelectedPath="{Binding Operand1Path}" Application="{u:AttachedApplicationBinding}" PropertyType="Number" VerticalAlignment="Center" />
+        <ComboBox x:Name="OperatorCb" SelectedValue="{Binding Operator}" SelectedValuePath="Value" DisplayMemberPath="Key" Margin="6,0" VerticalAlignment="Center" />
+        <c:GameStateParameterPicker SelectedPath="{Binding Operand2Path}" Application="{u:AttachedApplicationBinding}" PropertyType="Number" VerticalAlignment="Center" />
+    </StackPanel>
 </UserControl>

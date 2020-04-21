@@ -31,10 +31,8 @@ namespace Aurora.Settings.Overrides.Logic {
         public double DetectionThreshold { get; set; } = 0;
 
         public Visual GetControl() => new StackPanel()
-            .WithChild(new DockPanel { LastChildFill = true }
-                .WithChild(new Label { Content = "Expression", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
-                .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(double), Margin = new System.Windows.Thickness(24, 0, 0, 0) }
-                    .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay)))
+            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(double) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay))
             .WithChild(new CheckBox { Content = "Trigger on increase" }
                 .WithBinding(CheckBox.IsCheckedProperty, this, "DetectRising"))
             .WithChild(new CheckBox { Content = "Trigger on decrease" }

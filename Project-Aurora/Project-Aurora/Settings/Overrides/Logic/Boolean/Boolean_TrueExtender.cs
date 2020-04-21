@@ -26,7 +26,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public TimeUnit TimeUnit { get; set; } = TimeUnit.Seconds;
 
         public Visual GetControl() => new StackPanel()
-            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool), Margin = new System.Windows.Thickness(24, 0, 0, 0) }
+            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
                 .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding("Evaluatable") { Source = this, Mode = BindingMode.TwoWay }))
             .WithChild(new Control_TimeAndUnit()
                 .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("ExtensionTime") { Source = this, Mode = BindingMode.TwoWay })

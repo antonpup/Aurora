@@ -27,7 +27,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public Keys TargetKey { get; set; } = Keys.Space;
 
         /// <summary>Create a control where the user can select the key they wish to detect.</summary>
-        public Visual GetControl() => new Controls.Control_FieldPresenter { Type = typeof(Keys), Margin = new System.Windows.Thickness(0, 0, 0, 6) }
+        public Visual GetControl() => new Controls.Control_FieldPresenter { Type = typeof(Keys) }
             .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
