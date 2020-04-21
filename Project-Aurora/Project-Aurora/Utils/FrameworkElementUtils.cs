@@ -1,10 +1,30 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
+using System.Windows.Media;
 
 namespace Aurora.Utils {
     public static class FrameworkElementExtensions {
+
+        /// <summary>
+        /// Performs a breadth-first search from the given element and returns the first found visual child of the target type.
+        /// Returns null if an element of the target type was not found.
+        /// </summary>
+        public static T FindChildOfType<T>(this DependencyObject self) where T : DependencyObject {
+            var toSearch = new Queue<DependencyObject>();
+            toSearch.Enqueue(self);
+            while (toSearch.Count > 0) {
+                var cur = toSearch.Dequeue();
+                for (int i = 0, count = VisualTreeHelper.GetChildrenCount(cur); i < count; i++) {
+                    var child = VisualTreeHelper.GetChild(cur, i);
+                    if (child is T tChild) return tChild;
+                    toSearch.Enqueue(child);
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Tiny extension for the FrameworkElement that allows to set a binding on an element and return that element (so it can be chained).
