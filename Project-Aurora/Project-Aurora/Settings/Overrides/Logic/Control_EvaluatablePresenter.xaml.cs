@@ -80,8 +80,7 @@ namespace Aurora.Settings.Overrides.Logic {
         private static void OnExpressionChange(DependencyObject evaluatablePresenter, DependencyPropertyChangedEventArgs eventArgs) {
             var control = (Control_EvaluatablePresenter)evaluatablePresenter;
             var expr = (IEvaluatable)eventArgs.NewValue;
-            var x = expr?.GetType();
-            control.ContentContainer.Content = expr?.GetControl(control.Application);
+            control.ContentContainer.Content = expr?.GetControl();
             control.settingTypeSelection = true;
             control.expressionSelection.SelectedValue = expr?.GetType();
             control.settingTypeSelection = false;
@@ -92,19 +91,6 @@ namespace Aurora.Settings.Overrides.Logic {
             get => (IEvaluatable)GetValue(ExpressionProperty);
             set => SetValue(ExpressionProperty, value);
         }
-
-        // Application Property (the application passed to the component's UserControl to allow it do detect GSI variables names and such)
-        private static void OnApplicationChange(DependencyObject evaluatablePresenter, DependencyPropertyChangedEventArgs eventArgs) {
-            var control = (Control_EvaluatablePresenter)evaluatablePresenter;
-            control.Expression?.SetApplication((Profiles.Application)eventArgs.NewValue);
-        }
-
-        public static readonly DependencyProperty ApplicationProperty = DependencyProperty.Register("Application", typeof(Profiles.Application), typeof(Control_EvaluatablePresenter), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnApplicationChange));
-        public Profiles.Application Application {
-            get => (Profiles.Application)GetValue(ApplicationProperty);
-            set => SetValue(ApplicationProperty, value);
-        }
-
         // The subtype of evaluatable to restrict the user to (e.g. IEvaluatable<bool>)
         private static void OnEvalTypeChange(DependencyObject evaluatablePresenter, DependencyPropertyChangedEventArgs eventArgs) {
             var control = (Control_EvaluatablePresenter)evaluatablePresenter;

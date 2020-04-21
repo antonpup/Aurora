@@ -36,6 +36,8 @@ namespace Aurora.Utils
                     case MemberTypes.Property:
                         prop_type = ((PropertyInfo)prop).PropertyType;
                         break;
+
+                    /* Why is this here? There is no way of passing parameters to methods from the game state UI?? */
                     case MemberTypes.Method:
                         //if (((MethodInfo)prop).IsSpecialName)
                             //continue;
@@ -223,16 +225,23 @@ namespace Aurora.Utils
             => parameterLookup.ContainsKey(parameter);
 
         /// <summary>
+        /// Checks if the given parameter is valid for the current parameter lookup and if the type of parameter matches the given <see cref="PropertyType"/>.
+        /// </summary>
+        public static bool IsValidParameter(this GamestateParameterLookup parameterLookup, string parameter, PropertyType type)
+            => parameterLookup.TryGetValue(parameter, out var paramDef) && PropertyTypePredicate[type](new KeyValuePair<string, Tuple<Type, Type>>(parameter, paramDef));
+
+        /// <summary>
         /// Gets a list of the names of all variables (inc. path) of a certain type in this parameter map.
         /// </summary>
         public static IEnumerable<string> GetParameters(this GamestateParameterLookup parameterLookup, PropertyType type)
             => parameterLookup.Where(PropertyTypePredicate[type]).Select(kvp => kvp.Key);
 
         static Dictionary<PropertyType, Func<KeyValuePair<string, Tuple<Type, Type>>, bool>> PropertyTypePredicate { get; } = new Dictionary<PropertyType, Func<KeyValuePair<string, Tuple<Type, Type>>, bool>> {
+            [PropertyType.None] = _ => false,
             [PropertyType.Number] = kvp => TypeUtils.IsNumericType(kvp.Value.Item1),
-            [PropertyType.Number] = kvp => TypeUtils.IsNumericType(kvp.Value.Item1),
-            [PropertyType.Number] = kvp => TypeUtils.IsNumericType(kvp.Value.Item1),
-            [PropertyType.Number] = kvp => TypeUtils.IsNumericType(kvp.Value.Item1)
+            [PropertyType.Boolean] = kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean,
+            [PropertyType.String] = kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String,
+            [PropertyType.Enum] = kvp => kvp.Value.Item1.IsEnum
         };
         #endregion
     }
@@ -240,5 +249,5 @@ namespace Aurora.Utils
     /// <summary>
     /// Available types that can be handled by the gamestate parameter methods.
     /// </summary>
-    public enum PropertyType { Number, Boolean, String, Enum }
+    public enum PropertyType { None, Number, Boolean, String, Enum }
 }

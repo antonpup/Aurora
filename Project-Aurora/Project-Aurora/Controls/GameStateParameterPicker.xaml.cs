@@ -93,8 +93,16 @@ namespace Aurora.Controls {
         private static void SelectedPathDPChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
             // Do nothing if the value hasn't actually changed.
             if (e.OldValue == e.NewValue || e.NewValue == null) return;
-
+            
             var picker = (GameStateParameterPicker)sender;
+            
+            // If the path isn't valid, set it to "".
+            if (!picker.ValidatePath((string)e.NewValue)) {
+                picker.SelectedPath = "";
+                // We need to return out of this method as we don't want to change anything since NewValue is now no longer respective of the new new value.
+                return;
+            }
+
             if (double.TryParse(e.NewValue.ToString(), out double val)) {
                 // If a raw number has been entered, fill in the numeric stepper
                 picker.numericEntry.Value = val;
@@ -135,14 +143,31 @@ namespace Aurora.Controls {
         }
 
         public static readonly DependencyProperty PropertyTypeProperty =
-            DependencyProperty.Register(nameof(PropertyType), typeof(PropertyType), typeof(GameStateParameterPicker), new PropertyMetadata(PropertyType.Number, ApplicationOrPropertyTypeChange));
+            DependencyProperty.Register(nameof(PropertyType), typeof(PropertyType), typeof(GameStateParameterPicker), new PropertyMetadata(PropertyType.None, ApplicationOrPropertyTypeChange));
 
         public static void ApplicationOrPropertyTypeChange(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
             var picker = (GameStateParameterPicker)sender;
             picker.parameterList = null;
             picker.NotifyChanged(nameof(ParameterList), nameof(CurrentParameterListItems));
+
+            if (!picker.ValidatePath(picker.SelectedPath ))
+                picker.SelectedPath = "";
         }
         #endregion
+
+        /// <summary>
+        /// Determines if the selected path is a valid one (i.e. it is a number or a valid variable in the current application context).
+        /// If the current application context is null (i.e. not yet loaded), the path is assumed to be valid.
+        /// </summary>
+        private bool ValidatePath(string path) =>
+            // If application parameter context doesn't exist or there is no set type, assume non loaded and allow the path
+            Application?.ParameterLookup == null || PropertyType == PropertyType.None
+            // An empty path is fine
+            || string.IsNullOrEmpty(path)
+            // If we're in number mode, allow the selected path to be a double
+            || (PropertyType == PropertyType.Number && double.TryParse(path, out var _))
+            // If not in number mode, must be a valid path and have the same type as the expected property type
+            || Application.ParameterLookup.IsValidParameter(path, PropertyType);
 
         #region Animation
         /// <summary>Animates the list boxes.</summary>

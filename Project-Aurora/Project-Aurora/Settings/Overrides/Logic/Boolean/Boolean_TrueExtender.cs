@@ -25,15 +25,12 @@ namespace Aurora.Settings.Overrides.Logic {
         public double ExtensionTime { get; set; } = 5;
         public TimeUnit TimeUnit { get; set; } = TimeUnit.Seconds;
 
-        private StackPanel sp;
-        private Control_EvaluatablePresenter ep;
-        public Visual GetControl(Application a) => sp ?? (sp = new StackPanel()
-            .WithChild(ep = new Control_EvaluatablePresenter { EvalType = EvaluatableType.Boolean, Margin = new System.Windows.Thickness(24, 0, 0, 0) }
+        public Visual GetControl() => new StackPanel()
+            .WithChild(new Control_EvaluatablePresenter { EvalType = EvaluatableType.Boolean, Margin = new System.Windows.Thickness(24, 0, 0, 0) }
                 .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding("Evaluatable") { Source = this, Mode = BindingMode.TwoWay }))
             .WithChild(new Control_TimeAndUnit()
                 .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("ExtensionTime") { Source = this, Mode = BindingMode.TwoWay })
-                .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay })
-            ));
+                .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay }));
 
         public bool Evaluate(IGameState gameState) {
             var res = Evaluatable.Evaluate(gameState);
@@ -47,11 +44,6 @@ namespace Aurora.Settings.Overrides.Logic {
             }
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            ep.Application = application;
-            Evaluatable.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanExtender { Evaluatable = Evaluatable.Clone(), ExtensionTime = ExtensionTime, TimeUnit = TimeUnit };
         IEvaluatable IEvaluatable.Clone() => Clone();

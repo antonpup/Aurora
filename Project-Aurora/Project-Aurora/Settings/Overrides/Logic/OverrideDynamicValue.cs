@@ -72,9 +72,9 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Creates the control that is used to edit the IEvaluatables used as parameters for this DynamicValue logic
         /// </summary>
-        public Visual GetControl(Application application) => typeDynamicDefMap.ContainsKey(VarType)
+        public Visual GetControl() => typeDynamicDefMap.ContainsKey(VarType)
             // If this has a valid type (i.e. supported by the dynamic constructor), then create the control and pass in `this` and `application` for context
-            ? new Control_OverrideDynamicValue(this, application)
+            ? new Control_OverrideDynamicValue(this)
             // If it is an invalid type, then simply show a red warning message
             : (Visual)new Label { Content = "This property type is not supported with the dynamic value editor. Sorry :(", Foreground = Brushes.Red, Margin = new System.Windows.Thickness(6) };
         #endregion

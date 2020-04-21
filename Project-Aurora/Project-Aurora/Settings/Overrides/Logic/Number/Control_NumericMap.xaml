@@ -21,15 +21,15 @@
         <!-- Value -->
         <Border BorderThickness="1" BorderBrush="#6000" Background="#3000" Grid.ColumnSpan="3" />
         <TextBlock Text="Map value:" Margin="6,2" FontWeight="Bold" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.Value, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,10,6,0" Grid.ColumnSpan="3" />
+        <logic:Control_EvaluatablePresenter Expression="{Binding Value, Mode=TwoWay}" EvalType="Number" Margin="6,10,6,0" Grid.ColumnSpan="3" />
         
         <!-- From range -->
         <Border BorderThickness="1,0,1,1" BorderBrush="#6000" Background="#3000" Grid.Row="1" Grid.RowSpan="2" />
         <TextBlock Text="From range:" Margin="6,2" FontWeight="Bold" Grid.Row="1" />
         <TextBlock Text="Min:" Margin="8,18" Grid.Row="1" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.FromMin, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,28,6,0" Grid.Row="1" />
+        <logic:Control_EvaluatablePresenter Expression="{Binding FromMin, Mode=TwoWay}" EvalType="Number" Margin="6,28,6,0" Grid.Row="1" />
         <TextBlock Text="Max:" Margin="8,0" Grid.Row="2" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.FromMax, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,10,6,0" Grid.Row="2" />
+        <logic:Control_EvaluatablePresenter Expression="{Binding FromMax, Mode=TwoWay}" EvalType="Number" Margin="6,10,6,0" Grid.Row="2" />
 
         <!-- Arrow -->
         <TextBlock Text="&#x2794;" Margin="6" FontSize="18" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" />
@@ -38,8 +38,8 @@
         <Border BorderThickness="1,0,1,1" BorderBrush="#6000" Background="#3000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" />
         <TextBlock Text="Onto range:" Margin="6,2" FontWeight="Bold" Grid.Row="1" Grid.Column="2" />
         <TextBlock Text="Min:" Margin="8,18" Grid.Row="1" Grid.Column="2" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.ToMin, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,28,6,0" Grid.Row="1" Grid.Column="2" />
+        <logic:Control_EvaluatablePresenter Expression="{Binding ToMin, Mode=TwoWay}" EvalType="Number" Margin="6,28,6,0" Grid.Row="1" Grid.Column="2" />
         <TextBlock Text="Max:" Margin="8,0" Grid.Row="2" Grid.Column="2" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.ToMax, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,10,6,0" Grid.Row="2" Grid.Column="2" />
+        <logic:Control_EvaluatablePresenter Expression="{Binding ToMax, Mode=TwoWay}" EvalType="Number" Margin="6,10,6,0" Grid.Row="2" Grid.Column="2" />
     </Grid>
 </UserControl>

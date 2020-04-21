@@ -30,12 +30,10 @@ namespace Aurora.Settings.Overrides.Logic {
         public bool DetectFalling { get; set; } = true;
         public double DetectionThreshold { get; set; } = 0;
 
-        private StackPanel control;
-        private Control_EvaluatablePresenter ep;
-        public Visual GetControl(Application a) => control ?? (control = new StackPanel()
+        public Visual GetControl() => new StackPanel()
             .WithChild(new DockPanel { LastChildFill = true }
                 .WithChild(new Label { Content = "Expression", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
-                .WithChild(ep = new Control_EvaluatablePresenter { EvalType = EvaluatableType.Number, Margin = new System.Windows.Thickness(24, 0, 0, 0) }
+                .WithChild(new Control_EvaluatablePresenter { EvalType = EvaluatableType.Number, Margin = new System.Windows.Thickness(24, 0, 0, 0) }
                     .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay)))
             .WithChild(new CheckBox { Content = "Trigger on increase" }
                 .WithBinding(CheckBox.IsCheckedProperty, this, "DetectRising"))
@@ -44,7 +42,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithChild(new DockPanel { LastChildFill = true }
                 .WithChild(new Label { Content = "Change required", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
                 .WithChild(new DoubleUpDown { Minimum = 0 }
-                    .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold"))));
+                    .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold")));
 
         public bool Evaluate(IGameState gameState) {
             var val = Evaluatable.Evaluate(gameState);
@@ -61,11 +59,6 @@ namespace Aurora.Settings.Overrides.Logic {
             return @out;
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            ep.Application = application;
-            Evaluatable?.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new NumericChangeDetector { Evaluatable = Evaluatable.Clone(), DetectRising = DetectRising, DetectFalling = DetectFalling, DetectionThreshold = DetectionThreshold };
         IEvaluatable IEvaluatable.Clone() => Clone();

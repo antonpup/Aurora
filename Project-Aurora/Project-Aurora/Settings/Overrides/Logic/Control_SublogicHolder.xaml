@@ -16,7 +16,7 @@
                         <Rectangle Fill="#6000" Height="4" Width="10" HorizontalAlignment="Left" VerticalAlignment="Center" />
                         <Border Margin="10,0,0,0" BorderThickness="1" BorderBrush="#6000" Background="#3000">
                             <Grid>
-                                <local:Control_EvaluatablePresenter Expression="{Binding .}" Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}, Path=DataContext.Application}" EvalType="Boolean" ExpressionChanged="ConditionPresenter_ConditionChanged" Margin="6,2,36,0" />
+                                <local:Control_EvaluatablePresenter Expression="{Binding .}" EvalType="Boolean" ExpressionChanged="ConditionPresenter_ConditionChanged" Margin="6,2,36,0" />
                                 <Button Margin="6" HorizontalAlignment="Right" VerticalAlignment="Center" Click="DeleteButton_Click" ToolTip="Remove this subcondition">
                                     <Image Source="/Aurora;component/Resources/Layers_Remove.png" Width="18" Height="18" Margin="2" />
                                 </Button>

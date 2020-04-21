@@ -8,13 +8,18 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Interaction logic for Control_SubconditionHolder.xaml
     /// </summary>
     public partial class Control_SubconditionHolder : UserControl {
-        public Control_SubconditionHolder(IHasSubConditons parent, Profiles.Application app, string description="") {
+        public Control_SubconditionHolder(IHasSubConditons parent, string description="") {
             InitializeComponent();
             ParentExpr = parent;
-            Application = app;
             Description = description;
             ((FrameworkElement)Content).DataContext = this;
         }
+
+        /// <summary>The parent evaluatable of this control. Must be an evaluatable that has sub conditions.</summary>
+        public IHasSubConditons ParentExpr { get; }
+
+        /// <summary>The title/description text of this control.</summary>
+        public string Description { get; }
 
         private void AddSubconditionButton_Click(object sender, RoutedEventArgs e) {
             ParentExpr.SubConditions.Add(new BooleanConstant());
@@ -33,23 +38,5 @@ namespace Aurora.Settings.Overrides.Logic {
             var cond = (IEvaluatable<bool>)((FrameworkElement)sender).DataContext;
             ParentExpr.SubConditions.Remove(cond);
         }
-
-        #region Properties/Dependency Properties
-        /// <summary>The parent evaluatable of this control. Must be an evaluatable that has sub conditions.</summary>
-        public IHasSubConditons ParentExpr { get; }
-
-        /// <summary>The title/description text of this control.</summary>
-        public string Description { get; }
-
-        /// <summary>The application context of this control. Is passed to the EvaluatablePresenter children.</summary>
-        public Profiles.Application Application {
-            get => (Profiles.Application)GetValue(ApplicationProperty);
-            set => SetValue(ApplicationProperty, value);
-        }
-        
-        /// <summary>The property used as a backing store for the application context.</summary>
-        public static readonly DependencyProperty ApplicationProperty =
-            DependencyProperty.Register("Application", typeof(Profiles.Application), typeof(Control_SubconditionHolder), new PropertyMetadata(null));
-        #endregion
     }
 }

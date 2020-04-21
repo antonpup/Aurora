@@ -17,15 +17,12 @@ namespace Aurora.Settings.Overrides.Logic {
         public BooleanProcessRunning() { }
         public BooleanProcessRunning(string processName) { ProcessName = processName; }
 
-        private TextBox control;
-        public Visual GetControl(Application application) => control ?? (control = new TextBox { MinWidth = 80 }
-            .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay }));
+        public Visual GetControl() => new TextBox { MinWidth = 80 }
+            .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay });
 
         public bool Evaluate(IGameState gameState)
             => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) { }
 
         public IEvaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
         IEvaluatable IEvaluatable.Clone() => Clone();

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Profiles;
+using Aurora.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Overrides.Logic {
@@ -27,17 +29,10 @@ namespace Aurora.Settings.Overrides.Logic {
 
         [JsonIgnore]
         private Control_SubconditionHolder control;
-        public Visual GetControl(Application app) => control ?? (control = new Control_SubconditionHolder(this, app, "Require atleast one of the following is true..."));
+        public Visual GetControl() => control ?? (control = new Control_SubconditionHolder(this, "Require atleast one of the following is true..."));
 
         public bool Evaluate(IGameState gameState) => SubConditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            if (control != null)
-                control.Application = application;
-            foreach (var subcondition in SubConditions)
-                subcondition.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanOr { SubConditions = new ObservableCollection<IEvaluatable<bool>>(SubConditions.Select(e => e.Clone())) };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -62,17 +57,10 @@ namespace Aurora.Settings.Overrides.Logic {
 
         [JsonIgnore]
         private Control_SubconditionHolder control;
-        public Visual GetControl(Application app) => control ?? (control = new Control_SubconditionHolder(this, app, "Require all of the following are true..."));
+        public Visual GetControl() => control ?? (control = new Control_SubconditionHolder(this, "Require all of the following are true..."));
 
         public bool Evaluate(IGameState gameState) => SubConditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            if (control != null)
-                control.Application = application;
-            foreach (var subcondition in SubConditions)
-                subcondition.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanAnd { SubConditions = new ObservableCollection<IEvaluatable<bool>>(SubConditions.Select(e => { var x = e.Clone(); return x; })) };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -97,15 +85,10 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<bool> SubCondition { get; set; } = new BooleanConstant();
 
         private Control_ConditionNot control;
-        public Visual GetControl(Application app) => control ?? (control = new Control_ConditionNot(this, app));
+        public Visual GetControl() => control ?? (control = new Control_ConditionNot(this));
 
         public bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-           // control.app
-            SubCondition?.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanNot { SubCondition = SubCondition.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -128,22 +111,12 @@ namespace Aurora.Settings.Overrides.Logic {
         public bool State { get; set; }
 
         // Create a checkbox to use to set the constant value
-        [JsonIgnore]
-        private CheckBox control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new CheckBox { Content = "True/False" };
-                control.SetBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public Visual GetControl() => new CheckBox { Content = "True/False" }
+            .WithBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
 
         // Simply return the current state
         public bool Evaluate(IGameState _) => State;
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        // Application-independent evaluatable, do nothing.
-        public void SetApplication(Application application) { }
 
         // Creates a new BooleanConstant
         public IEvaluatable<bool> Clone() => new BooleanConstant { State = State };

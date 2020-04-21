@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:l="clr-namespace:Aurora.Controls" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
+             xmlns:u="clr-namespace:Aurora.Utils"
              Height="22" MinWidth="120">
 
     <UserControl.Resources>
@@ -17,12 +18,12 @@
 
     <Grid>
         <!-- Main dropdown toggle button -->
-        <ToggleButton x:Name="pickerToggleButton" HorizontalContentAlignment="Left" Padding="4,1" Content="{Binding SelectedPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" IsChecked="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" />
+        <ToggleButton x:Name="pickerToggleButton" HorizontalContentAlignment="Left" Padding="4,1,25,1" Content="{Binding SelectedPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" IsChecked="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" />
         <Path Width="10" Height="6" HorizontalAlignment="Right" Margin="0,0,9,0" Fill="#FF858585" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z " Stretch="Fill" IsHitTestVisible="False" />
 
         <!-- Dropdown content -->
         <Popup x:Name="pickerPopup" StaysOpen="False" IsOpen="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}">
-            <Grid x:Name="popupContent" Height="280" Width="{Binding ActualWidth, ElementName=pickerToggleButton}">
+            <Grid x:Name="popupContent" Background="#1A1A1A" Height="280" Width="{Binding ActualWidth, ElementName=pickerToggleButton}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="1*" />

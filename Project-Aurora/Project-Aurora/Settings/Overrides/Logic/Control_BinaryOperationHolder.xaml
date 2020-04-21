@@ -15,7 +15,7 @@
                 <Rectangle Fill="#6000" Width="4" HorizontalAlignment="Left" VerticalAlignment="Stretch" />
                 <Rectangle Fill="#6000" Height="4" Width="6" Margin="4,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" />
                 <Border Margin="10,0,0,0" BorderThickness="1" BorderBrush="#6000" Background="#3000">
-                    <local:Control_EvaluatablePresenter Expression="{Binding Operand1, Mode=TwoWay}" Application="{Binding Application}" EvalType="{Binding EvalType}" Margin="6,2,6,0" />
+                    <local:Control_EvaluatablePresenter Expression="{Binding Operand1, Mode=TwoWay}" EvalType="{Binding EvalType}" Margin="6,2,6,0" />
                 </Border>
             </Grid>
 
@@ -36,7 +36,7 @@
                 <Rectangle Fill="#6000" Width="4" HorizontalAlignment="Left" VerticalAlignment="Stretch" />
                 <Rectangle Fill="#6000" Height="4" Width="6" Margin="4,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
                 <Border Margin="10,0,0,0" BorderThickness="1" BorderBrush="#6000" Background="#3000" Grid.RowSpan="2">
-                    <local:Control_EvaluatablePresenter Expression="{Binding Operand2, Mode=TwoWay}" Application="{Binding Application}" EvalType="{Binding EvalType}" Margin="6,2,6,0" />
+                    <local:Control_EvaluatablePresenter Expression="{Binding Operand2, Mode=TwoWay}" EvalType="{Binding EvalType}" Margin="6,2,6,0" />
                 </Border>
             </Grid>
         </StackPanel>

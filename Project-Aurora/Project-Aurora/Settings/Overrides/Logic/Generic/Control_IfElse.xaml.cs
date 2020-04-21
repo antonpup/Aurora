@@ -25,9 +25,8 @@ namespace Aurora.Settings.Overrides.Logic {
 
         private Control_Ternary_Context<T> context;
 
-        public Control_Ternary(IfElseGeneric<T> context, Profiles.Application application) : base() {
+        public Control_Ternary(IfElseGeneric<T> context) : base() {
             DataContext = this.context = new Control_Ternary_Context<T> {
-                Application = application,
                 ParentCondition = context,
                 EvaluatableType = EvaluatableTypeResolver.GetEvaluatableType(typeof(IEvaluatable<T>))
             };
@@ -82,7 +81,6 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     internal class Control_Ternary_Context<T> {
         public IfElseGeneric<T> ParentCondition { get; set; }
-        public Profiles.Application Application { get; set; }
         public EvaluatableType EvaluatableType { get; set; }
     }
 

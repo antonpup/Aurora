@@ -17,7 +17,7 @@
         <!--<Border Margin="0" BorderThickness="1" BorderBrush="#6000" Background="#3000">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="If" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                    <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.Condition, Mode=TwoWay}" Application="{Binding Application}" EvalType="Boolean" Margin="5,0,0,0" />
+                    <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.Condition, Mode=TwoWay}" EvalType="Boolean" Margin="5,0,0,0" />
                 </StackPanel>
             </Border>
             <Grid>
@@ -27,7 +27,7 @@
                         <Border Margin="10,0,0,0" BorderThickness="1" BorderBrush="#6000" Background="#3000">
                             <Grid>
                                 <TextBlock Text="Then" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                                <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.CaseTrue, Mode=TwoWay}" Application="{Binding Application}" EvalType="{Binding EvaluatableType}" Margin="45,0,0,0" />
+                                <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.CaseTrue, Mode=TwoWay}" EvalType="{Binding EvaluatableType}" Margin="45,0,0,0" />
                             </Grid>
                         </Border>
                     </Grid>
@@ -37,7 +37,7 @@
 
                             <Grid>
                                 <TextBlock Text="Else" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                                <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.CaseFalse, Mode=TwoWay}" Application="{Binding Application}" EvalType="{Binding EvaluatableType}" Margin="45,0,0,0" />
+                                <local:Control_EvaluatablePresenter Expression="{Binding ParentCondition.CaseFalse, Mode=TwoWay}" EvalType="{Binding EvaluatableType}" Margin="45,0,0,0" />
                             </Grid>
                         </Border>
                     </Grid>
@@ -71,7 +71,7 @@
                                     <Button Content="↓" VerticalAlignment="Center" Padding="4,2" Click="CaseDown_Click" />
                                     <Button Content="X" VerticalAlignment="Center" Padding="4,2" Click="DeleteCase_Click" />
                                 </StackPanel>
-                                <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" Application="{Binding Path=DataContext.Application, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" EvalType="Boolean" Margin="5,0,0,0" Visibility="{Binding Path=Condition, Converter={StaticResource IsNullToVisibilityConverter}}" />
+                                <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" EvalType="Boolean" Margin="5,0,0,0" Visibility="{Binding Path=Condition, Converter={StaticResource IsNullToVisibilityConverter}}" />
                             </DockPanel>
                         </Border>
 
@@ -79,7 +79,7 @@
                         <Border Margin="28,8,0,8" BorderThickness="1" BorderBrush="#6000" Background="#3000" Grid.Row="1">
                             <DockPanel LastChildFill="True">
                                 <TextBlock DockPanel.Dock="Left" Text="Then" FontStyle="Italic" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" />
-                                <local:Control_EvaluatablePresenter Expression="{Binding Value, Mode=TwoWay}" Application="{Binding Path=DataContext.Application, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" EvalType="{Binding Path=DataContext.EvaluatableType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Margin="5,0,0,0" />
+                                <local:Control_EvaluatablePresenter Expression="{Binding Value, Mode=TwoWay}" EvalType="{Binding Path=DataContext.EvaluatableType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Margin="5,0,0,0" />
                             </DockPanel>
                         </Border>
                     </Grid>

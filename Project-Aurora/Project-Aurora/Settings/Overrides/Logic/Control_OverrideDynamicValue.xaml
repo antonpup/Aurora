@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
+             xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -24,7 +25,7 @@
                                 <Run Text="{Binding Item1, Mode=OneWay}" TextDecorations="{Binding Item4, Converter={StaticResource UnderlineConv}}" Cursor="{Binding Item4, Converter={StaticResource CursorConv}}" ToolTip="{Binding Item4, Mode=OneWay}" />
                                 <Run Text="=" />
                             </TextBlock>
-                            <local:Control_EvaluatablePresenter Expression="{Binding Item3, Mode=OneWay}" EvalType="{Binding Item2}" Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Application}" ExpressionChanged="VariableEvaluatable_ExpressionChanged" />
+                            <local:Control_EvaluatablePresenter Expression="{Binding Item3, Mode=OneWay}" EvalType="{Binding Item2}" ExpressionChanged="VariableEvaluatable_ExpressionChanged" />
                         </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

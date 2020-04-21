@@ -79,7 +79,7 @@ namespace Aurora.Settings.Layers
         internal void SetProfile(Profiles.Application profile) {
             if (profile != null && !profileset) {
                 this.profile = profile;
-                triggerEvaluatable.Application = profile;
+                AttachedApplication.SetApplication(triggerEvaluatable, profile);
                 UpdatePathCombobox();
                 profileset = true;
             }

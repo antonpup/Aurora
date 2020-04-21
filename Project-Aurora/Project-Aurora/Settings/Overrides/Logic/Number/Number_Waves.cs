@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Windows.Data;
@@ -23,16 +24,9 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>The type of wave to generate.</summary>
         public WaveFunctionType WaveFunc { get; set; } = WaveFunctionType.Sine;
 
-        [JsonIgnore]
-        private Control_NumericUnaryOpHolder control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new Control_NumericUnaryOpHolder(application, typeof(WaveFunctionType));
-                control.SetBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_NumericUnaryOpHolder.SelectedOperatorProperty, new Binding("WaveFunc") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public Visual GetControl() => new Control_NumericUnaryOpHolder(typeof(WaveFunctionType))
+                .WithBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay })
+                .WithBinding(Control_NumericUnaryOpHolder.SelectedOperatorProperty, new Binding("WaveFunc") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>
         /// Evaluates this wave function generator using the result of the operand and the given wave type.
@@ -47,11 +41,6 @@ namespace Aurora.Settings.Overrides.Logic {
             }
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-            Operand?.SetApplication(application);
-        }
 
         public IEvaluatable<double> Clone() => new NumberWaveFunction { Operand = Operand.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();

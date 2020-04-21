@@ -28,7 +28,7 @@ namespace Aurora.Settings.Overrides.Logic
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseGeneric(ObservableCollection<Branch> cases) : this() { Cases = cases; }
 
-        public Visual GetControl(Application application) => new Control_Ternary<T>(this, application);
+        public Visual GetControl() => new Control_Ternary<T>(this);
 
         /// <summary>Evaluate conditions and return the appropriate evaluation.</summary>
         public T Evaluate(IGameState gameState) {
@@ -39,14 +39,6 @@ namespace Aurora.Settings.Overrides.Logic
         }
 
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        /// <summary>Update the applications of the children evaluatables.</summary>
-        public void SetApplication(Application application) {
-            foreach (var kvp in Cases) {
-                kvp.Condition?.SetApplication(application);
-                kvp.Value?.SetApplication(application);
-            }
-        }
 
         public IEvaluatable<T> Clone() => new IfElseGeneric<T>(new ObservableCollection<Branch>(Cases));
         IEvaluatable IEvaluatable.Clone() => Clone();
