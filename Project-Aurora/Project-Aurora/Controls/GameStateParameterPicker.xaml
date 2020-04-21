@@ -6,7 +6,7 @@
              xmlns:l="clr-namespace:Aurora.Controls" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d"
              xmlns:u="clr-namespace:Aurora.Utils"
-             Height="22" MinWidth="120">
+             Height="22" MinWidth="60">
 
     <UserControl.Resources>
         <DataTemplate x:Key="ListItemTemplate">
@@ -23,7 +23,7 @@
 
         <!-- Dropdown content -->
         <Popup x:Name="pickerPopup" StaysOpen="False" IsOpen="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}">
-            <Grid x:Name="popupContent" Background="#1A1A1A" Height="280" Width="{Binding ActualWidth, ElementName=pickerToggleButton}">
+            <Grid x:Name="popupContent" Background="#1A1A1A" Height="280" Width="200">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="1*" />
@@ -37,8 +37,8 @@
                 </StackPanel>
 
                 <!-- List boxes (aux is for animation) -->
-                <ListBox x:Name="mainListBox" Grid.Row="1" ItemsSource="{Binding CurrentParameterListItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=pickerToggleButton}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="0" RenderTransform="{l:DoubleToRelativeTransformOffset}" PreviewMouseLeftButtonDown="MainListBox_PreviewMouseLeftButtonDown" />
-                <ListBox x:Name="auxillaryListbox" Grid.Row="1" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=pickerToggleButton}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="-1" RenderTransform="{l:DoubleToRelativeTransformOffset}" />
+                <ListBox x:Name="mainListBox" Grid.Row="1" ItemsSource="{Binding CurrentParameterListItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=popupContent}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="0" RenderTransform="{l:DoubleToRelativeTransformOffset}" PreviewMouseLeftButtonDown="MainListBox_PreviewMouseLeftButtonDown" />
+                <ListBox x:Name="auxillaryListbox" Grid.Row="1" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=popupContent}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="-1" RenderTransform="{l:DoubleToRelativeTransformOffset}" />
 
                 <!-- Numeric input for numeric types -->
                 <DockPanel Grid.Row="2" LastChildFill="True">

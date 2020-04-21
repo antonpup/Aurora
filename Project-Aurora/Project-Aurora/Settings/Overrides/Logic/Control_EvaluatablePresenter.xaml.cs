@@ -1,6 +1,7 @@
 using Aurora.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -192,6 +193,22 @@ namespace Aurora.Settings.Overrides.Logic {
         #endregion
     }
 
+
+    /// <summary>
+    /// Converter that takes a type and returns the color (as defined in the theme) that is used to represent evaluatables of this type.
+    /// </summary>
+    public class EvaluatableBackgroundSelector : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            var dic = App.Current.FindResource("OverridesTypeColors") as ResourceDictionary;
+            return (value != null && dic.Contains(value) ? dic[value] : App.Current.FindResource("OverridesTypeFallbackColor")) as SolidColorBrush;
+        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+
+    /// <summary>
+    /// Event arguments passed to subscribers when the IEvaluatable expression changes on a <see cref="Control_EvaluatablePresenter"/>.
+    /// </summary>
     public class ExpressionChangeEventArgs : EventArgs {
         public IEvaluatable OldExpression { get; set; }
         public IEvaluatable NewExpression { get; set; }

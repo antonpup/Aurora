@@ -13,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         
@@ -80,5 +81,8 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
+
+        <!-- Toolbox -->
+        <local:Control_EvaluatableToolbox Grid.Row="4" />
     </Grid>
 </UserControl>

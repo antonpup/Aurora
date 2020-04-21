@@ -14,7 +14,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that checks a set of subconditions for atleast one of them being true.
     /// </summary>
-    [OverrideLogic("Or", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("Or", category: OverrideLogicCategory.Logic)]
     public class BooleanOr : IEvaluatable<bool>, IHasSubConditons {
 
         /// <summary>Creates a new Or evaluatable with no subconditions.</summary>
@@ -42,7 +42,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that checks a set of subconditions and requires them all to be true.
     /// </summary>
-    [OverrideLogic("And", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("And", category: OverrideLogicCategory.Logic)]
     public class BooleanAnd : IEvaluatable<bool>, IHasSubConditons {
 
         /// <summary>Creates a new And evaluatable with no subconditions.</summary>
@@ -71,7 +71,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that inverts another condition.
     /// </summary>
-    [OverrideLogic("Not", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("Not", category: OverrideLogicCategory.Logic)]
     public class BooleanNot : IEvaluatable<bool> {
 
         /// <summary>Creates a new NOT evaluatable with the default BooleanTrue subcondition.</summary>
@@ -99,7 +99,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that always returns true. Useful as a default condition as it means that
     /// the layer will always be visible.
     /// </summary>
-    [OverrideLogic("Boolean Constant", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("Boolean Constant", category: OverrideLogicCategory.Logic)]
     public class BooleanConstant : IEvaluatable<bool> {
 
         /// <summary>Creates a new constant true boolean.</summary>

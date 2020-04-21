@@ -12,7 +12,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <see cref="ExtensionTime"/> set to 3 seconds, the result of this would be a 3 second long "true" signal. Receiving another true
     /// signal while already extending an existing signal will restart the timer.
     /// </summary>
-    [OverrideLogic("True Extender", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("True Extender", category: OverrideLogicCategory.Logic)]
     public class BooleanExtender : IEvaluatable<bool> {
 
         private Stopwatch sw = new Stopwatch();

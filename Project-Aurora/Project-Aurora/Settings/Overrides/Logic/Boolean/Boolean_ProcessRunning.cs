@@ -10,7 +10,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that returns true/false depending on whether the given process name is running.
     /// </summary>
-    [OverrideLogic("Process Running", category: OverrideLogicCategory.Misc)]
+    [Evaluatable("Process Running", category: OverrideLogicCategory.Misc)]
     public class BooleanProcessRunning : IEvaluatable<bool>, INotifyPropertyChanged {
 
         public string ProcessName { get; set; } = "";

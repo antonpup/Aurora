@@ -14,7 +14,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
     /// <summary>
     /// An evaluatable that returns the time since the user has pressed a keyboard key or clicked the mouse.
     /// </summary>
-    [OverrideLogic("Away Time", category: OverrideLogicCategory.Input)]
+    [Evaluatable("Away Time", category: OverrideLogicCategory.Input)]
     public class NumberAwayTime : IEvaluatable<double> {
 
         /// <summary>Gets or sets the time unit that the time is being measured in.</summary>

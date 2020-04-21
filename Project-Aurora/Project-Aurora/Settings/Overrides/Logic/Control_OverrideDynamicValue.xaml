@@ -11,12 +11,18 @@
         <local:UnderlineConverter x:Key="UnderlineConv" />
         <local:CurosrConverter x:Key="CursorConv" />
     </UserControl.Resources>
-    <DockPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        
         <!-- Description -->
-        <TextBlock Text="A dynamic value allows you to set the value of the selected property using another variable. For example, you can set the opacity of a layer to be the result of health divided by maxhealth, causing the layer to fade out as your character takes damage (in supported games). Not all property types can have a dynamic value created for them." Margin="8" TextWrapping="Wrap" DockPanel.Dock="Top" />
+        <TextBlock Text="A dynamic value allows you to set the value of the selected property using another variable. For example, you can set the opacity of a layer to be the result of health divided by maxhealth, causing the layer to fade out as your character takes damage (in supported games). Not all property types can have a dynamic value created for them." Margin="8" TextWrapping="Wrap" Grid.Row="0" />
 
         <!-- Parameter list -->
-        <ScrollViewer Margin="6,0,6,6">
+        <ScrollViewer Margin="6,0,6,6" Grid.Row="1">
             <ItemsControl ItemsSource="{Binding Parameters}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
@@ -31,5 +37,8 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </DockPanel>
+
+        <!-- Toolbox -->
+        <local:Control_EvaluatableToolbox Grid.Row="2" />
+    </Grid>
 </UserControl>

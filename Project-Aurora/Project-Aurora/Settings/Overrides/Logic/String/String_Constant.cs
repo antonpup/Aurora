@@ -8,7 +8,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Represents a constant string value that will always evaluate to the same value.
     /// </summary>
-    [OverrideLogic("String Constant", category: OverrideLogicCategory.String)]
+    [Evaluatable("String Constant", category: OverrideLogicCategory.String)]
     public class StringConstant : IEvaluatable<string> {
 
         /// <summary>The value of the constant.</summary>

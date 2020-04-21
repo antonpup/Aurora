@@ -15,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that performs a binary mathematical operation on two operands.
     /// </summary>
-    [OverrideLogic("Arithmetic Operation", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Arithmetic Operation", category: OverrideLogicCategory.Maths)]
     public class NumberMathsOperation : IEvaluatable<double> {
 
         /// <summary>Creates a new maths operation that has no values pre-set.</summary>
@@ -68,7 +68,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Returns the absolute value of the given evaluatable.
     /// </summary>
-    [OverrideLogic("Absolute", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Absolute", category: OverrideLogicCategory.Maths)]
     public class NumberAbsValue : IEvaluatable<double> {
 
         /// <summary>Creates a new absolute operation with the default operand.</summary>
@@ -96,7 +96,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that compares two numerical evaluatables and returns a boolean depending on the comparison.
     /// </summary>
-    [OverrideLogic("Arithmetic Comparison", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Arithmetic Comparison", category: OverrideLogicCategory.Maths)]
     public class BooleanMathsComparison : IEvaluatable<bool> {
 
         /// <summary>Creates a new maths comparison that has no values pre-set.</summary>
@@ -151,7 +151,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that takes a number in a given range and linearly interpolates it onto another range.
     /// </summary>
-    [OverrideLogic("Lerp", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Lerp", category: OverrideLogicCategory.Maths)]
     public class NumberMap : IEvaluatable<double> {
 
         /// <summary>Creates a new numeric map with the default constant parameters.</summary>
@@ -201,7 +201,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that resolves to a numerical constant.
     /// </summary>
-    [OverrideLogic("Number Constant", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Number Constant", category: OverrideLogicCategory.Maths)]
     public class NumberConstant : IEvaluatable<double> {
 
         /// <summary>Creates a new constant with the zero as the constant value.</summary>

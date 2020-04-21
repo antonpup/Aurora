@@ -3,13 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:Aurora.Settings.Overrides.Logic"
              xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" d:DesignWidth="30" d:DesignHeight="120"
              MinWidth="30" MinHeight="30"
              VerticalAlignment="Top" HorizontalAlignment="Left"
              AllowDrop="True">
+    <UserControl.Resources>
+        <l:EvaluatableBackgroundSelector x:Key="EvaluatableBackgroundSelector" />
+    </UserControl.Resources>
 
-    <Border Padding="4" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Background="#883498DB">
+    <Border Padding="4" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Background="{Binding EvalType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource EvaluatableBackgroundSelector}}">
         <Grid>
             <ContentPresenter x:Name="EvaluatableControl" Margin="17,0,0,0" />
             <Border Width="2" Margin="5,0,0,0" Height="16" Background="#2FFF" HorizontalAlignment="Left" VerticalAlignment="Center" />

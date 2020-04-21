@@ -71,5 +71,15 @@ namespace Aurora.Utils
                     .Select((arg, i) => arg == interfaceGenericParameters[i])
                     .All(v => v)
                 ?? false;
+
+        /// <summary>Gets the generic argument types of the given interface for the given type.</summary>
+        /// <param name="type">The type to check interfaces on.</param>
+        /// <param name="interfaceType">The type of interface whose generic parameters to fetch.</param>
+        /// <returns>An array containing all the types of generic parameters defined for this type on the given interface, or null if interface not found.</returns>
+        public static Type[] GetGenericInterfaceTypes(this Type type, Type interfaceType) =>
+            type.GetInterfaces()
+                .Where(i => i.IsGenericType)
+                .SingleOrDefault(i => i.GetGenericTypeDefinition() == interfaceType)?
+                .GetGenericArguments();
     }
 }

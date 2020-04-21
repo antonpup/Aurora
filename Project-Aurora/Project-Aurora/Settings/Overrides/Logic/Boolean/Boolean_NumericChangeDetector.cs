@@ -12,7 +12,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that detects when the value of the given numeric evaluatable changes by a particular amount.
     /// <para>Can be used in conjunction with the <see cref="BooleanExtender"/> to make the 'true' last longer than a single eval tick.</para>
     /// </summary>
-    [OverrideLogic("Number Change Detector", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Number Change Detector", category: OverrideLogicCategory.Maths)]
     public class NumericChangeDetector : IEvaluatable<bool> {
 
         private double? lastValue;
