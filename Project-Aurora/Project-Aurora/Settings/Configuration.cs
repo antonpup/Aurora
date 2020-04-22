@@ -9,6 +9,9 @@ using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
 using Newtonsoft.Json.Serialization;
 using Aurora.Utils;
+using System.Collections.ObjectModel;
+using System.Collections.Concurrent;
+using Aurora.Settings.Overrides.Logic;
 
 namespace Aurora.Settings
 {
@@ -490,6 +493,9 @@ namespace Aurora.Settings
         private bool httpWindowOnStartUp;
         public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }
 
+        private ObservableConcurrentDictionary<string, IEvaluatable> evaluatableTemplates;
+        public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get => evaluatableTemplates; set { evaluatableTemplates = value; InvokePropertyChanged(); } }
+
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
         public Configuration()
@@ -560,9 +566,21 @@ namespace Aurora.Settings
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
+
+            evaluatableTemplates = new ObservableConcurrentDictionary<string, IEvaluatable>();
         }
 
+        /// <summary>
+        /// Called after the configuration file has been deserialized or created for the first time.
+        /// </summary>
+        public void OnPostLoad() {
+            if (!unified_hid_disabled) {
+                devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
+                unified_hid_disabled = true;
+            }
 
+            evaluatableTemplates.CollectionChanged += (sender, e) => InvokePropertyChanged(nameof(EvaluatableTemplates));
+        }
     }
 
     public static class ExtensionHelpers
@@ -588,24 +606,19 @@ namespace Aurora.Settings
 
         public static Configuration Load()
         {
+            Configuration config;
             var configPath = ConfigPath + ConfigExtension;
 
             if (!File.Exists(configPath))
-                return CreateDefaultConfigurationFile();
-
-            string content = File.ReadAllText(configPath, Encoding.UTF8);
-
-            if (String.IsNullOrWhiteSpace(content))
-                return CreateDefaultConfigurationFile();
-
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
-
-            if (!config.unified_hid_disabled)
-            {
-                config.devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
-                config.unified_hid_disabled = true;
+                config = CreateDefaultConfigurationFile();
+            else {
+                string content = File.ReadAllText(configPath, Encoding.UTF8);
+                config = string.IsNullOrWhiteSpace(content)
+                    ? CreateDefaultConfigurationFile()
+                    : JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
             }
 
+            config.OnPostLoad();
             return config;
         }
 

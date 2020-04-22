@@ -381,6 +381,9 @@
     <Compile Include="Controls\GameStateParameterPicker.xaml.cs">
       <DependentUpon>GameStateParameterPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Window_Prompt.xaml.cs">
+      <DependentUpon>Window_Prompt.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\DockFighter.cs" />
@@ -890,6 +893,7 @@
     </Compile>
     <Compile Include="Utils\AttachedApplication.cs" />
     <Compile Include="Utils\DragBehaviour.cs" />
+    <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
     <Compile Include="Utils\WindowPlacement.cs" />
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
@@ -1838,6 +1842,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\GameStateParameterPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Window_Prompt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

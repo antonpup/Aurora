@@ -180,16 +180,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Attempts to get an evaluatable from the suppliied data object. Will return true/false indicating if data is of correct format
         /// (an <see cref="IEvaluatable{T}"/> where T matches the <see cref="EvalType"/> property.</summary>
-        private bool TryGetData(IDataObject @do, out IEvaluatable evaluatable, out Control_EvaluatablePresenter source) {
-            if (@do.GetData(@do.GetFormats().FirstOrDefault(x => x != "SourcePresenter")) is IEvaluatable data && Utils.TypeUtils.ImplementsGenericInterface(data.GetType(), typeof(IEvaluatable<>), EvalType)) {
-                evaluatable = data;
-                source = @do.GetData("SourcePresenter") as Control_EvaluatablePresenter;
-                return true;
-            }
-            evaluatable = null;
-            source = null;
-            return false;
-        }
+        private bool TryGetData(IDataObject @do, out IEvaluatable evaluatable, out Control_EvaluatablePresenter source) => EvaluatableHelpers.TryGetData(@do, out evaluatable, out source, EvalType);
         #endregion
     }
 
@@ -198,7 +189,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Converter that takes a type and returns the color (as defined in the theme) that is used to represent evaluatables of this type.
     /// </summary>
     public class EvaluatableBackgroundSelector : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+        public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             var dic = App.Current.FindResource("OverridesTypeColors") as ResourceDictionary;
             return (value != null && dic.Contains(value) ? dic[value] : App.Current.FindResource("OverridesTypeFallbackColor")) as SolidColorBrush;
         }
