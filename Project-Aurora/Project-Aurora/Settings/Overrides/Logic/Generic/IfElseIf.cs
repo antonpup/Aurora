@@ -8,10 +8,9 @@ using System.Windows.Data;
 using System.Windows.Media;
 
 
-namespace Aurora.Settings.Overrides.Logic
-{
-    //[OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
-    public class IfElseGeneric<T> : IEvaluatable<T> {
+namespace Aurora.Settings.Overrides.Logic {
+
+    public abstract class IfElseGeneric<T> : IEvaluatable<T> {
         /// <summary>
         /// A list of all branches of the conditional.
         /// </summary>
@@ -40,7 +39,7 @@ namespace Aurora.Settings.Overrides.Logic
 
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
-        public IEvaluatable<T> Clone() => new IfElseGeneric<T>(new ObservableCollection<Branch>(Cases));
+        public abstract IEvaluatable<T> Clone();
         IEvaluatable IEvaluatable.Clone() => Clone();
 
         private static ObservableCollection<Branch> CreateDefaultCases(IEvaluatable<bool> condition, IEvaluatable<T> caseTrue, IEvaluatable<T> caseFalse) =>
@@ -59,6 +58,7 @@ namespace Aurora.Settings.Overrides.Logic
     }
 
 
+    // Concrete classes
     [Evaluatable("If - Else If - Else", category: OverrideLogicCategory.Logic)]
     public class IfElseBoolean : IfElseGeneric<bool> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
@@ -69,6 +69,7 @@ namespace Aurora.Settings.Overrides.Logic
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseBoolean(ObservableCollection<Branch> cases) : base(cases) { }
+        public override IEvaluatable<bool> Clone() => new IfElseBoolean(new ObservableCollection<Branch>(Cases));
     }
 
 
@@ -82,6 +83,7 @@ namespace Aurora.Settings.Overrides.Logic
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseNumeric(ObservableCollection<Branch> cases) : base(cases) { }
+        public override IEvaluatable<double> Clone() => new IfElseNumeric(new ObservableCollection<Branch>(Cases));
     }
 
 
@@ -95,5 +97,6 @@ namespace Aurora.Settings.Overrides.Logic
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseString(ObservableCollection<Branch> cases) : base(cases) { }
+        public override IEvaluatable<string> Clone() => new IfElseString(new ObservableCollection<Branch>(Cases));
     }
 }
