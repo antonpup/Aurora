@@ -65,6 +65,7 @@ namespace Aurora.Settings.Overrides.Logic {
         private bool AskUserForName(out string name) {
             var confirmName = "";
             var wnd = new Window_Prompt {
+                Title = "Enter name",
                 Description = "Enter a name to save this evaluatable as a template."
             };
             wnd.Validate = n => {

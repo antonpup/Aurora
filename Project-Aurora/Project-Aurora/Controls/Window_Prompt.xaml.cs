@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Aurora.Controls {
 
@@ -9,6 +11,7 @@ namespace Aurora.Controls {
 
         public Window_Prompt() {
             InitializeComponent();
+            Input.Focus();
         }
 
         /// <summary>
@@ -59,5 +62,19 @@ namespace Aurora.Controls {
         private void CancelButton_Click(object sender, RoutedEventArgs e) {
             DialogResult = false;
         }
+
+        private void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
+            if (e.Key == System.Windows.Input.Key.Enter)
+                OkayButton_Click(null, null);
+        }
+    }
+
+
+    /// <summary>
+    /// If the given string is empty, collapses the element.
+    /// </summary>
+    public class CollapseIfEmptyConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => string.IsNullOrWhiteSpace(value.ToString()) ? Visibility.Collapsed : Visibility.Visible;
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }
