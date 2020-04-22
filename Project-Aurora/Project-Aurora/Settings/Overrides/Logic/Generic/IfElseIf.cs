@@ -59,7 +59,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
 
     // Concrete classes
-    [Evaluatable("If - Else If - Else", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("If - Else If - Else", category: EvaluatableCategory.Logic)]
     public class IfElseBoolean : IfElseGeneric<bool> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
         public IfElseBoolean() : base() { }
@@ -73,7 +73,7 @@ namespace Aurora.Settings.Overrides.Logic {
     }
 
 
-    [Evaluatable("If - Else If - Else", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("If - Else If - Else", category: EvaluatableCategory.Logic)]
     public class IfElseNumeric : IfElseGeneric<double> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
         public IfElseNumeric() : base() { }
@@ -87,7 +87,7 @@ namespace Aurora.Settings.Overrides.Logic {
     }
 
 
-    [Evaluatable("If - Else If - Else", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("If - Else If - Else", category: EvaluatableCategory.Logic)]
     public class IfElseString : IfElseGeneric<string> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
         public IfElseString() : base() { }

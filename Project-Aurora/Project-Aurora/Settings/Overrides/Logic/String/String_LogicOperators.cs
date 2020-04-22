@@ -10,7 +10,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Logic that compares two strings using a selection of operators.
     /// </summary>
-    [Evaluatable("String Comparison", category: OverrideLogicCategory.String)]
+    [Evaluatable("String Comparison", category: EvaluatableCategory.String)]
     public class StringComparison : IEvaluatable<bool> {
 
         // Operands and operator

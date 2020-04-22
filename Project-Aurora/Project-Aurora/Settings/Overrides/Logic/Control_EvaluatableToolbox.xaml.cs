@@ -14,7 +14,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Returns a list of all detected evaluatables grouped by their category.</summary>
-        public IEnumerable<IGrouping<OverrideLogicCategory, EvaluatableRegistry.EvaluatableTypeContainer>> GroupedEvalutables =>
+        public IEnumerable<IGrouping<EvaluatableCategory, EvaluatableRegistry.EvaluatableTypeContainer>> GroupedEvalutables =>
             EvaluatableRegistry.Get().GroupBy(x => x.Metadata.Category);
 
         private void EvaluatableSpawnerItem_StartDrag(object sender, MouseEventArgs e, Point initial) {

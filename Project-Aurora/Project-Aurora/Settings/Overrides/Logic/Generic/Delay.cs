@@ -58,21 +58,21 @@ namespace Aurora.Settings.Overrides.Logic.Generic {
 
 
     // Concrete classes
-    [Evaluatable("Delay", category: OverrideLogicCategory.Misc)]
+    [Evaluatable("Delay", category: EvaluatableCategory.Misc)]
     public class DelayBoolean : DelayGeneric<bool> {
         public DelayBoolean() : base() { }
         public DelayBoolean(IEvaluatable<bool> source, double delay) : base(source, delay) { }
         public override IEvaluatable<bool> Clone() => new DelayBoolean(Source, Delay);
     }
 
-    [Evaluatable("Delay", category: OverrideLogicCategory.Misc)]
+    [Evaluatable("Delay", category: EvaluatableCategory.Misc)]
     public class DelayNumeric : DelayGeneric<double> {
         public DelayNumeric() : base() { }
         public DelayNumeric(IEvaluatable<double> source, double delay) : base(source, delay) { }
         public override IEvaluatable<double> Clone() => new DelayNumeric(Source, Delay);
     }
 
-    [Evaluatable("Delay", category: OverrideLogicCategory.Misc)]
+    [Evaluatable("Delay", category: EvaluatableCategory.Misc)]
     public class DelayString : DelayGeneric<string> {
         public DelayString() : base() { }
         public DelayString(IEvaluatable<string> source, double delay) : base(source, delay) { }

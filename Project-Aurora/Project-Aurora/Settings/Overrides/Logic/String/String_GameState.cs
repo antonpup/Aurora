@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace Aurora.Settings.Overrides.Logic {
 
-    [Evaluatable("String State Variable", category: OverrideLogicCategory.State)]
+    [Evaluatable("String State Variable", category: EvaluatableCategory.State)]
     public class StringGSIString : IEvaluatable<string> {
 
         /// <summary>Path to the GSI variable</summary>
