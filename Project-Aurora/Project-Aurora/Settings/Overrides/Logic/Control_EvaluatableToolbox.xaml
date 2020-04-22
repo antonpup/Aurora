@@ -10,7 +10,10 @@
 
     <UserControl.Resources>
         <o:EvaluatableBackgroundSelector x:Key="EvaluatableBackgroundSelector" />
-        <o:TemplateEvaluatableBackgroundSelector x:Key="TemplateEvaluatableBackgroundSelector" />
+        <u:ValueConverterGroup x:Key="TemplateEvaluatableBackgroundSelector">
+            <o:TemplateEvaluatableTypeSelector />
+            <o:EvaluatableBackgroundSelector />
+        </u:ValueConverterGroup>
     </UserControl.Resources>
 
     <Grid>
@@ -50,8 +53,13 @@
             <ItemsControl Background="Transparent" ItemsSource="{Binding TemplateSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" AllowDrop="True" DragEnter="EvaluatableTemplateList_DragEnter" Drop="EvaluatableTemplateList_Drop" u:AttachedApplication.Application="{x:Null}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableTemplateItem_StartDrag">
-                            <TextBlock Text="{Binding Path=Key}" Margin="4" />
+                        <Border Background="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableTemplateItem_StartDrag" Padding="4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=Key}" Margin="0,0,12,0" />
+                                <!-- Note these buttons use MouseDown because otherwise if the user uses enter on the rename prompt window, it re-triggers a click on this button. -->
+                                <Button Content="R" ToolTip="Rename this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="RenameTemplateButton_Click" />
+                                <Button Content="X" ToolTip="Remove this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="DeleteTemplateButton_Click" />
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

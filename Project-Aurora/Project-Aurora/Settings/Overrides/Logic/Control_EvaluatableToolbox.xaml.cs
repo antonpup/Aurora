@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using static Aurora.Settings.Overrides.Logic.EvaluatableHelpers;
+using TemplateContext = System.Collections.Generic.KeyValuePair<string, Aurora.Settings.Overrides.Logic.IEvaluatable>;
 
 namespace Aurora.Settings.Overrides.Logic {
 
@@ -39,7 +40,7 @@ namespace Aurora.Settings.Overrides.Logic {
         #region Evaluatable Templates
         /// <summary>Handler for when the user drags an evaluatable out from their list of saved evaluatables.</summary>
         private void EvaluatableTemplateItem_StartDrag(object sender, MouseEventArgs e, Point initial) {
-            var dc = (KeyValuePair<string, IEvaluatable>)((FrameworkElement)sender).DataContext;
+            var dc = (TemplateContext)((FrameworkElement)sender).DataContext;
             DragDrop.DoDragDrop(this, dc.Value.Clone(), DragDropEffects.Move);
         }
 
@@ -62,7 +63,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Asks the user to enter a name for an evaluatable. Returns whether successful (false = user cancel).</summary>
-        private bool AskUserForName(out string name) {
+        private bool AskUserForName(out string name, string existingName = null) {
             var confirmName = "";
             var wnd = new Window_Prompt {
                 Title = "Enter name",
@@ -75,7 +76,8 @@ namespace Aurora.Settings.Overrides.Logic {
                     return false;
 
                 // If an evaluatable with this name already exists, make the user confirm by clicking okay again.
-                } else if (TemplateSource.ContainsKey(n) && n != confirmName) {
+                // Note that when renaming and an existingName is provided, don't require confirm for renaming
+                } else if (TemplateSource.ContainsKey(n) && n != confirmName && (existingName == null || n != existingName)) {
                     wnd.ErrorMessage = "A template with this name already exists. Click 'Okay' again to overwrite it.";
                     confirmName = n;
                     return false;
@@ -88,16 +90,32 @@ namespace Aurora.Settings.Overrides.Logic {
             name = wnd.Text;
             return res;
         }
+
+        private void RenameTemplateButton_Click(object sender, MouseButtonEventArgs e) {
+            e.Handled = true;
+            var dc = (TemplateContext)((FrameworkElement)sender).DataContext;
+            if (AskUserForName(out var newName, dc.Key) && dc.Key != newName) {
+                TemplateSource.Remove(dc.Key);
+                TemplateSource[newName] = dc.Value;
+            }
+        }
+
+        private void DeleteTemplateButton_Click(object sender, MouseButtonEventArgs e) {
+            e.Handled = true;
+            var dc = (TemplateContext)((FrameworkElement)sender).DataContext;
+            if (MessageBox.Show($"Are you sure you wish to remove template '{dc.Key}'? This cannot be undone.", "Confirm delete", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                TemplateSource.Remove(dc.Key);
+        }
         #endregion
     }
 
 
     /// <summary>
-    /// A more-specialised version of the <see cref="EvaluatableBackgroundSelector"/> that deals with selecting the relevant
-    /// background color for an evaluatable template.
+    /// A converter that extracts the type of evaluatable from a template.
     /// </summary>
-    public class TemplateEvaluatableBackgroundSelector : EvaluatableBackgroundSelector {
-        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
-            base.Convert(value.GetType().GetGenericInterfaceTypes(typeof(IEvaluatable<>))[0], targetType, parameter, culture);
+    public class TemplateEvaluatableTypeSelector : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+            value.GetType().GetGenericInterfaceTypes(typeof(IEvaluatable<>))[0];
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }
