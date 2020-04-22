@@ -161,6 +161,7 @@ namespace Aurora.Settings.Overrides {
                 { typeof(long), "icons8-numbers-30.png" },
                 { typeof(float), "icons8-numbers-30.png" },
                 { typeof(double), "icons8-numbers-30.png" },
+                { typeof(string), "icons8-font-size-30.png" },
                 { typeof(Color), "icons8-paint-palette-30.png" },
                 { typeof(KeySequence), "icons8-keyboard-30.png" }
             }.TryGetValue((Type)value, out string val) ? val : "icons8-diamonds-30.png";

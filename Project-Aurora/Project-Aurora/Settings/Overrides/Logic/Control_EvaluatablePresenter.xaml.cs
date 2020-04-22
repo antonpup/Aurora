@@ -107,7 +107,8 @@ namespace Aurora.Settings.Overrides.Logic {
                 e.Effects = (e.KeyStates & DragDropKeyStates.ControlKey) > 0 ? DragDropEffects.Copy : DragDropEffects.Move;
                 // Mark the event as handled so any parent presenters don't attempt to override the effects with their own logic.
                 e.Handled = true;
-            }
+            } else
+                e.Effects = DragDropEffects.None;
         }
 
         /// <summary>

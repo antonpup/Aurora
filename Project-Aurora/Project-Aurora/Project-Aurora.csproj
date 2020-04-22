@@ -1746,6 +1746,7 @@
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
     <Resource Include="Resources\terraria_512x512.png" />
+    <Resource Include="Resources\icons8-font-size-30.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

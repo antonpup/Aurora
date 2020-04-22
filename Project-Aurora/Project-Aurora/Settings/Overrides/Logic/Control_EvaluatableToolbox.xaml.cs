@@ -22,7 +22,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Returns a list of all detected evaluatables grouped by their category.</summary>
         public IEnumerable<IGrouping<EvaluatableCategory, EvaluatableRegistry.EvaluatableTypeContainer>> GroupedEvalutables =>
-            EvaluatableRegistry.Get().GroupBy(x => x.Metadata.Category);
+            EvaluatableRegistry.Get().GroupBy(x => x.Metadata.Category).OrderBy(x => (int)x.Key);
 
         /// <summary>Property that forwards the evaluatable template store from the global config.</summary>
         public ObservableConcurrentDictionary<string, IEvaluatable> TemplateSource => Global.Configuration.EvaluatableTemplates;

@@ -14,6 +14,7 @@ namespace Aurora.Settings.Overrides.Logic {
         private static readonly IEnumerable<EvaluatableTypeContainer> allOverrideLogics = Utils.TypeUtils
             .GetTypesWithCustomAttribute<EvaluatableAttribute>()
             .Where(kvp => typeof(IEvaluatable).IsAssignableFrom(kvp.Key))
+            .OrderBy(kvp => kvp.Value.Name, StringComparer.OrdinalIgnoreCase)
             .Select(kvp => new EvaluatableTypeContainer {
                 Evaluatable = kvp.Key,
                 Metadata = kvp.Value,
