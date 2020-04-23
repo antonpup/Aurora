@@ -220,6 +220,12 @@ namespace Aurora.Utils
             #region Sensors
             private readonly ISensor _BandwidthUsed;
             public float BandwidthUsed => GetValue(_BandwidthUsed);
+
+            private readonly ISensor _UploadSpeed;
+            public float UploadSpeedBytes => GetValue(_UploadSpeed);
+
+            private readonly ISensor _DownloadSpeed;
+            public float DownloadSpeedBytes => GetValue(_DownloadSpeed);
             #endregion
 
             public NETUpdater(IEnumerable<IHardware> hws)
@@ -231,6 +237,8 @@ namespace Aurora.Utils
                     return;
                 }
                 _BandwidthUsed = hw.FindSensor("load");
+                _UploadSpeed = hw.FindSensor("throughput/7");
+                _DownloadSpeed = hw.FindSensor("throughput/8");
             }
         }
     }
