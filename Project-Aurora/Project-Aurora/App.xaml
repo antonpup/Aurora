@@ -13,9 +13,9 @@
 
             <!-- Dictionary containing the colors of the evalutable presenters for each type of override type. -->
             <ResourceDictionary x:Key="OverridesTypeColors">
-                <SolidColorBrush x:Key="{x:Type s:Double}" Color="#8834DB4C" />
-                <SolidColorBrush x:Key="{x:Type s:Boolean}" Color="#883498DB" />
-                <SolidColorBrush x:Key="{x:Type s:String}" Color="#88DB3453" />
+                <SolidColorBrush x:Key="{x:Type s:Double}" Color="#5534DB4C" />
+                <SolidColorBrush x:Key="{x:Type s:Boolean}" Color="#553498DB" />
+                <SolidColorBrush x:Key="{x:Type s:String}" Color="#55DB3453" />
             </ResourceDictionary>
             <SolidColorBrush x:Key="OverridesTypeFallbackColor" Color="#88DBDBDB" />
         </ResourceDictionary>
