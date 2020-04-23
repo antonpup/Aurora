@@ -50,10 +50,11 @@ namespace Aurora.Controls {
 
                 // Generate the string version of this working path (and cache it)
                 var _workingPath = WorkingPathStr;
+                if (_workingPath != "") _workingPath += "/"; // If not at the root directory, add / to the end of the test path. This means it doesn't get confused with things such as `CPU` and `CPUUsage`.
                 return ParameterList // With all properties in the current param lookup that are of a valid type (e.g. numbers)
                     .Where(path => path.StartsWith(_workingPath)) // Pick only the ones that start with the same working path
-                    .Select(path => path.Substring(_workingPath == "" ? 0 : _workingPath.Length + 1).Split('/').First()) // Select only the next part of the path
-                    .Distinct() // And ensure there are no duplicates (get distinct elements) so that we don't show "directories" multiple times (e.g. only once will "LocalPCInfo" be shown)
+                    .Select(path => path.Substring(_workingPath.Length).Split('/').First()) // Select only the next part of the path
+                    .Distinct() // And ensure there are no duplicates (get distinct elements) so that we don't show "directories" multiple times (e.g. only once with "LocalPCInfo" be shown)
                     .OrderBy(p => p.ToLowerInvariant()) // Order the items alphabetically (case insensitive)
                     .ToList();
             }
