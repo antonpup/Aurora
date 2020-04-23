@@ -1,15 +1,24 @@
 ﻿<Application x:Class="Aurora.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    DispatcherUnhandledException="App_DispatcherUnhandledException"
-    >
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
+             DispatcherUnhandledException="App_DispatcherUnhandledException">
+
     <Application.Resources>
-        <!--<ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <!--<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>
                 <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>-->
+            </ResourceDictionary.MergedDictionaries>-->
+
+            <!-- Dictionary containing the colors of the evalutable presenters for each type of override type. -->
+            <ResourceDictionary x:Key="OverridesTypeColors">
+                <SolidColorBrush x:Key="{x:Type s:Double}" Color="#5534DB4C" />
+                <SolidColorBrush x:Key="{x:Type s:Boolean}" Color="#553498DB" />
+                <SolidColorBrush x:Key="{x:Type s:String}" Color="#55DB3453" />
+            </ResourceDictionary>
+            <SolidColorBrush x:Key="OverridesTypeFallbackColor" Color="#88DBDBDB" />
+        </ResourceDictionary>
     </Application.Resources>
 
 </Application>

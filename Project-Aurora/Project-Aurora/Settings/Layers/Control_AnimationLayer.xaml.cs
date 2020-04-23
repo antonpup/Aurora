@@ -79,7 +79,7 @@ namespace Aurora.Settings.Layers
         internal void SetProfile(Profiles.Application profile) {
             if (profile != null && !profileset) {
                 this.profile = profile;
-                triggerEvaluatable.Application = profile;
+                AttachedApplication.SetApplication(triggerEvaluatable, profile);
                 UpdatePathCombobox();
                 profileset = true;
             }
@@ -173,13 +173,13 @@ namespace Aurora.Settings.Layers
             UpdateUI();
 
             // If the evaluatable is not the correct type or it is null, then create the default Evaluatable for it
-            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatable<double>)))
-                Context.Properties._EvaluatableTrigger = EvaluatableTypeResolver.GetDefault(EvaluatableType.Number);
-            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatable<bool>)))
-                Context.Properties._EvaluatableTrigger = EvaluatableTypeResolver.GetDefault(EvaluatableType.Boolean);
+            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !typeof(IEvaluatable<double>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+                Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<double>();
+            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !typeof(IEvaluatable<bool>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+                Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<bool>();
 
             // Update the evaluatable control
-            triggerEvaluatable.EvalType = AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) ? EvaluatableType.Number : EvaluatableType.Boolean;
+            triggerEvaluatable.EvalType = AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) ? typeof(double) : typeof(bool);
             triggerEvaluatable.Expression = Context.Properties._EvaluatableTrigger;
         }
 
