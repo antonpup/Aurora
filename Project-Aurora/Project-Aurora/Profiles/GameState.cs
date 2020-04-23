@@ -260,6 +260,11 @@ namespace Aurora.Profiles
         public GPUInfo GPU => _gpuInfo ?? (_gpuInfo = new GPUInfo());
         #endregion
 
+        #region NET Properties
+        private static NETInfo _netInfo;
+        public NETInfo NET => _netInfo ?? (_netInfo = new NETInfo());
+        #endregion
+
         /// <summary>
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
@@ -335,5 +340,10 @@ namespace Aurora.Profiles
         public float MemoryUsed => Utils.HardwareMonitor.GPU.GPUMemoryUsed;
         public float MemoryFree => MemoryTotal - MemoryUsed;
         public float MemoryTotal => Utils.HardwareMonitor.GPU.GPUMemoryTotal;
+    }
+
+    public class NETInfo : Node<NETInfo>
+    {
+        public float Usage => Utils.HardwareMonitor.NET.BandwidthUsed;
     }
 }
