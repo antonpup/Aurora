@@ -1,6 +1,7 @@
 ﻿using Aurora.Controls;
 using Aurora.Utils;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -20,9 +21,14 @@ namespace Aurora.Settings.Overrides.Logic {
             InitializeComponent();
         }
 
-        /// <summary>Returns a list of all detected evaluatables grouped by their category.</summary>
-        public IEnumerable<IGrouping<EvaluatableCategory, EvaluatableRegistry.EvaluatableTypeContainer>> GroupedEvalutables =>
-            EvaluatableRegistry.Get().GroupBy(x => x.Metadata.Category).OrderBy(x => (int)x.Key);
+        /// <summary>Returns a list of all detected evaluatables grouped by their category and also a special marker for the custom templates tab.</summary>
+        public IEnumerable AvailableTabs {
+            get {
+                foreach (var group in EvaluatableRegistry.Get().GroupBy(x => x.Metadata.Category).OrderBy(x => (int)x.Key))
+                    yield return group;
+                yield return new { Key = "My Templates" };
+            }
+        }
 
         /// <summary>Property that forwards the evaluatable template store from the global config.</summary>
         public ObservableConcurrentDictionary<string, IEvaluatable> TemplateSource => Global.Configuration.EvaluatableTemplates;
@@ -107,6 +113,15 @@ namespace Aurora.Settings.Overrides.Logic {
                 TemplateSource.Remove(dc.Key);
         }
         #endregion
+    }
+
+
+    /// <summary>
+    /// Data template selector for selecting the tab content (since the template evaluatables and default evaluatables require different data templates)
+    /// </summary>
+    public class TabContentTemplateSelector : DataTemplateSelector {
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) =>
+            ((FrameworkElement)container).FindResource(item is IGrouping<EvaluatableCategory, EvaluatableRegistry.EvaluatableTypeContainer> ? "DefaultEvaluatableDT" : "TemplateEvaluatableDT") as DataTemplate;
     }
 
 
