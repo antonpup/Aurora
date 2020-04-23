@@ -893,6 +893,7 @@
     <Compile Include="Utils\DragBehaviour.cs" />
     <Compile Include="Utils\GridHelper.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
+    <Compile Include="Utils\TextUtils.cs" />
     <Compile Include="Utils\WindowPlacement.cs" />
     <Compile Include="Utils\Converters.cs" />
     <Compile Include="Utils\DesktopUtils.cs" />
@@ -1746,6 +1747,7 @@
     <Resource Include="Resources\betterdiscord.png" />
     <Resource Include="Resources\terraria_512x512.png" />
     <Resource Include="Resources\icons8-font-size-30.png" />
+    <Resource Include="Resources\icons8-folder-30.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

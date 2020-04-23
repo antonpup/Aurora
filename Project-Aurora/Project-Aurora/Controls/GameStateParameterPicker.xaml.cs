@@ -39,7 +39,7 @@ namespace Aurora.Controls {
         /// <summary>
         /// Gets a list of items that should be displayed in the parameter list (based on the current "parent" variable).
         /// </summary>
-        public List<string> CurrentParameterListItems {
+        public IEnumerable<PathOption> CurrentParameterListItems {
             get {
                 // If the application or param lookup is null, we don't know the parameters so do nothing
                 if (Application?.ParameterLookup == null) return null;
@@ -51,12 +51,13 @@ namespace Aurora.Controls {
                 // Generate the string version of this working path (and cache it)
                 var _workingPath = WorkingPathStr;
                 if (_workingPath != "") _workingPath += "/"; // If not at the root directory, add / to the end of the test path. This means it doesn't get confused with things such as `CPU` and `CPUUsage`.
-                return ParameterList // With all properties in the current param lookup that are of a valid type (e.g. numbers)
-                    .Where(path => path.StartsWith(_workingPath)) // Pick only the ones that start with the same working path
-                    .Select(path => path.Substring(_workingPath.Length).Split('/').First()) // Select only the next part of the path
-                    .Distinct() // And ensure there are no duplicates (get distinct elements) so that we don't show "directories" multiple times (e.g. only once with "LocalPCInfo" be shown)
-                    .OrderBy(p => p.ToLowerInvariant()) // Order the items alphabetically (case insensitive)
-                    .ToList();
+                return from path in ParameterList // With all properties in the current param lookup that are of a valid type (e.g. numbers)
+                       where path.StartsWith(_workingPath) // Pick only the ones that start with the same working path
+                       let pathSplit = path.Substring(_workingPath.Length).Split('/') // Get a list of all remaining parts of the path (e.g. if this was A/B/C and current path was A, pathSplit would be 'B', 'C')
+                       let isFolder = pathSplit.Length > 1 // If there is more than one part of the path remaining, this must be a directory
+                       group isFolder by pathSplit[0] into g // Group by the path name so duplicates are removed
+                       orderby !g.First(), g.Key // Order the remaining (distinct) items by folders first, then order by their name
+                       select new PathOption(g.Key, g.First()); // Finally, put them in a POCO so we can bind the UI to these properties.
             }
         }
 
@@ -113,7 +114,7 @@ namespace Aurora.Controls {
                 picker.WorkingPath = new Stack<string>(e.NewValue.ToString().Split('/'));
                 picker.WorkingPath.Pop(); // Remove the last one, since the working path should not include the actual var name
                 picker.NotifyChanged(nameof(WorkingPath), nameof(WorkingPathStr), nameof(ParameterList), nameof(CurrentParameterListItems)); // All these things will be different now, so trigger an update of anything requiring them
-                picker.mainListBox.SelectedItem = e.NewValue.ToString().Split('/').Last(); // The selected item in the list will be the last part of the path
+                picker.mainListBox.SelectedValue = e.NewValue.ToString().Split('/').Last(); // The selected item in the list will be the last part of the path
             }
 
             // Raise an event informing subscribers
@@ -151,7 +152,7 @@ namespace Aurora.Controls {
             picker.parameterList = null;
             picker.NotifyChanged(nameof(ParameterList), nameof(CurrentParameterListItems));
 
-            if (!picker.ValidatePath(picker.SelectedPath ))
+            if (!picker.ValidatePath(picker.SelectedPath))
                 picker.SelectedPath = "";
         }
         #endregion
@@ -243,7 +244,7 @@ namespace Aurora.Controls {
                     auxillaryListbox.ItemsSource = CurrentParameterListItems;
 
                     // Add the clicked item to the working path (even if it is an end variable, not a "directory")
-                    WorkingPath.Push(item.Content.ToString());
+                    WorkingPath.Push(((PathOption)item.DataContext).Path);
 
                     var path = string.Join("/", WorkingPath.Reverse());
                     if (Application?.ParameterLookup?.IsValidParameter(path) ?? false) {
@@ -277,6 +278,21 @@ namespace Aurora.Controls {
         private void NotifyChanged(params string[] propNames) {
             foreach (var prop in propNames)
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        }
+
+
+        /// <summary>
+        /// Basic POCO for holding a bit of metadata about a path option.
+        /// </summary>
+        public class PathOption {
+            public PathOption(string path, bool isFolder) {
+                Path = path;
+                IsFolder = isFolder;
+            }
+
+            public string DisplayPath => Path.CamelCaseToSpaceCase();
+            public string Path { get; }
+            public bool IsFolder { get; }
         }
     }
 

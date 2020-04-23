@@ -9,8 +9,12 @@
              Height="22" MinWidth="60">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConv" />
         <DataTemplate x:Key="ListItemTemplate">
-            <TextBlock Text="{Binding .}" Padding="4,1" />
+            <Grid>
+                <TextBlock Text="{Binding DisplayPath}" Padding="4,1" Margin="0,0,16,0" />
+                <Image Source="/Aurora;component/Resources/icons8-folder-30.png" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding IsFolder, Converter={StaticResource BoolToVisConv}}" />
+            </Grid>
         </DataTemplate>
         <l:IsStringNotNullOrWhitespaceConverter x:Key="IsStringNotNullConv" />
         <l:PropertyTypeToGridLengthConverter x:Key="PropTypeToHeightConv" />
@@ -37,8 +41,8 @@
                 </StackPanel>
 
                 <!-- List boxes (aux is for animation) -->
-                <ListBox x:Name="mainListBox" Grid.Row="1" ItemsSource="{Binding CurrentParameterListItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=popupContent}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="0" RenderTransform="{l:DoubleToRelativeTransformOffset}" PreviewMouseLeftButtonDown="MainListBox_PreviewMouseLeftButtonDown" />
-                <ListBox x:Name="auxillaryListbox" Grid.Row="1" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=popupContent}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="-1" RenderTransform="{l:DoubleToRelativeTransformOffset}" />
+                <ListBox x:Name="mainListBox" Grid.Row="1" ItemsSource="{Binding CurrentParameterListItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" ItemTemplate="{StaticResource ListItemTemplate}" SelectedValuePath="Path" Width="{Binding ActualWidth, ElementName=popupContent}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="0" RenderTransform="{l:DoubleToRelativeTransformOffset}" PreviewMouseLeftButtonDown="MainListBox_PreviewMouseLeftButtonDown" />
+                <ListBox x:Name="auxillaryListbox" Grid.Row="1" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=popupContent}" SelectedValuePath="Path" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="-1" RenderTransform="{l:DoubleToRelativeTransformOffset}" />
 
                 <!-- Numeric input for numeric types -->
                 <DockPanel Grid.Row="2" LastChildFill="True">
