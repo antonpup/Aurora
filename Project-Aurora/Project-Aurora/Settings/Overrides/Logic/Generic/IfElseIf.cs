@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,12 +49,13 @@ namespace Aurora.Settings.Overrides.Logic {
                 new Branch(null, caseFalse)
             };
 
-        public class Branch {
+        public class Branch : ICloneable {
             public IEvaluatable<bool> Condition { get; set; }
             public IEvaluatable<T> Value { get; set; }
 
-            public Branch() { }
             public Branch(IEvaluatable<bool> condition, IEvaluatable<T> value) { Condition = condition; Value = value; }
+
+            public object Clone() => new Branch(Condition?.Clone(), Value.Clone());
         }
     }
 
@@ -69,7 +71,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseBoolean(ObservableCollection<Branch> cases) : base(cases) { }
-        public override IEvaluatable<bool> Clone() => new IfElseBoolean(new ObservableCollection<Branch>(Cases));
+        public override IEvaluatable<bool> Clone() => new IfElseBoolean(Cases.Clone());
     }
 
 
@@ -83,7 +85,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseNumeric(ObservableCollection<Branch> cases) : base(cases) { }
-        public override IEvaluatable<double> Clone() => new IfElseNumeric(new ObservableCollection<Branch>(Cases));
+        public override IEvaluatable<double> Clone() => new IfElseNumeric(Cases.Clone());
     }
 
 
@@ -97,6 +99,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseString(ObservableCollection<Branch> cases) : base(cases) { }
-        public override IEvaluatable<string> Clone() => new IfElseString(new ObservableCollection<Branch>(Cases));
+        public override IEvaluatable<string> Clone() => new IfElseString(Cases.Clone());
     }
 }
