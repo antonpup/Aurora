@@ -345,5 +345,7 @@ namespace Aurora.Profiles
     public class NETInfo : Node<NETInfo>
     {
         public float Usage => Utils.HardwareMonitor.NET.BandwidthUsed;
+        public float UploadSpeed => Utils.HardwareMonitor.NET.UploadSpeedBytes;
+        public float DownloadSpeed => Utils.HardwareMonitor.NET.DownloadSpeedBytes;
     }
 }
