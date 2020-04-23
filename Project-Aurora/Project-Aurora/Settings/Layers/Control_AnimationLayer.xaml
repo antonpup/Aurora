@@ -30,7 +30,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox x:Name="triggerGroupbox" Header="Trigger" Margin="257,53,0,0" Width="333" MinHeight="299" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox x:Name="triggerGroupbox" Header="Trigger" Margin="257,53,0,0" Width="333" MinHeight="299" HorizontalAlignment="Left">
             <ScrollViewer>
                 <Grid>
                     <Grid x:Name="triggerGridLayout">
@@ -66,7 +66,10 @@
                         <Label Content="Trigger path:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" />
                         <ComboBox x:Name="triggerPath" Grid.Row="1" Grid.Column="1"  Margin="2,4" VerticalAlignment="Center" Height="20" HorizontalAlignment="Stretch" IsEditable="True" TextBoxBase.TextChanged="triggerPath_TextChanged" />
                         <Label Content="Trigger expr:" Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                        <logic:Control_EvaluatablePresenter x:Name="triggerEvaluatable" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ExpressionChanged="triggerEvaluatable_ExpressionChanged" />
+                        <DockPanel Grid.Row="2" Grid.Column="1" LastChildFill="True">
+                            <logic:Control_EvaluatableToolbox DockPanel.Dock="Bottom" Height="180" />
+                            <logic:Control_EvaluatablePresenter x:Name="triggerEvaluatable" VerticalAlignment="Center" ExpressionChanged="triggerEvaluatable_ExpressionChanged" />
+                        </DockPanel>
                         <Label Content="Trigger keys:" Grid.Row="3" VerticalAlignment="Top" HorizontalAlignment="Right" />
                         <CheckBox x:Name="triggerAnyKey" Grid.Row="3" Grid.Column="1" Content="Trigger for any key" Margin="-6,6" Checked="triggerAnyKey_Checked" Unchecked="triggerAnyKey_Checked" />
                         <Controls:KeySequence x:Name="triggerKeys" Margin="0,28,0,0" Grid.Row="3" Grid.Column="1" RecordingTag="AnimationTriggerKeys" Title="Trigger keys" FreestyleEnabled="False" SequenceUpdated="triggerKeys_SequenceUpdated" />

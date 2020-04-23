@@ -79,7 +79,7 @@ namespace Aurora.Settings.Overrides {
             get => _selectedProperty;
             set {
                 _selectedProperty = value;
-                OnPropertyChanged("SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
+                OnPropertyChanged(nameof(SelectedProperty), nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl));
             }
         }
 
@@ -101,13 +101,16 @@ namespace Aurora.Settings.Overrides {
                         ((IValueOverridable)Layer.Handler.Properties).Overrides.SetValueFromString(_selectedProperty.Item1, null);
                     }  else // Else if the user selected a non-"None" option, create a new instance of that OverrideLogic and assign it to this property
                         Layer.OverrideLogic[_selectedProperty.Item1] = (IOverrideLogic)Activator.CreateInstance(value, _selectedProperty.Item3);
-                    OnPropertyChanged("SelectedLogic", "SelectedLogicType", "SelectedLogicControl"); // Raise an event to update the control
+                    OnPropertyChanged(nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl)); // Raise an event to update the control
                 }
             }
         }
 
         // The control for the currently selected logic
-        public System.Windows.Media.Visual SelectedLogicControl => SelectedLogic?.GetControl(Layer?.AssociatedApplication);
+        public System.Windows.Media.Visual SelectedLogicControl => SelectedLogic?.GetControl();
+
+        // Application context for logic
+        public Profiles.Application Application => Layer?.AssociatedApplication;
         #endregion
 
         #region Dependency Objects
@@ -117,7 +120,7 @@ namespace Aurora.Settings.Overrides {
             // Ensure the layer has the property-override map
             if (layer.OverrideLogic == null)
                 layer.OverrideLogic = new Dictionary<string, IOverrideLogic>();
-            control.OnPropertyChanged("Layer", "AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
+            control.OnPropertyChanged(nameof(Layer), nameof(AvailableLayerProperties), nameof(SelectedProperty), nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl), nameof(Application));
         }
 
         public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(Control_OverridesEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnLayerChange));
@@ -158,6 +161,7 @@ namespace Aurora.Settings.Overrides {
                 { typeof(long), "icons8-numbers-30.png" },
                 { typeof(float), "icons8-numbers-30.png" },
                 { typeof(double), "icons8-numbers-30.png" },
+                { typeof(string), "icons8-font-size-30.png" },
                 { typeof(Color), "icons8-paint-palette-30.png" },
                 { typeof(KeySequence), "icons8-keyboard-30.png" }
             }.TryGetValue((Type)value, out string val) ? val : "icons8-diamonds-30.png";
