@@ -834,9 +834,6 @@
     <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml.cs">
       <DependentUpon>Control_BooleanGSINumeric.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml.cs">
-      <DependentUpon>Control_BooleanNot.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Settings\Overrides\Logic\Control_EvaluatablePresenter.xaml.cs">
       <DependentUpon>Control_EvaluatablePresenter.xaml</DependentUpon>
     </Compile>
@@ -892,7 +889,9 @@
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AttachedApplication.cs" />
+    <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\DragBehaviour.cs" />
+    <Compile Include="Utils\GridHelper.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
     <Compile Include="Utils\WindowPlacement.cs" />
     <Compile Include="Utils\Converters.cs" />
@@ -2295,10 +2294,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanGSINumeric.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Settings\Overrides\Logic\Boolean\Control_BooleanNot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

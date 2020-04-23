@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -80,8 +81,10 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public IEvaluatable<bool> SubCondition { get; set; } = new BooleanConstant();
 
-        private Control_ConditionNot control;
-        public Visual GetControl() => control ?? (control = new Control_ConditionNot(this));
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new TextBlock { Text = "Not", FontWeight = FontWeights.Bold, Margin = new Thickness(2, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center })
+            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(SubCondition)) { Source = this, Mode = BindingMode.TwoWay }));
 
         public bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);

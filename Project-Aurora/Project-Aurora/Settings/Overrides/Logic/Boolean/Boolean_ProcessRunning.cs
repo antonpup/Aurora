@@ -22,7 +22,6 @@ namespace Aurora.Settings.Overrides.Logic {
 
         public Visual GetControl() {
             var selectButton = new Button { Content = "Select", Padding = new System.Windows.Thickness(8, 0, 8, 0), Margin = new System.Windows.Thickness(8, 0, 0, 0) };
-            DockPanel.SetDock(selectButton, Dock.Right);
             selectButton.Click += (sender, e) => {
                 var wnd = new Window_ProcessSelection { ButtonLabel = "Select" };
                 if (wnd.ShowDialog() == true && !string.IsNullOrWhiteSpace(wnd.ChosenExecutableName)) {
@@ -31,10 +30,12 @@ namespace Aurora.Settings.Overrides.Logic {
                 }
             };
 
-            return new DockPanel { LastChildFill = true }
-                .WithChild(selectButton)
+            return new StackPanel { Orientation = Orientation.Horizontal }
+                .WithChild(new Label { Content = "Is process" })
                 .WithChild(new TextBox { MinWidth = 80 }
-                    .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay }));
+                    .WithBinding(TextBox.TextProperty, this, "ProcessName", BindingMode.TwoWay))
+                .WithChild(selectButton)
+                .WithChild(new Label { Content = "running" });
         }
 
         public bool Evaluate(IGameState gameState)

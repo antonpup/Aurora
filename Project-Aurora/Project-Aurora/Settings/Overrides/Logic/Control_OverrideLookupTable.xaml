@@ -61,7 +61,10 @@
                                     <!-- Main item content -->
                                     <controls:Control_FieldPresenter Value="{Binding Value, Mode=TwoWay}" Type="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Table.VarType}" Grid.Column="0" VerticalAlignment="Center" Margin="8,4,8,8" />
                                     <TextBlock Text="When" FontStyle="Italic" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" EvalType="{x:Type sys:Boolean}" Grid.Column="2" VerticalAlignment="Center" Margin="8,4,8,8" />
+
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Column="2">
+                                        <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" EvalType="{x:Type sys:Boolean}" VerticalAlignment="Center" Margin="8,4,8,8" />
+                                    </ScrollViewer>
 
                                     <!-- Delete button -->
                                     <Button Margin="6" Grid.Column="3" VerticalAlignment="Center" ToolTip="Remove this lookup entry" Click="DeleteLookupEntry_Click">

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -26,11 +27,15 @@ namespace Aurora.Settings.Overrides.Logic {
         public TimeUnit TimeUnit { get; set; } = TimeUnit.Seconds;
 
         public Visual GetControl() => new StackPanel()
-            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
-                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding("Evaluatable") { Source = this, Mode = BindingMode.TwoWay }))
-            .WithChild(new Control_TimeAndUnit()
-                .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("ExtensionTime") { Source = this, Mode = BindingMode.TwoWay })
-                .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay }));
+            .WithChild(new StackPanel { Orientation = Orientation.Horizontal }
+                .WithChild(new TextBlock { Text = "Extend", Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center })
+                .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
+                    .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding("Evaluatable") { Source = this, Mode = BindingMode.TwoWay })))
+            .WithChild(new StackPanel { Orientation = Orientation.Horizontal }
+                .WithChild(new TextBlock { Text = "For", Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center })
+                .WithChild(new Control_TimeAndUnit()
+                    .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("ExtensionTime") { Source = this, Mode = BindingMode.TwoWay })
+                    .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay })));
 
         public bool Evaluate(IGameState gameState) {
             var res = Evaluatable.Evaluate(gameState);

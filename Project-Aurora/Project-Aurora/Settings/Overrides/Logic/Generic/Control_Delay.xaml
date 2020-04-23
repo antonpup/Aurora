@@ -6,9 +6,12 @@
              xmlns:l="clr-namespace:Aurora.Settings.Overrides.Logic" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d">
     <StackPanel>
-        <l:Control_EvaluatablePresenter Expression="{Binding Path=Source, Mode=TwoWay}" EvalType="{Binding EvalType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+            <Label FontWeight="Bold">Delay</Label>
+            <l:Control_EvaluatablePresenter Expression="{Binding Path=Source, Mode=TwoWay}" EvalType="{Binding EvalType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+        </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Label FontWeight="Bold">Delay:</Label>
+            <Label FontWeight="Bold">for</Label>
             <xctk:DoubleUpDown MinWidth="38" Value="{Binding Path=Delay, Mode=TwoWay}" />
             <Label>secs</Label>
         </StackPanel>
