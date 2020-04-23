@@ -49,13 +49,7 @@ namespace Aurora.Settings.Layers
 
         internal void SetProfile(Profiles.Application profile)
         {
-            if (profile != null && !profileset && profile.ParameterLookup != null)
-            {
-                variablePicker.Application = maxVariablePicker.Application = profile;
-                profileset = true;
-            }
-            settingsset = false;
-            this.SetSettings();
+            variablePicker.Application = maxVariablePicker.Application = profile;
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
