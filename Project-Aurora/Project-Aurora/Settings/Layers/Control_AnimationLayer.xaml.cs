@@ -175,7 +175,7 @@ namespace Aurora.Settings.Layers
             // If the evaluatable is not the correct type or it is null, then create the default Evaluatable for it
             if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !typeof(IEvaluatable<double>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
                 Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<double>();
-            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && typeof(IEvaluatable<bool>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !typeof(IEvaluatable<bool>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
                 Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<bool>();
 
             // Update the evaluatable control
