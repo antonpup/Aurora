@@ -51,10 +51,10 @@ namespace Aurora.Utils
         private static ISensor FindSensor(this IHardware hardware, string identifier)
         {
             var result = Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
-            if(result == null)
+            if (result is null)
             {
                 Global.logger.Error(
-                    $"[Hardware Monitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
+                    $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
             }
             return result;
         }
@@ -143,23 +143,25 @@ namespace Aurora.Utils
             {
                 hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.GpuAmd ||
                                                    hw.HardwareType == HardwareType.GpuNvidia);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _GPUCoreLoad = hw.FindSensor("load/0");
-                    _GPUMemoryCLoad = hw.FindSensor("load/1");
-                    _GPUVideoEngineLoad = hw.FindSensor("load/2");
-
-                    _GPUCoreClock = hw.FindSensor("clock/0");
-                    _GPUMemoryClock = hw.FindSensor("clock/1");
-                    _GPUShaderClock = hw.FindSensor("clock/2");
-
-                    _GPUCoreTemp = hw.FindSensor("temperature/0");
-                    _GPUFan = hw.FindSensor("fan/0");
-                    _GPUPower = hw.FindSensor("power/0");
-
-                    _GPUMemoryTotal = hw.FindSensor("smalldata/3");
-                    _GPUMemoryUsed = hw.FindSensor("smalldata/2");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type GPU");
+                    return;
                 }
+                _GPUCoreLoad = hw.FindSensor("load/0");
+                _GPUMemoryCLoad = hw.FindSensor("load/1");
+                _GPUVideoEngineLoad = hw.FindSensor("load/2");
+
+                _GPUCoreClock = hw.FindSensor("clock/0");
+                _GPUMemoryClock = hw.FindSensor("clock/1");
+                _GPUShaderClock = hw.FindSensor("clock/2");
+
+                _GPUCoreTemp = hw.FindSensor("temperature/0");
+                _GPUFan = hw.FindSensor("fan/0");
+                _GPUPower = hw.FindSensor("power/0");
+
+                _GPUMemoryTotal = hw.FindSensor("smalldata/3");
+                _GPUMemoryUsed = hw.FindSensor("smalldata/2");
             }
         }
 
@@ -179,12 +181,14 @@ namespace Aurora.Utils
             public CPUUpdater(IEnumerable<IHardware> hardware)
             {
                 hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _CPUDieTemp = hw.FindSensor("temperature/0");
-                    _CPUTotalLoad = hw.FindSensor("load/0");
-                    _CPUPower = hw.FindSensor("power/0");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type CPU");
+                    return;
                 }
+                _CPUDieTemp = hw.FindSensor("temperature/0");
+                _CPUTotalLoad = hw.FindSensor("load/0");
+                _CPUPower = hw.FindSensor("power/0");
             }
         }
 
@@ -201,11 +205,13 @@ namespace Aurora.Utils
             public RAMUpdater(IEnumerable<IHardware> hws)
             {
                 hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Memory);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _RAMUsed = hw.FindSensor("data/0");
-                    _RAMFree = hw.FindSensor("data/1");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type RAM");
+                    return;
                 }
+                _RAMUsed = hw.FindSensor("data/0");
+                _RAMFree = hw.FindSensor("data/1");
             }
         }
 
@@ -219,10 +225,12 @@ namespace Aurora.Utils
             public NETUpdater(IEnumerable<IHardware> hws)
             {
                 hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Network);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _BandwidthUsed = hw.FindSensor("load");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type Network");
+                    return;
                 }
+                _BandwidthUsed = hw.FindSensor("load");
             }
         }
     }
