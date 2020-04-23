@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Discord.GSI.Nodes {
-
     public enum DiscordStatus
     {
         Undefined,
@@ -15,24 +14,33 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         Invisible
     }
 
-
-    public class UserNode : Node<UserNode> {
-
+    public class UserNode : AutoJsonNode<UserNode> {
         public long Id = 0;
-        public string Status = "";
-        public bool SelfMute = false;
-        public bool SelfDeafen = false;
-        public bool Mentions = false;
-        public bool UnreadMessages = false;
-   
-        internal UserNode() : base() { }
+        [AutoJsonIgnore] public DiscordStatus Status;
+        [AutoJsonPropertyName("self_mute")] public bool SelfMute;
+        [AutoJsonPropertyName("self_deafen")] public bool SelfDeafen;
+        public bool Mentions;
+        [AutoJsonPropertyName("unread_messages")] public bool UnreadMessages;
+
         internal UserNode(string json) : base(json) {
-            Id = GetLong("id");
-            Status = GetString("status");
-            SelfMute = GetBool("self_mute");
-            SelfDeafen = GetBool("self_deafen");
-            Mentions = GetBool("mentions");
-            UnreadMessages = GetBool("unread_messages");
+            Status = GetStatus(GetString("status"));
+        }
+
+        private static DiscordStatus GetStatus(string status)
+        {
+            switch (status)
+            {
+                case "online":
+                    return DiscordStatus.Online;
+                case "dnd":
+                    return DiscordStatus.DoNotDisturb;
+                case "invisible":
+                    return DiscordStatus.Invisible;
+                case "idle":
+                    return DiscordStatus.Idle;
+                default:
+                    return DiscordStatus.Undefined;
+            }
         }
     }
 }

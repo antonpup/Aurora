@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,17 +9,16 @@ using System.Windows.Data;
 using System.Windows.Media;
 
 
-namespace Aurora.Settings.Overrides.Logic
-{
-    //[OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
-    public class IfElseGeneric<T> : IEvaluatable<T> {
+namespace Aurora.Settings.Overrides.Logic {
+
+    public abstract class IfElseGeneric<T> : IEvaluatable<T> {
         /// <summary>
         /// A list of all branches of the conditional.
         /// </summary>
         public ObservableCollection<Branch> Cases { get; set; } = CreateDefaultCases(
             new BooleanConstant(), // Condition
-            (IEvaluatable<T>)EvaluatableTypeResolver.GetDefault(EvaluatableTypeResolver.GetEvaluatableType(typeof(IEvaluatable<T>))), // True
-            (IEvaluatable<T>)EvaluatableTypeResolver.GetDefault(EvaluatableTypeResolver.GetEvaluatableType(typeof(IEvaluatable<T>))) // False
+            EvaluatableDefaults.Get<T>(), // True
+            EvaluatableDefaults.Get<T>() // False
         );
 
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
@@ -28,7 +28,7 @@ namespace Aurora.Settings.Overrides.Logic
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseGeneric(ObservableCollection<Branch> cases) : this() { Cases = cases; }
 
-        public Visual GetControl(Application application) => new Control_Ternary<T>(this, application);
+        public Visual GetControl() => new Control_Ternary<T>(this);
 
         /// <summary>Evaluate conditions and return the appropriate evaluation.</summary>
         public T Evaluate(IGameState gameState) {
@@ -40,15 +40,7 @@ namespace Aurora.Settings.Overrides.Logic
 
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
-        /// <summary>Update the applications of the children evaluatables.</summary>
-        public void SetApplication(Application application) {
-            foreach (var kvp in Cases) {
-                kvp.Condition?.SetApplication(application);
-                kvp.Value?.SetApplication(application);
-            }
-        }
-
-        public IEvaluatable<T> Clone() => new IfElseGeneric<T>(new ObservableCollection<Branch>(Cases));
+        public abstract IEvaluatable<T> Clone();
         IEvaluatable IEvaluatable.Clone() => Clone();
 
         private static ObservableCollection<Branch> CreateDefaultCases(IEvaluatable<bool> condition, IEvaluatable<T> caseTrue, IEvaluatable<T> caseFalse) =>
@@ -57,17 +49,19 @@ namespace Aurora.Settings.Overrides.Logic
                 new Branch(null, caseFalse)
             };
 
-        public class Branch {
+        public class Branch : ICloneable {
             public IEvaluatable<bool> Condition { get; set; }
             public IEvaluatable<T> Value { get; set; }
 
-            public Branch() { }
             public Branch(IEvaluatable<bool> condition, IEvaluatable<T> value) { Condition = condition; Value = value; }
+
+            public object Clone() => new Branch(Condition?.Clone(), Value.Clone());
         }
     }
 
 
-    [OverrideLogic("If - Else If - Else", category: OverrideLogicCategory.Logic)]
+    // Concrete classes
+    [Evaluatable("If - Else If - Else", category: EvaluatableCategory.Logic)]
     public class IfElseBoolean : IfElseGeneric<bool> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
         public IfElseBoolean() : base() { }
@@ -77,10 +71,11 @@ namespace Aurora.Settings.Overrides.Logic
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseBoolean(ObservableCollection<Branch> cases) : base(cases) { }
+        public override IEvaluatable<bool> Clone() => new IfElseBoolean(Cases.Clone());
     }
 
 
-    [OverrideLogic("If - Else If - Else", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("If - Else If - Else", category: EvaluatableCategory.Logic)]
     public class IfElseNumeric : IfElseGeneric<double> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
         public IfElseNumeric() : base() { }
@@ -90,10 +85,11 @@ namespace Aurora.Settings.Overrides.Logic
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseNumeric(ObservableCollection<Branch> cases) : base(cases) { }
+        public override IEvaluatable<double> Clone() => new IfElseNumeric(Cases.Clone());
     }
 
 
-    [OverrideLogic("If - Else If - Else", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("If - Else If - Else", category: EvaluatableCategory.Logic)]
     public class IfElseString : IfElseGeneric<string> {
         /// <summary>Creates a new If-Else evaluatable with default evaluatables.</summary>
         public IfElseString() : base() { }
@@ -103,5 +99,6 @@ namespace Aurora.Settings.Overrides.Logic
 
         /// <summary>Creates a new evaluatable using the given case tree.</summary>
         public IfElseString(ObservableCollection<Branch> cases) : base(cases) { }
+        public override IEvaluatable<string> Clone() => new IfElseString(Cases.Clone());
     }
 }

@@ -14,7 +14,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
     /// <summary>
     /// An evaluatable that returns the time since the user has pressed a keyboard key or clicked the mouse.
     /// </summary>
-    [OverrideLogic("Away Time", category: OverrideLogicCategory.Input)]
+    [Evaluatable("Away Time", category: EvaluatableCategory.Input)]
     public class NumberAwayTime : IEvaluatable<double> {
 
         /// <summary>Gets or sets the time unit that the time is being measured in.</summary>
@@ -30,12 +30,11 @@ namespace Aurora.Settings.Overrides.Logic.Number {
         #endregion
 
         // Control
-        private ComboBox control;
-        public Visual GetControl(Application app) => control ?? (control = new ComboBox {
+        public Visual GetControl() => new ComboBox {
                 DisplayMemberPath = "Key",
                 SelectedValuePath = "Value",
                 ItemsSource = EnumUtils.GetEnumItemsSource<TimeUnit>()
-            }.WithBinding(ComboBox.SelectedValueProperty, this, "TimeUnit", BindingMode.TwoWay));
+            }.WithBinding(ComboBox.SelectedValueProperty, this, "TimeUnit", BindingMode.TwoWay);
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
         public double Evaluate(IGameState gameState) {
@@ -49,8 +48,6 @@ namespace Aurora.Settings.Overrides.Logic.Number {
             };
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) { }
 
         public IEvaluatable<double> Clone() => new NumberAwayTime { TimeUnit = TimeUnit };
         IEvaluatable IEvaluatable.Clone() => Clone();

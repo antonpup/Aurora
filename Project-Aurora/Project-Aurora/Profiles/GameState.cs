@@ -39,10 +39,10 @@ namespace Aurora.Profiles
         /// </summary>
         //LocalPCInformation LocalPCInfo { get; }
 
-        Newtonsoft.Json.Linq.JObject _ParsedData { get; set; }
+        JObject _ParsedData { get; set; }
         string json { get; set; }
-
-        String GetNode(string name);
+        
+        string GetNode(string name);
     }
 
     public class GameState<TSelf> : StringProperty<TSelf>, IGameState where TSelf : GameState<TSelf>
@@ -57,8 +57,8 @@ namespace Aurora.Profiles
         /// </summary>
         public LocalPCInformation LocalPCInfo => _localpcinfo ?? (_localpcinfo = new LocalPCInformation());
 
-        public JObject _ParsedData { get; set; }
-        public string json { get; set; }
+        [GameStateIgnore] public JObject _ParsedData { get; set; }
+        [GameStateIgnore] public string json { get; set; }
 
         /// <summary>
         /// Creates a default GameState instance.
@@ -92,7 +92,7 @@ namespace Aurora.Profiles
             json = other_state.json;
         }
 
-        public String GetNode(string name)
+        [GameStateIgnore] public string GetNode(string name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -105,14 +105,14 @@ namespace Aurora.Profiles
         /// <summary>
         /// Use this method to more-easily lazily return the child node of the given name that exists on this AutoNode.
         /// </summary>
-        protected TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
+        [GameStateIgnore] protected TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
             => (TNode)(childNodes.TryGetValue(name, out var n) ? n : (childNodes[name] = Instantiator<TNode, string>.Create(_ParsedData[name]?.ToString() ?? "")));
 
         /// <summary>
         /// Displays the JSON, representative of the GameState data
         /// </summary>
         /// <returns>JSON String</returns>
-        public override string ToString()
+        [GameStateIgnore] public override string ToString()
         {
             return json;
         }

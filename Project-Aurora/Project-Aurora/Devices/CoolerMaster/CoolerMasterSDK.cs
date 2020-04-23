@@ -27,6 +27,12 @@ namespace CoolerMaster
             EFF_SPECTRUM = 11,
             EFF_RAPID_FIRE = 12,
             EFF_INDICATOR = 13,
+            EFF_FIRE_BALL = 14,
+            EFF_WATER_RIPPLE = 15,
+            EFF_REACTIVE_PUNCH = 16,
+            EFF_SNOWING = 17,
+            EFF_HEART_BEAT = 18,
+            EFF_REACTIVE_TORNADO = 19,
             EFF_MULTI_1 = 224,
             EFF_MULTI_2 = 225,
             EFF_MULTI_3 = 226,
@@ -72,14 +78,14 @@ namespace CoolerMaster
             DEV_CK530 = 15,
             [Description("MK850")]
             DEV_MK850 = 16,
-            [Description("MK730")]
-            DEV_MK730 = 17,
-            [Description("SK621")]
-            DEV_SK621 = 18,
             [Description("SK630")]
-            DEV_SK630 = 19,
+            DEV_SK630 = 17,
             [Description("SK650")]
-            DEV_SK650 = 20,
+            DEV_SK650 = 18,
+            [Description("SK621")]
+            DEV_SK621 = 19,
+            [Description("MK730")]
+            DEV_MK730 = 20,
             [Description("Default")]
             DEV_DEFAULT = 0xFFFF
         }
@@ -95,11 +101,13 @@ namespace CoolerMaster
         public static List<DEVICE_INDEX> Keyboards = new List<DEVICE_INDEX>
         {
             DEVICE_INDEX.DEV_MKeys_L,
-            DEVICE_INDEX.DEV_MKeys_L_White,
-            DEVICE_INDEX.DEV_MKeys_M,
-            DEVICE_INDEX.DEV_MKeys_M_White,
             DEVICE_INDEX.DEV_MKeys_S,
+            DEVICE_INDEX.DEV_MKeys_L_White,
+            DEVICE_INDEX.DEV_MKeys_M_White,
+
+            DEVICE_INDEX.DEV_MKeys_M,
             DEVICE_INDEX.DEV_MKeys_S_White,
+
             DEVICE_INDEX.DEV_MK750,
             DEVICE_INDEX.DEV_CK372,
             DEVICE_INDEX.DEV_CK550_552,
@@ -107,10 +115,10 @@ namespace CoolerMaster
             DEVICE_INDEX.DEV_MM830,
             DEVICE_INDEX.DEV_CK530,
             DEVICE_INDEX.DEV_MK850,
-            DEVICE_INDEX.DEV_MK730,
-            DEVICE_INDEX.DEV_SK621,
             DEVICE_INDEX.DEV_SK630,
-            DEVICE_INDEX.DEV_SK650
+            DEVICE_INDEX.DEV_SK650,
+            DEVICE_INDEX.DEV_SK621,
+            DEVICE_INDEX.DEV_MK730,
         };
 
         public enum LAYOUT_KEYBOARD
@@ -141,9 +149,9 @@ namespace CoolerMaster
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAX_LED_ROW * MAX_LED_COLUMN, ArraySubType = UnmanagedType.Struct)]
             public KEY_COLOR[,] KeyColor;
-        } 
+        }
 
-        public const int MAX_LED_ROW = 7;
+        public const int MAX_LED_ROW = 8;
 
         public const int MAX_LED_COLUMN = 24;
 

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
              xmlns:utils="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
@@ -10,14 +11,14 @@
     <UserControl.Resources>
         <utils:IsNullToVisibilityConverter x:Key="NullableToVisConv" />
     </UserControl.Resources>
-    <Grid>
-        <!-- Controls -->
-        <ComboBox ItemsSource="{Binding OperatorList}" SelectedValue="{Binding SelectedOperator}" Visibility="{Binding OperatorList, Converter={StaticResource NullableToVisConv}}" SelectedValuePath="Value" DisplayMemberPath="Key" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" />
-        <TextBlock Text="{Binding StaticOperator}" TextAlignment="Right" Visibility="{Binding StaticOperator, Converter={StaticResource NullableToVisConv}}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="96" />
-        <local:Control_EvaluatablePresenter Expression="{Binding Operand, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="119,0,19,0" />
+    
+    <StackPanel Orientation="Horizontal">
+        <!-- Operator -->
+        <ComboBox ItemsSource="{Binding OperatorList}" SelectedValue="{Binding SelectedOperator}" Visibility="{Binding OperatorList, Converter={StaticResource NullableToVisConv}}" SelectedValuePath="Value" DisplayMemberPath="Key" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding StaticOperator}" Visibility="{Binding StaticOperator, Converter={StaticResource NullableToVisConv}}" VerticalAlignment="Center" />
 
         <!-- Left bracket -->
-        <Ellipse Width="30" Stroke="White" StrokeThickness="3" HorizontalAlignment="Left" Margin="102,0,0,0">
+        <Ellipse Width="30" Stroke="White" StrokeThickness="3" Margin="8,0,-8,0">
             <Ellipse.OpacityMask>
                 <LinearGradientBrush StartPoint="0,1">
                     <LinearGradientBrush.GradientStops>
@@ -27,9 +28,12 @@
                 </LinearGradientBrush>
             </Ellipse.OpacityMask>
         </Ellipse>
-        
+
+        <!-- Operand -->
+        <local:Control_EvaluatablePresenter Expression="{Binding Operand, Mode=TwoWay}" EvalType="{x:Type sys:Double}" />
+
         <!-- Right bracket -->
-        <Ellipse Width="30" Stroke="White" StrokeThickness="3" HorizontalAlignment="Right">
+        <Ellipse Width="30" Stroke="White" StrokeThickness="3" Margin="-8,0,2,0">
             <Ellipse.OpacityMask>
                 <LinearGradientBrush StartPoint="0,1">
                     <LinearGradientBrush.GradientStops>
@@ -39,5 +43,5 @@
                 </LinearGradientBrush>
             </Ellipse.OpacityMask>
         </Ellipse>
-    </Grid>
+    </StackPanel>
 </UserControl>

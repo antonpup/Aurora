@@ -221,7 +221,7 @@ namespace Aurora.EffectsEngine
                         if (!rect.IsEmpty)
                         {
                             (brush as LinearGradientBrush).TranslateTransform(rect.X, rect.Y);
-                            (brush as LinearGradientBrush).ScaleTransform(rect.Width, rect.Height);
+                            (brush as LinearGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
                         }
                         else
                         {
@@ -249,7 +249,7 @@ namespace Aurora.EffectsEngine
                                 y_offset = (rect.Height / 2.0f) * percent;
 
                                 (brush as PathGradientBrush).TranslateTransform(rect.X + x_offset, rect.Y + y_offset);
-                                (brush as PathGradientBrush).ScaleTransform(rect.Width - (2.0f * x_offset), rect.Height - (2.0f * y_offset));
+                                (brush as PathGradientBrush).ScaleTransform((rect.Width - (2.0f * x_offset)) * 100 / effect_config.gradient_size, (rect.Height - (2.0f * y_offset)) * 100 / effect_config.gradient_size);
                             }
                             else
                             {
@@ -261,7 +261,7 @@ namespace Aurora.EffectsEngine
                             if (!rect.IsEmpty)
                             {
                                 (brush as PathGradientBrush).TranslateTransform(rect.X, rect.Y);
-                                (brush as PathGradientBrush).ScaleTransform(rect.Width, rect.Height);
+                                (brush as PathGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
                             }
                             else
                             {
@@ -454,8 +454,8 @@ namespace Aurora.EffectsEngine
                 {
                     float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                     float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                    float width = (float)(sequence.freeform.Width * Effects.editor_to_canvas_width);
-                    float height = (float)(sequence.freeform.Height * Effects.editor_to_canvas_height);
+                    float width = (float)Math.Round((sequence.freeform.Width * Effects.editor_to_canvas_width));
+                    float height = (float)Math.Round((sequence.freeform.Height * Effects.editor_to_canvas_height));
 
                     if (width < 3) width = 3;
                     if (height < 3) height = 3;

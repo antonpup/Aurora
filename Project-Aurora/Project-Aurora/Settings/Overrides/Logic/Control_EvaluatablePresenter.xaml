@@ -3,33 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
-             mc:Ignorable="d"
-             d:DesignWidth="100" d:DesignHeight="40">
-    <Grid>
-        <!-- Expression type selection -->
-        <Label Content="Expression Type:" FontWeight="Bold" Margin="0,6,0,0" />
-        <ComboBox x:Name="expressionSelection" SelectedValuePath="Key" DisplayMemberPath="Value.Name" Margin="104,6,50,0" Height="26" VerticalAlignment="Top" SelectionChanged="ExpressionSelection_SelectionChanged">
-            <ComboBox.GroupStyle>
-                <GroupStyle>
-                    <GroupStyle.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}" Background="#1FFF" FontWeight="Bold" Margin="0,4,0,0" Padding="4,0,4,2" />
-                        </DataTemplate>
-                    </GroupStyle.HeaderTemplate>
-                </GroupStyle>
-            </ComboBox.GroupStyle>
-        </ComboBox>
-        
-        <!-- Menu button -->
-        <Button Height="26" Width="26" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,5.5,0,0" Click="PasteButton_Click"> <!-- We use 5.5 because for some reason the edge is blurry if we use 6. -->
-            <Image Source="/Aurora;component/Resources/Layers_Paste.png" Width="18" Height="18" Opacity=".6" />
-        </Button>
-        <Button Height="26" Width="26" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,5.5,25,0" Click="CopyButton_Click">
-            <Image Source="/Aurora;component/Resources/Layers_Copy.png" Width="18" Height="18" Opacity=".6" />
-        </Button>
+             xmlns:l="clr-namespace:Aurora.Settings.Overrides.Logic"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d" d:DesignWidth="30" d:DesignHeight="120"
+             MinWidth="30" MinHeight="30"
+             VerticalAlignment="Top" HorizontalAlignment="Left"
+             AllowDrop="True">
+    <UserControl.Resources>
+        <l:EvaluatableBackgroundSelector x:Key="EvaluatableBackgroundSelector" />
+    </UserControl.Resources>
 
-        <!-- Evaluatable control -->
-        <ContentPresenter x:Name="ContentContainer" Margin="0,36,0,0" VerticalAlignment="Top" />
-    </Grid>
+    <Border Padding="4" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Background="{Binding EvalType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource EvaluatableBackgroundSelector}}">
+        <Grid>
+            <ContentPresenter x:Name="EvaluatableControl" Margin="17,0,0,0" />
+            <Border Width="2" Margin="5,0,0,0" Height="16" Background="#2FFF" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <Border Width="2" Margin="10,0,0,0" Height="16" Background="#2FFF" HorizontalAlignment="Left" VerticalAlignment="Center" />
+            <Rectangle Width="17" Cursor="SizeAll" Fill="Transparent" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="DragArea_StartDrag" />
+        </Grid>
+    </Border>
 </UserControl>
