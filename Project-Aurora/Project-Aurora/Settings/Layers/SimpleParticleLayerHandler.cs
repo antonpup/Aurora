@@ -96,6 +96,21 @@ namespace Aurora.Settings.Layers {
         public float? _DragY { get => dragY; set => SetAndNotify(ref dragY, value); }
         [JsonIgnore] public float DragY => Logic._DragY ?? _DragY ?? 0;
 
+        // The smallest initial size of the particles
+        private float? minSize;
+        public float? _MinSize { get => minSize; set => SetAndNotify(ref minSize, value); }
+        [JsonIgnore] public float MinSize => Logic._MinSize ?? _MinSize ?? 6;
+
+        // The largest initial size of the particles
+        private float? maxSize;
+        public float? _MaxSize { get => maxSize; set => SetAndNotify(ref maxSize, value); }
+        [JsonIgnore] public float MaxSize => Logic._MaxSize ?? _MaxSize ?? 6;
+
+        // The initial size of the particles
+        private float? deltaSize;
+        public float? _DeltaSize { get => deltaSize; set => SetAndNotify(ref deltaSize, value); }
+        [JsonIgnore] public float DeltaSize => Logic._DeltaSize ?? _DeltaSize ?? 0;
+
         // Where the particles will spawn from
         private ParticleSpawnLocations? spawnLocation;
         public ParticleSpawnLocations? _SpawnLocation { get => spawnLocation; set => SetAndNotify(ref spawnLocation, value); }
@@ -129,6 +144,9 @@ namespace Aurora.Settings.Layers {
             _AccelerationY = .5f;
             _DragX = 0;
             _DragY = 0;
+            _MinSize = 6;
+            _MaxSize = 6;
+            _DeltaSize = 0;
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
 
@@ -202,6 +220,7 @@ namespace Aurora.Settings.Layers {
         public float PositionY { get; set; }
         public float VelocityX { get; set; }
         public float VelocityY { get; set; }
+        public float Size { get; set; }
         public double Lifetime { get; set; }
         public double MaxLifetime { get; set; }
 
@@ -223,6 +242,7 @@ namespace Aurora.Settings.Layers {
                 : properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.canvas_height // For bottom edge, Y should start at maximum height
                 : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
                 : (float)(rnd.NextDouble() * Effects.canvas_height); // For left, right or random, randomly choose a Y value
+            Size = (float)(rnd.NextDouble() * (properties.MaxSize - properties.MinSize)) + properties.MinSize;
         }
 
         /// <summary>
@@ -230,8 +250,10 @@ namespace Aurora.Settings.Layers {
         /// </summary>
         public bool IsAlive(SimpleParticleLayerProperties properties, IGameState gameState) => Lifetime < MaxLifetime;
 
-        public void Render(Graphics gfx, SimpleParticleLayerProperties properties, IGameState gameState) =>
-            gfx.FillEllipse(new SolidBrush(properties.ColorAt((float)(Lifetime / MaxLifetime))), new RectangleF(PositionX - 3, PositionY - 3, 6, 6));
+        public void Render(Graphics gfx, SimpleParticleLayerProperties properties, IGameState gameState) {
+            var s2 = Size / 2;
+            gfx.FillEllipse(new SolidBrush(properties.ColorAt((float)(Lifetime / MaxLifetime))), new RectangleF(PositionX - s2, PositionY - s2, Size, Size));
+        }
 
         /// <summary>
         /// Update the velocity of the particle based on the acceleration and drag. Then, update the position based on the velocity.
@@ -244,6 +266,7 @@ namespace Aurora.Settings.Layers {
             VelocityY *= (float)Math.Pow(1 - properties.DragY, deltaTime); // Doing it once over a second won't be 100% the same as doing it twice over a second if acceleration is present, but it should be close enough that it won't be noticed under most cicrumstances
             PositionX += VelocityX;
             PositionY += VelocityY;
+            Size += (float)(properties.DeltaSize * deltaTime);
         }
     }
 
@@ -281,6 +304,9 @@ namespace Aurora.Settings.Layers {
                     p._MinInitialVelocityY = -1.3f; p._MaxInitialVelocityY = -0.8f;
                     p._AccelerationX = 0;
                     p._AccelerationY = 0.5f;
+                    p._MinSize = 6;
+                    p._MaxSize = 6;
+                    p._DeltaSize = 0;
                 } },
                 { "Matrix", p => {
                     p._SpawnLocation = ParticleSpawnLocations.TopEdge;
@@ -295,6 +321,9 @@ namespace Aurora.Settings.Layers {
                     p._MinInitialVelocityY = p._MaxInitialVelocityY = 3;
                     p._AccelerationX = 0;
                     p._AccelerationY = 0;
+                    p._MinSize = 6;
+                    p._MaxSize = 6;
+                    p._DeltaSize = 0;
                 } }
             }
         );
