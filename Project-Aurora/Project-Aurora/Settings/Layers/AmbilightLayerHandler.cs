@@ -194,6 +194,7 @@ namespace Aurora.Settings.Layers
         private Image screen;
         private long last_use_time = 0;
         private IntPtr specificProcessHandle = IntPtr.Zero;
+        private Rectangle cropRegion;
 
         private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
         private int Scale => (int)Math.Pow(2, 4 - (int)Properties.AmbilightQuality);
@@ -263,6 +264,8 @@ namespace Aurora.Settings.Layers
                 Global.logger.Info("Started regular ambilight mode");
                 //Console.WriteLine("Started regular ambilight mode");
             }
+
+            cropRegion = screenCapture.CurrentScreenBounds;
         }
 
         private void CaptureTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -303,7 +306,12 @@ namespace Aurora.Settings.Layers
             if (region.Width == 0 || region.Height == 0)
                 return ambilight_layer;
 
-            Rectangle cropRegion = GetCropRegion();
+            //This is needed to prevent the layer from disappearing
+            //for a frame when the user alt-tabs with the foregroundapp option selected
+            if (TryGetCropRegion(out var newCropRegion))
+                cropRegion = newCropRegion;
+
+            //and because of that, this should never happen 
             if (cropRegion.Width == 0 || cropRegion.Height == 0)
                 return ambilight_layer;
 
@@ -362,14 +370,15 @@ namespace Aurora.Settings.Layers
         /// Switches display if the desired coordinates are offscreen.
         /// </summary>
         /// <returns></returns>
-        private Rectangle GetCropRegion()
+        private bool TryGetCropRegion(out Rectangle crop)
         {
-            Rectangle cropRegion = new Rectangle();
+            crop = new Rectangle();
+
             switch (Properties.AmbilightCaptureType)
             {
                 case AmbilightCaptureType.EntireMonitor:
                     //we're using the whole screen, so we don't crop at all
-                    cropRegion = new Rectangle(Point.Empty, screen.Size);
+                    crop = new Rectangle(Point.Empty, screen.Size);
                     break;
                 case AmbilightCaptureType.SpecificProcess:
                 case AmbilightCaptureType.ForegroundApp:
@@ -381,19 +390,16 @@ namespace Aurora.Settings.Layers
                         handle = specificProcessHandle;
 
                     if (handle == IntPtr.Zero)
-                    {
-                        //should never happen
-                        break;
-                    }
+                        return false;//happens when alt tabbing
 
                     var appRect = new User32.Rect();
                     User32.GetWindowRect(handle, ref appRect);
-
+                    
                     var appDisplay = Screen.FromHandle(handle).Bounds;
 
                     screenCapture.SwitchDisplay(appDisplay);
 
-                    cropRegion = GetResized(new Rectangle(
+                    crop = GetResized(new Rectangle(
                             appRect.Left - appDisplay.Left,
                             appRect.Top - appDisplay.Top,
                             appRect.Right - appRect.Left,
@@ -403,7 +409,7 @@ namespace Aurora.Settings.Layers
                 case AmbilightCaptureType.Coordinates:
                     screenCapture.SwitchDisplay(Screen.FromRectangle(Properties.Coordinates).Bounds);
 
-                    cropRegion = GetResized(new Rectangle(
+                    crop = GetResized(new Rectangle(
                             Properties.Coordinates.Left - screenCapture.CurrentScreenBounds.Left,
                             Properties.Coordinates.Top - screenCapture.CurrentScreenBounds.Top,
                             Properties.Coordinates.Width,
@@ -411,7 +417,7 @@ namespace Aurora.Settings.Layers
                     break;
             }
 
-            return cropRegion;
+            return (crop.Width != 0 && crop.Width != 0);
         }
 
         /// <summary>
@@ -536,8 +542,9 @@ namespace Aurora.Settings.Layers
     internal class DXScreenCapture : IScreenCapture
     {
         public Rectangle CurrentScreenBounds { get; set; }
-        private DesktopDuplicator desktopDuplicator;//there can only be one
+        private DesktopDuplicator desktopDuplicator;
         private bool processing = false;
+        private int display;
 
         public Bitmap Capture()
         {
@@ -554,12 +561,14 @@ namespace Aurora.Settings.Layers
             {
                 processing = true;
                 bigScreen = desktopDuplicator.Capture(5000);
+                processing = false;
             }
             catch (SharpDXException e)
             {
-                Global.logger.Error("Deal with this later: " + e);
+                Global.logger.Error("[Ambilight] Error capturing screen, restarting: : " + e);
+                processing = false;
+                SetDisplay(display);
             }
-            processing = false;
             return bigScreen;
         }
 
@@ -584,7 +593,7 @@ namespace Aurora.Settings.Layers
             var outputs = GetAdapters();
             if (screen > (outputs.Count() - 1))
                 screen = 0;
-
+            display = screen;
             var output = outputs.ElementAt(screen);
             var desktopbounds = output.Output.Description.DesktopBounds;
             CurrentScreenBounds = new Rectangle(desktopbounds.Left,
@@ -597,7 +606,7 @@ namespace Aurora.Settings.Layers
             }
             catch (SharpDXException e)
             {
-                Global.logger.Error("Deal with this later: " + e);
+                Global.logger.Error("[Ambilight] Error switching display: " + e);
             }
         }
 
