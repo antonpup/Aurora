@@ -120,7 +120,9 @@ namespace Aurora.Profiles
                              where meta == null || !meta.Exclude
                              select (type, meta);
             foreach (var (type, meta) in layerTypes) {
-                var id = ((ILayerHandler)Activator.CreateInstance(type)).ID;
+                var layer = (ILayerHandler)Activator.CreateInstance(type);
+                var id = layer.ID;
+                (layer as IDisposable)?.Dispose(); // Since this layer is only so we can get the ID, make sure we dispose of it properly
                 var fallbackName = type.Name.CamelCaseToSpaceCase();
                 if (fallbackName.EndsWith(" Layer Handler")) fallbackName = fallbackName.Substring(0, fallbackName.Length - 14);
                 RegisterLayerHandler(id, meta?.Name ?? fallbackName, type, meta?.IsDefault ?? true);
