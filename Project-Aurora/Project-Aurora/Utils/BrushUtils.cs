@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -248,34 +249,144 @@ namespace Aurora.Utils
                 return new M.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)); //Return error color
             }
         }
+    }
+
+    /// <summary>
+    /// A collection which stores and interpolates a collection of colors that can represent a gradient.
+    /// </summary>
+    /// <remarks>
+    /// I've made this as it's own class rather than using one of the built-in collections as there can sometimes be UI multi-thead issues if trying
+    /// to access a gradient stop collection that is being used by a gradient editor in the UI.
+    /// </remarks>
+    public class ColorStopCollection : IEnumerable<KeyValuePair<float, D.Color>> {
+
+        private readonly SortedList<float, D.Color> stops = new SortedList<float, D.Color>();
 
         /// <summary>
-        /// Creates a <see cref="ColorStopCollecion"/> from the given media brush.
+        /// Creates an empty ColorStopCollection.
         /// </summary>
-        public static ColorStopCollecion ToColorStopCollection(this M.Brush brush) {
-            ColorStopCollecion csc = null;
-            if (brush is M.GradientBrush gb)
-                csc = gb.GradientStops.Select(gs => (gs.Color.ToDrawingColor(), (float)gs.Offset)).ToList();
-            else if (brush is M.SolidColorBrush sb)
-                csc = new ColorStopCollecion { (sb.Color.ToDrawingColor(), 0f) };
-            csc?.Sort((a, b) => Comparer<float>.Default.Compare(a.offset, b.offset));
-            return csc;
+        public ColorStopCollection() { }
+
+        /// <summary>
+        /// Creates a ColorStopCollection from the given float-color key-value-pairs.
+        /// </summary>
+        public ColorStopCollection(IEnumerable<KeyValuePair<float, D.Color>> stops) {
+            foreach (var stop in stops)
+                SetColorAt(stop.Key, stop.Value);
         }
 
         /// <summary>
-        /// Converts a <see cref="ColorStopCollecion"/> into a media brush (either <see cref="M.SolidColorBrush"/>
-        /// or a <see cref="M.LinearGradientBrush"/> depending on the amount of stops in the collection).
+        /// Creates a ColorStopCollection from the given colors, which are automatically evenly placed, with the first being at offset 0 and the last at offset 1.
         /// </summary>
-        public static M.Brush ToMediaBrush(this ColorStopCollecion stops) {
+        public ColorStopCollection(IEnumerable<D.Color> colors) {
+            var count = colors.Count();
+            if (count > 0) {
+                float offset = 0, d = count > 2 ? 1f / (count - 1f) : 0f;
+                foreach (var color in colors) {
+                    SetColorAt(offset, color);
+                    offset += d;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The number of stops in this stop collection.
+        /// </summary>
+        public int StopCount => stops.Count;
+
+        /// <summary>
+        /// Gets or sets the color at the specified offset.
+        /// When setting a value, a new color stop will be created at the given offset if one does not already exist.
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public D.Color this[float offset] {
+            get => GetColorAt(offset);
+            set => SetColorAt(offset, value);
+        }
+
+        /// <summary>
+        /// Gets the color at the specific offset.
+        /// If this point is not at a stop, it's value is interpolated.
+        /// </summary>
+        public D.Color GetColorAt(float offset) {
+            // If there are no stops, return a transparent color
             if (stops.Count == 0)
-                return M.Brushes.Transparent;
-            else if (stops.Count == 1)
-                return new M.SolidColorBrush(stops[0].color.ToMediaColor());
-            else
-                return new M.LinearGradientBrush(new M.GradientStopCollection(
-                    stops.Select(s => new M.GradientStop(s.color.ToMediaColor(), s.offset))
-                ));
+                return D.Color.Transparent;
+
+            offset = Math.Max(Math.Min(offset, 1), 0);
+
+            // First, check if the target offset is at a stop. If so, return the value of that stop.
+            if (stops.ContainsKey(offset))
+                return stops[offset];
+
+            // Next, check to see if the target offset is before the first stop or after the last, if so, return that stop.
+            if (offset < stops.First().Key)
+                return stops.First().Value;
+            if (offset > stops.Last().Key)
+                return stops.Last().Value;
+
+            // At this point, offset is determined to be between two stops, so find which two and then interpolate them.
+            for (var i = 1; i < stops.Count; i++) {
+                if (offset > stops.Keys[i - 1] && offset < stops.Keys[i])
+                    return ColorUtils.BlendColors(
+                        stops.Values[i - 1],
+                        stops.Values[i],
+                        (offset - stops.Keys[i - 1]) / (stops.Keys[i] - stops.Keys[i - 1])
+                    );
+            }
+
+            // Logically, should never get here.
+            throw new InvalidOperationException("No idea what happened.");
         }
+
+        /// <summary>
+        /// Sets the color at the specified offset to the given value.
+        /// If an offset does not exist at this point, one will be created.
+        /// </summary>
+        public void SetColorAt(float offset, D.Color color) {
+            if (offset < 0 || offset > 1)
+                throw new ArgumentOutOfRangeException(nameof(offset), $"Gradient stop at offset {offset} is out of range. Value must be between 0 and 1 (inclusive).");
+            stops[offset] = color;
+        }
+
+        /// <summary>
+        /// Creates a new media brush from this stop collection.
+        /// </summary>
+        public M.LinearGradientBrush ToMediaBrush() {
+            M.GradientStopCollection gsc;
+            if (stops.Count == 0)
+                gsc = new M.GradientStopCollection(new[] { new M.GradientStop(M.Colors.Transparent, 0), new M.GradientStop(M.Colors.Transparent, 1) });
+            else if (stops.Count == 1)
+                gsc = new M.GradientStopCollection(new[] { new M.GradientStop(stops.Values[0].ToMediaColor(), 0), new M.GradientStop(stops.Values[0].ToMediaColor(), 1) });
+            else
+                gsc = new M.GradientStopCollection(stops.Select(s => new M.GradientStop(s.Value.ToMediaColor(), s.Key)));
+            return new M.LinearGradientBrush(gsc);
+        }
+
+        /// <summary>
+        /// Creates a new stop collection from the given media brush.
+        /// </summary>
+        public static ColorStopCollection FromMediaBrush(M.Brush brush) {
+            if (brush is M.GradientBrush gb)
+                return new ColorStopCollection(gb.GradientStops.GroupBy(gs => gs.Offset).ToDictionary(gs => (float)gs.First().Offset, gs => gs.First().Color.ToDrawingColor()));
+            else if (brush is M.SolidColorBrush sb)
+                return new ColorStopCollection { { 0f, sb.Color.ToDrawingColor() } };
+            throw new InvalidOperationException($"Brush of type '{brush.GetType().Name} could not be converted to a ColorStopCollection.");
+        }
+
+        /// <summary>
+        /// Determines if this color stop collection contains the same stops as another collection.
+        /// </summary>
+        public bool StopsEqual(ColorStopCollection other) => Enumerable.SequenceEqual(stops, other.stops);
+
+        #region IEnumerable
+        /// <summary>Alias for <see cref="SetColorAt(float, D.Color)"/> to allow for list constructor syntax.</summary>
+        public void Add(float offset, D.Color color) => SetColorAt(offset, color);
+
+        public IEnumerator<KeyValuePair<float, D.Color>> GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)stops).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)stops).GetEnumerator();
+        #endregion
     }
 
     /// <summary>

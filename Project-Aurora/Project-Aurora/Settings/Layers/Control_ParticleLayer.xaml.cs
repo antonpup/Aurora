@@ -33,7 +33,7 @@ namespace Aurora.Settings.Layers {
 
         private void GradientEditor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e) {
             // Set the particle's color stops from the media brush. We cannot pass the media brush directly as it causes issues with UI threading
-            handler.Properties._ParticleColorStops = e.Brush.ToColorStopCollection();
+            handler.Properties._ParticleColorStops = ColorStopCollection.FromMediaBrush(e.Brush);
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e) {
