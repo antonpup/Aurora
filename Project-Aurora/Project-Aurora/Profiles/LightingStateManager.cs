@@ -184,7 +184,9 @@ namespace Aurora.Profiles
                 new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler)),
                 new LayerHandlerEntry("Timer", "Timer Layer", typeof(TimerLayerHandler)),
                 new LayerHandlerEntry("Toolbar", "Toolbar Layer", typeof(ToolbarLayerHandler)),
-                new LayerHandlerEntry("BinaryCounter", "Binary Counter Layer", typeof(BinaryCounterLayerHandler))
+                new LayerHandlerEntry("BinaryCounter", "Binary Counter Layer", typeof(BinaryCounterLayerHandler)),
+                new LayerHandlerEntry("Particle", "Particle Layer", typeof(SimpleParticleLayerHandler)),
+                new LayerHandlerEntry("InteractiveParticle", "Interactive Particle Layer", typeof(InteractiveParticleLayerHandler))
             }, true);
 
             RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);

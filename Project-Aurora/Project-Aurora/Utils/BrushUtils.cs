@@ -1,39 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Data;
+using ColorStopCollecion = System.Collections.Generic.List<(System.Drawing.Color color, float offset)>;
+using D = System.Drawing;
+using M = System.Windows.Media;
 
 namespace Aurora.Utils
 {
     public static class BrushUtils
     {
-        public static System.Drawing.Brush MediaBrushToDrawingBrush(System.Windows.Media.Brush in_brush)
+        public static D.Brush MediaBrushToDrawingBrush(M.Brush in_brush)
         {
-            if (in_brush is System.Windows.Media.SolidColorBrush)
+            if (in_brush is M.SolidColorBrush)
             {
-                System.Drawing.SolidBrush brush = new System.Drawing.SolidBrush(
-                    ColorUtils.MediaColorToDrawingColor((in_brush as System.Windows.Media.SolidColorBrush).Color)
+                D.SolidBrush brush = new D.SolidBrush(
+                    ColorUtils.MediaColorToDrawingColor((in_brush as M.SolidColorBrush).Color)
                     );
 
                 return brush;
             }
-            else if (in_brush is System.Windows.Media.LinearGradientBrush)
+            else if (in_brush is M.LinearGradientBrush)
             {
-                System.Windows.Media.LinearGradientBrush lgb = (in_brush as System.Windows.Media.LinearGradientBrush);
+                M.LinearGradientBrush lgb = (in_brush as M.LinearGradientBrush);
 
-                System.Drawing.PointF starting_point = new System.Drawing.PointF(
+                D.PointF starting_point = new D.PointF(
                     (float)lgb.StartPoint.X,
                     (float)lgb.StartPoint.Y
                     );
 
-                System.Drawing.PointF ending_point = new System.Drawing.PointF(
+                D.PointF ending_point = new D.PointF(
                     (float)lgb.EndPoint.X,
                     (float)lgb.EndPoint.Y
                     );
 
-                System.Drawing.Drawing2D.LinearGradientBrush brush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                D.Drawing2D.LinearGradientBrush brush = new D.Drawing2D.LinearGradientBrush(
                     starting_point,
                     ending_point,
-                    System.Drawing.Color.Red,
-                    System.Drawing.Color.Red
+                    D.Color.Red,
+                    D.Color.Red
                     );
 
                 /*
@@ -51,7 +57,7 @@ namespace Aurora.Utils
                 }
                 */
 
-                SortedDictionary<float, System.Drawing.Color> brush_blend = new SortedDictionary<float, System.Drawing.Color>();
+                SortedDictionary<float, D.Color> brush_blend = new SortedDictionary<float, D.Color>();
 
                 foreach (var grad_stop in lgb.GradientStops)
                 {
@@ -59,7 +65,7 @@ namespace Aurora.Utils
                         brush_blend.Add((float)grad_stop.Offset, ColorUtils.MediaColorToDrawingColor(grad_stop.Color));
                 }
 
-                List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
+                List<D.Color> brush_colors = new List<D.Color>();
                 List<float> brush_positions = new List<float>();
 
                 foreach (var kvp in brush_blend)
@@ -68,33 +74,33 @@ namespace Aurora.Utils
                     brush_positions.Add(kvp.Key);
                 }
 
-                System.Drawing.Drawing2D.ColorBlend color_blend = new System.Drawing.Drawing2D.ColorBlend();
+                D.Drawing2D.ColorBlend color_blend = new D.Drawing2D.ColorBlend();
                 color_blend.Colors = brush_colors.ToArray();
                 color_blend.Positions = brush_positions.ToArray();
                 brush.InterpolationColors = color_blend;
 
                 return brush;
             }
-            else if (in_brush is System.Windows.Media.RadialGradientBrush)
+            else if (in_brush is M.RadialGradientBrush)
             {
-                System.Windows.Media.RadialGradientBrush rgb = (in_brush as System.Windows.Media.RadialGradientBrush);
+                M.RadialGradientBrush rgb = (in_brush as M.RadialGradientBrush);
 
-                System.Drawing.RectangleF brush_region = new System.Drawing.RectangleF(
+                D.RectangleF brush_region = new D.RectangleF(
                     0.0f,
                     0.0f,
                     2.0f * (float)rgb.RadiusX,
                     2.0f * (float)rgb.RadiusY
                     );
 
-                System.Drawing.PointF center_point = new System.Drawing.PointF(
+                D.PointF center_point = new D.PointF(
                     (float)rgb.Center.X,
                     (float)rgb.Center.Y
                     );
 
-                System.Drawing.Drawing2D.GraphicsPath g_path = new System.Drawing.Drawing2D.GraphicsPath();
+                D.Drawing2D.GraphicsPath g_path = new D.Drawing2D.GraphicsPath();
                 g_path.AddEllipse(brush_region);
 
-                System.Drawing.Drawing2D.PathGradientBrush brush = new System.Drawing.Drawing2D.PathGradientBrush(g_path);
+                D.Drawing2D.PathGradientBrush brush = new D.Drawing2D.PathGradientBrush(g_path);
 
                 brush.CenterPoint = center_point;
 
@@ -113,7 +119,7 @@ namespace Aurora.Utils
                 }
                 */
 
-                SortedDictionary<float, System.Drawing.Color> brush_blend = new SortedDictionary<float, System.Drawing.Color>();
+                SortedDictionary<float, D.Color> brush_blend = new SortedDictionary<float, D.Color>();
 
                 foreach (var grad_stop in rgb.GradientStops)
                 {
@@ -121,7 +127,7 @@ namespace Aurora.Utils
                         brush_blend.Add((float)grad_stop.Offset, ColorUtils.MediaColorToDrawingColor(grad_stop.Color));
                 }
 
-                List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
+                List<D.Color> brush_colors = new List<D.Color>();
                 List<float> brush_positions = new List<float>();
 
                 foreach (var kvp in brush_blend)
@@ -130,7 +136,7 @@ namespace Aurora.Utils
                     brush_positions.Add(kvp.Key);
                 }
 
-                System.Drawing.Drawing2D.ColorBlend color_blend = new System.Drawing.Drawing2D.ColorBlend();
+                D.Drawing2D.ColorBlend color_blend = new D.Drawing2D.ColorBlend();
                 color_blend.Colors = brush_colors.ToArray();
                 color_blend.Positions = brush_positions.ToArray();
                 brush.InterpolationColors = color_blend;
@@ -139,23 +145,23 @@ namespace Aurora.Utils
             }
             else
             {
-                return new System.Drawing.SolidBrush(System.Drawing.Color.Red); //Return error color
+                return new D.SolidBrush(System.Drawing.Color.Red); //Return error color
             }
         }
 
-        public static System.Windows.Media.Brush DrawingBrushToMediaBrush(System.Drawing.Brush in_brush)
+        public static M.Brush DrawingBrushToMediaBrush(D.Brush in_brush)
         {
-            if (in_brush is System.Drawing.SolidBrush)
+            if (in_brush is D.SolidBrush)
             {
-                System.Windows.Media.SolidColorBrush brush = new System.Windows.Media.SolidColorBrush(
-                    ColorUtils.DrawingColorToMediaColor((in_brush as System.Drawing.SolidBrush).Color)
+                M.SolidColorBrush brush = new M.SolidColorBrush(
+                    ColorUtils.DrawingColorToMediaColor((in_brush as D.SolidBrush).Color)
                     );
 
                 return brush;
             }
-            else if (in_brush is System.Drawing.Drawing2D.LinearGradientBrush)
+            else if (in_brush is D.Drawing2D.LinearGradientBrush)
             {
-                System.Drawing.Drawing2D.LinearGradientBrush lgb = (in_brush as System.Drawing.Drawing2D.LinearGradientBrush);
+                D.Drawing2D.LinearGradientBrush lgb = (in_brush as D.Drawing2D.LinearGradientBrush);
 
                 System.Windows.Point starting_point = new System.Windows.Point(
                     lgb.Rectangle.X,
@@ -167,7 +173,7 @@ namespace Aurora.Utils
                     lgb.Rectangle.Bottom
                     );
 
-                System.Windows.Media.GradientStopCollection collection = new System.Windows.Media.GradientStopCollection();
+                M.GradientStopCollection collection = new M.GradientStopCollection();
 
                 try
                 {
@@ -176,7 +182,7 @@ namespace Aurora.Utils
                         for (int x = 0; x < lgb.InterpolationColors.Colors.Length; x++)
                         {
                             collection.Add(
-                                new System.Windows.Media.GradientStop(
+                                new M.GradientStop(
                                     ColorUtils.DrawingColorToMediaColor(lgb.InterpolationColors.Colors[x]),
                                     lgb.InterpolationColors.Positions[x]
                                     )
@@ -189,7 +195,7 @@ namespace Aurora.Utils
                     for (int x = 0; x < lgb.LinearColors.Length; x++)
                     {
                         collection.Add(
-                            new System.Windows.Media.GradientStop(
+                            new M.GradientStop(
                                 ColorUtils.DrawingColorToMediaColor(lgb.LinearColors[x]),
                                 x / (double)(lgb.LinearColors.Length - 1)
                                 )
@@ -197,7 +203,7 @@ namespace Aurora.Utils
                     }
                 }
 
-                System.Windows.Media.LinearGradientBrush brush = new System.Windows.Media.LinearGradientBrush(
+                M.LinearGradientBrush brush = new M.LinearGradientBrush(
                     collection,
                     starting_point,
                     ending_point
@@ -205,23 +211,23 @@ namespace Aurora.Utils
 
                 return brush;
             }
-            else if (in_brush is System.Drawing.Drawing2D.PathGradientBrush)
+            else if (in_brush is D.Drawing2D.PathGradientBrush)
             {
-                System.Drawing.Drawing2D.PathGradientBrush pgb = (in_brush as System.Drawing.Drawing2D.PathGradientBrush);
+                D.Drawing2D.PathGradientBrush pgb = (in_brush as D.Drawing2D.PathGradientBrush);
 
                 System.Windows.Point starting_point = new System.Windows.Point(
                     pgb.CenterPoint.X,
                     pgb.CenterPoint.Y
                     );
 
-                System.Windows.Media.GradientStopCollection collection = new System.Windows.Media.GradientStopCollection();
+                M.GradientStopCollection collection = new M.GradientStopCollection();
 
                 if (pgb.InterpolationColors != null && pgb.InterpolationColors.Colors.Length == pgb.InterpolationColors.Positions.Length)
                 {
                     for (int x = 0; x < pgb.InterpolationColors.Colors.Length; x++)
                     {
                         collection.Add(
-                            new System.Windows.Media.GradientStop(
+                            new M.GradientStop(
                                 ColorUtils.DrawingColorToMediaColor(pgb.InterpolationColors.Colors[x]),
                                 pgb.InterpolationColors.Positions[x]
                                 )
@@ -229,7 +235,7 @@ namespace Aurora.Utils
                     }
                 }
 
-                System.Windows.Media.RadialGradientBrush brush = new System.Windows.Media.RadialGradientBrush(
+                M.RadialGradientBrush brush = new M.RadialGradientBrush(
                     collection
                     );
 
@@ -239,8 +245,45 @@ namespace Aurora.Utils
             }
             else
             {
-                return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)); //Return error color
+                return new M.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)); //Return error color
             }
         }
+
+        /// <summary>
+        /// Creates a <see cref="ColorStopCollecion"/> from the given media brush.
+        /// </summary>
+        public static ColorStopCollecion ToColorStopCollection(this M.Brush brush) {
+            ColorStopCollecion csc = null;
+            if (brush is M.GradientBrush gb)
+                csc = gb.GradientStops.Select(gs => (gs.Color.ToDrawingColor(), (float)gs.Offset)).ToList();
+            else if (brush is M.SolidColorBrush sb)
+                csc = new ColorStopCollecion { (sb.Color.ToDrawingColor(), 0f) };
+            csc?.Sort((a, b) => Comparer<float>.Default.Compare(a.offset, b.offset));
+            return csc;
+        }
+
+        /// <summary>
+        /// Converts a <see cref="ColorStopCollecion"/> into a media brush (either <see cref="M.SolidColorBrush"/>
+        /// or a <see cref="M.LinearGradientBrush"/> depending on the amount of stops in the collection).
+        /// </summary>
+        public static M.Brush ToMediaBrush(this ColorStopCollecion stops) {
+            if (stops.Count == 0)
+                return M.Brushes.Transparent;
+            else if (stops.Count == 1)
+                return new M.SolidColorBrush(stops[0].color.ToMediaColor());
+            else
+                return new M.LinearGradientBrush(new M.GradientStopCollection(
+                    stops.Select(s => new M.GradientStop(s.color.ToMediaColor(), s.offset))
+                ));
+        }
+    }
+
+    /// <summary>
+    /// Converter that converts a <see cref="M.Color"/> into a <see cref="M.SolidColorBrush"/>.
+    /// Does not support converting back.
+    /// </summary>
+    public class ColorToBrushConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => new M.SolidColorBrush((value as M.Color?) ?? System.Windows.Media.Color.FromArgb(0, 0, 0, 0));
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

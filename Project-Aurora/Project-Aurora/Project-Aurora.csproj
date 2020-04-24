@@ -405,6 +405,9 @@
     <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousAnimationLayerHandler.cs" />
     <Compile Include="Devices\Ducky\DuckyDevice.cs" />
     <Compile Include="Devices\Ducky\DuckyRGBMappings.cs" />
+    <Compile Include="Controls\Control_LayerPreview.xaml.cs">
+      <DependentUpon>Control_LayerPreview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml.cs">
       <DependentUpon>Control_CSGODeathLayer.xaml</DependentUpon>
@@ -773,6 +776,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Layers\Control_ParticleLayer.xaml.cs">
+      <DependentUpon>Control_ParticleLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\Layers\InteractiveParticleLayerHandler.cs" />
+    <Compile Include="Settings\Layers\SimpleParticleLayerHandler.cs" />
+    <Compile Include="Settings\Layers\ParticleLayerHandlerBase.cs" />
     <Compile Include="Settings\Layers\RazerLayerHandler.cs" />
     <Compile Include="Settings\Layers\Control_RazerLayer.xaml.cs">
       <DependentUpon>Control_RazerLayer.xaml</DependentUpon>
@@ -1871,6 +1880,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Control_LayerPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\Skype\Control_Skype.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -2279,6 +2292,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\Layers\Control_ParticleLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Settings\Layers\Control_RazerLayer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -2577,6 +2594,7 @@
     <Folder Include="Profiles\Slime Rancher\Layers\" />
     <Folder Include="Profiles\Subnautica\Layers\" />
     <Folder Include="Properties\DataSources\" />
+    <Folder Include="Settings\Overrides\Logic\Special\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\RemoveProfile_Icon.png" />

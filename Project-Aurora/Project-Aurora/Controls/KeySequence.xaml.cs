@@ -120,6 +120,21 @@ namespace Aurora.Controls
             }
         }
 
+        #region ShowOnCanvas property
+        // Drawn freeform object bounds will only appear if this is true.
+        public bool ShowOnCanvas {
+            get => (bool)GetValue(ShowOnCanvasProperty);
+            set => SetValue(ShowOnCanvasProperty, value);
+        }
+
+        public static readonly DependencyProperty ShowOnCanvasProperty =
+            DependencyProperty.Register("ShowOnCanvas", typeof(bool), typeof(KeySequence), new FrameworkPropertyMetadata(true, ShowOnCanvasPropertyChanged));
+
+        private static void ShowOnCanvasPropertyChanged(DependencyObject target, DependencyPropertyChangedEventArgs e) =>
+            ((KeySequence)target).sequence_updateToLayerEditor();
+        #endregion
+
+
         /// <summary>Fired whenever the KeySequence object is changed or re-created. Does NOT trigger when keys are changed.</summary>
         public event EventHandler SequenceUpdated;
         /// <summary>Fired whenever keys are changed.</summary>
@@ -129,7 +144,15 @@ namespace Aurora.Controls
         public KeySequence()
         {
             InitializeComponent();
-            this.DataContext = this;
+
+            /* BAD BAD BAD!!! Don't do this! Doing this overrides the DataContext of the control, so if you were to use a binding on this control
+             * from another control, the binding would try access 'this' instead. E.G., in the following example, the binding is attempting to
+             * access KeySequence.SomeProperty, which is not what is expected. By looking at this code (and if it were a proper control), the
+             * binding should be accessing SomeContext.SomeProperty.
+             * <Grid DataContext="SomeContext">
+             *     <KeySequence Sequence="{Binding SomeProperty}" />
+             * </Grid> */
+            //this.DataContext = this;
         }
 
         private void sequence_remove_keys_Click(object sender, RoutedEventArgs e)
@@ -238,7 +261,7 @@ namespace Aurora.Controls
         {
             if (Sequence != null && IsInitialized && IsVisible && IsEnabled)
             {
-                if (Sequence.type == Settings.KeySequenceType.FreeForm)
+                if (Sequence.type == Settings.KeySequenceType.FreeForm && ShowOnCanvas)
                 {
                     Sequence.freeform.ValuesChanged += freeform_updated;
                     LayerEditor.AddKeySequenceElement(Sequence.freeform, Color.FromRgb(255, 255, 255), Title);
