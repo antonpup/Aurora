@@ -283,7 +283,7 @@ namespace Aurora.Utils
         public ColorStopCollection(IEnumerable<D.Color> colors) {
             var count = colors.Count();
             if (count > 0) {
-                float offset = 0, d = offset / count;
+                float offset = 0, d = count > 2 ? 1f / (count - 1f) : 0f;
                 foreach (var color in colors) {
                     SetColorAt(offset, color);
                     offset += d;
