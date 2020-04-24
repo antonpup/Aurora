@@ -1,14 +1,11 @@
-﻿using Corale.Colore.Core;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
 using D = System.Drawing;
 using M = System.Windows.Media;
-using System.Linq;
-using System.Drawing;
-using System.Collections;
-using Aurora.Profiles.LeagueOfLegends.Layers;
 
 namespace Aurora.Utils
 {
