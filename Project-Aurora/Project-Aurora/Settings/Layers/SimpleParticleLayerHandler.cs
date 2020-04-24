@@ -302,9 +302,9 @@ namespace Aurora.Settings.Layers {
                 } },
                 { "Rain", p => {
                     p._SpawnLocation = ParticleSpawnLocations.TopEdge;
-                    p._ParticleColorStops = new List<(Color color, float offset)> {
-                        (Color.Cyan, 0f),
-                        (Color.Cyan, 1f)
+                    p._ParticleColorStops = new ColorStopCollection {
+                        { 0f, Color.Cyan },
+                        { 1f, Color.Cyan }
                     };
                     p._MinSpawnTime = .1f; p._MaxSpawnTime = .2f;
                     p._MinSpawnAmount = 1; p._MaxSpawnAmount = 2;
