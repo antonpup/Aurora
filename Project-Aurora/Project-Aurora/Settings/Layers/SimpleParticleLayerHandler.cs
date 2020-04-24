@@ -324,6 +324,23 @@ namespace Aurora.Settings.Layers {
                     p._MinSize = 6;
                     p._MaxSize = 6;
                     p._DeltaSize = 0;
+                } },
+                { "Rain", p => {
+                    p._SpawnLocation = ParticleSpawnLocations.TopEdge;
+                    p._ParticleColorStops = new List<(Color color, float offset)> {
+                        (Color.Cyan, 0f),
+                        (Color.Cyan, 1f)
+                    };
+                    p._MinSpawnTime = .1f; p._MaxSpawnTime = .2f;
+                    p._MinSpawnAmount = 1; p._MaxSpawnAmount = 2;
+                    p._MinLifetime = p._MaxLifetime = 1;
+                    p._MinInitialVelocityX = p._MaxInitialVelocityX = 0;
+                    p._MinInitialVelocityY = p._MaxInitialVelocityY = 3;
+                    p._AccelerationX = 0;
+                    p._AccelerationY = 0;
+                    p._MinSize = 2;
+                    p._MaxSize = 4;
+                    p._DeltaSize = 0;
                 } }
             }
         );
