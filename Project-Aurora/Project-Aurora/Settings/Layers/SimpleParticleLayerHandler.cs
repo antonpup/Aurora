@@ -144,8 +144,7 @@ namespace Aurora.Settings.Layers {
             _AccelerationY = .5f;
             _DragX = 0;
             _DragY = 0;
-            _MinSize = 6;
-            _MaxSize = 6;
+            _MinSize = 6; _MaxSize = 6;
             _DeltaSize = 0;
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
@@ -282,9 +281,8 @@ namespace Aurora.Settings.Layers {
                     p._MinInitialVelocityY = -1.3f; p._MaxInitialVelocityY = -0.8f;
                     p._AccelerationX = 0;
                     p._AccelerationY = 0.5f;
-                    p._MinSize = 6;
-                    p._MaxSize = 6;
-                    p._DeltaSize = 0;
+                    p._MinSize = 8; p._MaxSize = 12;
+                    p._DeltaSize = -4;
                 } },
                 { "Matrix", p => {
                     p._SpawnLocation = ParticleSpawnLocations.TopEdge;
@@ -299,8 +297,7 @@ namespace Aurora.Settings.Layers {
                     p._MinInitialVelocityY = p._MaxInitialVelocityY = 3;
                     p._AccelerationX = 0;
                     p._AccelerationY = 0;
-                    p._MinSize = 6;
-                    p._MaxSize = 6;
+                    p._MinSize = 6; p._MaxSize = 6;
                     p._DeltaSize = 0;
                 } }
             }
