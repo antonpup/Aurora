@@ -106,97 +106,29 @@ namespace Aurora.Profiles
             processMonitor = new ActiveProcessMonitor();
             runningProcessMonitor = new RunningProcessMonitor();
 
-            #region Initiate Defaults
-            RegisterEvents(new List<ILightEvent> {
-                new Desktop.Desktop(),
-                new Dota_2.Dota2(),
-                new CSGO.CSGO(),
-                new GTA5.GTA5(),
-                new RocketLeague.RocketLeague(),
-                new Borderlands2.Borderlands2(),
-                new Overwatch.Overwatch(),
-                new Payday_2.PD2(),
-                new TheDivision.TheDivision(),
-                new LeagueOfLegends.LoL(),
-                new HotlineMiami.HotlineMiami(),
-                new TheTalosPrinciple.TalosPrinciple(),
-                new BF3.BF3(),
-                new Blacklight.Blacklight(),
-                new Magic_Duels_2012.MagicDuels2012(),
-                new ShadowOfMordor.ShadowOfMordor(),
-                new Serious_Sam_3.SSam3(),
-                new DiscoDodgeball.DiscoDodgeballApplication(),
-                new XCOM.XCOM(),
-                new Evolve.Evolve(),
-                new Metro_Last_Light.MetroLL(),
-                new Guild_Wars_2.GW2(),
-                new WormsWMD.WormsWMD(),
-                new Blade_and_Soul.BnS(),
-                new Skype.Skype(),
-                new ROTTombRaider.ROTTombRaider(),
-                new DyingLight.DyingLight(),
-                new ETS2.ETS2(),
-                new ATS.ATS(),
-                new Move_or_Die.MoD(),
-                new QuantumConumdrum.QuantumConumdrum(),
-                new Battlefield1.Battlefield1(),
-                new Dishonored.Dishonored(),
-                new Witcher3.Witcher3(),
-                new Minecraft.Minecraft(),
-                new KillingFloor2.KillingFloor2(),
-                new DOOM.DOOM(),
-                new Factorio.Factorio(),
-                new QuakeChampions.QuakeChampions(),
-                new Diablo3.Diablo3(),
-                new DeadCells.DeadCells(),
-                new Subnautica.Subnautica(),
-                new ResidentEvil2.ResidentEvil2(),
-                new CloneHero.CloneHero(),
-                new Osu.Osu(),
-                new Slime_Rancher.Slime_Rancher(),
-                new Terraria.Terraria(),
-                new Discord.Discord(),
-                new EliteDangerous.EliteDangerous()
-            });
+            // Register all Application types in the assembly
+            foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(type => type.BaseType == typeof(Profiles.Application) && type != typeof(GenericApplication)))
+                RegisterEvent((Profiles.Application)Activator.CreateInstance(type));
 
-            RegisterLayerHandlers(new List<LayerHandlerEntry> {
-                new LayerHandlerEntry("Default", "Default Layer", typeof(DefaultLayerHandler)),
-                new LayerHandlerEntry("Solid", "Solid Color Layer", typeof(SolidColorLayerHandler)),
-                new LayerHandlerEntry("SolidFilled", "Solid Fill Color Layer", typeof(SolidFillLayerHandler)),
-                new LayerHandlerEntry("Gradient", "Gradient Layer", typeof(GradientLayerHandler)),
-                new LayerHandlerEntry("GradientFill", "Gradient Fill Layer", typeof(GradientFillLayerHandler)),
-                new LayerHandlerEntry("Breathing", "Breathing Layer", typeof(BreathingLayerHandler)),
-                new LayerHandlerEntry("Blinking", "Blinking Layer", typeof(BlinkingLayerHandler)),
-                new LayerHandlerEntry("Image", "Image Layer", typeof(ImageLayerHandler)),
-                new LayerHandlerEntry("Script", "Script Layer", typeof(ScriptLayerHandler)),
-                new LayerHandlerEntry("Percent", "Percent Effect Layer", typeof(PercentLayerHandler)),
-                new LayerHandlerEntry("PercentGradient", "Percent (Gradient) Effect Layer", typeof(PercentGradientLayerHandler)),
-                new LayerHandlerEntry("Razer", "Razer Chroma Layer", typeof(RazerLayerHandler)),
-                new LayerHandlerEntry("Conditional", "Conditional Layer", typeof(ConditionalLayerHandler)),
-                new LayerHandlerEntry("Comparison", "Comparison Layer", typeof(ComparisonLayerHandler)),
-                new LayerHandlerEntry("Interactive", "Interactive Layer", typeof(InteractiveLayerHandler) ),
-                new LayerHandlerEntry("ShortcutAssistant", "Shortcut Assistant Layer", typeof(ShortcutAssistantLayerHandler) ),
-                new LayerHandlerEntry("Equalizer", "Audio Visualizer Layer", typeof(EqualizerLayerHandler) ),
-                new LayerHandlerEntry("Ambilight", "Ambilight Layer", typeof(AmbilightLayerHandler) ),
-                new LayerHandlerEntry("LockColor", "Lock Color Layer", typeof(LockColourLayerHandler) ),
-                new LayerHandlerEntry("Glitch", "Glitch Effect Layer", typeof(GlitchLayerHandler) ),
-                new LayerHandlerEntry("Animation", "Animation Layer", typeof(AnimationLayerHandler) ),
-                new LayerHandlerEntry("ToggleKey", "Toggle Key Layer", typeof(ToggleKeyLayerHandler)),
-                new LayerHandlerEntry("Timer", "Timer Layer", typeof(TimerLayerHandler)),
-                new LayerHandlerEntry("Toolbar", "Toolbar Layer", typeof(ToolbarLayerHandler)),
-                new LayerHandlerEntry("BinaryCounter", "Binary Counter Layer", typeof(BinaryCounterLayerHandler)),
-                new LayerHandlerEntry("Particle", "Particle Layer", typeof(SimpleParticleLayerHandler)),
-                new LayerHandlerEntry("InteractiveParticle", "Interactive Particle Layer", typeof(InteractiveParticleLayerHandler)),
-                new LayerHandlerEntry("Radial", "Radial Layer", typeof(RadialLayerHandler))
-            }, true);
-
-            RegisterLayerHandler(new LayerHandlerEntry("WrapperLights", "Wrapper Lighting Layer", typeof(WrapperLightsLayerHandler)), false);
-
-            #endregion
+            // Register all layer types that are in the Aurora.Settings.Layers namespace.
+            // Do not register all that are inside the assembly since some are application-specific (e.g. minecraft health layer)
+            var layerTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+                             let meta = type.GetCustomAttribute<LayerHandlerMetaAttribute>()
+                             where !type.IsGenericType
+                             where type.GetInterfaces().Contains(typeof(ILayerHandler))
+                             where type.Namespace == "Aurora.Settings.Layers"
+                             where meta == null || !meta.Exclude
+                             select (type, meta);
+            foreach (var (type, meta) in layerTypes) {
+                var id = ((ILayerHandler)Activator.CreateInstance(type)).ID;
+                var fallbackName = type.Name.CamelCaseToSpaceCase();
+                if (fallbackName.EndsWith(" Layer Handler")) fallbackName = fallbackName.Substring(0, fallbackName.Length - 14);
+                RegisterLayerHandler(id, meta?.Name ?? fallbackName, type, meta?.IsDefault ?? true);
+            }
 
             LoadSettings();
 
-            this.LoadPlugins();
+            LoadPlugins();
 
             if (Directory.Exists(AdditionalProfilesPath))
             {
@@ -486,7 +418,7 @@ namespace Aurora.Profiles
 
         public bool RegisterLayerHandler(string key, string title, Type type, bool @default = true)
         {
-            return RegisterLayerHandler(new LayerHandlerEntry(key, title, type));
+            return RegisterLayerHandler(new LayerHandlerEntry(key, title, type), @default);
         }
 
         public Type GetLayerHandlerType(string key)
@@ -863,5 +795,21 @@ namespace Aurora.Profiles
             foreach (var app in this.Events)
                 app.Value.Dispose();
         }
+    }
+
+
+    /// <summary>
+    /// Attribute to provide additional meta data about layers for them to be registered.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class LayerHandlerMetaAttribute : Attribute {
+        /// <summary>A different name for the layer. If not specified, will automatically take it from the layer's class name.</summary>
+        public string Name { get; set; }
+
+        /// <summary>If true, this layer will be excluded from automatic registration. Default false.</summary>
+        public bool Exclude { get; set; } = false;
+
+        /// <summary>If true, this layer will be registered as a 'default' layer for all applications. Default true.</summary>
+        public bool IsDefault { get; set; } = true;
     }
 }

@@ -164,6 +164,7 @@ namespace Aurora.Settings.Layers {
     /// <summary>
     /// Layer handler for the simple particles. It uses time-based spawning and despawning logic.
     /// </summary>
+    [LayerHandlerMeta(Name = "Particle")]
     public class SimpleParticleLayerHandler : ParticleLayerHandlerBase<SimpleParticle, SimpleParticleLayerProperties> {
 
         private double nextSpawnInterval = 0; // How many seconds until next set of particle spawns

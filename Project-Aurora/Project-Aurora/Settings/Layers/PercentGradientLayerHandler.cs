@@ -31,6 +31,7 @@ namespace Aurora.Settings.Layers
 
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
+    [LayerHandlerMeta(Name = "Percent (Gradient)")]
     public class PercentGradientLayerHandler : PercentLayerHandler<PercentGradientLayerHandlerProperties>
     { 
         public PercentGradientLayerHandler() : base()

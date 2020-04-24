@@ -60,6 +60,7 @@ namespace Aurora.Settings.Layers
     
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_Sequence")]
+    [LayerHandlerMeta(IsDefault = false)]
     public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerProperties>
     {
         internal int[] bitmap = new int[126];

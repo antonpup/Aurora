@@ -250,6 +250,7 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LayerHandlerMeta(Exclude = true)]
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {
 

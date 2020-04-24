@@ -1,10 +1,12 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
+using Aurora.Profiles;
 using Aurora.Utils;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace Aurora.Settings.Layers {
 
+    [LayerHandlerMeta(Name = "Particle (Interactive)")]
     public class InteractiveParticleLayerHandler : SimpleParticleLayerHandler {
 
         private readonly HashSet<DeviceKeys> awaitingKeys = new HashSet<DeviceKeys>();
