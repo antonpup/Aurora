@@ -23,8 +23,11 @@ namespace Aurora.Settings.Layers {
             presetsCombo.ItemsSource = ParticleLayerPresets.Presets.Select(kvp => new { Text = kvp.Key, ApplyFunc = kvp.Value });
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
-            // Create a temporary Media brush from the particle's color stops
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) => ApplyGradientToEditor();
+
+        private void ApplyGradientToEditor() {
+            // Note that I tried using a binding instead of this but since it'd need a IValueConverter which would have to create a new brush and
+            // the _values_ on that brush change not the brush itself, the binding was not actually being triggered.
             gradientEditor.Brush = handler.Properties._ParticleColorStops.Count == 1
                 ? (Brush)new SolidColorBrush(handler.Properties._ParticleColorStops.First().color.ToMediaColor())
                 : new LinearGradientBrush(new GradientStopCollection(handler.Properties._ParticleColorStops.Select(t => new GradientStop(t.color.ToMediaColor(), t.offset))));
@@ -43,6 +46,7 @@ namespace Aurora.Settings.Layers {
             if (presetsCombo.SelectedValue is Action<SimpleParticleLayerProperties> apply && MessageBox.Show("Do you wish to apply this preset? Your current configuration will be overwritten.", "Apply Preset", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
                 handler.Properties.Default();
                 apply(handler.Properties);
+                ApplyGradientToEditor(); // Manually update the gradient editor since this can't be handled by bindings
             }
         }
     }
