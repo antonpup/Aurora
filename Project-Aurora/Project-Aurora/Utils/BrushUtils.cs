@@ -5,8 +5,10 @@ using System.Globalization;
 using System.Windows.Data;
 using D = System.Drawing;
 using M = System.Windows.Media;
-using ColorStopCollecion = System.Collections.Generic.List<(System.Drawing.Color color, float offset)>;
 using System.Linq;
+using System.Drawing;
+using System.Collections;
+using Aurora.Profiles.LeagueOfLegends.Layers;
 
 namespace Aurora.Utils
 {
@@ -249,34 +251,115 @@ namespace Aurora.Utils
                 return new M.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)); //Return error color
             }
         }
+    }
 
-        /// <summary>
-        /// Creates a <see cref="ColorStopCollecion"/> from the given media brush.
-        /// </summary>
-        public static ColorStopCollecion ToColorStopCollection(this M.Brush brush) {
-            ColorStopCollecion csc = null;
-            if (brush is M.GradientBrush gb)
-                csc = gb.GradientStops.Select(gs => (gs.Color.ToDrawingColor(), (float)gs.Offset)).ToList();
-            else if (brush is M.SolidColorBrush sb)
-                csc = new ColorStopCollecion { (sb.Color.ToDrawingColor(), 0f) };
-            csc?.Sort((a, b) => Comparer<float>.Default.Compare(a.offset, b.offset));
-            return csc;
+    /// <summary>
+    /// A collection which stores and interpolates a collection of colors that can represent a gradient.
+    /// </summary>
+    /// <remarks>
+    /// I've made this as it's own class rather than using one of the built-in collections as there can sometimes be UI multi-thead issues if trying
+    /// to access a gradient stop collection that is being used by a gradient editor in the UI.
+    /// </remarks>
+    public class ColorStopCollection : IEnumerable<KeyValuePair<float, D.Color>> {
+
+        private readonly SortedList<float, D.Color> stops = new SortedList<float, D.Color>();
+
+        public ColorStopCollection() { }
+
+        public ColorStopCollection(IEnumerable<KeyValuePair<float, D.Color>> stops) {
+            foreach (var stop in stops)
+                SetColorAt(stop.Key, stop.Value);
         }
 
         /// <summary>
-        /// Converts a <see cref="ColorStopCollecion"/> into a media brush (either <see cref="M.SolidColorBrush"/>
-        /// or a <see cref="M.LinearGradientBrush"/> depending on the amount of stops in the collection).
+        /// Gets or sets the color at the specified offset.
+        /// When setting a value, a new color stop will be created at the given offset if one does not already exist.
         /// </summary>
-        public static M.Brush ToMediaBrush(this ColorStopCollecion stops) {
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        public D.Color this[float offset] {
+            get => GetColorAt(offset);
+            set => SetColorAt(offset, value);
+        }
+
+        /// <summary>
+        /// Gets the color at the specific offset.
+        /// If this point is not at a stop, it's value is interpolated.
+        /// </summary>
+        public D.Color GetColorAt(float offset) {
+            // If there are no stops, return a transparent color
+            if (stops.Count == 0)
+                return D.Color.Transparent;
+
+            offset = Math.Max(Math.Min(offset, 1), 0);
+
+            // First, check if the target offset is at a stop. If so, return the value of that stop.
+            if (stops.ContainsKey(offset))
+                return stops[offset];
+
+            // Next, check to see if the target offset is before the first stop or after the last, if so, return that stop.
+            if (offset < stops.First().Key)
+                return stops.First().Value;
+            if (offset > stops.Last().Key)
+                return stops.Last().Value;
+
+            // At this point, offset is determined to be between two stops, so find which two and then interpolate them.
+            for (var i = 1; i < stops.Count; i++) {
+                if (offset > stops.Keys[i - 1] && offset < stops.Keys[i])
+                    return ColorUtils.BlendColors(
+                        stops.Values[i - 1],
+                        stops.Values[i],
+                        (offset - stops.Keys[i - 1]) / (stops.Keys[i] - stops.Keys[i - 1])
+                    );
+            }
+
+            // Logically, should never get here.
+            throw new InvalidOperationException("No idea what happened.");
+        }
+
+        /// <summary>
+        /// Sets the color at the specified offset to the given value.
+        /// If an offset does not exist at this point, one will be created.
+        /// </summary>
+        public void SetColorAt(float offset, D.Color color) {
+            if (offset < 0 || offset > 1)
+                throw new ArgumentOutOfRangeException(nameof(offset), $"Gradient stop at offset {offset} is out of range. Value must be between 0 and 1 (inclusive).");
+            stops[offset] = color;
+        }
+
+        /// <summary>
+        /// Creates a new media brush from this stop collection.
+        /// Either <see cref="M.SolidColorBrush"/> or a <see cref="M.LinearGradientBrush"/> will be created depending on the number of stops.
+        /// </summary>
+        public M.Brush ToMediaBrush() {
             if (stops.Count == 0)
                 return M.Brushes.Transparent;
             else if (stops.Count == 1)
-                return new M.SolidColorBrush(stops[0].color.ToMediaColor());
+                return new M.SolidColorBrush(stops.Values[0].ToMediaColor());
             else
                 return new M.LinearGradientBrush(new M.GradientStopCollection(
-                    stops.Select(s => new M.GradientStop(s.color.ToMediaColor(), s.offset))
+                    stops.Select(s => new M.GradientStop(s.Value.ToMediaColor(), s.Key))
                 ));
         }
+
+        /// <summary>
+        /// Creates a new stop collection from the given media brush.
+        /// </summary>
+        public static ColorStopCollection FromMediaBrush(M.Brush brush) {
+            if (brush is M.GradientBrush gb)
+                return new ColorStopCollection(gb.GradientStops.ToDictionary(gs => (float)gs.Offset, gs => gs.Color.ToDrawingColor()));
+            else if (brush is M.SolidColorBrush sb)
+                return new ColorStopCollection { { 0f, sb.Color.ToDrawingColor() } };
+            throw new InvalidOperationException($"Brush of type '{brush.GetType().Name} could not be converted to a ColorStopCollection.");
+        }
+
+        #region IEnumerable
+        /// <summary>Alias for <see cref="SetColorAt(float, D.Color)"/> to allow for list constructor syntax.</summary>
+        public void Add(float offset, D.Color color) => SetColorAt(offset, color);
+
+        public IEnumerator<KeyValuePair<float, D.Color>> GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)stops).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)stops).GetEnumerator();
+        #endregion
     }
 
     /// <summary>

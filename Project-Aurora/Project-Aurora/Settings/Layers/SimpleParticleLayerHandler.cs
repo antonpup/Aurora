@@ -119,13 +119,13 @@ namespace Aurora.Settings.Layers {
         // The color gradient stops for the particle. Note this is sorted by offset when set using _ParticleColorStops. Not using a linear brush here because:
         //   1) there are multithreading issues when trying to access a Media brush's gradient collection since it belongs to the UI thread
         //   2) We don't actually need the gradient as a brush since we're not drawing particles as gradients, only a solid color based on their lifetime, so we only need to access the color stops
-        private List<(Color color, float offset)> particleColorStops;
-        public List<(Color color, float offset)> _ParticleColorStops { get => particleColorStops; set => SetAndNotify(ref particleColorStops, value.OrderBy(s => s.offset).ToList()); }
-        [JsonIgnore] public List<(Color color, float offset)> ParticleColorStops => Logic._ParticleColorStops ?? _ParticleColorStops ?? defaultParticleColor;
+        private ColorStopCollection particleColorStops;
+        public ColorStopCollection _ParticleColorStops { get => particleColorStops; set => SetAndNotify(ref particleColorStops, value); }
+        [JsonIgnore] public ColorStopCollection ParticleColorStops => Logic._ParticleColorStops ?? _ParticleColorStops ?? defaultParticleColor;
 
-        private static readonly List<(Color, float)> defaultParticleColor = new List<(Color, float)> {
-            (Color.White, 0f),
-            (Color.FromArgb(0, Color.White), 1f)
+        private static readonly ColorStopCollection defaultParticleColor = new ColorStopCollection {
+            {0f, Color.White },
+            {1f,  Color.FromArgb(0, Color.White) }
         };
 
         public SimpleParticleLayerProperties() : base() { }
@@ -148,28 +148,6 @@ namespace Aurora.Settings.Layers {
             _MaxSize = 6;
             _DeltaSize = 0;
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
-        }
-
-        /// <summary>
-        /// Returns the color at the specified offset for the current <see cref="_ParticleColorStops"/>.
-        /// </summary>
-        /// <param name="offset">A value between 0 and 1. At 0, the left-most color is returned, at 1, the rightmost is.</param>
-        /// <returns></returns>
-        public Color ColorAt(float offset) {
-            // Check if any GradientStops are exactly at the requested offset. If so, return that
-            var exact = particleColorStops.Where(s => s.offset == offset);
-            if (exact.Count() == 1) return exact.Single().color;
-
-            // Check if the requested offset is outside of bounds of the offset range. If so, return the nearest offset
-            if (offset <= particleColorStops.First().offset) return particleColorStops.First().color;
-            if (offset >= particleColorStops.Last().offset) return particleColorStops.Last().color;
-
-            // Find the two stops either side of the requsted offset
-            var left = particleColorStops.Last(s => s.offset < offset);
-            var right = particleColorStops.First(s => s.offset > offset);
-
-            // Return the blended color that is the correct ratio between left and right
-            return ColorUtils.BlendColors(left.color, right.color, (offset - left.offset) / (right.offset - left.offset));
         }
     }
 
@@ -252,7 +230,7 @@ namespace Aurora.Settings.Layers {
 
         public void Render(Graphics gfx, SimpleParticleLayerProperties properties, IGameState gameState) {
             var s2 = Size / 2;
-            gfx.FillEllipse(new SolidBrush(properties.ColorAt((float)(Lifetime / MaxLifetime))), new RectangleF(PositionX - s2, PositionY - s2, Size, Size));
+            gfx.FillEllipse(new SolidBrush(properties.ParticleColorStops.GetColorAt((float)(Lifetime / MaxLifetime))), new RectangleF(PositionX - s2, PositionY - s2, Size, Size));
         }
 
         /// <summary>
@@ -292,10 +270,10 @@ namespace Aurora.Settings.Layers {
             new Dictionary<string, Action<SimpleParticleLayerProperties>> {
                 { "Fire", p => {
                     p._SpawnLocation = ParticleSpawnLocations.BottomEdge;
-                    p._ParticleColorStops = new List<(Color color, float offset)> {
-                        (Color.Yellow, 0f),
-                        (Color.FromArgb(128, Color.Red), 0.6f),
-                        (Color.FromArgb(0, Color.Black), 1f)
+                    p._ParticleColorStops = new ColorStopCollection {
+                        { 0f, Color.Yellow },
+                        { 0.6f, Color.FromArgb(128, Color.Red) },
+                        { 1f, Color.FromArgb(0, Color.Black) }
                     };
                     p._MinSpawnTime = p._MaxSpawnTime = .05f;
                     p._MinSpawnAmount = 4; p._MaxSpawnAmount = 6;
@@ -310,9 +288,9 @@ namespace Aurora.Settings.Layers {
                 } },
                 { "Matrix", p => {
                     p._SpawnLocation = ParticleSpawnLocations.TopEdge;
-                    p._ParticleColorStops = new List<(Color color, float offset)> {
-                        (Color.FromArgb(0,255,0), 0f),
-                        (Color.FromArgb(0,255,0), 1f)
+                    p._ParticleColorStops = new ColorStopCollection {
+                        { 0f, Color.FromArgb(0,255,0) },
+                        { 1f, Color.FromArgb(0,255,0) }
                     };
                     p._MinSpawnTime = .1f; p._MaxSpawnTime = .2f;
                     p._MinSpawnAmount = 1; p._MaxSpawnAmount = 2;
