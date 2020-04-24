@@ -1,4 +1,4 @@
-﻿using Corale.Colore.Core;
+using Corale.Colore.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -329,17 +329,16 @@ namespace Aurora.Utils
 
         /// <summary>
         /// Creates a new media brush from this stop collection.
-        /// Either <see cref="M.SolidColorBrush"/> or a <see cref="M.LinearGradientBrush"/> will be created depending on the number of stops.
         /// </summary>
-        public M.Brush ToMediaBrush() {
+        public M.LinearGradientBrush ToMediaBrush() {
+            M.GradientStopCollection gsc;
             if (stops.Count == 0)
-                return M.Brushes.Transparent;
+                gsc = new M.GradientStopCollection(new[] { new M.GradientStop(M.Colors.Transparent, 0), new M.GradientStop(M.Colors.Transparent, 1) });
             else if (stops.Count == 1)
-                return new M.SolidColorBrush(stops.Values[0].ToMediaColor());
+                gsc = new M.GradientStopCollection(new[] { new M.GradientStop(stops.Values[0].ToMediaColor(), 0), new M.GradientStop(stops.Values[0].ToMediaColor(), 1) });
             else
-                return new M.LinearGradientBrush(new M.GradientStopCollection(
-                    stops.Select(s => new M.GradientStop(s.Value.ToMediaColor(), s.Key))
-                ));
+                gsc = new M.GradientStopCollection(stops.Select(s => new M.GradientStop(s.Value.ToMediaColor(), s.Key)));
+            return new M.LinearGradientBrush(gsc);
         }
 
         /// <summary>
@@ -347,7 +346,7 @@ namespace Aurora.Utils
         /// </summary>
         public static ColorStopCollection FromMediaBrush(M.Brush brush) {
             if (brush is M.GradientBrush gb)
-                return new ColorStopCollection(gb.GradientStops.ToDictionary(gs => (float)gs.Offset, gs => gs.Color.ToDrawingColor()));
+                return new ColorStopCollection(gb.GradientStops.GroupBy(gs => gs.Offset).ToDictionary(gs => (float)gs.First().Offset, gs => gs.First().Color.ToDrawingColor()));
             else if (brush is M.SolidColorBrush sb)
                 return new ColorStopCollection { { 0f, sb.Color.ToDrawingColor() } };
             throw new InvalidOperationException($"Brush of type '{brush.GetType().Name} could not be converted to a ColorStopCollection.");
