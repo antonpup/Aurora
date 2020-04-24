@@ -1,4 +1,4 @@
-using Corale.Colore.Core;
+﻿using Corale.Colore.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -264,12 +264,37 @@ namespace Aurora.Utils
 
         private readonly SortedList<float, D.Color> stops = new SortedList<float, D.Color>();
 
+        /// <summary>
+        /// Creates an empty ColorStopCollection.
+        /// </summary>
         public ColorStopCollection() { }
 
+        /// <summary>
+        /// Creates a ColorStopCollection from the given float-color key-value-pairs.
+        /// </summary>
         public ColorStopCollection(IEnumerable<KeyValuePair<float, D.Color>> stops) {
             foreach (var stop in stops)
                 SetColorAt(stop.Key, stop.Value);
         }
+
+        /// <summary>
+        /// Creates a ColorStopCollection from the given colors, which are automatically evenly placed, with the first being at offset 0 and the last at offset 1.
+        /// </summary>
+        public ColorStopCollection(IEnumerable<D.Color> colors) {
+            var count = colors.Count();
+            if (count > 0) {
+                float offset = 0, d = offset / count;
+                foreach (var color in colors) {
+                    SetColorAt(offset, color);
+                    offset += d;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The number of stops in this stop collection.
+        /// </summary>
+        public int StopCount => stops.Count;
 
         /// <summary>
         /// Gets or sets the color at the specified offset.
@@ -351,6 +376,11 @@ namespace Aurora.Utils
                 return new ColorStopCollection { { 0f, sb.Color.ToDrawingColor() } };
             throw new InvalidOperationException($"Brush of type '{brush.GetType().Name} could not be converted to a ColorStopCollection.");
         }
+
+        /// <summary>
+        /// Determines if this color stop collection contains the same stops as another collection.
+        /// </summary>
+        public bool StopsEqual(ColorStopCollection other) => Enumerable.SequenceEqual(stops, other.stops);
 
         #region IEnumerable
         /// <summary>Alias for <see cref="SetColorAt(float, D.Color)"/> to allow for list constructor syntax.</summary>

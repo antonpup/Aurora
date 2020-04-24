@@ -4,6 +4,7 @@ using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -12,9 +13,10 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers {
+
     public class RadialLayerProperties : LayerHandlerProperties<RadialLayerProperties> {
 
-        private static readonly SegmentedRadialBrushFactory defaultFactory = new SegmentedRadialBrushFactory(new[] { Color.Red, Color.Orange, Color.Yellow, Color.Lime, Color.Cyan, Color.Blue, Color.Purple }) { EasingAmount = 3 };
+        private static readonly SegmentedRadialBrushFactory defaultFactory = new SegmentedRadialBrushFactory(new Utils.ColorStopCollection(new[] { Color.Red, Color.Orange, Color.Yellow, Color.Lime, Color.Cyan, Color.Blue, Color.Purple, Color.Red }));
 
         public SegmentedRadialBrushFactory _Brush { get; set; }
         [JsonIgnore] public SegmentedRadialBrushFactory Brush => Logic._Brush ?? _Brush ?? defaultFactory;

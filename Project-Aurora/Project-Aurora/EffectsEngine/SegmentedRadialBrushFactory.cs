@@ -1,8 +1,10 @@
 ﻿using Aurora.Utils;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
 
 namespace Aurora.EffectsEngine {
 
@@ -19,13 +21,13 @@ namespace Aurora.EffectsEngine {
         // The resolution of the base texture size.
         private const int textureSize = 200;
         private static readonly Rectangle renderArea = new Rectangle(0, 0, textureSize, textureSize);
-        private static SolidBrush fallback = new SolidBrush(Color.Transparent);
+        private static readonly SolidBrush fallback = new SolidBrush(Color.Transparent);
 
-        private Color[] colors;
-        private int easingAmount;
+        private ColorStopCollection colors;
+        private int segmentCount = 24;
         private TextureBrush baseBrush;
 
-        public SegmentedRadialBrushFactory(Color[] colors) {
+        public SegmentedRadialBrushFactory(ColorStopCollection colors) {
             this.colors = colors;
             CreateBaseTextureBrush();
         }
@@ -33,11 +35,11 @@ namespace Aurora.EffectsEngine {
         /// <summary>
         /// Gets or sets the colors and their orders in use by the brush.
         /// </summary>
-        public Color[] Colors {
-            get => (Color[])colors.Clone();
+        public ColorStopCollection Colors {
+            get => colors;
             set {
                 // If the colors are equal, don't do anything
-                if (colors.Length == value.Length && ((IStructuralEquatable)colors).Equals(value, StructuralComparisons.StructuralEqualityComparer))
+                if (colors.StopsEqual(value))
                     return;
 
                 // If they are not equal, create a new texture brush
@@ -47,13 +49,15 @@ namespace Aurora.EffectsEngine {
         }
 
         /// <summary>
-        /// Determines the number of auto-generated colors between each of the colors defined in the <see cref="Colors"/> array.
+        /// How many segments should be created for this brush. Larger values appear smoother by may run more slowly.
         /// </summary>
-        public int EasingAmount {
-            get => easingAmount;
+        public int SegmentCount {
+            get => segmentCount;
             set {
-                if (easingAmount != value) {
-                    easingAmount = value;
+                if (segmentCount <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(SegmentCount), "Segment count must not be lower than 1.");
+                if (segmentCount != value) {
+                    segmentCount = value;
                     CreateBaseTextureBrush();
                 }
             }
@@ -63,37 +67,53 @@ namespace Aurora.EffectsEngine {
         /// Creates a new base brush from the current properties.
         /// </summary>
         private void CreateBaseTextureBrush() {
-            var colors = GetBrushColors();
-            var angle = 360f / colors.Length;
+            var angle = 360f / segmentCount;
+            var segmentOffset = 1f / segmentCount; // how much each segment moves the offset forwards on the gradient
 
-            // Draw the texture to be used for the brush. This is made up of circular segments 
+            // Get a list of all stops in the stop collection.
+            // We use this to optimise the interpolation of the colors.
+            // If we were to use ColorStopCollection.GetColorAt, it may end up running numerous for loops over the same stops, but given
+            // the special requirements here, we can eliminate that and use less for loops and make the ones we do use slightly more optimal.
+            var stops = colors.ToList();
+            var currentOffset = segmentOffset / 2;
+            var stopIdx = 0;
+
+            // If there isn't a stop at offsets 0 and 1, create them. This makes it easier during the loop since we don't have to check if we're left/right of the first/last stops.
+            if (stops[0].Key != 0)
+                stops.Insert(0, new KeyValuePair<float, Color>(0f, stops[0].Value));
+            if (stops[stops.Count - 1].Key != 1)
+                stops.Add(new KeyValuePair<float, Color>(1f, stops[stops.Count - 1].Value));
+
+            // Create and draw texture
             var texture = new Bitmap(textureSize, textureSize);
-            using (var gfx = Graphics.FromImage(texture))
-                for (var i = 0; i < colors.Length; i++)
-                    gfx.FillPie(new SolidBrush(colors[i]), renderArea, i * angle, angle);
+            using (var gfx = Graphics.FromImage(texture)) {
+                for (var i = 0; i < segmentCount; i++) {
+
+                    // Move the stop index forwards if required.
+                    //  - It needs to more fowards until the the stop at that index is to the left of the current offset and the point at that index+1 is to the right.
+                    //  - If it is exactly on a stop, make that matched stop at that index.
+                    while (stops[stopIdx + 1].Key < currentOffset)
+                        stopIdx++;
+
+                    // Now that stopIdx is in the right place, we can figure out which color we need.
+                    var color = stops[stopIdx].Key == currentOffset
+                        ? stops[stopIdx].Value // if exactly on a stop, don't need to interpolate it
+                        : ColorUtils.BlendColors( // otherwise, we need to calculate the blend between the two stops
+                            stops[stopIdx].Value,
+                            stops[stopIdx + 1].Value,
+                            (currentOffset - stops[stopIdx].Key) / (stops[stopIdx + 1].Key - stops[stopIdx].Key)
+                        );
+
+                    // Draw this segment
+                    gfx.FillPie(new SolidBrush(color), renderArea, i * angle, angle);
+
+                    // Bump the offset
+                    currentOffset += segmentOffset;
+                }
+            }
 
             // Create the texture brush from our custom bitmap texture
             baseBrush = new TextureBrush(texture);
-        }
-
-        /// <summary>
-        /// Generates the colors array to be used for building the brush. This will also generate interpolated colors between defined stops if required.
-        /// </summary>
-        private Color[] GetBrushColors() {
-            // Simply return the colors array if easing is disabled.
-            if (easingAmount <= 0) return colors;
-
-            // For each color, easingAmount many times, generate the interpolated color between the 'i'th color and the 'i + 1'th color.
-            var interpolatedColors = new Color[colors.Length * (easingAmount + 1)];
-            var easeAmountScale = 1f / (easingAmount + 1);
-            for (var i = 0; i < colors.Length; i++) {
-                var s = i * (easingAmount + 1); // The start index for this color group
-                interpolatedColors[s] = colors[i];
-                for (var j = 0; j < easingAmount; j++)
-                    interpolatedColors[s + j + 1] = ColorUtils.BlendColors(colors[i], colors[(i + 1) % colors.Length], (j + 1) * easeAmountScale);
-            }
-
-            return interpolatedColors;
         }
 
         /// <summary>
@@ -140,6 +160,6 @@ namespace Aurora.EffectsEngine {
         /// <summary>
         /// Creates a clone of this factory.
         /// </summary>
-        public object Clone() => new SegmentedRadialBrushFactory((Color[])colors.Clone()) { EasingAmount = EasingAmount };
+        public object Clone() => new SegmentedRadialBrushFactory(new ColorStopCollection(colors)) { SegmentCount = SegmentCount };
     }
 }
