@@ -28,17 +28,12 @@ namespace Aurora.Settings.Layers {
         private void ApplyGradientToEditor() {
             // Note that I tried using a binding instead of this but since it'd need a IValueConverter which would have to create a new brush and
             // the _values_ on that brush change not the brush itself, the binding was not actually being triggered.
-            gradientEditor.Brush = handler.Properties._ParticleColorStops.Count == 1
-                ? (Brush)new SolidColorBrush(handler.Properties._ParticleColorStops.First().color.ToMediaColor())
-                : new LinearGradientBrush(new GradientStopCollection(handler.Properties._ParticleColorStops.Select(t => new GradientStop(t.color.ToMediaColor(), t.offset))));
+            gradientEditor.Brush = handler.Properties._ParticleColorStops.ToMediaBrush();
         }
 
         private void GradientEditor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e) {
             // Set the particle's color stops from the media brush. We cannot pass the media brush directly as it causes issues with UI threading
-            if (e.Brush is GradientBrush gb)
-                handler.Properties._ParticleColorStops = gb.GradientStops.Select(gs => (gs.Color.ToDrawingColor(), (float)gs.Offset)).ToList();
-            else if (e.Brush is SolidColorBrush sb)
-                handler.Properties._ParticleColorStops = new List<(System.Drawing.Color color, float offset)> { (sb.Color.ToDrawingColor(), 0f) };
+            handler.Properties._ParticleColorStops = e.Brush.ToColorStopCollection();
         }
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e) {
