@@ -1,12 +1,11 @@
-﻿using Corale.Colore.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Data;
+using ColorStopCollecion = System.Collections.Generic.List<(System.Drawing.Color color, float offset)>;
 using D = System.Drawing;
 using M = System.Windows.Media;
-using ColorStopCollecion = System.Collections.Generic.List<(System.Drawing.Color color, float offset)>;
-using System.Linq;
 
 namespace Aurora.Utils
 {
@@ -39,8 +38,8 @@ namespace Aurora.Utils
                 D.Drawing2D.LinearGradientBrush brush = new D.Drawing2D.LinearGradientBrush(
                     starting_point,
                     ending_point,
-                    System.Drawing.Color.Red,
-                    System.Drawing.Color.Red
+                    D.Color.Red,
+                    D.Color.Red
                     );
 
                 /*
