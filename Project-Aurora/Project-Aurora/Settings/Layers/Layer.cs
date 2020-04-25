@@ -2,6 +2,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
+using MiscUtil;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -271,5 +272,13 @@ namespace Aurora.Settings.Layers
         {
             this.Handler.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Interface for layers that fire an event when the layer is rendered.<para/>
+    /// To use, the layer handler should call <code>LayerRender?.Invoke(this, layer.GetBitmap());</code> at the end of their <see cref="Layer.Render(IGameState)"/> method.
+    /// </summary>
+    public interface INotifyRender {
+        event EventHandler<Bitmap> LayerRender;
     }
 }

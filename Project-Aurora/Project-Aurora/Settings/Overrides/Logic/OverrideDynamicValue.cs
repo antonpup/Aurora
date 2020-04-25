@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -85,7 +86,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// that are required for the constructor (including what type they are) and also a constructor function which is passed these RESOLVED
         /// parameters each frame.
         /// </summary>
-        internal static readonly Dictionary<Type, DCD> typeDynamicDefMap = new Dictionary<Type, DCD> {
+        internal static readonly ConcurrentDictionary<Type, DCD> typeDynamicDefMap = new ConcurrentDictionary<Type, DCD>(new Dictionary<Type, DCD> {
             // Boolean
             { typeof(bool), new DCD(p => p["Value"], new[]{ new DCPD("Value", typeof(bool)) }) },
 
@@ -116,7 +117,7 @@ namespace Aurora.Settings.Overrides.Logic {
                     new DCPD("Angle", typeof(double))
                 }
             ) }
-        };
+        });
 
         #region Dynamic Constructor Helper Methods
         /// <summary>Converts a double object (from 0-1) into a color component (int between 0 and 255).</summary>
