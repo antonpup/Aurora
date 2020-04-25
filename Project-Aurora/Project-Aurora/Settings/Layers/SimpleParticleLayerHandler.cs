@@ -26,6 +26,10 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public class SimpleParticleLayerProperties<TSelf> : ParticleLayerPropertiesBase<TSelf> where TSelf : SimpleParticleLayerProperties<TSelf> {
 
+        // Override the default key sequence property so that we can make it trigger a property change notification
+        private KeySequence sequence;
+        [LogicOverridable("Spawn region")] public override KeySequence _Sequence { get => sequence; set => SetAndNotify(ref sequence, value); }
+
         // The shortest time (in seconds) between particles spawning. A random time between this value and "MaxSpawnTime" will be chosen.
         private float? minSpawnTime;
         [LogicOverridable] public float? _MinSpawnTime { get => minSpawnTime; set => SetAndNotify(ref minSpawnTime, value); }
