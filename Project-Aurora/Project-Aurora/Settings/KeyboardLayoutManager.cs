@@ -430,14 +430,18 @@ namespace Aurora.Settings
 
         public Dictionary<DeviceKeys, string> KeyText { get { return virtualKeyboardGroup.KeyText; } }
 
-        public Grid Virtual_keyboard {
-            get {
+        public Grid Virtual_keyboard
+        {
+            get
+            {
                 return _virtualKeyboard;
             }
         }
 
-        public Grid AbstractVirtualKeyboard {
-            get {
+        public Grid AbstractVirtualKeyboard
+        {
+            get
+            {
                 return CreateUserControl(true);
             }
         }
@@ -456,8 +460,10 @@ namespace Aurora.Settings
 
         private PreferredKeyboardLocalization _loaded_localization = PreferredKeyboardLocalization.None;
 
-        public PreferredKeyboardLocalization Loaded_Localization {
-            get {
+        public PreferredKeyboardLocalization Loaded_Localization
+        {
+            get
+            {
                 return _loaded_localization;
             }
         }
@@ -724,6 +730,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
+                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -746,6 +754,10 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+            else if (keyboard_preference == PreferredKeyboard.Ducky_Shine_7)
+                layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
+            else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
+                layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
             else
             {
                 LoadNone();

@@ -144,7 +144,8 @@ namespace Aurora.Profiles
                 new Osu.Osu(),
                 new Slime_Rancher.Slime_Rancher(),
                 new Terraria.Terraria(),
-                new Discord.Discord()
+                new Discord.Discord(),
+                new EliteDangerous.EliteDangerous()
             });
 
             RegisterLayerHandlers(new List<LayerHandlerEntry> {
@@ -204,9 +205,6 @@ namespace Aurora.Profiles
             LightingStateManager.Initialize();
             OpenBackgroundProcess(DesktopProfileName);
 
-            // Listen for profile keybind triggers
-            Global.InputEvents.KeyDown += LightingStateManager.CheckProfileKeybinds;
-
             //Global.logger.LogLine("ProcessManager::Start()");
             ProcessManager.Start();
 
@@ -263,8 +261,7 @@ namespace Aurora.Profiles
 
             Events.Add(key, @event);
 
-            Global.logger.LogLine("ProcessManager::RegisterEvent()" + key);
-            ProcessManager.SubsribeForChange(key, @event.Config.ProcessNames, @event.Config.ProcessTitles);
+            ProcessManager.SubsribeForChange(@event.Config);
 
             if (@event.Config.ProcessNames != null)
             {
@@ -490,7 +487,6 @@ namespace Aurora.Profiles
 
         }
 
-
         public void ActiveProcessChanged(string key)
         {
             key = key ?? DesktopProfileName;
@@ -529,13 +525,13 @@ namespace Aurora.Profiles
         public void CloseBackgroundProcess(string key)
         {
             //Global.logger.LogLine("Focused:CloseBackgroundProcess" + key);
-            if (Global.Configuration.excluded_programs.Contains(key))
+            if(BackgroundProfile.Contains(key))
             {
-                return;
+                BackgroundProfile.Remove(key);
+                Events[key].OnStop();
+                RefreshBackroundProfile();
             }
-            BackgroundProfile.Remove(key);
-            Events[key].OnStop();
-            RefreshBackroundProfile();
+            
         }
 
         private void RefreshBackroundProfile()

@@ -48,6 +48,9 @@ namespace Aurora.Profiles
 
             this.InitUpdate();
 
+            // Listen for profile keybind triggers
+            Global.InputEvents.KeyDown += CheckProfileKeybinds;
+
             Initialized = true;
             return Initialized;
         }

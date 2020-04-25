@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using GamestateParameterLookup = System.Collections.Generic.Dictionary<string, System.Tuple<System.Type, System.Type>>;
 
 namespace Aurora.Utils
 {
@@ -16,9 +17,9 @@ namespace Aurora.Utils
             { typeof(string), true },
         };
 
-        public static Dictionary<string, Tuple<Type, Type>> ReflectGameStateParameters(Type typ)
+        public static GamestateParameterLookup ReflectGameStateParameters(Type typ)
         {
-            Dictionary<string, Tuple<Type, Type>> parameters = new Dictionary<string, Tuple<Type, Type>>();
+            var parameters = new GamestateParameterLookup();
 
             foreach (MemberInfo prop in typ.GetFields().Cast<MemberInfo>().Concat(typ.GetProperties().Cast<MemberInfo>()).Concat(typ.GetMethods().Where(m => !m.IsSpecialName).Cast<MemberInfo>()))
             {
@@ -35,6 +36,8 @@ namespace Aurora.Utils
                     case MemberTypes.Property:
                         prop_type = ((PropertyInfo)prop).PropertyType;
                         break;
+
+                    /* Why is this here? There is no way of passing parameters to methods from the game state UI?? */
                     case MemberTypes.Method:
                         //if (((MethodInfo)prop).IsSpecialName)
                             //continue;
@@ -98,10 +101,10 @@ namespace Aurora.Utils
                     }
                     else
                     {
-                        Dictionary<string, Tuple<Type, Type>> sub_params;
+                        GamestateParameterLookup sub_params;
 
                         if (prop_type == typ)
-                            sub_params = new Dictionary<string, Tuple<Type, Type>>(parameters);
+                            sub_params = new GamestateParameterLookup(parameters);
                         else
                             sub_params = ReflectGameStateParameters(prop_type);
 
@@ -159,21 +162,14 @@ namespace Aurora.Utils
             return val;
         }
 
-        public static object RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values)
-        {
-            if (Global.isDebug)
+        public static object RetrieveGameStateParameter(IGameState state, string parameter_path, params object[] input_values) {
+            try {
                 return _RetrieveGameStateParameter(state, parameter_path, input_values);
-            else
-            {
-                try
-                {
-                    return _RetrieveGameStateParameter(state, parameter_path, input_values);
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error($"Exception: {exc}");
-                    return null;
-                }
+            } catch (Exception exc) {
+                Global.logger.Error($"Exception: {exc}");
+                if (Global.isDebug)
+                    throw exc;
+                return null;
             }
         }
 
@@ -186,10 +182,8 @@ namespace Aurora.Utils
             if (!double.TryParse(path, out double value) && !string.IsNullOrWhiteSpace(path)) {
                 try {
                     value = Convert.ToDouble(RetrieveGameStateParameter(state, path));
-                } catch (Exception exc) {
+                } catch {
                     value = 0;
-                    if (Global.isDebug)
-                        throw exc;
                 }
             }
             return value;
@@ -223,11 +217,37 @@ namespace Aurora.Utils
         }
 
 
-        /*public static object RetrieveGameStateParameter(GameState state, string parameter_path, Type type = null)
-        {
+        #region ParameterLookup Extensions
+        /// <summary>
+        /// Checks if the given parameter is valid for the current parameter lookup.
+        /// </summary>
+        public static bool IsValidParameter(this GamestateParameterLookup parameterLookup, string parameter)
+            => parameterLookup.ContainsKey(parameter);
 
+        /// <summary>
+        /// Checks if the given parameter is valid for the current parameter lookup and if the type of parameter matches the given <see cref="PropertyType"/>.
+        /// </summary>
+        public static bool IsValidParameter(this GamestateParameterLookup parameterLookup, string parameter, PropertyType type)
+            => parameterLookup.TryGetValue(parameter, out var paramDef) && PropertyTypePredicate[type](new KeyValuePair<string, Tuple<Type, Type>>(parameter, paramDef));
 
-            return null;
-        }*/
+        /// <summary>
+        /// Gets a list of the names of all variables (inc. path) of a certain type in this parameter map.
+        /// </summary>
+        public static IEnumerable<string> GetParameters(this GamestateParameterLookup parameterLookup, PropertyType type)
+            => parameterLookup.Where(PropertyTypePredicate[type]).Select(kvp => kvp.Key);
+
+        static Dictionary<PropertyType, Func<KeyValuePair<string, Tuple<Type, Type>>, bool>> PropertyTypePredicate { get; } = new Dictionary<PropertyType, Func<KeyValuePair<string, Tuple<Type, Type>>, bool>> {
+            [PropertyType.None] = _ => false,
+            [PropertyType.Number] = kvp => TypeUtils.IsNumericType(kvp.Value.Item1),
+            [PropertyType.Boolean] = kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean,
+            [PropertyType.String] = kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String,
+            [PropertyType.Enum] = kvp => kvp.Value.Item1.IsEnum
+        };
+        #endregion
     }
+
+    /// <summary>
+    /// Available types that can be handled by the gamestate parameter methods.
+    /// </summary>
+    public enum PropertyType { None, Number, Boolean, String, Enum }
 }

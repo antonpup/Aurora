@@ -29,10 +29,9 @@ namespace Aurora.Profiles
 
         private static readonly int  SleepTime = 3000;
         private static bool IsExit = false;
-        private static Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
-        private static Dictionary<string, string> EventTitles { get; set; } = new Dictionary<string, string>();
-        private static string PreviousActiveProcess = "";
+        private static Dictionary<string, LightEventConfig> EventConfigs { get; set; } = new Dictionary<string, LightEventConfig>();
         private static List<string> RunningBackgroundProcess = new List<string>();
+        private static string PreviousActiveProcessKey = null;
 
         private static ActiveProcessMonitor ProcessMonitor;
         private static IProcessChanged Listener;
@@ -49,20 +48,20 @@ namespace Aurora.Profiles
         }
 
 
-        public void SubsribeForChange(string key, string[] processNames, string[] processTitles)
+        public void SubsribeForChange(LightEventConfig processConfig)
         {
+            string key = processConfig.ID;
+            if (string.IsNullOrWhiteSpace(key) || EventConfigs.ContainsKey(key))
+                return;
             //Global.logger.LogLine("ProcessManager::SubsribeForChange()" + key);
-            if (processNames != null)
+            EventConfigs.Add(key, processConfig);
+            if (processConfig.ProcessNames != null)
             {
-                foreach (string exe in processNames)
+                for (int i = 0; i < processConfig.ProcessNames.Length; i++)
                 {
-                    //if (!exe.Equals(key))
-                        EventProcesses.Add(exe.ToLower(), key);
+                    processConfig.ProcessNames[i] = processConfig.ProcessNames[i].ToLower();
                 }
             }
-            if (processTitles != null)
-                foreach (string titleRx in processTitles)
-                    EventTitles.Add(titleRx, key);
         }
         public void Start()
         {
@@ -77,7 +76,38 @@ namespace Aurora.Profiles
             //Global.logger.LogLine("ProcessManager::Finished()");
             IsExit = true;
         }
+        private static bool TryToMatchProcessTitle(string[] processTitles, string processTitle)
+        {
+            // Is title matching required?
+            if (processTitles != null)
+            {
+                if (processTitles.Where(title => Regex.IsMatch(processTitle, title, RegexOptions.IgnoreCase)).Any())
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+            return false;
+        }
 
+        // Used to match a process's name and optional window title to a profile
+        private static string GetProfileKeyFromProcessData(string processName, string processTitle = null)
+        {
+            string processKeyByName = EventConfigs.Where(ec => ec.Value.ProcessNames.Contains(processName)).Select(ec => ec.Key).First();
+
+            if (processKeyByName == null)
+                return null;
+
+            if(TryToMatchProcessTitle(EventConfigs[processKeyByName].ProcessTitles, processTitle))
+            {
+                return processKeyByName;
+            }
+
+            return null;
+        }
 
         private static void UpdateActiveProcess()
         {
@@ -90,47 +120,56 @@ namespace Aurora.Profiles
                     string process_title = ProcessMonitor.GetActiveWindowsProcessTitle();
 
                     //(Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
-                    if (EventProcesses.ContainsKey(process_name) || EventTitles.Where(title => Regex.IsMatch(process_title, title.Key, RegexOptions.IgnoreCase)).Any())
+                    string process_key = GetProfileKeyFromProcessData(process_name, process_title);
+                    if (process_key != PreviousActiveProcessKey)
                     {
-                        if (process_name != PreviousActiveProcess)
-                        {
-                            Listener.ActiveProcessChanged(EventProcesses[process_name]);
-                            PreviousActiveProcess = process_name;
-                        }
+                        Listener.ActiveProcessChanged(process_key);
+                        PreviousActiveProcessKey = process_key;
                     }
-                    else
-                    {
-                        if (PreviousActiveProcess != string.Empty)
-                        {
-                            PreviousActiveProcess = string.Empty;
-                            Listener.ActiveProcessChanged(null);
-                        }
-                    }
+
                 }
                 Thread.Sleep(SleepTime);
             }
             
         }
+        private bool IsProcessRunningBackground(LightEventConfig processConfig)
+        {
+            foreach (var processName in processConfig.ProcessNames)
+            {
+                var processArray = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(processName));
+                if (processArray.Length > 0)
+                {
+                    foreach (var process in processArray)
+                    {
+                        if (TryToMatchProcessTitle(processConfig.ProcessTitles, process.MainWindowTitle))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
         private void UpdateBackgroundProcess()
         {
             while (!IsExit)
             {
-                foreach (var process in EventProcesses)
+                foreach (var config in EventConfigs)
                 {
-                    if (Process.GetProcessesByName(Path.GetFileNameWithoutExtension(process.Key)).Length > 0)
+                    if (IsProcessRunningBackground(config.Value))
                     {
-                        if (!RunningBackgroundProcess.Contains(process.Value))
+                        if (!RunningBackgroundProcess.Contains(config.Key))
                         {
-                            RunningBackgroundProcess.Add(process.Value);
-                            Listener.OpenBackgroundProcess(process.Value);
+                            RunningBackgroundProcess.Add(config.Key);
+                            Listener.OpenBackgroundProcess(config.Key);
                         }
                     }
                     else
                     {
-                        if (RunningBackgroundProcess.Contains(process.Value))
+                        if (RunningBackgroundProcess.Contains(config.Key))
                         {
-                            RunningBackgroundProcess.Remove(process.Value);
-                            Listener.CloseBackgroundProcess(process.Value);
+                            RunningBackgroundProcess.Remove(config.Key);
+                            Listener.CloseBackgroundProcess(config.Key);
                         }
                     }
                 }
@@ -138,6 +177,7 @@ namespace Aurora.Profiles
             }
 
         }
+
     }
 }
 
