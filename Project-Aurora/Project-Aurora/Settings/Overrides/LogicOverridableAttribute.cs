@@ -14,6 +14,8 @@ namespace Aurora.Settings.Overrides {
         /// </summary>
         public string Name { get; }
 
+        public LogicOverridableAttribute() { }
+
         public LogicOverridableAttribute(string name) {
             Name = name;
         }
