@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.RocketLeague.GSI.Nodes
 {
-    public class Team_RocketLeague : Node<Team_RocketLeague>
+    public class Team_RocketLeague : AutoJsonNode<Team_RocketLeague>
     {
         /// <summary>
         /// Name of the team. Usually Blue or Orange, but can be different in custom games and for clan teams
@@ -34,14 +34,7 @@ namespace Aurora.Profiles.RocketLeague.GSI.Nodes
         /// </summary>
         public float Blue;
 
-        internal Team_RocketLeague(string JSON) : base(JSON)
-        {
-            Name = GetString("name");
-            Goals = GetInt("goals");
-            Red = GetFloat("red");
-            Green = GetFloat("green");
-            Blue = GetFloat("blue");
-        }
+        internal Team_RocketLeague(string JSON) : base(JSON) { }
 
         public Color TeamColor
         {

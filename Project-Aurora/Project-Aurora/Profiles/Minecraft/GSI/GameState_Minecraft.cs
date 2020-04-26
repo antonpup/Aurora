@@ -1,4 +1,5 @@
-﻿using Aurora.Profiles.Minecraft.GSI.Nodes;
+﻿using Aurora.Profiles.Generic.GSI.Nodes;
+using Aurora.Profiles.Minecraft.GSI.Nodes;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -10,54 +11,25 @@ namespace Aurora.Profiles.Minecraft.GSI {
 
     public class GameState_Minecraft : GameState<GameState_Minecraft> {
 
-        private ProviderNode _Provider;
-        private GameNode _Game;
-        private WorldNode _World;
-        private PlayerNode _Player;
-
         /// <summary>
         /// Provider node provides information about the data source so that Aurora can update the correct gamestate.
         /// </summary>
-        public ProviderNode Provider {
-            get {
-                if (_Provider == null)
-                    _Provider = new ProviderNode(_ParsedData["provider"]?.ToString() ?? "");
-                return _Provider;
-            }
-        }
+        public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
         /// <summary>
         /// Player node provides information about the player (e.g. health and hunger).
         /// </summary>
-        public GameNode Game {
-            get {
-                if (_Game == null)
-                    _Game = new GameNode(_ParsedData["game"]?.ToString() ?? "");
-                return _Game;
-            }
-        }
+        public GameNode Game => NodeFor<GameNode>("game");
 
         /// <summary>
         /// World node provides information about the world (e.g. rain intensity and time).
         /// </summary>
-        public WorldNode World {
-            get {
-                if (_World == null)
-                    _World = new WorldNode(_ParsedData["world"]?.ToString() ?? "");
-                return _World;
-            }
-        }
+        public WorldNode World => NodeFor<WorldNode>("world");
 
         /// <summary>
         /// Player node provides information about the player (e.g. health and hunger).
         /// </summary>
-        public PlayerNode Player {
-            get {
-                if (_Player == null)
-                    _Player = new PlayerNode(_ParsedData["player"]?.ToString() ?? "");
-                return _Player;
-            }
-        }
+        public PlayerNode Player => NodeFor<PlayerNode>("player");
 
         /// <summary>
         /// Creates a default GameState_Minecraft instance.

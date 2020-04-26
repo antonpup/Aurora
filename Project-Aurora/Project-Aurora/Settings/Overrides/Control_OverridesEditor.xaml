@@ -7,6 +7,7 @@
              xmlns:conditions="clr-namespace:Aurora.Settings.Overrides.Logic"
              xmlns:controls="clr-namespace:Aurora.Controls"
              xmlns:overrides="clr-namespace:Aurora.Settings.Overrides"
+             xmlns:utils="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="920">
     <UserControl.Resources>
@@ -43,7 +44,7 @@
         <!--<GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Center" Background="#6000" MaxHeight="480" />-->
 
         <Border Grid.Column="2" Margin="4" Padding="4" Background="#A51E1E1E" CornerRadius="8">
-            <Grid>
+            <Grid utils:AttachedApplication.Application="{Binding Application}">
                 <Label Content="Override mode:" Margin="0,2,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <ComboBox ItemsSource="{Binding OverrideTypes}" SelectedValue="{Binding SelectedLogicType, Mode=TwoWay}" DisplayMemberPath="Key" SelectedValuePath="Value" IsEnabled="{Binding SelectedProperty, Converter={StaticResource HasValToBoolConv}}" Margin="96,4,0,0" Width="180" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <ContentControl Margin="0,28,0,0" Content="{Binding SelectedLogicControl}" />

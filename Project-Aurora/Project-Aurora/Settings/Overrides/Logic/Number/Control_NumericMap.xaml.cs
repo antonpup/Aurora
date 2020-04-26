@@ -5,14 +5,9 @@ namespace Aurora.Settings.Overrides.Logic {
 
     public partial class Control_NumericMap : UserControl {
 
-        public NumberMap Map { get; set; }
-        public Application Application { get; set; }
-
-        public Control_NumericMap(NumberMap context, Application application) {
+        public Control_NumericMap(NumberMap context) {
             InitializeComponent();
-            Map = context;
-            Application = application;
-            DataContext = this;
+            DataContext = context;
         }
     }
 }

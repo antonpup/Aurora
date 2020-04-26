@@ -51,9 +51,35 @@ namespace Aurora.Utils
                 .Where(kvp => kvp.Value != null); // Filter out any where the attribute is null (i.e. doesn't exist)
         }
 
-        /// <summary>
-        /// Checks if the given type implements the given interface type.
-        /// </summary>
-        public static bool IsInterface(Type type, Type @interface) => @interface.IsAssignableFrom(type);
+
+        /// <summary>Checks whether the given 'this' type extends the given *generic* interface, regardless of type parameters.</summary>
+        /// <param name="type">The type that will be checked to see if ti implements the given interface.</param>
+        /// <param name="interfaceType">The type of generic interface to check if 'type' extends. Does not account for type parameters.</param>
+        public static bool ImplementsGenericInterface(this Type type, Type interfaceType) =>
+            type.GetInterfaces().Select(i => i.IsGenericType ? i.GetGenericTypeDefinition() : i).Contains(interfaceType);
+
+        /// <summary>Checks whether the given 'this' type extends the given *generic* interface with the given type parameters.</summary>
+        /// <param name="type">The type that will be checked to see if it implements the given interface.</param>
+        /// <param name="interfaceType">The type of generic interface to check if 'type' extends.</param>
+        /// <param name="interfaceGenericParameters">An array of types to check against the type parameters in the generic interface.
+        /// Note that the length of this array must match the number of type parameters in the target interface.</param>
+        public static bool ImplementsGenericInterface(Type type, Type interfaceType, params Type[] interfaceGenericParameters) =>
+            type.GetInterfaces()
+                .Where(i => i.IsGenericType)
+                .SingleOrDefault(i => i.GetGenericTypeDefinition() == interfaceType)?
+                .GetGenericArguments()
+                    .Select((arg, i) => arg == interfaceGenericParameters[i])
+                    .All(v => v)
+                ?? false;
+
+        /// <summary>Gets the generic argument types of the given interface for the given type.</summary>
+        /// <param name="type">The type to check interfaces on.</param>
+        /// <param name="interfaceType">The type of interface whose generic parameters to fetch.</param>
+        /// <returns>An array containing all the types of generic parameters defined for this type on the given interface, or null if interface not found.</returns>
+        public static Type[] GetGenericInterfaceTypes(this Type type, Type interfaceType) =>
+            type.GetInterfaces()
+                .Where(i => i.IsGenericType)
+                .SingleOrDefault(i => i.GetGenericTypeDefinition() == interfaceType)?
+                .GetGenericArguments();
     }
 }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Discord.GSI.Nodes {
-
     public enum DiscordTextType
     {
         Undefined = -1,
@@ -14,18 +13,11 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         GroupChat = 3
     }
 
-
-    public class TextNode : Node<TextNode> {
-
+    public class TextNode : AutoJsonNode<TextNode> {
         public long Id = 0;
         public string Name;
-        public int Type;
+        public DiscordTextType Type;
 
-        internal TextNode() : base() { }
-        internal TextNode(string json) : base(json) {
-            Id = GetLong("id");
-            Name = GetString("name");
-            Type = GetInt("type");
-        }
+        internal TextNode(string json) : base(json) { }
     }
 }

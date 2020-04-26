@@ -23,6 +23,7 @@ namespace Aurora.Settings
         public Color secondary;
         public float speed;
         public float angle;
+        public float gradient_size = 100.0f;
         public AnimationType animation_type;
         public bool animation_reverse;
         public EffectBrush brush;
@@ -35,6 +36,7 @@ namespace Aurora.Settings
         [JsonIgnore] public Color Secondary { get => secondary; set => secondary = value; }
         [JsonIgnore] public float Speed { get => speed; set => speed = value; }
         [JsonIgnore] public float Angle { get => angle; set => angle = value; }
+        [JsonIgnore] public float GradientSize { get => gradient_size; set => gradient_size = value; }
         [JsonIgnore] public AnimationType AnimationType { get => animation_type; set => animation_type = value; }
         [JsonIgnore] public bool AnimationReverse { get => animation_reverse; set => animation_reverse = value; }
         [JsonIgnore] public EffectBrush Brush { get => brush; set => brush = value; }
