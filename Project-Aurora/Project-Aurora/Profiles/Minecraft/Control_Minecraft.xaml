@@ -18,6 +18,8 @@
                     </TextBlock>
 
                     <Button Content="Minecraft Forge download" HorizontalAlignment="Left" Padding="10,2" Click="GoToForgePage_Click" />
+                    
+                    <Button Content="Minecraft Fabric download" HorizontalAlignment="Left" Padding="10,2" Margin="0,10" Click="GoToFabricDownloadPage"/>
 
                     <TextBlock Margin="0,10,0,0" Text="Supported versions:" FontSize="13" FontWeight="Bold" />
 
@@ -35,7 +37,7 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    
+
                                     <TextBlock Text="{Binding Path=Name}" FontWeight="SemiBold" HorizontalAlignment="Stretch" Grid.Column="0" />
                                     <TextBlock Grid.Column="1">
                                         <Run Text="{Binding Path=Version}" />
@@ -87,7 +89,7 @@
 
                     <Label Content="Health:" Grid.Row="2" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="2" Grid.Column="1" Margin="0,4" ValueChanged="HealthSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
-                    
+
                     <Label Content="Absorption:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="Slider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
 
