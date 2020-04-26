@@ -279,6 +279,7 @@ namespace Aurora.Devices.Asus
                     return 0x0052;
                 case DeviceKeys.NUM_PERIOD:
                     return 0x0053;
+                case DeviceKeys.RIGHT_WINDOWS:
                 case DeviceKeys.FN_Key:
                     return 0x0100;
                 case DeviceKeys.LOGO:
