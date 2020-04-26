@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using AuraServiceLib;
 using Aurora.Devices.Asus.Config;
+using Microsoft.Win32;
 
 namespace Aurora.Devices.Asus
 {
@@ -12,6 +13,8 @@ namespace Aurora.Devices.Asus
         public IAuraSdk2 AuraSdk { get;}
         private readonly List<AuraSyncDevice> devices = new List<AuraSyncDevice>();
         private readonly object deviceLock = new object();
+        private const string RecommendedAsusVersion = "1.07.71";
+        private const string AsusAuraPath = @"Software\Asus\AURA";
         
         /// <summary>
         /// The number of registered devices
@@ -26,13 +29,48 @@ namespace Aurora.Devices.Asus
         {
             try
             {
-                AuraSdk = new AuraSdk() as IAuraSdk2;
+                if (CheckVersion(out string message))
+                    AuraSdk = new AuraSdk() as IAuraSdk2;
+                else
+                    AuraSdk = null;
+                
+                Log(message);
             }
             catch
             {
                 Log("AuraSDK not installed!");
                 AuraSdk = null;
             }
+        }
+
+        /// <summary>
+        /// Checks to see if the version of Aura installed is the correct one
+        /// </summary>
+        /// <returns>true if the registry entry equals to <see cref="RecommendedAsusVersion"/></returns>
+        private bool CheckVersion(out string message)
+        {
+            message = null;
+            //Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Asus\AURA\Version
+            using (var root = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+            {
+                using (var key = root.OpenSubKey(AsusAuraPath, false))
+                {
+                    if (key != null)
+                    {
+                        var registeredOwner = key.GetValue("Version");
+                        if (registeredOwner is string str)
+                        {
+                            message = str == RecommendedAsusVersion 
+                                ? $"Found correct version of Asus Aura SDK v{RecommendedAsusVersion}" 
+                                : $"Found version of Asus Aura SDK v{str}, which is not supported, if you have issues uninstall and reinstall to v{RecommendedAsusVersion}";
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            message = $"Could not find Asus Aura SDK, please install version v{RecommendedAsusVersion}";
+            return false;
         }
 
         public bool Start()
