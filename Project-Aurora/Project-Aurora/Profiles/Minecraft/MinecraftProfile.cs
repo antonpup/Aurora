@@ -5,6 +5,7 @@ using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,8 +32,13 @@ namespace Aurora.Profiles.Minecraft
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
                 new Layer("Controls Assistant Layer", new MinecraftKeyConflictLayerHandler()),
 
-                new Layer("Health Bar", new MinecraftHealthBarLayerHandler() {
-                    Properties = new MinecraftHealthBarLayerHandlerProperties() {
+                new Layer("Health Bar", new PercentLayerHandler() {
+                    Properties = new PercentLayerHandlerProperties()
+                    {
+                        _VariablePath = "Player/Health",
+                        _MaxVariablePath = "Player/HealthMax",
+                        _PrimaryColor = Color.Red,
+                        _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(new[] {
                             DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH
                         })
@@ -40,6 +46,12 @@ namespace Aurora.Profiles.Minecraft
                 },
                 new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
+                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.FromArgb(255, 210, 0), new BooleanGSIBoolean("Player/PlayerEffects/HasAbsorption"))
+                        .AddEntry(Color.FromArgb(240, 75, 100), new BooleanGSIBoolean("Player/PlayerEffects/HasRegeneration"))
+                        .AddEntry(Color.FromArgb(145, 160, 30), new BooleanGSIBoolean("Player/PlayerEffects/HasPoison"))
+                        .AddEntry(Color.FromArgb(70, 5, 5), new BooleanGSIBoolean("Player/PlayerEffects/HasWither"))
+                    )
                 ),
 
                 new Layer("Experience Bar", new PercentLayerHandler() {
@@ -194,9 +206,9 @@ namespace Aurora.Profiles.Minecraft
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(125,42,123), new BooleanAnd(new IEvaluatable<bool>[] { 
+                        .AddEntry(Color.FromArgb(125,42,123), new BooleanAnd(new IEvaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", 1),
-                            new BooleanGSIBoolean("Player/InGame") 
+                            new BooleanGSIBoolean("Player/InGame")
                         }))//The End
                         .AddEntry(Color.FromArgb(255,183,0), new BooleanAnd(new IEvaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", -1),
