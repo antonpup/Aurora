@@ -20,10 +20,13 @@ namespace Aurora.Settings.Overrides.Logic {
         public bool CaseInsensitive { get; set; } = false;
 
         // Control allowing the user to edit the comparison
-        public Visual GetControl() => new Control_BinaryOperationHolder(typeof(string), typeof(StringComparisonOperator))
-            .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
-            .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
-            .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
+        public Visual GetControl() => new StackPanel()
+            .WithChild(new Control_BinaryOperationHolder(typeof(string), typeof(StringComparisonOperator))
+                .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
+                .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
+                .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay }))
+            .WithChild(new CheckBox { Content = "Ignore case" }
+                .WithBinding(CheckBox.IsCheckedProperty, this, nameof(CaseInsensitive), BindingMode.TwoWay));
 
         /// <summary>Compares the two strings with the given operator</summary>
         public bool Evaluate(IGameState gameState) {
