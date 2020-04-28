@@ -20,15 +20,18 @@ namespace Aurora.Devices.Asus
             foreach (IAuraRgbKey key in device.Keys)
                 deviceKeyToKey[AsusLedIdMapper(key.Code)] = device.Key[key.Code];
 
-            //Hashtag Key
+            // These keys are selected by inspecting the lights 2D array
+            // This is because the keycodes for a UK keyboard and American keyboard do not align for whatever reason
+            // Hashtag Key
             deviceKeyToKey[DeviceKeys.HASHTAG] = keyboard.Lights[(int)(3 * keyboard.Width + 13)];
-            //BackSlash Key
+            // BackSlash Key
             deviceKeyToKey[DeviceKeys.BACKSLASH_UK] = keyboard.Lights[(int)(4 * keyboard.Width + 1)];
+            
             if (Global.Configuration.keyboard_brand == Settings.PreferredKeyboard.Asus_Strix_Scope)
             {
-                //Left window Key
+                // Left Windows Key
                 deviceKeyToKey[DeviceKeys.LEFT_WINDOWS] = keyboard.Lights[(int)(5 * keyboard.Width + 2)];
-                //Left alt Key
+                // Left Alt Key
                 deviceKeyToKey[DeviceKeys.LEFT_ALT] = keyboard.Lights[(int)(5 * keyboard.Width + 3)];
             }
 
