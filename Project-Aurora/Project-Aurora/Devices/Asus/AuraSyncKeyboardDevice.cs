@@ -8,12 +8,9 @@ namespace Aurora.Devices.Asus
     public class AuraSyncKeyboardDevice : AuraSyncDevice
     {
         private readonly IAuraSyncKeyboard keyboard;
-        
-        private readonly Dictionary<ushort, IAuraRgbKey> idToKey
-            = new Dictionary<ushort, IAuraRgbKey>();
 
-        private readonly Dictionary<DeviceKeys, ushort> deviceKeyToKeyId
-            = new Dictionary<DeviceKeys, ushort>();
+        private readonly Dictionary<DeviceKeys, IAuraRgbLight> deviceKeyToKey
+            = new Dictionary<DeviceKeys, IAuraRgbLight>();
 
         /// <inheritdoc />
         public AuraSyncKeyboardDevice(AsusHandler asusHandler, IAuraSyncKeyboard device, int frameRate = 30) : base(asusHandler, device, frameRate)
@@ -21,16 +18,20 @@ namespace Aurora.Devices.Asus
             keyboard = device;
 
             foreach (IAuraRgbKey key in device.Keys)
-                idToKey[key.Code] = key;
+                deviceKeyToKey[AsusLedIdMapper(key.Code)] = device.Key[key.Code];
 
-            foreach (var deviceKey in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
+            //Hashtag Key
+            deviceKeyToKey[DeviceKeys.HASHTAG] = keyboard.Lights[(int)(3 * keyboard.Width + 13)];
+            //BackSlash Key
+            deviceKeyToKey[DeviceKeys.BACKSLASH_UK] = keyboard.Lights[(int)(4 * keyboard.Width + 1)];
+            if (Global.Configuration.keyboard_brand == Settings.PreferredKeyboard.Asus_Strix_Scope)
             {
-                var key = DeviceKeyToAuraKeyboardKeyId(deviceKey);
-                if (key == 0)
-                    continue;
-
-                deviceKeyToKeyId[deviceKey] = key;
+                //Left window Key
+                deviceKeyToKey[DeviceKeys.LEFT_WINDOWS] = keyboard.Lights[(int)(5 * keyboard.Width + 2)];
+                //Left alt Key
+                deviceKeyToKey[DeviceKeys.LEFT_ALT] = keyboard.Lights[(int)(5 * keyboard.Width + 3)];
             }
+
         }
 
         /// <inheritdoc />
@@ -38,260 +39,246 @@ namespace Aurora.Devices.Asus
         {
             foreach (var keyPair in colors)
             {
-                if (!deviceKeyToKeyId.TryGetValue(keyPair.Key, out ushort keyId))
-                    continue;
-            
-                if (!idToKey.TryGetValue(keyId, out var light))
+                if (!deviceKeyToKey.TryGetValue(keyPair.Key, out var light))
                     continue;
             
                 SetRgbLight(light, keyPair.Value);
             }
         }
-
         /// <summary>
-        /// Determines the ushort ID from a DeviceKeys
+        /// Determines the DeviceKeys from a ushort hashcode
         /// </summary>
-        /// <param name="key">The key to translate</param>
-        /// <returns>the ushort id, or ushort.MaxValue if invalid</returns>
-        private ushort DeviceKeyToAuraKeyboardKeyId(DeviceKeys key)
+        /// <param name="asusKey">The key hashcode to translate</param>
+        /// <returns>the DeviceKeys, or DeviceKeys.None if invalid</returns>
+        private DeviceKeys AsusLedIdMapper(ushort asusKey)
         {
-            switch (key)
+            switch (asusKey)
             {
-                case DeviceKeys.ESC:
-                    return 0x0001;
-                case DeviceKeys.F1:
-                    return 0x003B;
-                case DeviceKeys.F2:
-                    return 0x003C;
-                case DeviceKeys.F3:
-                    return 0x003D;
-                case DeviceKeys.F4:
-                    return 0x003E;
-                case DeviceKeys.F5:
-                    return 0x003F;
-                case DeviceKeys.F6:
-                    return 0x0040;
-                case DeviceKeys.F7:
-                    return 0x0041;
-                case DeviceKeys.F8:
-                    return 0x0042;
-                case DeviceKeys.F9:
-                    return 0x0043;
-                case DeviceKeys.F10:
-                    return 0x0044;
-                case DeviceKeys.F11:
-                    return 0x0057;
-                case DeviceKeys.F12:
-                    return 0x0058;
-                case DeviceKeys.PRINT_SCREEN:
-                    return 0x00B7;
-                case DeviceKeys.SCROLL_LOCK:
-                    return 0x0046;
-                case DeviceKeys.PAUSE_BREAK:
-                    return 0x00C5;
-                case DeviceKeys.OEM5:
-                    return 0x0006;
-                case DeviceKeys.TILDE:
-                    return 0x0029;
-                case DeviceKeys.ONE:
-                    return 0x0002;
-                case DeviceKeys.TWO:
-                    return 0x0003;
-                case DeviceKeys.THREE:
-                    return 0x0004;
-                case DeviceKeys.FOUR:
-                    return 0x0005;
-                case DeviceKeys.FIVE:
-                    return 0x0006;
-                case DeviceKeys.SIX:
-                    return 0x0007;
-                case DeviceKeys.SEVEN:
-                    return 0x0008;
-                case DeviceKeys.EIGHT:
-                    return 0x0009;
-                case DeviceKeys.NINE:
-                    return 0x000A;
-                case DeviceKeys.ZERO:
-                    return 0x000B;
-                case DeviceKeys.MINUS:
-                    return 0x000C;
-                case DeviceKeys.EQUALS:
-                    return 0x000D;
-                case DeviceKeys.OEM6:
-                    return 0x0007;
-                case DeviceKeys.BACKSPACE:
-                    return 0x000E;
-                case DeviceKeys.INSERT:
-                    return 0x00D2;
-                case DeviceKeys.HOME:
-                    return 0x00C7;
-                case DeviceKeys.PAGE_UP:
-                    return 0x00C9;
-                case DeviceKeys.NUM_LOCK:
-                    return 0x0045;
-                case DeviceKeys.NUM_SLASH:
-                    return 0x00B5;
-                case DeviceKeys.NUM_ASTERISK:
-                    return 0x0037;
-                case DeviceKeys.NUM_MINUS:
-                    return 0x004A;
-                case DeviceKeys.TAB:
-                    return 0x000F;
-                case DeviceKeys.Q:
-                    return 0x0010;
-                case DeviceKeys.W:
-                    return 0x0011;
-                case DeviceKeys.E:
-                    return 0x0012;
-                case DeviceKeys.R:
-                    return 0x0013;
-                case DeviceKeys.T:
-                    return 0x0014;
-                case DeviceKeys.Y:
-                    return 0x0015;
-                case DeviceKeys.U:
-                    return 0x0016;
-                case DeviceKeys.I:
-                    return 0x0017;
-                case DeviceKeys.O:
-                    return 0x0018;
-                case DeviceKeys.P:
-                    return 0x0019;
-                case DeviceKeys.OEM1:
-                    return 0x0002;
-                case DeviceKeys.OPEN_BRACKET:
-                    return 0x001A;
-                case DeviceKeys.OEMPlus:
-                    return 0x000D;
-                case DeviceKeys.CLOSE_BRACKET:
-                    return 0x001B;
-                case DeviceKeys.BACKSLASH:
-                    return 0x002B;
-                case DeviceKeys.DELETE:
-                    return 0x00D3;
-                case DeviceKeys.END:
-                    return 0x00CF;
-                case DeviceKeys.PAGE_DOWN:
-                    return 0x00D1;
-                case DeviceKeys.NUM_SEVEN:
-                    return 0x0047;
-                case DeviceKeys.NUM_EIGHT:
-                    return 0x0048;
-                case DeviceKeys.NUM_NINE:
-                    return 0x0049;
-                case DeviceKeys.NUM_PLUS:
-                    return 0x004E;
-                case DeviceKeys.CAPS_LOCK:
-                    return 0x003A;
-                case DeviceKeys.A:
-                    return 0x001E;
-                case DeviceKeys.S:
-                    return 0x001F;
-                case DeviceKeys.D:
-                    return 0x0020;
-                case DeviceKeys.F:
-                    return 0x0021;
-                case DeviceKeys.G:
-                    return 0x0022;
-                case DeviceKeys.H:
-                    return 0x0023;
-                case DeviceKeys.J:
-                    return 0x0024;
-                case DeviceKeys.K:
-                    return 0x0025;
-                case DeviceKeys.L:
-                    return 0x0026;
-                case DeviceKeys.OEMTilde:
-                    return 0x0029;
-                case DeviceKeys.SEMICOLON:
-                    return 0x0027;
-                case DeviceKeys.APOSTROPHE:
-                    return 0x0028;
-                case DeviceKeys.HASHTAG:
-                    return 0x0003;
-                case DeviceKeys.ENTER:
-                    return 0x001C;
-                case DeviceKeys.NUM_FOUR:
-                    return 0x004B;
-                case DeviceKeys.NUM_FIVE:
-                    return 0x004C;
-                case DeviceKeys.NUM_SIX:
-                    return 0x004D;
-                case DeviceKeys.LEFT_SHIFT:
-                    return 0x002A;
-                case DeviceKeys.BACKSLASH_UK:
-                    return 0x002B;
-                case DeviceKeys.Z:
-                    return 0x002C;
-                case DeviceKeys.X:
-                    return 0x002D;
-                case DeviceKeys.C:
-                    return 0x002E;
-                case DeviceKeys.V:
-                    return 0x002F;
-                case DeviceKeys.B:
-                    return 0x0030;
-                case DeviceKeys.N:
-                    return 0x0031;
-                case DeviceKeys.M:
-                    return 0x0032;
-                case DeviceKeys.COMMA:
-                    return 0x0033;
-                case DeviceKeys.PERIOD:
-                    return 0x0034;
-                case DeviceKeys.FORWARD_SLASH:
-                    return 0x0035;
-                case DeviceKeys.OEM8:
-                    return 0x0009;
-                case DeviceKeys.RIGHT_SHIFT:
-                    return 0x0036;
-                case DeviceKeys.ARROW_UP:
-                    return 0x00C8;
-                case DeviceKeys.NUM_ONE:
-                    return 0x004F;
-                case DeviceKeys.NUM_TWO:
-                    return 0x0050;
-                case DeviceKeys.NUM_THREE:
-                    return 0x0051;
-                case DeviceKeys.NUM_ENTER:
-                    return 0x009C;
-                case DeviceKeys.LEFT_CONTROL:
-                    return 0x001D;
-                case DeviceKeys.LEFT_WINDOWS:
-                    return 0x00DB;
-                case DeviceKeys.LEFT_ALT:
-                    return 0x0038;
-                case DeviceKeys.SPACE:
-                    return 0x0039;
-                case DeviceKeys.RIGHT_ALT:
-                    return 0x00B8;
-                case DeviceKeys.APPLICATION_SELECT:
-                    return 0x00DD;
-                case DeviceKeys.RIGHT_CONTROL:
-                    return 0x009D;
-                case DeviceKeys.ARROW_LEFT:
-                    return 0x00CB;
-                case DeviceKeys.ARROW_DOWN:
-                    return 0x00D0;
-                case DeviceKeys.ARROW_RIGHT:
-                    return 0x00CD;
-                case DeviceKeys.NUM_ZERO:
-                    return 0x0052;
-                case DeviceKeys.NUM_PERIOD:
-                    return 0x0053;
-                case DeviceKeys.RIGHT_WINDOWS:
-                case DeviceKeys.FN_Key:
-                    return 0x0100;
-                case DeviceKeys.LOGO:
-                    return 0x0101;
-                case DeviceKeys.ADDITIONALLIGHT1:
+                #region KeyBinding
+                case 0x01:
+                    return DeviceKeys.ESC;
+                case 0x3B:
+                    return DeviceKeys.F1;
+                case 0x3C:
+                    return DeviceKeys.F2;
+                case 0x3D:
+                    return DeviceKeys.F3;
+                case 0x3E:
+                    return DeviceKeys.F4;
+                case 0x3F:
+                    return DeviceKeys.F5;
+                case 0x40:
+                    return DeviceKeys.F6;
+                case 0x41:
+                    return DeviceKeys.F7;
+                case 0x42:
+                    return DeviceKeys.F8;
+                case 0x43:
+                    return DeviceKeys.F9;
+                case 0x44:
+                    return DeviceKeys.F10;
+                case 0x57:
+                    return DeviceKeys.F11;
+                case 0x58:
+                    return DeviceKeys.F12;
+                case 0x02:
+                    return DeviceKeys.ONE;
+                case 0x03:
+                    return DeviceKeys.TWO;
+                case 0x04:
+                    return DeviceKeys.THREE;
+                case 0x05:
+                    return DeviceKeys.FOUR;
+                case 0x06:
+                    return DeviceKeys.FIVE;
+                case 0x07:
+                    return DeviceKeys.SIX;
+                case 0x08:
+                    return DeviceKeys.SEVEN;
+                case 0x09:
+                    return DeviceKeys.EIGHT;
+                case 0x0A:
+                    return DeviceKeys.NINE;
+                case 0x0B:
+                    return DeviceKeys.ZERO;
+                case 0x0C:
+                    return DeviceKeys.MINUS;
+                case 0x0D:
+                    return DeviceKeys.EQUALS;
+                case 0x0E:
+                    return DeviceKeys.BACKSPACE;
+                case 0x0F:
+                    return DeviceKeys.TAB;
+                case 0x10:
+                    return DeviceKeys.Q;
+                case 0x11:
+                    return DeviceKeys.W;
+                case 0x12:
+                    return DeviceKeys.E;
+                case 0x13:
+                    return DeviceKeys.R;
+                case 0x14:
+                    return DeviceKeys.T;
+                case 0x15:
+                    return DeviceKeys.Y;
+                case 0x16:
+                    return DeviceKeys.U;
+                case 0x17:
+                    return DeviceKeys.I;
+                case 0x18:
+                    return DeviceKeys.O;
+                case 0x19:
+                    return DeviceKeys.P;
+                case 0x1A:
+                    return DeviceKeys.OPEN_BRACKET;
+                case 0x1B:
+                    return DeviceKeys.CLOSE_BRACKET;
+                case 0x1C:
+                    return DeviceKeys.ENTER;
+                case 0x3A:
+                    return DeviceKeys.CAPS_LOCK;
+                case 0x1E:
+                    return DeviceKeys.A;
+                case 0x1F:
+                    return DeviceKeys.S;
+                case 0x20:
+                    return DeviceKeys.D;
+                case 0x21:
+                    return DeviceKeys.F;
+                case 0x22:
+                    return DeviceKeys.G;
+                case 0x23:
+                    return DeviceKeys.H;
+                case 0x24:
+                    return DeviceKeys.J;
+                case 0x25:
+                    return DeviceKeys.K;
+                case 0x26:
+                    return DeviceKeys.L;
+                case 0x27:
+                    return DeviceKeys.SEMICOLON;
+                case 0x28:
+                    return DeviceKeys.APOSTROPHE;
+                case 0x29:
+                    return DeviceKeys.TILDE;
+                case 0x2A:
+                    return DeviceKeys.LEFT_SHIFT;
+                case 0x2B:
+                    return DeviceKeys.BACKSLASH;
+                case 0x2C:
+                    return DeviceKeys.Z;
+                case 0x2D:
+                    return DeviceKeys.X;
+                case 0x2E:
+                    return DeviceKeys.C;
+                case 0x2F:
+                    return DeviceKeys.V;
+                case 0x30:
+                    return DeviceKeys.B;
+                case 0x31:
+                    return DeviceKeys.N;
+                case 0x32:
+                    return DeviceKeys.M;
+                case 0x33:
+                    return DeviceKeys.COMMA;
+                case 0x34:
+                    return DeviceKeys.PERIOD;
+                case 0x35:
+                    return DeviceKeys.FORWARD_SLASH;
+                case 0x36:
+                    return DeviceKeys.RIGHT_SHIFT;
+                case 0x1D:
+                    return DeviceKeys.LEFT_CONTROL;
+                case 0xDB:
+                    return DeviceKeys.LEFT_WINDOWS;
+                case 0x38:
+                    return DeviceKeys.LEFT_ALT;
+                case 0x39:
+                    return DeviceKeys.SPACE;
+                case 0xB8:
+                    return DeviceKeys.RIGHT_ALT;
+                // Right Windows
+                case 0x100:
+                    return DeviceKeys.FN_Key;
+                case 0xDD:
+                    return DeviceKeys.APPLICATION_SELECT;
+                case 0x9D:
+                    return DeviceKeys.RIGHT_CONTROL;
+                case 0xB7:
+                    return DeviceKeys.PRINT_SCREEN;
+                case 0x46:
+                    return DeviceKeys.SCROLL_LOCK;
+                case 0xC5:
+                    return DeviceKeys.PAUSE_BREAK;
+                case 0xD2:
+                    return DeviceKeys.INSERT;
+                case 0xC7:
+                    return DeviceKeys.HOME;
+                case 0xC9:
+                    return DeviceKeys.PAGE_UP;
+                case 0xD3:
+                    return DeviceKeys.DELETE;
+                case 0xCF:
+                    return DeviceKeys.END;
+                case 0xD1:
+                    return DeviceKeys.PAGE_DOWN;
+                case 0xC8:
+                    return DeviceKeys.ARROW_UP;
+                case 0xCB:
+                    return DeviceKeys.ARROW_LEFT;
+                case 0xD0:
+                    return DeviceKeys.ARROW_DOWN;
+                case 0xCD:
+                    return DeviceKeys.ARROW_RIGHT;
+                case 0x45:
+                    return DeviceKeys.NUM_LOCK;
+                case 0xB5:
+                    return DeviceKeys.NUM_SLASH;
+                case 0x37:
+                    return DeviceKeys.NUM_ASTERISK;
+                case 0x4A:
+                    return DeviceKeys.NUM_MINUS;
+                case 0x47:
+                    return DeviceKeys.NUM_SEVEN;
+                case 0x48:
+                    return DeviceKeys.NUM_EIGHT;
+                case 0x49:
+                    return DeviceKeys.NUM_NINE;
+                case 0x53:
+                    return DeviceKeys.NUM_PERIOD;
+                case 0x4E:
+                    return DeviceKeys.NUM_PLUS;
+                case 0x4B:
+                    return DeviceKeys.NUM_FOUR;
+                case 0x4C:
+                    return DeviceKeys.NUM_FIVE;
+                case 0x4D:
+                    return DeviceKeys.NUM_SIX;
+                case 0x4F:
+                    return DeviceKeys.NUM_ONE;
+                case 0x50:
+                    return DeviceKeys.NUM_TWO;
+                case 0x51:
+                    return DeviceKeys.NUM_THREE;
+                case 0x52:
+                    return DeviceKeys.NUM_ZERO;
+                case 0x9C:
+                    return DeviceKeys.NUM_ENTER;
+                case 0x59:
+                    return DeviceKeys.BACKSLASH_UK;
+                case 0x56:
+                    return DeviceKeys.HASHTAG;
+                case 0x101:
+                    return DeviceKeys.LOGO;
+                case 0x102:
                     // LEFT OF STRIX FLARE KEYBOARD
-                    return 0x0102;
-                case DeviceKeys.ADDITIONALLIGHT2:
-                    //RIGHT OF STRIX FLARE KEYBOARD
-                    return 0x0103;
+                    return DeviceKeys.ADDITIONALLIGHT1;
+                case 0x103:
+                    // RIGHT OF STRIX FLARE KEYBOARD
+                    return DeviceKeys.ADDITIONALLIGHT2;
                 default:
-                    return 0x0000;
+                    return DeviceKeys.NONE;
+                    #endregion
             }
         }
     }

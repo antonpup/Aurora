@@ -744,6 +744,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
             else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
                 layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Scope)
+                layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_scope.json");
             else if (keyboard_preference == PreferredKeyboard.SoundBlasterX_Vanguard_K08)
                 layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
             else if (keyboard_preference == PreferredKeyboard.GenericLaptop)
