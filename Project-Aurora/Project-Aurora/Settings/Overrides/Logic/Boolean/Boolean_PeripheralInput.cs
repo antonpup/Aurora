@@ -42,6 +42,27 @@ namespace Aurora.Settings.Overrides.Logic {
 
 
     /// <summary>
+    /// Condition that is true when any keyboard button is held down
+    /// </summary>
+    [Evaluatable("Any Key Held", category: EvaluatableCategory.Input)]
+    public class BooleanAnyKeyDown : IEvaluatable<bool>
+    {
+        /// <summary>Creates a new any key held condition.</summary>
+        public BooleanAnyKeyDown() { }
+
+        /// <summary>Create a control with no options indicating what the evaluatable does.</summary>
+        public Visual GetControl() => new Label() { Content = "Any Key Held" };
+
+        /// <summary>True if the global event bus's pressed key list contains any key.</summary>
+        public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Any();
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        public IEvaluatable<bool> Clone() => new BooleanAnyKeyDown();
+        IEvaluatable IEvaluatable.Clone() => Clone();
+    }
+
+
+    /// <summary>
     /// Condition that is true when a specific keyboard button is held down.
     /// </summary>
     [Evaluatable("Key Press (Retain for duration)", category: EvaluatableCategory.Input)]
