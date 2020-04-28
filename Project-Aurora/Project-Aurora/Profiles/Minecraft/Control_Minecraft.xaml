@@ -12,12 +12,18 @@
                 <StackPanel Margin="10">
                     <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with Minecraft. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
                     <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824">
-                        <Run Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game. Currently this mod requires Forge mod loader, though other options may become available in future." />
-                        <LineBreak /><LineBreak />
+                        <Run Text="Support for Minecraft requires a mod so that Aurora is able to fetch the variables from the game."/>
+                        <LineBreak />
+                        <LineBreak />
+                        <Run Text="Currently this mod requires either Forge or Fabric mod loader, depending on the version of the game."/>
+                        <LineBreak />
+                        <LineBreak />
                         <Run Text="These mods are not authored by the main Aurora developers and any issues with these mods should not be directed at them, but posted on the relevant GitLab repo for the mod." />
                     </TextBlock>
 
                     <Button Content="Minecraft Forge download" HorizontalAlignment="Left" Padding="10,2" Click="GoToForgePage_Click" />
+                    
+                    <Button Content="Minecraft Fabric download" HorizontalAlignment="Left" Padding="10,2" Margin="0,10" Click="GoToFabricDownloadPage"/>
 
                     <TextBlock Margin="0,10,0,0" Text="Supported versions:" FontSize="13" FontWeight="Bold" />
 
@@ -35,7 +41,7 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    
+
                                     <TextBlock Text="{Binding Path=Name}" FontWeight="SemiBold" HorizontalAlignment="Stretch" Grid.Column="0" />
                                     <TextBlock Grid.Column="1">
                                         <Run Text="{Binding Path=Version}" />
@@ -87,7 +93,7 @@
 
                     <Label Content="Health:" Grid.Row="2" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="2" Grid.Column="1" Margin="0,4" ValueChanged="HealthSlider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
-                    
+
                     <Label Content="Absorption:" Grid.Row="3" HorizontalAlignment="Right" Margin="8,0" />
                     <Slider Grid.Row="3" Grid.Column="1" Margin="0,4" ValueChanged="Slider_ValueChanged" Minimum="0" Maximum="20" TickFrequency="1" IsSnapToTickEnabled="True" />
 
