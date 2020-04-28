@@ -26,89 +26,93 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public class SimpleParticleLayerProperties<TSelf> : ParticleLayerPropertiesBase<TSelf> where TSelf : SimpleParticleLayerProperties<TSelf> {
 
+        // Override the default key sequence property so that we can make it trigger a property change notification
+        private KeySequence sequence;
+        [LogicOverridable("Spawn region")] public override KeySequence _Sequence { get => sequence; set => SetAndNotify(ref sequence, value); }
+
         // The shortest time (in seconds) between particles spawning. A random time between this value and "MaxSpawnTime" will be chosen.
         private float? minSpawnTime;
-        public float? _MinSpawnTime { get => minSpawnTime; set => SetAndNotify(ref minSpawnTime, value); }
+        [LogicOverridable] public float? _MinSpawnTime { get => minSpawnTime; set => SetAndNotify(ref minSpawnTime, value); }
         [JsonIgnore] public float MinSpawnTime => Logic._MinSpawnTime ?? _MinSpawnTime ?? .5f;
 
         // The longest time (in seconds) between particles spawning. A random time from "MinSpawnTime" up to this value will be chosen.
         private float? maxSpawnTime;
-        public float? _MaxSpawnTime { get => maxSpawnTime; set => SetAndNotify(ref maxSpawnTime, value); }
+        [LogicOverridable] public float? _MaxSpawnTime { get => maxSpawnTime; set => SetAndNotify(ref maxSpawnTime, value); }
         [JsonIgnore] public float MaxSpawnTime => Logic._MaxSpawnTime ?? _MaxSpawnTime ?? 1f;
 
         // The smallest quantity of particles that will spawn at a time. A random value between this value and "MaxSpawnAmount" will be chosen.
         private int? minSpawnAmount;
-        public int? _MinSpawnAmount { get => minSpawnAmount; set => SetAndNotify(ref minSpawnAmount, value); }
+        [LogicOverridable] public int? _MinSpawnAmount { get => minSpawnAmount; set => SetAndNotify(ref minSpawnAmount, value); }
         [JsonIgnore] public int MinSpawnAmount => Logic._MinSpawnAmount ?? _MinSpawnAmount ?? 1;
 
         // The largest quantity of particles that will spawn at a time. A random value between "MinSpawnAmount" and this value will be chosen.
         private int? maxSpawnAmount;
-        public int? _MaxSpawnAmount { get => maxSpawnAmount; set => SetAndNotify(ref maxSpawnAmount, value); }
+        [LogicOverridable] public int? _MaxSpawnAmount { get => maxSpawnAmount; set => SetAndNotify(ref maxSpawnAmount, value); }
         [JsonIgnore] public int MaxSpawnAmount => Logic._MaxSpawnAmount ?? _MaxSpawnAmount ?? 1;
 
         // The smallest possible initial horizontal velocity of the spawned particles. A random value between this value and "MaxInitialVelocityX" will be chosen for each particle.
         private float? minInitialVelocityX;
-        public float? _MinInitialVelocityX { get => minInitialVelocityX; set => SetAndNotify(ref minInitialVelocityX, value); }
+        [LogicOverridable] public float? _MinInitialVelocityX { get => minInitialVelocityX; set => SetAndNotify(ref minInitialVelocityX, value); }
         [JsonIgnore] public float MinInitialVelocityX => Logic._MinInitialVelocityX ?? _MinInitialVelocityX ?? 0f;
 
         // The largest possible initial horizontal velocity of the spawned particles. A random value between "MinInitialVelocityX" and this value will be chosen for each particle.
         private float? maxInitialVelocityX;
-        public float? _MaxInitialVelocityX { get => maxInitialVelocityX; set => SetAndNotify(ref maxInitialVelocityX, value); }
+        [LogicOverridable] public float? _MaxInitialVelocityX { get => maxInitialVelocityX; set => SetAndNotify(ref maxInitialVelocityX, value); }
         [JsonIgnore] public float MaxInitialVelocityX => Logic._MaxInitialVelocityX ?? _MaxInitialVelocityX ?? 0f;
 
         // The smallest possible initial vertical velocity of the spawned particles. A random value between this value and "MaxInitialVelocityY" will be chosen for each particle.
         private float? minInitialVelocityY;
-        public float? _MinInitialVelocityY { get => minInitialVelocityY; set => SetAndNotify(ref minInitialVelocityY, value); }
+        [LogicOverridable] public float? _MinInitialVelocityY { get => minInitialVelocityY; set => SetAndNotify(ref minInitialVelocityY, value); }
         [JsonIgnore] public float MinInitialVelocityY => Logic._MinInitialVelocityY ?? _MinInitialVelocityY ?? 0f;
 
         // The largest possible initial vertical velocity of the spawned particles. A random value between "MinInitialVelocityY" and this value will be chosen for each particle.
         private float? maxInitialVelocityY;
-        public float? _MaxInitialVelocityY { get => maxInitialVelocityY; set => SetAndNotify(ref maxInitialVelocityY, value); }
+        [LogicOverridable] public float? _MaxInitialVelocityY { get => maxInitialVelocityY; set => SetAndNotify(ref maxInitialVelocityY, value); }
         [JsonIgnore] public float MaxInitialVelocityY => Logic._MaxInitialVelocityY ?? _MaxInitialVelocityY ?? 0f;
 
         // The minimum possible lifetime of the particles (in seconds). A random lifetime between this number and "MaxLifetime" will be chosen.
         private float? minLifetime;
-        public float? _MinLifetime { get => minLifetime; set => SetAndNotify(ref minLifetime, value); }
+        [LogicOverridable] public float? _MinLifetime { get => minLifetime; set => SetAndNotify(ref minLifetime, value); }
         [JsonIgnore] public float MinLifetime => Logic._MinLifetime ?? _MinLifetime ?? 3f;
 
         // The maximum possible lifetime of the particles (in seconds). A random lifetime between from "MinLifetime" up to this number will be chosen.
         private float? maxLifetime;
-        public float? _MaxLifetime { get => maxLifetime; set => SetAndNotify(ref maxLifetime, value); }
+        [LogicOverridable] public float? _MaxLifetime { get => maxLifetime; set => SetAndNotify(ref maxLifetime, value); }
         [JsonIgnore] public float MaxLifetime => Logic._MaxLifetime ?? _MaxLifetime ?? 3f;
 
         // The amount the speed of the particle in the horizontal direction will change per second.
         private float? accelerationX;
-        public float? _AccelerationX { get => accelerationX; set => SetAndNotify(ref accelerationX, value); }
+        [LogicOverridable] public float? _AccelerationX { get => accelerationX; set => SetAndNotify(ref accelerationX, value); }
         [JsonIgnore] public float AccelerationX => Logic._AccelerationX ?? _AccelerationX ?? 0f;
 
         // The amount the speed of the particle in the vertical direction will change per second.
         private float? accelerationY;
-        public float? _AccelerationY { get => accelerationY; set => SetAndNotify(ref accelerationY, value); }
+        [LogicOverridable] public float? _AccelerationY { get => accelerationY; set => SetAndNotify(ref accelerationY, value); }
         [JsonIgnore] public float AccelerationY => Logic._AccelerationY ?? _AccelerationY ?? -1f;
 
         // The amount of velocity per second the particle loses in the horizontal direction as a percentage of its current velocity
         private float? dragX;
-        public float? _DragX { get => dragX; set => SetAndNotify(ref dragX, value); }
+        [LogicOverridable] public float? _DragX { get => dragX; set => SetAndNotify(ref dragX, value); }
         [JsonIgnore] public float DragX => Logic._DragX ?? _DragX ?? 0;
 
         // The amount of velocity per second the particle loses in the vertical direction as a percentage of its current velocity
         private float? dragY;
-        public float? _DragY { get => dragY; set => SetAndNotify(ref dragY, value); }
+        [LogicOverridable] public float? _DragY { get => dragY; set => SetAndNotify(ref dragY, value); }
         [JsonIgnore] public float DragY => Logic._DragY ?? _DragY ?? 0;
 
         // The smallest initial size of the particles
         private float? minSize;
-        public float? _MinSize { get => minSize; set => SetAndNotify(ref minSize, value); }
+        [LogicOverridable] public float? _MinSize { get => minSize; set => SetAndNotify(ref minSize, value); }
         [JsonIgnore] public float MinSize => Logic._MinSize ?? _MinSize ?? 6;
 
         // The largest initial size of the particles
         private float? maxSize;
-        public float? _MaxSize { get => maxSize; set => SetAndNotify(ref maxSize, value); }
+        [LogicOverridable] public float? _MaxSize { get => maxSize; set => SetAndNotify(ref maxSize, value); }
         [JsonIgnore] public float MaxSize => Logic._MaxSize ?? _MaxSize ?? 6;
 
         // The initial size of the particles
         private float? deltaSize;
-        public float? _DeltaSize { get => deltaSize; set => SetAndNotify(ref deltaSize, value); }
+        [LogicOverridable] public float? _DeltaSize { get => deltaSize; set => SetAndNotify(ref deltaSize, value); }
         [JsonIgnore] public float DeltaSize => Logic._DeltaSize ?? _DeltaSize ?? 0;
 
         // Where the particles will spawn from
@@ -122,6 +126,9 @@ namespace Aurora.Settings.Layers {
         private ColorStopCollection particleColorStops;
         public ColorStopCollection _ParticleColorStops { get => particleColorStops; set => SetAndNotify(ref particleColorStops, value); }
         [JsonIgnore] public ColorStopCollection ParticleColorStops => Logic._ParticleColorStops ?? _ParticleColorStops ?? defaultParticleColor;
+
+        // An override proxy for setting the particle color stops
+        [JsonIgnore, LogicOverridable("Color over time")] public EffectBrush _ParticleBrush { get => new EffectBrush(_ParticleColorStops.ToMediaBrush()); set => _ParticleColorStops = value == null ? null : ColorStopCollection.FromMediaBrush(value.GetMediaBrush()); }
 
         private static readonly ColorStopCollection defaultParticleColor = new ColorStopCollection {
             {0f, Color.White },
@@ -164,6 +171,7 @@ namespace Aurora.Settings.Layers {
     /// <summary>
     /// Layer handler for the simple particles. It uses time-based spawning and despawning logic.
     /// </summary>
+    [LogicOverrideIgnoreProperty(nameof(LayerHandlerProperties._PrimaryColor))]
     public class SimpleParticleLayerHandler : ParticleLayerHandlerBase<SimpleParticle, SimpleParticleLayerProperties> {
 
         private double nextSpawnInterval = 0; // How many seconds until next set of particle spawns
