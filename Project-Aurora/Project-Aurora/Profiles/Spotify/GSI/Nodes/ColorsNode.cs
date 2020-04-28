@@ -14,6 +14,8 @@ namespace Aurora.Profiles.Spotify.GSI.Nodes
         public ColorNode Vibrant => NodeFor<ColorNode>("vibrant");
         public ColorNode VibrantNonAlarming => NodeFor<ColorNode>("vibrant_non_alarming");
 
+        public ColorThiefNode ColorThief => NodeFor<ColorThiefNode>("colorThief");
+
         public ColorsNode(string json) : base(json) { }
     }
 }

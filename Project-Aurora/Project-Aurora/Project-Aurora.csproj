@@ -450,6 +450,8 @@
     <Compile Include="Profiles\Spotify\GSI\GameState_Spotify.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\ColorNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\ColorsNode.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\ColorThiefNode.cs" />
+    <Compile Include="Profiles\Spotify\GSI\Nodes\PaletteNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\TrackNode.cs" />
     <Compile Include="Profiles\Spotify\SpotifyApplication.cs" />
@@ -1721,7 +1723,7 @@
     <Resource Include="Resources\info.png" />
     <Resource Include="Resources\Skype_300x300.png" />
     <Resource Include="Resources\Slime_Rancher.png" />
-    <Resource Include="Profiles\Spotify\GSI\AuroraSpotify.js" />
+    <None Include="Profiles\Spotify\GSI\AuroraSpotify.mjs" />
     <Resource Include="Resources\elite_dangerous_256x256.png" />
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
@@ -1780,6 +1782,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Resource Include="Profiles\Witcher3\GSI\Resources\witcher3-mod.zip" />
+    <None Include="Profiles\Spotify\GSI\color-thief.mjs" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
