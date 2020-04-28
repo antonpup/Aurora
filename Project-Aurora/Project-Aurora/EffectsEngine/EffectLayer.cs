@@ -225,7 +225,7 @@ namespace Aurora.EffectsEngine
                         }
                         else
                         {
-                            (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height, Effects.canvas_height);
+                            (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
                         }
 
                         (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
@@ -253,7 +253,7 @@ namespace Aurora.EffectsEngine
                             }
                             else
                             {
-                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height + x_offset, Effects.canvas_height + y_offset);
+                                (brush as PathGradientBrush).ScaleTransform((Effects.canvas_height + x_offset) * 100 / effect_config.gradient_size, (Effects.canvas_height + y_offset) * 100 / effect_config.gradient_size);
                             }
                         }
                         else
@@ -265,7 +265,7 @@ namespace Aurora.EffectsEngine
                             }
                             else
                             {
-                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height, Effects.canvas_height);
+                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
                             }
                         }
 

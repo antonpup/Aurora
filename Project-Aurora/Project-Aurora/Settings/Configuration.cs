@@ -337,6 +337,8 @@ namespace Aurora.Settings
         //Cooler Master range is 500-599
 
         //Roccat range is 600-699
+        [Description("Roccat - Kone Pure")]
+        Roccat_Kone_Pure = 600,
 
         //Steelseries range is 700-799
         [Description("SteelSeries - Rival 300")]
