@@ -72,14 +72,13 @@ namespace Aurora.Controls
 
         private static void SequencePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
             var source = (KeySequence)sender;
-            var old = e.OldValue as Settings.KeySequence;
             if (!(e.NewValue is Settings.KeySequence@new)) {
                 source.Sequence = new Settings.KeySequence();
                 return;
             }
 
             // If the old sequence is a region, remove that region from the editor
-            if (old.type == Settings.KeySequenceType.FreeForm)
+            if (e.OldValue is Settings.KeySequence old && old.type == Settings.KeySequenceType.FreeForm)
                 LayerEditor.RemoveKeySequenceElement(old.freeform);
 
             // Handle the new sequence. If a region, this will add it to the editor
