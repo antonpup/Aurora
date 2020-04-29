@@ -91,7 +91,17 @@ namespace Aurora.Devices.Asus
                     var allDevices = AuraSdk.Enumerate((uint)AsusDeviceType.All);
                     foreach (IAuraSyncDevice device in allDevices)
                     {
-                        var deviceType = (AsusDeviceType) device.Type;
+                        AsusDeviceType deviceType;
+                        if (Enum.IsDefined(typeof(AsusDeviceType), device.Type))
+                        {
+                            deviceType = (AsusDeviceType) device.Type;
+                        }
+                        else
+                        {
+                            deviceType = AsusDeviceType.Unknown;
+                            Log($"Could not read device type {device.Type} marking as Unknown");
+                        }
+
                         Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
 
                         var configIndex = config.Devices.IndexOf(new AsusConfig.AsusConfigDevice(device));
@@ -252,6 +262,7 @@ namespace Aurora.Devices.Asus
             Chassis = 0x000B0000,
             Projector = 0x000C0000,
             Terminal = 0x000E0000,
+            Unknown = 0xFFFFFFFF,
         }
     }
 }
