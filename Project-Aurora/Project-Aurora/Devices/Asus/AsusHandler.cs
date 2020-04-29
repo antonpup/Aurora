@@ -129,7 +129,6 @@ namespace Aurora.Devices.Asus
                                 {
                                     Log($"Something went wrong with reading your device as a keyboard {device} using as generic aura sync device\r\n{e}");
                                     devices.Add(new AuraSyncDevice(this, device));
-                                    return false;
                                 }
                                 break;
                             // ignore whatever this is
