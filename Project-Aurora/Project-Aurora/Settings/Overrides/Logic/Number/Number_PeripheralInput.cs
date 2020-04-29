@@ -30,11 +30,13 @@ namespace Aurora.Settings.Overrides.Logic.Number {
         #endregion
 
         // Control
-        public Visual GetControl() => new ComboBox {
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new Label { Content = "Away time in" })
+            .WithChild(new ComboBox {
                 DisplayMemberPath = "Key",
                 SelectedValuePath = "Value",
                 ItemsSource = EnumUtils.GetEnumItemsSource<TimeUnit>()
-            }.WithBinding(ComboBox.SelectedValueProperty, this, "TimeUnit", BindingMode.TwoWay);
+            }.WithBinding(ComboBox.SelectedValueProperty, this, "TimeUnit", BindingMode.TwoWay));
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
         public double Evaluate(IGameState gameState) {
