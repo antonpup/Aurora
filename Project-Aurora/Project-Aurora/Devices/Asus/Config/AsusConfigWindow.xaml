@@ -34,8 +34,11 @@
                 <DockPanel
                     VerticalAlignment="Stretch"
                     Height="auto">
-                    <StackPanel Orientation="Vertical" Name="AsusDeviceKeys">
-                        <config:AsusKeyToDeviceKeyControl/>
+                    <StackPanel Orientation="Vertical">
+                        <CheckBox Content="Enabled" Name="DeviceEnabledCheckBox" IsChecked="False"/>
+                        <StackPanel Orientation="Vertical" Name="AsusDeviceKeys">
+                            <config:AsusKeyToDeviceKeyControl/>
+                        </StackPanel>
                     </StackPanel>
                 </DockPanel>
             </ScrollViewer>

@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using AuraServiceLib;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace Aurora.Devices.Asus.Config
 {
@@ -27,11 +20,28 @@ namespace Aurora.Devices.Asus.Config
         private int selectedDevice = 0;
 
         private AsusConfig config;
+        private bool wasEnabled = false;
+        private AsusDevice asusDevice;
+
+        private static bool windowOpen = false;
         
         public AsusConfigWindow()
         {
+            if (windowOpen)
+                Close();
+            
+            windowOpen = true;
             InitializeComponent();
             Loaded += OnLoaded;
+            Closed += OnClosed;
+
+            asusDevice = Global.dev_manager.Devices.FirstOrDefault(device => device.Device is AsusDevice)?.Device as AsusDevice;
+
+            if (asusDevice != null && asusDevice.IsInitialized())
+            {
+                wasEnabled = true;
+                asusDevice.Shutdown();
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -41,6 +51,13 @@ namespace Aurora.Devices.Asus.Config
 
             LoadConfigFile();
             LoadDevices();
+        }
+
+        private void OnClosed(object sender, EventArgs e)
+        {
+            windowOpen = false;
+            if (asusDevice != null && wasEnabled)
+                asusDevice.Initialize();
         }
 
         private void LoadConfigFile()
@@ -57,6 +74,7 @@ namespace Aurora.Devices.Asus.Config
         private bool LoadAuraSdk()
         {
             asusHandler = new AsusHandler();
+            asusHandler.AuraSdk.SwitchMode();
 
             if (asusHandler.HasSdk)
                 return true;
@@ -83,10 +101,6 @@ namespace Aurora.Devices.Asus.Config
 
             foreach (IAuraSyncDevice auraDevice in asusHandler.AuraSdk.Enumerate((uint)AsusHandler.AsusDeviceType.All))
             {
-                // ignore keyboards and mice, we already handle that
-                if (auraDevice.Type == (uint)AsusHandler.AsusDeviceType.Keyboard || auraDevice.Type == (uint)AsusHandler.AsusDeviceType.Mouse)
-                    continue;
-
                 devices.Add(auraDevice);
                 
                 // create a new button for the ui
@@ -115,25 +129,63 @@ namespace Aurora.Devices.Asus.Config
             AsusConfig.AsusConfigDevice? configDevice = null;
             if (GetAsusConfigDevice(out var cDevice) >= 0)
                 configDevice = cDevice;
-            
-            
+
+            DeviceEnabledCheckBox.IsChecked = configDevice?.Enabled ?? false;
             for (int i = 0; i < device.Lights.Count; i++)
             {
+                var lightIndex = i;
                 var keyControl = new AsusKeyToDeviceKeyControl();
+                
+                keyControl.BlinkCallback += () => BlinkKey(lightIndex);
                 keyControl.KeyIdValue.Text = i.ToString();
                 if (configDevice.HasValue && configDevice.Value.KeyMapper.TryGetValue(i, out var deviceKey))
                     keyControl.DeviceKey.SelectedValue = deviceKey;
                 
                 keys.Add(keyControl);
-
+                
                 AsusDeviceKeys.Children.Add(keyControl);
             }
         }
 
+        private void BlinkKey(int lightIndex)
+        {
+            BlinkLight(devices[selectedDevice], lightIndex);
+        }
+        
+        private CancellationTokenSource tokenSource;
+        private const int BlinkCount = 7;
+        public async void BlinkLight(IAuraSyncDevice device, int lightId)
+        {
+            if (tokenSource != null && !tokenSource.Token.IsCancellationRequested)
+                tokenSource.Cancel();
+            
+            tokenSource = new CancellationTokenSource();
+            for (int i = 0; i < BlinkCount; i++)
+            {
+                if (tokenSource.IsCancellationRequested || device == null)
+                    return;
+                
+                // set everything to black
+                foreach (IAuraRgbLight light in device.Lights)
+                    light.Color = 0;
+                
+                // set this one key to white
+                if (i % 2 == 1)
+                {
+                    device.Lights[lightId].Red = 255;
+                    device.Lights[lightId].Green = 255;
+                    device.Lights[lightId].Blue = 255;
+                }
+                
+                device.Apply();
+                await Task.Delay(200); // ms
+            }
+        }
+        
         private void SaveDevice()
         {
             var index = GetAsusConfigDevice(out var device);
-
+        
             foreach (var key in keys)
             {
                 if (!int.TryParse(key.KeyIdValue.Text, out int keyIndex))
@@ -144,7 +196,9 @@ namespace Aurora.Devices.Asus.Config
                 
                 device.KeyMapper[keyIndex] = (DeviceKeys)key.DeviceKey.SelectedValue;
             }
-
+            
+            device.Enabled = DeviceEnabledCheckBox.IsChecked ?? false;
+            
             if (index < 0)
                 config.Devices.Add(device);
             else
@@ -181,7 +235,6 @@ namespace Aurora.Devices.Asus.Config
         }
 
         #region UI
-
 
         private void ReloadButton_Click(object sender, RoutedEventArgs e)
         {

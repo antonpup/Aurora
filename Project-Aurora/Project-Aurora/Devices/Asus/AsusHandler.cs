@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using AuraServiceLib;
 using Aurora.Devices.Asus.Config;
 using Microsoft.Win32;
@@ -96,8 +98,12 @@ namespace Aurora.Devices.Asus
 
                         if (configIndex >= 0)
                         {
-                            devices.Add(new AsusSyncConfiguredDevice(this, device, config.Devices[configIndex]));
-                            continue;
+                            var configDevice = config.Devices[configIndex];
+                            if (configDevice.Enabled)
+                            {
+                                devices.Add(new AsusSyncConfiguredDevice(this, device, config.Devices[configIndex]));
+                                continue;
+                            }
                         }
                     
                         switch (deviceType)
@@ -105,7 +111,16 @@ namespace Aurora.Devices.Asus
                             case AsusDeviceType.Keyboard:
                             case AsusDeviceType.NotebookKeyboard:
                             case AsusDeviceType.NotebookKeyboard4ZoneType:
-                                devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
+                                try
+                                {
+                                    devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
+                                }
+                                catch (Exception e)
+                                {
+                                    Log($"Something went wrong with reading your device as a keyboard {device} using as generic aura sync device\r\n{e}");
+                                    devices.Add(new AuraSyncDevice(this, device));
+                                    return false;
+                                }
                                 break;
                             // ignore whatever this is
                             case AsusDeviceType.All:
@@ -213,7 +228,7 @@ namespace Aurora.Devices.Asus
         {
             Global.logger.Info($"[ASUS] {text}");
         }
-        
+
         /// <summary>
         /// Devices specified in the AsusSDK documentation
         /// </summary>

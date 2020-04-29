@@ -13,10 +13,7 @@ namespace Aurora.Devices.Asus
         private bool isActive = false;
         
         /// <inheritdoc />
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry GetRegisteredVariables() => new VariableRegistry();
 
         /// <inheritdoc />
         public string GetDeviceName() => DeviceName;

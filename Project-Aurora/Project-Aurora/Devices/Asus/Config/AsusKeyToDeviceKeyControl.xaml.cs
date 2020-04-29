@@ -20,9 +20,16 @@ namespace Aurora.Devices.Asus.Config
     /// </summary>
     public partial class AsusKeyToDeviceKeyControl : UserControl
     {
+        public Action BlinkCallback;
+        
         public AsusKeyToDeviceKeyControl()
         {
             InitializeComponent();
+        }
+
+        private void TestBlink(object sender, RoutedEventArgs e)
+        {
+            BlinkCallback?.Invoke();
         }
     }
 }

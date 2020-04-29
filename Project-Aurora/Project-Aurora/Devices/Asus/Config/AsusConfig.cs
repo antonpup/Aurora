@@ -33,6 +33,7 @@ namespace Aurora.Devices.Asus.Config
 
             return JsonConvert.DeserializeObject<AsusConfig>(content);
         }
+        
         public static void SaveConfig(AsusConfig config)
         {
             string content = JsonConvert.SerializeObject(config, Formatting.Indented);
@@ -52,10 +53,13 @@ namespace Aurora.Devices.Asus.Config
             public int KeyCount;
             [JsonProperty(PropertyName = "k")]
             public Dictionary<int, DeviceKeys> KeyMapper;
+            [JsonProperty(PropertyName = "e")]
+            public bool Enabled;
 
             public AsusConfigDevice(IAuraSyncDevice device)
             {
                 Name = device.Name;
+                Enabled = true;
                 Type = device.Type;
                 KeyCount = device.Lights.Count;
                 KeyMapper = new Dictionary<int, DeviceKeys>();

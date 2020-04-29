@@ -18,6 +18,7 @@
     <DockPanel>
         <TextBlock Name="KeyIdText" Text="Key ID" VerticalAlignment="Center" Padding="10,0,10,0"/>
         <TextBlock Name="KeyIdValue" Text="0" Padding="0,0,10,0" VerticalAlignment="Center"/>
+        <Button Content="Test" Padding="10,0,10,0" ToolTip="This will blink the key on the keyboard" Click="TestBlink"/>
         <ComboBox Name="DeviceKey" ItemsSource="{Binding Source={StaticResource DeviceKeyEnum}}"/>
     </DockPanel>
 </UserControl>

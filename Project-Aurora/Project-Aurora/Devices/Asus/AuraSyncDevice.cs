@@ -17,6 +17,7 @@ namespace Aurora.Devices.Asus
         public AsusHandler.AsusDeviceType DeviceType => (AsusHandler.AsusDeviceType)device.Type;
 
         private readonly IAuraSyncDevice device;
+        public IAuraSyncDevice Device => device;
         private readonly AsusHandler asusHandler;
         private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
@@ -56,6 +57,12 @@ namespace Aurora.Devices.Asus
             // create a scary parallel thread
             var parallelOptions = new ParallelOptions();
             parallelOptions.CancellationToken = tokenSource.Token;
+
+            // set every key to black
+            foreach (IAuraRgbLight light in device.Lights)
+                light.Color = 0;
+            device.Apply();
+
             Parallel.Invoke(parallelOptions, () => Thread(tokenSource.Token));
             Active = true;
         }
