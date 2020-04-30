@@ -55,7 +55,7 @@ namespace Aurora.Profiles.Subnautica {
 
         private void GoToQModManagerPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/subnautica/mods/16/");
+            Process.Start(@"https://www.nexusmods.com/subnautica/mods/201");
         }
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
@@ -72,13 +72,11 @@ namespace Aurora.Profiles.Subnautica {
         {
             if ((sender as CheckBox).IsChecked == true)
             {
-                State.GameState.GameState = 2;
-                State.GameState.InGame = true;
+                State.GameState.State = GSI.Nodes.GameState.Playing;
             }
             else
             {
-                State.GameState.GameState = 0;
-                State.GameState.InGame = false;
+                State.GameState.State = GSI.Nodes.GameState.Menu;
             }
         }
 

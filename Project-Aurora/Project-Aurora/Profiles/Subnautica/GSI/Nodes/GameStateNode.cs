@@ -5,24 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI.Nodes {
+    public enum GameState
+    {
+        Menu = 0,
+        Loading = 1,
+        Playing = 2,
+        Paused = 3
+    }
+
     public class GameStateNode : Node<GameStateNode> {
 
-        public int GameState;
-        /*
-        0 = Menu
-        1 = Loading
-        2 = Playing
-        */
-        public bool InGame;
-        public bool InMenu;
-        public bool loading;
+        public GameState State;
 
         internal GameStateNode(string json) : base(json) {
-
-            GameState = GetInt("game_state");
-            InGame = GameState == 2;
-            InMenu = GameState == 0;
-            loading = GameState == 1;
+            State = (GameState)GetInt("game_state");
         }
     }
 }

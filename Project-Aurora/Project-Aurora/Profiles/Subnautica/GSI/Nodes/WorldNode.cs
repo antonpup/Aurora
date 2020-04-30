@@ -8,6 +8,7 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
     public class WorldNode : Node<WorldNode> {
 
         public float DayScalar;
+        public float daylight_scaler;
         //public bool IsDay;
 
         internal WorldNode(string json) : base(json) {
@@ -17,6 +18,7 @@ namespace Aurora.Profiles.Subnautica.GSI.Nodes {
             else
                 IsDay = false;
                 */
+            this.daylight_scaler = GetFloat("daylight_scaler");
         }
     }
 }

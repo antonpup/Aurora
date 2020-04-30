@@ -3,6 +3,9 @@ using Aurora.EffectsEngine.Animations;
 //using Aurora.Profiles.Subnautica.Layers;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Aurora.Settings.Overrides;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides.Logic.Builder;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,61 +14,78 @@ using System.Text;
 using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
 
-namespace Aurora.Profiles.Subnautica {
+namespace Aurora.Profiles.Subnautica
+{
 
-    public class SubnauticaProfile : ApplicationProfile {
+    public class SubnauticaProfile : ApplicationProfile
+    {
 
         public SubnauticaProfile() : base() { }
-        
-        public override void Reset() {
+
+        public override void Reset()
+        {
             base.Reset();
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
 
-                new Layer("PDA Open", new ConditionalLayerHandler{
-                    Properties = new ConditionalLayerProperties
+                new Layer("PDA Open", new SolidFillLayerHandler
+                {
+                    Properties = new SolidFillLayerHandlerProperties
                     {
-                        _ConditionPath = "Player/PDAopened",
-                        _PrimaryColor = Color.FromArgb(170,0,0,0),
-                        _SecondaryColor = Color.FromArgb(0,0,0,0),
-                        _Sequence = new KeySequence(new FreeFormObject(0, -50, 980, 280))
+                        _PrimaryColor = Color.FromArgb(170,0,0,0)
                     }
-                }
+                },
+                new OverrideLogicBuilder()
+                    .SetLookupTable("_Enabled", new OverrideLookupTableBuilder<bool>()
+                        .AddEntry(false, new BooleanNot(new BooleanGSIEnum("Player/PDAState", GSI.Nodes.PDAState.Opened)))
+                    )
                 ),
-                new Layer("PDA Close Animation", new AnimationLayerHandler {
-                    Properties = new AnimationLayerHandlerProperties {
+
+                new Layer("PDA Close Animation", new AnimationLayerHandler
+                {
+                    Properties = new AnimationLayerHandlerProperties
+                    {
                         _AnimationDuration = .5f,
                         _AnimationRepeat = 1,
-                        _AnimationMix = new EffectsEngine.Animations.AnimationMix(new []{
+                        _AnimationMix = new EffectsEngine.Animations.AnimationMix(new[]{
                             new EffectsEngine.Animations.AnimationTrack("Rectangle", 1)
                                 .SetFrame(0, new EffectsEngine.Animations.AnimationFilledRectangle(new Rectangle(0, 0, 1000, 60), Color.FromArgb(170, 0, 0, 0)))
                                 .SetFrame(.5f, new EffectsEngine.Animations.AnimationFilledRectangle(new Rectangle(0, 70, 1000, 60), Color.FromArgb(170, 0, 0, 0)))
-                        }),
-                        _TriggerMode = AnimationTriggerMode.OnTrue,
-                        _TriggerPath = "Player/PDAclosing",
+                            }),
+                        _TriggerMode = AnimationTriggerMode.OnEvaluatableTrue,
+                        _EvaluatableTrigger = new BooleanGSIEnum("Player/PDAState", GSI.Nodes.PDAState.Closing),
                         _StackMode = AnimationStackMode.Ignore,
                         _Sequence = new KeySequence(new FreeFormObject(0, -50, 980, 280))
                     }
                 }),
 
-                new Layer("PDA Open Animation", new AnimationLayerHandler {
-                    Properties = new AnimationLayerHandlerProperties {
+                new Layer("PDA Open Animation", new AnimationLayerHandler
+                {
+                    Properties = new AnimationLayerHandlerProperties
+                    {
                         _AnimationDuration = .5f,
                         _AnimationRepeat = 1,
-                        _AnimationMix = new EffectsEngine.Animations.AnimationMix(new []{
+                        _AnimationMix = new EffectsEngine.Animations.AnimationMix(new[]{
                             new EffectsEngine.Animations.AnimationTrack("Rectangle", 1)
                                 .SetFrame(0, new EffectsEngine.Animations.AnimationFilledRectangle(new Rectangle(0, 70, 1000, 60), Color.FromArgb(170, 0, 0, 0)))
                                 .SetFrame(.5f, new EffectsEngine.Animations.AnimationFilledRectangle(new Rectangle(0, 0, 1000, 60), Color.FromArgb(170, 0, 0, 0)))
                         }),
-                        _TriggerMode = AnimationTriggerMode.OnTrue,
-                        _TriggerPath = "Player/PDAopening",
+                        _TriggerMode = AnimationTriggerMode.OnEvaluatableTrue,
+                        _EvaluatableTrigger = new BooleanGSIEnum("Player/PDAState", GSI.Nodes.PDAState.Opening),
                         _StackMode = AnimationStackMode.Ignore,
                         _Sequence = new KeySequence(new FreeFormObject(0, -50, 980, 280))
                     }
-                }),
+                },
+                    new OverrideLogicBuilder()
+                    .SetLookupTable("_Enabled", new OverrideLookupTableBuilder<bool>()
+                        .AddEntry(false, new BooleanGSIEnum("Player/PDAState", GSI.Nodes.PDAState.Opened))
+                    )
+                ),
 
-                new Layer("Health", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
+                new Layer("Health", new PercentLayerHandler()
+                {
+                    Properties = new PercentLayerHandlerProperties()
+                    {
                         _VariablePath = "Player/Health",
                         _MaxVariablePath = "100",
                         _PrimaryColor = Color.FromArgb(255, 0, 0),
@@ -77,8 +97,10 @@ namespace Aurora.Profiles.Subnautica {
                     }
                 }),
 
-                new Layer("Food", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
+                new Layer("Food", new PercentLayerHandler()
+                {
+                    Properties = new PercentLayerHandlerProperties()
+                    {
                         _VariablePath = "Player/Food",
                         _MaxVariablePath = "100",
                         _PrimaryColor = Color.FromArgb(139, 69, 19),
@@ -90,8 +112,10 @@ namespace Aurora.Profiles.Subnautica {
                     }
                 }),
 
-                new Layer("Water", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
+                new Layer("Water", new PercentLayerHandler()
+                {
+                    Properties = new PercentLayerHandlerProperties()
+                    {
                         _VariablePath = "Player/Water",
                         _MaxVariablePath = "100",
                         _PrimaryColor = Color.FromArgb(0, 0, 255),
@@ -103,8 +127,10 @@ namespace Aurora.Profiles.Subnautica {
                     }
                 }),
 
-                new Layer("Oxygen", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
+                new Layer("Oxygen", new PercentLayerHandler()
+                {
+                    Properties = new PercentLayerHandlerProperties()
+                    {
                         _VariablePath = "Player/OxygenAvailable",
                         _MaxVariablePath = "Player/OxygenCapacity",
                         _PrimaryColor = Color.FromArgb(0, 170, 65),
@@ -116,9 +142,12 @@ namespace Aurora.Profiles.Subnautica {
                     }
                 }),
 
-                new Layer("Background", new PercentGradientLayerHandler() {
-                    Properties = new PercentGradientLayerHandlerProperties {
-                        _Gradient = new EffectBrush() {
+                new Layer("Background", new PercentGradientLayerHandler()
+                {
+                    Properties = new PercentGradientLayerHandlerProperties
+                    {
+                        _Gradient = new EffectBrush()
+                        {
                             type = EffectBrush.BrushType.Linear,
                             start = new PointF(0, 0),
                             end = new PointF(1, 0),
@@ -138,6 +167,6 @@ namespace Aurora.Profiles.Subnautica {
 
             };
         }
-        
+
     }
 }
