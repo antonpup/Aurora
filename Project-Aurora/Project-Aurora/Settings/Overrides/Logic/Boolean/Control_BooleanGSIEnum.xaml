@@ -4,16 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:c="clr-namespace:Aurora.Controls"
-             mc:Ignorable="d" d:DesignWidth="400">
-    <Grid Margin="0,0,0,6">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-
-        <ComboBox x:Name="GSIPath" SelectedItem="{Binding StatePath}" Grid.Column="0" SelectionChanged="GSIPath_SelectionChanged" />
-        <TextBlock Text="=" FontWeight="Bold" Grid.Column="1" Margin="4,0" VerticalAlignment="Center" />
-        <ComboBox x:Name="EnumVal" SelectedValue="{Binding EnumValue}" DisplayMemberPath="Key" SelectedValuePath="Value" Grid.Column="2" HorizontalAlignment="Stretch" />
-    </Grid>
+             xmlns:u="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d">
+    <StackPanel Orientation="Horizontal">
+        <c:GameStateParameterPicker SelectedPath="{Binding StatePath}" PropertyType="Enum" Application="{u:AttachedApplicationBinding}" VerticalAlignment="Center" SelectedPathChanged="GameStateParameterPicker_SelectedPathChanged" />
+        <TextBlock Text="=" FontWeight="Bold" Margin="4,0" VerticalAlignment="Center" />
+        <ComboBox x:Name="EnumVal" SelectedValue="{Binding EnumValue}" DisplayMemberPath="Key" SelectedValuePath="Value" VerticalAlignment="Center" />
+    </StackPanel>
 </UserControl>

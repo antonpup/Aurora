@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Profiles;
+using Aurora.Utils;
 using Newtonsoft.Json;
 using Xceed.Wpf.Toolkit;
 
@@ -14,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that performs a binary mathematical operation on two operands.
     /// </summary>
-    [OverrideLogic("Arithmetic Operation", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Arithmetic Operation", category: EvaluatableCategory.Maths)]
     public class NumberMathsOperation : IEvaluatable<double> {
 
         /// <summary>Creates a new maths operation that has no values pre-set.</summary>
@@ -37,18 +38,10 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<double> Operand2 { get; set; } = new NumberConstant();
         public MathsOperator Operator { get; set; } = MathsOperator.Add;
         
-        // The control allowing the user to edit the evaluatable
-        [JsonIgnore]
-        private Control_BinaryOperationHolder control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new Control_BinaryOperationHolder(application, EvaluatableType.Number, typeof(MathsOperator));
-                control.SetBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public Visual GetControl() => new Control_BinaryOperationHolder(typeof(double), typeof(MathsOperator))
+            .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
+            .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
+            .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Resolves the two operands and then compares them using the user specified operator</summary>
         public double Evaluate(IGameState gameState) {
@@ -58,19 +51,12 @@ namespace Aurora.Settings.Overrides.Logic {
                 case MathsOperator.Add: return op1 + op2;
                 case MathsOperator.Sub: return op1 - op2;
                 case MathsOperator.Mul: return op1 * op2;
-                case MathsOperator.Div: return op2 == 0 ? 0 : op1 / op2; // Return 0 if user tried to divide by zero. Easier than having to deal with Infinity (which C# returns).
-                case MathsOperator.Mod: return op2 == 0 ? 0 : op1 % op2;
+                case MathsOperator.Div when op2 != 0: return op1 / op2; // Return 0 if user tried to divide by zero.
+                case MathsOperator.Mod when op2 != 0: return op1 % op2;
                 default: return 0;
             }
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        /// <summary>Updates the user control and the operands with a new application context.</summary>
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-            Operand1?.SetApplication(application);
-            Operand2?.SetApplication(application);
-        }
 
         /// <summary>Creates a copy of this maths operation.</summary>
         public IEvaluatable<double> Clone() => new NumberMathsOperation { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator };
@@ -82,7 +68,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Returns the absolute value of the given evaluatable.
     /// </summary>
-    [OverrideLogic("Absolute", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Absolute", category: EvaluatableCategory.Maths)]
     public class NumberAbsValue : IEvaluatable<double> {
 
         /// <summary>Creates a new absolute operation with the default operand.</summary>
@@ -94,21 +80,12 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<double> Operand { get; set; } = new NumberConstant();
 
         // Get the control allowing the user to set the operand
-        [JsonIgnore]
-        private Control_NumericUnaryOpHolder control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new Control_NumericUnaryOpHolder(application, "Absolute");
-                control.SetBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public Visual GetControl() => new Control_NumericUnaryOpHolder("Absolute")
+            .WithBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Evaluate the operand and return the absolute value of it.</summary>
         public double Evaluate(IGameState gameState) => Math.Abs(Operand.Evaluate(gameState));
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) => Operand?.SetApplication(application);
 
         public IEvaluatable<double> Clone() => new NumberAbsValue { Operand = Operand.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -119,7 +96,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that compares two numerical evaluatables and returns a boolean depending on the comparison.
     /// </summary>
-    [OverrideLogic("Arithmetic Comparison", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Arithmetic Comparison", category: EvaluatableCategory.Maths)]
     public class BooleanMathsComparison : IEvaluatable<bool> {
 
         /// <summary>Creates a new maths comparison that has no values pre-set.</summary>
@@ -143,17 +120,10 @@ namespace Aurora.Settings.Overrides.Logic {
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.EQ;
 
         // The control allowing the user to edit the evaluatable
-        [JsonIgnore]
-        private Control_BinaryOperationHolder control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new Control_BinaryOperationHolder(application, EvaluatableType.Number, typeof(ComparisonOperator));
-                control.SetBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public Visual GetControl() => new Control_BinaryOperationHolder(typeof(double), typeof(ComparisonOperator))
+            .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
+            .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
+            .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Resolves the two operands and then compares them with the user-specified operator.</summary>
         public bool Evaluate(IGameState gameState) {
@@ -171,13 +141,6 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
-        /// <summary>Updates the user control and the operands with a new application context.</summary>
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-            Operand1?.SetApplication(application);
-            Operand2?.SetApplication(application);
-        }
-
         /// <summary>Creates a copy of this mathematical comparison.</summary>
         public IEvaluatable<bool> Clone() => new BooleanMathsComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -188,7 +151,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that takes a number in a given range and linearly interpolates it onto another range.
     /// </summary>
-    [OverrideLogic("Lerp", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Lerp", category: EvaluatableCategory.Maths)]
     public class NumberMap : IEvaluatable<double> {
 
         /// <summary>Creates a new numeric map with the default constant parameters.</summary>
@@ -214,9 +177,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable<double> ToMax { get; set; } = new NumberConstant(1);
 
         // The control to edit the map parameters
-        [JsonIgnore]
-        private Control_NumericMap control;
-        public Visual GetControl(Application application) => control ?? (control = new Control_NumericMap(this, application));
+        public Visual GetControl() => new Control_NumericMap(this);
 
         /// <summary>Evaluate the from range and to range and return the value in the new range.</summary>
         public double Evaluate(IGameState gameState) {
@@ -231,15 +192,6 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
-        /// <summary> Updates the applications on all sub evaluatables.</summary>
-        public void SetApplication(Application application) {
-            Value?.SetApplication(application);
-            FromMin?.SetApplication(application);
-            ToMin?.SetApplication(application);
-            FromMax?.SetApplication(application);
-            ToMax?.SetApplication(application);
-        }
-
         public IEvaluatable<double> Clone() => new NumberMap { Value = Value.Clone(), FromMin = FromMin.Clone(), ToMin = ToMin.Clone(), FromMax = FromMax.Clone(), ToMax = ToMax.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
@@ -249,7 +201,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that resolves to a numerical constant.
     /// </summary>
-    [OverrideLogic("Number Constant", category: OverrideLogicCategory.Maths)]
+    [Evaluatable("Number Constant", category: EvaluatableCategory.Maths)]
     public class NumberConstant : IEvaluatable<double> {
 
         /// <summary>Creates a new constant with the zero as the constant value.</summary>
@@ -261,22 +213,12 @@ namespace Aurora.Settings.Overrides.Logic {
         public double Value { get; set; }
 
         // The control allowing the user to edit the number value
-        [JsonIgnore]
-        private DoubleUpDown control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new DoubleUpDown { Margin = new System.Windows.Thickness(0, 0, 0, 6) };
-                control.SetBinding(DoubleUpDown.ValueProperty, new Binding("Value") { Source = this });
-            }
-            return control;
-        }
+        public Visual GetControl() => new DoubleUpDown { Margin = new System.Windows.Thickness(0, 0, 0, 6) }
+            .WithBinding(DoubleUpDown.ValueProperty, new Binding("Value") { Source = this });
 
         /// <summary>Simply returns the constant value specified by the user</summary>
         public double Evaluate(IGameState gameState) => Value;
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        /// <summary>Does nothing - this evaluatable is application-independant.</summary>
-        public void SetApplication(Application application) { }
 
         /// <summary>Creates a copy of this number constant</summary>
         public IEvaluatable<double> Clone() => new NumberConstant { Value = Value };

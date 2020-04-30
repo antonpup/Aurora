@@ -10,6 +10,9 @@ using Aurora.Profiles;
 using Aurora.Profiles.Generic_Application;
 using Newtonsoft.Json.Serialization;
 using Aurora.Utils;
+using System.Collections.ObjectModel;
+using System.Collections.Concurrent;
+using Aurora.Settings.Overrides.Logic;
 
 namespace Aurora.Settings
 {
@@ -339,6 +342,8 @@ namespace Aurora.Settings
         //Cooler Master range is 500-599
 
         //Roccat range is 600-699
+        [Description("Roccat - Kone Pure")]
+        Roccat_Kone_Pure = 600,
 
         //Steelseries range is 700-799
         [Description("SteelSeries - Rival 300")]
@@ -479,6 +484,9 @@ namespace Aurora.Settings
         public int idle_amount;
         public float idle_frequency;
 
+        //Hardware Monitor
+        public int HardwareMonitorUpdateRate;
+
         public VariableRegistry VarRegistry;
 
         //BitmapDebug Data
@@ -500,6 +508,9 @@ namespace Aurora.Settings
 
         private bool httpWindowOnStartUp;
         public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }
+
+        private ObservableConcurrentDictionary<string, IEvaluatable> evaluatableTemplates;
+        public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get => evaluatableTemplates; set { evaluatableTemplates = value; InvokePropertyChanged(); } }
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
@@ -564,6 +575,8 @@ namespace Aurora.Settings
             idle_amount = 5;
             idle_frequency = 2.5f;
 
+            HardwareMonitorUpdateRate = 200;
+
             //Debug
             bitmapDebugTopMost = false;
             httpDebugTopMost = false;
@@ -571,9 +584,21 @@ namespace Aurora.Settings
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
+
+            evaluatableTemplates = new ObservableConcurrentDictionary<string, IEvaluatable>();
         }
 
+        /// <summary>
+        /// Called after the configuration file has been deserialized or created for the first time.
+        /// </summary>
+        public void OnPostLoad() {
+            if (!unified_hid_disabled) {
+                devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
+                unified_hid_disabled = true;
+            }
 
+            evaluatableTemplates.CollectionChanged += (sender, e) => InvokePropertyChanged(nameof(EvaluatableTemplates));
+        }
     }
 
     public static class ExtensionHelpers
@@ -599,24 +624,19 @@ namespace Aurora.Settings
 
         public static Configuration Load()
         {
+            Configuration config;
             var configPath = ConfigPath + ConfigExtension;
 
             if (!File.Exists(configPath))
-                return CreateDefaultConfigurationFile();
-
-            string content = File.ReadAllText(configPath, Encoding.UTF8);
-
-            if (String.IsNullOrWhiteSpace(content))
-                return CreateDefaultConfigurationFile();
-
-            Configuration config = JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
-
-            if (!config.unified_hid_disabled)
-            {
-                config.devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
-                config.unified_hid_disabled = true;
+                config = CreateDefaultConfigurationFile();
+            else {
+                string content = File.ReadAllText(configPath, Encoding.UTF8);
+                config = string.IsNullOrWhiteSpace(content)
+                    ? CreateDefaultConfigurationFile()
+                    : JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
             }
 
+            config.OnPostLoad();
             return config;
         }
 
