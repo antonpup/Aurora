@@ -362,7 +362,11 @@ namespace Aurora.Settings
         [Description("OMEN Photon")]
         OMEN_Photon = 1001,
         [Description("OMEN Outpost + Photon")]
-        OMEN_Outpost_Plus_Photon = 1002
+        OMEN_Outpost_Plus_Photon = 1002,
+        [Description("OMEN Vector")]
+        OMEN_Vector = 1003,
+        [Description("OMEN Vector Essentials")]
+        OMEN_Vector_Essentials = 1004,
     }
 
     public enum KeycapType

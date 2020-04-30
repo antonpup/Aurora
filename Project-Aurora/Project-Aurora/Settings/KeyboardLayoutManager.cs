@@ -874,6 +874,12 @@ namespace Aurora.Settings
                     case PreferredMouse.OMEN_Outpost_Plus_Photon:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json");
                         break;
+                    case PreferredMouse.OMEN_Vector:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Vector_Essentials:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
+                        break;
                 }
 
                 if (!string.IsNullOrWhiteSpace(mouse_feature_path))
