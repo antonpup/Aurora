@@ -156,7 +156,7 @@ namespace Aurora.Settings.Layers
         // Base rectangle that defines the region that is used to render the audio output
         // Higher values mean a higher initial resolution, but may increase memory usage (looking at you, waveform).
         // KEEP X AND Y AT 0
-        private static readonly RectangleF sourceRect = new RectangleF(0, 0, 40, 40);
+        private static readonly RectangleF sourceRect = new RectangleF(0, 0, 80, 40);
 
         private SampleAggregator sampleAggregator = new SampleAggregator(fftLength);
         private Complex[] _ffts = { };
@@ -286,7 +286,7 @@ namespace Aurora.Settings.Layers
                             for (int x = 0; x < (int)sourceRect.Width; x++) {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
                                 Brush brush = GetBrush(fft_val, x, sourceRect.Width);
-                                var yOff = -Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, halfHeight), -halfHeight);
+                                var yOff = -Math.Max(Math.Min(fft_val / scaled_max_amplitude * 1000.0f, halfHeight), -halfHeight);
                                 g.DrawLine(new Pen(brush), x, halfHeight, x, halfHeight + yOff);
                             }
                             break;
@@ -492,7 +492,7 @@ namespace Aurora.Settings.Layers
             if (PerformFFT && FftCalculated != null)
             {
                 // Remember the window function! There are many others as well.
-                fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HammingWindow(fftPos, fftLength));
+                fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HannWindow(fftPos, fftLength));
                 fftBuffer[fftPos].Y = 0; // This is always zero with audio.
                 fftPos++;
                 if (fftPos >= fftLength)
