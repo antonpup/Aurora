@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -30,7 +31,7 @@ namespace Aurora.Settings.Overrides.Logic {
             // a new instance of the default IEvaluatable for each parameter. E.G. for a parameter specified as EvaluatableType.Boolean, a new true
             // constant will be put in the constructor parameters dictionary.
             ConstructorParameters = typeDynamicDefMap.ContainsKey(type)
-                ? typeDynamicDefMap[type].constructorParameters.ToDictionary(dcpd => dcpd.name, dcpd => EvaluatableTypeResolver.GetDefault(dcpd.type))
+                ? typeDynamicDefMap[type].constructorParameters.ToDictionary(dcpd => dcpd.name, dcpd => EvaluatableDefaults.Get(dcpd.type))
                 : null;
         }
 
@@ -72,9 +73,9 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Creates the control that is used to edit the IEvaluatables used as parameters for this DynamicValue logic
         /// </summary>
-        public Visual GetControl(Application application) => typeDynamicDefMap.ContainsKey(VarType)
+        public Visual GetControl() => typeDynamicDefMap.ContainsKey(VarType)
             // If this has a valid type (i.e. supported by the dynamic constructor), then create the control and pass in `this` and `application` for context
-            ? new Control_OverrideDynamicValue(this, application)
+            ? new Control_OverrideDynamicValue(this)
             // If it is an invalid type, then simply show a red warning message
             : (Visual)new Label { Content = "This property type is not supported with the dynamic value editor. Sorry :(", Foreground = Brushes.Red, Margin = new System.Windows.Thickness(6) };
         #endregion
@@ -85,38 +86,38 @@ namespace Aurora.Settings.Overrides.Logic {
         /// that are required for the constructor (including what type they are) and also a constructor function which is passed these RESOLVED
         /// parameters each frame.
         /// </summary>
-        internal static readonly Dictionary<Type, DCD> typeDynamicDefMap = new Dictionary<Type, DCD> {
+        internal static readonly ConcurrentDictionary<Type, DCD> typeDynamicDefMap = new ConcurrentDictionary<Type, DCD>(new Dictionary<Type, DCD> {
             // Boolean
-            { typeof(bool), new DCD(p => p["Value"], new[]{ new DCPD("Value", EvaluatableType.Boolean) }) },
+            { typeof(bool), new DCD(p => p["Value"], new[]{ new DCPD("Value", typeof(bool)) }) },
 
             // Numeric
-            { typeof(int), new DCD(p => Convert.ToInt32(p["Value"]), new[]{ new DCPD("Value", EvaluatableType.Number) }) },
-            { typeof(long), new DCD(p => Convert.ToInt64(p["Value"]), new[]{ new DCPD("Value", EvaluatableType.Number) }) },
-            { typeof(float), new DCD(p => Convert.ToSingle(p["Value"]), new[]{ new DCPD("Value", EvaluatableType.Number) }) },
-            { typeof(double), new DCD(p => p["Value"], new[]{ new DCPD("Value", EvaluatableType.Number) }) },
+            { typeof(int), new DCD(p => Convert.ToInt32(p["Value"]), new[]{ new DCPD("Value", typeof(double)) }) },
+            { typeof(long), new DCD(p => Convert.ToInt64(p["Value"]), new[]{ new DCPD("Value", typeof(double)) }) },
+            { typeof(float), new DCD(p => Convert.ToSingle(p["Value"]), new[]{ new DCPD("Value", typeof(double)) }) },
+            { typeof(double), new DCD(p => p["Value"], new[]{ new DCPD("Value", typeof(double)) }) },
 
             // Special
             { typeof(System.Drawing.Color), new DCD(
                 p => System.Drawing.Color.FromArgb(ToColorComp(p["Alpha"]), ToColorComp(p["Red"]), ToColorComp(p["Green"]), ToColorComp(p["Blue"])),
                 new[] {
-                    new DCPD("Alpha", EvaluatableType.Number, "A value between 0 (transparent) and 1 (opaque) for the transparency of the color."),
-                    new DCPD("Red", EvaluatableType.Number, "A value between 0 and 1 for the amount of red in the color."),
-                    new DCPD("Green", EvaluatableType.Number, "A value between 0 and 1 for the amount of green in the color."),
-                    new DCPD("Blue", EvaluatableType.Number, "A value between 0 and 1 for the amount of blue in the color.")
+                    new DCPD("Alpha", typeof(double), "A value between 0 (transparent) and 1 (opaque) for the transparency of the color."),
+                    new DCPD("Red", typeof(double), "A value between 0 and 1 for the amount of red in the color."),
+                    new DCPD("Green", typeof(double), "A value between 0 and 1 for the amount of green in the color."),
+                    new DCPD("Blue", typeof(double), "A value between 0 and 1 for the amount of blue in the color.")
                 }
             ) },
 
             { typeof(KeySequence), new DCD(
                 p => new KeySequence(new FreeFormObject(Convert.ToSingle(p["X"]), Convert.ToSingle(p["Y"]), Convert.ToSingle(p["Width"]), Convert.ToSingle(p["Height"]), Convert.ToSingle(p["Angle"]))),
                 new[] {
-                    new DCPD("X", EvaluatableType.Number),
-                    new DCPD("Y", EvaluatableType.Number),
-                    new DCPD("Width", EvaluatableType.Number),
-                    new DCPD("Height", EvaluatableType.Number),
-                    new DCPD("Angle", EvaluatableType.Number)
+                    new DCPD("X", typeof(double)),
+                    new DCPD("Y", typeof(double)),
+                    new DCPD("Width", typeof(double)),
+                    new DCPD("Height", typeof(double)),
+                    new DCPD("Angle", typeof(double))
                 }
             ) }
-        };
+        });
 
         #region Dynamic Constructor Helper Methods
         /// <summary>Converts a double object (from 0-1) into a color component (int between 0 and 255).</summary>
@@ -143,11 +144,11 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Parameter name.</summary>
         public string name;
         /// <summary>The type of variable this parameter is.</summary>
-        public EvaluatableType type;
+        public Type type;
         /// <summary>A simple description of the parameter for the user.</summary>
         public string description;
 
-        public DynamicConstructorParamDefinition(string name, EvaluatableType type, string description=null) {
+        public DynamicConstructorParamDefinition(string name, Type type, string description=null) {
             this.name = name;
             this.type = type;
             this.description = description;

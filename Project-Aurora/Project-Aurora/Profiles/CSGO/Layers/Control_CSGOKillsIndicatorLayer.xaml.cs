@@ -22,7 +22,6 @@ namespace Aurora.Profiles.CSGO.Layers
     public partial class Control_CSGOKillIndicatorLayer : UserControl
     {
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_CSGOKillIndicatorLayer()
         {
@@ -50,12 +49,6 @@ namespace Aurora.Profiles.CSGO.Layers
 
         internal void SetProfile(Application profile)
         {
-            if (profile != null && !profileset)
-            {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-
-                profileset = true;
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

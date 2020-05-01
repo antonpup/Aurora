@@ -77,17 +77,23 @@ namespace Aurora.Utils
         public override bool CanConvert(Type objectType) => true;
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-            // TODO: add some sort of error handling, e.g. in case of the targetType being inaccessible?
+            // If this is a null token, then the original value was null.
+            if (reader.TokenType == JsonToken.Null) return null;
 
-            reader.Read(); // Read "$type" property name
-            reader.Read(); // Read "$type" value
-            var typeName = reader.Value?.ToString(); // Find the type based on the fully-qualified name from the $type. This will be null if the original value was null
-            reader.Read(); // Read "$value" property name
-            reader.Read(); // Read "$value" value
-            var value = typeName == null ? null : JsonConvert.DeserializeObject(reader.Value.ToString(), Type.GetType(typeName)); // The $value is a JSON-encoded string, so decode as the requested type
-            reader.Read(); // Read end of object (if this is not done, it breaks the next converter)
+            // Read "$type" property
+            reader.Read(); // Property name
+            reader.Read(); // Property value
+            var typeName = reader.Value.ToString(); // Find the type based on the fully-qualified name from the $type. This will be null if the original value was null
 
-            return value;
+            // Read "$value" property
+            reader.Read(); // Property name
+            reader.Read(); // Property value
+            var value = reader.Value.ToString();
+
+            // Read end of object '}' (if this is not done, it breaks the next converter)
+            reader.Read();
+
+            return JsonConvert.DeserializeObject(value.ToString(), Type.GetType(typeName)); // The $value is a JSON-encoded string, so decode as the requested type;
         }
         
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {

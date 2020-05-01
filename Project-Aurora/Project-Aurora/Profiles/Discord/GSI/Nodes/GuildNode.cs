@@ -5,15 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Discord.GSI.Nodes {
-    public class GuildNode : Node<GuildNode> {
+    public class GuildNode : AutoJsonNode<GuildNode> {
+        public long Id;
+        public string Name;
 
-        public long Id = 0;
-        public string Name = String.Empty;
-
-        internal GuildNode() : base() { }
-        internal GuildNode(string json) : base(json) {
-            Id = GetLong("id");
-            Name = GetString("name");
-        }
+        internal GuildNode(string json) : base(json) { }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
+using Aurora.Utils;
+using MiscUtil.Collections.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -52,7 +54,8 @@ namespace Aurora.Settings.Overrides {
                     .Where(prop => !ignoredProperties.Contains(prop.Name)) // Only select things that are NOT on the ignored properties list
                     .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
                         prop.Name, // The actual C# property name
-                        ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
+                        ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name // Get the name specified in the attribute (so it is prettier for the user),
+                            ?? prop.Name.TrimStart('_').CamelCaseToSpaceCase(), //  but if one wasn't provided, pretty-print the code name
                         Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
                     ))
                     .OrderBy(tup => tup.Item2)
@@ -79,7 +82,7 @@ namespace Aurora.Settings.Overrides {
             get => _selectedProperty;
             set {
                 _selectedProperty = value;
-                OnPropertyChanged("SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
+                OnPropertyChanged(nameof(SelectedProperty), nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl));
             }
         }
 
@@ -101,13 +104,16 @@ namespace Aurora.Settings.Overrides {
                         ((IValueOverridable)Layer.Handler.Properties).Overrides.SetValueFromString(_selectedProperty.Item1, null);
                     }  else // Else if the user selected a non-"None" option, create a new instance of that OverrideLogic and assign it to this property
                         Layer.OverrideLogic[_selectedProperty.Item1] = (IOverrideLogic)Activator.CreateInstance(value, _selectedProperty.Item3);
-                    OnPropertyChanged("SelectedLogic", "SelectedLogicType", "SelectedLogicControl"); // Raise an event to update the control
+                    OnPropertyChanged(nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl)); // Raise an event to update the control
                 }
             }
         }
 
         // The control for the currently selected logic
-        public System.Windows.Media.Visual SelectedLogicControl => SelectedLogic?.GetControl(Layer?.AssociatedApplication);
+        public System.Windows.Media.Visual SelectedLogicControl => SelectedLogic?.GetControl();
+
+        // Application context for logic
+        public Profiles.Application Application => Layer?.AssociatedApplication;
         #endregion
 
         #region Dependency Objects
@@ -117,7 +123,7 @@ namespace Aurora.Settings.Overrides {
             // Ensure the layer has the property-override map
             if (layer.OverrideLogic == null)
                 layer.OverrideLogic = new Dictionary<string, IOverrideLogic>();
-            control.OnPropertyChanged("Layer", "AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
+            control.OnPropertyChanged(nameof(Layer), nameof(AvailableLayerProperties), nameof(SelectedProperty), nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl), nameof(Application));
         }
 
         public static readonly DependencyProperty LayerProperty = DependencyProperty.Register("Layer", typeof(Layer), typeof(Control_OverridesEditor), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnLayerChange));
@@ -132,7 +138,7 @@ namespace Aurora.Settings.Overrides {
 
         private void HelpButton_Click(object sender, RoutedEventArgs e) {
             // Open the overrides page on the documentation page
-            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/docs/advanced-topics/overrides-system.html"));
+            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/advanced-topics/overrides-system/"));
         }
         #endregion
     }
@@ -158,6 +164,7 @@ namespace Aurora.Settings.Overrides {
                 { typeof(long), "icons8-numbers-30.png" },
                 { typeof(float), "icons8-numbers-30.png" },
                 { typeof(double), "icons8-numbers-30.png" },
+                { typeof(string), "icons8-font-size-30.png" },
                 { typeof(Color), "icons8-paint-palette-30.png" },
                 { typeof(KeySequence), "icons8-keyboard-30.png" }
             }.TryGetValue((Type)value, out string val) ? val : "icons8-diamonds-30.png";

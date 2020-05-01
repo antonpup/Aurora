@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Profiles;
+using Aurora.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Overrides.Logic {
@@ -12,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that checks a set of subconditions for atleast one of them being true.
     /// </summary>
-    [OverrideLogic("Or", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("Or", category: EvaluatableCategory.Logic)]
     public class BooleanOr : IEvaluatable<bool>, IHasSubConditons {
 
         /// <summary>Creates a new Or evaluatable with no subconditions.</summary>
@@ -25,19 +28,10 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public ObservableCollection<IEvaluatable<bool>> SubConditions { get; set; } = new ObservableCollection<IEvaluatable<bool>>();
 
-        [JsonIgnore]
-        private Control_SubconditionHolder control;
-        public Visual GetControl(Application app) => control ?? (control = new Control_SubconditionHolder(this, app, "Require atleast one of the following is true..."));
+        public Visual GetControl() => new Control_SubconditionHolder(this, "Or");
 
         public bool Evaluate(IGameState gameState) => SubConditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            if (control != null)
-                control.Application = application;
-            foreach (var subcondition in SubConditions)
-                subcondition.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanOr { SubConditions = new ObservableCollection<IEvaluatable<bool>>(SubConditions.Select(e => e.Clone())) };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -47,7 +41,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that checks a set of subconditions and requires them all to be true.
     /// </summary>
-    [OverrideLogic("And", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("And", category: EvaluatableCategory.Logic)]
     public class BooleanAnd : IEvaluatable<bool>, IHasSubConditons {
 
         /// <summary>Creates a new And evaluatable with no subconditions.</summary>
@@ -60,19 +54,10 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public ObservableCollection<IEvaluatable<bool>> SubConditions { get; set; } = new ObservableCollection<IEvaluatable<bool>>();
 
-        [JsonIgnore]
-        private Control_SubconditionHolder control;
-        public Visual GetControl(Application app) => control ?? (control = new Control_SubconditionHolder(this, app, "Require all of the following are true..."));
+        public Visual GetControl() => new Control_SubconditionHolder(this, "And");
 
         public bool Evaluate(IGameState gameState) => SubConditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            if (control != null)
-                control.Application = application;
-            foreach (var subcondition in SubConditions)
-                subcondition.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanAnd { SubConditions = new ObservableCollection<IEvaluatable<bool>>(SubConditions.Select(e => { var x = e.Clone(); return x; })) };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -83,7 +68,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that inverts another condition.
     /// </summary>
-    [OverrideLogic("Not", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("Not", category: EvaluatableCategory.Logic)]
     public class BooleanNot : IEvaluatable<bool> {
 
         /// <summary>Creates a new NOT evaluatable with the default BooleanTrue subcondition.</summary>
@@ -96,16 +81,13 @@ namespace Aurora.Settings.Overrides.Logic {
         [JsonProperty]
         public IEvaluatable<bool> SubCondition { get; set; } = new BooleanConstant();
 
-        private Control_ConditionNot control;
-        public Visual GetControl(Application app) => control ?? (control = new Control_ConditionNot(this, app));
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new TextBlock { Text = "Not", FontWeight = FontWeights.Bold, Margin = new Thickness(2, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center })
+            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(SubCondition)) { Source = this, Mode = BindingMode.TwoWay }));
 
         public bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-           // control.app
-            SubCondition?.SetApplication(application);
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanNot { SubCondition = SubCondition.Clone() };
         IEvaluatable IEvaluatable.Clone() => Clone();
@@ -116,7 +98,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that always returns true. Useful as a default condition as it means that
     /// the layer will always be visible.
     /// </summary>
-    [OverrideLogic("Boolean Constant", category: OverrideLogicCategory.Logic)]
+    [Evaluatable("Boolean Constant", category: EvaluatableCategory.Logic)]
     public class BooleanConstant : IEvaluatable<bool> {
 
         /// <summary>Creates a new constant true boolean.</summary>
@@ -128,22 +110,12 @@ namespace Aurora.Settings.Overrides.Logic {
         public bool State { get; set; }
 
         // Create a checkbox to use to set the constant value
-        [JsonIgnore]
-        private CheckBox control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new CheckBox { Content = "True/False" };
-                control.SetBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public Visual GetControl() => new CheckBox { Content = "True/False" }
+            .WithBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
 
         // Simply return the current state
         public bool Evaluate(IGameState _) => State;
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        // Application-independent evaluatable, do nothing.
-        public void SetApplication(Application application) { }
 
         // Creates a new BooleanConstant
         public IEvaluatable<bool> Clone() => new BooleanConstant { State = State };
