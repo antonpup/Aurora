@@ -40,10 +40,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
         private Random rnd = new Random();
         private int frame = 0;
 
-        public MinecraftRainLayerHandler() : base() {
-            _ID = "MinecraftRainLayer";
-        }
-
         protected override UserControl CreateControl() {
             return new Control_MinecraftRainLayer(this);
         }

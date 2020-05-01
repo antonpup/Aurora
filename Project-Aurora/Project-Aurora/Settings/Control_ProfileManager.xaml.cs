@@ -254,7 +254,7 @@ namespace Aurora.Settings
             // Check all the layers types to ensure that they can be added to this application (to prevent
             // crashes when copying a layer from an application that has a special layer unique to that app)
             for (int i = 0; i < src.Layers.Count; i++)
-                if (Global.LightingStateManager.DefaultLayerHandlers.Contains(src.Layers[i].Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(src.Layers[i].Handler.ID))
+                if (FocusedApplication.IsAllowedLayer(src.Layers[i].Handler.GetType()))
                     @new.Layers.Add((Layer)src.Layers[i].Clone());
             
             FocusedApplication.SaveProfiles();

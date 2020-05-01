@@ -172,10 +172,14 @@ namespace Aurora.Settings {
         private void PasteButton_Click(object sender, RoutedEventArgs e) {
             // Check if clipboard is layer and also that either: The layer on the clipboard is available to ALL applications OR the layer is available to the current application type.
             // This check is to avoid being able to copy application specific layers to other applications, e.g. prevent copying Minecraft health layer to CSGO.
-            if (Global.Clipboard is Layer clipboardLayer && (Global.LightingStateManager.DefaultLayerHandlers.Contains(clipboardLayer.Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(clipboardLayer.Handler.ID))) {
-                var newLayer = (Layer)clipboardLayer.Clone();
-                newLayer.Name += " - Copy";
-                AddLayer(newLayer);
+            if (Global.Clipboard is Layer clipboardLayer) {
+                if (FocusedApplication.IsAllowedLayer(clipboardLayer.Handler.GetType())) {
+                    var newLayer = (Layer)clipboardLayer.Clone();
+                    newLayer.Name += " - Copy";
+                    AddLayer(newLayer);
+                } else {
+                    MessageBox.Show("Cannot use this type of layer on this profile.");
+                }
             }
         }
 

@@ -78,9 +78,7 @@ namespace Aurora.Profiles
 
         private Dictionary<string, string> EventAppIDs { get; set; } = new Dictionary<string, string>();
 
-        public Dictionary<string, LayerHandlerEntry> LayerHandlers { get; private set; } = new Dictionary<string, LayerHandlerEntry>();
-
-        public List<string> DefaultLayerHandlers { get; private set; } = new List<string>();
+        public Dictionary<Type, LayerHandlerMeta> LayerHandlers { get; private set; } = new Dictionary<Type, LayerHandlerMeta>();
 
         public string AdditionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
 
@@ -113,20 +111,14 @@ namespace Aurora.Profiles
             // Register all layer types that are in the Aurora.Settings.Layers namespace.
             // Do not register all that are inside the assembly since some are application-specific (e.g. minecraft health layer)
             var layerTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+                             where type.GetInterfaces().Contains(typeof(ILayerHandler))
+                             let name = type.Name.CamelCaseToSpaceCase()
                              let meta = type.GetCustomAttribute<LayerHandlerMetaAttribute>()
                              where !type.IsGenericType
-                             where type.GetInterfaces().Contains(typeof(ILayerHandler))
-                             where type.Namespace == "Aurora.Settings.Layers"
                              where meta == null || !meta.Exclude
                              select (type, meta);
-            foreach (var (type, meta) in layerTypes) {
-                var layer = (ILayerHandler)Activator.CreateInstance(type);
-                var id = layer.ID;
-                (layer as IDisposable)?.Dispose(); // Since this layer is only so we can get the ID, make sure we dispose of it properly
-                var fallbackName = type.Name.CamelCaseToSpaceCase();
-                if (fallbackName.EndsWith(" Layer Handler")) fallbackName = fallbackName.Substring(0, fallbackName.Length - 14);
-                RegisterLayerHandler(id, meta?.Name ?? fallbackName, type, meta?.IsDefault ?? true);
-            }
+            foreach (var (type, meta) in layerTypes)
+                LayerHandlers.Add(type, new LayerHandlerMeta(type, meta));
 
             LoadSettings();
 
@@ -397,51 +389,16 @@ namespace Aurora.Profiles
             return null;
         }
 
-        public void RegisterLayerHandlers(List<LayerHandlerEntry> layers, bool @default = true)
+        /// <summary>
+        /// Manually registers a layer. Only needed externally.
+        /// </summary>
+        public bool RegisterLayer<T>() where T : ILayerHandler
         {
-            foreach(var layer in layers)
-            {
-                RegisterLayerHandler(layer, @default);
-            }
-        }
-
-        public bool RegisterLayerHandler(LayerHandlerEntry entry, bool @default = true)
-        {
-            if (LayerHandlers.ContainsKey(entry.Key) || DefaultLayerHandlers.Contains(entry.Key))
-                return false;
-
-            LayerHandlers.Add(entry.Key, entry);
-
-            if (@default)
-                DefaultLayerHandlers.Add(entry.Key);
-
+            var t = typeof(T);
+            if (LayerHandlers.ContainsKey(t)) return false;
+            var meta = t.GetCustomAttribute<LayerHandlerMetaAttribute>() as LayerHandlerMetaAttribute;
+            LayerHandlers.Add(t, new LayerHandlerMeta(t, meta));
             return true;
-        }
-
-        public bool RegisterLayerHandler(string key, string title, Type type, bool @default = true)
-        {
-            return RegisterLayerHandler(new LayerHandlerEntry(key, title, type), @default);
-        }
-
-        public Type GetLayerHandlerType(string key)
-        {
-            return LayerHandlers.ContainsKey(key) ? LayerHandlers[key].Type : null;
-        }
-
-        public ILayerHandler GetLayerHandlerInstance(LayerHandlerEntry entry)
-        {
-            return (ILayerHandler)Activator.CreateInstance(entry.Type);
-        }
-
-        public ILayerHandler GetLayerHandlerInstance(string key)
-        {
-            if (LayerHandlers.ContainsKey(key))
-            {
-                return GetLayerHandlerInstance(LayerHandlers[key]);
-            }
-
-
-            return null;
         }
 
         private Timer updateTimer;
@@ -801,6 +758,24 @@ namespace Aurora.Profiles
 
 
     /// <summary>
+    /// POCO that stores data about a type of layer.
+    /// </summary>
+    public class LayerHandlerMeta {
+
+        /// <summary>Creates a new LayerHandlerMeta object from the given meta attribute and type.</summary>
+        public LayerHandlerMeta(Type type, LayerHandlerMetaAttribute attribute) {
+            Name = attribute?.Name ?? type.Name.CamelCaseToSpaceCase().TrimEndStr(" Layer Handler");
+            Type = type;
+            IsDefault = attribute?.IsDefault ?? type.Namespace == "Aurora.Settings.Layers"; // if the layer is in the Aurora.Settings.Layers namespace, make the IsDefault true unless otherwise specified. If it is in another namespace, it's probably a custom application layer and so make IsDefault false unless otherwise specified
+        }
+
+        public string Name { get; }
+        public Type Type { get; }
+        public bool IsDefault { get; }
+    }
+
+
+    /// <summary>
     /// Attribute to provide additional meta data about layers for them to be registered.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
@@ -812,6 +787,6 @@ namespace Aurora.Profiles
         public bool Exclude { get; set; } = false;
 
         /// <summary>If true, this layer will be registered as a 'default' layer for all applications. Default true.</summary>
-        public bool IsDefault { get; set; } = true;
+        public bool IsDefault { get; set; } = false;
     }
 }

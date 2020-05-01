@@ -75,11 +75,6 @@ namespace Aurora.Profiles.GTA5.Layers
         private Color right_siren_color = Color.Empty;
         private int siren_keyframe = 0;
 
-        public GTA5PoliceSirenLayerHandler() : base()
-        {
-            _ID = "GTA5PoliceSiren";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_GTA5PoliceSirenLayer(this);

@@ -190,8 +190,6 @@ namespace Aurora.Settings.Layers
 
         public AmbilightLayerHandler()
         {
-            _ID = "Ambilight";
-
             if (captureTimer == null)
             {
                 this.Initialize();

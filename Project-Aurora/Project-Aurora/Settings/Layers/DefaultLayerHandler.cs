@@ -16,11 +16,6 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_Sequence")]
     public class DefaultLayerHandler : LayerHandler<LayerHandlerProperties>
     {
-        public DefaultLayerHandler()
-        {
-            _ID = "Default";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_DefaultLayer();

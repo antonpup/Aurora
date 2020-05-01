@@ -71,11 +71,6 @@ namespace Aurora.Settings.Layers
 
         internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
 
-        public WrapperLightsLayerHandler()
-        {
-            this._ID = "WrapperLights";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_WrapperLightsLayer(this);

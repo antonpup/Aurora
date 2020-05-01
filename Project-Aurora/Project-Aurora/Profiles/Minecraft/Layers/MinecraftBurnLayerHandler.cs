@@ -18,10 +18,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
         private List<FireParticle> particles = new List<FireParticle>();
         private Random rnd = new Random();
 
-        public MinecraftBurnLayerHandler() {
-            _ID = "MinecraftBurningLayer";
-        }
-
         protected override UserControl CreateControl() {
             return new Control_MinecraftBurnLayer();
         }
