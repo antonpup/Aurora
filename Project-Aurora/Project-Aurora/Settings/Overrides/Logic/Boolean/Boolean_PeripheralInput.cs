@@ -27,14 +27,37 @@ namespace Aurora.Settings.Overrides.Logic {
         public Keys TargetKey { get; set; } = Keys.Space;
 
         /// <summary>Create a control where the user can select the key they wish to detect.</summary>
-        public Visual GetControl() => new Controls.Control_FieldPresenter { Type = typeof(Keys) }
-            .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay });
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new Label { Content = "Key held" })
+            .WithChild(new Controls.Control_FieldPresenter { Type = typeof(Keys) }
+                .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay }));
 
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
         public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Contains(TargetKey);
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         public IEvaluatable<bool> Clone() => new BooleanKeyDown { TargetKey = TargetKey };
+        IEvaluatable IEvaluatable.Clone() => Clone();
+    }
+
+
+    /// <summary>
+    /// Condition that is true when any keyboard button is held down
+    /// </summary>
+    [Evaluatable("Any Key Held", category: EvaluatableCategory.Input)]
+    public class BooleanAnyKeyDown : IEvaluatable<bool>
+    {
+        /// <summary>Creates a new any key held condition.</summary>
+        public BooleanAnyKeyDown() { }
+
+        /// <summary>Create a control with no options indicating what the evaluatable does.</summary>
+        public Visual GetControl() => new Label() { Content = "Any Key Held" };
+
+        /// <summary>True if the global event bus's pressed key list contains any key.</summary>
+        public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Any();
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        public IEvaluatable<bool> Clone() => new BooleanAnyKeyDown();
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
@@ -58,8 +81,10 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Create a control where the user can select the key they wish to detect.</summary>
         public Visual GetControl() => new StackPanel()
-            .WithChild(new Controls.Control_FieldPresenter { Type = typeof(Keys), Margin = new System.Windows.Thickness(0, 0, 0, 6) }
-                .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay }))
+            .WithChild(new StackPanel { Orientation = Orientation.Horizontal }
+                .WithChild(new TextBlock { Text = "Key held" })
+                .WithChild(new Controls.Control_FieldPresenter { Type = typeof(Keys), Margin = new System.Windows.Thickness(0, 0, 0, 6) }
+                    .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay })))
             .WithChild(new StackPanel { Orientation = Orientation.Horizontal }
                 .WithChild(new TextBlock { Text = "For" })
                 .WithChild(new Controls.Control_FieldPresenter { Type = typeof(float), Margin = new System.Windows.Thickness(5, 0, 5, 6) }
@@ -102,10 +127,13 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>The mouse button to be checked to see if it is held down.</summary>
         public System.Windows.Forms.MouseButtons TargetButton { get; set; } = System.Windows.Forms.MouseButtons.Left;
-        
+
         /// <summary>Create a control where the user can select the mouse button they wish to detect.</summary>
-        public Visual GetControl() => new Controls.Control_FieldPresenter { Type = typeof(System.Windows.Forms.MouseButtons), Margin = new System.Windows.Thickness(0, 0, 0, 6) }
-            .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetButton") { Source = this, Mode = BindingMode.TwoWay });
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new Label { Content = "When" })
+            .WithChild(new Controls.Control_FieldPresenter { Type = typeof(System.Windows.Forms.MouseButtons), Margin = new System.Windows.Thickness(0, 0, 0, 6) }
+                .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetButton") { Source = this, Mode = BindingMode.TwoWay }))
+            .WithChild(new Label { Content = "mouse button down" });
 
         /// <summary>True if the global event bus's pressed mouse button list contains the target button.</summary>
         public bool Evaluate(IGameState gameState) => Global.InputEvents.PressedButtons.Contains(TargetButton);
@@ -130,8 +158,10 @@ namespace Aurora.Settings.Overrides.Logic {
         public Keys TargetKey { get; set; } = Keys.CapsLock;
 
         /// <summary>Create a control allowing the user to specify which lock key to check.</summary>
-        public Visual GetControl() => new ComboBox { ItemsSource = new[] { Keys.CapsLock, Keys.NumLock, Keys.Scroll } }
-            .WithBinding(ComboBox.SelectedValueProperty, new Binding("TargetKey") { Source = this, Mode=BindingMode.TwoWay });
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new ComboBox { ItemsSource = new[] { Keys.CapsLock, Keys.NumLock, Keys.Scroll } }
+                .WithBinding(ComboBox.SelectedValueProperty, new Binding("TargetKey") { Source = this, Mode=BindingMode.TwoWay }))
+            .WithChild(new Label { Content = "is locked" });
 
         /// <summary>Return true if the target lock key is active.</summary>
         public bool Evaluate(IGameState gameState) => System.Windows.Forms.Control.IsKeyLocked(TargetKey);
@@ -168,10 +198,11 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         #endregion
 
-        private Control_TimeAndUnit control;
-        public Visual GetControl() => control ?? (control = new Control_TimeAndUnit()
-            .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("InactiveTime") { Source = this, Mode = BindingMode.TwoWay })
-            .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay }));
+        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+            .WithChild(new Label { Content = "Away for" })
+            .WithChild(new Control_TimeAndUnit()
+                .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("InactiveTime") { Source = this, Mode = BindingMode.TwoWay })
+                .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay }));
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
         public bool Evaluate(IGameState gameState) {

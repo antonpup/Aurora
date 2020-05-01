@@ -1,5 +1,7 @@
 ﻿using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
+using Aurora.Utils;
+using MiscUtil.Collections.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -52,7 +54,8 @@ namespace Aurora.Settings.Overrides {
                     .Where(prop => !ignoredProperties.Contains(prop.Name)) // Only select things that are NOT on the ignored properties list
                     .Select(prop => new Tuple<string, string, Type>( // Return the name and type of these properties.
                         prop.Name, // The actual C# property name
-                        ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name, // Get the name specified in the attribute (so it is prettier for the user)
+                        ((LogicOverridableAttribute)prop.GetCustomAttributes(typeof(LogicOverridableAttribute), true)[0]).Name // Get the name specified in the attribute (so it is prettier for the user),
+                            ?? prop.Name.TrimStart('_').CamelCaseToSpaceCase(), //  but if one wasn't provided, pretty-print the code name
                         Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType // If the property is a nullable type (e.g. bool?), will instead return the non-nullable type (bool)
                     ))
                     .OrderBy(tup => tup.Item2)
@@ -135,7 +138,7 @@ namespace Aurora.Settings.Overrides {
 
         private void HelpButton_Click(object sender, RoutedEventArgs e) {
             // Open the overrides page on the documentation page
-            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/docs/advanced-topics/overrides-system.html"));
+            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/advanced-topics/overrides-system/"));
         }
         #endregion
     }

@@ -12,7 +12,7 @@
         </StackPanel>
         <StackPanel Orientation="Horizontal">
             <Label FontWeight="Bold">for</Label>
-            <xctk:DoubleUpDown MinWidth="38" Value="{Binding Path=Delay, Mode=TwoWay}" />
+            <xctk:DoubleUpDown MinWidth="38" Value="{Binding Path=Delay, Mode=TwoWay}" Minimum="0" />
             <Label>secs</Label>
         </StackPanel>
     </StackPanel>

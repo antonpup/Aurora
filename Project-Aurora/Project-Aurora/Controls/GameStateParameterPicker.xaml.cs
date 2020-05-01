@@ -118,7 +118,7 @@ namespace Aurora.Controls {
             }
 
             // Raise an event informing subscribers
-            picker.SelectedPathChanged?.Invoke(picker, new SelectedPathChangedEventArgs(e.OldValue.ToString(), e.NewValue.ToString()));
+            picker.SelectedPathChanged?.Invoke(picker, new SelectedPathChangedEventArgs(e.OldValue?.ToString() ?? "", e.NewValue?.ToString() ?? ""));
         }
         #endregion
 

@@ -19,7 +19,7 @@
         <xctk:IntegerUpDown Value="{Binding Properties._AnimationSpeed}" Grid.Column="1" Grid.Row="1" Margin="0,4" />
 
         <Label Content="Segment count:" Grid.Row="2" />
-        <xctk:IntegerUpDown Value="{Binding Properties._Brush.SegmentCount}" Minimum="1" Grid.Column="1" Grid.Row="2" Margin="0,4" />
+        <xctk:IntegerUpDown Value="{Binding Properties._Brush.SegmentCount}" Minimum="1" Maximum="90" Grid.Column="1" Grid.Row="2" Margin="0,4" />
 
         <Label Content="Affected keys:" Grid.Row="3" VerticalAlignment="Top" />
         <controls:KeySequence Sequence="{Binding Properties._Sequence, Mode=TwoWay}" RecordingTag="RadialLayer" Title="Affected Keys" Grid.Row="3" Grid.Column="1" Margin="0,4" />
