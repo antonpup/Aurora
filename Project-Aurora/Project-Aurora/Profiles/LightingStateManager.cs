@@ -24,27 +24,6 @@ using System.Globalization;
 
 namespace Aurora.Profiles
 {
-    public class LayerHandlerEntry
-    {
-        public Type Type { get; set; }
-
-        public string Title { get; set; }
-
-        public string Key { get; set; }
-
-        public LayerHandlerEntry(string key, string title, Type type)
-        {
-            this.Type = type;
-            this.Title = title;
-            this.Key = key;
-        }
-
-        public override string ToString()
-        {
-            return Title;
-        }
-    }    
-
     public class ProfilesManagerSettings
     {
         public ProfilesManagerSettings()
@@ -105,8 +84,13 @@ namespace Aurora.Profiles
             runningProcessMonitor = new RunningProcessMonitor();
 
             // Register all Application types in the assembly
-            foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(type => type.BaseType == typeof(Profiles.Application) && type != typeof(GenericApplication)))
-                RegisterEvent((Profiles.Application)Activator.CreateInstance(type));
+            var profileTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+                               where type.BaseType == typeof(Application) && type != typeof(GenericApplication)
+                               let inst = (Application)Activator.CreateInstance(type)
+                               orderby inst.Config.Name
+                               select inst;
+            foreach (var inst in profileTypes)
+                RegisterEvent(inst);
 
             // Register all layer types that are in the Aurora.Settings.Layers namespace.
             // Do not register all that are inside the assembly since some are application-specific (e.g. minecraft health layer)
