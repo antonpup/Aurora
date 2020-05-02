@@ -9,7 +9,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that accesses a specific game state variable (of boolean type) and returns the state.
     /// </summary>
-    [OverrideLogic("Boolean State Variable", category: OverrideLogicCategory.State)]
+    [Evaluatable("Boolean State Variable", category: EvaluatableCategory.State)]
     public class BooleanGSIBoolean : IEvaluatable<bool> {
 
         /// <summary>Creates an empty boolean state variable lookup.</summary>
@@ -24,11 +24,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// so that the application be updated if required.</summary>
         [Newtonsoft.Json.JsonIgnore]
         private Control_ConditionGSIBoolean control;
-        public Visual GetControl(Application application) {
-            if (control == null)
-                control = new Control_ConditionGSIBoolean(this, application);
-            return control;
-        }
+        public Visual GetControl() => control ?? (control = new Control_ConditionGSIBoolean(this));
 
         /// <summary>Fetches the given boolean value from the game state and returns it.</summary>
         public bool Evaluate(IGameState gameState) {
@@ -42,15 +38,6 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
-        /// <summary>Update the assigned control with the new application.</summary>
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-
-            // Check to ensure the variable path is valid
-            if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
-                VariablePath = string.Empty;
-        }
-
         public IEvaluatable<bool> Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
@@ -60,7 +47,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that accesses some specified game state variables (of numeric type) and returns a comparison between them.
     /// </summary>
-    [OverrideLogic("Numeric State Variable", category: OverrideLogicCategory.State)]
+    [Evaluatable("Numeric State Variable", category: EvaluatableCategory.State)]
     public class BooleanGSINumeric : IEvaluatable<bool> {
 
         /// <summary>Creates a blank numeric game state lookup evaluatable.</summary>
@@ -82,11 +69,7 @@ namespace Aurora.Settings.Overrides.Logic {
         // Control assigned to this condition
         [Newtonsoft.Json.JsonIgnore]
         private Control_ConditionGSINumeric control;
-        public Visual GetControl(Application application) {
-            if (control == null)
-                control = new Control_ConditionGSINumeric(this, application);
-            return control;
-        }
+        public Visual GetControl() => control ?? (control = new Control_ConditionGSINumeric(this));
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
         public bool Evaluate(IGameState gameState) {
@@ -107,17 +90,6 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
-        /// <summary>Update the assigned control with the new application.</summary>
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-
-            // Check to ensure the variable paths are valid
-            if (application != null && !double.TryParse(Operand1Path, out _) && !string.IsNullOrWhiteSpace(Operand1Path) && !application.ParameterLookup.ContainsKey(Operand1Path))
-                Operand1Path = string.Empty;
-            if (application != null && !double.TryParse(Operand2Path, out _) && !string.IsNullOrWhiteSpace(Operand2Path) && !application.ParameterLookup.ContainsKey(Operand2Path))
-                Operand2Path = string.Empty;
-        }
-
         public IEvaluatable<bool> Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
         IEvaluatable IEvaluatable.Clone() => Clone();
     }
@@ -127,7 +99,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Condition that accesses a specified game state variable (of any enum type) and returns a comparison between it and a static enum of the same type.
     /// </summary>
-    [OverrideLogic("Enum State Variable", category: OverrideLogicCategory.State)]
+    [Evaluatable("Enum State Variable", category: EvaluatableCategory.State)]
     public class BooleanGSIEnum : IEvaluatable<bool> {
 
         /// <summary>Creates a blank enum game state lookup evaluatable.</summary>
@@ -145,12 +117,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         // Control
         private Control_BooleanGSIEnum control;
-        public Visual GetControl(Application application) {
-            if (control == null)
-                control = new Control_BooleanGSIEnum(this);
-            control.SetApplication(application);
-            return control;
-        }
+        public Visual GetControl() => control ?? (control = new Control_BooleanGSIEnum(this));
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
         public bool Evaluate(IGameState gameState) {
@@ -158,15 +125,6 @@ namespace Aurora.Settings.Overrides.Logic {
             return @enum != null && @enum.Equals(EnumValue);
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        /// <summary>Update the assigned control with the new application.</summary>
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-
-            // Check to ensure the variable paths are valid
-            if (application != null && !string.IsNullOrWhiteSpace(StatePath) && !application.ParameterLookup.ContainsKey(StatePath))
-                StatePath = string.Empty;
-        }
 
         public IEvaluatable<bool> Clone() => new BooleanGSIEnum { StatePath = StatePath, EnumValue = EnumValue };
         IEvaluatable IEvaluatable.Clone() => Clone();

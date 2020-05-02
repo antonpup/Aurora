@@ -66,7 +66,7 @@ namespace Aurora.Devices.RGBNet
 
                 try
                 {
-                    _surface.LoadDevices(_deviceProvider, throwExceptions: true,exclusiveAccessIfPossible: false);
+                    //_surface.LoadDevices(_deviceProvider, throwExceptions: true,exclusiveAccessIfPossible: false);
                     _ledGroup?.Detach(); //DarthAffe 03.02.2019: This should never run, but safety first
                     _ledGroup = new ListLedGroup(_deviceProvider.Devices.SelectMany(d => d)) { Brush = _brush };
                     //rgbDevice  = new CorsairDeviceProvider();

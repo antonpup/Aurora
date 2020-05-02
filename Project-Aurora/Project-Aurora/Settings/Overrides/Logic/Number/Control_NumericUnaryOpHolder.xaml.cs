@@ -15,23 +15,21 @@ namespace Aurora.Settings.Overrides.Logic {
     public partial class Control_NumericUnaryOpHolder : UserControl {
 
         /// <summary>Base constructor for the unary operation holder.</summary>
-        public Control_NumericUnaryOpHolder(Profiles.Application application) {
+        public Control_NumericUnaryOpHolder() {
             InitializeComponent();
-            Application = application;
             DataContext = this;
         }
 
         /// <summary>Creates a new unary operation control using the given Enum type as a source for the possible operators to choose from.</summary>
-        public Control_NumericUnaryOpHolder(Profiles.Application application, Type enumType) : this(application) {
+        public Control_NumericUnaryOpHolder(Type enumType) : this() {
             OperatorList = Utils.EnumUtils.GetEnumItemsSource(enumType).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         /// <summary>Creates a new unary opeartion control using the given string as the name of the operator, disallowing the user to choose an option.</summary>
-        public Control_NumericUnaryOpHolder(Profiles.Application application, string operatorName) : this(application) {
+        public Control_NumericUnaryOpHolder(string operatorName) : this() {
             StaticOperator = operatorName;
         }
 
-        public Profiles.Application Application { get; set; }
         public Dictionary<string, object> OperatorList { get; set; } = null;
         public string StaticOperator { get; set; } = null;
 
@@ -47,10 +45,6 @@ namespace Aurora.Settings.Overrides.Logic {
         public object SelectedOperator {
             get => GetValue(SelectedOperatorProperty);
             set => SetValue(SelectedOperatorProperty, value);
-        }
-
-        public void SetApplication(Profiles.Application application) {
-            Application = application;
         }
     }
 }

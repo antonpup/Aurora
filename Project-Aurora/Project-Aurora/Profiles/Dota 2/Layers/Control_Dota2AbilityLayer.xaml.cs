@@ -24,7 +24,6 @@ namespace Aurora.Profiles.Dota_2.Layers
     public partial class Control_Dota2AbilityLayer : UserControl
     {
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_Dota2AbilityLayer()
         {
@@ -57,12 +56,6 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         internal void SetProfile(Application profile)
         {
-            if (profile != null && !profileset)
-            {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-
-                profileset = true;
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

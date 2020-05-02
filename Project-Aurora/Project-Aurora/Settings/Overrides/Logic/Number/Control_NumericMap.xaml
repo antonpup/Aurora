@@ -3,43 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:logic="clr-namespace:Aurora.Settings.Overrides.Logic"
+             xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
              d:DesignWidth="500">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <!-- Value -->
-        <Border BorderThickness="1" BorderBrush="#6000" Background="#3000" Grid.ColumnSpan="3" />
-        <TextBlock Text="Map value:" Margin="6,2" FontWeight="Bold" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.Value, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,10,6,0" Grid.ColumnSpan="3" />
+    
+    <Grid u:GridHelper.Columns="Auto,Auto,Auto" u:GridHelper.Rows="Auto,Auto,Auto,Auto">
         
+        <!-- Value -->
+        <StackPanel Grid.ColumnSpan="999" Orientation="Horizontal">
+            <TextBlock Text="Map value:" Margin="6,2" FontWeight="Bold" VerticalAlignment="Center" />
+            <logic:Control_EvaluatablePresenter Expression="{Binding Value, Mode=TwoWay}" EvalType="{x:Type sys:Double}" Margin="6,0,2,0" />
+        </StackPanel>
+
         <!-- From range -->
-        <Border BorderThickness="1,0,1,1" BorderBrush="#6000" Background="#3000" Grid.Row="1" Grid.RowSpan="2" />
         <TextBlock Text="From range:" Margin="6,2" FontWeight="Bold" Grid.Row="1" />
-        <TextBlock Text="Min:" Margin="8,18" Grid.Row="1" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.FromMin, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,28,6,0" Grid.Row="1" />
-        <TextBlock Text="Max:" Margin="8,0" Grid.Row="2" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.FromMax, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,10,6,0" Grid.Row="2" />
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,2,0,6">
+            <TextBlock Text="Min:" Margin="8,0" VerticalAlignment="Center" />
+            <logic:Control_EvaluatablePresenter Expression="{Binding FromMin, Mode=TwoWay}" EvalType="{x:Type sys:Double}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3">
+            <TextBlock Text="Max:" Margin="8,0" VerticalAlignment="Center" />
+            <logic:Control_EvaluatablePresenter Expression="{Binding FromMax, Mode=TwoWay}" EvalType="{x:Type sys:Double}" VerticalAlignment="Center" />
+        </StackPanel>
 
         <!-- Arrow -->
-        <TextBlock Text="&#x2794;" Margin="6" FontSize="18" Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" />
+        <TextBlock Text="&#x2794;" Margin="6" FontSize="18" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center" />
 
         <!-- To range -->
-        <Border BorderThickness="1,0,1,1" BorderBrush="#6000" Background="#3000" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" />
         <TextBlock Text="Onto range:" Margin="6,2" FontWeight="Bold" Grid.Row="1" Grid.Column="2" />
-        <TextBlock Text="Min:" Margin="8,18" Grid.Row="1" Grid.Column="2" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.ToMin, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,28,6,0" Grid.Row="1" Grid.Column="2" />
-        <TextBlock Text="Max:" Margin="8,0" Grid.Row="2" Grid.Column="2" />
-        <logic:Control_EvaluatablePresenter Expression="{Binding Map.ToMax, Mode=TwoWay}" Application="{Binding Application}" EvalType="Number" Margin="6,10,6,0" Grid.Row="2" Grid.Column="2" />
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Margin="0,2,0,6">
+            <TextBlock Text="Min:" Margin="8,0" VerticalAlignment="Center" />
+            <logic:Control_EvaluatablePresenter Expression="{Binding ToMin, Mode=TwoWay}" EvalType="{x:Type sys:Double}" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="2">
+            <TextBlock Text="Max:" Margin="8,0" VerticalAlignment="Center" />
+            <logic:Control_EvaluatablePresenter Expression="{Binding ToMax, Mode=TwoWay}" EvalType="{x:Type sys:Double}" VerticalAlignment="Center" />
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -1,0 +1,23 @@
+﻿<Window x:Class="Aurora.Controls.Window_Prompt"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:c="clr-namespace:Aurora.Controls"
+        mc:Ignorable="d"
+        WindowStyle="ToolWindow" SizeToContent="Height" ResizeMode="NoResize"
+        Background="#181818" Width="320">
+    <Window.Resources>
+        <c:CollapseIfEmptyConverter x:Key="CollapseIfEmptyConverter" />
+    </Window.Resources>
+    
+    <StackPanel>
+        <TextBlock Text="{Binding Path=Description, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}" Margin="8" TextWrapping="Wrap" Visibility="{Binding Path=Description, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Converter={StaticResource CollapseIfEmptyConverter}}" />
+        <TextBlock Text="{Binding Path=ErrorMessage, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Mode=OneWay}" Foreground="Red" Margin="8,0,8,8" TextWrapping="Wrap" Visibility="{Binding Path=ErrorMessage, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Converter={StaticResource CollapseIfEmptyConverter}}" />
+        <TextBox x:Name="Input" Margin="8,0" FontSize="14" Padding="4" Text="{Binding Path=Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewKeyDown="TextBox_PreviewKeyDown" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="8">
+            <Button Content="Cancel" Padding="6,2" Margin="0,0,8,0" Click="CancelButton_Click" />
+            <Button Content="Okay" Padding="6,2" Click="OkayButton_Click" />
+        </StackPanel>
+    </StackPanel>
+</Window>

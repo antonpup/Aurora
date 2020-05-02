@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using NAudio.CoreAudioApi;
+using Aurora.Utils;
 
 namespace Aurora.Profiles
 {
@@ -38,32 +39,26 @@ namespace Aurora.Profiles
         /// </summary>
         //LocalPCInformation LocalPCInfo { get; }
 
-        Newtonsoft.Json.Linq.JObject _ParsedData { get; set; }
+        JObject _ParsedData { get; set; }
         string json { get; set; }
-
-        String GetNode(string name);
+        
+        string GetNode(string name);
     }
 
-    public class GameState<T> : StringProperty<T>, IGameState where T : GameState<T>
+    public class GameState<TSelf> : StringProperty<TSelf>, IGameState where TSelf : GameState<TSelf>
     {
         private static LocalPCInformation _localpcinfo;
+
+        // Holds a cache of the child nodes on this gamestate
+        private readonly Dictionary<string, object> childNodes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Information about the local system
         /// </summary>
-        public LocalPCInformation LocalPCInfo
-        {
-            get
-            {
-                if (_localpcinfo == null)
-                    _localpcinfo = new LocalPCInformation();
+        public LocalPCInformation LocalPCInfo => _localpcinfo ?? (_localpcinfo = new LocalPCInformation());
 
-                return _localpcinfo;
-            }
-        }
-
-        public JObject _ParsedData { get; set; }
-        public string json { get; set; }
+        [GameStateIgnore] public JObject _ParsedData { get; set; }
+        [GameStateIgnore] public string json { get; set; }
 
         /// <summary>
         /// Creates a default GameState instance.
@@ -97,21 +92,27 @@ namespace Aurora.Profiles
             json = other_state.json;
         }
 
-        public String GetNode(string name)
+        [GameStateIgnore] public string GetNode(string name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
-            if (_ParsedData.TryGetValue(name, out value))
+            if (_ParsedData.TryGetValue(name, StringComparison.OrdinalIgnoreCase, out value))
                 return value.ToString();
             else
                 return "";
         }
 
         /// <summary>
+        /// Use this method to more-easily lazily return the child node of the given name that exists on this AutoNode.
+        /// </summary>
+        [GameStateIgnore] protected TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
+            => (TNode)(childNodes.TryGetValue(name, out var n) ? n : (childNodes[name] = Instantiator<TNode, string>.Create(_ParsedData[name]?.ToString() ?? "")));
+
+        /// <summary>
         /// Displays the JSON, representative of the GameState data
         /// </summary>
         /// <returns>JSON String</returns>
-        public override string ToString()
+        [GameStateIgnore] public override string ToString()
         {
             return json;
         }
@@ -124,93 +125,40 @@ namespace Aurora.Profiles
         public GameState(string json) : base(json) { }
     }
 
-    static class PerformanceInfo
-    {
-        [DllImport("psapi.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetPerformanceInfo([Out] out PerformanceInformation PerformanceInformation, [In] int Size);
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct PerformanceInformation
-        {
-            public int Size;
-            public IntPtr CommitTotal;
-            public IntPtr CommitLimit;
-            public IntPtr CommitPeak;
-            public IntPtr PhysicalTotal;
-            public IntPtr PhysicalAvailable;
-            public IntPtr SystemCache;
-            public IntPtr KernelTotal;
-            public IntPtr KernelPaged;
-            public IntPtr KernelNonPaged;
-            public IntPtr PageSize;
-            public int HandlesCount;
-            public int ProcessCount;
-            public int ThreadCount;
-        }
-
-        public static Int64 GetPhysicalAvailableMemoryInMiB()
-        {
-            ulong availableMemory = new ComputerInfo().AvailablePhysicalMemory;
-            return Convert.ToInt64(availableMemory / 1048576);
-        }
-
-        public static Int64 GetTotalMemoryInMiB()
-        {
-            ulong availableMemory = new ComputerInfo().TotalPhysicalMemory;
-            return Convert.ToInt64(availableMemory / 1048576);
-
-        }
-    }
-
     /// <summary>
     /// Class representing local computer information
     /// </summary>
     public class LocalPCInformation : Node<LocalPCInformation> {
+        #region Time Properties
         /// <summary>
         /// The current hour
         /// </summary>
-        public int CurrentHour { get { return Utils.Time.GetHours(); } }
+        public int CurrentHour => Utils.Time.GetHours();
 
         /// <summary>
         /// The current minute
         /// </summary>
-        public int CurrentMinute { get { return Utils.Time.GetMinutes(); } }
+        public int CurrentMinute => Utils.Time.GetMinutes();
 
         /// <summary>
         /// The current second
         /// </summary>
-        public int CurrentSecond { get { return Utils.Time.GetSeconds(); } }
+        public int CurrentSecond => Utils.Time.GetSeconds();
 
         /// <summary>
         /// The current millisecond
         /// </summary>
-        public int CurrentMillisecond { get { return Utils.Time.GetMilliSeconds(); } }
+        public int CurrentMillisecond => Utils.Time.GetMilliSeconds();
 
         /// <summary>
         /// The total number of milliseconds since the epoch
         /// </summary>
         public long MillisecondsSinceEpoch => Utils.Time.GetMillisecondsSinceEpoch();
+        #endregion
 
-        /// <summary>
-        /// Used RAM
-        /// </summary>
-        public long MemoryUsed { get { return PerformanceInfo.GetTotalMemoryInMiB() - PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
-
-        /// <summary>
-        /// Available RAM
-        /// </summary>
-        public long MemoryFree { get { return PerformanceInfo.GetPhysicalAvailableMemoryInMiB(); } }
-
-        /// <summary>
-        /// Total RAM
-        /// </summary>
-        public long MemoryTotal { get { return PerformanceInfo.GetTotalMemoryInMiB(); } }
-
-        /// <summary>
-        /// Returns whether or not the device dession is in a locked state.
-        /// </summary>
-        public bool IsDesktopLocked => Utils.DesktopUtils.IsDesktopLocked;
+        #region Audio Properties
+        private static readonly MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
+        private static readonly NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
 
         /// <summary>
         /// Gets the default endpoint for output (playback) devices e.g. speakers, headphones, etc.
@@ -264,50 +212,65 @@ namespace Aurora.Profiles
         /// Gets whether the default microphone is muted.
         /// </summary>
         public bool MicrophoneIsMuted => DefaultAudioInDevice?.AudioEndpointVolume.Mute ?? true;
+        #endregion
 
-        private static PerformanceCounter _CPUCounter;
-
-        private static float _CPUUsage = 0.0f;
-        private static float _SmoothCPUUsage = 0.0f;
-
-        private static System.Timers.Timer cpuCounterTimer;
-
-        private static MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
-        private static NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
-
+        #region Device Properties
+        /// <summary>
+        /// Battery level of a dualshock controller
+        /// </summary>
         public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
-
+        /// <summary>
+        /// Whether or not thr dualshock controller is charging
+        /// </summary>
         public bool DS4Charging => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Charging ?? false;
+        #endregion
 
+        #region CPU Properties
+        /// <summary>
+        /// Legacy cpu usage prop, DEPRECATED
+        /// </summary>
+        public float CPUUsage => CPU.Usage;
+
+        private static CPUInfo _cpuInfo;
+        public CPUInfo CPU => _cpuInfo ?? (_cpuInfo = new CPUInfo());
+        #endregion
+
+        #region RAM Properties
+        /// <summary>
+        /// Used RAM, DEPRECATED
+        /// </summary>
+        public long MemoryUsed => RAM.Used;
 
         /// <summary>
-        /// Current CPU Usage
+        /// Available RAM, DEPRECATED
         /// </summary>
-        public float CPUUsage
-        {
-            get
-            {
-                //Global.logger.LogLine($"_CPUUsage = {_CPUUsage}\t\t_SmoothCPUUsage = {_SmoothCPUUsage}");
+        public long MemoryFree => RAM.Free;
 
-                if (_SmoothCPUUsage < _CPUUsage)
-                    _SmoothCPUUsage += (_CPUUsage - _SmoothCPUUsage) / 10.0f;
-                else if (_SmoothCPUUsage > _CPUUsage)
-                    _SmoothCPUUsage -= (_SmoothCPUUsage - _CPUUsage) / 10.0f;
+        /// <summary>
+        /// Total RAM, DEPRECATED
+        /// </summary>
+        public long MemoryTotal => MemoryFree + MemoryUsed;
 
-                return _SmoothCPUUsage;
-            }
-        }
+        private static RAMInfo _ramInfo;
+        public RAMInfo RAM => _ramInfo ?? (_ramInfo = new RAMInfo());
+        #endregion
+
+        #region GPU Properties
+        private static GPUInfo _gpuInfo;
+        public GPUInfo GPU => _gpuInfo ?? (_gpuInfo = new GPUInfo());
+        #endregion
+
+        #region NET Properties
+        private static NETInfo _netInfo;
+        public NETInfo NET => _netInfo ?? (_netInfo = new NETInfo());
+        #endregion
+
+        /// <summary>
+        /// Returns whether or not the device dession is in a locked state.
+        /// </summary>
+        public bool IsDesktopLocked => Utils.DesktopUtils.IsDesktopLocked;
 
         static LocalPCInformation() {
-            try
-            {
-                _CPUCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            }
-            catch(Exception exc)
-            {
-                Global.logger.LogLine("Failed to create PerformanceCounter. Try: https://stackoverflow.com/a/34615451 Exception: " + exc);
-            }
-
             void StartStopRecording() {
                 // We must start recording to be able to capture audio in, but only do this if the user has the option set. Allowing them
                 // to turn it off will give them piece of mind we're not spying on them and will stop the Windows 10 mic icon appearing.
@@ -325,27 +288,64 @@ namespace Aurora.Profiles
                     StartStopRecording();
             };
         }
+    }
 
-        internal LocalPCInformation() : base()
-        {
-            if (cpuCounterTimer == null)
-            {
-                cpuCounterTimer = new System.Timers.Timer(1000);
-                cpuCounterTimer.Elapsed += CpuCounterTimer_Elapsed;
-                cpuCounterTimer.Start();
-            }
-        }
+    public class CPUInfo : Node<CPUInfo>
+    {
+        /// <summary>
+        /// Represents the CPU usage from 0 to 100
+        /// </summary>
+        public float Usage => Utils.HardwareMonitor.CPU.CPUTotalLoad;
 
-        private void CpuCounterTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            try
-            {
-                _CPUUsage = (_CPUUsage + _CPUCounter.NextValue()) / 2.0f;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("PerformanceCounter exception: " + exc);
-            }
-        }
+        /// <summary>
+        /// Represents the temperature of the cpu die in celsius
+        /// </summary>
+        public float Temperature => Utils.HardwareMonitor.CPU.CPUDieTemp;
+
+        /// <summary>
+        /// Represents the CPU power draw in watts
+        /// </summary>
+        public float PowerUsage => Utils.HardwareMonitor.CPU.CPUPower;
+    }
+
+    public class RAMInfo : Node<RAMInfo>
+    {
+        /// <summary>
+        /// Used system memory in megabytes
+        /// </summary>
+        public long Used => (long)(Utils.HardwareMonitor.RAM.RAMUsed * 1024f);
+
+        /// <summary>
+        /// Free system memory in megabytes
+        /// </summary>
+        public long Free => (long)(Utils.HardwareMonitor.RAM.RAMFree * 1024f);
+
+        /// <summary>
+        /// Total system memory in megabytes
+        /// </summary>
+        public long Total => Free + Used;
+    }
+
+    public class GPUInfo : Node<GPUInfo>
+    {
+        public float Usage => Utils.HardwareMonitor.GPU.GPUCoreLoad;
+        public float Temperature => Utils.HardwareMonitor.GPU.GPUCoreTemp;
+        public float PowerUsage => Utils.HardwareMonitor.GPU.GPUPower;
+        public float FanRPM => Utils.HardwareMonitor.GPU.GPUFan;
+        public float CoreClock => Utils.HardwareMonitor.GPU.GPUCoreClock;
+        public float MemoryClock => Utils.HardwareMonitor.GPU.GPUMemoryClock;
+        public float ShaderClock => Utils.HardwareMonitor.GPU.GPUShaderClock;
+        public float MemoryControllerUsage => Utils.HardwareMonitor.GPU.GPUMemoryCLoad;
+        public float VideoEngineUsage => Utils.HardwareMonitor.GPU.GPUVideoEngineLoad;
+        public float MemoryUsed => Utils.HardwareMonitor.GPU.GPUMemoryUsed;
+        public float MemoryFree => MemoryTotal - MemoryUsed;
+        public float MemoryTotal => Utils.HardwareMonitor.GPU.GPUMemoryTotal;
+    }
+
+    public class NETInfo : Node<NETInfo>
+    {
+        public float Usage => Utils.HardwareMonitor.NET.BandwidthUsed;
+        public float UploadSpeed => Utils.HardwareMonitor.NET.UploadSpeedBytes;
+        public float DownloadSpeed => Utils.HardwareMonitor.NET.DownloadSpeedBytes;
     }
 }

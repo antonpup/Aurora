@@ -898,6 +898,11 @@ namespace Aurora.Utils
             return _returnKeys.ToArray();
         }
 
+        public static DeviceKeys[] GetDeviceAllKeys()
+        {
+            return (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys));
+        }
+
         /// <summary>
         /// Converts CorsairLedId to Devices.DeviceKeys
         /// </summary>
@@ -1193,8 +1198,6 @@ namespace Aurora.Utils
             {
                 case Keys.RControlKey:
                     return Keys.LControlKey;
-                case Keys.RMenu:
-                    return Keys.LMenu;
                 case Keys.RShiftKey:
                     return Keys.LShiftKey;
                 case Keys.RWin:

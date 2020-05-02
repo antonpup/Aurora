@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -445,6 +445,7 @@ namespace Aurora.Settings
             //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
 
             var layoutConfigPath = "";
+
             if (keyboard_preference != "" && keyboard_preference != "None")
             {
                 layoutConfigPath = Path.Combine(layoutsPath, "Keyboard", keyboard_preference + ".json");
