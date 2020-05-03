@@ -63,6 +63,10 @@ namespace Aurora.Profiles.Minecraft {
             Process.Start(((sender as Button).DataContext as ModDetails).Link);
         }
 
+        private void GoToFabricDownloadPage(object sender, RoutedEventArgs e) {
+            Process.Start(@"https://fabricmc.net/");
+        }
+
         private async void PopulateModList() {
             ModList.Clear();
             try {

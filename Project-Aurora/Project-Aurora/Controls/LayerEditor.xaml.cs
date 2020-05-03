@@ -110,7 +110,7 @@ namespace Aurora.Controls
 
             foreach (var child in static_canvas.Children)
             {
-                if (child is ContentControl && tag.Equals((child as ContentControl).Tag))
+                if (child is ContentControl && ReferenceEquals(tag, (child as ContentControl).Tag))
                 {
                     foundElement = child as ContentControl;
                     break;
