@@ -111,7 +111,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public String SpecificProcess { get { return Logic._SpecificProcess ?? _SpecificProcess ?? String.Empty; } }
 
-        public Rectangle? _Coordinates { get; set; }
+        [LogicOverridable("Coordinates")] public Rectangle? _Coordinates { get; set; }
 
         [JsonIgnore]
         public Rectangle Coordinates { get { return Logic._Coordinates ?? _Coordinates ?? Rectangle.Empty; } }
