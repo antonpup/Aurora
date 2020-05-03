@@ -238,6 +238,10 @@ namespace Aurora.Settings.Layers
 
         public void Initialize()
         {
+            if (screenCapture is DXScreenCapture)
+            {
+                (screenCapture as DXScreenCapture).Dispose();
+            }
             if (Properties.ExperimentalMode)
             {
                 screenCapture = new DXScreenCapture();
@@ -406,7 +410,7 @@ namespace Aurora.Settings.Layers
 
                     var appRect = new User32.Rect();
                     User32.GetWindowRect(handle, ref appRect);
-                    
+
                     var appDisplay = Screen.FromHandle(handle).Bounds;
 
                     screenCapture.SwitchDisplay(appDisplay);
@@ -569,8 +573,8 @@ namespace Aurora.Settings.Layers
             SetDisplay(targetDisplay);
         }
 
-        public IEnumerable<string> GetDisplays() => 
-            Screen.AllScreens.Select((s, index) => 
+        public IEnumerable<string> GetDisplays() =>
+            Screen.AllScreens.Select((s, index) =>
                 $"Display {index}: X:{s.Bounds.X}, Y:{s.Bounds.Y}, W:{s.Bounds.Width}, H:{s.Bounds.Height}");
     }
 
@@ -580,6 +584,7 @@ namespace Aurora.Settings.Layers
         private DesktopDuplicator desktopDuplicator;
         private bool processing = false;
         private int display;
+        private static readonly object deskDupLock = new object();
 
         public Bitmap Capture()
         {
@@ -595,7 +600,8 @@ namespace Aurora.Settings.Layers
             try
             {
                 processing = true;
-                bigScreen = desktopDuplicator.Capture(5000);
+                lock (deskDupLock)
+                    bigScreen = desktopDuplicator.Capture(5000);
                 processing = false;
             }
             catch (SharpDXException e)
@@ -604,6 +610,12 @@ namespace Aurora.Settings.Layers
                 processing = false;
                 SetDisplay(display);
             }
+
+            if (bigScreen is null)
+                processing = false;
+
+
+
             return bigScreen;
         }
 
@@ -624,7 +636,6 @@ namespace Aurora.Settings.Layers
         {
             desktopDuplicator?.Dispose();
 
-
             var outputs = GetAdapters();
             if (screen > (outputs.Count() - 1) || screen < 0)
                 screen = 0;
@@ -635,13 +646,14 @@ namespace Aurora.Settings.Layers
                                                 desktopbounds.Top,
                                                 desktopbounds.Right - desktopbounds.Left,
                                                 desktopbounds.Bottom - desktopbounds.Top);
-            try
+
+            lock (deskDupLock)
             {
+                while (processing)
+                {
+
+                }
                 desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, CurrentScreenBounds);
-            }
-            catch (SharpDXException e)
-            {
-                Global.logger.Error("[Ambilight] Error switching display: " + e);
             }
         }
 
@@ -662,5 +674,7 @@ namespace Aurora.Settings.Layers
         {
             return (raw.Left == rec.Left) && (raw.Top == rec.Top) && (raw.Right == rec.Right) && (raw.Bottom == rec.Bottom);
         }
+
+        public void Dispose() => desktopDuplicator?.Dispose();
     }
 }
