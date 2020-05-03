@@ -2,6 +2,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
+using MiscUtil.Collections.Extensions;
 using Newtonsoft.Json;
 using SharpDX;
 using SharpDX.DXGI;
@@ -24,6 +25,7 @@ using Timer = System.Timers.Timer;
 
 namespace Aurora.Settings.Layers
 {
+    #region Enums
     public enum AmbilightType
     {
         [Description("Default")]
@@ -83,6 +85,7 @@ namespace Aurora.Settings.Layers
         [Description("Highest")]
         Highest,
     }
+    #endregion
 
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
     {
@@ -195,6 +198,7 @@ namespace Aurora.Settings.Layers
         private long last_use_time = 0;
         private IntPtr specificProcessHandle = IntPtr.Zero;
         private Rectangle cropRegion;
+        public IEnumerable<string> Displays => screenCapture.GetDisplays();
 
         public int OutputId
         {
@@ -264,6 +268,7 @@ namespace Aurora.Settings.Layers
             }
 
             cropRegion = screenCapture.CurrentScreenBounds;
+            InvokePropertyChanged(nameof(Displays));
         }
 
         public override EffectLayer Render(IGameState gamestate)
@@ -521,6 +526,8 @@ namespace Aurora.Settings.Layers
         /// </summary>
         /// <returns></returns>
         Bitmap Capture();
+
+        IEnumerable<string> GetDisplays();
     }
 
     internal class GDIScreenCapture : IScreenCapture
@@ -531,7 +538,7 @@ namespace Aurora.Settings.Layers
         {
             var outputs = Screen.AllScreens;
 
-            if (screen > (outputs.Length - 1))
+            if (screen > (outputs.Length - 1) || screen < 0)
                 screen = 0;
 
             CurrentScreenBounds = outputs.ElementAtOrDefault(screen).Bounds;
@@ -561,6 +568,10 @@ namespace Aurora.Settings.Layers
 
             SetDisplay(targetDisplay);
         }
+
+        public IEnumerable<string> GetDisplays() => 
+            Screen.AllScreens.Select((s, index) => 
+                $"Display {index}: X:{s.Bounds.X}, Y:{s.Bounds.Y}, W:{s.Bounds.Width}, H:{s.Bounds.Height}");
     }
 
     internal class DXScreenCapture : IScreenCapture
@@ -615,7 +626,7 @@ namespace Aurora.Settings.Layers
 
 
             var outputs = GetAdapters();
-            if (screen > (outputs.Count() - 1))
+            if (screen > (outputs.Count() - 1) || screen < 0)
                 screen = 0;
             display = screen;
             var output = outputs.ElementAt(screen);
@@ -633,6 +644,13 @@ namespace Aurora.Settings.Layers
                 Global.logger.Error("[Ambilight] Error switching display: " + e);
             }
         }
+
+        public IEnumerable<string> GetDisplays() => GetAdapters().Select(((Adapter1 Adapter, Output1 Output) s, int index) =>
+        {
+            var b = s.Output.Description.DesktopBounds;
+
+            return $"Display {index}: X:{b.Left}, Y:{b.Top}, W:{b.Right - b.Left}, H:{b.Bottom - b.Top}";
+        });
 
         private static IEnumerable<(Adapter1 Adapter, Output1 Output)> GetAdapters()
         {
