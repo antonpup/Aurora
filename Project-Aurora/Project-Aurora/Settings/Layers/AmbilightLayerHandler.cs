@@ -196,8 +196,6 @@ namespace Aurora.Settings.Layers
         private IntPtr specificProcessHandle = IntPtr.Zero;
         private Rectangle cropRegion;
 
-        private int Interval => 1000 / (10 + 5 * (int)Properties.AmbiLightUpdatesPerSecond);
-        private int Scale => (int)Math.Pow(2, 4 - (int)Properties.AmbilightQuality);
         public int OutputId
         {
             get => Properties.AmbilightOutputId;
@@ -230,8 +228,8 @@ namespace Aurora.Settings.Layers
         {
             _ID = "Ambilight";
             Initialize();
-            captureTimer = new Timer(Interval);
-            captureTimer.Elapsed += CaptureTimer_Elapsed;
+            captureTimer = new Timer(GetIntervalFromFPS(Properties.AmbiLightUpdatesPerSecond));
+            captureTimer.Elapsed += TakeScreenshot;
         }
 
         public void Initialize()
@@ -268,25 +266,6 @@ namespace Aurora.Settings.Layers
             cropRegion = screenCapture.CurrentScreenBounds;
         }
 
-        private void CaptureTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
-                captureTimer.Stop();
-
-            var bigScreen = screenCapture.Capture();
-            if (bigScreen is null)
-                return;
-
-            Bitmap smallScreen = new Bitmap(bigScreen.Width / Scale, bigScreen.Height / Scale);
-
-            using (var graphics = Graphics.FromImage(smallScreen))
-                graphics.DrawImage(bigScreen, 0, 0, bigScreen.Width / Scale, bigScreen.Height / Scale);
-
-            bigScreen?.Dispose();
-
-            screen = smallScreen;
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             var ambilight_layer = new EffectLayer();
@@ -296,8 +275,9 @@ namespace Aurora.Settings.Layers
             if (!captureTimer.Enabled)
                 captureTimer.Start();
 
-            if (captureTimer.Interval != Interval)
-                captureTimer.Interval = Interval;
+            var interval = GetIntervalFromFPS(Properties.AmbiLightUpdatesPerSecond);
+            if (captureTimer.Interval != interval)
+                captureTimer.Interval = interval;
 
             if (screen is null)
                 return ambilight_layer;
@@ -365,6 +345,33 @@ namespace Aurora.Settings.Layers
             return ambilight_layer;
         }
 
+        protected override System.Windows.Controls.UserControl CreateControl()
+        {
+            return new Control_AmbilightLayer(this);
+        }
+
+        private void TakeScreenshot(object sender, ElapsedEventArgs e)
+        {
+            if (Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
+                captureTimer.Stop();
+
+            var bigScreen = screenCapture.Capture();
+            if (bigScreen is null)
+                return;
+
+            var scale = GetScaleFromQuality(Properties.AmbilightQuality);
+
+            Bitmap smallScreen = new Bitmap(bigScreen.Width / scale, bigScreen.Height / scale);
+
+            using (var graphics = Graphics.FromImage(smallScreen))
+                graphics.DrawImage(bigScreen, 0, 0, bigScreen.Width / scale, bigScreen.Height / scale);
+
+            bigScreen?.Dispose();
+
+            screen = smallScreen;
+        }
+
+        #region Helper Methods
         /// <summary>
         /// Gets the region to crop based on user preference and current display.
         /// Switches display if the desired coordinates are offscreen.
@@ -427,9 +434,30 @@ namespace Aurora.Settings.Layers
         /// <returns></returns>
         private Rectangle GetResized(Rectangle r)
         {
-            return new Rectangle(r.X / Scale, r.Y / Scale, r.Width / Scale, r.Height / Scale);
+            var scale = GetScaleFromQuality(Properties.AmbilightQuality);
+            return new Rectangle(r.X / scale, r.Y / scale, r.Width / scale, r.Height / scale);
         }
 
+        /// <summary>
+        /// Converts the AmbilightQuality Enum in an integer for the bitmap to be divided by.
+        /// Lower quality values result in a higher divisor, which results in a smaller bitmap
+        /// </summary>
+        /// <param name="quality"></param>
+        /// <returns></returns>
+        private static int GetScaleFromQuality(AmbilightQuality quality) => (int)Math.Pow(2, 4 - (int)quality);
+
+        /// <summary>
+        /// Returns an interval in ms usign the AmbilightFpsChoice enum.
+        /// Higher values result in lower intervals
+        /// </summary>
+        /// <param name="fps"></param>
+        /// <returns></returns>
+        private static int GetIntervalFromFPS(AmbilightFpsChoice fps) => 1000 / (10 + 5 * (int)fps);
+
+        /// <summary>
+        /// Updates the handle of the window used to crop the screenshot
+        /// </summary>
+        /// <param name="process"></param>
         public void UpdateSpecificProcessHandle(string process)
         {
             var a = Array.Find(Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process))
@@ -440,11 +468,7 @@ namespace Aurora.Settings.Layers
                 specificProcessHandle = a.MainWindowHandle;
             }
         }
-
-        protected override System.Windows.Controls.UserControl CreateControl()
-        {
-            return new Control_AmbilightLayer(this);
-        }
+        #endregion
 
         #region User32
         private static class User32
