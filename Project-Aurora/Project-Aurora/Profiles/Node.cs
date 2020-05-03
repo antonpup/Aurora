@@ -36,7 +36,7 @@ namespace Aurora.Profiles
             }
         }
 
-        internal string GetString(string Name)
+        public string GetString(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -46,7 +46,7 @@ namespace Aurora.Profiles
                 return "";
         }
 
-        internal int GetInt(string Name)
+        public int GetInt(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -56,7 +56,7 @@ namespace Aurora.Profiles
                 return -1;
         }
 
-        internal float GetFloat(string Name)
+        public float GetFloat(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -66,7 +66,7 @@ namespace Aurora.Profiles
                 return -1.0f;
         }
 
-        internal long GetLong(string Name)
+        public long GetLong(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -76,7 +76,7 @@ namespace Aurora.Profiles
                 return -1;
         }
 
-        internal T GetEnum<T>(string Name) where T : struct
+        public T GetEnum<T>(string Name) where T : struct
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -100,7 +100,7 @@ namespace Aurora.Profiles
             return Enum.TryParse<T>("Undefined", true, out var u) ? u : default(T);
         }
 
-        internal bool GetBool(string Name)
+        public bool GetBool(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -110,7 +110,7 @@ namespace Aurora.Profiles
                 return false;
         }
 
-        internal T[] GetArray<T>(string Name)
+        public T[] GetArray<T>(string Name)
         {
             Newtonsoft.Json.Linq.JToken value;
 
@@ -125,7 +125,7 @@ namespace Aurora.Profiles
         /// </summary>
         /// <typeparam name="TNode">The type of node that will be returned by this method.</typeparam>
         /// <param name="name">The JSON path of the child node.</param>
-        internal TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
+        public TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
             => (TNode)(childNodes.TryGetValue(name, out var n) ? n : (childNodes[name] = Instantiator<TNode, string>.Create( _ParsedData[name]?.ToString() ?? "")));
     }
 }
