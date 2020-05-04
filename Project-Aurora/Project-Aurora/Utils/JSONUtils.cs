@@ -22,6 +22,8 @@ namespace Aurora.Utils
         {
             switch (typeName)
             {
+                case "System.Collections.Generic.List`1[[Aurora.Devices.DeviceKeys, Aurora]]":
+                    return typeof(List<Settings.DeviceKey>);
                 case "System.Collections.Generic.List`1[[System.Drawing.Color, System.Drawing]]":
                     return typeof(List<System.Drawing.Color>);
                 case "System.Collections.Generic.SortedDictionary`2[[System.Single, mscorlib],[System.Drawing.Color, System.Drawing]]":

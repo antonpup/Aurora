@@ -71,7 +71,7 @@ namespace Aurora.Controls
             this.UpdateLayout();
 
             //Generate a new mapping
-            foreach (Settings.Keycaps.Control_Keycap key in deviceLayerPresenter.Keycaps)
+            foreach (Settings.DeviceLayoutViewer.Control_Keycap key in deviceLayerPresenter.Keycaps)
             {
                 if (key.GetKey() != DeviceKeys.NONE)
                 {
@@ -87,9 +87,9 @@ namespace Aurora.Controls
 
         private void KeyboardKey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.DeviceLayoutViewer.Keycaps.KeycapViewer keycapViewer)
             {
-                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _PrimaryManualColor);
+                SetKeyColor(keycapViewer.GetKey(), _PrimaryManualColor);
 
                 this.animMixer.UpdatePlaybackTime();
             }
@@ -97,9 +97,9 @@ namespace Aurora.Controls
 
         private void KeyboardKey_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.DeviceLayoutViewer.Keycaps.KeycapViewer keycapViewer)
             {
-                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _SecondaryManualColor);
+                SetKeyColor(keycapViewer.GetKey(), _SecondaryManualColor);
 
                 this.animMixer.UpdatePlaybackTime();
             }

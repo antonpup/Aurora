@@ -1,7 +1,7 @@
-﻿<Window  x:Class="Aurora.Settings.Keycaps.Window_DeviceConfig"
+﻿<Window  x:Class="Aurora.Settings.DeviceLayoutViewer.Window_DeviceConfig"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Aurora.Settings.Keycaps"
+    xmlns:local="clr-namespace:Aurora.Settings.DeviceLayoutViewer"
     Title="Device Config"
     MinHeight="100"
     Height="500"
@@ -19,7 +19,7 @@
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <local:Control_DeviceLayout x:Name="deviceLayout"  Grid.Column="0"/>
-        <StackPanel Grid.Column="1" Margin="5">
+        <StackPanel Grid.Column="1" Margin="5" Background="Gray">
 
             <StackPanel Margin="5" Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Width="150">
@@ -35,6 +35,30 @@
             </StackPanel>
             <StackPanel>
                 <CheckBox x:Name="devices_disable_lighting" Content="Disable Device Lighting" Margin="0,1,0,1" Checked="device_disable_lighting_Checked" Unchecked="device_disable_lighting_Checked" />
+            </StackPanel>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Margin="5" Orientation="Horizontal">
+
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Tag: "/>
+                    <TextBox Text="{Binding Path=SelectedKey.Keycap.Config.Tag, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Image: "/>
+                    <TextBox Text="{Binding Path=SelectedKey.Keycap.Config.Image, Mode=TwoWay}" Width="120" Margin="0,1,0,1"/>
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Height: "/>
+                    <TextBox Text="{Binding Path=SelectedKey.Config.Height, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Width: "/>
+                    <TextBox Text="{Binding Path=SelectedKey.Config.Width, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                </StackPanel>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="X: "/>
+                    <TextBox  x:Name="keycap_x" Text="{Binding Path=SelectedKey.Keycap.Config.X, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Y: "/>
+                    <TextBox  x:Name="keycap_y" Text="{Binding Path=SelectedKey.Keycap.Config.Y, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Height: "/>
+                    <TextBox  x:Name="keycap_height" Text="{Binding Path=SelectedKey.Keycap.Config.Height, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Width: "/>
+                    <TextBox  x:Name="keycap_width" Text="{Binding Path=SelectedKey.Keycap.Config.Width, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
         <StackPanel  Orientation="Horizontal"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="0">

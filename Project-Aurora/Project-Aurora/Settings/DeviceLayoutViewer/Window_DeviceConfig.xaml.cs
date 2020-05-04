@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,12 +15,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
-namespace Aurora.Settings.Keycaps
+namespace Aurora.Settings.DeviceLayoutViewer
 {
     /// <summary>
     /// Interaction logic for Window_DeviceConfig.xaml
     /// </summary>
-    public partial class Window_DeviceConfig : Window
+    public partial class Window_DeviceConfig : Window, INotifyPropertyChanged
     {
         private DeviceConfig _config;
         public DeviceConfig Config
@@ -32,17 +34,33 @@ namespace Aurora.Settings.Keycaps
         }
         public bool DeleteDevice = false;
         private System.Windows.Point _positionInBlock;
-        public Control_Keycap SelectedKey;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private Control_Keycap _selectedKey;
+        public Control_Keycap SelectedKey
+        {
+            get { return _selectedKey; }
+            set{
+                _selectedKey = value;
+                OnPropertyChanged(nameof(SelectedKey));
+            }
+        }
         public Window_DeviceConfig(DeviceConfig config)
         {
             InitializeComponent();
             Config = config;
             LoadDeviceType(config.Type);
-            
             this.device_type.ItemsSource = new string[2]{"Keyboard", "Other Devices"};
             this.device_layout.SelectedItem = Config.SelectedLayout;
             if (config.SelectedKeyboardLayout != null) 
                 this.keyboard_layout.SelectedItem = Config.SelectedKeyboardLayout;
+            DataContext = this;
         }
         private List<string> GetBrandsName(string dicName)
         {
@@ -133,18 +151,20 @@ namespace Aurora.Settings.Keycaps
         }
         private void KeyMouseDown(object sender, MouseButtonEventArgs e)
         {
+            SelectedKey = sender as Control_Keycap;
+
             // when the mouse is down, get the position within the current control. (so the control top/left doesn't move to the mouse position)
             _positionInBlock = Mouse.GetPosition(sender as UIElement);
 
             // capture the mouse (so the mouse move events are still triggered (even when the mouse is not above the control)
-            (sender as UIElement).CaptureMouse();
+            (sender as Control_Keycap)?.CaptureMouse();
 
         }
 
         private void KeyMouseMove(object sender, MouseEventArgs e)
         {
             // if the mouse is captured. you are moving it. (there is your 'real' boolean)
-            if ((sender as UIElement).IsMouseCaptured)
+            if ((sender as Control_Keycap).IsMouseCaptured)
             {
                 // get the parent container
                 var container = VisualTreeHelper.GetParent(sender as UIElement) as UIElement;
@@ -153,15 +173,17 @@ namespace Aurora.Settings.Keycaps
                 var mousePosition = e.GetPosition(container);
 
                 // move the usercontrol.
-                (sender as UIElement).RenderTransform = new TranslateTransform((int)(mousePosition.X - _positionInBlock.X), (int)(mousePosition.Y - _positionInBlock.Y));
-
+                (sender as Control_Keycap).Keycap.Config.X = (int)(mousePosition.X - _positionInBlock.X);
+                (sender as Control_Keycap).Keycap.Config.Y = (int)(mousePosition.Y - _positionInBlock.Y);
+                //keycap_x.Text = ((int)(mousePosition.X - _positionInBlock.X)).ToString();
+                //keycap_y.Text = ((int)(mousePosition.Y - _positionInBlock.Y)).ToString();
             }
         }
 
         private void KeyMouseUp(object sender, MouseButtonEventArgs e)
         {
             // release this control.
-            (sender as UIElement).ReleaseMouseCapture();
+            (sender as Control_Keycap)?.ReleaseMouseCapture();
 
         }
         private void LoadDeviceLayout()
@@ -176,6 +198,28 @@ namespace Aurora.Settings.Keycaps
             }
             deviceLayout.UpdateLayout();
             this.Width = deviceLayout.Width + 340;
+            this.KeyDown += OnKeyDownHandler;
+        }
+        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                MessageBox.Show("CTRL + C Pressed!");
+            }
+            else if (e.Key == Key.Z && (Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift))
+            {
+                MessageBox.Show("CTRL + Z Pressed!");
+            }
+            if (e.Key == Key.Up)
+            {
+                MessageBox.Show("Up Pressed!");
+            }
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

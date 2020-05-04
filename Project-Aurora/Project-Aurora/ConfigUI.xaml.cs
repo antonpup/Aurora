@@ -15,7 +15,6 @@ using Aurora.Settings;
 using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
-using Aurora.Settings.Keycaps;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
 using Aurora.Profiles.Aurora_Wrapper;

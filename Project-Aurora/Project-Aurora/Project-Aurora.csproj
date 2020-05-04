@@ -778,16 +778,36 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\DeviceLayoutManager.cs" />
-    <Compile Include="Settings\Keycaps\Window_DeviceConfig.xaml.cs">
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_ImageKeycap.xaml.cs" />
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_ColorizedKeycap.xaml.cs">
+      <DependentUpon>Control_ColorizedKeycap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_ColorizedKeycapBlank.xaml.cs">
+      <DependentUpon>Control_ColorizedKeycapBlank.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_DefaultKeycap.xaml.cs">
+      <DependentUpon>Control_DefaultKeycap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_DefaultKeycapBackglow.xaml.cs">
+      <DependentUpon>Control_DefaultKeycapBackglow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_DefaultKeycapBackglowOnly.xaml.cs">
+      <DependentUpon>Control_DefaultKeycapBackglowOnly.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_GhostKeycap.xaml.cs">
+      <DependentUpon>Control_GhostKeycap.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\ViewModelBase .cs" />
+    <Compile Include="Settings\DeviceLayoutViewer\Window_DeviceConfig.xaml.cs">
       <DependentUpon>Window_DeviceConfig.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Keycaps\Control_DeviceLayout.xaml.cs">
+    <Compile Include="Settings\DeviceLayoutViewer\Control_DeviceLayout.xaml.cs">
       <DependentUpon>Control_DeviceLayout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Keycaps\Control_DeviceLayoutPresenter.xaml.cs">
+    <Compile Include="Settings\DeviceLayoutViewer\Control_DeviceLayoutPresenter.xaml.cs">
       <DependentUpon>Control_DeviceLayoutPresenter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Keycaps\Control_Keycap.xaml.cs">
+    <Compile Include="Settings\DeviceLayoutViewer\Control_Keycap.xaml.cs">
       <DependentUpon>Control_Keycap.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Layers\Control_ParticleLayer.xaml.cs">
@@ -1225,7 +1245,7 @@
       <DependentUpon>Control_LayerControlPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\IInit.cs" />
-    <Compile Include="Settings\Keycaps\IKeycap.cs" />
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\KeycapViewer.cs" />
     <Compile Include="Settings\Layers\AmbilightLayerHandler.cs" />
     <Compile Include="Settings\Layers\BlinkingLayerHandler.cs" />
     <Compile Include="Settings\Layers\BreathingLayerHandler.cs" />
@@ -1923,19 +1943,47 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Keycaps\Window_DeviceConfig.xaml">
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_ImageKeycap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_ColorizedKeycap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_ColorizedKeycapBlank.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_DefaultKeycap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_DefaultKeycapBackglow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_DefaultKeycapBackglowOnly.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Keycaps\Control_GhostKeycap.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Window_DeviceConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Keycaps\Control_DeviceLayout.xaml">
+    <Page Include="Settings\DeviceLayoutViewer\Control_DeviceLayout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Keycaps\Control_DeviceLayoutPresenter.xaml">
+    <Page Include="Settings\DeviceLayoutViewer\Control_DeviceLayoutPresenter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\Keycaps\Control_Keycap.xaml">
+    <Page Include="Settings\DeviceLayoutViewer\Control_Keycap.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

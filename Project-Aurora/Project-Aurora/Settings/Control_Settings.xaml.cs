@@ -600,6 +600,7 @@ namespace Aurora.Settings
             if (IsLoaded)
             {
                 Global.Configuration.virtualkeyboard_keycap_type = (KeycapType)Enum.Parse(typeof(KeycapType), this.ComboBox_virtualkeyboard_keycap_type.SelectedItem.ToString());
+                Global.devicesLayout.Load();
                 ConfigManager.Save(Global.Configuration);
             }
         }

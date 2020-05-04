@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 
-namespace Aurora.Settings.Keycaps
+namespace Aurora.Settings.DeviceLayoutViewer
 {
     /// <summary>
     /// Interaction logic for Control_DeviceLayout.xaml
@@ -24,7 +24,6 @@ namespace Aurora.Settings.Keycaps
 
         public event LayoutUpdatedEventHandler DeviceLayoutUpdated;
         public Dictionary<DeviceKey, Control_Keycap> KeyboardMap = new Dictionary<DeviceKey, Control_Keycap>(new DeviceKey.EqualityComparer());
-        private Point BaseOffset = new Point(0,0);
 
         public static readonly DependencyProperty DeviceConfigProperty = DependencyProperty.Register("DeviceConfig", typeof(DeviceConfig), typeof(DeviceConfig));
 
@@ -37,9 +36,6 @@ namespace Aurora.Settings.Keycaps
                 ConfigChanged();
             }
         }
-
-
-        private string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
 
         public Control_DeviceLayout()
         {
@@ -100,43 +96,26 @@ namespace Aurora.Settings.Keycaps
             deviceControl.Children.Clear();
             if (Keys.Count > 0)
             {
-                string images_path = System.IO.Path.Combine(layoutsPath, "Images");
 
                 int layout_height = 0;
                 int layout_width = 0;
                 foreach (DeviceKeyConfiguration key in Keys)
                 {
-                    string image_path = "";
 
-                    if (!String.IsNullOrWhiteSpace(key.Image))
-                        image_path = System.IO.Path.Combine(images_path, key.Image);
+                    Control_Keycap keycap = new Control_Keycap(key);
 
-                    Control_Keycap keycap = new Control_Keycap(key, image_path);
-
-                    if (key.Tag == (int)Devices.DeviceKeys.ESC)
-                    {
-                        //var escKey = KeyboardMap[Devices.DeviceKeys.ESC];
-                        BaseOffset.X = key.Region.X;
-                        BaseOffset.Y = key.Region.Y;
-
-                    }
-                    keycap.RenderTransform = new TranslateTransform(key.Region.X, key.Region.Y);
                     //keycap.Margin = new Thickness(key.Region.X, key.Region.Y, 0, 0);
                     deviceControl.Children.Add(keycap);
 
-                    if (!KeyboardMap.ContainsKey((Devices.DeviceKeys)key.Tag) && keycap is IKeycap && !abstractKeycaps)
+                    if (!KeyboardMap.ContainsKey((Devices.DeviceKeys)key.Tag) && !abstractKeycaps)
                         KeyboardMap.Add(key.Key, keycap);
 
-                    if (key.Region.Width + key.Region.X > layout_width)
-                        layout_width = key.Region.Width + key.Region.X;
+                    if (key.Width + key.X > layout_width)
+                        layout_width = key.Width + key.X;
 
-                    if (key.Region.Height + key.Region.Y > layout_height)
-                        layout_height = key.Region.Height + key.Region.Y;
+                    if (key.Height + key.Y > layout_height)
+                        layout_height = key.Height + key.Y;
 
-                }
-                foreach (Control_Keycap k in deviceControl.Children)
-                {
-                    k.Offset = BaseOffset;
                 }
                 //Update size
                 deviceControl.Width = layout_width;
@@ -187,10 +166,10 @@ namespace Aurora.Settings.Keycaps
             foreach (var key in Keys)
             {
 
-                double width = key.Region.Width;
-                double height = key.Region.Height;
-                double x_offset = DeviceConfig.Offset.X + key.Region.X;
-                double y_offset = DeviceConfig.Offset.Y + key.Region.Y;
+                double width = key.Width;
+                double height = key.Height;
+                double x_offset = DeviceConfig.Offset.X + key.X;
+                double y_offset = DeviceConfig.Offset.Y + key.Y;
 
                 bitmapMap[key.Key] = new BitmapRectangle(PixelToByte(x_offset), PixelToByte(y_offset), PixelToByte(width), PixelToByte(height));
 

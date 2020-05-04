@@ -11,9 +11,9 @@ using System.Windows.Input;
 using Aurora.Devices;
 using System.Drawing;
 using System.Windows.Media.Imaging;
-using Aurora.Settings.Keycaps;
 using System.Windows.Threading;
 using System.Globalization;
+using Aurora.Settings.DeviceLayoutViewer.Keycaps;
 
 namespace Aurora.Settings
 {
@@ -285,7 +285,7 @@ namespace Aurora.Settings
 
         private VirtualGroup virtualKeyboardGroup;
 
-        private Dictionary<Devices.DeviceKeys, IKeycap> _virtualKeyboardMap = new Dictionary<DeviceKeys, IKeycap>();
+        private Dictionary<Devices.DeviceKeys, KeycapViewer> _virtualKeyboardMap = new Dictionary<DeviceKeys, KeycapViewer>();
 
         private bool _virtualKBInvalid = true;
 

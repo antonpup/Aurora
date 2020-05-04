@@ -543,6 +543,12 @@ namespace Aurora.Devices.CoolerMaster
         //private CoolerMasterSDK.KEY_COLOR[,] previous_key_colors = new CoolerMasterSDK.KEY_COLOR[CoolerMasterSDK.MAX_LED_ROW, CoolerMasterSDK.MAX_LED_COLUMN];
         //private Color previous_peripheral_Color = Color.Black;
 
+        public static Devices.DeviceKeys[] possible_peripheral_keys = {
+                    Devices.DeviceKeys.Peripheral,
+                    Devices.DeviceKeys.Peripheral_FrontLight,
+                    Devices.DeviceKeys.Peripheral_ScrollWheel,
+                    Devices.DeviceKeys.Peripheral_Logo
+                };
 
         public bool Initialize()
         {
@@ -738,7 +744,7 @@ namespace Aurora.Devices.CoolerMaster
                     /*if (dev_key == DeviceKeys.ENTER && !Global.kbLayout.Loaded_Localization.IsANSI())
                         dev_key = DeviceKeys.BACKSLASH;*/
 
-                    if (Effects.possible_peripheral_keys.Contains(dev_key))
+                    if (possible_peripheral_keys.Contains(dev_key))
                     {
                         //Temp until mice support is added
                         continue;

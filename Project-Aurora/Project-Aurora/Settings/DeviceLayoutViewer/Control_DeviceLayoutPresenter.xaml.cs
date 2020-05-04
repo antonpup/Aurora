@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Aurora.Settings.Keycaps
+namespace Aurora.Settings.DeviceLayoutViewer
 {
     /// <summary>
     /// Interaction logic for Control_DeviceLayoutPresenter.xaml
@@ -160,7 +160,10 @@ namespace Aurora.Settings.Keycaps
             {
                 Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
                 var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
-                DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x => bitmap.Add(x.Key, x.Value)));
+                DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x => {
+                    if (!bitmap.ContainsKey(x.Key))
+                        bitmap.Add(x.Key, x.Value);
+                }));
                 Global.effengine.SetBitmapping(bitmap);
             }
         }

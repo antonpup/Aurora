@@ -21,15 +21,6 @@ namespace Aurora.EffectsEngine
 
         private bool needsRender = false;
 
-        Color peripheral;
-
-        private static Devices.DeviceKeys[] possible_peripheral_keys = {
-                Devices.DeviceKeys.Peripheral,
-                Devices.DeviceKeys.Peripheral_FrontLight,
-                Devices.DeviceKeys.Peripheral_ScrollWheel,
-                Devices.DeviceKeys.Peripheral_Logo
-            };
-
         static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
 
         /// <summary>
@@ -39,7 +30,6 @@ namespace Aurora.EffectsEngine
         {
             name = "Effect Layer";
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
         }
@@ -52,7 +42,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = another_layer.name;
             colormap = new Bitmap(another_layer.colormap);
-            peripheral = another_layer.peripheral;
 
             needsRender = another_layer.needsRender;
         }
@@ -65,7 +54,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
         }
@@ -79,7 +67,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = color;
 
             Fill(color);
         }
@@ -96,7 +83,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
 
@@ -584,40 +570,18 @@ namespace Aurora.EffectsEngine
         {
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-            if (key.Tag == (int)Devices.DeviceKeys.Peripheral)
+            if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
+                keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
             {
-                if (brush is SolidBrush solidBrush)
-                    peripheral = solidBrush.Color;
-                // TODO Add support for this ^ to other brush types
-
-                using (Graphics g = Graphics.FromImage(colormap))
-                {
-                    foreach (DeviceKey peri_key in possible_peripheral_keys)
-                    {
-                        BitmapRectangle peri_keymaping = Effects.GetBitmappingFromDeviceKey(peri_key);
-
-                        if (peri_keymaping.IsValid)
-                            g.FillRectangle(brush, peri_keymaping.Rectangle);
-                    }
-
-                    needsRender = true;
-                }
+                Global.logger.Warn("Coudln't set key color " + key.ToString());
+                return this;
             }
             else
             {
-                if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
-                    keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
+                using (Graphics g = Graphics.FromImage(colormap))
                 {
-                    Global.logger.Warn("Coudln't set key color " + key.ToString());
-                    return this;
-                }
-                else
-                {
-                    using (Graphics g = Graphics.FromImage(colormap))
-                    {
-                        g.FillRectangle(brush, keymaping.Rectangle);
-                        needsRender = true;
-                    }
+                    g.FillRectangle(brush, keymaping.Rectangle);
+                    needsRender = true;
                 }
             }
 
@@ -717,8 +681,6 @@ namespace Aurora.EffectsEngine
                     g.DrawImage(rhs.colormap, 0, 0);
             }
 
-            added.peripheral = Utils.ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
-
             return added;
         }
 
@@ -759,8 +721,6 @@ namespace Aurora.EffectsEngine
             }
 
             layer.colormap.UnlockBits(srcData);
-
-            layer.peripheral = Utils.ColorUtils.MultiplyColorByScalar(layer.peripheral, value);
 
             return layer;
         }
