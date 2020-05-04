@@ -12,85 +12,35 @@ using System.Text;
 using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
 
-namespace Aurora.Profiles.StardewValley {
-    public class StardewValleyProfile : ApplicationProfile {
-        /*
-        public override void Reset() {
+namespace Aurora.Profiles.StardewValley
+{
+    public class StardewValleyProfile : ApplicationProfile
+    {
+        public override void Reset()
+        {
             base.Reset();
 
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                new Layer("Health", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
-                        _VariablePath = "Player/Health",
-                        _MaxVariablePath = "Player/MaxHealth",
-                        _PrimaryColor = Color.FromArgb(255, 0, 0),
-                        _SecondaryColor = Color.FromArgb(128, 0, 255),
-                        _Sequence = new KeySequence(new[] {
-                            DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12
-                        }),
-                        _BlinkThreshold = 0.25
-                    }
-                }),
-                new Layer("Mana", new PercentLayerHandler() {
-                    Properties = new PercentLayerHandlerProperties() {
-                        _VariablePath = "Player/Mana",
-                        _MaxVariablePath = "Player/MaxMana",
-                        _PrimaryColor = Color.FromArgb(0, 0, 255),
-                        _SecondaryColor = Color.FromArgb(0, 0, 128),
-                        _Sequence = new KeySequence(new[] {
-                            DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE, DK.SIX, DK.SEVEN, DK.EIGHT, DK.NINE, DK.ZERO, DK.MINUS, DK.EQUALS
-                        }),
-                        _BlinkThreshold = 0.25
-                    }
-                }),
-                new Layer("Background", new PercentGradientLayerHandler() {
-                    Properties = new PercentGradientLayerHandlerProperties {
-                        _Gradient = new EffectBrush() {
-                            type = EffectBrush.BrushType.Linear,
-                            start = new PointF(0, 0),
-                            end = new PointF(1, 0),
-                            colorGradients = new SortedDictionary<float, Color> {
-                                { 0, Color.White },
-                                { 1, Color.DarkGray }
-                            }
-                        },
-                        _VariablePath = "Player/Depth",
-                        _MaxVariablePath = "Player/MaxDepth",
+                new Layer("Background/Season", new SolidFillLayerHandler() {
+                    Properties = new SolidFillLayerHandlerProperties {
                         _PrimaryColor = Color.Transparent,
-                        _SecondaryColor = Color.Transparent,
-                        _PercentType = PercentEffectType.AllAtOnce,
-                        _Sequence = new KeySequence(Effects.WholeCanvasFreeForm)
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetLookupTable("_Gradient",new OverrideLookupTableBuilder<EffectBrush>()
-                        .AddEntry(GetColorGradient(Color.Green, Color.DarkOliveGreen),
-                                new BooleanGSIEnum("Player/Biome", GSI.Nodes.TerrariaBiome.Forest))
-                        .AddEntry(GetColorGradient(Color.Blue, Color.DarkBlue),
-                                new BooleanGSIEnum("Player/Biome", GSI.Nodes.TerrariaBiome.Snow))
-                        .AddEntry(GetColorGradient(Color.Yellow, Color.SandyBrown),
-                                new BooleanGSIEnum("Player/Biome", GSI.Nodes.TerrariaBiome.Desert))
-                        .AddEntry(GetColorGradient(Color.Lime, Color.DarkGreen),
-                                new BooleanGSIEnum("Player/Biome", GSI.Nodes.TerrariaBiome.Jungle))
+                    .SetLookupTable("_PrimaryColor",new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.ForestGreen,
+                                new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Spring))
+                        .AddEntry(Color.Gold,
+                                new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Summer))
+                        .AddEntry(Color.Brown,
+                                new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Fall))
+                        .AddEntry(Color.DeepSkyBlue,
+                                new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Winter))
                     )
                 ),
             };
         }
 
-        private static EffectBrush GetColorGradient(Color start, Color end)
-        {
-            return new EffectBrush()
-            {
-                type = EffectBrush.BrushType.Linear,
-                start = new PointF(0, 0),
-                end = new PointF(1, 0),
-                colorGradients = new SortedDictionary<float, Color> {
-                    { 0, start },
-                    { 1, end }
-                }
-            };
-        }
-        */
     }
 }
