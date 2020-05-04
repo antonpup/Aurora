@@ -194,10 +194,12 @@ namespace Aurora.Settings.Layers
     {
         private IScreenCapture screenCapture;
         private readonly Timer captureTimer;
-        private Image screen;
+        private Bitmap screen;
         private long last_use_time = 0;
         private IntPtr specificProcessHandle = IntPtr.Zero;
         private Rectangle cropRegion;
+
+        #region Bindings
         public IEnumerable<string> Displays => screenCapture.GetDisplays();
 
         public int OutputId
@@ -227,6 +229,7 @@ namespace Aurora.Settings.Layers
                 }
             }
         }
+        #endregion
 
         public AmbilightLayerHandler()
         {
@@ -433,7 +436,7 @@ namespace Aurora.Settings.Layers
                     break;
             }
 
-            return (crop.Width != 0 && crop.Width != 0);
+            return crop.Width != 0 && crop.Height != 0;
         }
 
         /// <summary>
