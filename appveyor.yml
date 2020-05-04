@@ -28,7 +28,7 @@ before_build:
     
 after_build:
 - cmd: >-
-    set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+    set PATH="C:\Program Files (x86)\Inno Setup 6";%PATH%
     
     ISCC.exe /DEXTERNAL_VERSION=%APPVEYOR_BUILD_VERSION% %APPVEYOR_BUILD_FOLDER%\Installer\installer.iss
 
