@@ -211,7 +211,7 @@ namespace Aurora.Settings.Layers
                 {
                     Properties._AmbilightOutputId = value;
                     InvokePropertyChanged(nameof(OutputId));
-                    screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                    Initialize();
                 }
             }
         }
@@ -253,6 +253,7 @@ namespace Aurora.Settings.Layers
                 }
                 catch (SharpDXException e)
                 {
+                    (screenCapture as DXScreenCapture)?.Dispose();
                     //Console.WriteLine("Error using experimental ambilight mode: " + e);
                     Global.logger.Error("Error using experimental ambilight mode: " + e);
                     Properties._ExperimentalMode = false;
@@ -260,10 +261,6 @@ namespace Aurora.Settings.Layers
 
                     screenCapture = new GDIScreenCapture();
                     screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                }
-                finally
-                {
-                    (screenCapture as DXScreenCapture)?.Dispose();
                 }
             }
             else
