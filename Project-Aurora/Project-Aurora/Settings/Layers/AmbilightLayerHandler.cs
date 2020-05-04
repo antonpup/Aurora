@@ -238,10 +238,6 @@ namespace Aurora.Settings.Layers
 
         public void Initialize()
         {
-            if (screenCapture is DXScreenCapture)
-            {
-                (screenCapture as DXScreenCapture).Dispose();
-            }
             if (Properties.ExperimentalMode)
             {
                 screenCapture = new DXScreenCapture();
@@ -261,6 +257,10 @@ namespace Aurora.Settings.Layers
 
                     screenCapture = new GDIScreenCapture();
                     screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                }
+                finally
+                {
+                    (screenCapture as DXScreenCapture)?.Dispose();
                 }
             }
             else
