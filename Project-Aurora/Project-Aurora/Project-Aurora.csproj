@@ -225,12 +225,6 @@
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
-    <Compile Include="Profiles\Skype\Control_Skype.xaml.cs">
-      <DependentUpon>Control_Skype.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Profiles\Skype\SkypeProfile.cs" />
-    <Compile Include="Profiles\Skype\SkypeApplication.cs" />
-    <Compile Include="Profiles\Skype\State_SkypeOverlay.cs" />
     <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
     <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
@@ -1671,10 +1665,6 @@
     <Page Include="Controls\Control_LayerPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Profiles\Skype\Control_Skype.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Terraria\Control_Terraria.xaml">
       <Generator>MSBuild:Compile</Generator>
