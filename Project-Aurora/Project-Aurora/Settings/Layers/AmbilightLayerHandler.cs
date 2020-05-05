@@ -303,7 +303,6 @@ namespace Aurora.Settings.Layers
             if (cropRegion.Width == 0 || cropRegion.Height == 0)
                 return ambilight_layer;
 
-
             switch (Properties.AmbilightType)
             {
                 case AmbilightType.Default:
@@ -574,7 +573,7 @@ namespace Aurora.Settings.Layers
 
         public IEnumerable<string> GetDisplays() =>
             Screen.AllScreens.Select((s, index) =>
-                $"Display {index}: X:{s.Bounds.X}, Y:{s.Bounds.Y}, W:{s.Bounds.Width}, H:{s.Bounds.Height}");
+                $"Display {index + 1}: X:{s.Bounds.X}, Y:{s.Bounds.Y}, W:{s.Bounds.Width}, H:{s.Bounds.Height}");
     }
 
     internal class DXScreenCapture : IScreenCapture
@@ -613,8 +612,6 @@ namespace Aurora.Settings.Layers
             if (bigScreen is null)
                 processing = false;
 
-
-
             return bigScreen;
         }
 
@@ -648,10 +645,7 @@ namespace Aurora.Settings.Layers
 
             lock (deskDupLock)
             {
-                while (processing)
-                {
-
-                }
+                while (processing) { }
                 desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, CurrentScreenBounds);
             }
         }
@@ -660,7 +654,7 @@ namespace Aurora.Settings.Layers
         {
             var b = s.Output.Description.DesktopBounds;
 
-            return $"Display {index}: X:{b.Left}, Y:{b.Top}, W:{b.Right - b.Left}, H:{b.Bottom - b.Top}";
+            return $"Display {index + 1}: X:{b.Left}, Y:{b.Top}, W:{b.Right - b.Left}, H:{b.Bottom - b.Top}";
         });
 
         private static IEnumerable<(Adapter1 Adapter, Output1 Output)> GetAdapters()
