@@ -2,7 +2,6 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
-using MiscUtil.Collections.Extensions;
 using Newtonsoft.Json;
 using SharpDX;
 using SharpDX.DXGI;
