@@ -50,8 +50,6 @@ namespace Aurora.Profiles
 
         public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
 
-        public LightEventType? Type { get; set; } = LightEventType.Normal;
-
         public bool EnableByDefault { get; set; } = true;
         public bool EnableOverlaysByDefault { get; set; } = true;
 
@@ -74,7 +72,6 @@ namespace Aurora.Profiles
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
         public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
-        public LightEventType Type { get; set; }
         #endregion
 
         #region Internal Properties
