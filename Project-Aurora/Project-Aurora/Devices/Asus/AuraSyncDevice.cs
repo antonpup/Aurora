@@ -30,7 +30,6 @@ namespace Aurora.Devices.Asus
         private const int DiscountTries = 3;
         private int disconnectCounter = 0;
 
-
         public AuraSyncDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 30)
         {
             this.asusHandler = asusHandler;

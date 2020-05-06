@@ -8,12 +8,20 @@ namespace Aurora.Devices.Asus
 {
     public class AsusDevice : Device
     {
-        private const string DeviceName = "Asus";
+        public const string DeviceName = "Asus";
         private AsusHandler asusHandler = new AsusHandler();
         private bool isActive = false;
-        
+
+        private VariableRegistry defaultRegistry = null;
         /// <inheritdoc />
-        public VariableRegistry GetRegisteredVariables() => new VariableRegistry();
+        public VariableRegistry GetRegisteredVariables()
+        {
+            if (defaultRegistry != null) return defaultRegistry;
+            
+            defaultRegistry = new VariableRegistry();
+            defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
+            return defaultRegistry;
+        }
 
         /// <inheritdoc />
         public string GetDeviceName() => DeviceName;

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using AuraServiceLib;
 using Aurora.Devices.Asus.Config;
 using Microsoft.Win32;
@@ -52,6 +50,9 @@ namespace Aurora.Devices.Asus
         private bool CheckVersion(out string message)
         {
             message = null;
+            
+            bool enableUnsupportedVersion = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_disconnect_when_stop");
+            
             //Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Asus\AURA\Version
             using (var root = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
             {
@@ -62,10 +63,20 @@ namespace Aurora.Devices.Asus
                         var registeredOwner = key.GetValue("Version");
                         if (registeredOwner is string str)
                         {
-                            message = str == RecommendedAsusVersion 
-                                ? $"Found correct version of Asus Aura SDK v{RecommendedAsusVersion}" 
-                                : $"Found version of Asus Aura SDK v{str}, which is not supported, if you have issues uninstall and reinstall to v{RecommendedAsusVersion}";
-                            return true;
+                            if (str == RecommendedAsusVersion)
+                            {
+                                message = $"Found correct version of Asus Aura SDK v{RecommendedAsusVersion}";
+                                return true;
+                            }
+
+                            if (enableUnsupportedVersion)
+                            {
+                                message = $"Found version of Asus Aura SDK v{str}, which is not supported, if you have issues uninstall and reinstall to v{RecommendedAsusVersion}";
+                                return true;
+                            }
+                            
+                            message = $"Found version of Asus Aura SDK v{str}, which is not supported, either uninstall and reinstall to v{RecommendedAsusVersion} or enable Unsupported Asus SDK Version in 'View Options'";
+                            return false;
                         }
                     }
                 }
@@ -74,6 +85,8 @@ namespace Aurora.Devices.Asus
             message = $"Could not find Asus Aura SDK, please install version v{RecommendedAsusVersion}";
             return false;
         }
+
+        public object DeviceName { get; set; }
 
         public bool Start()
         {
