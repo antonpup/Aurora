@@ -132,7 +132,6 @@ namespace Aurora.Profiles
                 new Guild_Wars_2.GW2(),
                 new WormsWMD.WormsWMD(),
                 new Blade_and_Soul.BnS(),
-                new Skype.Skype(),
                 new ROTTombRaider.ROTTombRaider(),
                 new DyingLight.DyingLight(),
                 new ETS2.ETS2(),
