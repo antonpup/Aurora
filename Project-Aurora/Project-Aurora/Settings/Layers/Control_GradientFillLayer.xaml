@@ -11,21 +11,6 @@
              xmlns:eff_config="clr-namespace:Aurora.Settings"
              xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_GradientFillLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-
-            <ObjectDataProvider x:Key="AnimationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="eff_config:AnimationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:AnimationTypeToStringVC x:Key="AnimationTypeToStringVC"/>
-            <DataTemplate x:Key="AnimationTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AnimationTypeToStringVC}}" />
-            </DataTemplate>
-
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <Controls:KeySequence x:Name="KeySequence_keys" Margin="265,0,0,0" HorizontalAlignment="Left" Width="230" RecordingTag="SolidColorLayer" Title="Affected Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated"/>

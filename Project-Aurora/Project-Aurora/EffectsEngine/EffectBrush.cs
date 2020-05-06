@@ -58,7 +58,7 @@ namespace Aurora.EffectsEngine
         {
             type = BrushType.Linear;
 
-            foreach(var color in spectrum.GetSpectrumColors())
+            foreach (var color in spectrum.GetSpectrumColors())
                 colorGradients.Add(color.Key, color.Value);
 
             start = new System.Drawing.PointF(0, 0);
@@ -192,15 +192,15 @@ namespace Aurora.EffectsEngine
 
             }
 
-            if(colorGradients.Count > 0)
+            if (colorGradients.Count > 0)
             {
                 bool firstFound = false;
                 System.Drawing.Color first_color = new System.Drawing.Color();
                 System.Drawing.Color last_color = new System.Drawing.Color();
 
-                foreach(var kvp in colorGradients)
+                foreach (var kvp in colorGradients)
                 {
-                    if(!firstFound)
+                    if (!firstFound)
                     {
                         first_color = kvp.Value;
                         firstFound = true;
@@ -224,7 +224,7 @@ namespace Aurora.EffectsEngine
                     colorGradients.Add(1.0f, System.Drawing.Color.Transparent);
             }
 
-            
+
         }
 
         public EffectBrush(System.Windows.Media.Brush brush)
@@ -462,7 +462,157 @@ namespace Aurora.EffectsEngine
 
             return _drawingBrush;
         }
+        private SortedDictionary<float, System.Drawing.Color> GetColorGradientsForWindow(float shift, float window_size, float starting_value = 0)
+        {
+            SortedDictionary<float, System.Drawing.Color> gradients = new SortedDictionary<float, System.Drawing.Color>();
+            float previousKey = 0;
+            foreach (var kvp in colorGradients)
+            {
+                if (kvp.Key >= shift)
+                {
+                    if (gradients.Count == 0 && kvp.Key != 0)
+                    {
+                        gradients[starting_value] = Utils.ColorUtils.BlendColors(colorGradients[previousKey], kvp.Value, (shift - previousKey)/(kvp.Key - previousKey));
+                    }
 
+                    if (kvp.Key <= shift + window_size)
+                    {
+                        float index = starting_value + (kvp.Key - shift) / window_size;
+                        if (index >= 1)
+                        {
+                            gradients[1] = kvp.Value;
+                            break;
+                        }
+                        gradients[index] = kvp.Value;
+                    }
+                    else
+                    {
+                        gradients[1] = Utils.ColorUtils.BlendColors(colorGradients[previousKey], kvp.Value, (shift + window_size - previousKey) / (kvp.Key - previousKey));
+                        return gradients;
+                    }
+
+                    if (kvp.Key == 1)
+                    {
+                        foreach (var gradient in GetColorGradientsForWindow(0, window_size +shift-previousKey, starting_value + (1 - shift) / window_size))
+                        {
+                            gradients[gradient.Key] = gradient.Value;
+                        }
+                    }
+                }
+                previousKey = kvp.Key;
+            }
+            return gradients;
+        }
+        public System.Drawing.Brush GetDrawingBrush(float shift, float window_size)
+        {
+            if (true/*_drawingbrush == null*/)
+            {
+                if (type == BrushType.Solid)
+                {
+                    _drawingBrush = new System.Drawing.SolidBrush(colorGradients[0.0f]);
+                }
+                else if (type == BrushType.Linear)
+                {
+                    System.Drawing.Drawing2D.LinearGradientBrush brush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                        start,
+                        new System.Drawing.PointF(100/window_size,0),
+                        System.Drawing.Color.Red,
+                        System.Drawing.Color.Red
+                        );
+
+                    List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
+                    List<float> brush_positions = new List<float>();
+
+                    foreach (var kvp in colorGradients)
+                    {
+                        brush_positions.Add(kvp.Key);
+                        brush_colors.Add(kvp.Value);
+                    }
+
+                    System.Drawing.Drawing2D.ColorBlend color_blend = new System.Drawing.Drawing2D.ColorBlend();
+                    color_blend.Colors = brush_colors.ToArray();
+                    color_blend.Positions = brush_positions.ToArray();
+                    brush.InterpolationColors = color_blend;
+
+                    switch (wrap)
+                    {
+                        //case BrushWrap.None:
+                        //    brush.WrapMode = System.Drawing.Drawing2D.WrapMode.Clamp;
+                        //    break;
+                        case BrushWrap.Repeat:
+                            brush.WrapMode = System.Drawing.Drawing2D.WrapMode.Tile;
+                            break;
+                        case BrushWrap.Reflect:
+                            brush.WrapMode = System.Drawing.Drawing2D.WrapMode.TileFlipXY;
+                            break;
+                    }
+
+                    _drawingBrush = brush;
+                }
+                else if (type == BrushType.Radial)
+                {
+                    System.Drawing.Drawing2D.GraphicsPath g_path = new System.Drawing.Drawing2D.GraphicsPath();
+                    g_path.AddEllipse(
+                        new System.Drawing.RectangleF(
+                        start.X,
+                        start.Y,
+                        end.X,
+                        end.Y
+                        ));
+
+                    System.Drawing.Drawing2D.PathGradientBrush brush = new System.Drawing.Drawing2D.PathGradientBrush(
+                        g_path
+                        );
+
+                    switch (wrap)
+                    {
+                        //// Clamp causes an exception, it's a bug in the Drawing Brush.
+                        //case BrushWrap.None:
+                        //    brush.WrapMode = System.Drawing.Drawing2D.WrapMode.Clamp;
+                        //    break;
+                        case BrushWrap.Repeat:
+                            brush.WrapMode = System.Drawing.Drawing2D.WrapMode.Tile;
+                            break;
+                        case BrushWrap.Reflect:
+                            brush.WrapMode = System.Drawing.Drawing2D.WrapMode.TileFlipXY;
+                            break;
+                    }
+
+                    List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
+                    List<float> brush_positions = new List<float>();
+
+                    foreach (var kvp in GetColorGradientsForWindow(Math.Abs(shift), window_size/100))
+                    {
+                        if (shift < 0)
+                            brush_positions.Add(1.0f - kvp.Key);
+                        else
+                            brush_positions.Add(kvp.Key);
+                        brush_colors.Add(kvp.Value);
+                    }
+
+                    if (shift < 0)
+                    {
+                        brush_colors.Reverse();
+                        brush_positions.Reverse();
+                    }
+
+                    brush.CenterPoint = center;
+
+                    System.Drawing.Drawing2D.ColorBlend color_blend = new System.Drawing.Drawing2D.ColorBlend();
+                    color_blend.Colors = brush_colors.ToArray();
+                    color_blend.Positions = brush_positions.ToArray();
+                    brush.InterpolationColors = color_blend;
+
+                    _drawingBrush = brush;
+                }
+                else
+                {
+                    _drawingBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Transparent);
+                }
+            }
+
+            return _drawingBrush;
+        }
         public System.Windows.Media.Brush GetMediaBrush()
         {
             if (_mediaBrush == null)

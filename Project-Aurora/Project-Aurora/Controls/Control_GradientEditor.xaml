@@ -31,15 +31,12 @@
         <Label Content="Brush:" Grid.Row="0" HorizontalAlignment="Right" />
         <ncore:ColorBox Grid.Row="0" Grid.Column="1" Brush="{Binding Brush, Converter={StaticResource BrushConverter}, Mode=TwoWay}" />
 
-        <Label Content="Animation Type:" Grid.Row="1" HorizontalAlignment="Right" />
-        <ComboBox x:Name="animTypeCb" Grid.Row="1" Grid.Column="1" Margin="0,0,0,2" DisplayMemberPath="Key" SelectedValuePath="Value"  SelectedValue="{Binding AnimationType}" />
-
         <Label Content="Speed:" Grid.Row="2" HorizontalAlignment="Right" />
-        <xctk:SingleUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Speed}" Margin="0,2" />
+        <xctk:SingleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Speed}" Margin="0,2" />
 
         <Label Content="Angle:" Grid.Row="3" HorizontalAlignment="Right" />
-        <xctk:SingleUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Angle}" Margin="0,2" />
+        <xctk:SingleUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Angle}" Margin="0,2" />
         
-        <CheckBox Grid.Row="4" Grid.Column="1" Content="Reverse Direction?" IsChecked="{Binding AnimationReverse}" />
+        <CheckBox Grid.Row="3" Grid.Column="1" Content="Reverse Direction?" IsChecked="{Binding AnimationReverse}" />
     </Grid>
 </UserControl>

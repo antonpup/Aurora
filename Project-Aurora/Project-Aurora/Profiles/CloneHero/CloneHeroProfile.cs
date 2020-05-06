@@ -53,7 +53,6 @@ namespace Aurora.Profiles.CloneHero
                             secondary = Color.FromArgb(39, 73, 167),
                             speed = 3,
                             angle = 0,
-                            animation_type = AnimationType.Translate_XY,
                             animation_reverse = false,
                             brush =
                             {
