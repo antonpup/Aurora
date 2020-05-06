@@ -221,8 +221,8 @@ namespace Aurora.Settings.Layers
             {
                 AnimationTrack rainbowWave = new AnimationTrack("Rainbow Wave", 1.0f);
 
-                rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
-                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
+                rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new RadialEffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()), Properties.EffectWidth));
+                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new RadialEffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()), Properties.EffectWidth));
 
                 anim_mix.AddTrack(rainbowWave);
             }

@@ -62,12 +62,12 @@ namespace Aurora.Settings.Layers
         private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
+                (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = EffectsEngine.EffectBrush.GetEffectBrush((sender as ColorBox.ColorBox).Brush);
         }
 
         private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new EffectBrush(ColorSpectrum.Rainbow);
+            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new LinearEffectBrush(ColorSpectrum.Rainbow);
 
             Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush.GetMediaBrush();
             try
@@ -82,7 +82,7 @@ namespace Aurora.Settings.Layers
 
         private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new EffectBrush(ColorSpectrum.RainbowLoop);
+            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new LinearEffectBrush(ColorSpectrum.RainbowLoop);
 
             Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush.GetMediaBrush();
             try

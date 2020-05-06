@@ -41,7 +41,7 @@ namespace Aurora.EffectsEngine.Animations
             RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
             _scaledDimension.Offset(offset);
 
-            EffectBrush _newbrush = new EffectBrush(_gradientBrush);
+            EffectBrush _newbrush = new RadialEffectBrush(_gradientBrush);
             _newbrush.start = new PointF(0.0f, 0.0f);
             _newbrush.end = new PointF(1.0f, 1.0f);
             _newbrush.center = new PointF(0.5f, 0.5f);
@@ -77,7 +77,6 @@ namespace Aurora.EffectsEngine.Animations
                 newColorGradients.Add(0.0f, spectrum.GetColorAt((1 - 1 / _cutOffPoint)));
             }
 
-            _newbrush.SetBrushType(EffectBrush.BrushType.Radial);
             Brush brush = _newbrush.GetDrawingBrush();
 
             if(brush is PathGradientBrush)
@@ -124,7 +123,7 @@ namespace Aurora.EffectsEngine.Animations
                 _dimension.Height
                 );
 
-            return new AnimationGradientCircle(newrect, new EffectBrush(_gradientBrush), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationGradientCircle(newrect, (EffectBrush)_gradientBrush.Clone(), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
         }
 
         public override bool Equals(object obj)

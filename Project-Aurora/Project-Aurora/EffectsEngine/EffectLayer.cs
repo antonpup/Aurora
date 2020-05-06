@@ -209,14 +209,14 @@ namespace Aurora.EffectsEngine
                         shift *= -1.0f;
                     float percent = shift / (Effects.canvas_biggest / effect_config.gradient_size);
                     brush = effect_config.brush.GetDrawingBrush(percent % 1 , effect_config.gradient_size);
-                    if (effect_config.brush.type == EffectBrush.BrushType.Linear)
+                    if (brush is LinearGradientBrush linear_brush)
                     {
-                        (brush as LinearGradientBrush).ScaleTransform(brush_width, brush_height);
-                        (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
-                        (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                        linear_brush.ScaleTransform(brush_width, brush_height);
+                        linear_brush.RotateTransform(effect_config.angle);
+                        linear_brush.TranslateTransform(shift, shift);
 
                     }
-                    else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
+                    else if (brush is PathGradientBrush radial_brush)
                     {
                         brush_height *= (float)Math.Sqrt(2);
                         brush_width *= (float)Math.Sqrt(2);
@@ -229,10 +229,10 @@ namespace Aurora.EffectsEngine
                             y_offset += rect.Y;
                         }
 
-                        (brush as PathGradientBrush).TranslateTransform(x_offset, y_offset);
-                        (brush as PathGradientBrush).ScaleTransform(brush_width, brush_height);
+                        radial_brush.TranslateTransform(x_offset, y_offset);
+                        radial_brush.ScaleTransform(brush_width, brush_height);
 
-                        (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
+                        radial_brush.WrapMode = WrapMode.Clamp;
                     }
 
                     Fill(brush);

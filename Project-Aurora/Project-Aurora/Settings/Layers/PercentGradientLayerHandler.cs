@@ -20,12 +20,12 @@ namespace Aurora.Settings.Layers
         [Overrides.LogicOverridable("Gradient")]
         public EffectBrush _Gradient { get; set; }
         [JsonIgnore]
-        public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear); } }
+        public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new LinearEffectBrush(); } }
         
         public override void Default()
         {
             base.Default();
-            this._Gradient = new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear);
+            this._Gradient = new LinearEffectBrush();
         }
     }
 

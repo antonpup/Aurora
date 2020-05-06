@@ -503,7 +503,7 @@ namespace Aurora.Utils
     /// </summary>
     public class EffectBrushToBrushConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((EffectsEngine.EffectBrush)value).GetMediaBrush();
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new EffectsEngine.EffectBrush((System.Windows.Media.Brush)value);
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => EffectsEngine.EffectBrush.GetEffectBrush((System.Windows.Media.Brush)value);
     }
 
     public class BoolToColorConverter : IValueConverter

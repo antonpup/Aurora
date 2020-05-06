@@ -55,8 +55,7 @@ namespace Aurora.Profiles.CloneHero
                             angle = 0,
                             animation_reverse = false,
                             brush =
-                            {
-                                type = EffectBrush.BrushType.Linear,
+                            new LinearEffectBrush{
                                 wrap = EffectBrush.BrushWrap.Repeat,
                                 colorGradients = new SortedDictionary<float, Color>()
                                 {

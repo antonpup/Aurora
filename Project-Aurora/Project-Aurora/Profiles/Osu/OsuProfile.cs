@@ -131,8 +131,7 @@ namespace Aurora.Profiles.Osu {
                     Properties = new EqualizerLayerHandlerProperties {
                         _ViewType = EqualizerPresentationType.GradientColorShift,
                         _MaxAmplitude = 25,
-                        _Gradient = new EffectsEngine.EffectBrush {
-                            type = EffectsEngine.EffectBrush.BrushType.Linear,
+                        _Gradient = new EffectsEngine.LinearEffectBrush {
                             colorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.Magenta },
                                 { 0.5f, Color.Cyan },

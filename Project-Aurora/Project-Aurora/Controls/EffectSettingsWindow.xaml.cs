@@ -70,7 +70,7 @@ namespace Aurora.Controls
 
         private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
-            EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
+            EffectConfig.brush = EffectsEngine.EffectBrush.GetEffectBrush(this.gradient_editor.Brush);
         }
 
         private void FireEffectConfigUpdated()
@@ -79,7 +79,7 @@ namespace Aurora.Controls
                 EffectConfigUpdated(this, new EventArgs());
         }
 
-
+        
         private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (this.IsLoaded)
@@ -114,7 +114,7 @@ namespace Aurora.Controls
 
         private void accept_button_Click(object sender, RoutedEventArgs e)
         {
-            EffectConfig.brush = new EffectsEngine.EffectBrush(this.gradient_editor.Brush);
+            EffectConfig.brush = EffectsEngine.EffectBrush.GetEffectBrush(this.gradient_editor.Brush);
             FireEffectConfigUpdated();
             Close();
         }

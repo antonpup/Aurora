@@ -49,7 +49,7 @@ namespace Aurora.Settings
             speed = 1.0f;
             angle = 0.0f;
             animation_reverse = false;
-            brush = new EffectBrush(
+            brush = EffectBrush.GetEffectBrush(
                 new System.Drawing.Drawing2D.LinearGradientBrush(
                     new PointF(0, 0),
                     new PointF(1, 0),
