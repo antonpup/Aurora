@@ -128,6 +128,13 @@ namespace Aurora.Devices.Asus
                                 continue;
                             }
                         }
+
+                        // Claymore Keyboard is not a IAuraSyncKeyboard, so a custom class has been made for it
+                        if (device.Name == "Armoury" && deviceType == AsusDeviceType.Keyboard)
+                        {
+                            devices.Add(new AsusSyncClaymoreDevice(this, device));
+                            continue;
+                        }
                     
                         switch (deviceType)
                         {
@@ -164,7 +171,6 @@ namespace Aurora.Devices.Asus
                     return false;
                 }
             }
-
             return true;
         }
 

@@ -377,6 +377,7 @@
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Asus\AsusHandler.cs" />
+    <Compile Include="Devices\Asus\AsusSyncClaymoreDevice.cs" />
     <Compile Include="Devices\Asus\AsusSyncConfiguredDevice.cs" />
     <Compile Include="Devices\Asus\AuraSyncDevice.cs" />
     <Compile Include="Devices\Asus\AuraSyncKeyboardDevice.cs" />
