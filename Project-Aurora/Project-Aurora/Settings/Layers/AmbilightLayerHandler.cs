@@ -2,6 +2,7 @@
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
+using PropertyChanged;
 using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
@@ -159,6 +160,7 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     [LogicOverrideIgnoreProperty("_Sequence")]
+    [DoNotNotify]
     public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
     {
         private static System.Timers.Timer captureTimer;

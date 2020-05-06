@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings.Layers;
+using PropertyChanged;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 
 namespace Aurora.Settings {
 
+    [DoNotNotify]
     public partial class Control_LayerList : UserControl, INotifyPropertyChanged {
         
         public Control_LayerList() {

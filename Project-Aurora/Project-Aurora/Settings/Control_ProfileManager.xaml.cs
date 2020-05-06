@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
+using Aurora.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -234,7 +235,7 @@ namespace Aurora.Settings
 
         private void btnCopyProfile_Click(object sender, RoutedEventArgs e)
         {
-            Global.Clipboard = (lstProfiles.SelectedItem as ApplicationProfile)?.Clone();
+            Global.Clipboard = (lstProfiles.SelectedItem as ApplicationProfile)?.TryClone(true);
         }
 
         private void btnPasteProfile_Click(object sender, RoutedEventArgs e)

@@ -17,12 +17,12 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using Aurora.Settings;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
-    public class LightEventConfig : NotifyPropertyChangedEx
+    public class LightEventConfig : INotifyPropertyChanged
     {
-        //TODO: Add NotifyPropertyChanged to properties
         public string[] ProcessNames { get; set; }
 
         /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
@@ -50,24 +50,15 @@ namespace Aurora.Profiles
 
         public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
 
-        protected LightEventType? type = LightEventType.Normal;
-        public LightEventType? Type
-        {
-            get { return type; }
-            set
-            {
-                object old = type;
-                object newVal = value;
-                type = value;
-                InvokePropertyChanged(old, newVal);
-            }
-        }
+        public LightEventType? Type { get; set; } = LightEventType.Normal;
 
         public bool EnableByDefault { get; set; } = true;
         public bool EnableOverlaysByDefault { get; set; } = true;
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
+    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, INotifyPropertyChanged, IDisposable
     {
         #region Public Properties
         public bool Initialized { get; protected set; } = false;
@@ -83,19 +74,7 @@ namespace Aurora.Profiles
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
         public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
-        public event PropertyChangedExEventHandler PropertyChanged;
-        protected LightEventType type;
-        public LightEventType Type
-        {
-            get { return type; }
-            protected set
-            {
-                object old = type;
-                object newVal = value;
-                type = value;
-                InvokePropertyChanged(old, newVal);
-            }
-        }
+        public LightEventType Type { get; set; }
         #endregion
 
         #region Internal Properties
@@ -108,8 +87,7 @@ namespace Aurora.Profiles
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 
-        #region Private Fields/Properties
-        #endregion
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Application(LightEventConfig config)
         {
@@ -145,11 +123,6 @@ namespace Aurora.Profiles
         protected override void SettingsCreateHook() {
             Settings.IsEnabled = Config.EnableByDefault;
             Settings.IsOverlayEnabled = Config.EnableOverlaysByDefault;
-        }
-
-        protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
         }
 
         public void SwitchToProfile(ApplicationProfile newProfileSettings)

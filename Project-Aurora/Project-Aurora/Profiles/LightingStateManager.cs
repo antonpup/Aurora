@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
@@ -307,19 +308,11 @@ namespace Aurora.Profiles
             return true;   
         }
 
-        private void LightEvent_PropertyChanged(object sender, PropertyChangedExEventArgs e)
+        private void LightEvent_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ILightEvent lightEvent = (ILightEvent)sender;
             if (e.PropertyName.Equals(nameof(LightEventConfig.Type)))
-            {
-                LightEventType old = (LightEventType)e.OldValue;
-                LightEventType newVal = (LightEventType)e.NewValue;
-
-                if (!old.Equals(newVal))
-                {
-                    InsertLightEvent(lightEvent, old);
-                }
-            }
+                InsertLightEvent(lightEvent);
         }
 
         public bool RegisterEvent(ILightEvent @event)
