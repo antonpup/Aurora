@@ -1,4 +1,5 @@
-{
+﻿{
+  "IsNewFormat": true,
   "keys_to_remove": [
     14,
     15,
@@ -14,163 +15,193 @@
     103,
     104
   ],
-  "key_conversion": {
-    14: 35,
-    15: 36,
-    16: 37,
-
-
-    31: 55,
-    32: 56,
-    33: 57,
-
-    52: 73,
-    53: 74,
-    54: 75,
-
-    89: 91,
-    102: 105,
-    103: 169,
-    104: 106
-  },
   "key_modifications": {
-    "13": {
-      "visualName": null,
-      "tag": 13,
-      "line_break": true,
-      "margin_left": null,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+    "34": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "35": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "36": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "37": {
-      "visualName": null,
-      "tag": 37,
-      "line_break": true,
-      "margin_left": null,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 674,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "55": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "56": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "57": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "58": {
-      "visualName": null,
-      "tag": 58,
-      "line_break": true,
-      "margin_left": null,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 674,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "73": {
-      "visualName": null,
-      "tag": 73,
-      "line_break": null,
-      "margin_left": 15,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 1,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "74": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "75": {
-      "visualName": null,
-      "tag": 75,
-      "line_break": true,
-      "margin_left": null,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "90": {
-      "visualName": null,
-      "tag": 90,
-      "line_break": null,
-      "margin_left": 15,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 1,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "91": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "92": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "93": {
-      "visualName": null,
-      "tag": 93,
-      "line_break": true,
-      "margin_left": null,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 674,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "105": {
-      "visualName": null,
-      "tag": 105,
-      "line_break": null,
-      "margin_left": null,
-      "margin_top": null,
-      "width": 30.0,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": 30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "106": {
-      "visualName": null,
-      "tag": 106,
-      "line_break": null,
-      "margin_left": 44.0,
-      "margin_top": null,
-      "width": null,
-      "height": null,
-      "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
-      "enabled": null
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     }
   },
-  "included_features": [
-    "masterkeys_pro_m_features.json"
-  ]
+  "key_to_add": {
+    "169": {
+      "Key": {
+        "visual_name": "00",
+        "tag": 169,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 600,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    }
+  }
 }

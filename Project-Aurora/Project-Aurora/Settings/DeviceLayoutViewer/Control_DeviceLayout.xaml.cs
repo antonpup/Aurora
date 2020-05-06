@@ -71,7 +71,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
                 CreateUserControl(device_grid);
 
-                this.Width = device_grid.Width;
+                this.Width = device_grid.Width + 5;
                 this.Height = device_grid.Height;
 
                 RenderTransform = new TranslateTransform(DeviceConfig.Offset.X, DeviceConfig.Offset.Y);
@@ -102,13 +102,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 foreach (DeviceKeyConfiguration key in Keys)
                 {
 
-                    Control_Keycap keycap = new Control_Keycap(key);
-
-                    //keycap.Margin = new Thickness(key.Region.X, key.Region.Y, 0, 0);
-                    deviceControl.Children.Add(keycap);
-
-                    if (!KeyboardMap.ContainsKey((Devices.DeviceKeys)key.Tag) && !abstractKeycaps)
-                        KeyboardMap.Add(key.Key, keycap);
+                    AddDeviceKey(key);
 
                     if (key.Width + key.X > layout_width)
                         layout_width = key.Width + key.X;
@@ -190,6 +184,30 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 {
                     System.Drawing.Color key_color = kvp.Value;
                     KeyboardMap[kvp.Key].SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
+                }
+            }
+        }
+        public void AddDeviceKey(DeviceKeyConfiguration key)
+        {
+            Control_Keycap keycap = new Control_Keycap(key);
+
+            //keycap.Margin = new Thickness(key.Region.X, key.Region.Y, 0, 0);
+            device_grid.Children.Add(keycap);
+
+            if (!KeyboardMap.ContainsKey((Devices.DeviceKeys)key.Tag))// && !abstractKeycaps)
+                KeyboardMap.Add(key.Key, keycap);
+        }
+        public void RemoveDeviceKey(DeviceKeyConfiguration key)
+        {
+            foreach (var child in device_grid.Children)
+            {
+                if (child is Control_Keycap keycap)
+                {
+                    if (keycap.GetConfiguration() == key)
+                    {
+                        device_grid.Children.Remove(keycap);
+                        return;
+                    }
                 }
             }
         }

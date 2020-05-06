@@ -1,35 +1,37 @@
-{
-  "group_tag": "mouse",
-  "origin_region": 4,
-  "grouped_keys": [
-  {
-      "tag": -1,
-      "margin_left": 10.0,
-      "margin_top": -232.0,
-      "width": 123.0,
-      "height": 232.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 10,
-      "height_bits": 19,
-      "image": "Logi_G900_outline.png",
-      "enabled": true,
-      "absolute_location": true
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
+        "tag": -1,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 123,
+      "Height": 232,
+      "Image": "Logi_G900_outline.png",
+      "IsImage": true
     },
-    {
-      "visualName": "Logo",
-      "tag": 160,
-      "margin_left": 60.0,
-      "margin_top": -69.0,
-      "width": 22.0,
-      "height": 24.0,
-      "width_bits": 2,
-      "height_bits": 2,
-      "margin_left_bits": 5,
-      "margin_top_bits": -5,
-      "image": "Logi_G900_logo.png",
-      "enabled": true,
-      "absolute_location": true
+    "160": {
+      "Key": {
+        "visual_name": "Logo",
+        "tag": 160,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 50,
+      "Y": 163,
+      "Width": 22,
+      "Height": 24,
+      "Image": "Logi_G900_logo.png",
+      "IsImage": true
     }
-  ]
+  }
 }

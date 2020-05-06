@@ -41,7 +41,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
     /// </summary>
     public partial class Control_Keycap : UserControl
     {
-
+        private bool IsSelected = false;
         private void PositionChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "X" || e.PropertyName == "Y")
@@ -164,7 +164,11 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             Keycap.SetColor(key_color, Global.key_recorder.HasRecorded(GetKey()));
         }
-
+        public void SelectionChanged()
+        {
+            IsSelected = !IsSelected;
+            Keycap.SetColor(IsSelected ? new Color() { A = 255, R = 10, G = 255, B = 10 } : new Color(),  false);
+        }
 
 
         internal DeviceKeyConfiguration GetConfiguration()

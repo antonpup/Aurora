@@ -777,8 +777,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\DeviceKeyData.cs" />
     <Compile Include="Settings\DeviceLayoutManager.cs" />
-    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_ImageKeycap.xaml.cs" />
+    <Compile Include="Settings\DeviceLayoutViewer\Control_EditKeycapData.xaml.cs">
+      <DependentUpon>Control_EditKeycapData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_ImageKeycap.xaml.cs">
+      <DependentUpon>Control_ImageKeycap.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\DeviceLayoutViewer\Keycaps\Control_ColorizedKeycap.xaml.cs">
       <DependentUpon>Control_ColorizedKeycap.xaml</DependentUpon>
     </Compile>
@@ -1940,6 +1946,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\XCOM\Control_XCOM.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\DeviceLayoutViewer\Control_EditKeycapData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

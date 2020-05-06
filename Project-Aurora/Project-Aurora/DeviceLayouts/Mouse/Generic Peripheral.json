@@ -1,34 +1,37 @@
-{
-  "group_tag": "mouse",
-  "origin_region": 4,
-  "grouped_keys": [
-    {
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
         "tag": -1,
-        "margin_left": 20.0,
-        "margin_top": -90.0,
-        "width": 90.0,
-        "height": 90.0,
-        "width_bits": 6,
-        "height_bits": 6,
-        "margin_left_bits": 2,
-        "margin_top_bits": -6,
-        "enabled": true,
-        "absolute_location": true
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 90,
+      "Height": 90,
+      "Image": "",
+      "IsImage": false
     },
-    {
-        "visualName": "Mouse/\r\nHeadset",
+    "0": {
+      "Key": {
+        "visual_name": "Mouse/\r\nHeadset",
         "tag": 0,
-        "font_size": 12,
-        "margin_left": 20.0,
-        "margin_top": -90.0,
-        "width": 90.0,
-        "height": 90.0,
-        "width_bits": 6,
-        "height_bits": 6,
-        "margin_left_bits": 2,
-        "margin_top_bits": -6,
-        "enabled": true,
-        "absolute_location": true
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 90,
+      "Height": 90,
+      "Image": "",
+      "IsImage": false
     }
-  ]
+  }
 }

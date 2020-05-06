@@ -15,220 +15,6 @@ using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings
 {
-    public class DeviceKey
-    {
-        [JsonProperty("visual_name")]
-        public string VisualName { get; set; }
-        [JsonProperty("tag")]
-        public int Tag { get; set; }
-        [JsonProperty("device_id")]
-        public int? DeviceId { get; set; }
-
-        /*public bool Equals(DeviceKey otherKey)
-        {
-            return Tag == otherKey.Tag && DeviceId == otherKey.DeviceId;
-        }
-
-        public override bool Equals(object obj)
-        {
-            // Again just optimization
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-
-            // Actually check the type, should not throw exception from Equals override
-            if (obj.GetType() != this.GetType()) return false;
-
-            // Call the implementation from IEquatable
-            return Equals((DeviceKey)obj);
-        }*/
-
-        public bool Equals(DeviceKey key1, DeviceKey key2)
-        {
-            return key1.Tag == key2.Tag && key1.DeviceId == key2.DeviceId;
-        }
-    
-
-        public int GetHashCode(DeviceKey obj)
-        {
-            return obj.Tag;
-        }
-        public class EqualityComparer : IEqualityComparer<DeviceKey>
-        {
-            public bool Equals(DeviceKey key1, DeviceKey key2)
-            {
-                return key1.Tag == key2.Tag && (key2.DeviceId == null || key1.DeviceId == key2.DeviceId);
-            }
-
-
-            public int GetHashCode(DeviceKey obj)
-            {
-                return obj.Tag;
-            }
-
-        }
-        public static bool operator==(DeviceKey key1, DeviceKey key2)
-        {
-            return key1.Tag == key2.Tag && (key2.DeviceId == null || key1.DeviceId == key2.DeviceId);
-        }
-        public static bool operator !=(DeviceKey key1, DeviceKey key2)
-        {
-            return !(key1.Tag == key2.Tag && (key2.DeviceId == null || key1.DeviceId == key2.DeviceId));
-        }
-        public DeviceKey()
-        {
-            Tag = -1;
-            DeviceId = null;
-        }
-        public DeviceKey(int key)
-        {
-            Tag = key;
-            DeviceId = null;
-            VisualName = ((Devices.DeviceKeys)key).ToString();
-        }
-        public DeviceKey(Devices.DeviceKeys key, int? deviceId = null, string visualName = null)
-        {
-            Tag = (int)key;
-            DeviceId = deviceId;
-            if (visualName != null)
-                VisualName = visualName;
-            else
-                VisualName = key.ToString();
-        }
-        public static implicit operator DeviceKey(Devices.DeviceKeys k) => new DeviceKey(k);
-
-        public static implicit operator DeviceKey(Int64 k) => new DeviceKey((int)k);
-
-    }
-    public class DeviceKeyConfiguration : INotifyPropertyChanged
-    {
-        public DeviceKey Key = Devices.DeviceKeys.NONE;
-        private int _x;
-        public int X
-        {
-            get { return _x; }
-            set
-            {
-                _x = value;
-                OnPropertyChanged(nameof(X));
-            }
-        }
-        private int _y;
-        public int Y
-        {
-            get { return _y; }
-            set
-            {
-                _y = value;
-                OnPropertyChanged(nameof(Y));
-            }
-        }
-        private int _width;
-        public int Width
-        {
-            get { return _width; }
-            set
-            {
-                _width = value;
-                OnPropertyChanged(nameof(Width));
-            }
-        }
-        private int _height;
-        public int Height
-        {
-            get { return _height; }
-            set
-            {
-                _height = value;
-                OnPropertyChanged(nameof(Height));
-            }
-        }
-        private string _image = "";
-        public string Image
-        {
-            get { return _image; }
-            set
-            {
-                _image = value;
-                OnPropertyChanged(nameof(Image));
-                OnPropertyChanged(nameof(IsImage));
-            }
-        }
-        public bool IsImage => !String.IsNullOrWhiteSpace(Image);
-        public double? FontSize;
-        public bool? Enabled = true;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        [JsonIgnore]
-        public int Tag
-        {
-            get { return Key.Tag; }
-            set
-            {
-                Key.Tag = value;
-                OnPropertyChanged(nameof(Tag));
-            }
-        }
-        public DeviceKeyConfiguration()
-        {
-        }
-        public DeviceKeyConfiguration(KeyboardKey key, int? deviceId)
-        {
-            Key = new DeviceKey(key.tag, deviceId, key.visualName);
-            if (key.width != null) Width = (int)key.width;
-            if (key.height != null) Height = (int)key.height;
-            if (key.font_size != null) FontSize = key.font_size;
-            if (key.margin_left != null) X = (int)key.margin_left;
-            if (key.margin_top != null) Y = (int)key.margin_top;
-            if (key.enabled != null) Enabled = key.enabled;
-            if (key.image != null) Image = key.image;
-        }
-        public void UpdateFromOtherKey(KeyboardKey key)
-        {
-            if (key != null)
-            {
-                
-                if (key.visualName != null) Key.VisualName = key.visualName;
-                if ((int)key.tag != -1)
-                    Key.Tag = (int)key.tag;
-                if (key.width != null) Width = (int)key.width;
-                if (key.height != null) Height = (int)key.height;
-                if (key.font_size != null) FontSize = key.font_size;
-                if (key.margin_left != null) X = (int)key.margin_left;
-                if (key.margin_top != null) Y = (int)key.margin_top;
-                if (key.enabled != null) Enabled = key.enabled;
-                if (key.image != null) Image = key.image;
-            }
-        }
-        public void UpdateFromOtherKey(DeviceKeyConfiguration key)
-        {
-            if (key.Key.VisualName != null) Key.VisualName = key.Key.VisualName;
-            if ((int)key.Key.Tag != -1)
-                Key.Tag = (int)key.Key.Tag;
-            X = key.X;
-            Y = key.Y;
-            Height = key.Height;
-            Width = key.Width;
-            if (key.FontSize != null) FontSize = key.FontSize;
-            if (key.Enabled != null) Enabled = key.Enabled;
-            if (key.Image != null) Image = key.Image;
-        }
-        public static bool operator ==(DeviceKeyConfiguration key1, DeviceKeyConfiguration key2)
-        {
-            const int epsilon = 3;
-            return key1.Tag == key2.Tag && key1.Image == key2.Image && key1.Enabled == key2.Enabled && key1.FontSize == key2.FontSize && key1.Width == key2.Width && key1.Height == key2.Height &&
-                key1.X > key2.X - epsilon && key1.X < key2.X + epsilon && key1.Y > key2.Y - epsilon && key1.Y < key2.Y + epsilon;
-        }
-        public static bool operator !=(DeviceKeyConfiguration key1, DeviceKeyConfiguration key2)
-        {
-            return !(key1 == key2);
-        }
-    }
 
     public class VirtualKeyboardConfiguration
     {
@@ -323,8 +109,8 @@ namespace Aurora.Settings
                 }
 
 
-                
-                /*var fileName = "Plain Keyboard\\layout." + "ansi" + ".json";
+                /*var layoutType = "jpn";
+                var fileName = "Plain Keyboard\\layout." + layoutType + ".json";
                 var layoutPath = Path.Combine(layoutsPath, "Keyboard", fileName);
                 string keyboardContent = File.ReadAllText(layoutPath, Encoding.UTF8);
                 KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(keyboardContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
@@ -332,9 +118,9 @@ namespace Aurora.Settings
                
                 NewKeyboardLayout saved = new NewKeyboardLayout();
                 saved.Keys = Keys.Values.ToArray();
-                keyboardContent = JsonConvert.SerializeObject(saved);
+                keyboardContent = JsonConvert.SerializeObject(saved, Formatting.Indented);
 
-                fileName = "Plain Keyboard\\" + "ansi" + "_layout.json";
+                fileName = "Plain Keyboard\\" + layoutType + "_layout.json";
                 File.WriteAllText(Path.Combine(layoutsPath, "Keyboard", fileName), keyboardContent, Encoding.UTF8);*/
 
                 try
@@ -400,12 +186,12 @@ namespace Aurora.Settings
                     {
                         if (Keys.ContainsKey(key.Key))
                         {
-                            Keys[key.Key].UpdateFromOtherKey(key.Value);
+                            Keys[key.Key].ApplyModifier(key.Value);
                         }
-                        else
-                        {
-                            Keys[key.Key] = key.Value;
-                        }
+                    }
+                    foreach (var key in layoutConfig.key_to_add)
+                    {
+                        Keys[key.Key] = key.Value;
                     }
 
                     NormalizeKeys();
@@ -415,10 +201,17 @@ namespace Aurora.Settings
 
             return Keys.Values.ToList();
         }
-        public void SaveLayout(List<Control_Keycap> layoutKey)
+        public void SaveLayout(List<Control_Keycap> layoutKey, Point offset)
         {
             List<DeviceKeyConfiguration> saveKeys = new List<DeviceKeyConfiguration>();
-            layoutKey.ForEach(key => saveKeys.Add(key.GetConfiguration()));
+            foreach (var key in layoutKey)
+            {
+                var conf = key.GetConfiguration();
+                conf.Key.DeviceId = null;
+                conf.X += (int)offset.X;
+                conf.Y += (int)offset.Y;
+                saveKeys.Add(conf);
+            }
 
             KeycapGroupConfiguration config = new KeycapGroupConfiguration();
             Dictionary<int, DeviceKeyConfiguration> defaultLayout = new Dictionary<int, DeviceKeyConfiguration>();
@@ -429,7 +222,7 @@ namespace Aurora.Settings
                 if (File.Exists(layoutPath))
                 {
                     string c = File.ReadAllText(layoutPath, Encoding.UTF8);
-                    NewKeyboardLayout keyboard = JsonConvert.DeserializeObject<NewKeyboardLayout>(c, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                    NewKeyboardLayout keyboard = JsonConvert.DeserializeObject<NewKeyboardLayout>(c, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, Formatting = Formatting.Indented });
 
                     defaultLayout = keyboard.Keys.ToDictionary(k => k.Tag, k => k);
                     //defaultLayout.Values.ToList().ForEach(k => k.Key.DeviceId = DeviceId);
@@ -441,17 +234,17 @@ namespace Aurora.Settings
                 {
                     if (defaultLayout[key.Tag] != key)
                     {
-                        config.key_modifications[key.Tag] = key;
+                        config.key_modifications[key.Tag] = new DeviceKeyModifier(defaultLayout[key.Tag], key);
                     }
                     defaultLayout.Remove(key.Tag);
                 }
                 else
                 {
-                    config.key_modifications[key.Tag] = key;
+                    config.key_to_add[key.Tag] = key;
                 }
             }
             config.keys_to_remove = defaultLayout.Keys.ToArray();
-            var content = JsonConvert.SerializeObject(config);
+            var content = JsonConvert.SerializeObject(config, Formatting.Indented);
 
             File.WriteAllText(Path.Combine(layoutsPath, GetFolder(), Config.SelectedLayout + ".json"), content, Encoding.UTF8);
         }
@@ -579,7 +372,7 @@ namespace Aurora.Settings
         public int[] keys_to_remove = new int[] { };
 
         [JsonProperty("key_modifications")]
-        public Dictionary<int, DeviceKeyConfiguration> key_modifications = new Dictionary<int, DeviceKeyConfiguration>();
+        public Dictionary<int, DeviceKeyModifier> key_modifications = new Dictionary<int, DeviceKeyModifier>();
 
         [JsonProperty("key_to_add")]
         public Dictionary<int, DeviceKeyConfiguration> key_to_add = new Dictionary<int, DeviceKeyConfiguration>();
@@ -702,7 +495,7 @@ namespace Aurora.Settings
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
             var fileName = "DevicesConfig.json";
             var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
-            var content = JsonConvert.SerializeObject(this);
+            var content = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
         }
         private void DeleteConfiguration(DeviceConfig config)
@@ -711,7 +504,7 @@ namespace Aurora.Settings
 
             var fileName = "DevicesConfig.json";
             var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
-            var content = JsonConvert.SerializeObject(this);
+            var content = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
             DeviceLayoutNumberChanged?.Invoke(this);
         }

@@ -37,9 +37,9 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
         }
         public abstract void SetColor(Color key_color, bool isSelected);
         public virtual DeviceKey GetKey() { return Config.Key; }
-        public void UpdateText()
+        public void UpdateText(TextBlock keycapName)
         {
-            //if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration())
+            if (Config.VisualNameUpdateEnabled)
             {
 
                 //if (keyCap.Text.Length > 1)
@@ -53,7 +53,7 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
                 var scan_code = KeyUtils.MapVirtualKeyEx((uint)key, KeyUtils.MapVirtualKeyMapTypes.MapvkVkToVsc, (IntPtr)0x8090809);*/
 
                 int ret = KeyUtils.GetKeyNameTextW((uint)scan_code << 16, sb, 2);
-                //keyCap.Text = sb.ToString().ToUpper();
+                keycapName.Text = sb.ToString().ToUpper();
             }
         }
         protected void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)

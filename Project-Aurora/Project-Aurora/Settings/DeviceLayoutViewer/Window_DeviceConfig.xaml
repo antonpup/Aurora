@@ -15,10 +15,10 @@
             <ColumnDefinition Width="340" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="400"/>
+            <RowDefinition MaxHeight="800"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <local:Control_DeviceLayout x:Name="deviceLayout"  Grid.Column="0"/>
+        <local:Control_DeviceLayout x:Name="deviceLayout"  Grid.Column="0" Margin="5"/>
         <StackPanel Grid.Column="1" Margin="5" Background="Gray">
 
             <StackPanel Margin="5" Orientation="Horizontal">
@@ -36,37 +36,32 @@
             <StackPanel>
                 <CheckBox x:Name="devices_disable_lighting" Content="Disable Device Lighting" Margin="0,1,0,1" Checked="device_disable_lighting_Checked" Unchecked="device_disable_lighting_Checked" />
             </StackPanel>
-            <StackPanel Orientation="Vertical">
-                <StackPanel Margin="5" Orientation="Horizontal">
-
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Tag: "/>
-                    <TextBox Text="{Binding Path=SelectedKey.Keycap.Config.Tag, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Image: "/>
-                    <TextBox Text="{Binding Path=SelectedKey.Keycap.Config.Image, Mode=TwoWay}" Width="120" Margin="0,1,0,1"/>
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Height: "/>
-                    <TextBox Text="{Binding Path=SelectedKey.Config.Height, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Width: "/>
-                    <TextBox Text="{Binding Path=SelectedKey.Config.Width, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                </StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
-                    
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="X: "/>
-                    <TextBox  x:Name="keycap_x" Text="{Binding Path=SelectedKey.Keycap.Config.X, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Y: "/>
-                    <TextBox  x:Name="keycap_y" Text="{Binding Path=SelectedKey.Keycap.Config.Y, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Height: "/>
-                    <TextBox  x:Name="keycap_height" Text="{Binding Path=SelectedKey.Keycap.Config.Height, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Width: "/>
-                    <TextBox  x:Name="keycap_width" Text="{Binding Path=SelectedKey.Keycap.Config.Width, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
-                </StackPanel>
+            <ListView x:Name="keycap_list"  
+                    VerticalContentAlignment="Top"
+                    SelectionMode="Single"
+                    SelectionChanged="keycap_list_SelectionChanged"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    ScrollViewer.CanContentScroll="False" Height="206">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <local:Control_EditKeycapData DataContext="{Binding}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <!-- etc. -->
+            </ListView>
+            <StackPanel Orientation="Horizontal" Height="20">
+                <Button Click="addKey_Click" Height="15" Margin="1">Add Key</Button>
+                <Button  Click="removeKey_Click" Height="15" Margin="1">Remove Key</Button>
             </StackPanel>
         </StackPanel>
-        <StackPanel  Orientation="Horizontal"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="0">
-            <Button Name="deleteButton" Click="deviceDelete_Click" IsDefault="True" Margin="5">Delete Device</Button>
+        <StackPanel  Orientation="Horizontal" VerticalAlignment="Bottom"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="0">
+            <TextBox x:Name="layoutName" Width="100" />
             <Button Name="saveLayoutButton" Click="saveLayout_Click" IsDefault="True" Margin="5">Save Layout</Button>
+            <Button Name="deleteButton" Click="deviceDelete_Click" IsDefault="True" Margin="5">Delete Device</Button>
+            
         </StackPanel>
         <!-- Accept or Cancel -->
-        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="1">
+        <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="1">
             <Button Name="okButton" Click="okButton_Click" IsDefault="True" Margin="5">OK</Button>
             <Button Name="cancelButton" Click="cancelButton_Click" IsCancel="True" Margin="5">Cancel</Button>
         </StackPanel>

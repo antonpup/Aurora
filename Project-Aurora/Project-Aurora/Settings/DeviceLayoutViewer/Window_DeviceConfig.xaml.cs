@@ -20,7 +20,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
     /// <summary>
     /// Interaction logic for Window_DeviceConfig.xaml
     /// </summary>
-    public partial class Window_DeviceConfig : Window, INotifyPropertyChanged
+    public partial class Window_DeviceConfig : Window
     {
         private DeviceConfig _config;
         public DeviceConfig Config
@@ -35,20 +35,14 @@ namespace Aurora.Settings.DeviceLayoutViewer
         public bool DeleteDevice = false;
         private System.Windows.Point _positionInBlock;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private Control_Keycap _selectedKey;
         public Control_Keycap SelectedKey
         {
             get { return _selectedKey; }
             set{
+                _selectedKey?.SelectionChanged();
                 _selectedKey = value;
-                OnPropertyChanged(nameof(SelectedKey));
+                _selectedKey.SelectionChanged();
             }
         }
         public Window_DeviceConfig(DeviceConfig config)
@@ -58,6 +52,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             LoadDeviceType(config.Type);
             this.device_type.ItemsSource = new string[2]{"Keyboard", "Other Devices"};
             this.device_layout.SelectedItem = Config.SelectedLayout;
+            layoutName.Text = Config.SelectedLayout;
             if (config.SelectedKeyboardLayout != null) 
                 this.keyboard_layout.SelectedItem = Config.SelectedKeyboardLayout;
             DataContext = this;
@@ -77,12 +72,14 @@ namespace Aurora.Settings.DeviceLayoutViewer
             switch (type)
             {
                 case 0:
+                    this.device_type.SelectedItem = "Keyboard";
                     this.device_layout.ItemsSource = GetBrandsName("Keyboard");
                     this.keyboard_layout.ItemsSource = GetBrandsName("Keyboard\\Plain Keyboard");
                     this.keyboard_layout.Visibility = Visibility.Visible;
                     this.keyboard_layout_tb.Visibility = Visibility.Visible;
                     break;
                 default:
+                    this.device_type.SelectedItem = "Other Devices";
                     this.device_layout.ItemsSource = GetBrandsName("Mouse");
                     this.keyboard_layout.Visibility = Visibility.Collapsed;
                     this.keyboard_layout_tb.Visibility = Visibility.Collapsed;
@@ -104,6 +101,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 Config.SelectedLayout = this.device_layout.SelectedItem.ToString();
                 LoadDeviceLayout();
+                layoutName.Text = this.device_layout.SelectedItem.ToString();
             }
         }
         private void keyboard_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -121,6 +119,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 Config.LightingEnabled = ((sender as CheckBox).IsChecked.HasValue) ? !(sender as CheckBox).IsChecked.Value : true;
             }
             deviceLayout = new Control_DeviceLayout(Config);
+            
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)
@@ -145,7 +144,15 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if (MessageBox.Show("Are you sure that save the device layout?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                new DeviceLayout(Config).SaveLayout(deviceLayout.KeyboardMap.Values.ToList());
+                Config.SelectedLayout = layoutName.Text;
+                var offset = new Point();
+                if(Config.Type == 0 && deviceLayout.KeyboardMap.ContainsKey(Devices.DeviceKeys.ESC))
+                {
+                    var escConfig = deviceLayout.KeyboardMap[Devices.DeviceKeys.ESC].GetConfiguration();
+                    offset.X = -escConfig.X;
+                    offset.Y = -escConfig.Y;
+                }
+                new DeviceLayout(Config).SaveLayout(deviceLayout.KeyboardMap.Values.ToList(), offset);
             }
 
         }
@@ -188,6 +195,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void LoadDeviceLayout()
         {
+            
             deviceLayout.DeviceConfig = new DeviceConfig(Config);
             foreach (var key in deviceLayout.KeyboardMap.Values)
             {
@@ -197,8 +205,15 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 key.UpdateLayout();
             }
             deviceLayout.UpdateLayout();
+            InitKeycapList();
             this.Width = deviceLayout.Width + 340;
             this.KeyDown += OnKeyDownHandler;
+        }
+        private void InitKeycapList()
+        {
+            //keycap_list.ItemsSource = deviceLayout.KeyboardMap.Keys.ToList().ConvertAll(k => k.VisualName);
+            keycap_list.ItemsSource = deviceLayout.KeyboardMap.Values.ToList().ConvertAll(k => k.GetConfiguration());
+            keycap_list.UpdateLayout();
         }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
@@ -216,10 +231,27 @@ namespace Aurora.Settings.DeviceLayoutViewer
             }
         }
 
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        private void keycap_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            if(sender is ListView listView)
+            {
+                if (listView.SelectedItem is DeviceKeyConfiguration conf)
+                {
+                    SelectedKey = deviceLayout.KeyboardMap.Values.ToList().Where(k => k.GetConfiguration() == conf).First();
+                }
+            }
         }
+        private void addKey_Click(object sender, RoutedEventArgs e)
+        {
+            var keyConf = new DeviceKeyConfiguration();
+            deviceLayout.AddDeviceKey(keyConf);
+            InitKeycapList();
+        }
+        private void removeKey_Click(object sender, RoutedEventArgs e)
+        {
+            deviceLayout.RemoveDeviceKey(SelectedKey.GetConfiguration());
+            InitKeycapList();
+        }
+
     }
 }

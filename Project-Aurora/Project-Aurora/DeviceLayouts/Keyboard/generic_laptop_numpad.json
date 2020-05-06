@@ -1,199 +1,468 @@
 ﻿{
+  "IsNewFormat": true,
   "keys_to_remove": [
-    14,
-    15,
     16,
+    31,
     32,
     33,
+    52,
     53,
     54,
-    51,
-    71,
-    77,
-    100,
-    103
+    99,
+    100
   ],
   "key_modifications": {
     "2": {
-      "tag": 2,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 37,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "3": {
-      "tag": 3,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 74,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "4": {
-      "tag": 4,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 111,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "5": {
-      "tag": 5,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 148,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "6": {
-      "tag": 6,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 185,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "7": {
-      "tag": 7,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 222,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "8": {
-      "tag": 8,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 259,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "9": {
-      "tag": 9,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 296,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "10": {
-      "tag": 10,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 333,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "11": {
-      "tag": 11,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 370,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "12": {
-      "tag": 12,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 407,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "13": {
-      "tag": 13,
-      "margin_left": 7.0
-    },
-    "31": {
-      "tag": 14,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 444,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "14": {
-      "visualName": "INSERT",
-      "tag": 31,
-      "margin_left": 7.0
-    },
-    "52": {
-      "tag": 15,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 481,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "15": {
-      "visualName": "DEL",
-      "tag": 52,
-      "line_break": true,
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 518,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "34": {
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "35": {
+      "VisualName": null,
+      "X": 592,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "36": {
+      "VisualName": null,
+      "X": 629,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "37": {
-      "line_break": true
-    },
-    "50": {
-      "line_break": null,
-      "width": 30
+      "VisualName": null,
+      "X": 666,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "55": {
-      "margin_left": 60
+      "VisualName": null,
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "56": {
+      "VisualName": null,
+      "X": 592,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "57": {
+      "VisualName": null,
+      "X": 629,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "58": {
-      "line_break": true
-    },
-    "72": {
-      "tag": 72,
-      "line_break": null,
-      "margin_left": 7.0,
-      "margin_top": 0.0,
-      "width": 74.0,
-      "height": 30.0,
-      "font_size": 12.0
+      "VisualName": null,
+      "X": 666,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "73": {
-      "margin_left": 7
+      "VisualName": null,
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "74": {
+      "VisualName": null,
+      "X": 592,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "75": {
-      "line_break": true
+      "VisualName": null,
+      "X": 629,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
-    "76": {
-      "tag": 76,
-      "margin_left": 0.0,
-      "margin_top": 0.0,
-      "width": 78.0,
-      "height": 30.0,
-      "font_size": 12.0
-    },
-    "88": {
-      "tag": 88,
-      "line_break": null,
-      "width": 93
-    },
-    "90": {
-      "margin_left": 7.0
-    },
-    "93": {
-      "line_break": true
-    },
-    "94": {
-      "tag": 94,
-      "width": 41
-    },
-    "95": {
-      "tag": 95,
-      "margin_left": 44,
-      "width": 30
-    },
-    "96": {
-      "tag": 96,
-      "margin_left": 7,
-      "width": 30
-    },
-    "97": {
-      "tag": 97,
-      "width": 178
-    },
-    "98": {
-      "tag": 98,
-      "margin_left": 7,
-      "width": 30
-    },
-    "99": {
-      "visualName": "FN",
-      "tag": 107,
-      "margin_left": 7,
-      "width": 30
-    },
-    "101": {
-      "tag": 101,
-      "margin_left": 7,
-      "width": 30
-    },
-    "102": {
-      "tag": 102,
-      "margin_left": 7.0,
-      "width": 24.5
+    "51": {
+      "VisualName": null,
+      "X": null,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": 9.0,
+      "Enabled": null
     },
     "89": {
-      "tag": 103
+      "VisualName": null,
+      "X": 486,
+      "Y": 185,
+      "Width": null,
+      "Height": 13,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "90": {
+      "VisualName": null,
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "91": {
+      "VisualName": null,
+      "X": 592,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "92": {
+      "VisualName": null,
+      "X": 629,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "93": {
+      "VisualName": null,
+      "X": 666,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "94": {
+      "VisualName": null,
+      "X": null,
+      "Y": null,
+      "Width": 41,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "95": {
+      "VisualName": null,
+      "X": 85,
+      "Y": null,
+      "Width": 30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "96": {
+      "VisualName": null,
+      "X": 122,
+      "Y": null,
+      "Width": 30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "97": {
+      "VisualName": null,
+      "X": 159,
+      "Y": null,
+      "Width": 178,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "98": {
+      "VisualName": null,
+      "X": 344,
+      "Y": null,
+      "Width": 30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "101": {
+      "VisualName": null,
+      "X": 418,
+      "Y": null,
+      "Width": 30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "102": {
+      "VisualName": null,
+      "X": 455,
+      "Y": null,
+      "Width": 24,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "103": {
-      "visualName": "↑",
-      "tag": 89,
-      "height": 14,
-      "font_size": 9
+      "VisualName": null,
+      "X": 486,
+      "Y": 202,
+      "Width": null,
+      "Height": 13,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "104": {
-      "tag": 104,
-      "line_break": null,
-      "width": 24.5
+      "VisualName": null,
+      "X": 523,
+      "Y": null,
+      "Width": 24,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "105": {
-      "margin_left": 7.0
+      "VisualName": null,
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     },
     "106": {
-      "line_break": true
+      "VisualName": null,
+      "X": 629,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
     }
   },
-  "included_features": [
-    "generic_laptop_numpad_left_bottom_features.json",
-    "generic_laptop_numpad_right_bottom_features.json",
-    "generic_laptop_numpad_right_features.json"
-  ]
+  "key_to_add": {
+    "171": {
+      "Key": {
+        "visual_name": "FN",
+        "tag": 171,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 48,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "107": {
+      "Key": {
+        "visual_name": "FN",
+        "tag": 107,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 381,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    }
+  }
 }

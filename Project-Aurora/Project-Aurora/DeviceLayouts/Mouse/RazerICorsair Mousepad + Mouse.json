@@ -1,175 +1,262 @@
-{
-    "group_tag": "mouse",
-    "origin_region": 4,
-    "grouped_keys": [
-        {
-            "tag": -1,
-            "margin_left": 25.0,
-            "margin_top": -185.0,
-            "width": 200.0,
-            "height": 168.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "Mouse Logo",
-            "tag": 160,
-            "margin_left": 100.0,
-            "margin_top": -125.0,
-            "width": 50.0,
-            "height": 50.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "",
-            "tag": 201,
-            "margin_left": 15.0,
-            "margin_top": -185.0,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "",
-            "tag": 202,
-            "margin_left": 15.0,
-            "margin_top": -151.4,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "",
-            "tag": 203,
-            "margin_left": 15.0,
-            "margin_top": -117.8,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "",
-            "tag": 204,
-            "margin_left": 15.0,
-            "margin_top": -84.2,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "",
-            "tag": 205,
-            "margin_left": 15.0,
-            "margin_top": -50.6,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 206,
-            "visualName": "",
-            "margin_left": 25.0,
-            "margin_top": -17.0,
-            "width": 40.0,
-            "height": 10.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 207,
-            "visualName": "",
-            "margin_left": 65.0,
-            "margin_top": -17.0,
-            "width": 40.0,
-            "height": 10.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 208,
-            "visualName": "",
-            "margin_left": 105.0,
-            "margin_top": -17.0,
-            "width": 40.0,
-            "height": 10.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 209,
-            "visualName": "",
-            "margin_left": 145.0,
-            "margin_top": -17.0,
-            "width": 40.0,
-            "height": 10.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 210,
-            "visualName": "",
-            "margin_left": 185.0,
-            "margin_top": -17.0,
-            "width": 40.0,
-            "height": 10.0,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 211,
-            "visualName": "",
-            "margin_left": 225.0,
-            "margin_top": -50.5,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 212,
-            "visualName": "",
-            "margin_left": 225.0,
-            "margin_top": -84.2,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 213,
-            "visualName": "",
-            "margin_left": 225.0,
-            "margin_top": -117.8,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 214,
-            "visualName": "",
-            "margin_left": 225.0,
-            "margin_top": -151.4,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "tag": 215,
-            "visualName": "",
-            "margin_left": 225.0,
-            "margin_top": -185.0,
-            "width": 10.0,
-            "height": 33.6,
-            "enabled": true,
-            "absolute_location": true
-        }
-    ]
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
+        "tag": -1,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 10,
+      "Y": 0,
+      "Width": 200,
+      "Height": 168,
+      "Image": "",
+      "IsImage": false
+    },
+    "160": {
+      "Key": {
+        "visual_name": "Mouse Logo",
+        "tag": 160,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 90,
+      "Y": 60,
+      "Width": 50,
+      "Height": 50,
+      "Image": "",
+      "IsImage": false
+    },
+    "201": {
+      "Key": {
+        "visual_name": "",
+        "tag": 201,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "202": {
+      "Key": {
+        "visual_name": "",
+        "tag": 202,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 34,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "203": {
+      "Key": {
+        "visual_name": "",
+        "tag": 203,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 68,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "204": {
+      "Key": {
+        "visual_name": "",
+        "tag": 204,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 101,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "205": {
+      "Key": {
+        "visual_name": "",
+        "tag": 205,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 135,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "206": {
+      "Key": {
+        "visual_name": "",
+        "tag": 206,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 10,
+      "Y": 168,
+      "Width": 40,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "207": {
+      "Key": {
+        "visual_name": "",
+        "tag": 207,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 50,
+      "Y": 168,
+      "Width": 40,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "208": {
+      "Key": {
+        "visual_name": "",
+        "tag": 208,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 90,
+      "Y": 168,
+      "Width": 40,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "209": {
+      "Key": {
+        "visual_name": "",
+        "tag": 209,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 130,
+      "Y": 168,
+      "Width": 40,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "210": {
+      "Key": {
+        "visual_name": "",
+        "tag": 210,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 170,
+      "Y": 168,
+      "Width": 40,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "211": {
+      "Key": {
+        "visual_name": "",
+        "tag": 211,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 210,
+      "Y": 135,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "212": {
+      "Key": {
+        "visual_name": "",
+        "tag": 212,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 210,
+      "Y": 101,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "213": {
+      "Key": {
+        "visual_name": "",
+        "tag": 213,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 210,
+      "Y": 68,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "214": {
+      "Key": {
+        "visual_name": "",
+        "tag": 214,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 210,
+      "Y": 34,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    },
+    "215": {
+      "Key": {
+        "visual_name": "",
+        "tag": 215,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 210,
+      "Y": 0,
+      "Width": 10,
+      "Height": 33,
+      "Image": "",
+      "IsImage": false
+    }
+  }
 }

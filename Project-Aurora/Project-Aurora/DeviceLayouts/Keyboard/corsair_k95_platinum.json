@@ -1,8 +1,487 @@
-{
+﻿{
+  "IsNewFormat": true,
   "keys_to_remove": [],
   "key_modifications": {},
-  "included_features": [
-	"corsair_k95_platinum_right_features.json",
-    "corsair_k95_platinum_left_features.json"
-  ]
+  "key_to_add": {
+    "139": {
+      "Key": {
+        "visual_name": "MUTE",
+        "tag": 139,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": -37,
+      "Width": 30,
+      "Height": 24,
+      "Image": "",
+      "IsImage": false
+    },
+    "136": {
+      "Key": {
+        "visual_name": "STOP",
+        "tag": 136,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 0,
+      "Width": 30,
+      "Height": 24,
+      "Image": "",
+      "IsImage": false
+    },
+    "137": {
+      "Key": {
+        "visual_name": "PREV",
+        "tag": 137,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": 0,
+      "Width": 30,
+      "Height": 24,
+      "Image": "",
+      "IsImage": false
+    },
+    "133": {
+      "Key": {
+        "visual_name": "PLAY",
+        "tag": 133,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 0,
+      "Width": 30,
+      "Height": 24,
+      "Image": "",
+      "IsImage": false
+    },
+    "138": {
+      "Key": {
+        "visual_name": "NEXT",
+        "tag": 138,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 791,
+      "Y": 0,
+      "Width": 30,
+      "Height": 24,
+      "Image": "",
+      "IsImage": false
+    },
+    "142": {
+      "Key": {
+        "visual_name": "",
+        "tag": 142,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -47,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "143": {
+      "Key": {
+        "visual_name": "",
+        "tag": 143,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -1,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "144": {
+      "Key": {
+        "visual_name": "",
+        "tag": 144,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 45,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "145": {
+      "Key": {
+        "visual_name": "",
+        "tag": 145,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 91,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "146": {
+      "Key": {
+        "visual_name": "",
+        "tag": 146,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 137,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "147": {
+      "Key": {
+        "visual_name": "",
+        "tag": 147,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 183,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "148": {
+      "Key": {
+        "visual_name": "",
+        "tag": 148,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 229,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "149": {
+      "Key": {
+        "visual_name": "",
+        "tag": 149,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 275,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "150": {
+      "Key": {
+        "visual_name": "",
+        "tag": 150,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 321,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "151": {
+      "Key": {
+        "visual_name": "",
+        "tag": 151,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 367,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "172": {
+      "Key": {
+        "visual_name": "",
+        "tag": 172,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 413,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "173": {
+      "Key": {
+        "visual_name": "",
+        "tag": 173,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 459,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "174": {
+      "Key": {
+        "visual_name": "",
+        "tag": 174,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 505,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "175": {
+      "Key": {
+        "visual_name": "",
+        "tag": 175,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 551,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "176": {
+      "Key": {
+        "visual_name": "",
+        "tag": 176,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 597,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "177": {
+      "Key": {
+        "visual_name": "",
+        "tag": 177,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 643,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "178": {
+      "Key": {
+        "visual_name": "",
+        "tag": 178,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 689,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "179": {
+      "Key": {
+        "visual_name": "",
+        "tag": 179,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 735,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "180": {
+      "Key": {
+        "visual_name": "",
+        "tag": 180,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 781,
+      "Y": -54,
+      "Width": 46,
+      "Height": 10,
+      "Image": "",
+      "IsImage": false
+    },
+    "131": {
+      "Key": {
+        "visual_name": "LIGHTS",
+        "tag": 131,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 104,
+      "Y": -37,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "132": {
+      "Key": {
+        "visual_name": "LOCK",
+        "tag": 132,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 141,
+      "Y": -37,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "108": {
+      "Key": {
+        "visual_name": "G1",
+        "tag": 108,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -43,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "109": {
+      "Key": {
+        "visual_name": "G2",
+        "tag": 109,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -43,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "110": {
+      "Key": {
+        "visual_name": "G3",
+        "tag": 110,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -43,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "111": {
+      "Key": {
+        "visual_name": "G4",
+        "tag": 111,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -43,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "112": {
+      "Key": {
+        "visual_name": "G5",
+        "tag": 112,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -43,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    },
+    "113": {
+      "Key": {
+        "visual_name": "G6",
+        "tag": 113,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -43,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    }
+  }
 }

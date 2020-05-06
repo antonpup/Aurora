@@ -78,7 +78,7 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
                     keyBorder.BorderThickness = new Thickness(0);
                 }
             }
-            UpdateText();
+            UpdateText(keyCap);
         }
 
     }

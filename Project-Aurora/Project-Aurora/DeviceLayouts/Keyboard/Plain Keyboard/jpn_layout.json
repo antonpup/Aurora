@@ -1,6 +1,6 @@
 ﻿{
-   "layout_width":800,
-   "layout_height":400,
+   "layout_width":0,
+   "layout_height":0,
    "keys":[
       {
          "Key":{
@@ -244,11 +244,11 @@
       },
       {
          "Key":{
-            "visual_name":"~",
-            "tag":158,
+            "visual_name":"半角/\r\n全角",
+            "tag":17,
             "device_id":null
          },
-         "FontSize":12.0,
+         "FontSize":9.0,
          "Enabled":true,
          "X":0,
          "Y":37,
@@ -424,7 +424,7 @@
       },
       {
          "Key":{
-            "visual_name":"=",
+            "visual_name":"^",
             "tag":29,
             "device_id":null
          },
@@ -439,15 +439,30 @@
       },
       {
          "Key":{
-            "visual_name":"BACKSPACE",
-            "tag":30,
+            "visual_name":"¥",
+            "tag":156,
             "device_id":null
          },
          "FontSize":12.0,
          "Enabled":true,
          "X":481,
          "Y":37,
-         "Width":67,
+         "Width":30,
+         "Height":30,
+         "Image":"",
+         "IsImage":false
+      },
+      {
+         "Key":{
+            "visual_name":"BACK",
+            "tag":30,
+            "device_id":null
+         },
+         "FontSize":12.0,
+         "Enabled":true,
+         "X":518,
+         "Y":37,
+         "Width":30,
          "Height":30,
          "Image":"",
          "IsImage":false
@@ -724,7 +739,7 @@
       },
       {
          "Key":{
-            "visual_name":"{",
+            "visual_name":"@",
             "tag":49,
             "device_id":null
          },
@@ -739,7 +754,7 @@
       },
       {
          "Key":{
-            "visual_name":"}",
+            "visual_name":"[",
             "tag":50,
             "device_id":null
          },
@@ -1009,7 +1024,7 @@
       },
       {
          "Key":{
-            "visual_name":":",
+            "visual_name":";",
             "tag":69,
             "device_id":null
          },
@@ -1024,8 +1039,8 @@
       },
       {
          "Key":{
-            "visual_name":"'",
-            "tag":17,
+            "visual_name":":",
+            "tag":70,
             "device_id":null
          },
          "FontSize":12.0,
@@ -1039,8 +1054,8 @@
       },
       {
          "Key":{
-            "visual_name":"#",
-            "tag":70,
+            "visual_name":"]",
+            "tag":71,
             "device_id":null
          },
          "FontSize":12.0,
@@ -1122,22 +1137,7 @@
          "Enabled":true,
          "X":0,
          "Y":148,
-         "Width":48,
-         "Height":30,
-         "Image":"",
-         "IsImage":false
-      },
-      {
-         "Key":{
-            "visual_name":"\\",
-            "tag":51,
-            "device_id":null
-         },
-         "FontSize":12.0,
-         "Enabled":true,
-         "X":55,
-         "Y":148,
-         "Width":30,
+         "Width":85,
          "Height":30,
          "Image":"",
          "IsImage":false
@@ -1279,7 +1279,7 @@
       },
       {
          "Key":{
-            "visual_name":"?",
+            "visual_name":"/",
             "tag":87,
             "device_id":null
          },
@@ -1294,15 +1294,30 @@
       },
       {
          "Key":{
-            "visual_name":"SHIFT",
-            "tag":88,
+            "visual_name":"\\",
+            "tag":77,
             "device_id":null
          },
          "FontSize":12.0,
          "Enabled":true,
          "X":462,
          "Y":148,
-         "Width":87,
+         "Width":30,
+         "Height":30,
+         "Image":"",
+         "IsImage":false
+      },
+      {
+         "Key":{
+            "visual_name":"SHIFT",
+            "tag":88,
+            "device_id":null
+         },
+         "FontSize":12.0,
+         "Enabled":true,
+         "X":499,
+         "Y":148,
+         "Width":50,
          "Height":30,
          "Image":"",
          "IsImage":false
@@ -1429,37 +1444,67 @@
       },
       {
          "Key":{
+            "visual_name":"無変換",
+            "tag":153,
+            "device_id":null
+         },
+         "FontSize":12.0,
+         "Enabled":true,
+         "X":147,
+         "Y":185,
+         "Width":42,
+         "Height":30,
+         "Image":"",
+         "IsImage":false
+      },
+      {
+         "Key":{
             "visual_name":"SPACE",
             "tag":97,
             "device_id":null
          },
          "FontSize":12.0,
          "Enabled":true,
-         "X":149,
+         "X":196,
          "Y":185,
-         "Width":208,
+         "Width":133,
          "Height":30,
          "Image":"",
          "IsImage":false
       },
       {
          "Key":{
-            "visual_name":"ALT Gr",
+            "visual_name":"変換",
             "tag":98,
             "device_id":null
          },
          "FontSize":9.0,
          "Enabled":true,
-         "X":362,
+         "X":336,
          "Y":185,
-         "Width":41,
+         "Width":30,
          "Height":30,
          "Image":"",
          "IsImage":false
       },
       {
          "Key":{
-            "visual_name":"WIN",
+            "visual_name":"カタカナ/\r\nひらがな",
+            "tag":155,
+            "device_id":null
+         },
+         "FontSize":9.0,
+         "Enabled":true,
+         "X":373,
+         "Y":185,
+         "Width":30,
+         "Height":30,
+         "Image":"",
+         "IsImage":false
+      },
+      {
+         "Key":{
+            "visual_name":"ALT",
             "tag":99,
             "device_id":null
          },

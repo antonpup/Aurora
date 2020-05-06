@@ -1,50 +1,52 @@
-{
-  "group_tag": "mouse",
-  "origin_region": 4,
-  "grouped_keys": [
-  {
-      "tag": -1,
-      "margin_left": 10.0,
-      "margin_top": -232.0,
-      "width": 158.0,
-      "height": 232.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 13,
-      "height_bits": 19,
-      "image": "Corsair_M65_outline.png",
-      "enabled": true,
-      "absolute_location": true
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
+        "tag": -1,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 158,
+      "Height": 232,
+      "Image": "Corsair_M65_outline.png",
+      "IsImage": true
     },
-    {
-      "visualName": "Logo",
-      "tag": 160,
-      "margin_left": 80.0,
-      "margin_top": -76.0,
-      "width": 27.0,
-      "height": 27.0,
-      "width_bits": 2,
-      "height_bits": 2,
-      "margin_left_bits": 7,
-      "margin_top_bits": -6,
-      "image": "Corsair_M65_logo.png",
-      "enabled": true,
-      "absolute_location": true
+    "160": {
+      "Key": {
+        "visual_name": "Logo",
+        "tag": 160,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 70,
+      "Y": 156,
+      "Width": 27,
+      "Height": 27,
+      "Image": "Corsair_M65_logo.png",
+      "IsImage": true
     },
-    {
-      "visualName": "Scroll Wheel",
-      "tag": 161,
-      "margin_left": 84.0,
-      "margin_top": -222.0,
-      "width": 21.0,
-      "height": 60.0,
-      "width_bits": 2,
-      "height_bits": 5,
-      "margin_left_bits": 7,
-      "margin_top_bits": -18,
-      "image": "Corsair_M65_scrollwheel.png",
-      "enabled": true,
-      "absolute_location": true
+    "161": {
+      "Key": {
+        "visual_name": "Scroll Wheel",
+        "tag": 161,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 74,
+      "Y": 10,
+      "Width": 21,
+      "Height": 60,
+      "Image": "Corsair_M65_scrollwheel.png",
+      "IsImage": true
     }
-  ]
+  }
 }
