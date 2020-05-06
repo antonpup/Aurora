@@ -20,7 +20,6 @@ namespace Aurora.Devices.Omen
 
         private bool isInitialized = false;
         private readonly string devicename = "OMEN";
-        private readonly object semaphoreLock = new object();
 
         private readonly System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
@@ -58,7 +57,7 @@ namespace Aurora.Devices.Omen
         public bool Initialize()
         {
 
-            lock (semaphoreLock)
+            lock (this)
             {
                 if (!isInitialized)
                 {
@@ -67,6 +66,9 @@ namespace Aurora.Devices.Omen
                     mousePad = OmenMousePad.GetOmenMousePad();
                     chassis = OmenChassis.GetOmenChassis();
                     speaker = OmenSpeaker.GetOmenSpeaker();
+
+                    Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
+                    Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
 
                     isInitialized = true;
                 }
@@ -109,9 +111,16 @@ namespace Aurora.Devices.Omen
             }
         }
 
+        private void DeviceChangedHandler(object sender)
+        {
+            Global.logger.Info("Devices is changed. Reset Omen Devices");
+            Shutdown();
+            Initialize();
+        }
+
         public void Shutdown()
         {
-            lock (semaphoreLock)
+            lock (this)
             {
                 try
                 {
