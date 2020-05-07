@@ -35,8 +35,12 @@ namespace Aurora.Devices.Omen
         {
             if (isInitialized)
             {
-                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : " ") 
-                    + (mouse != null ? "Mouse Connected " : " ") + (mousePad != null ? "Mouse Pad Connected " : " ") + (chassis != null ? "Chassis Connected " : " ");
+                return devicename + ": " 
+                    + (keyboard != null ? "Keyboard Connected " : " ") 
+                    + (mouse != null ? "Mouse Connected " : " ") 
+                    + (mousePad != null ? "Mouse Pad Connected " : " ") 
+                    + (chassis != null ? "Chassis Connected " : " ")
+                    + (speaker != null ? "Speaker Connected " : " ");
             }
             else
             {
@@ -171,11 +175,9 @@ namespace Aurora.Devices.Omen
                     {
                         UpdateMousePad(key);
                     }
-
                 }
 
                 UpdateKeyboard(keyColors);
-
             }
             catch (Exception ex)
             {
