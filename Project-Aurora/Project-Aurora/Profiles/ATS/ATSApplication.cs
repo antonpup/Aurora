@@ -2,11 +2,6 @@
 using Aurora.Profiles.ETS2.GSI;
 using Aurora.Profiles.ETS2.Layers;
 using Aurora.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Profiles.ATS {
     public class ATS : Application {
@@ -26,15 +21,9 @@ namespace Aurora.Profiles.ATS {
             Event = new GameEvent_ETS2("amtrucks"),
             IconURI = "Resources/ats_64x64.png"
         }) {
-            
-            List<LayerHandlerEntry> atsLayers = new List<LayerHandlerEntry> {
-                new LayerHandlerEntry("ETS2BlinkerIndicator", "ATS Blinker", typeof(ETS2BlinkerLayerHandler)),
-                new LayerHandlerEntry("ETS2Beacon", "ATS Beacon", typeof(ETS2BeaconLayerHandler))
-            };
 
-            Global.LightingStateManager.RegisterLayerHandlers(atsLayers, false);
-            foreach (var layer in atsLayers)
-                Config.ExtraAvailableLayers.Add(layer.Key);
+            AllowLayer<ETS2BlinkerLayerHandler>();
+            AllowLayer<ETS2BeaconLayerHandler>();
         }
     }
 }

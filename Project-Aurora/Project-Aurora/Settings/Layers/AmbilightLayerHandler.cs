@@ -232,7 +232,6 @@ namespace Aurora.Settings.Layers
 
         public AmbilightLayerHandler()
         {
-            _ID = "Ambilight";
             Initialize();
             captureTimer = new Timer(GetIntervalFromFPS(Properties.AmbiLightUpdatesPerSecond));
             captureTimer.Elapsed += TakeScreenshot;

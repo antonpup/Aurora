@@ -48,7 +48,7 @@ namespace Aurora.Profiles
 
         public string IconURI { get; set; }
 
-        public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
+        public HashSet<Type> ExtraAvailableLayers { get; } = new HashSet<Type>();
 
         protected LightEventType? type = LightEventType.Normal;
         public LightEventType? Type
@@ -65,6 +65,11 @@ namespace Aurora.Profiles
 
         public bool EnableByDefault { get; set; } = true;
         public bool EnableOverlaysByDefault { get; set; } = true;
+
+        public LightEventConfig WithLayer<T>() where T : ILayerHandler {
+            ExtraAvailableLayers.Add(typeof(T));
+            return this;
+        }
     }
 
     public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
@@ -151,6 +156,16 @@ namespace Aurora.Profiles
         {
             PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
         }
+
+        /// <summary>Enables the use of a non-default layer for this application.</summary>
+        protected void AllowLayer<T>() where T : ILayerHandler => Config.WithLayer<T>();
+
+        /// <summary>Determines if the given layer handler type can be used by this application. This is the case either if it is a default handler or has explicitly been allowed for this application.</summary>
+        public bool IsAllowedLayer(Type type) => Global.LightingStateManager.LayerHandlers.TryGetValue(type, out var def) && (def.IsDefault || Config.ExtraAvailableLayers.Contains(type));
+
+        /// <summary>Gets a list of layers that are allowed to be used by this application.</summary>
+        public IEnumerable<LayerHandlerMeta> AllowedLayers
+            => Global.LightingStateManager.LayerHandlers.Values.Where(val => val.IsDefault || Config.ExtraAvailableLayers.Contains(val.Type));
 
         public void SwitchToProfile(ApplicationProfile newProfileSettings)
         {
@@ -317,7 +332,7 @@ namespace Aurora.Profiles
                         void InitialiseLayerCollection(ObservableCollection<Layer> collection) { 
                             foreach (Layer lyr in collection.ToList()) {
                                 //Remove any Layers that have non-functional handlers
-                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
+                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.GetType())) {
                                     prof.Layers.Remove(lyr);
                                     continue;
                                 }

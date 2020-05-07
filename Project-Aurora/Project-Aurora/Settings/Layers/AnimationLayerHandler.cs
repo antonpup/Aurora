@@ -110,8 +110,6 @@ namespace Aurora.Settings.Layers
         private HashSet<DeviceKeys> _pressedKeys = new HashSet<DeviceKeys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
 
         public AnimationLayerHandler() {
-            _ID = "Animation";
-
             // Listen for key events for the key-based triggers
             Global.InputEvents.KeyDown += InputEvents_KeyDown;
             Global.InputEvents.KeyUp += InputEvents_KeyUp;

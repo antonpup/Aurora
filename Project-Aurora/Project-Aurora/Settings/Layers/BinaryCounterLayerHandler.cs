@@ -34,10 +34,6 @@ namespace Aurora.Settings.Layers {
 
     public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerProperties> {
 
-        public BinaryCounterLayerHandler() : base() {
-            _ID = "BinaryCounter";
-        }
-
         private Control_BinaryCounterLayer control;
         protected override UserControl CreateControl() => control ?? (control = new Control_BinaryCounterLayer(this));
 

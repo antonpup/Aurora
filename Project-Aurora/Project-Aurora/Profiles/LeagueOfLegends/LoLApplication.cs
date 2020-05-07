@@ -1,12 +1,4 @@
-﻿using Aurora.Settings;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+﻿using Aurora.Profiles.LeagueOfLegends.Layers;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {
@@ -24,17 +16,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 IconURI = "Resources/leagueoflegends_48x48.png"
             })
         {
-            var extra = new List<LayerHandlerEntry>
-            {
-                new LayerHandlerEntry("LoLBackgroundLayer", "League of Legends Background Layer", typeof(Layers.LoLBackgroundLayerHandler))
-            };
-
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
-
-            foreach (var entry in extra)
-            {
-                Config.ExtraAvailableLayers.Add(entry.Key);
-            }
+            AllowLayer<LoLBackgroundLayerHandler>();
         }
     }
 }

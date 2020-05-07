@@ -62,11 +62,6 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        public ScriptLayerHandler() : base()
-        {
-            _ID = "Script";
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer layer = null;

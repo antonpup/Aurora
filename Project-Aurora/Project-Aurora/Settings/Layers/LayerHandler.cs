@@ -108,8 +108,6 @@ namespace Aurora.Settings.Layers
     {
         UserControl Control { get; }
 
-        string ID { get; }
-
         IStringProperty Properties { get; set; }
 
         bool EnableSmoothing { get; set; }
@@ -142,12 +140,6 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public UserControl Control => _Control ?? (_Control = this.CreateControl());
-
-        [JsonIgnore]
-        protected string _ID;
-
-        [JsonIgnore]
-        public string ID { get { return _ID; } }
 
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
@@ -250,6 +242,7 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LayerHandlerMeta(Exclude = true)]
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {
 
