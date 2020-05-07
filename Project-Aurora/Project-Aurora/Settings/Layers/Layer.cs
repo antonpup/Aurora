@@ -2,7 +2,6 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
-using MiscUtil;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
