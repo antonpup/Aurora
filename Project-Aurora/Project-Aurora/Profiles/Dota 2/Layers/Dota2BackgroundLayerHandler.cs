@@ -64,11 +64,6 @@ namespace Aurora.Profiles.Dota_2.Layers
         private double dim_value = 1.0;
         private int dim_bg_at = 15;
 
-        public Dota2BackgroundLayerHandler() : base()
-        {
-            _ID = "Dota2Background";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_Dota2BackgroundLayer(this);

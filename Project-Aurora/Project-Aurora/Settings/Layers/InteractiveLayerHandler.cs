@@ -126,8 +126,6 @@ namespace Aurora.Settings.Layers
 
         public InteractiveLayerHandler()
         {
-            _ID = "Interactive";
-
             Global.InputEvents.KeyDown += InputEventsKeyDown;
             Global.InputEvents.KeyUp += InputEventsKeyUp;
         }
