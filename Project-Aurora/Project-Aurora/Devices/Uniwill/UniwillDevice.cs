@@ -14,24 +14,20 @@ using UniwillSDKDLL;
 
 namespace Aurora.Devices.Uniwill
 {
-     
     enum GAMECENTERTYPE
     {
         NONE = 0,
         GAMINGTCENTER = 1,
         CONTROLCENTER = 2
-        
     }
-
 
     public class UniwillDevice : Device
     {
-        
-       // Generic Variables
+        // Generic Variables
         private string devicename = "Uniwill";
         private bool isInitialized = false;
 
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private Stopwatch watch = new Stopwatch();
         private long lastUpdateTime = 0;
 
         System.Timers.Timer regTimer;
@@ -39,24 +35,22 @@ namespace Aurora.Devices.Uniwill
         const string subkey = @"SOFTWARE\OEM\Aurora";
         const string keyName = Root + "\\" + subkey;
         int SwitchOn = 0;
-       
+
         private AuroraInterface keyboard = null;
-     
+
         GAMECENTERTYPE GamingCenterType = 0;
-     
+
         float brightness = 1f;
         public UniwillDevice()
         {
             devicename = KeyboardFactory.GetOEMName();
             ChoiceGamingCenter();
- 
         }
- 
 
         private void ChoiceGamingCenter()
         {
             GamingCenterType = CheckGC();
-             
+
             if (GamingCenterType == GAMECENTERTYPE.GAMINGTCENTER)
             {
                 regTimer = new System.Timers.Timer();
@@ -64,20 +58,18 @@ namespace Aurora.Devices.Uniwill
                 regTimer.Elapsed += OnRegChanged;
                 regTimer.Stop();
                 regTimer.Start();
-     
+
             }
         }
-
-      
 
         private GAMECENTERTYPE CheckGC()
         {
             try
             {
-                int Control = (int)Registry.GetValue(keyName, "AuroraSwitch",null);
+                int Control = (int)Registry.GetValue(keyName, "AuroraSwitch", null);
                 GamingCenterType = GAMECENTERTYPE.GAMINGTCENTER;
                 SwitchOn = Control;
-         
+
             }
             catch (Exception ex)
             {
@@ -86,28 +78,23 @@ namespace Aurora.Devices.Uniwill
             }
             return GamingCenterType;
         }
- 
 
         public bool CheckGCPower()
         {
-           if(GamingCenterType== GAMECENTERTYPE.GAMINGTCENTER)
-           {
+            if (GamingCenterType == GAMECENTERTYPE.GAMINGTCENTER)
+            {
                 int Control = (int)Registry.GetValue(keyName, "AuroraSwitch", 0);
-                if (Control == 0)
-                    return false;
-                else
-                    return true;
+                return Control != 0;
             }
-            
-            else 
-              return true;
+            else
+            {
+                return true;
+            }
         }
-
-       
         private void OnRegChanged(object sender, EventArgs e)
         {
-            int newSwtich =(int) Registry.GetValue(keyName, "AuroraSwitch", 0);
-            if(SwitchOn != newSwtich)
+            int newSwtich = (int)Registry.GetValue(keyName, "AuroraSwitch", 0);
+            if (SwitchOn != newSwtich)
             {
                 SwitchOn = newSwtich;
                 if (CheckGCPower())
@@ -119,50 +106,44 @@ namespace Aurora.Devices.Uniwill
                     bRefreshOnce = true;
                     isInitialized = false;
                     Shutdown();
-
                 }
-               
             }
-            
-
         }
 
         public string GetDeviceName()
+        {
+            return devicename;
+        }
+
+        public string GetDeviceDetails()
+        {
+            if (isInitialized)
             {
-                return devicename;
+                return devicename + ": Initialized";
             }
-
-            public string GetDeviceDetails()
+            else
             {
-                if (isInitialized)
-                {
-                    return devicename + ": Initialized";
-                }
-                else
-                {
-                    return devicename + ": Not initialized";
-                }
+                return devicename + ": Not initialized";
             }
+        }
 
-            public bool Initialize()
+        public bool Initialize()
+        {
+            if (!isInitialized && CheckGCPower())
             {
-           
-
-              if (!isInitialized && CheckGCPower())
-                {
                 try
                 {
-                    keyboard =   KeyboardFactory.CreateHIDDevice("hidkeyboard");
-                        if (keyboard!=null)
-                        {
-                            bRefreshOnce = true;
-                            isInitialized = true;
-                            //SetBrightness();
-                            return true;
-                        }
-                           
-                        isInitialized = false;
-                        return false;
+                    keyboard = KeyboardFactory.CreateHIDDevice("hidkeyboard");
+                    if (keyboard != null)
+                    {
+                        bRefreshOnce = true;
+                        isInitialized = true;
+                        //SetBrightness();
+                        return true;
+                    }
+
+                    isInitialized = false;
+                    return false;
                 }
                 catch (Exception ex)
                 {
@@ -172,56 +153,57 @@ namespace Aurora.Devices.Uniwill
                 isInitialized = false;
                 return false;
             }
- 
 
             return isInitialized;
+        }
 
-            }
- 
-            public void Shutdown()
+        public void Shutdown()
+        {
+            if (this.IsInitialized())
             {
-                if (this.IsInitialized())
+                if (CheckGCPower())
                 {
-                    if(CheckGCPower())
-                     keyboard?.release();
-
-                    bRefreshOnce = true;
-                    isInitialized = false;
-                   
-                }
-            }
-
-            public void Reset()
-            {
-                if (this.IsInitialized())
-                {
-                 if(CheckGCPower())
                     keyboard?.release();
-
-                 bRefreshOnce = true;
-                 isInitialized = false;
-                
                 }
-                   
-            }
 
-            public bool Reconnect()
-            {
-                throw new NotImplementedException();
-            }
+                bRefreshOnce = true;
+                isInitialized = false;
 
-            public bool IsInitialized()
-            {
-        
-               return isInitialized;
             }
+        }
 
-            public bool IsConnected()
+        public void Reset()
+        {
+            if (this.IsInitialized())
             {
-                 return isInitialized;
-           }
+                if (CheckGCPower())
+                {
+                    keyboard?.release();
+                }
+
+                bRefreshOnce = true;
+                isInitialized = false;
+            }
+        }
+
+        public bool Reconnect()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsInitialized()
+        {
+            return isInitialized;
+        }
+
+        public bool IsConnected()
+        {
+            return isInitialized;
+        }
+
         bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)  
+
+        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -229,53 +211,47 @@ namespace Aurora.Devices.Uniwill
 
             watch.Restart();
 
-           
             //Alpha necessary for Global Brightness modifier
             var adjustedColors = keyColors.Select(kc => AdjustBrightness(kc));
 
             keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, adjustedColors, e);
 
             bRefreshOnce = false;
-       
+
             watch.Stop();
 
             lastUpdateTime = watch.ElapsedMilliseconds;
 
             return update_result;
-
         }
- 
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false) => UpdateDevice(colorComposition.keyColors, e, forced);
 
         private KeyValuePair<DeviceKeys, Color> AdjustBrightness(KeyValuePair<DeviceKeys, Color> kc)
         {
             var newEntry = new KeyValuePair<DeviceKeys, Color>(kc.Key, System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(kc.Value, (kc.Value.A / 255.0D) * brightness)));
-            kc= newEntry;
+            kc = newEntry;
             return kc;
         }
 
-
         // Device Status Methods
         public bool IsKeyboardConnected()
-            {
-                return isInitialized;
-            }
-
-            public bool IsPeripheralConnected()
-            {
-                return isInitialized;
-            }
-
-            public string GetDeviceUpdatePerformance()
-            {
-                return (isInitialized ? lastUpdateTime + " ms" : "");
-            }
-
-            public VariableRegistry GetRegisteredVariables()
-            {
-                return new VariableRegistry();
-            }
+        {
+            return isInitialized;
         }
-   
+
+        public bool IsPeripheralConnected()
+        {
+            return isInitialized;
+        }
+        public string GetDeviceUpdatePerformance()
+        {
+            return (isInitialized ? lastUpdateTime + " ms" : "");
+        }
+
+        public VariableRegistry GetRegisteredVariables()
+        {
+            return new VariableRegistry();
+        }
+    }
 }
