@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -430,14 +430,18 @@ namespace Aurora.Settings
 
         public Dictionary<DeviceKeys, string> KeyText { get { return virtualKeyboardGroup.KeyText; } }
 
-        public Grid Virtual_keyboard {
-            get {
+        public Grid Virtual_keyboard
+        {
+            get
+            {
                 return _virtualKeyboard;
             }
         }
 
-        public Grid AbstractVirtualKeyboard {
-            get {
+        public Grid AbstractVirtualKeyboard
+        {
+            get
+            {
                 return CreateUserControl(true);
             }
         }
@@ -456,8 +460,10 @@ namespace Aurora.Settings
 
         private PreferredKeyboardLocalization _loaded_localization = PreferredKeyboardLocalization.None;
 
-        public PreferredKeyboardLocalization Loaded_Localization {
-            get {
+        public PreferredKeyboardLocalization Loaded_Localization
+        {
+            get
+            {
                 return _loaded_localization;
             }
         }
@@ -724,6 +730,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
+                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -864,6 +872,9 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.Clevo_Touchpad:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
+                        break;
+                    case PreferredMouse.Roccat_Kone_Pure:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "roccat_kone_pure_features.json");
                         break;
                     case PreferredMouse.SteelSeries_Rival_300:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");

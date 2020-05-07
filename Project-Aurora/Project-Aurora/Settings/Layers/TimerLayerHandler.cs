@@ -54,8 +54,6 @@ namespace Aurora.Settings.Layers {
         private bool isActive = false;
 
         public TimerLayerHandler() : base() {
-            _ID = "Timer";
-
             timer = new CustomTimer();
             timer.Trigger += Timer_Elapsed;
 

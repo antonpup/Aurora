@@ -37,7 +37,7 @@ namespace Plugin_Example
         {
             if (manager is LightingStateManager)
             {
-                ((LightingStateManager)manager).RegisterLayerHandler(new LayerHandlerEntry("ExampleLayer", "Example Layer", typeof(ExampleLayerHandler)));
+                ((LightingStateManager)manager).RegisterLayer<ExampleLayerHandler>();
             }
         }
     }

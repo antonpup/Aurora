@@ -73,11 +73,6 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
         private bool showAnimation_Explosion = false;
 
-        public RocketLeagueGoalExplosionLayerHandler() : base()
-        {
-            _ID = "RocketLeagueGoalExplosion";
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             previoustime = currenttime;

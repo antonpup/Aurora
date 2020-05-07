@@ -29,14 +29,14 @@ namespace Aurora.Settings.Layers
         }
 
         [LogicOverridable("Primary Color")]
-        public Color? _PrimaryColor { get; set; }
+        public virtual Color? _PrimaryColor { get; set; }
         [JsonIgnore]
-        public Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
+        public virtual Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
 
         [LogicOverridable("Affected Keys")]
-        public KeySequence _Sequence { get; set; }
+        public virtual KeySequence _Sequence { get; set; }
         [JsonIgnore]
-        public KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
+        public virtual KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
 
 
         #region Override Special Properties
@@ -84,9 +84,9 @@ namespace Aurora.Settings.Layers
     public class LayerHandlerProperties2Color<TProperty> : LayerHandlerProperties<TProperty> where TProperty : LayerHandlerProperties2Color<TProperty>
     {
         [LogicOverridable("Secondary Color")]
-        public Color? _SecondaryColor { get; set; }
+        public virtual Color? _SecondaryColor { get; set; }
         [JsonIgnore]
-        public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
+        public virtual Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
 
         public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) { }
 
@@ -107,8 +107,6 @@ namespace Aurora.Settings.Layers
     public interface ILayerHandler : IDisposable
     {
         UserControl Control { get; }
-
-        string ID { get; }
 
         IStringProperty Properties { get; set; }
 
@@ -142,12 +140,6 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public UserControl Control => _Control ?? (_Control = this.CreateControl());
-
-        [JsonIgnore]
-        protected string _ID;
-
-        [JsonIgnore]
-        public string ID { get { return _ID; } }
 
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
@@ -250,6 +242,7 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LayerHandlerMeta(Exclude = true)]
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {
 

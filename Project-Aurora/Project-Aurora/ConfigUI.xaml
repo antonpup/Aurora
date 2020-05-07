@@ -52,7 +52,19 @@
                     </StackPanel.ContextMenu>
                 </StackPanel>
             </ScrollViewer>
-            <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseDown="DesktopControl_MouseDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+            <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseLeftButtonDown="DesktopControl_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                <Image.ContextMenu>
+                    <ContextMenu x:Name="cmenuSettings" Background="#FF181818" HorizontalContentAlignment="Center">
+                        <ContextMenu.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Background="#FF181818" />
+                            </ItemsPanelTemplate>
+                        </ContextMenu.ItemsPanel>
+                        <MenuItem x:Name="cmbtnOpenBitmap" Header="Open Bitmap Window" Click="cmbtnOpenBitmapWindow_Clicked" Foreground="White"/>
+                        <MenuItem x:Name="cmbtnOpenhttpDebug" Header="Open GSI/HTTP Window" Click="cmbtnOpenHttpDebugWindow_Clicked" Foreground="White"/>
+                    </ContextMenu>
+                </Image.ContextMenu>
+            </Image>
         </Grid>
 
         <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200">
