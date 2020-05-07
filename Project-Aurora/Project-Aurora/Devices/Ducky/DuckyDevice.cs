@@ -82,6 +82,10 @@ namespace Aurora.Devices.Ducky
                     }
                     break;
                 }
+                else
+                {
+                    isInitialized = false;
+                }
             }
 
             return isInitialized;
