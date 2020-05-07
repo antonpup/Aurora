@@ -41,6 +41,7 @@ namespace Aurora.Devices.Uniwill
         GAMECENTERTYPE GamingCenterType = 0;
 
         float brightness = 1f;
+
         public UniwillDevice()
         {
             devicename = KeyboardFactory.GetOEMName();
@@ -69,9 +70,8 @@ namespace Aurora.Devices.Uniwill
                 int Control = (int)Registry.GetValue(keyName, "AuroraSwitch", null);
                 GamingCenterType = GAMECENTERTYPE.GAMINGTCENTER;
                 SwitchOn = Control;
-
             }
-            catch (Exception ex)
+            catch
             {
                 GamingCenterType = GAMECENTERTYPE.NONE;
                 SwitchOn = 0;
@@ -91,6 +91,7 @@ namespace Aurora.Devices.Uniwill
                 return true;
             }
         }
+
         private void OnRegChanged(object sender, EventArgs e)
         {
             int newSwtich = (int)Registry.GetValue(keyName, "AuroraSwitch", 0);
@@ -145,7 +146,7 @@ namespace Aurora.Devices.Uniwill
                     isInitialized = false;
                     return false;
                 }
-                catch (Exception ex)
+                catch
                 {
                     Debug.WriteLine("Uniwill device error!");
                 }
@@ -207,29 +208,31 @@ namespace Aurora.Devices.Uniwill
         {
             if (e.Cancel) return false;
 
-            bool update_result = false;
-
-            watch.Restart();
-
             //Alpha necessary for Global Brightness modifier
             var adjustedColors = keyColors.Select(kc => AdjustBrightness(kc));
 
-            keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, adjustedColors, e);
+            bool ret = keyboard?.SetEffect(0x32, 0x00, bRefreshOnce, adjustedColors, e) ?? false;
 
             bRefreshOnce = false;
 
-            watch.Stop();
+            return ret;
+        }
 
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        {
+            watch.Restart();
+
+            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+
+            watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;
 
             return update_result;
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false) => UpdateDevice(colorComposition.keyColors, e, forced);
-
         private KeyValuePair<DeviceKeys, Color> AdjustBrightness(KeyValuePair<DeviceKeys, Color> kc)
         {
-            var newEntry = new KeyValuePair<DeviceKeys, Color>(kc.Key, System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(kc.Value, (kc.Value.A / 255.0D) * brightness)));
+            var newEntry = new KeyValuePair<DeviceKeys, Color>(kc.Key, Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(kc.Value, (kc.Value.A / 255.0D) * brightness)));
             kc = newEntry;
             return kc;
         }
@@ -244,6 +247,7 @@ namespace Aurora.Devices.Uniwill
         {
             return isInitialized;
         }
+
         public string GetDeviceUpdatePerformance()
         {
             return (isInitialized ? lastUpdateTime + " ms" : "");
