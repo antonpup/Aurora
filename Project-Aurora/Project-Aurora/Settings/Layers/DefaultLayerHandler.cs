@@ -14,6 +14,7 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_Opacity")]
     [LogicOverrideIgnoreProperty("_Enabled")]
     [LogicOverrideIgnoreProperty("_Sequence")]
+    [LayerHandlerMeta(Order = -1, IsDefault = true)]
     public class DefaultLayerHandler : LayerHandler<LayerHandlerProperties>
     {
         protected override UserControl CreateControl()

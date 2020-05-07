@@ -751,11 +751,13 @@ namespace Aurora.Profiles
             Name = attribute?.Name ?? type.Name.CamelCaseToSpaceCase().TrimEndStr(" Layer Handler");
             Type = type;
             IsDefault = attribute?.IsDefault ?? type.Namespace == "Aurora.Settings.Layers"; // if the layer is in the Aurora.Settings.Layers namespace, make the IsDefault true unless otherwise specified. If it is in another namespace, it's probably a custom application layer and so make IsDefault false unless otherwise specified
+            Order = attribute?.Order ?? 0;
         }
 
         public string Name { get; }
         public Type Type { get; }
         public bool IsDefault { get; }
+        public int Order { get; }
     }
 
 
@@ -772,5 +774,8 @@ namespace Aurora.Profiles
 
         /// <summary>If true, this layer will be registered as a 'default' layer for all applications. Default true.</summary>
         public bool IsDefault { get; set; } = false;
+
+        /// <summary>A number used when ordering the layer entry in the list. Only to be used for layers that need to appear at the top/bottom of the list.</summary>
+        public int Order { get; set; } = 0;
     }
 }

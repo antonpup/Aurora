@@ -141,6 +141,7 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LayerHandlerMeta(Name = "Audio Visualizer", IsDefault = true)]
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
         public event NewLayerRendered NewLayerRender = delegate { };

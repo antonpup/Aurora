@@ -52,7 +52,7 @@ namespace Aurora.Settings
 
             DataContext = layer;
 
-            cmbLayerType.ItemsSource = layer.AssociatedApplication.AllowedLayers.OrderBy(l => l.Name);
+            cmbLayerType.ItemsSource = layer.AssociatedApplication.AllowedLayers.OrderBy(l => l.Order).ThenBy(l => l.Name);
             cmbLayerType.SelectedValue = Layer.Handler.GetType();
 
             ctrlLayerTypeConfig.Content = layer.Control;

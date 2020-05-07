@@ -60,7 +60,7 @@ namespace Aurora.Settings.Layers
 
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_Sequence")]
-    [LayerHandlerMeta(Name = "Razer Chroma")]
+    [LayerHandlerMeta(Name = "Razer Chroma", IsDefault = true)]
     public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     {
         private Color[] _keyboardColors;
