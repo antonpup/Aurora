@@ -28,16 +28,13 @@ namespace Aurora.Devices.Omen
             switch (Global.Configuration.mouse_preference)
             {
                 case PreferredMouse.OMEN_Outpost_Plus_Photon:
+                case PreferredMouse.OMEN_Outpost_Plus_Vector:
+                case PreferredMouse.OMEN_Outpost_Plus_Vector_Essentials:
                     ptr = OmenLighting_MousePad_OpenByName("Outpost");
                     break;
             }
 
-            if (ptr != IntPtr.Zero)
-            {
-                return new OmenMousePad(ptr);
-            }
-
-            return null;
+            return (ptr == IntPtr.Zero ? null : new OmenMousePad(ptr));
         }
 
         internal void Shutdown()

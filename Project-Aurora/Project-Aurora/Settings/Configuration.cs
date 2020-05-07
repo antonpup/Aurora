@@ -365,8 +365,12 @@ namespace Aurora.Settings
         OMEN_Outpost_Plus_Photon = 1002,
         [Description("OMEN Vector")]
         OMEN_Vector = 1003,
+        [Description("OMEN Outpost + Vector")]
+        OMEN_Outpost_Plus_Vector = 1004,
         [Description("OMEN Vector Essentials")]
-        OMEN_Vector_Essentials = 1004,
+        OMEN_Vector_Essentials = 1005,
+        [Description("OMEN Outpost + Vector Essentials")]
+        OMEN_Outpost_Plus_Vector_Essentials = 1006,
     }
 
     public enum KeycapType

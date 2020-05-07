@@ -21,11 +21,8 @@ namespace Aurora.Devices.Omen
         public static OmenChassis GetOmenChassis()
         {
             IntPtr ptr = OmenLighting_Chassis_Open();
-            if (ptr != IntPtr.Zero)
-            {
-                return new OmenChassis(ptr);
-            }
-            return null;
+
+            return (ptr == IntPtr.Zero ? null : new OmenChassis(ptr));
         }
 
         internal void Shutdown()

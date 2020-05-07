@@ -22,12 +22,8 @@ namespace Aurora.Devices.Omen
         public static OmenSpeaker GetOmenSpeaker()
         {
             IntPtr ptr = OmenLighting_Speaker_Open();
-            if (ptr != IntPtr.Zero)
-            {
-                return new OmenSpeaker(ptr);
-            }
 
-            return null;
+            return (ptr == IntPtr.Zero ? null : new OmenSpeaker(ptr));
         }
 
         internal void Shutdown()

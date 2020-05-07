@@ -29,12 +29,7 @@ namespace Aurora.Devices.Omen
                     break;
             }
 
-            if (kboardPointer != IntPtr.Zero)
-            {
-                return new OmenKeyboard(kboardPointer);
-            }
-
-            return null;
+            return (kboardPointer == IntPtr.Zero ? null : new OmenKeyboard(kboardPointer));
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
