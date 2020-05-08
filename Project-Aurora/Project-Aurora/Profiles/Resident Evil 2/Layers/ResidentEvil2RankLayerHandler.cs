@@ -35,11 +35,6 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
 
     public class ResidentEvil2RankLayerHandler : LayerHandler<ResidentEvil2RankLayerHandlerProperties>
     {
-        public ResidentEvil2RankLayerHandler() : base()
-        {
-            _ID = "ResidentEvil2Rank";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_ResidentEvil2RankLayer( this );

@@ -52,11 +52,6 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Exception ScriptException { get; private set; }
 
-        public ScriptLayerHandler() : base()
-        {
-            _ID = "Script";
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             EffectLayer layer = null;

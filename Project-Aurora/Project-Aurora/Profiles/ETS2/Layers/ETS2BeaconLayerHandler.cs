@@ -41,10 +41,6 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         private int frame = 0;
 
-        public ETS2BeaconLayerHandler() : base() {
-            _ID = "ETS2BlinkerIndicator";
-        }
-
         protected override UserControl CreateControl() {
             return new Control_ETS2BeaconLayer(this);
         }

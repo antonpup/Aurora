@@ -40,11 +40,6 @@ namespace Aurora.Settings.Layers
         private System.Drawing.Image _loaded_image = null;
         private string _loaded_image_path = "";
 
-        public ImageLayerHandler()
-        {
-            _ID = "Image";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_ImageLayer(this);
