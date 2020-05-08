@@ -24,10 +24,8 @@ namespace Aurora.Settings.Overrides.Logic {
             var selectButton = new Button { Content = "Select", Padding = new System.Windows.Thickness(8, 0, 8, 0), Margin = new System.Windows.Thickness(8, 0, 0, 0) };
             selectButton.Click += (sender, e) => {
                 var wnd = new Window_ProcessSelection { ButtonLabel = "Select" };
-                if (wnd.ShowDialog() == true && !string.IsNullOrWhiteSpace(wnd.ChosenExecutableName)) {
+                if (wnd.ShowDialog() == true && !string.IsNullOrWhiteSpace(wnd.ChosenExecutableName))
                     ProcessName = wnd.ChosenExecutableName;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ProcessName)));
-                }
             };
 
             return new StackPanel { Orientation = Orientation.Horizontal }

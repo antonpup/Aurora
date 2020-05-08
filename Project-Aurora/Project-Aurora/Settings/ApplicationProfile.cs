@@ -1,6 +1,9 @@
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Aurora.Utils;
+using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,125 +12,69 @@ using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
-    public abstract class Settings : INotifyPropertyChanged, ICloneable
+
+    public class ScriptSettings : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public object Clone()
-        {
-            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
-
-            return JsonConvert.DeserializeObject(
-                    str,
-                    this.GetType(),
-                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
-                    );
-        }
-    }
-
-    public class ScriptSettings : Settings
-    {
-        #region Private Properties
-        private KeySequence _Keys;
-
-        private bool _Enabled = false;
-
-        private bool _ExceptionHit = false;
-
-        private Exception _Exception = null;
-        #endregion
-
-        #region Public Properties
-        public KeySequence Keys { get { return _Keys; } set { _Keys = value; InvokePropertyChanged(); } }
-
-        public bool Enabled { get { return _Enabled; }
-            set {
-                _Enabled = value;
-                if (value)
-                {
-                    ExceptionHit = false;
-                    Exception = null;
-                }
-                InvokePropertyChanged();
-            }
-        }
-
-        [JsonIgnore]
-        public bool ExceptionHit { get { return _ExceptionHit; } set { _ExceptionHit = value; InvokePropertyChanged(); } }
-
-        [JsonIgnore]
-        public Exception Exception { get { return _Exception; } set { _Exception = value; InvokePropertyChanged(); } }
-        #endregion
+        public KeySequence Keys { get; set; }
+        [OnChangedMethod(nameof(OnEnabledChanged))] public bool Enabled { get; set; }
+        [JsonIgnore] public bool ExceptionHit { get; set; }
+        [JsonIgnore] public Exception Exception { get; set; }
 
         public ScriptSettings(dynamic script)
         {
             if (script?.DefaultKeys != null && script?.DefaultKeys is KeySequence)
                 Keys = script.DefaultKeys;
         }
+
+        private void OnEnabledChanged() {
+            if (Enabled) {
+                ExceptionHit = false;
+                Exception = null;
+            }
+        }
     }
 
-    public class ApplicationProfile : Settings, IDisposable
+    public class ApplicationProfile : INotifyPropertyChanged, IDisposable
     {
-        #region Private Properties
-        private string _ProfileName = "";
-
-        private Keybind _triggerKeybind;
-
-        private Dictionary<string, ScriptSettings> _ScriptSettings;
-
-        private ObservableCollection<Layer> _Layers;
-
-        private ObservableCollection<Layer> _OverlayLayers;
-        #endregion
-
-        #region Public Properties
-        public string ProfileName { get => _ProfileName; set { _ProfileName = value; InvokePropertyChanged(); } }
-
-        public Keybind TriggerKeybind { get => _triggerKeybind; set { _triggerKeybind = value; InvokePropertyChanged(); } }
-
-        [JsonIgnore]
-        public string ProfileFilepath { get; set; }
-
-        public Dictionary<string, ScriptSettings> ScriptSettings { get => _ScriptSettings; set { _ScriptSettings = value; InvokePropertyChanged(); } }
-
-        public ObservableCollection<Layer> Layers { get => _Layers; set { _Layers = value; InvokePropertyChanged(); } }
-
-        public ObservableCollection<Layer> OverlayLayers { get => _OverlayLayers; set { _OverlayLayers = value; InvokePropertyChanged(); } }
-        #endregion
+        public string ProfileName { get; set; }
+        public Keybind TriggerKeybind { get; set; }
+        [JsonIgnore] public string ProfileFilepath { get; set; }
+        public Dictionary<string, ScriptSettings> ScriptSettings { get; set; }
+        public ObservableCollection<Layer> Layers { get; set; }
+        public ObservableCollection<Layer> OverlayLayers { get; set; }
 
         public ApplicationProfile()
         {
             this.Reset();
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public virtual void Reset()
         {
-            _Layers = new ObservableCollection<Layer>();
-            _OverlayLayers = new ObservableCollection<Layer>();
-            _ScriptSettings = new Dictionary<string, Aurora.Settings.ScriptSettings>();
-            _triggerKeybind = new Keybind();
+            Layers = new ObservableCollection<Layer>();
+            OverlayLayers = new ObservableCollection<Layer>();
+            ScriptSettings = new Dictionary<string, ScriptSettings>();
+            TriggerKeybind = new Keybind();
         }
 
-        public virtual void SetApplication(Aurora.Profiles.Application app)
+        public virtual void SetApplication(Profiles.Application app)
         {
-            foreach (Layer l in _Layers)
+            foreach (Layer l in Layers)
                 l.SetProfile(app);
 
-            foreach (Layer l in _OverlayLayers)
+            foreach (Layer l in OverlayLayers)
                 l.SetProfile(app);
         }
 
         public virtual void Dispose()
         {
-            foreach (Layer l in _Layers)
+            foreach (Layer l in Layers)
                 l.Dispose();
 
-            foreach (Layer l in _OverlayLayers)
+            foreach (Layer l in OverlayLayers)
                 l.Dispose();
         }
     }
