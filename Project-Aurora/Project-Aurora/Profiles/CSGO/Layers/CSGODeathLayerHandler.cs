@@ -47,11 +47,6 @@ namespace Aurora.Profiles.CSGO.Layers
         private long fadeStartAt = 15;
         private int fadeAlpha = 255;
 
-        public CSGODeathLayerHandler() : base()
-        {
-            _ID = "CSGODeathEffect";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGODeathLayer(this);

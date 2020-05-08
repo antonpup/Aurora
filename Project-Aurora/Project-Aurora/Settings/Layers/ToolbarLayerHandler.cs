@@ -43,8 +43,6 @@ namespace Aurora.Settings.Layers {
         private DeviceKeys activeKey = DeviceKeys.NONE;
 
         public ToolbarLayerHandler() {
-            _ID = "Toolbar";
-
             // Listen for relevant events
             Global.InputEvents.KeyDown += InputEvents_KeyDown;
             Global.InputEvents.Scroll += InputEvents_Scroll;

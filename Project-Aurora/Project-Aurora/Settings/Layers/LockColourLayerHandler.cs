@@ -42,11 +42,6 @@ namespace Aurora.Settings.Layers
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class LockColourLayerHandler : LayerHandler<LockColourLayerHandlerProperties>
     {
-        public LockColourLayerHandler() : base()
-        {
-            _ID = "LockColor";
-        }
-
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_LockColourLayer(this);

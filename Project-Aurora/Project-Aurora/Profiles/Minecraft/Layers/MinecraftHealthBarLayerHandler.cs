@@ -72,11 +72,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
     }
 
     public class MinecraftHealthBarLayerHandler : LayerHandler<MinecraftHealthBarLayerHandlerProperties> {
-
-        public MinecraftHealthBarLayerHandler() {
-            _ID = "MinecraftHealthBarLayer";
-        }
-
         protected override UserControl CreateControl() {
             return new Control_MinecraftHealthBarLayer(this);
         }

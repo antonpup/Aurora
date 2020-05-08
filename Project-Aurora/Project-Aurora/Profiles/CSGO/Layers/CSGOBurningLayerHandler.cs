@@ -45,11 +45,6 @@ namespace Aurora.Profiles.CSGO.Layers
     {
         private Random randomizer = new Random();
 
-        public CSGOBurningLayerHandler() : base()
-        {
-            _ID = "CSGOBurning";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOBurningLayer(this);

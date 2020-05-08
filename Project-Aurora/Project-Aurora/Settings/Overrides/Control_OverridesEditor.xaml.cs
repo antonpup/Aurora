@@ -1,7 +1,6 @@
 ﻿using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
-using MiscUtil.Collections.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -138,7 +137,7 @@ namespace Aurora.Settings.Overrides {
 
         private void HelpButton_Click(object sender, RoutedEventArgs e) {
             // Open the overrides page on the documentation page
-            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/docs/advanced-topics/overrides-system.html"));
+            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/advanced-topics/overrides-system/"));
         }
         #endregion
     }

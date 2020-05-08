@@ -75,11 +75,6 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         AnimationMix mixCaution = new AnimationMix(new[] { hbCaution });
         AnimationMix mixDanger = new AnimationMix(new[] { hbDanger });
 
-        public ResidentEvil2HealthLayerHandler() : base()
-        {
-            _ID = "ResidentEvil2Health";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_ResidentEvil2HealthLayer( this );

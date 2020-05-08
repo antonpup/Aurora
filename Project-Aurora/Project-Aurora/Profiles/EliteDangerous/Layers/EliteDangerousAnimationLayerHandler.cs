@@ -101,7 +101,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         
         public EliteDangerousAnimationLayerHandler() : base()
         {
-            _ID = "EliteDangerousAnimations";
             UpdateAnimations();
             RegenerateHyperspaceExitAnimation();
         }
