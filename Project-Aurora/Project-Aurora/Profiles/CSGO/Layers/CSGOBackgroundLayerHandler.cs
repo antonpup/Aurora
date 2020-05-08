@@ -71,11 +71,6 @@ namespace Aurora.Profiles.CSGO.Layers
         private double dim_value = 100.0;
         private long dim_bg_at = 15;
 
-        public CSGOBackgroundLayerHandler() : base()
-        {
-            _ID = "CSGOBackground";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOBackgroundLayer(this);

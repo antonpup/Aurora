@@ -37,11 +37,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
     }
     public class EliteDangerousBackgroundLayerHandler : LayerHandler<EliteDangerousBackgroundHandlerProperties>
     {
-        public EliteDangerousBackgroundLayerHandler() : base()
-        {
-            _ID = "EliteDangerousBackground";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_EliteDangerousBackgroundLayer(this);

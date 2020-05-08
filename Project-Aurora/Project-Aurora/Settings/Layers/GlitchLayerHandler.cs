@@ -100,11 +100,6 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_Sequence")]
     public class GlitchLayerHandler : GlitchLayerHandler<GlitchLayerHandlerProperties>
     {
-        public GlitchLayerHandler() : base()
-        {
-            _ID = "Glitch";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_GlitchLayer(this);

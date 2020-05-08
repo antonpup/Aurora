@@ -106,11 +106,6 @@ namespace Aurora.Settings.Layers
 
     public class PercentLayerHandler : PercentLayerHandler<PercentLayerHandlerProperties>
     {
-        public PercentLayerHandler() : base()
-        {
-            _ID = "Percent";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_PercentLayer(this);

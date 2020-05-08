@@ -30,12 +30,9 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         }
     }
 
+    [LayerHandlerMeta(Name = "League of Legends Background")]
     public class LoLBackgroundLayerHandler : LayerHandler<LoLBackgroundLayerHandlerProperties>
     {
-        public  LoLBackgroundLayerHandler() : base()
-        {
-            _ID = "LoLBackgroundLayer";
-        }
 
         private readonly EffectLayer layer = new EffectLayer();
         private Champion lastChampion = Champion.Undefined;
