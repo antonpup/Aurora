@@ -22,10 +22,5 @@ namespace Aurora.Profiles.Terraria.GSI {
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_Terraria(string JSONstring) : base(JSONstring) { }
-
-        /// <summary>
-        /// Creates a GameState_Terraria instance based on the data from the passed GameState instance.
-        /// </summary>
-        public GameState_Terraria(IGameState other) : base(other) { }
     }
 }

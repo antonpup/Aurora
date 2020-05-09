@@ -38,13 +38,5 @@ namespace Aurora.Profiles.CloneHero.GSI
         public GameState_CloneHero(string json_data) : base(json_data)
         {
         }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_CloneHero instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_CloneHero(IGameState other_state) : base(other_state)
-        {
-        }
     }
 }

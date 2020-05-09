@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Aurora.Profiles;
+using PropertyChanged;
 using DCD = Aurora.Settings.Overrides.Logic.DynamicConstructorDefinition;
 using DCPD = Aurora.Settings.Overrides.Logic.DynamicConstructorParamDefinition;
 
@@ -17,6 +18,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// The override dynamic logic creates a values dynamically based on some given IEvaluatables.
     /// This differs from the lookup table as non-discrete values can be used instead.
     /// </summary>
+    [DoNotNotify]
     public class OverrideDynamicValue : IOverrideLogic {
 
         #region Constructors

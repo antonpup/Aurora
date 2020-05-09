@@ -46,10 +46,10 @@ namespace Aurora.Settings.Layers {
 
         internal void SetProfile(Profiles.Application profile) {
             if (profile != null && !profileset) {
-                var var_types_boolean = profile.ParameterLookup?.Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean);
+                var var_types_boolean = profile.ParameterLookup.OfType(Profiles.GSIPropertyType.Boolean).Flatten();
                 conditionPath.Items.Clear();
                 foreach (var item in var_types_boolean)
-                    conditionPath.Items.Add(item.Key);
+                    conditionPath.Items.Add(item);
 
                 profileset = true;
             }

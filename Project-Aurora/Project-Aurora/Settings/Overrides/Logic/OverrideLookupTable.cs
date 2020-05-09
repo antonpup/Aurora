@@ -1,6 +1,7 @@
 ﻿using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 
 namespace Aurora.Settings.Overrides.Logic {
 
+    [DoNotNotify]
     public class OverrideLookupTable : IOverrideLogic {
 
         /// <summary>The type of variable that the user can set as the output when editing entries.</summary>

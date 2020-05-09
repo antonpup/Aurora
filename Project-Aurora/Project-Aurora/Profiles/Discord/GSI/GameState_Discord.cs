@@ -31,11 +31,5 @@ namespace Aurora.Profiles.Discord.GSI
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_Discord(string JSONstring) : base(JSONstring) { }
-
-        /// <summary>
-        /// Creates a GameState_Discord instance based on the data from the passed GameState instance.
-        /// </summary>
-        public GameState_Discord(IGameState other) : base(other) { }
-
     }
 }

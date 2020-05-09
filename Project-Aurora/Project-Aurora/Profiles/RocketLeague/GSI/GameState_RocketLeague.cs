@@ -50,12 +50,6 @@ namespace Aurora.Profiles.RocketLeague.GSI
         public GameState_RocketLeague(string json_data) : base(json_data) { }
 
         /// <summary>
-        /// A copy constructor, creates a GameState_RocketLeague instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_RocketLeague(IGameState other_state) : base(other_state) { }
-
-        /// <summary>
         /// Returns true if all the color values for both teams are between zero and one.
         /// </summary>
         /// <returns></returns>

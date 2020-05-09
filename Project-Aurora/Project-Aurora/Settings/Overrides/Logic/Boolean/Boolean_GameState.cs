@@ -28,13 +28,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Fetches the given boolean value from the game state and returns it.</summary>
         public bool Evaluate(IGameState gameState) {
-            bool result = false;
-            if (VariablePath.Length > 0)
-                try {
-                    object tmp = Utils.GameStateUtils.RetrieveGameStateParameter(gameState, VariablePath);
-                    result = (bool)Utils.GameStateUtils.RetrieveGameStateParameter(gameState, VariablePath);
-                } catch { }
-            return result;
+            return VariablePath.Length > 0 && gameState.GetBool(VariablePath);
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
@@ -74,8 +68,8 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
         public bool Evaluate(IGameState gameState) {
             // Parse the operands (either as numbers or paths)
-            double op1 = Utils.GameStateUtils.TryGetDoubleFromState(gameState, Operand1Path);
-            double op2 = Utils.GameStateUtils.TryGetDoubleFromState(gameState, Operand2Path);
+            double op1 = gameState.GetNumber(Operand1Path);
+            double op2 = gameState.GetNumber(Operand2Path);
 
             // Evaluate the operands based on the selected operator and return the result.
             switch (Operator) {
@@ -121,7 +115,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
         public bool Evaluate(IGameState gameState) {
-            var @enum = GameStateUtils.TryGetEnumFromState(gameState, StatePath);
+            var @enum = gameState.GetEnum(StatePath);
             return @enum != null && @enum.Equals(EnumValue);
         }
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);

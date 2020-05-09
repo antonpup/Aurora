@@ -538,24 +538,14 @@ namespace Aurora.Profiles
 
         public void GameStateUpdate(IGameState gs)
         {
-            //Debug.WriteLine("Received gs!");
-
-//Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
-
-//UpdateProcess();
-
-//string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
-
-//EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
 #if DEBUG
 #else
             try
             {
 #endif
                 ILightEvent profile;// = this.GetProfileFromProcess(process_name);
-                
 
-                JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
+                JObject provider = JObject.Parse(gs.GetNode("provider"));
                 string appid = provider.GetValue("appid").ToString();
                 string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
@@ -563,12 +553,12 @@ namespace Aurora.Profiles
                 {
                     IGameState gameState = gs;
                     if (profile.Config.GameStateType != null)
-                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
+                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
                     profile.SetGameState(gameState);
                 }
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
                 {
-                    string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
+                    string gs_process_name = JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                     lock (Events)
                     {
                         profile = profile ?? GetProfileFromProcessName(gs_process_name);

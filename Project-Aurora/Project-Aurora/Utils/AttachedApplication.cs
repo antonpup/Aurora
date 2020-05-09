@@ -14,7 +14,7 @@ namespace Aurora.Utils {
         public static Application GetApplication(DependencyObject obj) => (Application)obj.GetValue(ApplicationProperty);
         public static void SetApplication(DependencyObject obj, Application value) => obj.SetValue(ApplicationProperty, value);
 
-        // Using a DependencyProperty as the backing store for Application.  This enables animation, styling, binding, etc...
+        // Using a DependencyProperty as the backing store for Application.  This enables animation, styling, binding, etc..
         public static readonly DependencyProperty ApplicationProperty =
             DependencyProperty.RegisterAttached("Application", typeof(Application), typeof(AttachedApplication), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits | FrameworkPropertyMetadataOptions.OverridesInheritanceBehavior | FrameworkPropertyMetadataOptions.AffectsRender));
     }

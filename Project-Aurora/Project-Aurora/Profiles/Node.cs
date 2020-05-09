@@ -5,9 +5,8 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Aurora.Profiles
-{
-    public class Node<TClass> : StringProperty<TClass> where TClass : Node<TClass>
+namespace Aurora.Profiles {
+    public class Node<TClass> where TClass : Node<TClass>
     {
         protected Newtonsoft.Json.Linq.JObject _ParsedData;
 

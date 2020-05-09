@@ -11,20 +11,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Aurora.Settings.Layers
-{
+namespace Aurora.Settings.Layers {
     public interface IValueOverridable
     {
-        IStringProperty Overrides { get; set; }
+        object Overrides { get; set; }
     }
 
-    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
+    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
     {
         [GameStateIgnoreAttribute]
         [JsonIgnore]
         public TProperty Logic { get; set; }
-        IStringProperty IValueOverridable.Overrides {
-            get => (IStringProperty)Logic;
+        object IValueOverridable.Overrides {
+            get => Logic;
             set => Logic = value as TProperty;
         }
 
@@ -108,7 +107,7 @@ namespace Aurora.Settings.Layers
     {
         UserControl Control { get; }
 
-        IStringProperty Properties { get; set; }
+        object Properties { get; set; }
 
         bool EnableSmoothing { get; set; }
 
@@ -143,7 +142,7 @@ namespace Aurora.Settings.Layers
 
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
-        IStringProperty ILayerHandler.Properties {
+        object ILayerHandler.Properties {
             get => Properties;
             set => Properties = value as TProperty;
         }

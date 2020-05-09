@@ -38,13 +38,5 @@ namespace Aurora.Profiles.Dishonored.GSI
         public GameState_Dishonored(string json_data) : base(json_data)
         {
         }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_Dishonored instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_Dishonored(IGameState other_state) : base(other_state)
-        {
-        }
     }
 }

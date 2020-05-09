@@ -34,14 +34,6 @@ namespace Aurora.Profiles.Dota_2.GSI
         }
 
         /// <summary>
-        /// A copy constructor, creates a GameState_Dota2 instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_Dota2(IGameState other_state) : base(other_state)
-        {
-        }
-
-        /// <summary>
         /// Information about GSI authentication
         /// </summary>
         public Auth_Dota2 Auth

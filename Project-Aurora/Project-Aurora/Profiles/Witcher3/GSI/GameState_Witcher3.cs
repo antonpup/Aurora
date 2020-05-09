@@ -35,13 +35,5 @@ namespace Aurora.Profiles.Witcher3.GSI
         public GameState_Witcher3(string json_data) : base(json_data)
         {
         }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_Witcher3 instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_Witcher3(IGameState other_state) : base(other_state)
-        {
-        }
     }
 }

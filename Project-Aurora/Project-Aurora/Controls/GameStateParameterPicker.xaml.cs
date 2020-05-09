@@ -21,7 +21,7 @@ namespace Aurora.Controls {
         public event EventHandler<SelectedPathChangedEventArgs> SelectedPathChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private List<string> parameterList;
+        private GameStateParameterNode parameterList;
 
         public GameStateParameterPicker() {
             InitializeComponent();
@@ -36,7 +36,7 @@ namespace Aurora.Controls {
         /// <summary>
         /// Lazy-evaluated list of parameters for this application and property type.
         /// </summary>
-        public List<string> ParameterList => parameterList ?? (parameterList = Application?.ParameterLookup?.GetParameters(PropertyType).ToList());
+        public GameStateParameterNode ParameterList => parameterList ?? (parameterList = Application?.ParameterLookup?.OfType(PropertyType));
 
         /// <summary>
         /// Gets a list of items that should be displayed in the parameter list (based on the current "parent" variable).
@@ -47,19 +47,16 @@ namespace Aurora.Controls {
                 if (Application?.ParameterLookup == null) return null;
 
                 // If the given working path is a path to a variable (which it shouldn't be), pop the last item (the variable name) from the path to give just the "directory"
-                if (Application.ParameterLookup.IsValidParameter(WorkingPathStr))
+                if (Application.ParameterLookup.IsValidPath(WorkingPathStr))
                     WorkingPath.Pop();
 
                 // Generate the string version of this working path (and cache it)
-                var _workingPath = WorkingPathStr;
-                if (_workingPath != "") _workingPath += "/"; // If not at the root directory, add / to the end of the test path. This means it doesn't get confused with things such as `CPU` and `CPUUsage`.
-                return from path in ParameterList // With all properties in the current param lookup that are of a valid type (e.g. numbers)
-                       where path.StartsWith(_workingPath) // Pick only the ones that start with the same working path
-                       let pathSplit = path.Substring(_workingPath.Length).Split('/') // Get a list of all remaining parts of the path (e.g. if this was A/B/C and current path was A, pathSplit would be 'B', 'C')
-                       let isFolder = pathSplit.Length > 1 // If there is more than one part of the path remaining, this must be a directory
-                       group isFolder by pathSplit[0] into g // Group by the path name so duplicates are removed
-                       orderby !g.First(), g.Key // Order the remaining (distinct) items by folders first, then order by their name
-                       select new PathOption(g.Key, g.First()); // Finally, put them in a POCO so we can bind the UI to these properties.
+                var relevantList = ParameterList;
+                foreach (var path in WorkingPath.Reverse())
+                    relevantList = relevantList[path];
+                return from path in relevantList // With all properties in the current param lookup that are of a valid type (e.g. numbers)
+                       orderby path.IsLeaf, path.Name // Order the remaining (distinct) items by folders first, then order by their name
+                       select new PathOption(path.Name, !path.IsLeaf); // Finally, put them in a POCO so we can bind the UI to these properties.
             }
         }
 
@@ -141,13 +138,13 @@ namespace Aurora.Controls {
         /// <summary>
         /// The types of properties that will be shown to the user.
         /// </summary>
-        public PropertyType PropertyType {
-            get => (PropertyType)GetValue(PropertyTypeProperty);
+        public GSIPropertyType PropertyType {
+            get => (GSIPropertyType)GetValue(PropertyTypeProperty);
             set => SetValue(PropertyTypeProperty, value);
         }
 
         public static readonly DependencyProperty PropertyTypeProperty =
-            DependencyProperty.Register(nameof(PropertyType), typeof(PropertyType), typeof(GameStateParameterPicker), new PropertyMetadata(PropertyType.None, ApplicationOrPropertyTypeChange));
+            DependencyProperty.Register(nameof(PropertyType), typeof(GSIPropertyType), typeof(GameStateParameterPicker), new PropertyMetadata(GSIPropertyType.None, ApplicationOrPropertyTypeChange));
 
         public static void ApplicationOrPropertyTypeChange(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
             var picker = (GameStateParameterPicker)sender;
@@ -165,13 +162,13 @@ namespace Aurora.Controls {
         /// </summary>
         private bool ValidatePath(string path) =>
             // If application parameter context doesn't exist or there is no set type, assume non loaded and allow the path
-            Application?.ParameterLookup == null || PropertyType == PropertyType.None
+            Application?.ParameterLookup == null || PropertyType == GSIPropertyType.None
             // An empty path is fine
             || string.IsNullOrEmpty(path)
             // If we're in number mode, allow the selected path to be a double
-            || (PropertyType == PropertyType.Number && double.TryParse(path, out var _))
+            || (PropertyType == GSIPropertyType.Number && double.TryParse(path, out var _))
             // If not in number mode, must be a valid path and have the same type as the expected property type
-            || Application.ParameterLookup.IsValidParameter(path, PropertyType);
+            || Application.ParameterLookup.IsValidPath(path, PropertyType);
 
         #region Animation
         /// <summary>Animates the list boxes.</summary>
@@ -249,7 +246,7 @@ namespace Aurora.Controls {
                     WorkingPath.Push(((PathOption)item.DataContext).Path);
 
                     var path = string.Join("/", WorkingPath.Reverse());
-                    if (Application?.ParameterLookup?.IsValidParameter(path) ?? false) {
+                    if (Application?.ParameterLookup?.IsValidPath(path) ?? false) {
                         // If it turns out the user has selected an end variable, we want to update the DependencyObject for the selected path
                         SelectedPath = path;
                         NotifyChanged(nameof(SelectedPath));
@@ -325,10 +322,10 @@ namespace Aurora.Controls {
 
     /// <summary>
     /// Converter that converts a PropertyType enum value to a GridLength. Used for binding onto one of the row definition properties to hide a row when
-    /// the property type is anything other than <see cref="PropertyType.Number" />.
+    /// the property type is anything other than <see cref="GSIPropertyType.Number" />.
     /// </summary>
     public class PropertyTypeToGridLengthConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => new GridLength(0, (PropertyType)value == PropertyType.Number ? GridUnitType.Auto : GridUnitType.Pixel);
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => new GridLength(0, (GSIPropertyType)value == GSIPropertyType.Number ? GridUnitType.Auto : GridUnitType.Pixel);
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new NotImplementedException();
     }
 

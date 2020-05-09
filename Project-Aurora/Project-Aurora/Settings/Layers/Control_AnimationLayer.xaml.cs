@@ -96,13 +96,7 @@ namespace Aurora.Settings.Layers
             triggerPathItemsAreBoolean = isTriggerBoolean;
 
             // Get a list of the parameters. If trigger is boolean mode, filters to only boolean values, else does numeric values
-            triggerPath.ItemsSource = profile?.ParameterLookup?
-                .Where(kvp => isTriggerBoolean
-                    ? kvp.Value.Item1 == typeof(bool)
-                    : TypeUtils.IsNumericType(kvp.Value.Item1)
-                )
-                .Select(kvp => kvp.Key)
-                .ToList();
+            triggerPath.ItemsSource = profile?.ParameterLookup?.OfType(isTriggerBoolean ? Profiles.GSIPropertyType.Boolean : Profiles.GSIPropertyType.Number).Flatten();
         }
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e) {
