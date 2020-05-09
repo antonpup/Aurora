@@ -48,8 +48,19 @@ namespace Aurora.Profiles {
         /// <summary>The number of child nodes underneath this node.</summary>
         public int ChildCount => children?.Count ?? 0;
 
-        /// <summary>Attempts to get the child of the given name. Returns null if a child of this name does not exist.</summary>
-        public GameStateParameterNode this[string child] => children.TryGetValue(child, out var c) ? c : null;
+        /// <summary>Attempts to get the child of the given name or path. Returns null if a child of this path does not exist.</summary>
+        public GameStateParameterNode this[string path] {
+            get {
+                if (path.Contains("/")) {
+                    var cur = this;
+                    foreach (var part in path.Split('/'))
+                        if (cur != null)
+                            cur = cur[part];
+                    return cur;
+                } else
+                    return children.TryGetValue(path, out var c) ? c : null;
+            }
+        }
 
         /// <summary>Returns a filtered <see cref="GameStateParameterNode"/> that only contains paths that are of the given property type.</summary>
         public GameStateParameterNode OfType(GSIPropertyType type) => _OfType(type) ?? new GameStateParameterNode(Name, ClrType);
@@ -132,8 +143,8 @@ namespace Aurora.Profiles {
         }
 
         #region IEnumerable
-        public IEnumerator<GameStateParameterNode> GetEnumerator() => children.Values.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => children.Values.GetEnumerator();
+        public IEnumerator<GameStateParameterNode> GetEnumerator() => children?.Values.GetEnumerator() ?? Enumerable.Empty<GameStateParameterNode>().GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
     }
 }

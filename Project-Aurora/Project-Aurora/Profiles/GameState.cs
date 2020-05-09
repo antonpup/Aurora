@@ -94,6 +94,11 @@ namespace Aurora.Profiles {
         /// <param name="type">The <see cref="GSIPropertyType"/> that the property must match for this to be valid.</param>
         /// <param name="value">The current value of the resulting property or field on this instance.</param>
         private bool TryResolveGSPath(string path, GSIPropertyType type, out object value) {
+            if (string.IsNullOrEmpty(path)) {
+                value = null;
+                return false;
+            }
+
             object curObj = this;
             try {
                 foreach (var part in path.Split('/')) {
@@ -144,16 +149,17 @@ namespace Aurora.Profiles {
         /// </summary>
         private static Dictionary<GSIPropertyType, Func<Type, bool>> predicates = new Dictionary<GSIPropertyType, Func<Type, bool>> {
             [GSIPropertyType.None] = _ => false,
+            [GSIPropertyType.Enum] = type => type.IsEnum, // Needs to take priority over number, since enums are stored as numbers as so IsNumericType would be true
             [GSIPropertyType.Number] = type => TypeUtils.IsNumericType(type),
             [GSIPropertyType.Boolean] = type => Type.GetTypeCode(type) == TypeCode.Boolean,
-            [GSIPropertyType.String] = type => Type.GetTypeCode(type) == TypeCode.String,
-            [GSIPropertyType.Enum] = type => type.IsEnum
+            [GSIPropertyType.String] = type => Type.GetTypeCode(type) == TypeCode.String
         };
 
         /// <summary>
         /// Gets the <see cref="GSIPropertyType"/> for the given <see cref="Type"/>.
         /// </summary>
         public static GSIPropertyType TypeToPropertyType(Type type) {
+            if (type == null) return GSIPropertyType.None;
             foreach (var (propertyType, predicate) in predicates)
                 if (predicate(type))
                     return propertyType;
@@ -163,7 +169,7 @@ namespace Aurora.Profiles {
         /// <summary>
         /// Determines if the given <see cref="Type"/> is valid for the given <see cref="GSIPropertyType"/>.
         /// </summary>
-        public static bool IsTypePropertyType(Type type, GSIPropertyType propertyType) => predicates[propertyType](type);
+        public static bool IsTypePropertyType(Type type, GSIPropertyType propertyType) => type == null ? false : predicates[propertyType](type);
     }
 
 

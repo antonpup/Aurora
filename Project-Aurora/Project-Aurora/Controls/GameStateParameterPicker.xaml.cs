@@ -50,10 +50,7 @@ namespace Aurora.Controls {
                 if (Application.ParameterLookup.IsValidPath(WorkingPathStr))
                     WorkingPath.Pop();
 
-                // Generate the string version of this working path (and cache it)
-                var relevantList = ParameterList;
-                foreach (var path in WorkingPath.Reverse())
-                    relevantList = relevantList[path];
+                var relevantList = string.IsNullOrEmpty(WorkingPathStr) ? ParameterList : ParameterList[WorkingPathStr];
                 return from path in relevantList // With all properties in the current param lookup that are of a valid type (e.g. numbers)
                        orderby path.IsLeaf, path.Name // Order the remaining (distinct) items by folders first, then order by their name
                        select new PathOption(path.Name, !path.IsLeaf); // Finally, put them in a POCO so we can bind the UI to these properties.
