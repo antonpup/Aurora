@@ -182,10 +182,14 @@ namespace Aurora.Profiles {
     public class GameStateIgnoreAttribute : Attribute { }
 
     /// <summary>
-    /// Metadata attribute that can be applied to certain types (any array type or anything that extends <see cref="IList{T}"/>) of properties
+    /// Metadata attribute that can be applied to certain types (any array type or anything that extends <see cref="IEnumerable{T}"/>) of properties
     /// or fields of a GameState to indicate the valid range of indicies for that list.
     /// </summary>
     public class RangeAttribute : Attribute {
+
+        /// <summary>Specifies that a <see cref="IEnumerable{T}"/> property has a given number of valid values.</summary>
+        /// <param name="start">The first valid index for this enumerable (inclusive).</param>
+        /// <param name="end">The last valid index for this enumerable (inclusive).</param>
         public RangeAttribute(int start, int end) {
             Start = start;
             End = end;

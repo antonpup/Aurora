@@ -108,10 +108,24 @@ namespace Aurora.Profiles {
                 // Otherwise, check all the members for this type and recursively get the nodes.
                 var accessor = TypeAccessor.Create(t);
                 var children = new List<GameStateParameterNode>();
-                if (accessor.GetMembersSupported)
-                    foreach (var member in accessor.GetMembers())
-                        if (member.Type != t) // For now, ignore any recursive types. May need a better solution in future.
+                if (accessor.GetMembersSupported) {
+                    foreach (var member in accessor.GetMembers()) {
+                        if (member.Type == t) continue; // For now, ignore any recursive types. May need a better solution in future.
+                        if (member.GetAttribute(typeof(GameStateIgnoreAttribute), true) != null) continue; // Ignore anything with the GSIIgnore attribute on it
+
+                        if (member.Type.ImplementsGenericInterface(typeof(IEnumerable<>), out var ienumTypes) && member.GetAttribute(typeof(RangeAttribute), true) is RangeAttribute range) {
+                            // If the type is an IEnumerable with a RangeAttribute, create a path for each int in that range.
+                            var enumeratedChildren = new List<GameStateParameterNode>();
+                            for (var i = range.Start; i <= range.End; i++)
+                                enumeratedChildren.Add(getNode(i.ToString(), ienumTypes[0]));
+                            children.Add(new GameStateParameterNode(member.Name, enumeratedChildren));
+
+                        } else {
+                            // Else if it's a normal member, just recursively populate the tree
                             children.Add(getNode(member.Name, member.Type));
+                        }
+                    }
+                }
                 return new GameStateParameterNode(name, children);
             }
             return getNode("", type);

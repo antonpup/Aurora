@@ -55,8 +55,13 @@ namespace Aurora.Utils
         /// <summary>Checks whether the given 'this' type extends the given *generic* interface, regardless of type parameters.</summary>
         /// <param name="type">The type that will be checked to see if ti implements the given interface.</param>
         /// <param name="interfaceType">The type of generic interface to check if 'type' extends. Does not account for type parameters.</param>
-        public static bool ImplementsGenericInterface(this Type type, Type interfaceType) =>
-            type.GetInterfaces().Select(i => i.IsGenericType ? i.GetGenericTypeDefinition() : i).Contains(interfaceType);
+        /// <param name="interfaceGenericParameters">The generic type parameters of the first found interface of the given <paramref name="type"/>.</param>
+        public static bool ImplementsGenericInterface(this Type type, Type interfaceType, out Type[] interfaceGenericParameters) {
+            interfaceGenericParameters = (from @interface in type.GetInterfaces()
+                    where @interface.IsGenericType && @interface.GetGenericTypeDefinition() == interfaceType
+                    select @interface.GenericTypeArguments).FirstOrDefault();
+            return interfaceGenericParameters != null;
+        }
 
         /// <summary>Checks whether the given 'this' type extends the given *generic* interface with the given type parameters.</summary>
         /// <param name="type">The type that will be checked to see if it implements the given interface.</param>
