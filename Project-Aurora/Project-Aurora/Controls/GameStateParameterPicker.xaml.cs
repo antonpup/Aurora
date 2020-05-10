@@ -1,5 +1,6 @@
 ﻿using Aurora.Profiles;
 using Aurora.Utils;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,6 +15,7 @@ using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Controls {
 
+    [DoNotNotify]
     public partial class GameStateParameterPicker : UserControl, INotifyPropertyChanged {
 
         public event EventHandler<SelectedPathChangedEventArgs> SelectedPathChanged;
@@ -118,7 +120,7 @@ namespace Aurora.Controls {
             }
 
             // Raise an event informing subscribers
-            picker.SelectedPathChanged?.Invoke(picker, new SelectedPathChangedEventArgs(e.OldValue.ToString(), e.NewValue.ToString()));
+            picker.SelectedPathChanged?.Invoke(picker, new SelectedPathChangedEventArgs(e.OldValue?.ToString() ?? "", e.NewValue?.ToString() ?? ""));
         }
         #endregion
 

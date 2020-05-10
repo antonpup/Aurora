@@ -102,11 +102,6 @@ namespace Aurora.Profiles.Dota_2.Layers
         private static long ks_end_time = 0;
         private int current_kill_count = 0;
 
-        public Dota2KillstreakLayerHandler() : base()
-        {
-            _ID = "Dota2Killstreak";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_Dota2KillstreakLayer(this);

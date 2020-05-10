@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace Aurora.Controls
 {
     public partial class KeySequence : UserControl
@@ -62,42 +61,43 @@ namespace Aurora.Controls
         }
         private bool allowListRefresh = true;
 
+        #region Sequence Dependency Property
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public static readonly DependencyProperty SequenceProperty = DependencyProperty.Register("Sequence", typeof(Settings.KeySequence), typeof(UserControl));
+        public static readonly DependencyProperty SequenceProperty = DependencyProperty.Register("Sequence", typeof(Settings.KeySequence), typeof(UserControl), new PropertyMetadata(new Settings.KeySequence(), SequencePropertyChanged));
 
-        public Settings.KeySequence Sequence
-        {
-            get
-            {
-                return (Settings.KeySequence)GetValue(SequenceProperty);
-            }
-            set
-            {
-                if (value == null)
-                    value = new Settings.KeySequence();
-
-                if (!value.Equals(Sequence))
-                {
-                    sequence_removeFromLayerEditor();
-                }
-
-                SetValue(SequenceProperty, value);
-
-                sequence_updateToLayerEditor();
-
-                if (allowListRefresh)
-                {
-                    this.keys_keysequence.Items.Clear();
-                    foreach (var key in value.keys)
-                        this.keys_keysequence.Items.Add(key);
-                }
-
-                this.sequence_freestyle_checkbox.IsChecked = (value.type == Settings.KeySequenceType.FreeForm ? true : false);
-
-                if (SequenceUpdated != null)
-                    SequenceUpdated(this, new EventArgs());
-            }
+        public Settings.KeySequence Sequence {
+            get => (Settings.KeySequence)GetValue(SequenceProperty);
+            set => SetValue(SequenceProperty, value);
         }
+
+        private static void SequencePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+            var source = (KeySequence)sender;
+            if (!(e.NewValue is Settings.KeySequence@new)) {
+                source.Sequence = new Settings.KeySequence();
+                return;
+            }
+
+            // If the old sequence is a region, remove that region from the editor
+            if (e.OldValue is Settings.KeySequence old && old.type == Settings.KeySequenceType.FreeForm)
+                LayerEditor.RemoveKeySequenceElement(old.freeform);
+
+            // Handle the new sequence. If a region, this will add it to the editor
+            source.sequence_updateToLayerEditor();
+
+            // Manually update the keysequence list. Gross
+            if (source.allowListRefresh) {
+                source.keys_keysequence.Items.Clear();
+                foreach (var key in @new.keys)
+                    source.keys_keysequence.Items.Add(key);
+            }
+
+            // Manually update the "Use freestyle instead" checkbox state
+            source.sequence_freestyle_checkbox.IsChecked = @new.type == Settings.KeySequenceType.FreeForm;
+
+            // Fire an event? Dunno if this is really neccessary but since it was already there I feel like I should keep it
+            source.SequenceUpdated?.Invoke(source, new EventArgs());
+        }
+        #endregion
 
         public IEnumerable<Devices.DeviceKeys> SelectedItems => keys_keysequence.SelectedItems.Cast<Devices.DeviceKeys>();
 
@@ -365,5 +365,3 @@ namespace Aurora.Controls
         }
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

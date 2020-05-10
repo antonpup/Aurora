@@ -32,11 +32,6 @@ namespace Aurora.Settings.Layers {
             base.Default();
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
-
-        protected void SetAndNotify<T>(ref T field, T value, [CallerMemberName] string propName = null) {
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
     }
 
 

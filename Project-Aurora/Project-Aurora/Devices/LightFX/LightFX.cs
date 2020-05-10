@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Aurora.Settings;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using MiscUtil.Linq.Extensions;
 using Microsoft.Win32.SafeHandles;
 using System.IO;
 using System.Net.Sockets;

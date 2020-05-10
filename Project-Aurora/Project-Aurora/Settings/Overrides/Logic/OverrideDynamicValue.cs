@@ -116,6 +116,16 @@ namespace Aurora.Settings.Overrides.Logic {
                     new DCPD("Height", typeof(double)),
                     new DCPD("Angle", typeof(double))
                 }
+            ) },
+            { typeof(System.Drawing.Rectangle), new DCD(
+                p => new System.Drawing.Rectangle(Convert.ToInt32(p["X"]),Convert.ToInt32(p["Y"]),Convert.ToInt32(p["Width"]),Convert.ToInt32(p["Height"])),
+                new[]
+                {
+                    new DCPD("X", typeof(double)),
+                    new DCPD("Y", typeof(double)),
+                    new DCPD("Width", typeof(double)),
+                    new DCPD("Height", typeof(double)),
+                }
             ) }
         });
 

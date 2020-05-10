@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -848,6 +848,9 @@ namespace Aurora.Settings
                     case PreferredMouse.Clevo_Touchpad:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
                         break;
+                    case PreferredMouse.Roccat_Kone_Pure:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "roccat_kone_pure_features.json");
+                        break;
                     case PreferredMouse.SteelSeries_Rival_300:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");
                         break;
@@ -1010,14 +1013,14 @@ namespace Aurora.Settings
         {
             if (e.PropertyName.Equals(nameof(Configuration.BitmapAccuracy)))
             {
-                Global.LightingStateManager.LightingStateManager.PostUpdate += this.LightingStateManager_PostUpdate;
+                Global.LightingStateManager.LightingEngine.PostUpdate += this.LightingStateManager_PostUpdate;
             }
         }
 
         private void LightingStateManager_PostUpdate(object sender, EventArgs e)
         {
             this.LoadBrandDefault();
-            Global.LightingStateManager.LightingStateManager.PostUpdate -= this.LightingStateManager_PostUpdate;
+            Global.LightingStateManager.LightingEngine.PostUpdate -= this.LightingStateManager_PostUpdate;
         }
 
         public void CalculateBitmap()

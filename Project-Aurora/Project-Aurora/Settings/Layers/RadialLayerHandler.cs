@@ -41,10 +41,6 @@ namespace Aurora.Settings.Layers {
         private Stopwatch sw = new Stopwatch();
         private float angle;
 
-        public RadialLayerHandler() {
-            _ID = "Radial";
-        }
-
         protected override UserControl CreateControl() => new Control_RadialLayer(this);
 
         public override EffectLayer Render(IGameState gamestate) {

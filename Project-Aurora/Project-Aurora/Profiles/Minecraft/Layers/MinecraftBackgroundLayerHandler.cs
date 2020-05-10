@@ -30,10 +30,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
     public class MinecraftBackgroundLayerHandler : LayerHandler<MinecraftBackgroundLayerHandlerProperties> {
 
-        public MinecraftBackgroundLayerHandler() : base() {
-            _ID = "MinecraftBackgroundLayer";
-        }
-
         protected override UserControl CreateControl() {
             return new Control_MinecraftBackgroundLayer(this);
         }

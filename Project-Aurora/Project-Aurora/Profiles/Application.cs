@@ -17,12 +17,12 @@ using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using Aurora.Settings;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
-    public class LightEventConfig : NotifyPropertyChangedEx
+    public class LightEventConfig : INotifyPropertyChanged
     {
-        //TODO: Add NotifyPropertyChanged to properties
         public string[] ProcessNames { get; set; }
 
         /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
@@ -46,14 +46,20 @@ namespace Aurora.Profiles
 
         public string IconURI { get; set; }
 
-        public HashSet<string> ExtraAvailableLayers { get; set; } = new HashSet<string>();
-
+        public HashSet<Type> ExtraAvailableLayers { get; } = new HashSet<Type>();
 
         public bool EnableByDefault { get; set; } = true;
         public bool EnableOverlaysByDefault { get; set; } = true;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        
+        public LightEventConfig WithLayer<T>() where T : ILayerHandler {
+            ExtraAvailableLayers.Add(typeof(T));
+            return this;
+        }
     }
 
-    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, IDisposable
+    public class Application : ObjectSettings<ApplicationSettings>, IInit, ILightEvent, INotifyPropertyChanged, IDisposable
     {
         #region Public Properties
         public bool Initialized { get; protected set; } = false;
@@ -69,8 +75,6 @@ namespace Aurora.Profiles
         public Type GameStateType { get { return Config.GameStateType; } }
         public bool IsEnabled { get { return Settings.IsEnabled; } }
         public bool IsOverlayEnabled { get { return Settings.IsOverlayEnabled; } }
-        public event PropertyChangedExEventHandler PropertyChanged;
-
         #endregion
 
         #region Internal Properties
@@ -83,8 +87,7 @@ namespace Aurora.Profiles
         internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
         #endregion
 
-        #region Private Fields/Properties
-        #endregion
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Application(LightEventConfig config)
         {
@@ -122,10 +125,15 @@ namespace Aurora.Profiles
             Settings.IsOverlayEnabled = Config.EnableOverlaysByDefault;
         }
 
-        protected void InvokePropertyChanged(object oldValue, object newValue, [CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedExEventArgs(propertyName, oldValue, newValue));
-        }
+        /// <summary>Enables the use of a non-default layer for this application.</summary>
+        protected void AllowLayer<T>() where T : ILayerHandler => Config.WithLayer<T>();
+
+        /// <summary>Determines if the given layer handler type can be used by this application. This is the case either if it is a default handler or has explicitly been allowed for this application.</summary>
+        public bool IsAllowedLayer(Type type) => Global.LightingStateManager.LayerHandlers.TryGetValue(type, out var def) && (def.IsDefault || Config.ExtraAvailableLayers.Contains(type));
+
+        /// <summary>Gets a list of layers that are allowed to be used by this application.</summary>
+        public IEnumerable<LayerHandlerMeta> AllowedLayers
+            => Global.LightingStateManager.LayerHandlers.Values.Where(val => val.IsDefault || Config.ExtraAvailableLayers.Contains(val.Type));
 
         public void SwitchToProfile(ApplicationProfile newProfileSettings)
         {
@@ -292,7 +300,7 @@ namespace Aurora.Profiles
                         void InitialiseLayerCollection(ObservableCollection<Layer> collection) { 
                             foreach (Layer lyr in collection.ToList()) {
                                 //Remove any Layers that have non-functional handlers
-                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.ID)) {
+                                if (lyr.Handler == null || !Global.LightingStateManager.LayerHandlers.ContainsKey(lyr.Handler.GetType())) {
                                     prof.Layers.Remove(lyr);
                                     continue;
                                 }

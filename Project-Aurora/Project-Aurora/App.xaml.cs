@@ -112,7 +112,7 @@ namespace Aurora
 
         //public static GameEventHandler geh;
         public static PluginManager PluginManager;
-        public static ProfileManager LightingStateManager;
+        public static LightingStateManager LightingStateManager;
         public static NetworkListener net_listener;
         public static Configuration Configuration;
         public static DeviceManager dev_manager;
@@ -353,7 +353,7 @@ namespace Aurora
                 }
 
                 Global.logger.Info("Loading Applications");
-                (Global.LightingStateManager = new ProfileManager()).Initialize();
+                (Global.LightingStateManager = new LightingStateManager()).Initialize();
 
                 if (Global.Configuration.GetPointerUpdates)
                 {

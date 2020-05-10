@@ -38,11 +38,6 @@ namespace Aurora.Settings.Layers
     {
         private EffectLayer temp_layer;
 
-        public GradientLayerHandler()
-        {
-            _ID = "Gradient";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_GradientLayer(this);
@@ -66,26 +61,27 @@ namespace Aurora.Settings.Layers
             }
             else
             {
-                float x_pos = (float)Math.Round((Properties.Sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                float y_pos = (float)Math.Round((Properties.Sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-
-                float width = (float)Math.Round((double)(Properties.Sequence.freeform.Width * Effects.editor_to_canvas_width));
-                float height = (float)Math.Round((double)(Properties.Sequence.freeform.Height * Effects.editor_to_canvas_height));
-
-                if (width < 3) width = 3;
-                if (height < 3) height = 3;
-
-                Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
-
-                temp_layer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
-
                 if (Properties.Sequence.type == KeySequenceType.Sequence)
                 {
+                    temp_layer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig);
+
                     foreach (var key in Properties.Sequence.keys)
                         gradient_layer.Set(key, Utils.ColorUtils.AddColors(gradient_layer.Get(key), temp_layer.Get(key)));
                 }
                 else
                 {
+                    float x_pos = (float)Math.Round((Properties.Sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
+                    float y_pos = (float)Math.Round((Properties.Sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
+
+                    float width = (float)Math.Round((double)(Properties.Sequence.freeform.Width * Effects.editor_to_canvas_width));
+                    float height = (float)Math.Round((double)(Properties.Sequence.freeform.Height * Effects.editor_to_canvas_height));
+
+                    if (width < 3) width = 3;
+                    if (height < 3) height = 3;
+
+                    Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
+
+                    temp_layer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
 
                     using (Graphics g = gradient_layer.GetGraphics())
                     {
