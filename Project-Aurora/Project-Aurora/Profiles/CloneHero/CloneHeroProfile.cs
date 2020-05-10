@@ -56,28 +56,12 @@ namespace Aurora.Profiles.CloneHero
                             animation_reverse = false,
                             brush =
                             new LinearEffectBrush{
-                                wrap = EffectBrush.BrushWrap.Repeat,
-                                colorGradients = new SortedDictionary<float, Color>()
+                                ColorGradients = new SortedDictionary<float, Color>()
                                 {
                                     {0, Color.FromArgb(9, 43, 83) },
                                     {0.298960835f, Color.FromArgb(187, 18, 194) },
                                     {0.685535133f, Color.FromArgb(17, 185, 217) },
                                     {1, Color.FromArgb(9, 43, 83) }
-                                },
-                                start =
-                                {
-                                    X = 0,
-                                    Y = -0.5f
-                                },
-                                end =
-                                {
-                                    X = 1,
-                                    Y = 1
-                                },
-                                center =
-                                {
-                                    X = 0,
-                                    Y = 0
                                 }
 
                             },

@@ -49,21 +49,7 @@ namespace Aurora.Settings
             speed = 1.0f;
             angle = 0.0f;
             animation_reverse = false;
-            brush = EffectBrush.GetEffectBrush(
-                new System.Drawing.Drawing2D.LinearGradientBrush(
-                    new PointF(0, 0),
-                    new PointF(1, 0),
-                    primary,
-                    secondary
-                    )
-                {
-                    InterpolationColors = new System.Drawing.Drawing2D.ColorBlend(2)
-                    {
-                        Colors = new Color[] { primary, secondary },
-                        Positions = new float[] { 0.0f, 1.0f }
-                    }
-                }
-                );
+            brush = new LinearEffectBrush(new ColorBox.ColorSpectrum(primary_color, secondary_color));
         }
 
         public LayerEffectConfig(LayerEffectConfig otherConfig)

@@ -43,17 +43,7 @@ namespace Aurora.Settings.Layers
                 this.updown_blink_value.Value = (int)((this.DataContext as PercentGradientLayerHandler).Properties._BlinkThreshold * 100);
                 this.CheckBox_threshold_reverse.IsChecked = (this.DataContext as PercentGradientLayerHandler).Properties._BlinkDirection;
                 this.KeySequence_keys.Sequence = (this.DataContext as PercentGradientLayerHandler).Properties._Sequence;
-
-                Brush brush = (this.DataContext as PercentGradientLayerHandler).Properties._Gradient.GetMediaBrush();
-                try
-                {
-                    this.gradient_editor.Brush = brush;
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Could not set brush, exception: " + exc);
-                }
-
+                this.gradient_editor.Brush = (this.DataContext as PercentGradientLayerHandler).Properties._Gradient;
                 settingsset = true;
             }
         }
@@ -79,7 +69,7 @@ namespace Aurora.Settings.Layers
         private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as PercentGradientLayerHandler).Properties._Gradient = EffectsEngine.EffectBrush.GetEffectBrush((sender as ColorBox.ColorBox).Brush);
+                (this.DataContext as PercentGradientLayerHandler).Properties._Gradient = (sender as ColorBox.ColorBox).Brush;
         }
 
         private void ColorPicker_progressColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)

@@ -61,7 +61,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Throttle Key", new PercentGradientLayerHandler {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.FromArgb(0, 255, 255) },
                                 { 1, Color.FromArgb(0, 255, 0) }
                             }
@@ -76,7 +76,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Brake Key", new PercentGradientLayerHandler {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.FromArgb(0, 255, 255) },
                                 { 1, Color.FromArgb(255, 0, 0) }
                             }
@@ -103,7 +103,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("RPM", new PercentGradientLayerHandler {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.FromArgb(65, 255, 0) },
                                 { 0.65f, Color.FromArgb(67, 255, 0) },
                                 { 0.75f, Color.FromArgb(0, 100, 255) },
@@ -238,7 +238,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Fuel", new PercentGradientLayerHandler {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0f, Color.FromArgb(255, 0, 0) },
                                 { 0.25f, Color.FromArgb(255, 0, 0) },
                                 { 0.375f, Color.FromArgb(255, 255, 0) },
@@ -257,7 +257,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Air Pressure", new PercentGradientLayerHandler {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0f, Color.FromArgb(255, 0, 0) },
                                 { 0.25f, Color.FromArgb(255, 0, 0) },
                                 { 0.375f, Color.FromArgb(255, 255, 0) },

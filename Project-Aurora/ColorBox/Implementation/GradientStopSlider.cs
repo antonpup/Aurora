@@ -26,18 +26,17 @@ namespace ColorBox
             if (this.ColorBox != null)
             {
                 this.ColorBox._BrushSetInternally = true;
-                this.ColorBox._UpdateBrush = false;        
+                this.ColorBox._UpdateBrush = false;
 
                 this.ColorBox.SelectedGradient = this.SelectedGradient;
                 this.ColorBox.Color = this.SelectedGradient.Color;
-                
+
                 this.ColorBox._UpdateBrush = true;
                 //this.ColorBox._BrushSetInternally = false;
 
                 //e.Handled = true;
             }
         }
-
         protected override void OnValueChanged(double oldValue, double newValue)
         {
             base.OnValueChanged(oldValue, newValue);

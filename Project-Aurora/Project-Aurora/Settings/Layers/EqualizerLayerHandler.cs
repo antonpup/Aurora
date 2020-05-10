@@ -130,7 +130,7 @@ namespace Aurora.Settings.Layers
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
-            _Gradient = new LinearEffectBrush(ColorSpectrum.RainbowLoop);
+            _Gradient = new LinearEffectBrush(ColorBox.ColorSpectrum.RainbowLoop);
             _EQType = EqualizerType.PowerBars;
             _ViewType = EqualizerPresentationType.SolidColor;
             _MaxAmplitude = 20.0f;
@@ -429,8 +429,7 @@ namespace Aurora.Settings.Layers
             else if (Properties.ViewType == EqualizerPresentationType.GradientHorizontal)
             {
                 EffectBrush e_brush = new LinearEffectBrush(Properties.Gradient.GetColorSpectrum()) {
-                    start = PointF.Empty,
-                    end = new PointF(sourceRect.Width, 0)
+                    SampleWindowSize = 1 / sourceRect.Width
                 };
 
                 return e_brush.GetDrawingBrush();
@@ -440,8 +439,8 @@ namespace Aurora.Settings.Layers
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
                 EffectBrush e_brush = new LinearEffectBrush(Properties.Gradient.GetColorSpectrum()) {
-                    start = new PointF(0, sourceRect.Height),
-                    end = PointF.Empty
+                    SampleWindowSize = 1 / sourceRect.Width,
+                    Angle = 90
                 };
 
                 return e_brush.GetDrawingBrush();

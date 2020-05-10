@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using ColorBox;
 
-namespace Aurora.EffectsEngine
+namespace ColorBox
 {
 	/// <summary>
 	/// A class that represents a spectrum of colors. After creating an instance, you can then retrieve a blended color within a range of [0.0f, 1.0f].
@@ -201,8 +202,8 @@ namespace Aurora.EffectsEngine
 				}
 			}
 
-			return Utils.ColorUtils.MultiplyColorByScalar(
-				Utils.ColorUtils.BlendColors(
+			return ColorUtils.MultiplyColorByScalar(
+				ColorUtils.BlendColors(
 					colors[closest_lower], colors[closest_higher], ((double)(position - closest_lower) / (double)(closest_higher - closest_lower))
 					),
 				opacity
@@ -221,7 +222,7 @@ namespace Aurora.EffectsEngine
 		public LinearGradientBrush ToLinearGradient(float width, float height = 0.0f, float x = 0.0f, float y = 0.0f, double opacity = 1.0D)
 		{
 			var newColors = colors.Keys
-				.Select(val => new KeyValuePair<float, Color>(val, Utils.ColorUtils.MultiplyColorByScalar(colors[val], opacity)))
+				.Select(val => new KeyValuePair<float, Color>(val, ColorUtils.MultiplyColorByScalar(colors[val], opacity)))
 				.OrderBy(val => val.Key)
 				.ToList();
 
@@ -242,7 +243,7 @@ namespace Aurora.EffectsEngine
 					.OrderBy(val => val.Key)
 					.ToList();
 
-				var endColor = Utils.ColorUtils.BlendColors(
+				var endColor = ColorUtils.BlendColors(
 					newColors.First().Value, newColors.Last().Value,
 					((double) (newColors.First().Key) / (double) (newColors.First().Key + 1.0f - newColors.Last().Key)));
 
@@ -288,7 +289,7 @@ namespace Aurora.EffectsEngine
 			Dictionary<float, Color> newcolors = new Dictionary<float, Color>();
 
 			foreach (KeyValuePair<float, Color> kvp in colors)
-				newcolors[kvp.Key] = Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
+				newcolors[kvp.Key] = ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
 
 			colors = newcolors;
 

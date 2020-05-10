@@ -27,17 +27,9 @@ namespace Aurora.Controls
             this.effect_speed_slider.Value = EffectConfig.speed;
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
-            Brush brush = EffectConfig.brush.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
 
-                //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
-            }
+            this.gradient_editor.Brush = EffectConfig.brush;
+
 
             this.gradient_editor.BrushChanged += Gradient_editor_BrushChanged;
         }
@@ -53,24 +45,14 @@ namespace Aurora.Controls
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
             this.effect_animation_reversed.IsChecked = EffectConfig.animation_reverse;
-            Brush brush = EffectConfig.brush.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch(Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-
-                //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
-            }
+            this.gradient_editor.Brush = EffectConfig.brush;
 
             this.gradient_editor.BrushChanged += Gradient_editor_BrushChanged;
         }
 
         private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
-            EffectConfig.brush = EffectsEngine.EffectBrush.GetEffectBrush(this.gradient_editor.Brush);
+            EffectConfig.brush = this.gradient_editor.Brush;
         }
 
         private void FireEffectConfigUpdated()
@@ -114,7 +96,7 @@ namespace Aurora.Controls
 
         private void accept_button_Click(object sender, RoutedEventArgs e)
         {
-            EffectConfig.brush = EffectsEngine.EffectBrush.GetEffectBrush(this.gradient_editor.Brush);
+            EffectConfig.brush = this.gradient_editor.Brush;
             FireEffectConfigUpdated();
             Close();
         }

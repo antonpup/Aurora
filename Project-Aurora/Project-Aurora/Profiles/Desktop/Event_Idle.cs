@@ -127,7 +127,7 @@ namespace Aurora.Profiles.Desktop
 
                     Devices.DeviceKeys[] raindrops_keys = raindrops.Keys.ToArray();
 
-                    ColorSpectrum drop_spec = new ColorSpectrum(Global.Configuration.idle_effect_primary_color, Color.FromArgb(0, Global.Configuration.idle_effect_primary_color));
+                    var drop_spec = new ColorBox.ColorSpectrum(Global.Configuration.idle_effect_primary_color, Color.FromArgb(0, Global.Configuration.idle_effect_primary_color));
 
                     foreach (Devices.DeviceKeys raindrop in raindrops_keys)
                     {
@@ -217,7 +217,7 @@ namespace Aurora.Profiles.Desktop
 					}
 					layer.Fill(Global.Configuration.idle_effect_secondary_color);
 
-					ColorSpectrum drop_spec2 = new ColorSpectrum(
+					var drop_spec2 = new ColorBox.ColorSpectrum(
 						Global.Configuration.idle_effect_primary_color,
 						Color.FromArgb(0, Global.Configuration.idle_effect_primary_color));
 

@@ -46,9 +46,7 @@ namespace Aurora.Profiles.Terraria {
                 new Layer("Background", new PercentGradientLayerHandler() {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            start = new PointF(0, 0),
-                            end = new PointF(1, 0),
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.White },
                                 { 1, Color.DarkGray }
                             }
@@ -80,9 +78,7 @@ namespace Aurora.Profiles.Terraria {
         {
             return new LinearEffectBrush()
             {
-                start = new PointF(0, 0),
-                end = new PointF(1, 0),
-                colorGradients = new SortedDictionary<float, Color> {
+                ColorGradients = new SortedDictionary<float, Color> {
                     { 0, start },
                     { 1, end }
                 }

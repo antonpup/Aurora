@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Data;
+using Aurora.EffectsEngine;
 
 namespace ColorBox
 {
@@ -97,7 +98,7 @@ namespace ColorBox
             this.SetBrush();
         }
 
-        void InitTransform()
+        /*void InitTransform()
         {
             if (this.Brush.Transform == null || this.Brush.Transform.Value.IsIdentity)
             {
@@ -112,120 +113,88 @@ namespace ColorBox
 
                 this._BrushSetInternally = false;
             }
-        }
+        }*/
 
         #region Private Properties
-
-        double StartX
+        /*float StartX
         {
-            get { return (double)GetValue(StartXProperty); }
+            get { return (float)GetValue(StartXProperty); }
             set { SetValue(StartXProperty, value); }
         }
         static readonly DependencyProperty StartXProperty =
-            DependencyProperty.Register("StartX", typeof(double), typeof(ColorBox), new PropertyMetadata(0.5, new PropertyChangedCallback(StartXChanged)));
+            DependencyProperty.Register("StartX", typeof(float), typeof(ColorBox), new PropertyMetadata(0f, new PropertyChangedCallback(StartXChanged)));
         static void StartXChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is LinearGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as LinearGradientBrush).StartPoint = new Point((double)args.NewValue, (cp.Brush as LinearGradientBrush).StartPoint.Y);
-                cp._BrushSetInternally = false;
-            }
+            cp._BrushSetInternally = true;
+            cp.Brush.start.X = (float)args.NewValue;
+            cp._BrushSetInternally = false;
         }
 
-        double StartY
+        float StartY
         {
-            get { return (double)GetValue(StartYProperty); }
+            get { return (float)GetValue(StartYProperty); }
             set { SetValue(StartYProperty, value); }
         }
         static readonly DependencyProperty StartYProperty =
-            DependencyProperty.Register("StartY", typeof(double), typeof(ColorBox), new PropertyMetadata(0.0, new PropertyChangedCallback(StartYChanged)));
+            DependencyProperty.Register("StartY", typeof(float), typeof(ColorBox), new PropertyMetadata(0.0f, new PropertyChangedCallback(StartYChanged)));
         static void StartYChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is LinearGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as LinearGradientBrush).StartPoint = new Point((cp.Brush as LinearGradientBrush).StartPoint.X, (double)args.NewValue);
-                cp._BrushSetInternally = false;
-            }
+            cp._BrushSetInternally = true;
+            cp.Brush.start.Y = (float)args.NewValue;
+            cp._BrushSetInternally = false;
         }
 
-        double EndX
+        float EndX
         {
-            get { return (double)GetValue(EndXProperty); }
+            get { return (float)GetValue(EndXProperty); }
             set { SetValue(EndXProperty, value); }
         }
         static readonly DependencyProperty EndXProperty =
-            DependencyProperty.Register("EndX", typeof(double), typeof(ColorBox), new PropertyMetadata(0.5, new PropertyChangedCallback(EndXChanged)));
+            DependencyProperty.Register("EndX", typeof(float), typeof(ColorBox), new PropertyMetadata(1.0f, new PropertyChangedCallback(EndXChanged)));
         static void EndXChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is LinearGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as LinearGradientBrush).EndPoint = new Point((double)args.NewValue, (cp.Brush as LinearGradientBrush).EndPoint.Y);
-                cp._BrushSetInternally = false;
-            }
+            cp._BrushSetInternally = true;
+            cp.Brush.end.X = (float)args.NewValue;
+            cp._BrushSetInternally = false;
         }
 
-        double EndY
+        float EndY
         {
-            get { return (double)GetValue(EndYProperty); }
+            get { return (float)GetValue(EndYProperty); }
             set { SetValue(EndYProperty, value); }
         }
         static readonly DependencyProperty EndYProperty =
-            DependencyProperty.Register("EndY", typeof(double), typeof(ColorBox), new PropertyMetadata(1.0, new PropertyChangedCallback(EndYChanged)));
+            DependencyProperty.Register("EndY", typeof(float), typeof(ColorBox), new PropertyMetadata(1.0f, new PropertyChangedCallback(EndYChanged)));
         static void EndYChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is LinearGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as LinearGradientBrush).EndPoint = new Point((cp.Brush as LinearGradientBrush).EndPoint.X, (double)args.NewValue);
-                cp._BrushSetInternally = false;
-            }
-        }
-
-
-
-        double GradientOriginX
+            cp._BrushSetInternally = true;
+            cp.Brush.end.Y = (float)args.NewValue;
+            cp._BrushSetInternally = false;
+        }*/
+        int Angle
         {
-            get { return (double)GetValue(GradientOriginXProperty); }
-            set { SetValue(GradientOriginXProperty, value); }
+            get { return (int)GetValue(AngleProperty); }
+            set { SetValue(AngleProperty, value); }
         }
-        static readonly DependencyProperty GradientOriginXProperty =
-            DependencyProperty.Register("GradientOriginX", typeof(double), typeof(ColorBox), new PropertyMetadata(0.5, new PropertyChangedCallback(GradientOriginXChanged)));
-        static void GradientOriginXChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
+        static readonly DependencyProperty AngleProperty =
+            DependencyProperty.Register("Angle", typeof(int), typeof(ColorBox), new PropertyMetadata(0, new PropertyChangedCallback(AngleChanged)));
+        static void AngleChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is RadialGradientBrush)
+            
+            if (cp.Brush is LinearEffectBrush linearBrush)
             {
                 cp._BrushSetInternally = true;
-                (cp.Brush as RadialGradientBrush).GradientOrigin = new Point((double)args.NewValue, (cp.Brush as RadialGradientBrush).GradientOrigin.Y);
+                linearBrush.Angle = (int)args.NewValue;
+                cp.SetBrush();
                 cp._BrushSetInternally = false;
             }
+            
         }
-
-        double GradientOriginY
-        {
-            get { return (double)GetValue(GradientOriginYProperty); }
-            set { SetValue(GradientOriginYProperty, value); }
-        }
-        static readonly DependencyProperty GradientOriginYProperty =
-            DependencyProperty.Register("GradientOriginY", typeof(double), typeof(ColorBox), new PropertyMetadata(0.5, new PropertyChangedCallback(GradientOriginYChanged)));
-        static void GradientOriginYChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
-        {
-            ColorBox cp = property as ColorBox;
-            if (cp.Brush is RadialGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as RadialGradientBrush).GradientOrigin = new Point((cp.Brush as RadialGradientBrush).GradientOrigin.X, (double)args.NewValue);
-                cp._BrushSetInternally = false;
-            }
-        }
-
         double CenterX
         {
             get { return (double)GetValue(CenterXProperty); }
@@ -236,10 +205,12 @@ namespace ColorBox
         static void CenterXChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is RadialGradientBrush)
+            if (cp.Brush is RadialEffectBrush radialBrush)
             {
+                float centerX = (float)((double)args.NewValue % 1);
+
                 cp._BrushSetInternally = true;
-                (cp.Brush as RadialGradientBrush).Center = new Point((double)args.NewValue, (cp.Brush as RadialGradientBrush).Center.Y);
+                radialBrush.Center.X = centerX;
                 cp._BrushSetInternally = false;
             }
         }
@@ -254,49 +225,35 @@ namespace ColorBox
         static void CenterYChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is RadialGradientBrush)
+            if (cp.Brush is RadialEffectBrush radialBrush)
             {
+                float centerY = (float)((double)args.NewValue);
+                if (centerY > 1f) 
+                {
+                    centerY %= 1;
+                }
                 cp._BrushSetInternally = true;
-                (cp.Brush as RadialGradientBrush).Center = new Point((cp.Brush as RadialGradientBrush).Center.X, (double)args.NewValue);
+                radialBrush.Center.Y = centerY;
                 cp._BrushSetInternally = false;
             }
         }
 
-        double RadiusX
+        float SampleWindowSize
         {
-            get { return (double)GetValue(RadiusXProperty); }
-            set { SetValue(RadiusXProperty, value); }
+            get { return (float)GetValue(SampleWindowSizeProperty); }
+            set { SetValue(SampleWindowSizeProperty, value); }
         }
-        static readonly DependencyProperty RadiusXProperty =
-            DependencyProperty.Register("RadiusX", typeof(double), typeof(ColorBox), new PropertyMetadata(0.5, new PropertyChangedCallback(RadiusXChanged)));
-        static void RadiusXChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
+        static readonly DependencyProperty SampleWindowSizeProperty =
+            DependencyProperty.Register("SampleWindowSize", typeof(float), typeof(ColorBox), new PropertyMetadata(1.0f, new PropertyChangedCallback(SampleWindowSizeChanged)));
+        static void SampleWindowSizeChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is RadialGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as RadialGradientBrush).RadiusX = (double)args.NewValue;
-                cp._BrushSetInternally = false;
-            }
+
+            cp._BrushSetInternally = true;
+            cp.Brush.SampleWindowSize = (float)args.NewValue;
+            cp._BrushSetInternally = false;
         }
 
-        double RadiusY
-        {
-            get { return (double)GetValue(RadiusYProperty); }
-            set { SetValue(RadiusYProperty, value); }
-        }
-        static readonly DependencyProperty RadiusYProperty =
-            DependencyProperty.Register("RadiusY", typeof(double), typeof(ColorBox), new PropertyMetadata(0.5, new PropertyChangedCallback(RadiusYChanged)));
-        static void RadiusYChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
-        {
-            ColorBox cp = property as ColorBox;
-            if (cp.Brush is RadialGradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as RadialGradientBrush).RadiusY = (double)args.NewValue;
-                cp._BrushSetInternally = false;
-            }
-        }
 
         double BrushOpacity
         {
@@ -313,41 +270,20 @@ namespace ColorBox
         //    cp._BrushSetInternally = false;            
         //}
 
-        GradientSpreadMethod SpreadMethod
+        /*EffectBrush.BrushWrap SpreadMethod
         {
-            get { return (GradientSpreadMethod)GetValue(SpreadMethodProperty); }
+            get { return (EffectBrush.BrushWrap)GetValue(SpreadMethodProperty); }
             set { SetValue(SpreadMethodProperty, value); }
         }
         static readonly DependencyProperty SpreadMethodProperty =
-            DependencyProperty.Register("SpreadMethod", typeof(GradientSpreadMethod), typeof(ColorBox), new PropertyMetadata(GradientSpreadMethod.Pad, new PropertyChangedCallback(SpreadMethodChanged)));
+            DependencyProperty.Register("SpreadMethod", typeof(EffectBrush.BrushWrap), typeof(ColorBox), new PropertyMetadata(EffectBrush.BrushWrap.None, new PropertyChangedCallback(SpreadMethodChanged)));
         static void SpreadMethodChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox cp = property as ColorBox;
-            if (cp.Brush is GradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as GradientBrush).SpreadMethod = (GradientSpreadMethod)args.NewValue;
-                cp._BrushSetInternally = false;
-            }
-        }
-
-        BrushMappingMode MappingMode
-        {
-            get { return (BrushMappingMode)GetValue(MappingModeProperty); }
-            set { SetValue(MappingModeProperty, value); }
-        }
-        static readonly DependencyProperty MappingModeProperty =
-            DependencyProperty.Register("MappingMode", typeof(BrushMappingMode), typeof(ColorBox), new PropertyMetadata(BrushMappingMode.RelativeToBoundingBox, new PropertyChangedCallback(MappingModeChanged)));
-        static void MappingModeChanged(DependencyObject property, DependencyPropertyChangedEventArgs args)
-        {
-            ColorBox cp = property as ColorBox;
-            if (cp.Brush is GradientBrush)
-            {
-                cp._BrushSetInternally = true;
-                (cp.Brush as GradientBrush).MappingMode = (BrushMappingMode)args.NewValue;
-                cp._BrushSetInternally = false;
-            }
-        }
+            cp._BrushSetInternally = true;
+            cp.Brush.wrap = (EffectBrush.BrushWrap)args.NewValue;
+            cp._BrushSetInternally = false;
+        }*/
 
         #endregion
 
@@ -430,17 +366,18 @@ namespace ColorBox
             }
         }
 
-        public Brush Brush
+        public Brush MediaBrush
         {
-            get { return (Brush)GetValue(BrushProperty); }
-            set { SetValue(BrushProperty, value); }
+            get { return (Brush)GetValue(MediaBrushProperty); }
+            set { SetValue(MediaBrushProperty, value); }
         }
-        public static readonly DependencyProperty BrushProperty =
-            DependencyProperty.Register("Brush", typeof(Brush), typeof(ColorBox)
-            , new FrameworkPropertyMetadata(null, new PropertyChangedCallback(BrushChangedInternal)));
-        static void BrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
+
+        public static readonly DependencyProperty MediaBrushProperty =
+            DependencyProperty.Register("MediaBrush", typeof(Brush), typeof(ColorBox)
+            , new FrameworkPropertyMetadata(null, new PropertyChangedCallback(MediaBrushChangedInternal)));
+        static void MediaBrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
-            ColorBox c = property as ColorBox;         
+            ColorBox c = property as ColorBox;
             Brush brush = args.NewValue as Brush;
 
             if (!c._BrushSetInternally)
@@ -461,12 +398,12 @@ namespace ColorBox
                 {
                     LinearGradientBrush lgb = brush as LinearGradientBrush;
                     //c.Opacity = lgb.Opacity;
-                    c.StartX = lgb.StartPoint.X;
-                    c.StartY = lgb.StartPoint.Y;
-                    c.EndX = lgb.EndPoint.X;
-                    c.EndY = lgb.EndPoint.Y;
-                    c.MappingMode = lgb.MappingMode;
-                    c.SpreadMethod = lgb.SpreadMethod;                       
+                    /* c.StartX = lgb.StartPoint.X;
+                     c.StartY = lgb.StartPoint.Y;
+                     c.EndX = lgb.EndPoint.X;
+                     c.EndY = lgb.EndPoint.Y;
+                     c.MappingMode = lgb.MappingMode;
+                     c.SpreadMethod = lgb.SpreadMethod;*/
                     c.Gradients = new ObservableCollection<GradientStop>(lgb.GradientStops);
                     c.BrushType = BrushTypes.Linear;
                     //c.Color = lgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
@@ -480,15 +417,76 @@ namespace ColorBox
                     */
 
                     RadialGradientBrush rgb = brush as RadialGradientBrush;
-                    c.GradientOriginX = rgb.GradientOrigin.X;
+                    /*c.GradientOriginX = rgb.GradientOrigin.X;
                     c.GradientOriginY = rgb.GradientOrigin.Y;
                     c.RadiusX = rgb.RadiusX;
                     c.RadiusY = rgb.RadiusY;
                     c.CenterX = rgb.Center.X;
                     c.CenterY = rgb.Center.Y;
                     c.MappingMode = rgb.MappingMode;
-                    c.SpreadMethod = rgb.SpreadMethod;
+                    c.SpreadMethod = rgb.SpreadMethod;*/
                     c.Gradients = new ObservableCollection<GradientStop>(rgb.GradientStops);
+                    c.BrushType = BrushTypes.Radial;
+                    //c.Color = rgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
+                    //c.SelectedGradient = rgb.GradientStops.OrderBy(x => x.Offset).Last();
+
+                }
+
+                c._BrushTypeSetInternally = false;
+            }
+            else
+            {
+                c.RaiseBrushChangedEvent((Brush)args.NewValue);
+            }
+        }
+        public EffectBrush Brush
+        {
+            get { return (EffectBrush)GetValue(BrushProperty); }
+            set {
+                SetValue(BrushProperty, value);
+                SetValue(MediaBrushProperty, value.MediaBrush);
+            }
+        }
+        public static readonly DependencyProperty BrushProperty =
+            DependencyProperty.Register("Brush", typeof(EffectBrush), typeof(ColorBox)
+            , new FrameworkPropertyMetadata(null));//, new PropertyChangedCallback(BrushChangedInternal)));
+        /*static void BrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
+        {
+            ColorBox c = property as ColorBox;
+            EffectBrush brush = args.NewValue as EffectBrush;
+
+            if (!c._BrushSetInternally)
+            {
+                c._BrushTypeSetInternally = true;
+
+                if (brush == null)
+                {
+                    c.BrushType = BrushTypes.Solid;
+                    c.Color = Color.FromArgb(255, 255, 0, 0);
+                }
+                else if (brush is SolidEffectBrush)
+                {
+                    c.BrushType = BrushTypes.Solid;
+                    c.Color = ColorExt.ToMediaColor(brush.colorGradients[0]);
+                }
+                else if (brush is LinearEffectBrush lgb)
+                {
+
+                    c.SpreadMethod = lgb.wrap;                       
+                    c.Gradients = new ObservableCollection<GradientStop>(lgb.GetGradientStops());
+                    c.BrushType = BrushTypes.Linear;
+                    //c.SampleWindowSize = lgb.SampleWindowSize;
+                    //c.Color = lgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
+                    //c.SelectedGradient = lgb.GradientStops.OrderBy(x => x.Offset).Last();
+                }
+                else
+                {
+
+                    RadialEffectBrush rgb = brush as RadialEffectBrush;
+
+                    //c.SampleWindowSize = rgb.SampleWindowSize;
+                    c.SpreadMethod = rgb.wrap;
+                    c.Gradients = new ObservableCollection<GradientStop>(rgb.GetGradientStops());
                     c.BrushType = BrushTypes.Radial;
                     //c.Color = rgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
                     //c.SelectedGradient = rgb.GradientStops.OrderBy(x => x.Offset).Last();
@@ -499,9 +497,10 @@ namespace ColorBox
             }
             else
             {
-                c.RaiseBrushChangedEvent((Brush)args.NewValue);
+                c.RaiseBrushChangedEvent(((EffectBrush)args.NewValue).MediaBrush);
             }
-        }        
+            //c.MediaBrush = brush.GetMediaBrush();
+        }   */     
 
         public Color Color
         {
@@ -763,6 +762,21 @@ namespace ColorBox
         #endregion
         
 
+        private ColorSpectrum CalcColorSpectrum()
+        {
+            var colors = new ColorSpectrum();
+            GradientStop first = new GradientStop(new Color(), 1.0f);
+            GradientStop last = new GradientStop(new Color(), 0.0f);
+            foreach (var grad in Gradients)
+            {
+                if (grad.Offset < first.Offset) first = grad;
+                if (grad.Offset > last.Offset) last = grad;
+                colors.SetColorAt((float)grad.Offset, ColorUtils.MediaColorToDrawingColor(grad.Color));
+            }
+            colors.SetColorAt(0, ColorUtils.MediaColorToDrawingColor(first.Color));
+            colors.SetColorAt(1, ColorUtils.MediaColorToDrawingColor(last.Color));
+            return colors;
+        }
         internal void SetBrush()
         {
             if (!_UpdateBrush)
@@ -770,14 +784,6 @@ namespace ColorBox
 
             this._BrushSetInternally = true;
 
-            // retain old opacity
-            double opacity = 1;
-            TransformGroup tempTG = null;
-            if (this.Brush != null)
-            {
-                opacity = this.Brush.Opacity;
-                tempTG = Brush.Transform as TransformGroup;
-            }
 
             switch (BrushType)
             {
@@ -785,44 +791,28 @@ namespace ColorBox
 
                 case BrushTypes.Solid:
                     
-                    Brush = new SolidColorBrush(this.Color);
+                    Brush = new SolidEffectBrush(new SolidColorBrush(this.Color));
 
                     break;
 
                 case BrushTypes.Linear:
+                    var brush = new LinearEffectBrush(CalcColorSpectrum());
+                    brush.SampleWindowSize = this.SampleWindowSize;
+                    brush.Angle = Angle;
+                    Brush = new LinearEffectBrush(brush);
 
-                    var brush = new LinearGradientBrush();                    
-                    foreach (GradientStop g in Gradients)
-                    {
-                        brush.GradientStops.Add(new GradientStop(g.Color, g.Offset));
-                    }
-                    brush.StartPoint = new Point(this.StartX, this.StartY);
-                    brush.EndPoint = new Point(this.EndX, this.EndY);
-                    brush.MappingMode = this.MappingMode;
-                    brush.SpreadMethod = this.SpreadMethod;
-                    Brush = brush;
-                    
                     break;
 
                 
                 case BrushTypes.Radial:
 
-                    var brush1 = new RadialGradientBrush();                   
-                    foreach (GradientStop g in Gradients)
-                    {
-                        brush1.GradientStops.Add(new GradientStop(g.Color, g.Offset));
-                    }
-                    brush1.GradientOrigin = new Point(this.GradientOriginX, this.GradientOriginY);
-                    brush1.Center = new Point(this.CenterX, this.CenterY);
-                    brush1.RadiusX = this.RadiusX;
-                    brush1.RadiusY = this.RadiusY;
-                    brush1.MappingMode = this.MappingMode;
-                    brush1.SpreadMethod = this.SpreadMethod;
-                    Brush = brush1;
+                    var brush1 = new RadialEffectBrush(CalcColorSpectrum());
+                    brush1.SampleWindowSize = this.SampleWindowSize;
+                    brush1.Center = new System.Drawing.PointF((float)CenterX, (float)CenterY);
+                    Brush = (RadialEffectBrush)brush1.Clone();
 
                     break;
             }
-            
             /*
             if (this.BrushType != BrushTypes.None)
             {

@@ -203,7 +203,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                     {
                         double percentSuspicious = ((double)pd2.Players.LocalPlayer.SuspicionAmount / (double)1.0);
 
-                        ColorSpectrum suspicion_spec = new ColorSpectrum(Properties.LowSuspicionColor, Properties.HighSuspicionColor);
+                        var suspicion_spec = new ColorBox.ColorSpectrum(Properties.LowSuspicionColor, Properties.HighSuspicionColor);
                         suspicion_spec.SetColorAt(0.5f, Properties.MediumSuspicionColor);
 
                         Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / Effects.canvas_width), 1.0f / (Effects.editor_to_canvas_height / Effects.canvas_height)));
@@ -216,7 +216,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                 }
                 else if (pd2.Level.Phase == LevelPhase.Point_of_no_return && pd2.Game.State == GameStates.Ingame)
                 {
-                    ColorSpectrum no_return_spec = new ColorSpectrum(Color.Red, Color.Yellow);
+                    var no_return_spec = new ColorBox.ColorSpectrum(Color.Red, Color.Yellow);
                     if (pd2.Level.NoReturnTime != no_return_timeleft)
                     {
                         no_return_timeleft = pd2.Level.NoReturnTime;

@@ -42,13 +42,10 @@ namespace Aurora.EffectsEngine.Animations
             _scaledDimension.Offset(offset);
 
             EffectBrush _newbrush = new RadialEffectBrush(_gradientBrush);
-            _newbrush.start = new PointF(0.0f, 0.0f);
-            _newbrush.end = new PointF(1.0f, 1.0f);
-            _newbrush.center = new PointF(0.5f, 0.5f);
 
             SortedDictionary<float, System.Drawing.Color> newColorGradients = new SortedDictionary<float, System.Drawing.Color>();
-            ColorSpectrum spectrum = _newbrush.GetColorSpectrum();
-            var colors = _newbrush.colorGradients;
+            ColorBox.ColorSpectrum spectrum = _newbrush.GetColorSpectrum();
+            var colors = _newbrush.ColorGradients;
 
             float _cutOffPoint = _width / _radius;
 
@@ -62,7 +59,7 @@ namespace Aurora.EffectsEngine.Animations
                 newColorGradients.Add(_cutOffPoint - 0.0001f, Color.Transparent);
                 newColorGradients.Add(0.0f, Color.Transparent);
 
-                _newbrush.colorGradients = newColorGradients;
+                _newbrush.ColorGradients = newColorGradients;
             }
             else if (_cutOffPoint > 1.0f)
             {

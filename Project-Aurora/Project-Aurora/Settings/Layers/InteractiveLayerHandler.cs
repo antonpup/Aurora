@@ -30,7 +30,7 @@ namespace Aurora.Settings.Layers
         public float progress;
         public bool waitOnKeyUp;
         public AnimationMix animation;
-        public ColorSpectrum spectrum;
+        public ColorBox.ColorSpectrum spectrum;
         public readonly input_type type;
 
         public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, AnimationMix animation)
@@ -43,7 +43,7 @@ namespace Aurora.Settings.Layers
             type = input_type.AnimationMix;
         }
 
-        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, ColorSpectrum spectrum)
+        public input_item(Devices.DeviceKeys key, float progress, bool waitOnKeyUp, ColorBox.ColorSpectrum spectrum)
         {
             this.key = key;
             this.progress = progress;
@@ -221,8 +221,8 @@ namespace Aurora.Settings.Layers
             {
                 AnimationTrack rainbowWave = new AnimationTrack("Rainbow Wave", 1.0f);
 
-                rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new RadialEffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()), Properties.EffectWidth));
-                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new RadialEffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()), Properties.EffectWidth));
+                rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new RadialEffectBrush(new ColorBox.ColorSpectrum(ColorBox.ColorSpectrum.Rainbow).Flip()), Properties.EffectWidth));
+                rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new RadialEffectBrush(new ColorBox.ColorSpectrum(ColorBox.ColorSpectrum.Rainbow).Flip()), Properties.EffectWidth));
 
                 anim_mix.AddTrack(rainbowWave);
             }
@@ -242,8 +242,7 @@ namespace Aurora.Settings.Layers
             }
             else if (Properties.InteractiveEffect == InteractiveEffects.KeyPress)
             {
-                ColorSpectrum spec = new ColorSpectrum(primary_c, secondary_c);
-                spec = new ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
+                var spec = new ColorBox.ColorSpectrum(primary_c, Color.FromArgb(0, secondary_c));
                 spec.SetColorAt(0.80f, secondary_c);
 
                 return new input_item(key, 0.0f, Properties.WaitOnKeyUp, spec);

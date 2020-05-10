@@ -119,9 +119,7 @@ namespace Aurora.Profiles.Subnautica {
                 new Layer("Background", new PercentGradientLayerHandler() {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new LinearEffectBrush() {
-                            start = new PointF(0, 0),
-                            end = new PointF(1, 0),
-                            colorGradients = new SortedDictionary<float, Color> {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.FromArgb(46, 176, 255) },
                                 { 1, Color.FromArgb(0, 3, 53) }
                             }

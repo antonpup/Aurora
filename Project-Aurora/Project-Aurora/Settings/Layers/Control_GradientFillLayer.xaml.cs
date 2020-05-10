@@ -43,16 +43,7 @@ namespace Aurora.Settings.Layers
                 this.effect_speed_slider.Value = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.speed;
                 this.effect_speed_label.Text = "x " + (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.speed;
                 this.CheckBox_FillEntire.IsChecked = (this.DataContext as GradientFillLayerHandler).Properties._FillEntireKeyboard;
-                Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush.GetMediaBrush();
-                try
-                {
-                    this.gradient_editor.Brush = brush;
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Could not set brush, exception: " + exc);
-                }
-
+                this.gradient_editor.Brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush;
                 this.KeySequence_keys.Sequence = (this.DataContext as GradientFillLayerHandler).Properties._Sequence;
 
                 settingsset = true;
@@ -62,37 +53,20 @@ namespace Aurora.Settings.Layers
         private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = EffectsEngine.EffectBrush.GetEffectBrush((sender as ColorBox.ColorBox).Brush);
+                (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = (sender as ColorBox.ColorBox).Brush;
         }
 
         private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new LinearEffectBrush(ColorSpectrum.Rainbow);
-
-            Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
+            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new LinearEffectBrush(ColorBox.ColorSpectrum.Rainbow);
+             this.gradient_editor.Brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush;
         }
 
         private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new LinearEffectBrush(ColorSpectrum.RainbowLoop);
+            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush = new LinearEffectBrush(ColorBox.ColorSpectrum.RainbowLoop);
 
-            Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
+            this.gradient_editor.Brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.brush;
         }
 
         private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

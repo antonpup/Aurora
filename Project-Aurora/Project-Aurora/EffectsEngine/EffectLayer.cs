@@ -30,7 +30,7 @@ namespace Aurora.EffectsEngine
                 Devices.DeviceKeys.Peripheral_Logo
             };
 
-        static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
+        static private ColorBox.ColorSpectrum rainbow = new ColorBox.ColorSpectrum(ColorBox.ColorSpectrum.RainbowLoop);
 
         /// <summary>
         /// Creates a new instance of the EffectLayer class with default parameters.
@@ -207,18 +207,18 @@ namespace Aurora.EffectsEngine
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
-                    float percent = shift / (Effects.canvas_biggest / effect_config.gradient_size);
+                    float percent = shift;
                     brush = effect_config.brush.GetDrawingBrush(percent % 1 , effect_config.gradient_size);
                     if (brush is LinearGradientBrush linear_brush)
                     {
                         linear_brush.ScaleTransform(brush_width, brush_height);
                         linear_brush.RotateTransform(effect_config.angle);
-                        linear_brush.TranslateTransform(shift, shift);
+                        //linear_brush.TranslateTransform(shift, shift);
 
                     }
                     else if (brush is PathGradientBrush radial_brush)
                     {
-                        brush_height *= (float)Math.Sqrt(2);
+                        /*brush_height *= (float)Math.Sqrt(2);
                         brush_width *= (float)Math.Sqrt(2);
                         float x_offset = -(float)(Math.Sqrt(2) - 1) * brush_width / 2;
                         float y_offset = -(float)(Math.Sqrt(2) - 1) * brush_height / 2;
@@ -227,10 +227,10 @@ namespace Aurora.EffectsEngine
                         {
                             x_offset += rect.X;
                             y_offset += rect.Y;
-                        }
-
-                        radial_brush.TranslateTransform(x_offset, y_offset);
-                        radial_brush.ScaleTransform(brush_width, brush_height);
+                        }*/
+                        //radial_brush.TranslateTransform(0, -(brush_width) / 2);
+                        radial_brush.TranslateTransform(0, -(brush_width-brush_height)/2);
+                        radial_brush.ScaleTransform(brush_width, brush_width);
 
                         radial_brush.WrapMode = WrapMode.Clamp;
                     }
@@ -760,7 +760,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
+        public EffectLayer PercentEffect(ColorBox.ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
@@ -849,7 +849,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorBox.ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -983,7 +983,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorBox.ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)

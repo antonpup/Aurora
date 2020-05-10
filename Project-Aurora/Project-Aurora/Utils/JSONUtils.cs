@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Aurora.EffectsEngine;
 
 namespace Aurora.Utils
 {
@@ -33,6 +34,8 @@ namespace Aurora.Utils
                     //Resolve typo'd AbilityLayerHandler type
                 case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
                     return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
+                case "Aurora.EffectsEngine.EffectBrush":
+                    return typeof(LinearEffectBrush);
                 case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandler":
                     return typeof(Profiles.Dota_2.Layers.Dota2HeroAbilityEffectsLayerHandler);
                 case "Aurora.Profiles.Dota_2.Layers.Dota2HeroAbiltiyEffectsLayerHandlerProperties":

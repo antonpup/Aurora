@@ -52,16 +52,7 @@ namespace Aurora.Settings.Layers
                 this.eq_background_mode.SelectedItem = (this.DataContext as EqualizerLayerHandler).Properties._BackgroundMode;
                 this.Clr_primary_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
                 this.Clr_secondary_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
-
-                Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
-                try
-                {
-                    this.gradient_editor.Brush = brush;
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Could not set brush, exception: " + exc);
-                }
+                this.gradient_editor.Brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient;
 
                 this.updown_max_amplitude_value.Value = (int)(this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude;
                 this.Clr_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._DimColor ?? System.Drawing.Color.Empty);
@@ -105,37 +96,21 @@ namespace Aurora.Settings.Layers
         private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as EqualizerLayerHandler).Properties._Gradient = EffectsEngine.EffectBrush.GetEffectBrush((sender as ColorBox.ColorBox).Brush);
+                (this.DataContext as EqualizerLayerHandler).Properties._Gradient = (sender as ColorBox.ColorBox).Brush;
         }
 
         private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new LinearEffectBrush(ColorSpectrum.Rainbow);
+            (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new LinearEffectBrush(ColorBox.ColorSpectrum.Rainbow);
 
-            Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
+            this.gradient_editor.Brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient;
         }
 
         private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new LinearEffectBrush(ColorSpectrum.RainbowLoop);
+            (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new LinearEffectBrush(ColorBox.ColorSpectrum.RainbowLoop);
 
-            Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
+            this.gradient_editor.Brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient;
         }
 
         private void updown_max_amplitude_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

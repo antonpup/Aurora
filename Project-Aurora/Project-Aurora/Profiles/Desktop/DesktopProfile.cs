@@ -47,7 +47,7 @@ namespace Aurora.Profiles.Desktop
                         }),
                     _Gradient = new EffectsEngine.LinearEffectBrush()
                     {
-                        colorGradients = new SortedDictionary<float, Color> {
+                        ColorGradients = new SortedDictionary<float, Color> {
                                 { 0f, Color.FromArgb(255, 0, 255, 0) },
                                 { 0.5f, Color.OrangeRed },
                                 { 1f, Color.Red }

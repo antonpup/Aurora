@@ -9,10 +9,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="160" d:DesignWidth="240">
-    <UserControl.Resources>
-        <utils:EffectBrushToBrushConverter x:Key="BrushConverter" />
-    </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -29,7 +26,7 @@
 
 
         <Label Content="Brush:" Grid.Row="0" HorizontalAlignment="Right" />
-        <ncore:ColorBox Grid.Row="0" Grid.Column="1" Brush="{Binding Brush, Converter={StaticResource BrushConverter}, Mode=TwoWay}" />
+        <ncore:ColorBox Grid.Row="0" Grid.Column="1" Brush="{Binding Brush, Mode=TwoWay}" />
 
         <Label Content="Speed:" Grid.Row="2" HorizontalAlignment="Right" />
         <xctk:SingleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Speed}" Margin="0,2" />
