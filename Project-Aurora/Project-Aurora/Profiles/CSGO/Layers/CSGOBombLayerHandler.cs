@@ -68,11 +68,6 @@ namespace Aurora.Profiles.CSGO.Layers
         private static long bombflashtime = 0;
         private static long bombflashedat = 0;
 
-        public CSGOBombLayerHandler() : base()
-        {
-            _ID = "CSGOBomb";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOBombLayer(this);

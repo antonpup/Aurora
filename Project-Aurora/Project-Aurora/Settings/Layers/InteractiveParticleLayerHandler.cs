@@ -1,16 +1,17 @@
-﻿using Aurora.Devices;
+using Aurora.Devices;
+using Aurora.Profiles;
 using Aurora.Utils;
 using System.Collections.Generic;
 using System.Drawing;
 
 namespace Aurora.Settings.Layers {
 
+    [LayerHandlerMeta(Name = "Particle (Interactive)", IsDefault = true)]
     public class InteractiveParticleLayerHandler : SimpleParticleLayerHandler {
 
         private readonly HashSet<DeviceKeys> awaitingKeys = new HashSet<DeviceKeys>();
 
         public InteractiveParticleLayerHandler() {
-            _ID = "InteractiveParticle";
             Global.InputEvents.KeyDown += KeyDown;
         }
 

@@ -141,6 +141,7 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LayerHandlerMeta(Name = "Audio Visualizer", IsDefault = true)]
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
         public event NewLayerRendered NewLayerRender = delegate { };
@@ -166,8 +167,6 @@ namespace Aurora.Settings.Layers
 
         public EqualizerLayerHandler()
         {
-            _ID = "Equalizer";
-
             _ffts = new Complex[fftLength];
             _ffts_prev = new Complex[fftLength];
 

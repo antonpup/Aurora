@@ -37,5 +37,12 @@ namespace Aurora.Utils {
             }
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Trims the given substring off the end of the string if it exists.
+        /// Unlike TrimEnd, the entire string must match.
+        /// </summary>
+        public static string TrimEndStr(this string str, string sub) =>
+            str.EndsWith(sub) ? str.Substring(0, str.Length - sub.Length) : str;
     }
 }

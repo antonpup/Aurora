@@ -65,23 +65,29 @@ namespace Aurora.Devices.Ducky
             foreach (int keyboardID in DuckyRGBMappings.KeyboardIDs)
             {
                 duckyKeyboard = GetDuckyKeyboard(DuckyRGBMappings.DuckyID, keyboardID);
-                if (duckyKeyboard != null) { break; }
-            }
-
-            try
-            {
-                isInitialized = duckyKeyboard.TryOpen(out packetStream);
-                //This uses a monstrous 501 packets to initialize the keyboard in to letting the LEDs be controlled over USB HID.
-                foreach (byte[] controlPacket in DuckyRGBMappings.DuckyTakeover)
+                if (duckyKeyboard != null)
                 {
-                    packetStream.Write(controlPacket);
+                    try
+                    {
+                        isInitialized = duckyKeyboard.TryOpen(out packetStream);
+                        //This uses a monstrous 501 packets to initialize the keyboard in to letting the LEDs be controlled over USB HID.
+                        foreach (byte[] controlPacket in DuckyRGBMappings.DuckyTakeover)
+                        {
+                            packetStream.Write(controlPacket);
+                        }
+                    }
+                    catch
+                    {
+                        isInitialized = false;
+                    }
+                    break;
+                }
+                else
+                {
+                    isInitialized = false;
                 }
             }
-            catch
-            {
-                isInitialized = false;
-            }
-            
+
             return isInitialized;
         }
 

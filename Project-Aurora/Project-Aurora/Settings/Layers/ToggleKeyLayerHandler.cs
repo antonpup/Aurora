@@ -33,8 +33,6 @@ namespace Aurora.Settings.Layers {
         private bool state = false;
      
         public ToggleKeyLayerHandler() : base() {
-            _ID = "ToggleKey";
-
             Global.InputEvents.KeyDown += InputEvents_KeyDown;
         }
 

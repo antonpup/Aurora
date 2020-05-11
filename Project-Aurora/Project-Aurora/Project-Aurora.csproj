@@ -933,7 +933,6 @@
     <Compile Include="Settings\Control_ScriptManager.xaml.cs">
       <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
     <Compile Include="Settings\Keybind.cs" />
     <Compile Include="Settings\Layers\Control_GlitchLayer.xaml.cs">
       <DependentUpon>Control_GlitchLayer.xaml</DependentUpon>
@@ -2143,6 +2142,11 @@
     <PackageReference Include="DotNetZip">
       <Version>1.13.7</Version>
     </PackageReference>
+    <PackageReference Include="Fody">
+      <Version>6.1.1</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="hidlibrary">
       <Version>3.2.46</Version>
     </PackageReference>
@@ -2166,6 +2170,9 @@
     </PackageReference>
     <PackageReference Include="Octokit">
       <Version>0.47.0</Version>
+    </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody">
+      <Version>3.2.8</Version>
     </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Asus">
       <Version>0.1.32</Version>

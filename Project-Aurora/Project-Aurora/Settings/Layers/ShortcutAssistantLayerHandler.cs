@@ -113,11 +113,6 @@ namespace Aurora.Settings.Layers
 
     public class ShortcutAssistantLayerHandler : LayerHandler<ShortcutAssistantLayerHandlerProperties>
     {
-        public ShortcutAssistantLayerHandler()
-        {
-            _ID = "ShortcutAssistant";
-        }
-
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_ShortcutAssistantLayer(this);

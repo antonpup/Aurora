@@ -60,6 +60,7 @@ namespace Aurora.Settings.Layers
     
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_Sequence")]
+    [LayerHandlerMeta(IsDefault = false)]
     public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerProperties>
     {
         internal int[] bitmap = new int[126];
@@ -69,11 +70,6 @@ namespace Aurora.Settings.Layers
         internal EntireEffect current_effect = null;
 
         internal Dictionary<Devices.DeviceKeys, Color> colors = new Dictionary<Devices.DeviceKeys, Color>();
-
-        public WrapperLightsLayerHandler()
-        {
-            this._ID = "WrapperLights";
-        }
 
         protected override UserControl CreateControl()
         {
