@@ -89,8 +89,7 @@ namespace Aurora
         {
             connection_port = Port;
             net_Listener = new HttpListener();
-            net_Listener.Prefixes.Add("http://127.0.0.1:" + Port + "/");
-            net_Listener.Prefixes.Add("http://localhost:" + Port + "/");
+            net_Listener.Prefixes.Add("http://*:" + Port + "/");
         }
 
         /// <summary>
