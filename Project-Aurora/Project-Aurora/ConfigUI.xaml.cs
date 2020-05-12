@@ -22,9 +22,11 @@ using Aurora.Profiles.Aurora_Wrapper;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using PropertyChanged;
 
 namespace Aurora
 {
+    [DoNotNotify]
     partial class ConfigUI : Window, INotifyPropertyChanged
     {
         Control_Settings settingsControl = new Control_Settings();

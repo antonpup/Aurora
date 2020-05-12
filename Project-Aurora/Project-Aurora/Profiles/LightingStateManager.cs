@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 using System.Globalization;
+using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
@@ -43,10 +44,6 @@ namespace Aurora.Profiles
         public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
-
-        private List<string> Underlays = new List<string>();
-        private List<string> Normal = new List<string>();
-        private List<string> Overlays = new List<string>();
 
         private List<ILightEvent> StartedEvents = new List<ILightEvent>();
         private List<ILightEvent> UpdatedEvents = new List<ILightEvent>();
@@ -176,63 +173,6 @@ namespace Aurora.Profiles
             return RegisterEvent(new Application(config));
         }
 
-        private List<string> GetEventTable(LightEventType type)
-        {
-            List<string> events;
-            switch (type)
-            {
-                case LightEventType.Normal:
-                    events = Normal;
-                    break;
-                case LightEventType.Overlay:
-                    events = Overlays;
-                    break;
-                case LightEventType.Underlay:
-                    events = Underlays;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return events;
-        }
-
-        private bool InsertLightEvent(ILightEvent lightEvent, LightEventType? old = null)
-        {
-            LightEventType type = lightEvent.Config.Type ?? LightEventType.Normal;
-            lightEvent.Config.Type = type;
-
-            if (old == null)
-            {
-                lightEvent.Config.PropertyChanged += LightEvent_PropertyChanged;
-            }
-            else
-            {
-                var oldEvents = GetEventTable((LightEventType)old);
-                oldEvents.Remove(lightEvent.Config.ID);
-            }
-
-            var events = GetEventTable(type);
-
-            events.Add(lightEvent.Config.ID);
-
-            return true;   
-        }
-
-        private void LightEvent_PropertyChanged(object sender, PropertyChangedExEventArgs e)
-        {
-            ILightEvent lightEvent = (ILightEvent)sender;
-            if (e.PropertyName.Equals(nameof(LightEventConfig.Type)))
-            {
-                LightEventType old = (LightEventType)e.OldValue;
-                LightEventType newVal = (LightEventType)e.NewValue;
-
-                if (!old.Equals(newVal))
-                {
-                    InsertLightEvent(lightEvent, old);
-                }
-            }
-        }
-
         public bool RegisterEvent(ILightEvent @event)
         {
             string key = @event.Config.ID;
@@ -262,8 +202,6 @@ namespace Aurora.Profiles
                 if (!Global.Configuration.ProfileOrder.Contains(key))
                     Global.Configuration.ProfileOrder.Add(key);
             }
-
-            this.InsertLightEvent(@event);
 
             if (Initialized)
                 @event.Initialize();
@@ -529,50 +467,9 @@ namespace Aurora.Profiles
             else
                 Global.dev_manager.InitializeOnce();
 
-            if (Global.Configuration.OverlaysInPreview || !preview)
-            {
-                foreach (var underlay in Underlays)
-                {
-                    ILightEvent @event = Events[underlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
-                        UpdateEvent(@event, newFrame);
-                }
-            }
-
             //Need to do another check in case Desktop is disabled or the selected preview is disabled
             if (profile.IsEnabled)
                 UpdateEvent(profile, newFrame);
-
-            if (Global.Configuration.OverlaysInPreview || !preview)
-            {
-                // Update any overlays registered in the Overlays array. This includes applications with type set to Overlay and things such as skype overlay
-                foreach (var overlay in Overlays)
-                {
-                    ILightEvent @event = Events[overlay];
-                    if (@event.IsEnabled && (@event.Config.ProcessNames == null || ProcessUtils.AnyProcessExists(@event.Config.ProcessNames)))
-                        UpdateEvent(@event, newFrame);
-                }
-
-                // Update any overlays that are timer-based (e.g. the volume overlay that appears for a few seconds at a time)
-                TimedListObject[] overlay_events = overlays.ToArray();
-                foreach (TimedListObject evnt in overlay_events)
-                {
-                    if ((evnt.item as LightEvent).IsEnabled)
-                        UpdateEvent((evnt.item as LightEvent), newFrame);
-                }
-
-                // Update any applications that have overlay layers if that application is open
-                var events = GetOverlayActiveProfiles().ToList();
-
-                //Add the Light event that we're previewing to be rendered as an overlay
-                if (preview && Global.Configuration.OverlaysInPreview && !events.Contains(profile))
-                    events.Add(profile);
-
-                foreach (var @event in events)
-                    @event.UpdateOverlayLights(newFrame);
-                
-                UpdateIdleEffects(newFrame);
-            }
 
             Global.effengine.PushFrame(newFrame);
 
@@ -590,13 +487,13 @@ namespace Aurora.Profiles
             preview = false;
 
             //TODO: GetProfile that checks based on event type
-            if ((tempProfile = GetProfileFromProcessData(process_name, process_title)) != null && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+            if ((tempProfile = GetProfileFromProcessData(process_name, process_title)) != null && tempProfile.IsEnabled)
                 profile = tempProfile;
             else if ((tempProfile = GetProfileFromProcessName(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
             {
                 profile = tempProfile;
                 preview = true;
-            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.Config.Type == LightEventType.Normal && tempProfile.IsEnabled)
+            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.IsEnabled)
                 profile = tempProfile;
 
             profile = profile ?? DesktopProfile;
