@@ -177,7 +177,7 @@ namespace Aurora.Profiles.GTA5.GSI
         /// A copy constructor, creates a GameState_GTA5 instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_GTA5(GameState other_state) : base(other_state)
+        public GameState_GTA5(IGameState other_state) : base(other_state)
         {
             GameState_GTA5 gta = other_state as GameState_GTA5;
             if (gta != null)

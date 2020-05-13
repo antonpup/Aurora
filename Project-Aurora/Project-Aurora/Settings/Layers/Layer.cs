@@ -2,6 +2,7 @@ using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
+using FastMember;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -235,11 +236,12 @@ namespace Aurora.Settings.Layers
 
         public EffectLayer Render(IGameState gs)
         {
-            if (_OverrideLogic != null)
-            // For every property which has an override logic assigned
+            if (_OverrideLogic != null) {
+                // For every property which has an override logic assigned
                 foreach (var kvp in _OverrideLogic)
                     // Set the value of the logic evaluation as the override for this property
-                    ((IValueOverridable)_Handler.Properties).Overrides.SetValueFromString(kvp.Key, kvp.Value.Evaluate(gs));
+                    ((IValueOverridable)_Handler.Properties).SetOverride(kvp.Key, kvp.Value.Evaluate(gs));
+            }
             
             return ((dynamic)_Handler.Properties).Enabled ? _Handler.PostRenderFX(_Handler.Render(gs)) : new EffectLayer();
         }

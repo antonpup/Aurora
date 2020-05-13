@@ -122,7 +122,7 @@ namespace Aurora.Utils
             string[] parameters = parameter_path.Split('/');
 
             object val = null;
-            IStringProperty property_object = state as IStringProperty;
+            object property_object = state;
             int index_pos = 0;
 
             for (int x = 0; x < parameters.Count(); x++)
@@ -134,7 +134,7 @@ namespace Aurora.Utils
 
                 //Following needs validation
                 //If next param is placeholder then take the appropriate input value from the input_values array
-                val = property_object.GetValueFromString(param);
+                val = null;// property_object.GetValueFromString(param);
 
                 if (val == null)
                     throw new ArgumentNullException($"Failed to get value {parameter_path}, failed at '{param}'");
@@ -156,7 +156,7 @@ namespace Aurora.Utils
                         val = Activator.CreateInstance(child_type);
 
                 }
-                property_object = val as IStringProperty;
+                property_object = val;
             }
 
             return val;

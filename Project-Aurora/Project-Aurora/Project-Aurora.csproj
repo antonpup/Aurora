@@ -221,6 +221,7 @@
       <DependentUpon>Control_LoLBackgroundLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\AutoJsonNode.cs" />
+    <Compile Include="Profiles\LocalPCInformation.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
@@ -932,7 +933,6 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\LightingStateManager.cs" />
-    <Compile Include="Profiles\StringProperty.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>
@@ -2593,6 +2593,9 @@
     </PackageReference>
     <PackageReference Include="DotNetZip">
       <Version>1.13.7</Version>
+    </PackageReference>
+    <PackageReference Include="FastMember">
+      <Version>1.5.0</Version>
     </PackageReference>
     <PackageReference Include="Fody">
       <Version>6.1.1</Version>

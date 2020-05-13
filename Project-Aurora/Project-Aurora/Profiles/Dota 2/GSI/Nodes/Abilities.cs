@@ -54,11 +54,6 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
             }
         }
 
-        public override string ToString()
-        {
-            return json;
-        }
-
         public IEnumerator<Ability> GetEnumerator()
         {
             return abilities.GetEnumerator();

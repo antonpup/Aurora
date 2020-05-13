@@ -7,7 +7,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// A class representing various lighting information retaining to the wrapper.
     /// </summary>
-    public class GameState_Wrapper : GameState
+    public class GameState_Wrapper : GameState<GameState_Wrapper>
     {
         private Provider_Wrapper _Provider;
         private string _Command;
@@ -116,7 +116,7 @@ namespace Aurora.Profiles
         public GameState_Wrapper()
         {
             json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
+            _ParsedData = JObject.Parse(json);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace Aurora.Profiles
         /// A copy constructor, creates a GameState_Wrapper instance based on the data from the passed GameState instance.
         /// </summary>
         /// <param name="other_state">The passed GameState</param>
-        public GameState_Wrapper(GameState other_state) : base(other_state)
+        public GameState_Wrapper(IGameState other_state) : base(other_state)
         {
         }
     }
