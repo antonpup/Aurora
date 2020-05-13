@@ -307,14 +307,14 @@ namespace Aurora.Profiles
                                     continue;
                                 }
 
-                                lyr.AnythingChanged += SaveProfilesEvent;
+                                lyr.PropertyChanged += SaveProfilesEvent;
                             }
 
                             collection.CollectionChanged += (_, e) => {
                                 if (e.NewItems != null)
                                     foreach (Layer lyr in e.NewItems)
                                         if (lyr != null)
-                                            lyr.AnythingChanged += SaveProfilesEvent;
+                                            lyr.PropertyChanged += SaveProfilesEvent;
                                 SaveProfiles();
                             };
                         }
