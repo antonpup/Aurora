@@ -24,10 +24,5 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         {
 
         }
-
-        public GameState_LoL(IGameState other_state) : base(other_state)
-        {
-
-        }
     }
 }

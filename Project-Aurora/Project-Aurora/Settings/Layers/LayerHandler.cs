@@ -76,7 +76,7 @@ namespace Aurora.Settings.Layers
         public object GetOverride(string propertyName) {
             try {
                 return accessor.Value[Logic, propertyName];
-            } catch {
+            } catch (ArgumentOutOfRangeException) {
                 return null;
             }
         }
@@ -84,7 +84,7 @@ namespace Aurora.Settings.Layers
         public void SetOverride(string propertyName, object value) {
             try {
                 accessor.Value[Logic, propertyName] = value;
-            } catch { }
+            } catch (ArgumentOutOfRangeException) { }
         }
     }
 

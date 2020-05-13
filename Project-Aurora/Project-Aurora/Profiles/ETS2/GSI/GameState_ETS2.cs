@@ -83,12 +83,6 @@ namespace Aurora.Profiles.ETS2.GSI {
         public GameState_ETS2(string json_data) : base(json_data) { }
 
         /// <summary>
-        /// Creates a GameState_ETS2 instance based on data from another GateState instance.
-        /// </summary>
-        /// <param name="other">The GameState to copy.</param>
-        public GameState_ETS2(IGameState other) : base(other) { }
-
-        /// <summary>
         /// Creates a GameState_ETS2 instance based on data that has been read from the MemoryMappedFile
         /// into a ETS2MemoryStruct.
         /// </summary>

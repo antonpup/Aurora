@@ -77,7 +77,6 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// Retrieves the enumerator for all players list
         /// </summary>
         /// <returns>The enumerator</returns>
-        [GameStateIgnoreAttribute]
         public IEnumerator<PlayerNode> GetEnumerator()
         {
             return _Players.GetEnumerator();
@@ -89,7 +88,6 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
         /// <param name="Team">The team to lookup</param>
         /// <returns>A list of players</returns>
         //[Range(0, 16)]
-        [GameStateIgnoreAttribute]
         public List<PlayerNode> GetTeam(PlayerTeam Team)
         {
             return _Players.FindAll(x => x.Team == Team);

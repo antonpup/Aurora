@@ -205,6 +205,7 @@
     <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
+    <Compile Include="Profiles\GameStateParameterLookup.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameData.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
@@ -676,6 +677,7 @@
     <Compile Include="Utils\AttachedApplication.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\DragBehaviour.cs" />
+    <Compile Include="Utils\FastMemberExtensions.cs" />
     <Compile Include="Utils\GridHelper.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
     <Compile Include="Utils\TextUtils.cs" />
@@ -1479,7 +1481,6 @@
     </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
-    <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />

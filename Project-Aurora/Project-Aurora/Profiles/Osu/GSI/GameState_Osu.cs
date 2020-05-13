@@ -10,7 +10,6 @@ namespace Aurora.Profiles.Osu.GSI {
 
         public GameState_Osu() : base() { }
         public GameState_Osu(string JSONstring) : base(JSONstring) { }
-        public GameState_Osu(IGameState other) : base(other) { }
     }
 
     public class GameNode : AutoJsonNode<GameNode> {

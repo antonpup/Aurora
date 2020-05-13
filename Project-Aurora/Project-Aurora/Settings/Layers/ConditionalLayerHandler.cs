@@ -31,12 +31,7 @@ namespace Aurora.Settings.Layers {
         public override EffectLayer Render(IGameState gamestate) {
             EffectLayer layer = new EffectLayer("Conditional Layer");
 
-            bool result = false;
-            if (Properties.ConditionPath.Length > 0)
-                try {
-                    object tmp = Utils.GameStateUtils.RetrieveGameStateParameter(gamestate, Properties.ConditionPath);
-                    result = (bool)Utils.GameStateUtils.RetrieveGameStateParameter(gamestate, Properties.ConditionPath);
-                } catch { }
+            bool result = gamestate.GetBool(Properties.ConditionPath);
 
             layer.Set(Properties.Sequence, result ? Properties.PrimaryColor : Properties.SecondaryColor);
             return layer;
@@ -44,7 +39,7 @@ namespace Aurora.Settings.Layers {
 
         public override void SetApplication(Application profile) {
             if (profile != null) {
-                if (!string.IsNullOrWhiteSpace(Properties._ConditionPath) && !profile.ParameterLookup.ContainsKey(Properties._ConditionPath))
+                if (!string.IsNullOrWhiteSpace(Properties._ConditionPath) && !profile.ParameterLookup.IsValidParameter(Properties._ConditionPath))
                     Properties._ConditionPath = string.Empty;
             }
             (Control as Control_ConditionalLayer).SetProfile(profile);
