@@ -463,7 +463,7 @@ namespace Aurora.Settings
         public bool devices_disable_keyboard;
         public bool devices_disable_mouse;
         public bool devices_disable_headset;
-        public bool unified_hid_disabled = false;
+        public bool devices_disabled_by_default = false;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
 
@@ -587,9 +587,10 @@ namespace Aurora.Settings
         /// Called after the configuration file has been deserialized or created for the first time.
         /// </summary>
         public void OnPostLoad() {
-            if (!unified_hid_disabled) {
+            if (!devices_disabled_by_default) {
                 devices_disabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
-                unified_hid_disabled = true;
+                devices_disabled.Add(typeof(Devices.YeeLight.YeeLightDevice));
+                devices_disabled_by_default = true;
             }
 
             EvaluatableTemplates.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluatableTemplates)));
