@@ -180,7 +180,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Attempts to get an evaluatable from the suppliied data object. Will return true/false indicating if data is of correct format
-        /// (an <see cref="IEvaluatable{T}"/> where T matches the <see cref="EvalType"/> property.</summary>
+        /// (an <see cref="Evaluatable{T}"/> where T matches the <see cref="EvalType"/> property.</summary>
         private bool TryGetData(IDataObject @do, out IEvaluatable evaluatable, out Control_EvaluatablePresenter source) => EvaluatableHelpers.TryGetData(@do, out evaluatable, out source, EvalType);
         #endregion
     }
