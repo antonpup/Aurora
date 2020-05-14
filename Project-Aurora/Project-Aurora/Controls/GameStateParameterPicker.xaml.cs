@@ -26,10 +26,7 @@ namespace Aurora.Controls {
         }
 
         #region UI Properties
-        /// <summary>
-        /// The current parts that make up the path. E.G. "LocalPCInfo/RAM" -> "LocalPCInfo", "RAM"
-        /// </summary>
-        private Stack<string> WorkingPath { get; set; } = new Stack<string>();
+        public string WorkingPath { get; set; } = "";
 
         /// <summary>
         /// Gets a list of items that should be displayed in the parameter list (based on the current "parent" variable).
@@ -40,17 +37,12 @@ namespace Aurora.Controls {
                 if (Application?.ParameterLookup == null) return null;
 
                 // If the given working path is a path to a variable (which it shouldn't be), pop the last item (the variable name) from the path to give just the "directory"
-                if (Application.ParameterLookup.IsValidParameter(WorkingPathStr))
-                    WorkingPath.Pop();
+                if (Application.ParameterLookup.IsValidParameter(WorkingPath))
+                    GoUp();
 
-                return Application.ParameterLookup.Children(WorkingPathStr).OrderBy(p => !p.IsFolder).ThenBy(p => p.DisplayName);
+                return Application.ParameterLookup.Children(WorkingPath, PropertyType).OrderBy(p => !p.IsFolder).ThenBy(p => p.DisplayName);
             }
         }
-
-        /// <summary>
-        /// Returns the string representation of the current working path.
-        /// </summary>
-        public string WorkingPathStr => string.Join("/", WorkingPath.Reverse());
         #endregion
 
         #region IsOpen Dependency Property
@@ -97,9 +89,9 @@ namespace Aurora.Controls {
             } else {
                 // Else if an actual path has been given, split it up into it's ""directories""
                 // For the path to be valid (and to be passed as a param to this method) it will be a path to a variable, not a "directory". We use this assumption.
-                picker.WorkingPath = new Stack<string>(e.NewValue.ToString().Split('/'));
-                picker.WorkingPath.Pop(); // Remove the last one, since the working path should not include the actual var name
-                picker.NotifyChanged(nameof(WorkingPath), nameof(WorkingPathStr), nameof(CurrentParameterListItems)); // All these things will be different now, so trigger an update of anything requiring them
+                picker.WorkingPath = (string)e.NewValue;
+                picker.GoUp(); // Remove the last one, since the working path should not include the actual var name
+                picker.NotifyChanged(nameof(WorkingPath), nameof(CurrentParameterListItems)); // All these things will be different now, so trigger an update of anything requiring them
                 picker.mainListBox.SelectedValue = e.NewValue.ToString().Split('/').Last(); // The selected item in the list will be the last part of the path
             }
 
@@ -198,13 +190,13 @@ namespace Aurora.Controls {
 
         #region Event Handlers
         private void BackBtn_Click(object sender, RoutedEventArgs e) {
-            if (WorkingPath.Count > 0) {
+            if (!string.IsNullOrEmpty(WorkingPath)) {
                 // Make the aux list box take on the same items as the current one so that when animated (since the aux is moved to the middle first) it looks natural
                 auxillaryListbox.ItemsSource = CurrentParameterListItems;
 
                 Animate(-1);
-                WorkingPath.Pop(); // Remove the last "directory" off the working path
-                NotifyChanged(nameof(CurrentParameterListItems), nameof(WorkingPathStr)); // These properties will have changed so any UI stuff that relies on it should update
+                GoUp(); // Remove the last "directory" off the working path
+                NotifyChanged(nameof(CurrentParameterListItems), nameof(WorkingPath)); // These properties will have changed so any UI stuff that relies on it should update
             }
         }
 
@@ -220,29 +212,24 @@ namespace Aurora.Controls {
             // Element selection code is adapted from http://kevin-berridge.blogspot.com/2008/06/wpf-listboxitem-double-click.html
             var el = (UIElement)mainListBox.InputHitTest(e.GetPosition(mainListBox));
             while (el != null && el != mainListBox) {
-                if (el is ListBoxItem item) {
+                if (el is ListBoxItem item && item.DataContext is GameStateParameterLookupEntry itemContext) {
 
                     // Since the user has picked an item on the list, we want to clear the numeric box so it is obvious to the user that the number is having no effect.
                     numericEntry.Value = null;
 
-                    // Copy the current list items to the aux list box incase the list box is animated later. This must be done BEFORE the workingpath.push call.
+                    // Copy the current list items to the aux list box incase the list box is animated later. This must be done BEFORE changing workingpath
                     auxillaryListbox.ItemsSource = CurrentParameterListItems;
 
-                    // Add the clicked item to the working path (even if it is an end variable, not a "directory")
-                    WorkingPath.Push(((GameStateParameterLookupEntry)item.DataContext).Path);
-
-                    var path = string.Join("/", WorkingPath.Reverse());
-                    if (Application?.ParameterLookup?.IsValidParameter(path) ?? false) {
-                        // If it turns out the user has selected an end variable, we want to update the DependencyObject for the selected path
-                        SelectedPath = path;
-                        NotifyChanged(nameof(SelectedPath));
-                    } else {
-                        // If the user has selected a directory instead (i.e. isn't not a valid parameter) then perform the animation since there will now be new properties to choose from
+                    if (itemContext.IsFolder) {
+                        // If the user selected a directory, animate the box.
+                        WorkingPath = itemContext.Path;
                         Animate(1);
-                    }
+                        NotifyChanged(nameof(CurrentParameterListItems), nameof(WorkingPath));
 
-                    // Regardless of whether it was a variable or a directory, the list and path will have changed
-                    NotifyChanged(nameof(CurrentParameterListItems), nameof(WorkingPathStr));
+                    } else {
+                        // Otherwise if the user selected a parameter, update the SelectedPath Dependency Property (which will fire a change event).
+                        SelectedPath = itemContext.Path;
+                    }
                 }
                 el = (UIElement)VisualTreeHelper.GetParent(el);
             }
@@ -259,6 +246,12 @@ namespace Aurora.Controls {
             NotifyChanged(nameof(SelectedPath));
         }
         #endregion
+
+        /// <summary>
+        /// Removes the last parameter or folder from the working path.
+        /// </summary>
+        private void GoUp() =>
+            WorkingPath = WorkingPath.Contains("/") ? WorkingPath.Substring(0, WorkingPath.LastIndexOf("/")) : "";
 
         private void NotifyChanged(params string[] propNames) {
             foreach (var prop in propNames)

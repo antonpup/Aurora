@@ -85,7 +85,7 @@ namespace Aurora.Profiles
             value = null;
             return !string.IsNullOrEmpty(path)
                 && (value = this.ResolvePropertyPath(path)) != null
-                && !GSIPropertyTypeConverter.IsTypePropertyType(value?.GetType(), type);
+                && GSIPropertyTypeConverter.IsTypePropertyType(value?.GetType(), type);
         }
 
         public double GetNumber(string path) {
