@@ -29,7 +29,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public UserControl Control => Handler.Control;
 
-        public bool Enabled{ get; set; }
+        public bool Enabled { get; set; } = true;
 
         public Dictionary<string, IOverrideLogic> OverrideLogic { get; set; }
         // private void OnOverrideLogicChanged() => // Make the logic collection changed event trigger a property change to ensure it gets saved?
