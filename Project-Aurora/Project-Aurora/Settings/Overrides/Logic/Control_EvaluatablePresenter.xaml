@@ -27,7 +27,7 @@
             <ContentPresenter x:Name="EvaluatableControl" />
             
             <!-- Debug display -->
-            <Border Background="#4000" BorderBrush="#9000" BorderThickness="1" CornerRadius="3" Margin="4,0,0,0" Padding="4,2" MinWidth="50" VerticalAlignment="Center" ToolTip="Current Value" Visibility="{Binding (l:EvaluatablePresenterAddons.ShowDebugInfo), RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BoolToVisConverter}}">
+            <Border Background="#4000" BorderBrush="#9000" BorderThickness="1" CornerRadius="3" Margin="4,0,0,0" Padding="4,2" MinWidth="50" VerticalAlignment="Center" ToolTip="Most recent value" Visibility="{Binding (l:EvaluatablePresenterAddons.ShowDebugInfo), RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BoolToVisConverter}}">
                 <TextBlock Text="{Binding Path=Expression.LastValue, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type l:Control_EvaluatablePresenter}}}" />
             </Border>
         </StackPanel>
