@@ -209,7 +209,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public double Value { get; set; }
 
         // The control allowing the user to edit the number value
-        public override Visual GetControl() => new DoubleUpDown { Margin = new System.Windows.Thickness(0, 0, 0, 6) }
+        public override Visual GetControl() => new DoubleUpDown { VerticalAlignment = System.Windows.VerticalAlignment.Center }
             .WithBinding(DoubleUpDown.ValueProperty, new Binding("Value") { Source = this });
 
         /// <summary>Simply returns the constant value specified by the user</summary>

@@ -205,4 +205,13 @@ namespace Aurora.Settings.Overrides.Logic {
         public IEvaluatable OldExpression { get; set; }
         public IEvaluatable NewExpression { get; set; }
     }
+
+
+    public static class EvaluatablePresenterAddons {
+        public static bool GetShowDebugInfo(DependencyObject obj) => (bool)obj.GetValue(ShowDebugInfoProperty);
+        public static void SetShowDebugInfo(DependencyObject obj, bool value) => obj.SetValue(ShowDebugInfoProperty, value);
+
+        public static readonly DependencyProperty ShowDebugInfoProperty =
+            DependencyProperty.RegisterAttached("ShowDebugInfo", typeof(bool), typeof(EvaluatablePresenterAddons), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.Inherits));
+    }
 }

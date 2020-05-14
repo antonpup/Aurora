@@ -102,7 +102,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public bool State { get; set; }
 
         // Create a checkbox to use to set the constant value
-        public override Visual GetControl() => new CheckBox { Content = "True/False" }
+        public override Visual GetControl() => new CheckBox { Content = "True/False", VerticalAlignment = System.Windows.VerticalAlignment.Center }
             .WithBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
 
         // Simply return the current state

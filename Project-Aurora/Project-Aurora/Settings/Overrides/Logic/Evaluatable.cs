@@ -1,6 +1,7 @@
 ﻿using Aurora.Profiles;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -25,11 +26,13 @@ namespace Aurora.Settings.Overrides.Logic {
         IEvaluatable Clone();
     }
 
-    public abstract class Evaluatable<T> : IEvaluatable {
+    public abstract class Evaluatable<T> : IEvaluatable, System.ComponentModel.INotifyPropertyChanged {
 
         /// <summary>The most recent value that was output from the evaluatable.</summary>
         public T LastValue { get; private set; } = default;
         object IEvaluatable.LastValue => LastValue;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>Should evaluate the operand and return the evaluation result.</summary>
         protected abstract T Execute(IGameState gameState);
