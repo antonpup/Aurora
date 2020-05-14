@@ -61,9 +61,16 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             string layoutsPath = Path.Combine(Global.ExecutingDirectory, "DeviceLayouts", dicName);
             List<string> FilesName = new List<string>() { "None" };
-            foreach (var name in Directory.GetFiles(layoutsPath))
+            if (Directory.Exists(layoutsPath))
             {
-                FilesName.Add(name.Split('\\').Last().Split('.').First());
+                foreach (var name in Directory.GetFiles(layoutsPath))
+                {
+                    FilesName.Add(name.Split('\\').Last().Split('.').First());
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(layoutsPath);
             }
             return FilesName;
         }
