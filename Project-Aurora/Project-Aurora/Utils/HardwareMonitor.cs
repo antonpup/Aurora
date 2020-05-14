@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,6 +46,32 @@ namespace Aurora.Utils
             catch (Exception e)
             {
                 Global.logger.Error(e);
+            }
+        }
+
+        public static bool TryDump()
+        {
+            var lines = new List<string>();
+            foreach (var hw in _hardware)
+            {
+                lines.Add("-----");
+                lines.Add(hw.Name);
+                lines.Add("Sensors:");
+                foreach (var sensor in hw.Sensors.OrderBy(s => s.SensorType))
+                {
+                    lines.Add($"Name: {sensor.Name}, Id: {sensor.Identifier}, Type: {sensor.SensorType}");
+                }
+                lines.Add("-----");
+            }
+            try
+            {
+                File.WriteAllLines(Path.Combine(Global.LogsDirectory, "sensors.txt"), lines);
+                return true;
+            }
+            catch (IOException e)
+            {
+                Global.logger.Error("Failed to write sensors dump: " + e);
+                return false;
             }
         }
 
