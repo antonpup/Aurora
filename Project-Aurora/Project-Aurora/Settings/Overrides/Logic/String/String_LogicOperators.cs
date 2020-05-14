@@ -29,7 +29,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithBinding(CheckBox.IsCheckedProperty, this, nameof(CaseInsensitive), BindingMode.TwoWay));
 
         /// <summary>Compares the two strings with the given operator</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var op1 = Operand1.Evaluate(gameState);
             var op2 = Operand2.Evaluate(gameState);
 

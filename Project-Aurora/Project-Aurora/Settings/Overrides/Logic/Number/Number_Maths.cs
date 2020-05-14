@@ -44,7 +44,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Resolves the two operands and then compares them using the user specified operator</summary>
-        public override double Evaluate(IGameState gameState) {
+        protected override double Execute(IGameState gameState) {
             var op1 = Operand1.Evaluate(gameState);
             var op2 = Operand2.Evaluate(gameState);
             switch (Operator) {
@@ -82,7 +82,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(Control_NumericUnaryOpHolder.OperandProperty, new Binding("Operand") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Evaluate the operand and return the absolute value of it.</summary>
-        public override double Evaluate(IGameState gameState) => Math.Abs(Operand.Evaluate(gameState));
+        protected override double Execute(IGameState gameState) => Math.Abs(Operand.Evaluate(gameState));
         
         public override Evaluatable<double> Clone() => new NumberAbsValue { Operand = Operand.Clone() };
     }
@@ -122,7 +122,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Resolves the two operands and then compares them with the user-specified operator.</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var op1 = Operand1.Evaluate(gameState);
             var op2 = Operand2.Evaluate(gameState);
             switch (Operator) {
@@ -174,7 +174,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Visual GetControl() => new Control_NumericMap(this);
 
         /// <summary>Evaluate the from range and to range and return the value in the new range.</summary>
-        public override double Evaluate(IGameState gameState) {
+        protected override double Execute(IGameState gameState) {
             // Evaluate all components
             double value = Value.Evaluate(gameState);
             double fromMin = FromMin.Evaluate(gameState), fromMax = FromMax.Evaluate(gameState);
@@ -213,7 +213,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(DoubleUpDown.ValueProperty, new Binding("Value") { Source = this });
 
         /// <summary>Simply returns the constant value specified by the user</summary>
-        public override double Evaluate(IGameState gameState) => Value;
+        protected override double Execute(IGameState gameState) => Value;
 
         public override Evaluatable<double> Clone() => new NumberConstant { Value = Value };
     }

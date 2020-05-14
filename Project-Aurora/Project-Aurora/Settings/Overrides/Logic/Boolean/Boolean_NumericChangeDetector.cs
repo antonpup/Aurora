@@ -42,7 +42,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithChild(new DoubleUpDown { Minimum = 0 }
                     .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold")));
 
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var val = Evaluatable.Evaluate(gameState);
             var @out = false;
             if (lastValue.HasValue) {

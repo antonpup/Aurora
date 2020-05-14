@@ -31,7 +31,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Evaluates this wave function generator using the result of the operand and the given wave type.
         /// </summary>
-        public override double Evaluate(IGameState gameState) {
+        protected override double Execute(IGameState gameState) {
             var op = Operand.Evaluate(gameState);
             switch (WaveFunc) {
                 // The wave functions are generated on https://www.desmos.com/calculator/x9xl6m9ryf

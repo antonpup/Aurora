@@ -1,4 +1,4 @@
-using Aurora.Profiles;
+﻿using Aurora.Profiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,9 @@ namespace Aurora.Settings.Overrides.Logic {
     /// that can be used to edit the operand.
     /// </summary>
     public interface IEvaluatable {
+        /// <summary>The most recent value that was output from the evaluatable.</summary>
+        object LastValue { get; }
+
         /// <summary>Should evaluate the operand and return the evaluation result.</summary>
         object Evaluate(IGameState gameState);
 
@@ -23,8 +26,17 @@ namespace Aurora.Settings.Overrides.Logic {
     }
 
     public abstract class Evaluatable<T> : IEvaluatable {
+
+        /// <summary>The most recent value that was output from the evaluatable.</summary>
+        public T LastValue { get; private set; } = default;
+        object IEvaluatable.LastValue => LastValue;
+
         /// <summary>Should evaluate the operand and return the evaluation result.</summary>
-        public abstract T Evaluate(IGameState gameState);
+        protected abstract T Execute(IGameState gameState);
+
+        /// <summary>Evaluates the result of this evaluatable with the given gamestate and returns the result.</summary>
+        // Execute the evaluatable logic, store the latest value and return this value
+        public T Evaluate(IGameState gameState) => (LastValue = Execute(gameState));
         object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
 
         /// <summary>Should return a control that is bound to this logic element.</summary>

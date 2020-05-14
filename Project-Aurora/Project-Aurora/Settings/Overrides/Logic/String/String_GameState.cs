@@ -21,7 +21,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this });
 
         /// <summary>Attempts to return the string at the given state variable.</summary>
-        public override string Evaluate(IGameState gameState) {
+        protected override string Execute(IGameState gameState) {
             if (VariablePath.Length > 0)
                 try { return (string)Utils.GameStateUtils.RetrieveGameStateParameter(gameState, VariablePath); }
                 catch { }

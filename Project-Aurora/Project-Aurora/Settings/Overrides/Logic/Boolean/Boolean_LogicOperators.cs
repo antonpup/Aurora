@@ -30,7 +30,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         public override Visual GetControl() => new Control_SubconditionHolder(this, "Or");
 
-        public override bool Evaluate(IGameState gameState) => SubConditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
+        protected override bool Execute(IGameState gameState) => SubConditions.Any(subcondition => subcondition?.Evaluate(gameState) ?? false);
         
         public override Evaluatable<bool> Clone() => new BooleanOr { SubConditions = new ObservableCollection<Evaluatable<bool>>(SubConditions.Select(e => e.Clone())) };
     }
@@ -54,7 +54,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         public override Visual GetControl() => new Control_SubconditionHolder(this, "And");
 
-        public override bool Evaluate(IGameState gameState) => SubConditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
+        protected override bool Execute(IGameState gameState) => SubConditions.All(subcondition => subcondition?.Evaluate(gameState) ?? false);
         public override Evaluatable<bool> Clone() => new BooleanAnd { SubConditions = new ObservableCollection<Evaluatable<bool>>(SubConditions.Select(e => { var x = e.Clone(); return x; })) };
     }
 
@@ -80,7 +80,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
                 .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(SubCondition)) { Source = this, Mode = BindingMode.TwoWay }));
 
-        public override bool Evaluate(IGameState gameState) => !SubCondition.Evaluate(gameState);
+        protected override bool Execute(IGameState gameState) => !SubCondition.Evaluate(gameState);
 
         public override Evaluatable<bool> Clone() => new BooleanNot { SubCondition = SubCondition.Clone() };
     }
@@ -106,7 +106,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(CheckBox.IsCheckedProperty, new Binding("State") { Source = this, Mode = BindingMode.TwoWay });
 
         // Simply return the current state
-        public override bool Evaluate(IGameState _) => State;
+        protected override bool Execute(IGameState _) => State;
         // Creates a new BooleanConstant
         public override Evaluatable<bool> Clone() => new BooleanConstant { State = State };
     }

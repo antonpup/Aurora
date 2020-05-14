@@ -36,7 +36,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithChild(new Label { Content = "running" });
         }
 
-        public override bool Evaluate(IGameState gameState)
+        protected override bool Execute(IGameState gameState)
             => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
         
         public override Evaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };

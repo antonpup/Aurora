@@ -33,7 +33,7 @@ namespace Aurora.Settings.Overrides.Logic.Generic {
         public override Visual GetControl() => new Control_Delay<T>(this);
 
         // Eval
-        public override T Evaluate(IGameState gameState) {
+        protected override T Execute(IGameState gameState) {
             // First, evaluate the source evaluatable and check if the returned value is different from the last one we read.
             var val = Source.Evaluate(gameState);
             if (!EqualityComparer<T>.Default.Equals(val, lastValue)) {

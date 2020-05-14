@@ -29,7 +29,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this });
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
-        public override double Evaluate(IGameState gameState) => GameStateUtils.TryGetDoubleFromState(gameState, VariablePath);
+        protected override double Execute(IGameState gameState) => GameStateUtils.TryGetDoubleFromState(gameState, VariablePath);
         
         public override Evaluatable<double> Clone() => new NumberGSINumeric { VariablePath = VariablePath };
     }

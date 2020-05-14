@@ -27,7 +27,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Visual GetControl() => control ?? (control = new Control_ConditionGSIBoolean(this));
 
         /// <summary>Fetches the given boolean value from the game state and returns it.</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             bool result = false;
             if (VariablePath.Length > 0)
                 try {
@@ -70,7 +70,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Visual GetControl() => control ?? (control = new Control_ConditionGSINumeric(this));
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             // Parse the operands (either as numbers or paths)
             double op1 = Utils.GameStateUtils.TryGetDoubleFromState(gameState, Operand1Path);
             double op2 = Utils.GameStateUtils.TryGetDoubleFromState(gameState, Operand2Path);
@@ -116,7 +116,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Visual GetControl() => control ?? (control = new Control_BooleanGSIEnum(this));
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var @enum = GameStateUtils.TryGetEnumFromState(gameState, StatePath);
             return @enum != null && @enum.Equals(EnumValue);
         }

@@ -22,7 +22,7 @@ namespace Aurora.Settings.Overrides.Logic.Boolean {
         public Boolean_Latch() : this(EvaluatableDefaults.Get<bool>(),EvaluatableDefaults.Get<bool>()) { }
         public Boolean_Latch(Evaluatable<bool> set, Evaluatable<bool> reset) { Set = set; Reset = reset; }
 
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             if (Reset.Evaluate(gameState))
                 state = false;
             if (Set.Evaluate(gameState))

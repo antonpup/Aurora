@@ -39,7 +39,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
             }.WithBinding(ComboBox.SelectedValueProperty, this, "TimeUnit", BindingMode.TwoWay));
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
-        public override double Evaluate(IGameState gameState) {
+        protected override double Execute(IGameState gameState) {
             var idleTime = ActiveProcessMonitor.GetTimeSinceLastInput();
             switch (TimeUnit) {
                 case TimeUnit.Milliseconds: return idleTime.TotalMilliseconds;

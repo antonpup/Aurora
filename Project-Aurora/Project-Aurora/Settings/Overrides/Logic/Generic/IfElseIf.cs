@@ -31,7 +31,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Visual GetControl() => new Control_Ternary<T>(this);
 
         /// <summary>Evaluate conditions and return the appropriate evaluation.</summary>
-        public override T Evaluate(IGameState gameState) {
+        protected override T Execute(IGameState gameState) {
             foreach (var branch in Cases)
                 if (branch.Condition == null || branch.Condition.Evaluate(gameState)) // Find the first with a true condition, or where the condition is null (which indicates 'else')
                     return branch.Value.Evaluate(gameState);

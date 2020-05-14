@@ -33,7 +33,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithBinding(Controls.Control_FieldPresenter.ValueProperty, new Binding("TargetKey") { Source = this, Mode = BindingMode.TwoWay }));
 
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
-        public override bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Contains(TargetKey);
+        protected override bool Execute(IGameState gameState) => Global.InputEvents.PressedKeys.Contains(TargetKey);
 
         public override Evaluatable<bool> Clone() => new BooleanKeyDown { TargetKey = TargetKey };
     }
@@ -51,7 +51,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Visual GetControl() => new Label() { Content = "Any Key Held" };
 
         /// <summary>True if the global event bus's pressed key list contains any key.</summary>
-        public override bool Evaluate(IGameState gameState) => Global.InputEvents.PressedKeys.Any();
+        protected override bool Execute(IGameState gameState) => Global.InputEvents.PressedKeys.Any();
         public override Evaluatable<bool> Clone() => new BooleanAnyKeyDown();
     }
 
@@ -85,7 +85,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithChild(new TextBlock { Text = "Seconds" }));
 
         /// <summary>True if the global event bus's pressed key list contains the target key.</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             if (Global.InputEvents.PressedKeys.Contains(TargetKey)) {
                 watch.Restart();
                 return true;
@@ -123,7 +123,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithChild(new Label { Content = "mouse button down" });
 
         /// <summary>True if the global event bus's pressed mouse button list contains the target button.</summary>
-        public override bool Evaluate(IGameState gameState) => Global.InputEvents.PressedButtons.Contains(TargetButton);
+        protected override bool Execute(IGameState gameState) => Global.InputEvents.PressedButtons.Contains(TargetButton);
 
         public override Evaluatable<bool> Clone() => new BooleanMouseDown { TargetButton = TargetButton };
     }
@@ -149,7 +149,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithChild(new Label { Content = "is locked" });
 
         /// <summary>Return true if the target lock key is active.</summary>
-        public override bool Evaluate(IGameState gameState) => System.Windows.Forms.Control.IsKeyLocked(TargetKey);
+        protected override bool Execute(IGameState gameState) => System.Windows.Forms.Control.IsKeyLocked(TargetKey);
 
         public override Evaluatable<bool> Clone() => new BooleanLockKeyActive { TargetKey = TargetKey };
     }
@@ -187,7 +187,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay }));
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var idleTime = ActiveProcessMonitor.GetTimeSinceLastInput();
             switch (TimeUnit) {
                 case TimeUnit.Milliseconds: return idleTime.TotalMilliseconds > InactiveTime;

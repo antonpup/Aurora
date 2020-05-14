@@ -19,7 +19,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithBinding(TextBox.TextProperty, new Binding("Value") { Source = this, Mode = BindingMode.TwoWay });
 
         /// <summary>Simply return the constant value.</summary>
-        public override string Evaluate(IGameState gameState) => Value;
+        protected override string Execute(IGameState gameState) => Value;
                 
         /// <summary>Clones this constant string value.</summary>
         public override Evaluatable<string> Clone() => new StringConstant { Value = Value };

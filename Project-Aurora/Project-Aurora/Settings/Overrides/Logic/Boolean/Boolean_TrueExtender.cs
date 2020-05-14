@@ -37,7 +37,7 @@ namespace Aurora.Settings.Overrides.Logic {
                     .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("ExtensionTime") { Source = this, Mode = BindingMode.TwoWay })
                     .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay })));
 
-        public override bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var res = Evaluatable.Evaluate(gameState);
             if (res) sw.Restart();
             switch (TimeUnit) {
