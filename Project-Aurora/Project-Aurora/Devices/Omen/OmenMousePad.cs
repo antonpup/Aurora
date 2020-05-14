@@ -28,8 +28,6 @@ namespace Aurora.Devices.Omen
             switch (Global.Configuration.mouse_preference)
             {
                 case PreferredMouse.OMEN_Outpost_Plus_Photon:
-                case PreferredMouse.OMEN_Outpost_Plus_Vector:
-                case PreferredMouse.OMEN_Outpost_Plus_Vector_Essentials:
                     ptr = OmenLighting_MousePad_OpenByName("Outpost");
                     break;
             }

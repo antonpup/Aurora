@@ -32,11 +32,9 @@ namespace Aurora.Devices.Omen
                     ptr = OmenLighting_Mouse_OpenByName("Photon");
                     break;
                 case PreferredMouse.OMEN_Vector:
-                case PreferredMouse.OMEN_Outpost_Plus_Vector:
                     ptr = OmenLighting_Mouse_OpenByName("Daffy2");
                     break;
                 case PreferredMouse.OMEN_Vector_Essentials:
-                case PreferredMouse.OMEN_Outpost_Plus_Vector_Essentials:
                     ptr = OmenLighting_Mouse_OpenByName("Drake2");
                     break;
             }
