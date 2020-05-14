@@ -1,7 +1,4 @@
-using Aurora.Settings;
 using Aurora.Profiles.EliteDangerous.Layers;
-using System.Collections.Generic;
-using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous
 {
@@ -23,19 +20,9 @@ namespace Aurora.Profiles.EliteDangerous
             })
         {
 
-            var extra = new List<LayerHandlerEntry>
-            {
-                new LayerHandlerEntry("EliteDangerousBackground", "Elite: Dangerous Background Layer", typeof(EliteDangerousBackgroundLayerHandler)),
-                new LayerHandlerEntry("EliteDangerousKeyBinds", "Elite: Dangerous Key Binds Layer", typeof(EliteDangerousKeyBindsLayerHandler)),
-                new LayerHandlerEntry("EliteDangerousAnimations", "Elite: Dangerous Animation Layer", typeof(EliteDangerousAnimationLayerHandler)),
-            };
-
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
-
-            foreach (var entry in extra)
-            {
-                Config.ExtraAvailableLayers.Add(entry.Key);
-            }
+            AllowLayer<EliteDangerousBackgroundLayerHandler>();
+            AllowLayer<EliteDangerousKeyBindsLayerHandler>();
+            AllowLayer<EliteDangerousAnimationLayerHandler>();
         }
     }
 }

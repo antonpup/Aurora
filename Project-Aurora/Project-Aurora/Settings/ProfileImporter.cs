@@ -738,7 +738,7 @@ namespace Aurora.Settings
 
                 // Copy any valid layers from the read profile to the new one
                 for (int i = 0; i < inProf.Layers.Count; i++)
-                    if (Global.LightingStateManager.DefaultLayerHandlers.Contains(inProf.Layers[i].Handler.ID) || app.Config.ExtraAvailableLayers.Contains(inProf.Layers[i].Handler.ID))
+                    if (app.IsAllowedLayer(inProf.Layers[i].Handler.GetType()))
                         newProf.Layers.Add((Layer)inProf.Layers[i].Clone());
 
                 // Force a save to write the new profile to disk in the appdata dir

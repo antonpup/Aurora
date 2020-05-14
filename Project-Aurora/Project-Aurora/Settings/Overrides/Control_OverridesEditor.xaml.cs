@@ -1,6 +1,7 @@
 ﻿using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,6 +19,7 @@ namespace Aurora.Settings.Overrides {
     /// <summary>
     /// Interaction logic for Control_OverridesEditor.xaml
     /// </summary>
+    [DoNotNotify]
     public partial class Control_OverridesEditor : UserControl, INotifyPropertyChanged {
 
         public Control_OverridesEditor() {

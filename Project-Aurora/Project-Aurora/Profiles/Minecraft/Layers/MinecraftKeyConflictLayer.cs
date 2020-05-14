@@ -32,10 +32,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
 
     public class MinecraftKeyConflictLayerHandler : LayerHandler<MinecraftKeyConflictLayerProperties> {
-        
-        public MinecraftKeyConflictLayerHandler() {
-            _ID = "MinecraftKeyConflictLayer";
-        }
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftKeyConflictLayer(this);
