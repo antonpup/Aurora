@@ -71,7 +71,6 @@ namespace Aurora.Devices.Omen
                     chassis = OmenChassis.GetOmenChassis();
                     speaker = OmenSpeaker.GetOmenSpeaker();
 
-                    Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
                     Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
 
                     isInitialized = true;
@@ -137,6 +136,8 @@ namespace Aurora.Devices.Omen
                         mousePad?.Shutdown();
                         chassis?.Shutdown();
                         speaker?.Shutdown();
+
+                        Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
                     }
                 }
                 catch (Exception e)
