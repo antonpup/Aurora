@@ -2,7 +2,7 @@
 
 namespace Aurora.Profiles.Osu.GSI {
 
-    public class GameState_Osu : GameState<GameState_Osu> {
+    public class GameState_Osu : GameState {
 
         public ProviderNode Provider => NodeFor<ProviderNode>("Provider");
 

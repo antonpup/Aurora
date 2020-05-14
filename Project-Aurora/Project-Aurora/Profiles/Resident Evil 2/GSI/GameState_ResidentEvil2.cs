@@ -6,7 +6,7 @@ namespace Aurora.Profiles.ResidentEvil2.GSI
     /// <summary>
     /// A class representing various information relating to Resident Evil 2
     /// </summary>
-    public class GameState_ResidentEvil2 : GameState<GameState_ResidentEvil2>
+    public class GameState_ResidentEvil2 : GameState
     {
         private Player_ResidentEvil2 player;
 

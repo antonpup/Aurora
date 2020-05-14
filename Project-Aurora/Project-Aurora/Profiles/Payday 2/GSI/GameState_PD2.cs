@@ -8,7 +8,7 @@ namespace Aurora.Profiles.Payday_2.GSI
     /// <summary>
     /// A class representing various information retaining to Payday 2
     /// </summary>
-    public class GameState_PD2 : GameState<GameState_PD2>
+    public class GameState_PD2 : GameState
     {
         private ProviderNode _Provider;
         private LobbyNode _Lobby;

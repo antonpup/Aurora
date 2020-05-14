@@ -30,7 +30,7 @@ namespace Aurora.Profiles
         TEnum GetEnum<TEnum>(string path) where TEnum : Enum;
     }
 
-    public class GameState<TSelf> : IGameState where TSelf : GameState<TSelf>
+    public class GameState : IGameState
     {
         private static LocalPCInformation _localpcinfo;
 
@@ -71,7 +71,7 @@ namespace Aurora.Profiles
         /// <summary>
         /// Use this method to more-easily lazily return the child node of the given name that exists on this AutoNode.
         /// </summary>
-        protected TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
+        protected TNode NodeFor<TNode>(string name) where TNode : Node
             => (TNode)(childNodes.TryGetValue(name, out var n) ? n : (childNodes[name] = Instantiator<TNode, string>.Create(_ParsedData[name]?.ToString() ?? "")));
 
         #region GameState path resolution
@@ -146,7 +146,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// An empty gamestate with no child nodes.
     /// </summary>
-    public class EmptyGameState : GameState<EmptyGameState>
+    public class EmptyGameState : GameState
     {
         public EmptyGameState() : base() { }
         public EmptyGameState(string json) : base(json) { }

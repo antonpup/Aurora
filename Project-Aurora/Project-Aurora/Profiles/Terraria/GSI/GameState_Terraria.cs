@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Terraria.GSI {
-    public class GameState_Terraria : GameState<GameState_Terraria> {
+    public class GameState_Terraria : GameState {
         public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
         public WorldNode World => NodeFor<WorldNode>("world");

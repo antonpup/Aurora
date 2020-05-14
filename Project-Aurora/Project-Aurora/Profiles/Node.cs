@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
-    public class Node<TClass>
+    public class Node
     {
         protected JObject _ParsedData;
 
@@ -75,7 +75,7 @@ namespace Aurora.Profiles
         /// </summary>
         /// <typeparam name="TNode">The type of node that will be returned by this method.</typeparam>
         /// <param name="name">The JSON path of the child node.</param>
-        public TNode NodeFor<TNode>(string name) where TNode : Node<TNode>
+        public TNode NodeFor<TNode>(string name) where TNode : Node
             => (TNode)(childNodes.TryGetValue(name, out var n) ? n : (childNodes[name] = Instantiator<TNode, string>.Create( _ParsedData[name]?.ToString() ?? "")));
     }
 }

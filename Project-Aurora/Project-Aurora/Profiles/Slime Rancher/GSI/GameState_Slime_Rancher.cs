@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI {
 
-    public class GameState_Slime_Rancher : GameState<GameState_Slime_Rancher> {
+    public class GameState_Slime_Rancher : GameState {
 
         private ProviderNode _Provider;
         private GameStateNode _GameState;

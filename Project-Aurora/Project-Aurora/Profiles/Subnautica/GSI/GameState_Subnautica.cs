@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI {
 
-    public class GameState_Subnautica : GameState<GameState_Subnautica> {
+    public class GameState_Subnautica : GameState {
 
         private ProviderNode _Provider;
         private GameStateNode _GameState;

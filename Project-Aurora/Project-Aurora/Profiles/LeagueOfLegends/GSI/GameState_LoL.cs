@@ -7,7 +7,7 @@ using Aurora.Profiles.LeagueOfLegends.GSI.Nodes;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI
 {
-    public class GameState_LoL : GameState<GameState_LoL>
+    public class GameState_LoL : GameState
     {
         private PlayerNode player;
         public PlayerNode Player => player ?? (player = new PlayerNode());

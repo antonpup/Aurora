@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Borderlands2.GSI
     /// <summary>
     /// A class representing various information relating to Borderlands 2
     /// </summary>
-    public class GameState_Borderlands2 : GameState<GameState_Borderlands2>
+    public class GameState_Borderlands2 : GameState
     {
         private Player_Borderlands2 player;
 

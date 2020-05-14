@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Minecraft.GSI {
 
-    public class GameState_Minecraft : GameState<GameState_Minecraft> {
+    public class GameState_Minecraft : GameState {
 
         /// <summary>
         /// Provider node provides information about the data source so that Aurora can update the correct gamestate.

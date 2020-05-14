@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class SlotNode : Node<SlotNode>
+    public class SlotNode : Node
     {
         public bool HasItem => Item != ItemID.None;
         public bool CanUse;

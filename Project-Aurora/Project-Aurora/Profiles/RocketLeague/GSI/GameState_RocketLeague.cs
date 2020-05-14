@@ -32,7 +32,7 @@ namespace Aurora.Profiles.RocketLeague.GSI
     /// <summary>
     /// A class representing various information relating to Rocket League
     /// </summary>
-    public class GameState_RocketLeague : GameState<GameState_RocketLeague>
+    public class GameState_RocketLeague : GameState
     {
         public Match_RocketLeague Match => NodeFor<Match_RocketLeague>("match");
         public Player_RocketLeague Player => NodeFor<Player_RocketLeague>("player");

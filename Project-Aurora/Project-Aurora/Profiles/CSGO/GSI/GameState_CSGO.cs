@@ -13,7 +13,7 @@ namespace Aurora.Profiles.CSGO.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Counter-Strike: Global Offensive
     /// </summary>
-    public class GameState_CSGO : GameState<GameState_CSGO>
+    public class GameState_CSGO : GameState
     {
         private ProviderNode _Provider;
         private MapNode _Map;

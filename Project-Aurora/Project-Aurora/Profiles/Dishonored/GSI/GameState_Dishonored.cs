@@ -5,7 +5,7 @@ namespace Aurora.Profiles.Dishonored.GSI
     /// <summary>
     /// A class representing various information relating to Dishonored
     /// </summary>
-    public class GameState_Dishonored : GameState<GameState_Dishonored>
+    public class GameState_Dishonored : GameState
     {
         private Player_Dishonored player;
 

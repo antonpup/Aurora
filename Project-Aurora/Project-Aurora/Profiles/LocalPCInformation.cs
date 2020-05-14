@@ -6,7 +6,7 @@ namespace Aurora.Profiles {
     /// <summary>
     /// Class representing local computer information
     /// </summary>
-    public class LocalPCInformation : Node<LocalPCInformation> {
+    public class LocalPCInformation : Node {
         #region Time Properties
         /// <summary>
         /// The current hour
@@ -168,7 +168,7 @@ namespace Aurora.Profiles {
         }
     }
 
-    public class CPUInfo : Node<CPUInfo>
+    public class CPUInfo : Node
     {
         /// <summary>
         /// Represents the CPU usage from 0 to 100
@@ -186,7 +186,7 @@ namespace Aurora.Profiles {
         public float PowerUsage => HardwareMonitor.CPU.CPUPower;
     }
 
-    public class RAMInfo : Node<RAMInfo>
+    public class RAMInfo : Node
     {
         /// <summary>
         /// Used system memory in megabytes
@@ -204,7 +204,7 @@ namespace Aurora.Profiles {
         public long Total => Free + Used;
     }
 
-    public class GPUInfo : Node<GPUInfo>
+    public class GPUInfo : Node
     {
         public float Usage => HardwareMonitor.GPU.GPUCoreLoad;
         public float Temperature => HardwareMonitor.GPU.GPUCoreTemp;
@@ -220,7 +220,7 @@ namespace Aurora.Profiles {
         public float MemoryTotal => HardwareMonitor.GPU.GPUMemoryTotal;
     }
 
-    public class NETInfo : Node<NETInfo>
+    public class NETInfo : Node
     {
         public float Usage => HardwareMonitor.NET.BandwidthUsed;
         public float UploadSpeed => HardwareMonitor.NET.UploadSpeedBytes;

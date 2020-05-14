@@ -6,7 +6,7 @@ namespace Aurora.Profiles.CloneHero.GSI
     /// <summary>
     /// A class representing various information relating to CloneHero
     /// </summary>
-    public class GameState_CloneHero : GameState<GameState_CloneHero>
+    public class GameState_CloneHero : GameState
     {
         private Player_CloneHero player;
 

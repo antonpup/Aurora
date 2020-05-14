@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
 {
-    public class LocationNode : Node<LocationNode>
+    public class LocationNode : Node
     {
         public BiomeNode In;
 
@@ -17,7 +17,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
 
     }
 
-    public class BiomeNode : Node<BiomeNode>
+    public class BiomeNode : Node
     {
         public bool None;
         public bool TheRanch;

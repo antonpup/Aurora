@@ -1,5 +1,5 @@
 ﻿namespace Aurora.Profiles.ETS2.GSI.Nodes {
-    public class JobNode : Node<JobNode> {
+    public class JobNode : Node {
 
         private Box<ETS2MemoryStruct> _memdat;
 

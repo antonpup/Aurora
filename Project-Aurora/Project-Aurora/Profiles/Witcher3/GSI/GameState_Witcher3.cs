@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Witcher3.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Witcher 3
     /// </summary>
-    public class GameState_Witcher3 : GameState<GameState_Witcher3>
+    public class GameState_Witcher3 : GameState
     {
         private Player_Witcher3 player;
 

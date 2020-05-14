@@ -3,7 +3,7 @@ using Aurora.Profiles.Generic.GSI.Nodes;
 
 namespace Aurora.Profiles.Discord.GSI
 {
-    public class GameState_Discord : GameState<GameState_Discord>
+    public class GameState_Discord : GameState
     {
         public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 

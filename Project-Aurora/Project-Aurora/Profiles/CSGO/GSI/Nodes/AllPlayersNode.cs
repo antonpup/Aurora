@@ -7,7 +7,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// A class representing player information for all players
     /// </summary>
-    public class AllPlayersNode : Node<AllPlayersNode>
+    public class AllPlayersNode : Node
     {
         private readonly List<PlayerNode> _Players = new List<PlayerNode>();
         

@@ -7,7 +7,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// A class representing various lighting information retaining to the wrapper.
     /// </summary>
-    public class GameState_Wrapper : GameState<GameState_Wrapper>
+    public class GameState_Wrapper : GameState
     {
         private Provider_Wrapper _Provider;
         private string _Command;
@@ -125,7 +125,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class representing provider information for the wrapper
     /// </summary>
-    public class Provider_Wrapper : Node<Provider_Wrapper>
+    public class Provider_Wrapper : Node
     {
         /// <summary>
         /// Name of the program
@@ -148,7 +148,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper command data such as effects and colors
     /// </summary>
-    public class Command_Wrapper : Node<Command_Wrapper>
+    public class Command_Wrapper : Node
     {
         public int red_start;
         public int green_start;
@@ -184,7 +184,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper keys
     /// </summary>
-    public class Extra_Keys_Wrapper : Node<Extra_Keys_Wrapper>
+    public class Extra_Keys_Wrapper : Node
     {
         public Color peripheral;
         public Color logo;

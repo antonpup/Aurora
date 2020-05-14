@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Dota_2.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Dota 2
     /// </summary>
-    public class GameState_Dota2 : GameState<GameState_Dota2>
+    public class GameState_Dota2 : GameState
     {
         private Auth_Dota2 auth;
         private Provider_Dota2 provider;
