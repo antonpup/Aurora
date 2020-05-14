@@ -10,8 +10,8 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes
     public class PlayerNode : AutoJsonNode<PlayerNode>
     {
         public HealthNode Health => NodeFor<HealthNode>("Health");
-        public bool HealthBarActive;
         public string CurrentLocation;
+        public bool IsOutdoor;
         public EnergyNode Energy => NodeFor<EnergyNode>("Energy");
 
         internal PlayerNode(string json) : base(json){ }
@@ -20,6 +20,7 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes
         {
             public int Current;
             public int Max;
+            public bool BarActive;
 
             internal HealthNode(string JSON) : base(JSON) { }
         }

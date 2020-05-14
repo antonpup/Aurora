@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.StardewValley.GSI.Nodes {
+
     public enum TimeRange
     {
-        Sunrise,
-        Morning,
-        Daytime,
-        Evening,
-        Twilight,
-        Night,
-        Midnight
+        Sunrise, //< 750
+        Morning, //< 900
+        Daytime, //< 1200
+        Evening, //< 1600
+        Twilight,//< 1750
+        Night,   //< 2100
+        Midnight//>= 2100
     }
 
     public enum Seasons
@@ -28,21 +29,29 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes {
     public class WorldNode : AutoJsonNode<WorldNode> {
         public Seasons Season;
 
-        public bool TimePaused;
-        public int CurrentHour;
-        public int CurrentMin;
-        public TimeRange TimeRange;
+        public TimeNode Time => NodeFor<TimeNode>("Time");
         public WeatherNode Weather => NodeFor<WeatherNode>("Weather");
-
 
         internal WorldNode(string json) : base(json) {}
     }
+
+    public class TimeNode : AutoJsonNode<TimeNode>
+    {
+        public bool Paused;
+        public bool isFestivalDay;
+        public bool isWeddingToday;
+        public int Hour;
+        public int Min;
+        public TimeRange Range;
+
+        internal TimeNode(string JSON) : base(JSON) { }
+    }
+
     public class WeatherNode : AutoJsonNode<WeatherNode>
     {
         public bool IsSnowing;
         public bool IsRaining;
         public bool IsDebrisWeather;
-        public bool WeddingToday;
         public bool IsLightning;
 
         internal WeatherNode(string JSON) : base(JSON) { }
