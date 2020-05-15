@@ -387,13 +387,13 @@ namespace Aurora.Settings
 
         //OMEN range is 1000-1099
         [Description("OMEN Photon")]
-        OMEN_Photon = 1001,
+        OMEN_Photon = 1000,
         [Description("OMEN Outpost + Photon")]
-        OMEN_Outpost_Plus_Photon = 1002,
+        OMEN_Outpost_Plus_Photon = 1001,
         [Description("OMEN Vector")]
-        OMEN_Vector = 1003,
+        OMEN_Vector = 1002,
         [Description("OMEN Vector Essentials")]
-        OMEN_Vector_Essentials = 1004,
+        OMEN_Vector_Essentials = 1003,
     }
 
     public enum KeycapType
