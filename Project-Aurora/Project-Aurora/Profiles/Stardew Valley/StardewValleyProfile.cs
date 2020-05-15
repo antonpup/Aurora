@@ -65,6 +65,37 @@ namespace Aurora.Profiles.StardewValley
                     }
                 }),
 
+                new Layer("Debris/Fall", new SimpleParticleLayerHandler()
+                {
+                    Properties = new SimpleParticleLayerProperties()
+                    {
+                        _SpawnLocation = ParticleSpawnLocations.TopEdge,
+                        _ParticleColorStops = new Utils.ColorStopCollection
+                        {
+                            { 0f, Color.FromArgb(255, 255, 131, 65) },
+                            { 1f, Color.FromArgb(255, 255, 131, 65) }
+                        },
+                        _MinSpawnTime = .7f,
+                        _MaxSpawnTime = .9f,
+                        _MinSpawnAmount = 1,
+                        _MaxSpawnAmount = 2,
+                        _MinLifetime = 5,
+                        _MaxLifetime = 5,
+                        _MinInitialVelocityX = -0.5f,
+                        _MaxInitialVelocityX = -0.2f,
+                        _MinInitialVelocityY = 0.3f,
+                        _MaxInitialVelocityY = 0.3f,
+                        _AccelerationX = 0,
+                        _AccelerationY = 0,
+                        _MinSize = 7,
+                        _MaxSize = 7,
+                        _DeltaSize = 0,
+                    }
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<IEvaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsRaining"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
+                ),
+
                 new Layer("Raining", new SimpleParticleLayerHandler()
                 {
                     Properties = new SimpleParticleLayerProperties()
