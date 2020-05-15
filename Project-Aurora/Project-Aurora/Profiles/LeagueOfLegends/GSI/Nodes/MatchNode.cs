@@ -21,5 +21,16 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         public int BaronsKilled;
 
         public int HeraldsKilled;
+
+        public MapTerrain MapTerrain;
+    }
+
+    public enum MapTerrain
+    {
+        Unknown,
+        Default,
+        Infernal,
+        Cloud,
+        Mountain
     }
 }

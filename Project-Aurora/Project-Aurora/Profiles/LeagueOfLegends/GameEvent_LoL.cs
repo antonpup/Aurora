@@ -148,6 +148,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("HeraldKill"));
                 s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("DragonKill"));
                 s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("TurretKilled"));
+                s.Match.MapTerrain = EnumUtils.TryParseOr(allGameData.gameData.mapTerrain, true, MapTerrain.Unknown);
                 #endregion
 
                 #region Items
