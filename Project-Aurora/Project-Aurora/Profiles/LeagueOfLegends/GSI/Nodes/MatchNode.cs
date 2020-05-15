@@ -31,6 +31,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Default,
         Infernal,
         Cloud,
-        Mountain
+        Mountain,
+        Ocean
     }
 }
