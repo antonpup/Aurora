@@ -93,7 +93,7 @@ namespace Aurora.Profiles.StardewValley
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<IEvaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsRaining"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<IEvaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsDebrisWeather"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
                 ),
 
                 new Layer("Raining", new SimpleParticleLayerHandler()

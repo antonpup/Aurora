@@ -55,7 +55,7 @@ namespace Aurora.Profiles.StardewValley {
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/users/62179031?tab=user+files");
+            Process.Start(@"https://www.nexusmods.com/stardewvalley/mods/6088");
         }
     }
 }
