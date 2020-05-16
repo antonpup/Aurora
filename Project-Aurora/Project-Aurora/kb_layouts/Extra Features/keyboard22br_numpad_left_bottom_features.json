@@ -1,0 +1,118 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 3,
+  "grouped_keys": [
+
+    {
+      "visualName": "INERT",
+      "tag": 31,
+      "margin_left": 481.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+    {
+      "visualName": "PRTSC",
+      "tag": 14,
+      "margin_left": 518.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+    {
+      "visualName": "DEL",
+      "tag": 52,
+      "margin_left": 555.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+    {
+      "visualName": "-",
+      "tag": 37,
+      "margin_left": 592.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "+",
+      "tag": 58,
+      "margin_left": 629.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+
+    {
+      "visualName": "FN",
+      "tag": 107,
+      "margin_left": 48.0,
+      "margin_top": -37.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "PAUSE",
+      "tag": 16,
+      "margin_left": 481.0,
+      "margin_top": -185.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    }
+  
+  ]
+}
