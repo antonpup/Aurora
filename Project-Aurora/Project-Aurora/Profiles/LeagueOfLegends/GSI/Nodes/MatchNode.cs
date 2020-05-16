@@ -8,7 +8,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public class MatchNode : Node<MatchNode>
     {
-        public string GameMode;
+        public GameMode GameMode;
 
         public float GameTime;
 
@@ -34,4 +34,12 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Mountain,
         Ocean
     }
+
+    public enum GameMode 
+    {     
+        Unknown = -1,
+        None = 0,
+        PracticeTool
+    }
+
 }
