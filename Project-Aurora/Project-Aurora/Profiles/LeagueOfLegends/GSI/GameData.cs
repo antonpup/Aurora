@@ -170,7 +170,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
 
     [JsonConverter(typeof(JsonSubtypes), "EventName")]
     [JsonSubtypes.KnownSubType(typeof(_BaronKillEvent), "BaronKill")]
-    [JsonSubtypes.KnownSubType(typeof(_BaronKillEvent), "HeraldKill")]
+    [JsonSubtypes.KnownSubType(typeof(_HeraldKillEvent), "HeraldKill")]
     [JsonSubtypes.KnownSubType(typeof(_DragonKillEvent), "DragonKill")]
     [JsonSubtypes.KnownSubType(typeof(_ChampionKillEvent), "ChampionKill")]
     [JsonSubtypes.KnownSubType(typeof(_MultikillEvent), "Multikill")]
@@ -185,6 +185,13 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
     }
 
     public class _BaronKillEvent : _Event
+    {
+        public bool Stolen { get; set; }
+        public string KillerName { get; set; }
+        public string[] Assisters { get; set; }
+    }
+
+    public class _HeraldKillEvent : _Event
     {
         public bool Stolen { get; set; }
         public string KillerName { get; set; }

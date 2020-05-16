@@ -144,10 +144,11 @@ namespace Aurora.Profiles.LeagueOfLegends
                 #endregion
 
                 #region Events
-                s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("BaronKill"));
-                s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("HeraldKill"));
-                s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("DragonKill"));
-                s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("TurretKilled"));
+                s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev is _BaronKillEvent);
+                s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev is _HeraldKillEvent);
+                s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev is _DragonKillEvent);
+                s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev is _TurretKillEvent);
+                s.Match.InhibsKilled = allGameData.events.Events.Count(ev => ev is _InhibKillEvent);
                 s.Match.MapTerrain = EnumUtils.TryParseOr(allGameData.gameData.mapTerrain, true, MapTerrain.Unknown);
                 #endregion
 

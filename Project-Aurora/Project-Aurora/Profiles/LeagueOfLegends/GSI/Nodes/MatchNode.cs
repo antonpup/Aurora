@@ -8,6 +8,8 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public class MatchNode : Node<MatchNode>
     {
+        public MapTerrain MapTerrain;
+
         public GameMode GameMode;
 
         public float GameTime;
@@ -18,11 +20,11 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
         public int TurretsKilled;
 
+        public int InhibsKilled;
+
         public int BaronsKilled;
 
         public int HeraldsKilled;
-
-        public MapTerrain MapTerrain;
     }
 
     public enum MapTerrain
@@ -41,5 +43,4 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         None = 0,
         PracticeTool
     }
-
 }
