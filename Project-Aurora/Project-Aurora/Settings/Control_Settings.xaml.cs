@@ -83,7 +83,7 @@ namespace Aurora.Settings
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
-            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}" + " by Antonpup & simon-wh";
+            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}";
 
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 

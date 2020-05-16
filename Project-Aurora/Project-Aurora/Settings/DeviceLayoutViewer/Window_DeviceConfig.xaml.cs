@@ -224,7 +224,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
+            /*if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
             {
                 MessageBox.Show("CTRL + C Pressed!");
             }
@@ -235,7 +235,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (e.Key == Key.Up)
             {
                 MessageBox.Show("Up Pressed!");
-            }
+            }*/
         }
 
         private void keycap_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -251,13 +251,18 @@ namespace Aurora.Settings.DeviceLayoutViewer
         private void addKey_Click(object sender, RoutedEventArgs e)
         {
             var keyConf = new DeviceKeyConfiguration();
+            keyConf.Height = 30;
+            keyConf.Width = 30;
             deviceLayout.AddDeviceKey(keyConf);
             InitKeycapList();
         }
         private void removeKey_Click(object sender, RoutedEventArgs e)
         {
-            deviceLayout.RemoveDeviceKey(SelectedKey.GetConfiguration());
-            InitKeycapList();
+            if (SelectedKey != null)
+            {
+                deviceLayout.RemoveDeviceKey(SelectedKey.GetConfiguration());
+                InitKeycapList();
+            }
         }
 
     }

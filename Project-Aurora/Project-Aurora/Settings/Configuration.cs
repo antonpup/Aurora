@@ -253,11 +253,39 @@ namespace Aurora.Settings
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
+ 
+
+        [Description("UNIWILL2ND (ANSI)")]
+        Uniwill2ND_35X_1 = 2101,
+        [Description("UNIWILL2ND (ISO)")]
+        Uniwill2ND_35X_2 = 2102,
+
+        [Description("UNIWILL2P1 (ISO)")]
+        Uniwill2P1_550_UK = 2103,
+        [Description("UNIWILL2P1 (ANSI)")]
+        Uniwill2P1_550_US = 2104,
+        [Description("UNIWILL2P1 (ABNT)")]
+        Uniwill2P1_550_BR = 2105,
+        [Description("UNIWILL2P1 (JIS)")]
+        Uniwill2P1_550_JP = 2106,
+
+
+        [Description("UNIWILL2P2 (ISO)")]
+        Uniwill2P2_650_UK = 2107,
+        [Description("UNIWILL2P2 (ANSI)")]
+        Uniwill2P2_650_US = 2108,
+        [Description("UNIWILL2P2 (ABNT)")]
+        Uniwill2P2_650_BR = 2109,
+        [Description("UNIWILL2P2 (JIS)")]
+        Uniwill2P2_650_JP = 2110,
+
+ 
         //Ducky range is 1200-1299
         [Description("Ducky Shine 7/One 2 RGB")]
         Ducky_Shine_7 = 1200,
         [Description("Ducky One 2 RGB TKL")]
         Ducky_One_2_RGB_TKL = 1201,
+ 
     }
 
     public enum PreferredKeyboardLocalization
