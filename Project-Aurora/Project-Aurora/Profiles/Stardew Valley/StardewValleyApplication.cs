@@ -9,10 +9,10 @@ namespace Aurora.Profiles.StardewValley
     public class StardewValley : Application {
         public StardewValley() : base(new LightEventConfig
         {
-            Name = "Stardew Valley",
+            Name = "Stardew Valley SMAPI",
             ID = "stardew_valley",
             AppID = "413150",
-            ProcessNames = new[] { "StardewModdingAPI.exe", "Stardew Valley.exe" },
+            ProcessNames = new[] { "StardewModdingAPI.exe" },
             ProfileType = typeof(StardewValleyProfile),
             OverviewControlType = typeof(Control_StardewValley),
             GameStateType = typeof(GSI.GameState_StardewValley),
