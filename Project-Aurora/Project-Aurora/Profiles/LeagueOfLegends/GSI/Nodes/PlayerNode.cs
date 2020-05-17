@@ -200,7 +200,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Support
     }
 
-    public class PlayerNode : Node<PlayerNode>
+    public class PlayerNode : Node
     {
         public StatsNode ChampionStats = new StatsNode();
         public AbilitiesNode Abilities = new AbilitiesNode();

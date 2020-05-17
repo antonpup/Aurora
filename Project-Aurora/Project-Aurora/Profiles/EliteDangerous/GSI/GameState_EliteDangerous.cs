@@ -76,7 +76,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI
         }
     }
 
-    public class GameState_EliteDangerous : GameState<GameState_EliteDangerous>
+    public class GameState_EliteDangerous : GameState
     {
         private Status status;
         private Nodes.Journal journal;

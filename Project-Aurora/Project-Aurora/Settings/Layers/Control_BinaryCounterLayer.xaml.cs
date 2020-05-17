@@ -13,7 +13,7 @@ namespace Aurora.Settings.Layers {
         }
 
         public void SetApplication(Profiles.Application app) {
-            valuePath.ItemsSource = app.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1)).Select(kvp => kvp.Key);
+            varPathPicker.Application = app;
         }
 
         private void KeySequence_SequenceUpdated(object sender, System.EventArgs e) {

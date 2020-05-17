@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class InventoryNode : Node<InventoryNode>
+    public class InventoryNode : Node
     {
         public SlotNode Slot1 = new SlotNode();
         public SlotNode Slot2 = new SlotNode();

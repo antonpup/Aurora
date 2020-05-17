@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class AbilityNode : Node<AbilityNode>
+    public class AbilityNode : Node
     {
         public bool Learned => Level != 0;
         public int Level;

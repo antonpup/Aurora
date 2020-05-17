@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class MatchNode : Node<MatchNode>
+    public class MatchNode : Node
     {
         public MapTerrain MapTerrain;
 

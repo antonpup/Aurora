@@ -1,6 +1,7 @@
 ﻿using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
+using FastMember;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -102,7 +103,8 @@ namespace Aurora.Settings.Overrides {
                 if (_selectedProperty != null && SelectedLogic?.GetType() != value) {
                     if (value == null) { // If the value is null, that means the user selected the "None" option, so remove the override for this property. Also force reset the override to null so that it doesn't persist after removing the logic.
                         Layer.OverrideLogic.Remove(_selectedProperty.Item1);
-                        ((IValueOverridable)Layer.Handler.Properties).Overrides.SetValueFromString(_selectedProperty.Item1, null);
+                        ((IValueOverridable)Layer.Handler.Properties).SetOverride(_selectedProperty.Item1, null);
+
                     }  else // Else if the user selected a non-"None" option, create a new instance of that OverrideLogic and assign it to this property
                         Layer.OverrideLogic[_selectedProperty.Item1] = (IOverrideLogic)Activator.CreateInstance(value, _selectedProperty.Item3);
                     OnPropertyChanged(nameof(SelectedLogic), nameof(SelectedLogicType), nameof(SelectedLogicControl)); // Raise an event to update the control

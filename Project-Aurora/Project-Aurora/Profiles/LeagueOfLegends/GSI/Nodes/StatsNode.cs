@@ -26,7 +26,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Max
     }
 
-    public class StatsNode : Node<StatsNode>
+    public class StatsNode : Node
     {
         public float AbilityPower;
         public float Armor;

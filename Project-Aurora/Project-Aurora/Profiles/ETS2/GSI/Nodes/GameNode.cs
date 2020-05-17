@@ -1,5 +1,5 @@
 ﻿namespace Aurora.Profiles.ETS2.GSI.Nodes {
-    public class GameNode : Node<GameNode> {
+    public class GameNode : Node {
 
         private Box<ETS2MemoryStruct> _memdat;
 

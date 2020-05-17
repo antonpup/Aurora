@@ -1,5 +1,5 @@
 ﻿namespace Aurora.Profiles.ETS2.GSI.Nodes {
-    public class TruckNode : Node<TruckNode> {
+    public class TruckNode : Node {
 
         internal Box<ETS2MemoryStruct> _memdat;
 

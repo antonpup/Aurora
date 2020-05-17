@@ -21,8 +21,8 @@ namespace Aurora.Settings.Overrides.Logic {
             var isValid = ((FrameworkElement)Content).DataContext is BooleanGSIEnum ctx
                 && !string.IsNullOrWhiteSpace(ctx.StatePath) // If the path to the enum GSI isn't empty
                 && application?.ParameterLookup != null // If the application parameter lookup is ready (and application isn't null)
-                && application.ParameterLookup.ContainsKey(ctx.StatePath) // If the param lookup has the specified GSI key
-                && (selectedEnumType = application.ParameterLookup[ctx.StatePath].Item1).IsEnum; // And the GSI variable is an enum type
+                && application.ParameterLookup.IsValidParameter(ctx.StatePath) // If the param lookup has the specified GSI key
+                && (selectedEnumType = application.ParameterLookup[ctx.StatePath].ClrType).IsEnum; // And the GSI variable is an enum type
 
             EnumVal.IsEnabled = isValid;
             EnumVal.ItemsSource = isValid ? Utils.EnumUtils.GetEnumItemsSource(selectedEnumType) : null;

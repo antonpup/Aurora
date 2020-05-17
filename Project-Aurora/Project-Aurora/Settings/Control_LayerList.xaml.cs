@@ -145,7 +145,7 @@ namespace Aurora.Settings {
         /// Adds a new layer to the currently active collection. Will also setup the event listener to make the profile save and set the layer's application.
         /// </summary>
         private void AddLayer(Layer layer) {
-            layer.AnythingChanged += FocusedApplication.SaveProfilesEvent;
+            layer.PropertyChanged += FocusedApplication.SaveProfilesEvent;
             layer.SetProfile(FocusedApplication);
             ActiveLayerCollection.Insert(0, layer);
             SelectedLayer = layer;
