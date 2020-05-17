@@ -10,7 +10,9 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
     {
         public MapTerrain MapTerrain;
 
-        public GameMode GameMode;
+        //public GameMode GameMode;
+        //TODO: Find the rest of the enum values. meanwhile i'll leave this as a string
+        public string GameMode = "";
 
         public float GameTime;
 
@@ -49,6 +51,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Ocean
     }
 
+    //TODO: Find the rest of these
     public enum GameMode 
     {     
         Unknown = -1,

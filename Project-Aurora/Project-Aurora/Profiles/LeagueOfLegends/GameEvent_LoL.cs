@@ -64,7 +64,8 @@ namespace Aurora.Profiles.LeagueOfLegends
             {
                 #region Match
                 s.Match.InGame = true;
-                s.Match.GameMode = EnumUtils.TryParseOr(allGameData.gameData.gameMode, true, GameMode.Unknown);
+                //s.Match.GameMode = EnumUtils.TryParseOr(allGameData.gameData.gameMode, true, GameMode.Unknown);
+                s.Match.GameMode = allGameData.gameData.gameMode;
                 s.Match.GameTime = allGameData.gameData.gameTime;
                 #endregion
 
