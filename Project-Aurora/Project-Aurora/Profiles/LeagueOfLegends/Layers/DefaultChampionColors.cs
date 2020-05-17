@@ -16,6 +16,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         /// <returns></returns>
         public static Dictionary<Champion, Color> GetDictionary() => new Dictionary<Champion, Color>()
         {
+            [Champion.Unknown] = Color.FromArgb(120, 120, 120),
             [Champion.None] = Color.FromArgb(120, 120, 120),
             [Champion.Aatrox] = Color.FromArgb(237, 83, 79),
             [Champion.Ahri] = Color.FromArgb(61, 76, 178),
