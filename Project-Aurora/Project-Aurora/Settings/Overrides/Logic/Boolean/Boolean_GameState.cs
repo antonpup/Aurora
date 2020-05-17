@@ -29,7 +29,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>Fetches the given boolean value from the game state and returns it.</summary>
         protected override bool Execute(IGameState gameState) => gameState.GetBool(VariablePath);
 
-        public Evaluatable<bool> Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
+        public override Evaluatable<bool> Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
     }
 
 
