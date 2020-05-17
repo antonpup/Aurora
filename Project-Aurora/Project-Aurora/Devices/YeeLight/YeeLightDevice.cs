@@ -130,7 +130,7 @@ namespace Aurora.Devices.YeeLight
             //Auto discover a device if the IP is 0.0.0.0 and auto-discovery is enabled
             if (lightIP.Equals(IPAddress.Parse("0.0.0.0")) && default_registry.GetVariable<bool>($"{devicename}_auto_discovery"))
             {
-                var devices = DeviceLocator.DiscoverDevices();
+                var devices = DeviceLocator.DiscoverDevices(10000, 2);
                 if (devices.Any())
                 {
                     light = devices.First();
