@@ -130,11 +130,7 @@ namespace Aurora.Profiles.GTA5.GSI
         /// <summary>
         /// Creates a default GameState_GTA5 instance.
         /// </summary>
-        public GameState_GTA5()
-        {
-            json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
-        }
+        public GameState_GTA5() { }
 
         private byte RoundTo5(byte no)
         {
@@ -171,23 +167,6 @@ namespace Aurora.Profiles.GTA5.GSI
             RightSirenColor = Utils.ColorUtils.GetColorFromInt(Sent_Bitmap[(int)Devices.Logitech.Logitech_keyboardBitmapKeys.F12 / 4]);
 
             HasCops = LeftSirenColor != RightSirenColor;
-        }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_GTA5 instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_GTA5(GameState other_state) : base(other_state)
-        {
-            GameState_GTA5 gta = other_state as GameState_GTA5;
-            if (gta != null)
-            {
-                this.HasCops = gta.HasCops;
-                this.LeftSirenColor = gta.LeftSirenColor;
-                this.RightSirenColor = gta.RightSirenColor;
-                this.CurrentState = gta.CurrentState;
-                this.StateColor = gta.StateColor;
-            }
         }
 
         private Color JSonToColor(byte a, byte r, byte g, byte b)

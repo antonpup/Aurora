@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
-    public class GameStateNode : Node<GameStateNode> {
+    public class GameStateNode : Node {
 
         public bool InMenu;
         public bool loading;

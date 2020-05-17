@@ -16,18 +16,13 @@ namespace Aurora.Settings.Overrides.Logic {
         public string VariablePath { get; set; } = "";
 
         /// <summary>Control assigned to this logic node.</summary>
-        public override Visual GetControl() => new GameStateParameterPicker { PropertyType = PropertyType.String }
+        public Visual GetControl() => new GameStateParameterPicker { PropertyType = GSIPropertyType.String }
             .WithBinding(GameStateParameterPicker.ApplicationProperty, new AttachedApplicationBinding())
             .WithBinding(GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this });
 
         /// <summary>Attempts to return the string at the given state variable.</summary>
-        protected override string Execute(IGameState gameState) {
-            if (VariablePath.Length > 0)
-                try { return (string)Utils.GameStateUtils.RetrieveGameStateParameter(gameState, VariablePath); }
-                catch { }
-            return "";
-        }
-        
+        protected override string Execute(IGameState gameState) => gameState.GetString(VariablePath);
+
         /// <summary>Clones this StringGSIString.</summary>
         public override Evaluatable<string> Clone() => new StringGSIString { VariablePath = VariablePath };
     }

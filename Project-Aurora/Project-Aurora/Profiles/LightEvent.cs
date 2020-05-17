@@ -108,7 +108,7 @@ namespace Aurora.Profiles
 
         public virtual void ResetGameState()
         {
-            _game_state = new GameState();
+            _game_state = new EmptyGameState();
         }
         
         public virtual void OnStart()

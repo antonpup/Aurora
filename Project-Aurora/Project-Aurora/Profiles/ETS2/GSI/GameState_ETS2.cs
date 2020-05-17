@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.ETS2.GSI {
 
-    public class GameState_ETS2 : GameState<GameState_ETS2> {
+    public class GameState_ETS2 : GameState {
 
         internal Box<ETS2MemoryStruct> _memdat;
         private GameNode _Game;
@@ -81,12 +81,6 @@ namespace Aurora.Profiles.ETS2.GSI {
         /// </summary>
         /// <param name="json_data">The JSON data to parse.</param>
         public GameState_ETS2(string json_data) : base(json_data) { }
-
-        /// <summary>
-        /// Creates a GameState_ETS2 instance based on data from another GateState instance.
-        /// </summary>
-        /// <param name="other">The GameState to copy.</param>
-        public GameState_ETS2(IGameState other) : base(other) { }
 
         /// <summary>
         /// Creates a GameState_ETS2 instance based on data that has been read from the MemoryMappedFile

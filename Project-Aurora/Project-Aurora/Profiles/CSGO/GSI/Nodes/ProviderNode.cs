@@ -3,7 +3,7 @@
     /// <summary>
     /// Information about the provider of this GameState
     /// </summary>
-    public class ProviderNode : Node<ProviderNode>
+    public class ProviderNode : Node
     {
         /// <summary>
         /// Game name

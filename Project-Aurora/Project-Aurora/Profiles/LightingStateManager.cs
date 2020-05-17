@@ -471,6 +471,19 @@ namespace Aurora.Profiles
             if (profile.IsEnabled)
                 UpdateEvent(profile, newFrame);
 
+            // Overlay layers
+            if (!preview || Global.Configuration.OverlaysInPreview) {
+                foreach (var @event in GetOverlayActiveProfiles())
+                    @event.UpdateOverlayLights(newFrame);
+
+                //Add the Light event that we're previewing to be rendered as an overlay (assuming it's not already active)
+                if (preview && Global.Configuration.OverlaysInPreview && !GetOverlayActiveProfiles().Contains(profile))
+                    profile.UpdateOverlayLights(newFrame);
+
+                UpdateIdleEffects(newFrame);
+            }
+
+
             Global.effengine.PushFrame(newFrame);
 
             StopUnUpdatedEvents();
@@ -563,7 +576,7 @@ namespace Aurora.Profiles
                 {
                     IGameState gameState = gs;
                     if (profile.Config.GameStateType != null)
-                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
+                        gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
                     profile.SetGameState(gameState);
                 }
                 else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
