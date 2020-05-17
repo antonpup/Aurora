@@ -173,12 +173,12 @@ namespace Aurora.Profiles {
         /// <summary>
         /// Represents the CPU usage from 0 to 100
         /// </summary>
-        public float Usage => HardwareMonitor.CPU.CPUTotalLoad;
+        public float Usage => HardwareMonitor.CPU.CPULoad;
 
         /// <summary>
         /// Represents the temperature of the cpu die in celsius
         /// </summary>
-        public float Temperature => HardwareMonitor.CPU.CPUDieTemp;
+        public float Temperature => HardwareMonitor.CPU.CPUTemp;
 
         /// <summary>
         /// Represents the CPU power draw in watts
@@ -206,18 +206,10 @@ namespace Aurora.Profiles {
 
     public class GPUInfo : Node
     {
-        public float Usage => HardwareMonitor.GPU.GPUCoreLoad;
+        public float Usage => HardwareMonitor.GPU.GPULoad;
         public float Temperature => HardwareMonitor.GPU.GPUCoreTemp;
         public float PowerUsage => HardwareMonitor.GPU.GPUPower;
         public float FanRPM => HardwareMonitor.GPU.GPUFan;
-        public float CoreClock => HardwareMonitor.GPU.GPUCoreClock;
-        public float MemoryClock => HardwareMonitor.GPU.GPUMemoryClock;
-        public float ShaderClock => HardwareMonitor.GPU.GPUShaderClock;
-        public float MemoryControllerUsage => HardwareMonitor.GPU.GPUMemoryCLoad;
-        public float VideoEngineUsage => HardwareMonitor.GPU.GPUVideoEngineLoad;
-        public float MemoryUsed => HardwareMonitor.GPU.GPUMemoryUsed;
-        public float MemoryFree => MemoryTotal - MemoryUsed;
-        public float MemoryTotal => HardwareMonitor.GPU.GPUMemoryTotal;
     }
 
     public class NETInfo : Node
