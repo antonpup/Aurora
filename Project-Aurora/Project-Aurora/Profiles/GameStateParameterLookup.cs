@@ -1,4 +1,4 @@
-using Aurora.Utils;
+﻿using Aurora.Utils;
 using FastMember;
 using Mono.CSharp;
 using System;
@@ -12,6 +12,9 @@ namespace Aurora.Profiles {
     /// Data structure that holds a record of all game state parameters for a particular type of GameState.
     /// </summary>
     public sealed class GameStateParameterLookup {
+
+        // List of types that are permitted to be recursively searched
+        private static readonly Type[] recursiveWhiteList = new[] { typeof(Node), typeof(GameState), typeof(IEnumerable<Node>) };
 
         // Internal parameter store. Key = full path, Value = meta
         private readonly Dictionary<string, GameStateParameterLookupEntry> lookup = new Dictionary<string, GameStateParameterLookupEntry>();
@@ -27,8 +30,8 @@ namespace Aurora.Profiles {
                 if (GSIPropertyTypeConverter.TypeToPropertyType(type) != GSIPropertyType.None)
                     lookup.Add(path, GameStateParameterLookupEntry.Property(name, path, type));
 
-                else {
-                    // Else if this not a variable, such as a Node, make a folder and visit it's children
+                else if (recursiveWhiteList.Any(t => t.IsAssignableFrom(type))) {
+                    // Else if this not a handlable property, check if it's a node or list of nodes and if so make a folder and visit it's children
                     if (path != "") // If it's the root folder, don't add it
                         lookup.Add(path, GameStateParameterLookupEntry.Folder(name, path));
 
@@ -41,10 +44,9 @@ namespace Aurora.Profiles {
                         var nextPath = (path + "/" + member.Name).TrimStart('/');
 
                         // If the type is an Enumerable with a range attribute, visit for each item in that range
-                        var enumerableTypes = member.Type.GetGenericInterfaceTypes(typeof(IEnumerable<>));
-                        if (enumerableTypes != null && member.GetAttribute(typeof(RangeAttribute), true) is RangeAttribute range)
+                        if (member.Type.GetGenericInterfaceTypes(typeof(IEnumerable<>)) is { } ienumTypes && typeof(Node).IsAssignableFrom(ienumTypes[0]) && member.GetAttribute(typeof(RangeAttribute), true) is RangeAttribute range)
                             for (var i = range.Start; i <= range.End; i++)
-                                Visit(nextPath + "/" + i, i.ToString(), enumerableTypes[0]);
+                                Visit(nextPath + "/" + i, i.ToString(), ienumTypes[0]);
 
                         // Recursively visit the next type (do this even if it is IEnumerable, as it might be a custom class that implements IEnumerable with extra properties)
                         Visit(nextPath, member.Name, member.Type);
