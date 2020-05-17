@@ -10,7 +10,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that accesses a specific game state variable (of boolean type) and returns the state.
     /// </summary>
     [Evaluatable("Boolean State Variable", category: EvaluatableCategory.State)]
-    public class BooleanGSIBoolean : IEvaluatable<bool> {
+    public class BooleanGSIBoolean : Evaluatable<bool> {
 
         /// <summary>Creates an empty boolean state variable lookup.</summary>
         public BooleanGSIBoolean() { }
@@ -24,14 +24,12 @@ namespace Aurora.Settings.Overrides.Logic {
         /// so that the application be updated if required.</summary>
         [Newtonsoft.Json.JsonIgnore]
         private Control_ConditionGSIBoolean control;
-        public Visual GetControl() => control ?? (control = new Control_ConditionGSIBoolean(this));
+        public override Visual GetControl() => control ?? (control = new Control_ConditionGSIBoolean(this));
 
         /// <summary>Fetches the given boolean value from the game state and returns it.</summary>
-        public bool Evaluate(IGameState gameState) => gameState.GetBool(VariablePath);
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+        protected override bool Execute(IGameState gameState) => gameState.GetBool(VariablePath);
 
-        public IEvaluatable<bool> Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        public override Evaluatable<bool> Clone() => new BooleanGSIBoolean { VariablePath = VariablePath };
     }
 
 
@@ -40,7 +38,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that accesses some specified game state variables (of numeric type) and returns a comparison between them.
     /// </summary>
     [Evaluatable("Numeric State Variable", category: EvaluatableCategory.State)]
-    public class BooleanGSINumeric : IEvaluatable<bool> {
+    public class BooleanGSINumeric : Evaluatable<bool> {
 
         /// <summary>Creates a blank numeric game state lookup evaluatable.</summary>
         public BooleanGSINumeric() { }
@@ -61,10 +59,10 @@ namespace Aurora.Settings.Overrides.Logic {
         // Control assigned to this condition
         [Newtonsoft.Json.JsonIgnore]
         private Control_ConditionGSINumeric control;
-        public Visual GetControl() => control ?? (control = new Control_ConditionGSINumeric(this));
+        public override Visual GetControl() => control ?? (control = new Control_ConditionGSINumeric(this));
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
-        public bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             // Parse the operands (either as numbers or paths)
             double op1 = gameState.GetNumber(Operand1Path);
             double op2 = gameState.GetNumber(Operand2Path);
@@ -80,10 +78,8 @@ namespace Aurora.Settings.Overrides.Logic {
                 default: return false;
             }
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public IEvaluatable<bool> Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new BooleanGSINumeric { Operand1Path = Operand1Path, Operand2Path = Operand2Path, Operator = Operator };
     }
 
 
@@ -92,7 +88,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Condition that accesses a specified game state variable (of any enum type) and returns a comparison between it and a static enum of the same type.
     /// </summary>
     [Evaluatable("Enum State Variable", category: EvaluatableCategory.State)]
-    public class BooleanGSIEnum : IEvaluatable<bool> {
+    public class BooleanGSIEnum : Evaluatable<bool> {
 
         /// <summary>Creates a blank enum game state lookup evaluatable.</summary>
         public BooleanGSIEnum() { }
@@ -109,16 +105,14 @@ namespace Aurora.Settings.Overrides.Logic {
 
         // Control
         private Control_BooleanGSIEnum control;
-        public Visual GetControl() => control ?? (control = new Control_BooleanGSIEnum(this));
+        public override Visual GetControl() => control ?? (control = new Control_BooleanGSIEnum(this));
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
-        public bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var @enum = gameState.GetEnum(StatePath);
             return @enum != null && @enum.Equals(EnumValue);
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public IEvaluatable<bool> Clone() => new BooleanGSIEnum { StatePath = StatePath, EnumValue = EnumValue };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new BooleanGSIEnum { StatePath = StatePath, EnumValue = EnumValue };
     }
 }
