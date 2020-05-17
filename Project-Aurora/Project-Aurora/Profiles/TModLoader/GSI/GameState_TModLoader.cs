@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.TModLoader.GSI {
-    public class GameState_TModLoader : GameState<GameState_TModLoader> {
+    public class GameState_TModLoader : GameState {
         public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
         public WorldNode World => NodeFor<WorldNode>("world");
