@@ -49,7 +49,7 @@ namespace Aurora.Devices.YeeLight
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"Device {devicename} encountered an error during connecting. Exception: {exc}");
+                    Global.logger.Error($"Device {devicename} encountered an error while connecting. Exception: {exc}");
                     isConnected = false;
 
                     return false;
