@@ -1,6 +1,6 @@
 ﻿namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class WeaponNode : Node<WeaponNode>
+    public class WeaponNode : AutoJsonNode<WeaponNode>
     {
         public WeaponType Type;
         public string ID;
@@ -8,18 +8,10 @@
         public int Current_Clip;
         public int Current_Left;
         public int Max_Clip;
+        [AutoJsonPropertyName("is_selected")]
         public bool IsSelected;
 
-        internal WeaponNode(string JSON) : base(JSON)
-        {
-            Type = GetEnum<WeaponType>("type");
-            ID = GetString("id");
-            Max = GetInt("max");
-            Current_Clip = GetInt("current_clip");
-            Current_Left = GetInt("current_left");
-            Max_Clip = GetInt("max_clip");
-            IsSelected = GetBool("is_selected");
-        }
+        internal WeaponNode(string JSON) : base(JSON) { }
     }
 
     public enum WeaponType

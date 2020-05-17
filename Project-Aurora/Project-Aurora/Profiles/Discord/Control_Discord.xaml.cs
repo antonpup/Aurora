@@ -21,15 +21,13 @@ namespace Aurora.Profiles.Discord
     /// Interaction logic for Control_Minecraft.xaml
     /// </summary>
     public partial class Control_Discord : UserControl {
-
         private Application profile;
 
         public Control_Discord(Application profile) {
             this.profile = profile;
 
             InitializeComponent();
-            SetSettings();
-            
+            SetSettings();         
 
             profile.ProfileChanged += (sender, e) => SetSettings();
         }
@@ -47,16 +45,6 @@ namespace Aurora.Profiles.Discord
 
         private void PatchButton_Click(object sender, RoutedEventArgs e)
         {
-            InstallPlugin();
-        }
-
-        private void UnpatchButton_Click(object sender, RoutedEventArgs e)
-        {
-            UninstallPlugin();
-        }
-
-        private void InstallPlugin()
-        {
             string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string pluginDirectory = Path.Combine(appdata, "BetterDiscord", "plugins");
 
@@ -64,6 +52,41 @@ namespace Aurora.Profiles.Discord
                 Directory.CreateDirectory(pluginDirectory);
 
             string pluginFile = Path.Combine(pluginDirectory, "AuroraGSI.plugin.js");
+            WriteFile(pluginFile);
+        }
+
+        private void UnpatchButton_Click(object sender, RoutedEventArgs e)
+        {
+            string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string path = Path.Combine(appdata, "BetterDiscord", "plugins", "AuroraGSI.plugin.js");
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                MessageBox.Show("Plugin uninstalled successfully");
+                return;
+            }
+            else
+            {
+                MessageBox.Show("Plugin not found.");
+                return;
+            }
+        }
+
+        private void ManualPatchButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    return;
+
+                string pluginFile = Path.Combine(dialog.SelectedPath, "AuroraGSI.plugin.js");
+                WriteFile(pluginFile);
+            }
+        }
+
+        private void WriteFile(string pluginFile)
+        {
             if (File.Exists(pluginFile))
             {
                 MessageBox.Show("Plugin already installed");
@@ -81,24 +104,6 @@ namespace Aurora.Profiles.Discord
             catch (Exception e)
             {
                 MessageBox.Show("Error installng plugin: " + e.Message);
-            }
-        }
-
-        private void UninstallPlugin()
-        {
-            string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string path = Path.Combine(appdata, "BetterDiscord", "plugins", "AuroraGSI.plugin.js");
-
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-                MessageBox.Show("Plugin uninstalled successfully");
-                return;
-            }
-            else
-            {
-                MessageBox.Show("Plugin not found.");
-                return;
             }
         }
     }

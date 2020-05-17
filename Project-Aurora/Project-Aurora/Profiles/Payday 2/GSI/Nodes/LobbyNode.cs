@@ -3,7 +3,7 @@
     /// <summary>
     /// Information about the game lobby
     /// </summary>
-    public class LobbyNode : Node<LobbyNode>
+    public class LobbyNode : AutoJsonNode<LobbyNode>
     {
         /// <summary>
         /// Lobby difficulty
@@ -13,55 +13,52 @@
         /// <summary>
         /// Lobby visibility permissions
         /// </summary>
+        [AutoJsonPropertyName("permission")]
         public LobbyPermissions Permissions;
 
         /// <summary>
         /// A boolean representing if team AI is enabled
         /// </summary>
+        [AutoJsonPropertyName("team_ai")]
         public bool IsTeamAIEnabled;
 
         /// <summary>
         /// Required level to join this lobby
         /// </summary>
+        [AutoJsonPropertyName("minimum_level")]
         public int RequiredLevel;
 
         /// <summary>
         /// A boolean representing if dropping in is enabled
         /// </summary>
+        [AutoJsonPropertyName("drop_in")]
         public bool DropInEnabled;
 
         /// <summary>
         /// Lobby kick option
         /// </summary>
+        [AutoJsonPropertyName("kick_option")]
         public LobbyKickSetting KickSetting;
 
         /// <summary>
         /// Lobby job plan
         /// </summary>
+        [AutoJsonPropertyName("job_plan")]
         public LobbyJobPlan JobPlan;
 
         /// <summary>
         /// A boolean representing if cheaters are automatically kicked
         /// </summary>
+        [AutoJsonPropertyName("cheater_auto_kick")]
         public bool CheaterAutoKick;
 
         /// <summary>
         /// A boolean representing if lobby is singleplayer
         /// </summary>
+        [AutoJsonPropertyName("singleplayer")]
         public bool IsSingleplayer;
 
-        internal LobbyNode(string JSON) : base(JSON)
-        {
-            Difficulty = GetEnum<LobbyDifficulty>("difficulty");
-            Permissions = GetEnum<LobbyPermissions>("permission");
-            IsTeamAIEnabled = GetBool("team_ai");
-            RequiredLevel = GetInt("minimum_level");
-            DropInEnabled = GetBool("drop_in");
-            KickSetting = GetEnum<LobbyKickSetting>("kick_option");
-            JobPlan = GetEnum<LobbyJobPlan>("job_plan");
-            CheaterAutoKick = GetBool("cheater_auto_kick");
-            IsSingleplayer = GetBool("singleplayer");
-        }
+        internal LobbyNode(string JSON) : base(JSON) { }
     }
 
     /// <summary>

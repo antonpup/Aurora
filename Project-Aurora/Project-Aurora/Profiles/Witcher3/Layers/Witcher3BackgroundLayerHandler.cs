@@ -59,13 +59,6 @@ namespace Aurora.Profiles.Witcher3.Layers
 
     public class Witcher3BackgroundLayerHandler : LayerHandler<Witcher3BackgroundLayerHandlerProperties>
     {
-
-
-        public Witcher3BackgroundLayerHandler() : base()
-        {
-            _ID = "Witcher3Background";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_Witcher3BackgroundLayer(this);

@@ -17,11 +17,6 @@ namespace Plugin_Example.Layers
 
     public class ExampleLayerHandler : LayerHandler<LayerHandlerProperties>
     {
-        public ExampleLayerHandler()
-        {
-            _ID = "ExampleLayer";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_ExampleLayer(this);
