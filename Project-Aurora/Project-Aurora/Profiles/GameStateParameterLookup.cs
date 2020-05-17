@@ -1,7 +1,8 @@
-﻿using Aurora.Utils;
+using Aurora.Utils;
 using FastMember;
 using Mono.CSharp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,9 +35,19 @@ namespace Aurora.Profiles {
                     var accessor = TypeAccessor.Create(type);
                     if (!accessor.GetMembersSupported) return;
                     foreach (var member in accessor.GetMembers()) {
-                        if (member.Type == type) continue;
-                        if (member.GetAttribute(typeof(GameStateIgnoreAttribute), true) is { }) continue;
-                        Visit((path + "/" + member.Name).TrimStart('/'), member.Name, member.Type);
+                        if (member.Type == type) continue; // Ignore recursive types
+                        if (member.GetAttribute(typeof(GameStateIgnoreAttribute), true) != null) continue; // Ignore properties with [GameStateIgnore]
+
+                        var nextPath = (path + "/" + member.Name).TrimStart('/');
+
+                        // If the type is an Enumerable with a range attribute, visit for each item in that range
+                        var enumerableTypes = member.Type.GetGenericInterfaceTypes(typeof(IEnumerable<>));
+                        if (enumerableTypes != null && member.GetAttribute(typeof(RangeAttribute), true) is RangeAttribute range)
+                            for (var i = range.Start; i <= range.End; i++)
+                                Visit(nextPath + "/" + i, i.ToString(), enumerableTypes[0]);
+
+                        // Recursively visit the next type (do this even if it is IEnumerable, as it might be a custom class that implements IEnumerable with extra properties)
+                        Visit(nextPath, member.Name, member.Type);
                     }
                 }
             }
