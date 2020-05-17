@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -228,7 +228,7 @@
     <Compile Include="Profiles\TModLoader\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\TModLoader\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\TModLoader\TModLoaderApplication.cs" />
-    <Compile Include="Profiles\TModLoader\TerrariaProfile.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderProfile.cs" />
     <Compile Include="Profiles\TModLoader\Control_TModLoader.xaml.cs">
       <DependentUpon>Control_TModLoader.xaml</DependentUpon>
     </Compile>

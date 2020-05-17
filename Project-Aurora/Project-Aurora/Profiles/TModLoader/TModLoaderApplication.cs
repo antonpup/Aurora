@@ -11,7 +11,7 @@ namespace Aurora.Profiles.TModLoader
         {
             Name = "TModLoader",
             ID = "tmodloader",
-            AppID = "105600",
+            AppID = "1281930",
             ProcessNames = new[] { "tModLoader.exe" },
             ProfileType = typeof(TModLoaderProfile),
             OverviewControlType = typeof(Control_TModLoader),
