@@ -179,11 +179,9 @@ namespace Aurora.Devices.YeeLight
 
             if (updateDelayStopWatch.ElapsedMilliseconds > Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_send_delay"))
             {
-
-                Color targetColor = colorComposition.keyColors.FirstOrDefault(pair =>
-                    {
-                        return pair.Key == Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
-                    }).Value;
+                var targetKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{devicename}_devicekey");
+                if (!colorComposition.keyColors.TryGetValue(targetKey, out var targetColor))
+                    return false;
 
                 if ((targetColor.R + targetColor.G + targetColor.B) > 0)
                 {
