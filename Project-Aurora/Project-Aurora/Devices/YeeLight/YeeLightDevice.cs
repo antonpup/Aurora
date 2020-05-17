@@ -127,18 +127,19 @@ namespace Aurora.Devices.YeeLight
             //Can't reconnect using same device class instance
             light = new YeeLightAPI.YeeLightDevice();
 
-            //Auto discover a device if the IP is 0.0.0.0
-            if (lightIP.Equals(IPAddress.Parse("0.0.0.0")))
+            //Auto discover a device if the IP is 0.0.0.0 and auto-discovery is enabled
+            if (lightIP.Equals(IPAddress.Parse("0.0.0.0")) && default_registry.GetVariable<bool>($"{devicename}_auto_discovery"))
             {
                 var devices = DeviceLocator.DiscoverDevices();
                 if (devices.Any())
                 {
                     light = devices.First();
                     lightIP = light.GetLightIPAddressAndPort().ipAddress;
+                    default_registry.SetVariable($"{devicename}_IP", lightIP.ToString());
                 }
                 else
                 {
-                    throw new Exception("IP address is set to 0.0.0.0 and no devices have been located.");
+                    throw new Exception("IP address is set to 0.0.0.0 and auto-discovery is enabled but no devices have been located.");
                 }
             }
             //If it isn't then set the IP to the provided IP address
@@ -221,7 +222,8 @@ namespace Aurora.Devices.YeeLight
                 default_registry = new VariableRegistry();
                 default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
                 default_registry.Register($"{devicename}_send_delay", 35, "Send delay (ms)");
-                default_registry.Register($"{devicename}_IP", "0.0.0.0", "YeeLight IP", null, null, "If set to 0.0.0.0, it will try to discover a YeeLight and connect to it.");
+                default_registry.Register($"{devicename}_IP", "0.0.0.0", "YeeLight IP", null, null, "If set to 0.0.0.0 and auto-discovery it enabled, it will try to discover a YeeLight and connect to it.");
+                default_registry.Register($"{devicename}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and set IP to 0.0.0.0 to auto-discover a light.");
             }
 
             return default_registry;
