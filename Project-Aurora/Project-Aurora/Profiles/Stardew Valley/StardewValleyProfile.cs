@@ -36,6 +36,21 @@ namespace Aurora.Profiles.StardewValley
                     )
                 ),
 
+                new Layer("Damage", new AnimationLayerHandler {
+                    Properties = new AnimationLayerHandlerProperties {
+                        _AnimationMix = new AnimationMix(new[] {
+                            new AnimationTrack("Filled Rectangle Track", 0.5f)
+                                .SetFrame(0, new AnimationFilledRectangle(0, 0, 800, 300, Color.Red))
+                                .SetFrame(0.5f, new AnimationFilledRectangle(0, 0, 800, 300, Color.FromArgb(0, 255, 0, 0)))
+                        }),
+                        _AnimationDuration = 0.5f,
+                        _AnimationRepeat = 1,
+                        _TriggerMode = AnimationTriggerMode.OnLow,
+                        _TriggerPath = "Player/Health/Current",
+                        _StackMode = AnimationStackMode.Stack
+                    }
+                }),
+
                 new Layer("Health Bar", new PercentLayerHandler() {
                     Properties = new PercentLayerHandlerProperties()
                     {
@@ -149,8 +164,8 @@ namespace Aurora.Profiles.StardewValley
                         _MaxInitialVelocityY = 0.5f,
                         _AccelerationX = 0,
                         _AccelerationY = 0,
-                        _MinSize = 3,
-                        _MaxSize = 4,
+                        _MinSize = 5,
+                        _MaxSize = 5,
                         _DeltaSize = 0,
                     }
                 },
@@ -172,7 +187,7 @@ namespace Aurora.Profiles.StardewValley
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Summer))
                         .AddEntry(Color.Brown,
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Fall))
-                        .AddEntry(Color.DeepSkyBlue,
+                        .AddEntry(Color.FromArgb(255, 0, 110, 255),
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Winter))
                     )
                 ),
