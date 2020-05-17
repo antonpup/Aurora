@@ -16,6 +16,18 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
         public bool InGame;
 
+        public int InfernalDragonsKilled;
+
+        public int OceanDragonsKilled;
+
+        public int MountainDragonsKilled;
+
+        public int CloudDragonsKilled;
+
+        public int EarthDragonsKilled;
+
+        public int ElderDragonsKilled;
+
         public int DragonsKilled;
 
         public int TurretsKilled;
