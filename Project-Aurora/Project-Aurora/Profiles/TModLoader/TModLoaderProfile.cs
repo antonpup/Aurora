@@ -12,8 +12,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
 
-namespace Aurora.Profiles.Terraria {
-    public class TerrariaProfile : ApplicationProfile {
+namespace Aurora.Profiles.TModLoader {
+    public class TModLoaderProfile : ApplicationProfile {
         public override void Reset() {
             base.Reset();
 

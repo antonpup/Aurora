@@ -8,10 +8,10 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public enum ResourceType
     {
-        Undefined = -1,
+        Unknown = -1,
+        None = 0,
         Mana,
         Energy,
-        None,
         Shield,
         Battlefury,
         Dragonfury,

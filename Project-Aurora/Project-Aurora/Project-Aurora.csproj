@@ -224,13 +224,13 @@
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
-    <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
-    <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
-    <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
-    <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
-    <Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
-      <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    <Compile Include="Profiles\TModLoader\GSI\GameState_TModLoader.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderApplication.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderProfile.cs" />
+    <Compile Include="Profiles\TModLoader\Control_TModLoader.xaml.cs">
+      <DependentUpon>Control_TModLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
@@ -827,6 +827,15 @@
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_outline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g513.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g815.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
@@ -1600,9 +1609,9 @@
     <Resource Include="Resources\elite_dangerous_256x256.png" />
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
-    <Resource Include="Resources\terraria_512x512.png" />
     <Resource Include="Resources\icons8-font-size-30.png" />
     <Resource Include="Resources\icons8-folder-30.png" />
+    <Resource Include="Resources\tmodloader.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1724,7 +1733,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\Terraria\Control_Terraria.xaml">
+    <Page Include="Profiles\TModLoader\Control_TModLoader.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -2607,6 +2616,9 @@
     </PackageReference>
     <PackageReference Include="IronPython">
       <Version>2.7.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="JsonSubTypes">
+      <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="MouseKeyHook">
       <Version>5.6.0</Version>

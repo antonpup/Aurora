@@ -36,6 +36,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
     public enum ItemID
     {
+        Unknown = -1,
         None = 0,
         BootsofSpeed = 1001,
         FaerieCharm = 1004,

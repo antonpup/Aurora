@@ -56,7 +56,7 @@ namespace Aurora.Profiles.LeagueOfLegends
 
             if (allGameData == null)
             {
-                s.Match.InGame = false;
+                _game_state = new GameState_LoL();
                 return;
             }
 
@@ -64,6 +64,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             {
                 #region Match
                 s.Match.InGame = true;
+                //s.Match.GameMode = EnumUtils.TryParseOr(allGameData.gameData.gameMode, true, GameMode.Unknown);
                 s.Match.GameMode = allGameData.gameData.gameMode;
                 s.Match.GameTime = allGameData.gameData.gameTime;
                 #endregion
@@ -111,7 +112,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 s.Player.ChampionStats.PhysicalLethality = ap.championStats.physicalLethality;
                 s.Player.ChampionStats.ResourceMax = ap.championStats.resourceMax;
                 s.Player.ChampionStats.ResourceRegenRate = ap.championStats.resourceRegenRate;
-                s.Player.ChampionStats.ResourceType = EnumUtils.TryParseOr(ap.championStats.resourceType, true, ResourceType.Undefined);
+                s.Player.ChampionStats.ResourceType = EnumUtils.TryParseOr(ap.championStats.resourceType, true, ResourceType.Unknown);
                 s.Player.ChampionStats.ResourceCurrent = ap.championStats.resourceValue;
                 s.Player.ChampionStats.SpellVamp = ap.championStats.spellVamp;
                 s.Player.ChampionStats.Tenacity = ap.championStats.tenacity;
@@ -128,11 +129,11 @@ namespace Aurora.Profiles.LeagueOfLegends
                     return;
                 //if we can't find it, skip
 
-                s.Player.Champion = EnumUtils.TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, Champion.Undefined);
-                s.Player.SpellD = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellOne.displayName, true, SummonerSpell.Undefined);
-                s.Player.SpellF = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, true, SummonerSpell.Undefined);
-                s.Player.Team = EnumUtils.TryParseOr(p.team, true, Team.Undefined);
-                s.Player.Position = EnumUtils.TryParseOr(p.position, true, Position.Undefined);
+                s.Player.Champion = EnumUtils.TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, Champion.None);
+                s.Player.SpellD = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellOne.displayName, true, SummonerSpell.Unknown);
+                s.Player.SpellF = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, true, SummonerSpell.Unknown);
+                s.Player.Team = EnumUtils.TryParseOr(p.team, true, Team.Unknown);
+                s.Player.Position = EnumUtils.TryParseOr(p.position, true, Position.Unknown);
 
                 s.Player.IsDead = p.isDead;
                 s.Player.RespawnTimer = p.respawnTimer;
@@ -144,10 +145,20 @@ namespace Aurora.Profiles.LeagueOfLegends
                 #endregion
 
                 #region Events
-                s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("BaronKill"));
-                s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("HeraldKill"));
-                s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("DragonKill"));
-                s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev.EventName.Contains("TurretKilled"));
+                var drags = allGameData.events.Events.OfType<_DragonKillEvent>();
+
+                s.Match.InfernalDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "fire");
+                s.Match.EarthDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "earth");
+                s.Match.OceanDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "water");
+                s.Match.CloudDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "air");
+                s.Match.ElderDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "elder");
+
+                 s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev is _BaronKillEvent);
+                s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev is _HeraldKillEvent);
+                s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev is _DragonKillEvent);
+                s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev is _TurretKillEvent);
+                s.Match.InhibsKilled = allGameData.events.Events.Count(ev => ev is _InhibKillEvent);
+                s.Match.MapTerrain = EnumUtils.TryParseOr(allGameData.gameData.mapTerrain, true, MapTerrain.Unknown);
                 #endregion
 
                 #region Items
