@@ -2687,7 +2687,7 @@
       <Version>2.9.15603.14400</Version>
     </PackageReference>
     <PackageReference Include="YeeLightAPI_SnakePin">
-      <Version>0.0.1</Version>
+      <Version>0.0.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
