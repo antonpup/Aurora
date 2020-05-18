@@ -11,6 +11,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
         public AmountNode Amount;
         public MaxNode Max;
         public ColorNode Color;
+        public SpiralNode Spiral;
 
         public int SellectedSlot;
         public int UseableSlots;
@@ -23,6 +24,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             Amount = new AmountNode(_ParsedData["amount"]?.ToString() ?? "");
             Max = new MaxNode(_ParsedData["max"]?.ToString() ?? "");
             Color = new ColorNode(_ParsedData["color"]?.ToString() ?? "");
+            Spiral = new SpiralNode(_ParsedData["spiral"]?.ToString() ?? "");
 
             SellectedSlot = GetInt("sellected_slot");
             UseableSlots = GetInt("useable_slots");
@@ -187,5 +189,16 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
         #endregion
+        public class SpiralNode : Node<SpiralNode>
+        {
+            public float Percentage;
+            public float WarningThreshold;
+
+            internal SpiralNode(string json) : base(json)
+            {
+                Percentage = GetFloat("percentage");
+                WarningThreshold = GetFloat("warning_threshold");
+            }
+        }
     }
 }

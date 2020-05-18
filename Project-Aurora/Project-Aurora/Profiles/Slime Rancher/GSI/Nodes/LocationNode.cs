@@ -9,10 +9,13 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
     public class LocationNode : Node
     {
         public BiomeNode In;
+        public string ZoneName;
+
 
         internal LocationNode(string json) : base(json)
         {
             In = new BiomeNode(json);
+            ZoneName = GetString("zone_name");
         }
 
     }
