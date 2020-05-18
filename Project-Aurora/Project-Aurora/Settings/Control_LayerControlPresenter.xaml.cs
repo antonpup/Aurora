@@ -104,7 +104,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
-                ResetLayer((Type)(sender as ComboBox).SelectedValue);
+                ResetLayer((Type)cmbLayerType.SelectedValue);
             }
         }
 
