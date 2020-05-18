@@ -14,6 +14,7 @@
 
     public enum WitcherSign
     {
+        None,
         Axii,
         Aard,
         Igni,
