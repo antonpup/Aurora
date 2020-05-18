@@ -15,7 +15,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
     /// An evaluatable that returns the time since the user has pressed a keyboard key or clicked the mouse.
     /// </summary>
     [Evaluatable("Away Time", category: EvaluatableCategory.Input)]
-    public class NumberAwayTime : IEvaluatable<double> {
+    public class NumberAwayTime : Evaluatable<double> {
 
         /// <summary>Gets or sets the time unit that the time is being measured in.</summary>
         public TimeUnit TimeUnit { get; set; }
@@ -30,7 +30,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
         #endregion
 
         // Control
-        public Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
+        public override Visual GetControl() => new StackPanel { Orientation = Orientation.Horizontal }
             .WithChild(new Label { Content = "Away time in" })
             .WithChild(new ComboBox {
                 DisplayMemberPath = "Key",
@@ -39,7 +39,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
             }.WithBinding(ComboBox.SelectedValueProperty, this, "TimeUnit", BindingMode.TwoWay));
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
-        public double Evaluate(IGameState gameState) {
+        protected override double Execute(IGameState gameState) {
             var idleTime = ActiveProcessMonitor.GetTimeSinceLastInput();
             switch (TimeUnit) {
                 case TimeUnit.Milliseconds: return idleTime.TotalMilliseconds;
@@ -49,9 +49,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
                 default: return 0;
             };
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public IEvaluatable<double> Clone() => new NumberAwayTime { TimeUnit = TimeUnit };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<double> Clone() => new NumberAwayTime { TimeUnit = TimeUnit };
     }
 }

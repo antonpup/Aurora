@@ -61,11 +61,6 @@ namespace Aurora.Profiles.CSGO.Layers
 
         private bool showAnimation = false;
 
-        public CSGOWinningTeamLayerHandler() : base()
-        {
-            _ID = "CSGOWinningTeam";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOWinningTeamLayer(this);

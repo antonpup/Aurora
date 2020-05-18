@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
 {
-    public class VacPackNode : Node<VacPackNode>
+    public class VacPackNode : Node
     {
         public AmountNode Amount;
         public MaxNode Max;
@@ -31,7 +31,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             InNimbleValleyMode = GetBool("in_nimble_valley_mode");
         }
 
-        public class AmountNode : Node<AmountNode>
+        public class AmountNode : Node
         {
             public int SellectedSlot;
             public int Slot1;
@@ -51,7 +51,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class MaxNode : Node<MaxNode>
+        public class MaxNode : Node
         {
             public int SellectedSlot;
             public int Slot1;
@@ -71,7 +71,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class ColorNode : Node<ColorNode>
+        public class ColorNode : Node
         {
             public SellectedSlotNode SellectedSlot;
             public ColorSlot1Node Slot1;
@@ -91,7 +91,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
         #region ColorSlotNodes
-        public class SellectedSlotNode : Node<SellectedSlotNode>
+        public class SellectedSlotNode : Node
         {
             public float Red;
             public float Green;
@@ -107,7 +107,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class ColorSlot1Node : Node<ColorSlot1Node>
+        public class ColorSlot1Node : Node
         {
             public float Red;
             public float Green;
@@ -123,7 +123,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class ColorSlot2Node : Node<ColorSlot2Node>
+        public class ColorSlot2Node : Node
         {
             public float Red;
             public float Green;
@@ -139,7 +139,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class ColorSlot3Node : Node<ColorSlot3Node>
+        public class ColorSlot3Node : Node
         {
             public float Red;
             public float Green;
@@ -155,7 +155,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class ColorSlot4Node : Node<ColorSlot4Node>
+        public class ColorSlot4Node : Node
         {
             public float Red;
             public float Green;
@@ -171,7 +171,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
 
-        public class ColorSlot5Node : Node<ColorSlot5Node>
+        public class ColorSlot5Node : Node
         {
             public float Red;
             public float Green;

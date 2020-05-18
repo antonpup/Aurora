@@ -54,11 +54,6 @@ namespace Aurora.Profiles.CSGO.Layers
         private List<RoundKillType> roundKills = new List<RoundKillType>();
         private int lastCountedKill = 0;
 
-        public CSGOKillIndicatorLayerHandler() : base()
-        {
-            _ID = "CSGOKillsIndicator";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOKillIndicatorLayer(this);

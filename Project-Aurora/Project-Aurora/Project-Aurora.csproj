@@ -119,6 +119,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UniwillSDKDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\UniwillSDKDLL.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +171,7 @@
     <Compile Include="Controls\Window_Prompt.xaml.cs">
       <DependentUpon>Window_Prompt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\DockFighter.cs" />
@@ -192,6 +197,7 @@
       <DependentUpon>Control_LayerPreview.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\UnifiedHID\RoccatTyon.cs" />
+    <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml.cs">
       <DependentUpon>Control_CSGODeathLayer.xaml</DependentUpon>
     </Compile>
@@ -211,7 +217,7 @@
     <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
-    <Compile Include="Devices\Vulcan\Vulcan.cs" />
+    <Compile Include="Profiles\GameStateParameterLookup.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameData.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
@@ -228,16 +234,17 @@
       <DependentUpon>Control_LoLBackgroundLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\AutoJsonNode.cs" />
+    <Compile Include="Profiles\LocalPCInformation.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
-    <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
-    <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
-    <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
-    <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
-    <Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
-      <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    <Compile Include="Profiles\TModLoader\GSI\GameState_TModLoader.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderApplication.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderProfile.cs" />
+    <Compile Include="Profiles\TModLoader\Control_TModLoader.xaml.cs">
+      <DependentUpon>Control_TModLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
@@ -631,7 +638,7 @@
     <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
       <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
+    <Compile Include="Settings\Overrides\Logic\Evaluatable.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
     <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
@@ -681,6 +688,7 @@
     <Compile Include="Utils\AttachedApplication.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\DragBehaviour.cs" />
+    <Compile Include="Utils\FastMemberExtensions.cs" />
     <Compile Include="Utils\GridHelper.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
     <Compile Include="Utils\TextUtils.cs" />
@@ -836,6 +844,15 @@
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_outline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g513.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g815.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="kb_layouts\Extra Features\asus_strix_flare_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -846,6 +863,69 @@
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
     <None Include="kb_layouts\asus_strix_scope.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard101_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard102_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard21br_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard21jp_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard21us_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard21_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22br_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22jp_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22usuk_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard22us_numpad_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\keyboard_numpad_left_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2ND_35X_1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2ND_35X_2.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P1_550_BR.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P1_550_JP.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P1_550_UK.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P1_550_US.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P2_650_BR.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P2_650_JP.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P2_650_UK.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Uniwill2P2_650_US.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\ducky_shine_7.json">
@@ -887,7 +967,6 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\LightingStateManager.cs" />
-    <Compile Include="Profiles\StringProperty.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>
@@ -947,7 +1026,6 @@
     <Compile Include="Settings\Control_ScriptManager.xaml.cs">
       <DependentUpon>Control_ScriptManager.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\INotifyPropertyChangedEx.cs" />
     <Compile Include="Settings\Keybind.cs" />
     <Compile Include="Settings\Layers\Control_GlitchLayer.xaml.cs">
       <DependentUpon>Control_GlitchLayer.xaml</DependentUpon>
@@ -1435,7 +1513,6 @@
     </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
-    <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
@@ -1553,9 +1630,9 @@
     <Resource Include="Resources\elite_dangerous_256x256.png" />
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
-    <Resource Include="Resources\terraria_512x512.png" />
     <Resource Include="Resources\icons8-font-size-30.png" />
     <Resource Include="Resources\icons8-folder-30.png" />
+    <Resource Include="Resources\tmodloader.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1685,7 +1762,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\Terraria\Control_Terraria.xaml">
+    <Page Include="Profiles\TModLoader\Control_TModLoader.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -2555,6 +2632,14 @@
     <PackageReference Include="DotNetZip">
       <Version>1.13.7</Version>
     </PackageReference>
+    <PackageReference Include="FastMember">
+      <Version>1.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="Fody">
+      <Version>6.1.1</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="hidlibrary">
       <Version>3.2.46</Version>
     </PackageReference>
@@ -2563,6 +2648,9 @@
     </PackageReference>
     <PackageReference Include="IronPython">
       <Version>2.7.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="JsonSubTypes">
+      <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="MouseKeyHook">
       <Version>5.6.0</Version>
@@ -2578,6 +2666,9 @@
     </PackageReference>
     <PackageReference Include="Octokit">
       <Version>0.47.0</Version>
+    </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody">
+      <Version>3.2.8</Version>
     </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Asus">
       <Version>0.1.32</Version>
@@ -2628,7 +2719,7 @@
       <Version>2.9.15603.14400</Version>
     </PackageReference>
     <PackageReference Include="YeeLightAPI_SnakePin">
-      <Version>0.0.1</Version>
+      <Version>0.0.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

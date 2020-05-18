@@ -1,0 +1,134 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 3,
+  "grouped_keys": [
+
+    {
+      "visualName": "INSERT",
+      "tag": 31,
+      "margin_left": 481.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+    {
+      "visualName": "PRTSC",
+      "tag": 14,
+      "margin_left": 518.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+    {
+      "visualName": "DEL",
+      "tag": 52,
+      "margin_left": 555.0,
+      "margin_top": -222.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+    {
+      "visualName": "Home",
+      "tag": 32,
+      "margin_left": 556.0,
+      "margin_top": -187.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+
+    {
+      "visualName": "PGUP",
+      "tag": 33,
+      "margin_left": 556.0,
+      "margin_top": -150.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "PGDN",
+      "tag": 54,
+      "margin_left": 556.0,
+      "margin_top": -112.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "END",
+      "tag": 53,
+      "margin_left": 556.0,
+      "margin_top": -74.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    },
+
+
+    {
+      "visualName": "FN",
+      "tag": 107,
+      "margin_left": 48.0,
+      "margin_top": -37.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 4,
+      "margin_top_bits": -3,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

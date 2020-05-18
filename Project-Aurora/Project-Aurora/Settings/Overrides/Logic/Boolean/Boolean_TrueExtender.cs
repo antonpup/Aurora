@@ -14,19 +14,19 @@ namespace Aurora.Settings.Overrides.Logic {
     /// signal while already extending an existing signal will restart the timer.
     /// </summary>
     [Evaluatable("True Extender", category: EvaluatableCategory.Logic)]
-    public class BooleanExtender : IEvaluatable<bool> {
+    public class BooleanExtender : Evaluatable<bool> {
 
         private Stopwatch sw = new Stopwatch();
 
         public BooleanExtender() { }
-        public BooleanExtender(IEvaluatable<bool> evaluatable) { Evaluatable = evaluatable; }
-        public BooleanExtender(IEvaluatable<bool> evaluatable, double time, TimeUnit timeUnit = TimeUnit.Seconds) : this(evaluatable) { ExtensionTime = time; TimeUnit = timeUnit; }
+        public BooleanExtender(Evaluatable<bool> evaluatable) { Evaluatable = evaluatable; }
+        public BooleanExtender(Evaluatable<bool> evaluatable, double time, TimeUnit timeUnit = TimeUnit.Seconds) : this(evaluatable) { ExtensionTime = time; TimeUnit = timeUnit; }
 
-        public IEvaluatable<bool> Evaluatable { get; set; } = new BooleanConstant();
+        public Evaluatable<bool> Evaluatable { get; set; } = new BooleanConstant();
         public double ExtensionTime { get; set; } = 5;
         public TimeUnit TimeUnit { get; set; } = TimeUnit.Seconds;
 
-        public Visual GetControl() => new StackPanel()
+        public override Visual GetControl() => new StackPanel()
             .WithChild(new StackPanel { Orientation = Orientation.Horizontal }
                 .WithChild(new TextBlock { Text = "Extend", Margin = new Thickness(0, 0, 6, 0), VerticalAlignment = VerticalAlignment.Center })
                 .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
@@ -37,7 +37,7 @@ namespace Aurora.Settings.Overrides.Logic {
                     .WithBinding(Control_TimeAndUnit.TimeProperty, new Binding("ExtensionTime") { Source = this, Mode = BindingMode.TwoWay })
                     .WithBinding(Control_TimeAndUnit.UnitProperty, new Binding("TimeUnit") { Source = this, Mode = BindingMode.TwoWay })));
 
-        public bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var res = Evaluatable.Evaluate(gameState);
             if (res) sw.Restart();
             switch (TimeUnit) {
@@ -48,9 +48,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 default: return false;
             }
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public IEvaluatable<bool> Clone() => new BooleanExtender { Evaluatable = Evaluatable.Clone(), ExtensionTime = ExtensionTime, TimeUnit = TimeUnit };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new BooleanExtender { Evaluatable = Evaluatable.Clone(), ExtensionTime = ExtensionTime, TimeUnit = TimeUnit };
     }
 }
