@@ -160,9 +160,10 @@ namespace Aurora.Profiles.Desktop
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "LocalPCInfo/CPUUsage",
+                        _VariablePath = "LocalPCInfo/CPU/Usage",
                         _MaxVariablePath = "100"
                     },
+                    EnableSmoothing = true
                 }),
                 new Layer("RAM Usage", new PercentLayerHandler()
                 {
@@ -178,9 +179,10 @@ namespace Aurora.Profiles.Desktop
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "LocalPCInfo/MemoryUsed",
-                        _MaxVariablePath = "LocalPCInfo/MemoryTotal"
+                        _VariablePath = "LocalPCInfo/RAM/Used",
+                        _MaxVariablePath = "LocalPCInfo/RAM/Total"
                     },
+                    EnableSmoothing = true
                 }),
                 new Layer("Interactive Layer", new InteractiveLayerHandler()
                 {
