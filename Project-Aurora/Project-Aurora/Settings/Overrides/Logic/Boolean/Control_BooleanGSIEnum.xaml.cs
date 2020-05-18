@@ -11,7 +11,6 @@ namespace Aurora.Settings.Overrides.Logic {
         public Control_BooleanGSIEnum(BooleanGSIEnum context) {
             InitializeComponent();
             ((FrameworkElement)Content).DataContext = context;
-            UpdateEnumDropDown();
         }
 
         /// <summary>Updates the enum value dropdown with a list of enum values for the current application and selected variable path.</summary>
@@ -26,6 +25,12 @@ namespace Aurora.Settings.Overrides.Logic {
 
             EnumVal.IsEnabled = isValid;
             EnumVal.ItemsSource = isValid ? Utils.EnumUtils.GetEnumItemsSource(selectedEnumType) : null;
+        }
+
+        // We don't do UpdateEnumDropDown in the constructor because it won't have been added to the visual tree at the point and therefore
+        // the attached application property won't be set. If we wait til the control has added to the tree, the property is set.
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+            UpdateEnumDropDown();
         }
 
         // Update the enum dropdown when the user selects a different enum path
