@@ -74,7 +74,7 @@ namespace Aurora.Devices.Asus.Config
         private bool LoadAuraSdk()
         {
             asusHandler = new AsusHandler();
-            asusHandler.AuraSdk.SwitchMode();
+            asusHandler.AuraSdk?.SwitchMode();
 
             if (asusHandler.HasSdk)
                 return true;
