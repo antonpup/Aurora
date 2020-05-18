@@ -85,6 +85,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\DS4WindowsApi.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>.\Interop.AuraServiceLib.dll</HintPath>
+    </Reference>
     <Reference Include="LibreHardwareMonitorLib">
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
@@ -152,6 +157,18 @@
     </Compile>
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Asus\AsusHandler.cs" />
+    <Compile Include="Devices\Asus\AsusSyncClaymoreDevice.cs" />
+    <Compile Include="Devices\Asus\AsusSyncConfiguredDevice.cs" />
+    <Compile Include="Devices\Asus\AuraSyncDevice.cs" />
+    <Compile Include="Devices\Asus\AuraSyncKeyboardDevice.cs" />
+    <Compile Include="Devices\Asus\Config\AsusConfig.cs" />
+    <Compile Include="Devices\Asus\Config\AsusConfigWindow.xaml.cs">
+      <DependentUpon>AsusConfigWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Asus\Config\AsusKeyToDeviceKeyControl.xaml.cs">
+      <DependentUpon>AsusKeyToDeviceKeyControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\GameStateParameterPicker.xaml.cs">
       <DependentUpon>GameStateParameterPicker.xaml</DependentUpon>
@@ -277,7 +294,6 @@
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Asus\AsusDevice.cs" />
-    <Compile Include="Devices\Asus\AsusRGBNetBrush.cs" />
     <Compile Include="Devices\NZXT\NZXTDevice.cs" />
     <Compile Include="Controls\ReorderableListBox.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
@@ -863,6 +879,12 @@
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
     <Resource Include="Profiles\Discord\GSI\AuroraGSI.plugin.js" />
+    <Content Include="DeviceLayouts\Images\Asus_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Interop.AuraServiceLib.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="DeviceLayouts\Images\Asus_Pugio_backlights.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1001,6 +1023,9 @@
     <None Include="DeviceLayouts\Keyboard\asus_strix_flare.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="DeviceLayouts\Keyboard\asus_strix_scope.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="DeviceLayouts\Keyboard\corsair_k65.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1035,6 +1060,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="DeviceLayouts\Keyboard\ducky_shine_7.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="DeviceLayouts\Keyboard\Extra Features\asus_strix_flare_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="DeviceLayouts\Keyboard\Extra Features\corsair_k65_right_features.json">
@@ -1179,6 +1207,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="DeviceLayouts\Keyboard\masterkeys_pro_s.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="DeviceLayouts\Keyboard\Plain Keyboard\abnt2_layout.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="DeviceLayouts\Keyboard\Plain Keyboard\ansi_layout.json">
@@ -1561,9 +1592,6 @@
     <Content Include="DS4WindowsApi.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Interop.AuraServiceLib.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Resource Include="Resources\ats_64x64.png" />
     <Resource Include="Resources\qc_256x256.png" />
     <Resource Include="Resources\bf1_128x128.png" />
@@ -1690,6 +1718,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Profiles\EliteDangerous\Layers\Control_EliteDangerousAnimationLayer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Asus\Config\AsusConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Asus\Config\AsusKeyToDeviceKeyControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -2591,17 +2627,11 @@
     <PackageReference Include="PropertyChanged.Fody">
       <Version>3.2.8</Version>
     </PackageReference>
-    <PackageReference Include="RGB.NET.Devices.Asus">
-      <Version>0.1.32</Version>
-    </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Corsair">
       <Version>0.1.32</Version>
     </PackageReference>
     <PackageReference Include="RGB.NET.Groups">
       <Version>0.1.32</Version>
-    </PackageReference>
-    <PackageReference Include="RGB.NET.Resources.Asus">
-      <Version>0.3.0</Version>
     </PackageReference>
     <PackageReference Include="RGB.NET.Resources.Corsair">
       <Version>0.3.0.234</Version>

@@ -447,11 +447,6 @@ namespace Aurora.Settings
             var layoutConfigPath = "";
 
 
-            if (keyboard_preference != "" && keyboard_preference != "None")
-            {
-                layoutConfigPath = Path.Combine(layoutsPath, "Keyboard", keyboard_preference + ".json");
-            }
-
             if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
             {
                 //Load keyboard layout
@@ -579,7 +574,7 @@ namespace Aurora.Settings
 
         private void LightingStateManager_PostUpdate(object sender, EventArgs e)
         {
-            this.LoadBrandDefault();
+            //this.LoadBrandDefault();
             Global.LightingStateManager.PostUpdate -= this.LightingStateManager_PostUpdate;
         }
 

@@ -18,6 +18,7 @@ using System.Windows.Shapes;
 
 namespace Aurora.Settings.DeviceLayoutViewer
 {
+
     /// <summary>
     /// Interaction logic for Control_DeviceLayoutPresenter.xaml
     /// </summary>
@@ -27,9 +28,10 @@ namespace Aurora.Settings.DeviceLayoutViewer
         private System.Windows.Point _positionInBlock;
 
         public List<Control_Keycap> Keycaps => DeviceLayouts.SelectMany(dl => dl.KeyboardMap.Values).ToList();
+
         public static readonly DependencyProperty IsLayoutMoveEnabledProperty = DependencyProperty.Register("IsLayoutMoveEnabled",
                                                                                                 typeof(bool),
-                                                                                                typeof(Control_DeviceLayoutPresenter));
+                                                                                                typeof(Control_DeviceLayoutPresenter), new PropertyMetadata(false));
 
         public bool IsLayoutMoveEnabled
         {
@@ -39,13 +41,14 @@ namespace Aurora.Settings.DeviceLayoutViewer
         
         private void enableEditLayout_Click(object sender, RoutedEventArgs e)
         {
-            IsLayoutMoveEnabled = !IsLayoutMoveEnabled;
+            //IsLayoutMoveEnabled = !IsLayoutMoveEnabled;
         }
 
         public Control_DeviceLayoutPresenter()
         {
             InitializeComponent();
-            DataContext = this;
+            layouts_viewbox.DataContext = this;
+
             Global.devicesLayout.DeviceLayoutNumberChanged += DeviceLayoutNumberChanged;
             Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
             this.keyboard_record_message.Visibility = Visibility.Hidden;
@@ -84,17 +87,21 @@ namespace Aurora.Settings.DeviceLayoutViewer
         
         private void OpenEnableMenu(object sender, RoutedEventArgs e)
         {
-            ContextMenu cm = this.FindResource("enableMenu") as ContextMenu;
-            cm.PlacementTarget = sender as Button;
-            cm.IsOpen = true;
+            MenuItem menuItem = new MenuItem() { Header = "Edit Layout Enabled", IsCheckable = true };
+
+            Binding binding = new Binding("IsLayoutMoveEnabled") {Source = this, Mode = BindingMode.TwoWay};
+            menuItem.SetBinding(MenuItem.IsCheckedProperty, binding);
+
+            ContextMenu cm = new ContextMenu() { PlacementTarget = sender as Button, IsOpen = true };
+            cm.Items.Add(menuItem);
         }
         private void Layout_DeviceLayoutUpdated(object sender)
         {
 
             double baseline_x = double.MaxValue;
             double baseline_y = double.MaxValue;
-            double current_width = double.MinValue;
-            double current_height = double.MinValue;
+            double current_width = 800;
+            double current_height = 200;
             foreach (FrameworkElement layout in DeviceLayouts)
             {
                 Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
@@ -173,16 +180,52 @@ namespace Aurora.Settings.DeviceLayoutViewer
             //keyboard_grid.ClipToBounds = true;
 
             layouts_grid.Children.Clear();
-            foreach (var layout in DeviceLayouts)
+            if (DeviceLayouts.Count != 0)
             {
-                layouts_grid.Children.Add(layout);
-                layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
-                layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
-                layout.MouseDown += DeviceLayout_MouseDown;
-                layout.MouseMove += DeviceLayout_MouseMove;
-                layout.MouseUp += DeviceLayout_MouseUp;
+                foreach (var layout in DeviceLayouts)
+                {
+                    layouts_grid.Children.Add(layout);
+                    layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
+                    layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
+                    layout.MouseDown += DeviceLayout_MouseDown;
+                    layout.MouseMove += DeviceLayout_MouseMove;
+                    layout.MouseUp += DeviceLayout_MouseUp;
+                }
+                layouts_grid.Children.Add(new LayerEditor(layouts_grid));
             }
-            layouts_grid.Children.Add(new LayerEditor(layouts_grid));
+            else {
+                Label error_message = new Label();
+
+                /*DockPanel info_panel = new DockPanel()
+                {
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center
+                };*/
+
+                TextBlock info_message = new TextBlock()
+                {
+                    Text = "To enable/disable layout editor right click on this box",
+                    TextAlignment = TextAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
+                };
+
+                DockPanel.SetDock(info_message, Dock.Top);
+                //info_panel.Children.Add(info_message);
+
+                error_message.Content = info_message;
+
+                error_message.FontSize = 16.0;
+                error_message.FontWeight = FontWeights.Bold;
+                error_message.HorizontalContentAlignment = HorizontalAlignment.Center;
+                error_message.VerticalContentAlignment = VerticalAlignment.Center;
+
+                layouts_grid.Children.Add(error_message);
+                //Update size
+                layouts_grid.Width = 450;
+                layouts_grid.Height = 200;
+            }
         }
         private void DeviceLayout_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -237,9 +280,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
                 if (layout.RenderTransform is TranslateTransform)
                 {
-                    layout.DeviceConfig.Offset.X = (layout.RenderTransform as TranslateTransform).X;
-                    layout.DeviceConfig.Offset.Y = (layout.RenderTransform as TranslateTransform).Y;
-                    layout.DeviceConfig.Save();
+                    layout.DeviceConfig.Offset.X = (int)(layout.RenderTransform as TranslateTransform).X;
+                    layout.DeviceConfig.Offset.Y = (int)(layout.RenderTransform as TranslateTransform).Y;
+                    Global.devicesLayout.SaveConfiguration(layout.DeviceConfig);
                 }
             }
         }

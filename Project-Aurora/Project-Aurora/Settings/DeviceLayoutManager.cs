@@ -20,6 +20,7 @@ namespace Aurora.Settings
         //[Description("ANSI")]
         ANSI,
         ISO,
+        ABNT,
         JIS
     }
     public class VirtualKeyboardConfiguration
@@ -76,36 +77,36 @@ namespace Aurora.Settings
         }
         protected class NewKeyboardLayout
         {
-            [JsonProperty("layout_width")]
+            /*[JsonProperty("layout_width")]
             public int Width = 0;
 
             [JsonProperty("layout_height")]
-            public int Height = 0;
+            public int Height = 0;*/
 
             [JsonProperty("keys")]
             public DeviceKeyConfiguration[] Keys = null;
         }
         public List<DeviceKeyConfiguration> LoadLayout()
         {
-            var layoutConfigPath = "";
-            string keyboard_preference = Config.SelectedLayout;
-            if (keyboard_preference != "" && keyboard_preference != "None")
-            {
-                layoutConfigPath = Path.Combine(layoutsPath, GetFolder(), keyboard_preference + ".json");
-            }
+                var layoutConfigPath = "";
+                string keyboard_preference = Config.SelectedLayout;
+                if (keyboard_preference != "" && keyboard_preference != "None")
+                {
+                    layoutConfigPath = Path.Combine(layoutsPath, GetFolder(), keyboard_preference + ".json");
+                }
 
-            if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
-            {
-                //Load keyboard layout
-                //LoadCulture();
+                if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
+                {
+                    //Load keyboard layout
+                    //LoadCulture();
 
-                //TODO
-                //if (!File.Exists(layoutPath))
-                //    LoadDefault();
+                    //TODO
+                    //if (!File.Exists(layoutPath))
+                    //    LoadDefault();
 
 
 
-                /*var layoutType = "jpn";
+               /* var layoutType = "abnt2";
                 var fileName = "Plain Keyboard\\layout." + layoutType + ".json";
                 var layoutPath = Path.Combine(layoutsPath, "Keyboard", fileName);
                 string keyboardContent = File.ReadAllText(layoutPath, Encoding.UTF8);
@@ -116,85 +117,88 @@ namespace Aurora.Settings
                 saved.Keys = Keys.Values.ToArray();
                 keyboardContent = JsonConvert.SerializeObject(saved, Formatting.Indented);
 
-                fileName = "Plain Keyboard\\" + layoutType + "_layout.json";
-                File.WriteAllText(Path.Combine(layoutsPath, "Keyboard", fileName), keyboardContent, Encoding.UTF8);*/
+                    fileName = "Plain Keyboard\\" + layoutType + "_layout.json";
+                    File.WriteAllText(Path.Combine(layoutsPath, "Keyboard", fileName), keyboardContent, Encoding.UTF8);*/
 
-                if (Config.Type == 0)
-                {
-                    var keyboardConfig = new KeyboardConfig(Config);
-                    string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
-                    VirtualKeyboardConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualKeyboardConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                    if (layoutConfig.IsNewFormat == true)
+                    if (Config.Type == 0)
                     {
-                        var keys = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
-
-                        var keyboardLayout = LoadDeviceLayout(keyboardConfig.LayoutPath);
-                        keyboardLayout.ApplyConfig(keys);
-
-                        if (keyboardConfig.SelectedKeyboardLayout == KeyboardPhysicalLayout.JIS)
+                        var keyboardConfig = new KeyboardConfig(Config);
+                        string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
+                        VirtualKeyboardConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualKeyboardConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                        if (layoutConfig.IsNewFormat == true)
                         {
-                            foreach (var key in keyboardLayout.jis_key_modifications)
+                            var keys = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
+
+                            var keyboardLayout = LoadDeviceLayout(keyboardConfig.LayoutPath);
+                            keyboardLayout.ApplyConfig(keys);
+
+                            if (keyboardConfig.SelectedKeyboardLayout == KeyboardPhysicalLayout.JIS)
                             {
-                                if (keys.ContainsKey(key.Key))
+                                foreach (var key in keyboardLayout.jis_key_modifications)
                                 {
-                                    keys[key.Key].ApplyModifier(key.Value);
+                                    if (keys.ContainsKey(key.Key))
+                                    {
+                                        keys[key.Key].ApplyModifier(key.Value);
+                                    }
                                 }
                             }
+
+                            NormalizeKeys(keys);
+                            Keys = keys;
                         }
-
-                        NormalizeKeys(keys);
-                        return keys.Values.ToList();
-                    }
-
-                    Keys = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
-
-                    //AdjustKeys
-                    var adjustKeys = layoutConfig.key_modifications;
-                    Keys.Values.ToList().FindAll(key => adjustKeys.ContainsKey((int)key.Tag)).ForEach(k => k.UpdateFromOtherKey(adjustKeys[k.Tag]));
-                    foreach (var keyTag in layoutConfig.keys_to_remove)
-                    {
-                        Keys.Remove(keyTag);
-                    }
-
-
-                    NormalizeKeys(Keys);
-
-                    foreach (string feature in layoutConfig.included_features)
-                    {
-                        string feature_path = Path.Combine(layoutsPath, GetFolder(), "Extra Features", feature);
-
-                        if (File.Exists(feature_path))
+                        else
                         {
-                            string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
-                            VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                            AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+                            Keys = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
 
+                            //AdjustKeys
+                            var adjustKeys = layoutConfig.key_modifications;
+                            Keys.Values.ToList().FindAll(key => adjustKeys.ContainsKey((int)key.Tag)).ForEach(k => k.UpdateFromOtherKey(adjustKeys[k.Tag]));
+                            foreach (var keyTag in layoutConfig.keys_to_remove)
+                            {
+                                Keys.Remove(keyTag);
+                            }
+
+
+                            NormalizeKeys(Keys);
+
+                            foreach (string feature in layoutConfig.included_features)
+                            {
+                                string feature_path = Path.Combine(layoutsPath, GetFolder(), "Extra Features", feature);
+
+                                if (File.Exists(feature_path))
+                                {
+                                    string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
+                                    VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                                    AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+
+                                }
+                            }
+
+                            NormalizeKeys(Keys);
                         }
                     }
-
-                    NormalizeKeys(Keys);
-                }
-                else
-                {
-                    if (!string.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
+                    else
                     {
-                        string mouseConfigContent = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
-                        VirtualGroup mouseConfig = JsonConvert.DeserializeObject<VirtualGroup>(mouseConfigContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-                        if (mouseConfig.origin_region == null)
+                        if (!string.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
                         {
-                            Dictionary<int, DeviceKeyConfiguration> keys = new Dictionary<int, DeviceKeyConfiguration>();
-                            var deviceConfig = LoadDeviceLayout(Config.LayoutPath);
-                            deviceConfig.ApplyConfig(keys);
-                            return keys.Values.ToList();
+                            string mouseConfigContent = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
+                            VirtualGroup mouseConfig = JsonConvert.DeserializeObject<VirtualGroup>(mouseConfigContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                            if (mouseConfig.origin_region == null)
+                            {
+                                Dictionary<int, DeviceKeyConfiguration> keys = new Dictionary<int, DeviceKeyConfiguration>();
+                                var deviceConfig = LoadDeviceLayout(Config.LayoutPath);
+                                deviceConfig.ApplyConfig(keys);
+                                Keys = keys;
+                            }
+                            AddFeature(mouseConfig.grouped_keys.ToArray(), mouseConfig.origin_region);
+                            NormalizeKeys(Keys);
                         }
-                        AddFeature(mouseConfig.grouped_keys.ToArray(), mouseConfig.origin_region);
-                        NormalizeKeys(Keys);
                     }
+
+
                 }
-
-
-            }
 
             return Keys.Values.ToList();
         }
@@ -468,8 +472,6 @@ namespace Aurora.Settings
             SelectedLayout = config.SelectedLayout;
             Type = config.Type;
             ConfigurationChanged = config.ConfigurationChanged;
-            SaveConfiguration = config.SaveConfiguration;
-            DeleteConfiguration = config.DeleteConfiguration;
         }
 
         public DeviceConfig()
@@ -477,22 +479,17 @@ namespace Aurora.Settings
         }
 
         public delegate void ConfigChangedEventHandler();
-        public delegate void SaveConfigEventHandler(DeviceConfig sender);
-        public delegate void DeleteConfigEventHandler(DeviceConfig sender);
 
         public event ConfigChangedEventHandler ConfigurationChanged;
-        public event SaveConfigEventHandler SaveConfiguration;
-        public event DeleteConfigEventHandler DeleteConfiguration;
 
-        public void Save()
+        /*public void UpdateConfig(DeviceConfig config)
         {
+            Id = config.Id;
+            SelectedLayout = config.SelectedLayout;
+            Type = config.Type;
             SaveConfiguration?.Invoke(this);
             ConfigurationChanged?.Invoke();
-        }
-        public void Delete()
-        {
-            DeleteConfiguration?.Invoke(this);
-        }
+        }*/
         public void RefreshConfig()
         {
             ConfigurationChanged?.Invoke();
@@ -525,6 +522,8 @@ namespace Aurora.Settings
                     return "ansi_layout";
                 case KeyboardPhysicalLayout.ISO:
                     return "iso_layout";
+                case KeyboardPhysicalLayout.ABNT:
+                    return "abnt2_layout";
                 case KeyboardPhysicalLayout.JIS:
                     return "jpn_layout";
                 default:
@@ -540,7 +539,7 @@ namespace Aurora.Settings
 
     public class DeviceLayoutManager
     {
-        public List<DeviceConfig> DevicesConfig = new List<DeviceConfig>();
+        public Dictionary<int, DeviceConfig> DevicesConfig = new Dictionary<int, DeviceConfig>();
 
         public delegate void LayoutUpdatedEventHandler(object sender);
 
@@ -562,7 +561,7 @@ namespace Aurora.Settings
                 string devicesConfigContent = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
                 DeviceLayoutManager manager = JsonConvert.DeserializeObject<DeviceLayoutManager>(devicesConfigContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                DevicesConfig = manager?.DevicesConfig ?? new List<DeviceConfig>();
+                DevicesConfig = manager?.DevicesConfig ?? new Dictionary<int, DeviceConfig>();
             }
             /*DevicesConfig.Add(new DeviceConfig());
             DevicesConfig[0].Id = 0;
@@ -583,10 +582,8 @@ namespace Aurora.Settings
             DevicesConfig[2].Type = 0;*/
             //DevicesLayout[1].Region.X = 825;
 
-            foreach (var layout in DevicesConfig)
+            foreach (var layout in DevicesConfig.Values)
             {
-                layout.SaveConfiguration += SaveConfiguration;
-                layout.DeleteConfiguration += DeleteConfiguration;
                 /*
                 if (layout.Offset.X + layout.Region.Width > current_width)
                     current_width = layout.Region.X + layout.Region.Width;
@@ -601,17 +598,19 @@ namespace Aurora.Settings
 
             DeviceLayoutNumberChanged?.Invoke(this);
         }
-        private void SaveConfiguration(DeviceConfig config)
+        public void SaveConfiguration(DeviceConfig config)
         {
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
+            DevicesConfig[config.Id] = config;
             var fileName = "DevicesConfig.json";
             var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
             var content = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
+            DeviceLayoutNumberChanged?.Invoke(this);
         }
-        private void DeleteConfiguration(DeviceConfig config)
+        public void DeleteConfiguration(DeviceConfig config)
         {
-            DevicesConfig.Remove(config);
+            DevicesConfig.Remove(config.Id);
 
             var fileName = "DevicesConfig.json";
             var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
@@ -623,9 +622,7 @@ namespace Aurora.Settings
         {
             var config = new DeviceConfig();
             config.Id = DevicesConfig.Count;
-            config.SaveConfiguration += SaveConfiguration;
-            config.DeleteConfiguration += DeleteConfiguration;
-            DevicesConfig.Add(config);
+            DevicesConfig[config.Id] = config;
             DeviceLayoutNumberChanged?.Invoke(this);
         }
         private void Layout_DeviceLayoutUpdated(object sender)
@@ -641,7 +638,7 @@ namespace Aurora.Settings
         public List<Control_DeviceLayout> GetDeviceLayouts(bool abstractKeycaps = false)
         {
             List<Control_DeviceLayout> deviceLayouts = new List<Control_DeviceLayout>();
-            foreach (var item in DevicesConfig)
+            foreach (var item in DevicesConfig.Values)
             {
                 /*Grid deviceControl = item.CreateUserControl();
                 deviceControl.VerticalAlignment = VerticalAlignment.Top;

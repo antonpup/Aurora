@@ -33,7 +33,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             set {
                 SetValue(DeviceConfigProperty, value);
                 DeviceConfig.ConfigurationChanged += ConfigChanged;
-                ConfigChanged();
+                //ConfigChanged();
             }
         }
 
@@ -46,14 +46,24 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             InitializeComponent();
             DeviceConfig = config;
-            //ConfigChanged();
+
+            ConfigChanged();
 
 
         }
 
         public void ConfigChanged()
         {
-            Keys = LoadKeys();
+            ConfigChanged(DeviceConfig);
+        }
+        public void ConfigChanged(DeviceConfig config)
+        {
+            DeviceLayout layout = new DeviceLayout(config);
+            Keys = layout.LoadLayout();
+            /*foreach(var key in Keys)
+            {
+                key.Key.DeviceId = DeviceConfig.Id;
+            }*/
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -82,11 +92,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 DeviceLayoutUpdated?.Invoke(this);
 
             } 
-        }
-        private List<DeviceKeyConfiguration> LoadKeys()
-        {
-            DeviceLayout layout = new DeviceLayout(DeviceConfig);
-            return layout.LoadLayout();
         }
 
        
@@ -170,11 +175,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
             }
             return bitmapMap;
 
-        }
-        public void SaveLayoutPosition(Point pos)
-        {
-            DeviceConfig.Offset = pos;
-            DeviceConfig.Save();
         }
         public void SetKeyboardColors(Dictionary<DeviceKey, System.Drawing.Color> keylights)
         {

@@ -83,7 +83,6 @@ namespace Aurora
 
             GenerateProfileStack();
             settingsControl.DataContext = this;
-            deviceLayerPresenter.IsLayoutMoveEnabled = true;
             
         }
 

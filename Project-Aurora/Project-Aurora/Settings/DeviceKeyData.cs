@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 namespace Aurora.Settings
 {
     public class DeviceKey
-    {
-        [JsonProperty("visual_name")]
-        public string VisualName { get; set; }
+    {        
         [JsonProperty("tag")]
         public int Tag { get; set; }
-        [JsonProperty("device_id")]
+        [JsonProperty("visual_name")]
+        public string VisualName { get; set; }
+
+
+        [JsonProperty("device_id", NullValueHandling = NullValueHandling.Ignore)]
         public int? DeviceId { get; set; }
 
         /*public bool Equals(DeviceKey otherKey)
@@ -96,14 +98,22 @@ namespace Aurora.Settings
     {
         public string VisualName;
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? X;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? Y;
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? Width;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? Height;
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Image;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public double? FontSize;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool? Enabled;
 
         public DeviceKeyModifier() { }
@@ -177,7 +187,8 @@ namespace Aurora.Settings
                 OnPropertyChanged(nameof(Height));
             }
         }
-        private string _image = "";
+        private string _image = null;
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Image
         {
             get { return _image; }
@@ -188,6 +199,7 @@ namespace Aurora.Settings
                 OnPropertyChanged(nameof(IsImage));
             }
         }
+        [JsonIgnore]
         public bool IsImage => !String.IsNullOrWhiteSpace(Image);
         public double? FontSize;
         public bool? Enabled = true;
@@ -234,7 +246,7 @@ namespace Aurora.Settings
             if (key.margin_left != null) X = (int)key.margin_left;
             if (key.margin_top != null) Y = (int)key.margin_top;
             if (key.enabled != null) Enabled = key.enabled;
-            if (key.image != null) Image = key.image;
+            if (!String.IsNullOrWhiteSpace(key.image)) Image = key.image;
         }
         public void UpdateFromOtherKey(KeyboardKey key)
         {

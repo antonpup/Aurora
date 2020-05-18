@@ -43,7 +43,9 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             var currentChampion = (gamestate as GSI.GameState_LoL)?.Player.Champion ?? Champion.None;
-            var currentColor = Properties.ChampionColors[currentChampion];
+            if (!Properties.ChampionColors.TryGetValue(currentChampion, out var currentColor))
+                currentColor = Color.Black;
+
             //if the player changes champion
             //or if the color is adjusted in the UI
             //or if the canvas size changes due to the layout being changed

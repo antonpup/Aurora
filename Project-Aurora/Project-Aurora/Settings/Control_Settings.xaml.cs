@@ -18,6 +18,7 @@ using RazerSdkWrapper.Utils;
 using System.Net;
 using RazerSdkWrapper.Data;
 using System.Windows.Threading;
+using Aurora.Devices.Asus.Config;
 using Aurora.Utils;
 
 namespace Aurora.Settings
@@ -825,6 +826,12 @@ namespace Aurora.Settings
             }
         }
 
+        private void wrapper_asus_configure_devices_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AsusConfigWindow();
+            window.Show();
+        }
+        
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)

@@ -134,8 +134,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
-            Config.Save();
             originalDeviceLayout.DeviceConfig = Config;
+            Global.devicesLayout.SaveConfiguration(Config);
             Close();
         }
         private void cancelButton_Click(object sender, RoutedEventArgs e)
@@ -146,7 +146,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if (MessageBox.Show("Are you sure that remove the device layout?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                Config.Delete();
+                Global.devicesLayout.DeleteConfiguration(Config);
                 Close();
             }
 
@@ -206,18 +206,24 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void LoadDeviceLayout()
         {
-            Config.RefreshConfig();
-            foreach (var key in deviceLayout.KeyboardMap.Values)
+            //Config.RefreshConfig();
+            var config = Config;
+            Task.Run(() =>
             {
-                key.MouseDown += KeyMouseDown;
-                key.MouseMove += KeyMouseMove;
-                key.MouseUp += KeyMouseUp;
-                key.UpdateLayout();
-            }
-            deviceLayout.UpdateLayout();
-            InitKeycapList();
-            this.Width = deviceLayout.Width + 340;
-            this.KeyDown += OnKeyDownHandler;
+                Dispatcher.Invoke(() => { deviceLayout.ConfigChanged(config);
+                
+                foreach (var key in deviceLayout.KeyboardMap.Values)
+                {
+                    key.MouseDown += KeyMouseDown;
+                    key.MouseMove += KeyMouseMove;
+                    key.MouseUp += KeyMouseUp;
+                    key.UpdateLayout();
+                }
+                //deviceLayout.UpdateLayout();
+                InitKeycapList();
+                this.Width = deviceLayout.Width + 340;
+                this.KeyDown += OnKeyDownHandler; });
+            });
         }
         private void InitKeycapList()
         {

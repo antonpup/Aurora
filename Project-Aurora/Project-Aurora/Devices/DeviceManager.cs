@@ -352,6 +352,7 @@ namespace Aurora.Devices
                     }
                     foreach (var composition in compositionList.Values)
                     {
+
                         device.UpdateDevice(composition, forced);
                     }
   
