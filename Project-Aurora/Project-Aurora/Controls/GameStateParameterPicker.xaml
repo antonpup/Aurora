@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisConv" />
         <DataTemplate x:Key="ListItemTemplate">
             <Grid>
-                <TextBlock Text="{Binding DisplayPath}" Padding="4,1" Margin="0,0,16,0" />
+                <TextBlock Text="{Binding DisplayName}" Padding="4,1" Margin="0,0,16,0" />
                 <Image Source="/Aurora;component/Resources/icons8-folder-30.png" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding IsFolder, Converter={StaticResource BoolToVisConv}}" />
             </Grid>
         </DataTemplate>
@@ -36,8 +36,8 @@
 
                 <!-- Up button and current "directory" -->
                 <StackPanel Grid.Row="0" Orientation="Vertical">
-                    <Button Content="⬅ Previous" IsEnabled="{Binding WorkingPathStr, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}, Converter={StaticResource IsStringNotNullConv}}" Margin="6" Padding="6,2" Click="BackBtn_Click" />
-                    <TextBlock Text="{Binding WorkingPathStr, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" Margin="6,0,6,6" VerticalAlignment="Center" />
+                    <Button Content="⬅ Previous" IsEnabled="{Binding WorkingPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}, Converter={StaticResource IsStringNotNullConv}}" Margin="6" Padding="6,2" Click="BackBtn_Click" />
+                    <TextBlock Text="{Binding WorkingPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" Margin="6,0,6,6" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <!-- List boxes (aux is for animation) -->

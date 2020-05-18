@@ -13,24 +13,24 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <para>Can be used in conjunction with the <see cref="BooleanExtender"/> to make the 'true' last longer than a single eval tick.</para>
     /// </summary>
     [Evaluatable("Number Change Detector", category: EvaluatableCategory.Maths)]
-    public class NumericChangeDetector : IEvaluatable<bool> {
+    public class NumericChangeDetector : Evaluatable<bool> {
 
         private double? lastValue;
 
         public NumericChangeDetector() { }
-        public NumericChangeDetector(IEvaluatable<double> eval, bool detectRising = true, bool detectFalling = true, double threshold = 0) {
+        public NumericChangeDetector(Evaluatable<double> eval, bool detectRising = true, bool detectFalling = true, double threshold = 0) {
             Evaluatable = eval;
             DetectRising = detectRising;
             DetectFalling = detectFalling;
             DetectionThreshold = threshold;
         }
 
-        public IEvaluatable<double> Evaluatable { get; set; } = new NumberConstant();
+        public Evaluatable<double> Evaluatable { get; set; } = new NumberConstant();
         public bool DetectRising { get; set; } = true;
         public bool DetectFalling { get; set; } = true;
         public double DetectionThreshold { get; set; } = 0;
 
-        public Visual GetControl() => new StackPanel()
+        public override Visual GetControl() => new StackPanel()
             .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(double) }
                 .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay))
             .WithChild(new CheckBox { Content = "Trigger on increase" }
@@ -42,7 +42,7 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithChild(new DoubleUpDown { Minimum = 0 }
                     .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold")));
 
-        public bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var val = Evaluatable.Evaluate(gameState);
             var @out = false;
             if (lastValue.HasValue) {
@@ -56,9 +56,7 @@ namespace Aurora.Settings.Overrides.Logic {
             lastValue = val;
             return @out;
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public IEvaluatable<bool> Clone() => new NumericChangeDetector { Evaluatable = Evaluatable.Clone(), DetectRising = DetectRising, DetectFalling = DetectFalling, DetectionThreshold = DetectionThreshold };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new NumericChangeDetector { Evaluatable = Evaluatable.Clone(), DetectRising = DetectRising, DetectFalling = DetectFalling, DetectionThreshold = DetectionThreshold };
     }
 }

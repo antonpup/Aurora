@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI {
 
-    public class GameState_Slime_Rancher : GameState<GameState_Slime_Rancher> {
+    public class GameState_Slime_Rancher : GameState {
 
         private ProviderNode _Provider;
         private GameStateNode _GameState;
@@ -112,11 +112,5 @@ namespace Aurora.Profiles.Slime_Rancher.GSI {
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_Slime_Rancher(string JSONstring) : base(JSONstring) { }
-
-        /// <summary>
-        /// Creates a GameState_Slime_Rancher instance based on the data from the passed GameState instance.
-        /// </summary>
-        public GameState_Slime_Rancher(IGameState other) : base(other) { }
-        
     }
 }

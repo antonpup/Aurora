@@ -941,5 +941,13 @@ namespace Aurora.Settings
                 }
             }
         }
+
+        private void btnDumpSensors_Click(object sender, RoutedEventArgs e)
+        {
+            if (HardwareMonitor.TryDump())
+                Xceed.Wpf.Toolkit.MessageBox.Show("Successfully wrote sensor info to logs folder");
+            else
+                Xceed.Wpf.Toolkit.MessageBox.Show("Eror dumping file. Consult log for details.");
+        }
     }
 }

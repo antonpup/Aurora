@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
-    public class PlayerNode : Node<PlayerNode> {
+    public class PlayerNode : Node {
 
         public HealthNode Health;
         public EnergyNode Energy;
@@ -20,7 +20,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
 
     }
 
-    public class HealthNode : Node<HealthNode>
+    public class HealthNode : Node
     {
         public int Current;
         public int Max;
@@ -32,7 +32,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
         }
     }
 
-    public class EnergyNode : Node<EnergyNode>
+    public class EnergyNode : Node
     {
         public int Current;
         public int Max;
@@ -44,7 +44,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
         }
     }
 
-    public class RadNode : Node<RadNode>
+    public class RadNode : Node
     {
         public int Current;
         public int Max;

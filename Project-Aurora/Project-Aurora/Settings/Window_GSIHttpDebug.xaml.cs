@@ -50,7 +50,7 @@ namespace Aurora.Settings {
 
             // If a gamestate is already stored by the network listener, display it to the user immediately.
             if (Global.net_listener.CurrentGameState != null)
-                SetJsonText(Global.net_listener.CurrentGameState.json);
+                SetJsonText(Global.net_listener.CurrentGameState.Json);
 
             // Start a timer to update the time displays for the request
             timeDisplayTimer = new Timer(_ => Dispatcher.Invoke(() => {
@@ -83,7 +83,7 @@ namespace Aurora.Settings {
         {
             // This needs to be invoked due to the UI thread being different from the networking thread.
             // Without this, an exception is thrown trying to update the text box.
-            Dispatcher.Invoke(() => SetJsonText(gamestate.json));
+            Dispatcher.Invoke(() => SetJsonText(gamestate.Json));
             // Also record the time this request came in
             lastRequestTime = DateTime.Now;
         }

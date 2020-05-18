@@ -1,6 +1,9 @@
-﻿using System;
+﻿using JsonSubTypes;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -165,11 +168,75 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI
         public string team { get; set; }
     }
 
+    [JsonConverter(typeof(JsonSubtypes), "EventName")]
+    [JsonSubtypes.KnownSubType(typeof(_BaronKillEvent), "BaronKill")]
+    [JsonSubtypes.KnownSubType(typeof(_HeraldKillEvent), "HeraldKill")]
+    [JsonSubtypes.KnownSubType(typeof(_DragonKillEvent), "DragonKill")]
+    [JsonSubtypes.KnownSubType(typeof(_ChampionKillEvent), "ChampionKill")]
+    [JsonSubtypes.KnownSubType(typeof(_MultikillEvent), "Multikill")]
+    [JsonSubtypes.KnownSubType(typeof(_AceEvent), "Ace")]
+    [JsonSubtypes.KnownSubType(typeof(_InhibKillEvent), "InhibKilled")]
+    [JsonSubtypes.KnownSubType(typeof(_TurretKillEvent), "TurretKilled")]
     public class _Event
     {
         public int EventID { get; set; }
         public string EventName { get; set; }
         public float EventTime { get; set; }
+    }
+
+    public class _BaronKillEvent : _Event
+    {
+        public bool Stolen { get; set; }
+        public string KillerName { get; set; }
+        public string[] Assisters { get; set; }
+    }
+
+    public class _HeraldKillEvent : _Event
+    {
+        public bool Stolen { get; set; }
+        public string KillerName { get; set; }
+        public string[] Assisters { get; set; }
+    }
+
+    public class _DragonKillEvent : _Event
+    {
+        public string DragonType { get; set; }
+        public bool Stolen { get; set; }
+        public string KillerName { get; set; }
+        public string[] Assisters { get; set; }
+    }
+
+    public class _ChampionKillEvent : _Event
+    {
+        public string KillerName { get; set; }
+        public string VictimName { get; set; }
+        public string[] Assisters { get; set; }
+    }
+
+    public class _MultikillEvent : _Event
+    {
+        public string KillerName { get; set; }
+        public int KillStreak { get; set; }
+    }
+
+    public class _AceEvent : _Event
+    {
+        public string Acer { get; set; }
+        public string AcingTeam { get; set; }
+    }
+
+    public class _InhibKillEvent : _Event
+    {
+        public string KillerName { get; set; }
+        public string InhibKilled { get; set; }
+        public string[] Assisters { get; set; }
+    }
+
+    public class _TurretKillEvent : _Event
+    {
+        public string KillerName { get; set; }
+        public string TurretKilled { get; set; }
+        public string[] Assisters { get; set; }
     }
 
     public class _EventList

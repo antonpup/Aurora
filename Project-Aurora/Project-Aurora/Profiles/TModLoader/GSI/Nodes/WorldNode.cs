@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Aurora.Profiles.Terraria.GSI.Nodes {
+namespace Aurora.Profiles.TModLoader.GSI.Nodes {
     public enum TerrariaBoss
     {
         None = -1,

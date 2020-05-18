@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
-    public class WorldNode : Node<WorldNode> {
+    public class WorldNode : Node {
 
         public TimeNode Time;
         public bool Paused;
@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
         }
     }
 
-    public class TimeNode : Node<TimeNode>
+    public class TimeNode : Node
     {
         public int Hour;
         public int Min;

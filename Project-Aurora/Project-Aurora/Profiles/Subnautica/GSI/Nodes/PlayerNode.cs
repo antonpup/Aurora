@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI.Nodes {
-    public class PlayerNode : Node<PlayerNode> {
+    public class PlayerNode : Node {
 
         public string Biom;
         public bool InLifePod;
