@@ -85,6 +85,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\DS4WindowsApi.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>.\Interop.AuraServiceLib.dll</HintPath>
+    </Reference>
     <Reference Include="LibreHardwareMonitorLib">
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
