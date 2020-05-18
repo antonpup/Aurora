@@ -65,13 +65,14 @@ namespace Aurora.Devices.Uniwill
 
         private GAMECENTERTYPE CheckGC()
         {
-            try
+            int? Control = (int?)Registry.GetValue(keyName, "AuroraSwitch", null);
+            
+            if(Control.HasValue)
             {
-                int Control = (int)Registry.GetValue(keyName, "AuroraSwitch", null);
                 GamingCenterType = GAMECENTERTYPE.GAMINGTCENTER;
-                SwitchOn = Control;
+                SwitchOn = Control.Value;
             }
-            catch
+            else
             {
                 GamingCenterType = GAMECENTERTYPE.NONE;
                 SwitchOn = 0;
@@ -148,7 +149,7 @@ namespace Aurora.Devices.Uniwill
                 }
                 catch
                 {
-                    Debug.WriteLine("Uniwill device error!");
+                    Global.logger.Error("Uniwill device error!");
                 }
                 // Mark Initialized = FALSE
                 isInitialized = false;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
-    public class MailNode : Node<MailNode> {
+    public class MailNode : Node {
 
         public bool NewMail;
 

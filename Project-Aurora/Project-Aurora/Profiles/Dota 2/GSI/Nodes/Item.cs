@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing item information
     /// </summary>
-    public class Item : Node<Item>
+    public class Item : Node
     {
         /// <summary>
         /// Item name

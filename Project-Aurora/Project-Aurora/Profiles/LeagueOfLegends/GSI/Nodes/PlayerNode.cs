@@ -10,7 +10,8 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public enum Champion
     {
-        Undefined = -1,
+        Unknown = -1,
+        None = 0,
         Aatrox,
         Ahri,
         Akali,
@@ -163,14 +164,16 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
     public enum Team
     {
-        Undefined = -1,
+        Unknown = -1,
+        None = 0,
         Order,
         Chaos
     }
 
     public enum SummonerSpell
     {
-        Undefined = -1,
+        Unknown = -1,
+        None = 0,
         Cleanse,//210
         Exhaust,//210
         Flash,//300
@@ -187,7 +190,8 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
     public enum Position
     {
-        Undefined,
+        Unknown = -1,
+        None = 0,
         Top,
         Jungle,
         Middle,
@@ -196,17 +200,17 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Support
     }
 
-    public class PlayerNode : Node<PlayerNode>
+    public class PlayerNode : Node
     {
         public StatsNode ChampionStats = new StatsNode();
         public AbilitiesNode Abilities = new AbilitiesNode();
         public InventoryNode Items = new InventoryNode();
-        public SummonerSpell SpellD = SummonerSpell.Undefined;
-        public SummonerSpell SpellF = SummonerSpell.Undefined;
-        public Champion Champion = Champion.Undefined;
-        public Team Team = Team.Undefined;
-        public Position Position = Position.Undefined;
-        public string SummonerName;
+        public SummonerSpell SpellD = SummonerSpell.None;
+        public SummonerSpell SpellF = SummonerSpell.None;
+        public Champion Champion = Champion.None;
+        public Team Team = Team.None;
+        public Position Position = Position.None;
+        public string SummonerName = "";
         public int Level;
         public float Gold;       
         public bool IsDead;   

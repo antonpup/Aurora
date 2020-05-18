@@ -5,7 +5,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing information about the map
     /// </summary>
-    public class MapNode : Node<MapNode>
+    public class MapNode : Node
     {
         /// <summary>
         /// Current gamemode

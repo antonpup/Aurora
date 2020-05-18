@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class SlotNode : Node<SlotNode>
+    public class SlotNode : Node
     {
         public bool HasItem => Item != ItemID.None;
         public bool CanUse;
@@ -36,6 +36,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
     public enum ItemID
     {
+        Unknown = -1,
         None = 0,
         BootsofSpeed = 1001,
         FaerieCharm = 1004,

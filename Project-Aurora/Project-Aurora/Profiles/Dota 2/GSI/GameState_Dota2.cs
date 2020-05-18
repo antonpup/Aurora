@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Dota_2.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Dota 2
     /// </summary>
-    public class GameState_Dota2 : GameState<GameState_Dota2>
+    public class GameState_Dota2 : GameState
     {
         private Auth_Dota2 auth;
         private Provider_Dota2 provider;
@@ -18,28 +18,8 @@ namespace Aurora.Profiles.Dota_2.GSI
         private GameState_Dota2 previously;
         private GameState_Dota2 added;
 
-        /// <summary>
-        /// Creates a default GameState_Dota2 instance.
-        /// </summary>
-        public GameState_Dota2() : base()
-        {
-        }
-
-        /// <summary>
-        /// Creates a GameState instance based on the passed json data.
-        /// </summary>
-        /// <param name="json_data">The passed json data</param>
-        public GameState_Dota2(string json_data) : base(json_data)
-        {
-        }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_Dota2 instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_Dota2(IGameState other_state) : base(other_state)
-        {
-        }
+        public GameState_Dota2() : base() { }
+        public GameState_Dota2(string json_data) : base(json_data) { }
 
         /// <summary>
         /// Information about GSI authentication

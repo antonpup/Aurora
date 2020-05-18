@@ -81,5 +81,20 @@ namespace Aurora.Utils
                 .Where(i => i.IsGenericType)
                 .SingleOrDefault(i => i.GetGenericTypeDefinition() == interfaceType)?
                 .GetGenericArguments();
+
+        /// <summary>Gets the generic argument types of the given parent type for this type.
+        /// Searches the parent heirarchy until <paramref name="parentType"/> is found.</summary>
+        /// <param name="type">The type to check parent types for.</param>
+        /// <param name="parentType">Searches the parent types of <paramref name="type"/> until this generic type is found, returning this type's type parameters.</param>
+        /// <returns></returns>
+        public static Type[] GetGenericParentTypes(this Type type, Type parentType) {
+            var curType = type;
+            while (curType != null) {
+                if (curType.IsGenericType && curType.GetGenericTypeDefinition() == parentType)
+                    return curType.GetGenericArguments();
+                curType = curType.BaseType;
+            }
+            return null;
+        }
     }
 }
