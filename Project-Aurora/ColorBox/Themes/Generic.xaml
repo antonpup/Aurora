@@ -182,7 +182,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Border.InputBindings>
-                            <KeyBinding Key="Del" Command="{x:Static local:ColorBox.RemoveGradientStop}"/>
+                            <KeyBinding Key="Delete" Command="{x:Static local:ColorBox.RemoveGradientStop}"/>
                         </Border.InputBindings>
 
                         <Grid>
