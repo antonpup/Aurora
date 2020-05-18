@@ -29,7 +29,7 @@ namespace Aurora.Profiles.StardewValley
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_Enabled", new BooleanOr(new List<IEvaluatable<bool>> { new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.TitleMenu), new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.Loading) }))
+                    .SetDynamicBoolean("_Enabled", new BooleanOr(new List<Evaluatable<bool>> { new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.TitleMenu), new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.Loading) }))
                     .SetLookupTable("_PrimaryColor",new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.FromArgb(255, 255, 210, 132),
                                 new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.Loading))
@@ -108,7 +108,7 @@ namespace Aurora.Profiles.StardewValley
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<IEvaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsDebrisWeather"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<Evaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsDebrisWeather"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
                 ),
 
                 new Layer("Raining", new SimpleParticleLayerHandler()
@@ -139,7 +139,7 @@ namespace Aurora.Profiles.StardewValley
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<IEvaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsRaining"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<Evaluatable<bool>> { new BooleanGSIBoolean("World/Weather/IsRaining"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
                 ),
 
                 new Layer("Snowing", new SimpleParticleLayerHandler()
@@ -170,7 +170,7 @@ namespace Aurora.Profiles.StardewValley
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<IEvaluatable<bool>> {
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanAnd(new List<Evaluatable<bool>> {
                         new BooleanGSIBoolean("World/Weather/IsSnowing"), new BooleanGSIBoolean("Player/IsOutdoor"), new StringComparison() { Operand1 = new StringGSIString {VariablePath = "Player/CurrentLocation" }, Operand2 = new StringConstant {Value = "Desert" }, Operator = StringComparisonOperator.NotEqual } }))
                 ),
 

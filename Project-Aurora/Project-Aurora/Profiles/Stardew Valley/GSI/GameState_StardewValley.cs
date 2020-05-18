@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.StardewValley.GSI {
-    public class GameState_StardewValley : GameState<GameState_StardewValley> {
+    public class GameState_StardewValley : GameState {
         public ProviderNode Provider => NodeFor<ProviderNode>("Provider");
 
         public WorldNode World => NodeFor<WorldNode>("World");
@@ -21,14 +21,9 @@ namespace Aurora.Profiles.StardewValley.GSI {
         public GameState_StardewValley() : base() { }
 
         /// <summary>
-        /// Creates a GameState_Terraria instance based on the passed JSON data.
+        /// Creates a GameState_StardewValley instance based on the passed JSON data.
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_StardewValley(string JSONstring) : base(JSONstring) { }
-
-        /// <summary>
-        /// Creates a GameState_Terraria instance based on the data from the passed GameState instance.
-        /// </summary>
-        public GameState_StardewValley(IGameState other) : base(other) { }
     }
 }
