@@ -1,9 +1,13 @@
 ﻿{
   "IsNewFormat": true,
   "keys_to_remove": [
-    14,
     15,
-    16,
+    31,
+    32,
+    33,
+    53,
+    54,
+    93,
     99
   ],
   "key_modifications": {
@@ -127,30 +131,20 @@
       "FontSize": null,
       "Enabled": null
     },
-    "31": {
+    "14": {
+      "VisualName": null,
+      "X": 518,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "16": {
       "VisualName": null,
       "X": 481,
-      "Y": 0,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "32": {
-      "VisualName": "Home",
-      "X": 555,
-      "Y": 0,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "33": {
-      "VisualName": "PGUP",
-      "X": 629,
-      "Y": 0,
+      "Y": null,
       "Width": null,
       "Height": null,
       "Image": null,
@@ -189,8 +183,8 @@
     },
     "37": {
       "VisualName": null,
-      "X": 666,
-      "Y": null,
+      "X": 592,
+      "Y": 0,
       "Width": null,
       "Height": null,
       "Image": null,
@@ -209,27 +203,7 @@
     },
     "52": {
       "VisualName": null,
-      "X": 518,
-      "Y": 0,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "53": {
-      "VisualName": null,
-      "X": 592,
-      "Y": 0,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "54": {
-      "VisualName": "PGDN",
-      "X": 666,
+      "X": 555,
       "Y": 0,
       "Width": null,
       "Height": null,
@@ -269,10 +243,10 @@
     },
     "58": {
       "VisualName": null,
-      "X": 666,
-      "Y": null,
+      "X": 629,
+      "Y": 0,
       "Width": null,
-      "Height": null,
+      "Height": -37,
       "Image": null,
       "FontSize": null,
       "Enabled": null
@@ -350,16 +324,6 @@
     "92": {
       "VisualName": null,
       "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "93": {
-      "VisualName": null,
-      "X": 666,
       "Y": null,
       "Width": null,
       "Height": null,
@@ -504,5 +468,6 @@
       "Image": "",
       "IsImage": false
     }
-  }
+},
+  "jis_key_modifications": {}
 }

@@ -1064,39 +1064,6 @@
     <None Include="DeviceLayouts\Keyboard\Extra Features\ducky_shine_7_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard101_numpad_right_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard102_numpad_right_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard21br_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard21jp_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard21us_numpad_right_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard21_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard22br_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard22jp_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard22usuk_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard22us_numpad_right_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Extra Features\keyboard_numpad_left_bottom_features.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="DeviceLayouts\Keyboard\Extra Features\logitech_g810_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1238,34 +1205,10 @@
     <None Include="DeviceLayouts\Keyboard\Uniwill2ND_35X.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2ND_35X_1.json">
+    <None Include="DeviceLayouts\Keyboard\Uniwill2P1_550.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2ND_35X_2.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P1_550_BR.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P1_550_JP.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P1_550_UK.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P1_550_US.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P2_650_BR.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P2_650_JP.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P2_650_UK.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="DeviceLayouts\Keyboard\Uniwill2P2_650_US.json">
+    <None Include="DeviceLayouts\Keyboard\Uniwill2P2_650.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="DeviceLayouts\Keyboard\wooting_one.json">

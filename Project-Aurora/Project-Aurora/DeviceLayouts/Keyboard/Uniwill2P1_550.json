@@ -1,10 +1,26 @@
 ﻿{
   "IsNewFormat": true,
   "keys_to_remove": [
-    14,
     15,
     16,
-    99
+    34,
+    35,
+    36,
+    37,
+    55,
+    56,
+    57,
+    58,
+    73,
+    74,
+    75,
+    90,
+    91,
+    92,
+    93,
+    99,
+    105,
+    106
   ],
   "key_modifications": {
     "2": {
@@ -127,6 +143,16 @@
       "FontSize": null,
       "Enabled": null
     },
+    "14": {
+      "VisualName": null,
+      "X": 518,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
     "31": {
       "VisualName": null,
       "X": 481,
@@ -140,7 +166,7 @@
     "32": {
       "VisualName": "Home",
       "X": 555,
-      "Y": 0,
+      "Y": null,
       "Width": null,
       "Height": null,
       "Image": null,
@@ -149,48 +175,8 @@
     },
     "33": {
       "VisualName": "PGUP",
-      "X": 629,
-      "Y": 0,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "34": {
-      "VisualName": null,
       "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "35": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "36": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "37": {
-      "VisualName": null,
-      "X": 666,
-      "Y": null,
+      "Y": 74,
       "Width": null,
       "Height": null,
       "Image": null,
@@ -209,7 +195,7 @@
     },
     "52": {
       "VisualName": null,
-      "X": 518,
+      "X": 555,
       "Y": 0,
       "Width": null,
       "Height": null,
@@ -219,8 +205,8 @@
     },
     "53": {
       "VisualName": null,
-      "X": 592,
-      "Y": 0,
+      "X": 555,
+      "Y": 148,
       "Width": null,
       "Height": null,
       "Image": null,
@@ -229,78 +215,8 @@
     },
     "54": {
       "VisualName": "PGDN",
-      "X": 666,
-      "Y": 0,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "55": {
-      "VisualName": null,
       "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "56": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "57": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "58": {
-      "VisualName": null,
-      "X": 666,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "73": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "74": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "75": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
+      "Y": 111,
       "Width": null,
       "Height": null,
       "Image": null,
@@ -320,46 +236,6 @@
     "89": {
       "VisualName": null,
       "X": 518,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "90": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "91": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "92": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "93": {
-      "VisualName": null,
-      "X": 666,
       "Y": null,
       "Width": null,
       "Height": null,
@@ -466,26 +342,6 @@
       "Image": null,
       "FontSize": null,
       "Enabled": null
-    },
-    "105": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": -37,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
-    },
-    "106": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
     }
   },
   "key_to_add": {
@@ -504,5 +360,6 @@
       "Image": "",
       "IsImage": false
     }
-  }
+  },
+  "jis_key_modifications": {}
 }

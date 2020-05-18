@@ -51,7 +51,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         }
 
-        private void ConfigChanged()
+        public void ConfigChanged()
         {
             Keys = LoadKeys();
         }

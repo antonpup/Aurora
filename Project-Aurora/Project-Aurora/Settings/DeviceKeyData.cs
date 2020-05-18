@@ -126,8 +126,8 @@ namespace Aurora.Settings
                 if (updateConf.Key.VisualName != baseConf.Key.VisualName) VisualName = updateConf.Key.VisualName;
                 if (updateConf.X != baseConf.X) X = updateConf.X;
                 if (updateConf.Y != baseConf.Y) Y = updateConf.Y;
-                if (updateConf.Height != baseConf.Height) Height = updateConf.Height;
-                if (updateConf.Width != baseConf.Width) Width = updateConf.Width;
+                if (updateConf.Height != baseConf.Height) Height = updateConf.Height - baseConf.Height;
+                if (updateConf.Width != baseConf.Width) Width = updateConf.Width - baseConf.Width;
                 if (updateConf.FontSize != baseConf.FontSize) FontSize = updateConf.FontSize;
                 if (updateConf.Enabled != baseConf.Enabled) Enabled = updateConf.Enabled;
                 if (updateConf.Image != baseConf.Image) Image = updateConf.Image;
@@ -262,8 +262,8 @@ namespace Aurora.Settings
             }
             if (modifier.X != null) X = modifier.X.Value;
             if (modifier.Y != null) Y = modifier.Y.Value;
-            if (modifier.Height != null) Height = modifier.Height.Value;
-            if (modifier.Width != null) Width = modifier.Width.Value;
+            if (modifier.Height != null) Height += modifier.Height.Value;
+            if (modifier.Width != null) Width += modifier.Width.Value;
             if (modifier.FontSize != null) FontSize = modifier.FontSize;
             if (modifier.Enabled != null) Enabled = modifier.Enabled;
             if (modifier.Image != null) Image = modifier.Image;

@@ -190,7 +190,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 var layout = sender as Control_DeviceLayout;
                 layout.ReleaseMouseCapture();
-                Window_DeviceConfig configWindow = new Window_DeviceConfig(layout.DeviceConfig);
+                Window_DeviceConfig configWindow = new Window_DeviceConfig(layout);
                 configWindow.Show();
             }
 

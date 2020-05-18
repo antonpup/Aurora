@@ -333,19 +333,9 @@ namespace Aurora.Utils
         public IdleEffectsToStringVC() : base(IdleEffects.None) { }
     }
 
-    public class KbLayoutToStringVC : EnumToStringVC
+    public class KeyboardPhysicalLayoutToStringVC : EnumToStringVC
     {
-        public KbLayoutToStringVC() : base(PreferredKeyboardLocalization.None) { }
-    }
-
-    public class KbBrandToStringVC : EnumToStringVC
-    {
-        public KbBrandToStringVC() : base(PreferredKeyboard.None) { }
-    }
-
-    public class MouseBrandToStringVC : EnumToStringVC
-    {
-        public MouseBrandToStringVC() : base(PreferredMouse.None) { }
+        public KeyboardPhysicalLayoutToStringVC() : base(KeyboardPhysicalLayout.ANSI) { }
     }
 
     public class BitmapAccuracyToStringVC : EnumToStringVC
