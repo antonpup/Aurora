@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
 {
-    public class ProviderNode : Node<ProviderNode>
+    public class ProviderNode : Node
     {
         public string Name;
         public int AppID;
@@ -19,7 +19,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             //ModVer = new ModVerNode(_ParsedData["modver"]?.ToString() ?? "");
         }
 
-        public class ModVerNode : Node<ModVerNode>
+        public class ModVerNode : Node
         {
             public int Major;
             public int Minor;

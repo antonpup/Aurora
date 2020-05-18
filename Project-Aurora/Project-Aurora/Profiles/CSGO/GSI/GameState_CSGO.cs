@@ -13,7 +13,7 @@ namespace Aurora.Profiles.CSGO.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Counter-Strike: Global Offensive
     /// </summary>
-    public class GameState_CSGO : GameState<GameState_CSGO>
+    public class GameState_CSGO : GameState
     {
         private ProviderNode _Provider;
         private MapNode _Map;
@@ -151,34 +151,8 @@ namespace Aurora.Profiles.CSGO.GSI
             }
         }
 
-        /// <summary>
-        /// Creates a default GameState_CSGO instance.
-        /// </summary>
-        public GameState_CSGO()
-        {
-            json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
-        }
 
-        /// <summary>
-        /// Creates a GameState_CSGO instance based on the passed json data.
-        /// </summary>
-        /// <param name="JSONstring">The passed json data</param>
-        public GameState_CSGO(string JSONstring)
-        {
-            if (String.IsNullOrWhiteSpace(JSONstring))
-                JSONstring = "{}";
-
-            json = JSONstring;
-            _ParsedData = JObject.Parse(JSONstring);
-        }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_CSGO instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_CSGO(IGameState other_state) : base(other_state)
-        {
-        }
+        public GameState_CSGO() : base() { }
+        public GameState_CSGO(string json_data) : base(json_data) { }
     }
 }

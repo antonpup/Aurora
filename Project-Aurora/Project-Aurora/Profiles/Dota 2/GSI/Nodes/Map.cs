@@ -90,7 +90,7 @@
     /// <summary>
     /// Class representing information about the map
     /// </summary>
-    public class Map_Dota2 : Node<Map_Dota2>
+    public class Map_Dota2 : Node
     {
         /// <summary>
         /// Name of the current map

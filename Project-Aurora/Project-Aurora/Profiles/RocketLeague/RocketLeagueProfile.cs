@@ -78,7 +78,7 @@ namespace Aurora.Profiles.RocketLeague
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicDouble("_Value", new IfElseNumeric( new BooleanAnd( new List<IEvaluatable<bool>>{//if match is tied 0 - 0
+                    .SetDynamicDouble("_Value", new IfElseNumeric( new BooleanAnd( new List<Evaluatable<bool>>{//if match is tied 0 - 0
                                                                                     new BooleanMathsComparison(new NumberGSINumeric("YourTeam/Goals"), new NumberConstant(0)),
                                                                                     new BooleanMathsComparison(new NumberGSINumeric("OpponentTeam/Goals"), new NumberConstant(0))
                                                                                 }
@@ -87,7 +87,7 @@ namespace Aurora.Profiles.RocketLeague
                                                                 new NumberGSINumeric("YourTeam/Goals")//otherwise set to our goals
                                                 )
                     )
-                    .SetDynamicDouble("_MaxValue", new IfElseNumeric( new BooleanAnd( new List<IEvaluatable<bool>>{//if match is tied 0 - 0
+                    .SetDynamicDouble("_MaxValue", new IfElseNumeric( new BooleanAnd( new List<Evaluatable<bool>>{//if match is tied 0 - 0
                                                                                     new BooleanMathsComparison(new NumberGSINumeric("YourTeam/Goals"), new NumberConstant(0)),
                                                                                     new BooleanMathsComparison(new NumberGSINumeric("OpponentTeam/Goals"), new NumberConstant(0))
                                                                                 }

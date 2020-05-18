@@ -1,5 +1,5 @@
 ﻿namespace Aurora.Profiles.ETS2.GSI.Nodes {
-    public class PlacementNode : Node<PlacementNode> {
+    public class PlacementNode : Node {
 
         /// <summary>X coordinate of the object.</summary>
         public float x;

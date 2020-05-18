@@ -68,7 +68,7 @@ namespace Aurora.Profiles
         public bool Disposed { get; protected set; } = false;
         public ApplicationProfile Profile { get; set; }
         public ObservableCollection<ApplicationProfile> Profiles { get; set; }
-        public Dictionary<string, Tuple<Type, Type>> ParameterLookup { get; set; } //Key = variable path, Value = {Return type, Parameter type}
+        public GameStateParameterLookup ParameterLookup { get; set; }
         public bool HasLayers { get; set; }
         public event EventHandler ProfileChanged;
         public bool ScriptsLoaded { get; protected set; }
@@ -108,7 +108,7 @@ namespace Aurora.Profiles
             };
             EffectScripts = new Dictionary<string, IEffectScript>();
             if (config.GameStateType != null)
-                ParameterLookup = Utils.GameStateUtils.ReflectGameStateParameters(config.GameStateType);
+                ParameterLookup = new GameStateParameterLookup(config.GameStateType);
         }
 
         public virtual bool Initialize()
@@ -307,14 +307,14 @@ namespace Aurora.Profiles
                                     continue;
                                 }
 
-                                lyr.AnythingChanged += SaveProfilesEvent;
+                                lyr.PropertyChanged += SaveProfilesEvent;
                             }
 
                             collection.CollectionChanged += (_, e) => {
                                 if (e.NewItems != null)
                                     foreach (Layer lyr in e.NewItems)
                                         if (lyr != null)
-                                            lyr.AnythingChanged += SaveProfilesEvent;
+                                            lyr.PropertyChanged += SaveProfilesEvent;
                                 SaveProfiles();
                             };
                         }

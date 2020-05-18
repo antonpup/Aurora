@@ -8,10 +8,10 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
     public enum ResourceType
     {
-        Undefined = -1,
+        Unknown = -1,
+        None = 0,
         Mana,
         Energy,
-        None,
         Shield,
         Battlefury,
         Dragonfury,
@@ -26,7 +26,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Max
     }
 
-    public class StatsNode : Node<StatsNode>
+    public class StatsNode : Node
     {
         public float AbilityPower;
         public float Armor;

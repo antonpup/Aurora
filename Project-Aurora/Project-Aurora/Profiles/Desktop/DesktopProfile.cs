@@ -58,7 +58,7 @@ namespace Aurora.Profiles.Desktop
                     _MaxVariablePath = "100"
                 },
 
-            }, new Settings.Overrides.Logic.Builder.OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanOr(new List<IEvaluatable<bool>> { new BooleanKeyDownWithTimer(Keys.VolumeUp, 3), new BooleanKeyDownWithTimer(Keys.VolumeDown, 3) }))));
+            }, new Settings.Overrides.Logic.Builder.OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanOr(new List<Evaluatable<bool>> { new BooleanKeyDownWithTimer(Keys.VolumeUp, 3), new BooleanKeyDownWithTimer(Keys.VolumeDown, 3) }))));
         }
 
         public override void Reset()

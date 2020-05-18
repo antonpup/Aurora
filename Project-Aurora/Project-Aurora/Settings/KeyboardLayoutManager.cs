@@ -446,6 +446,7 @@ namespace Aurora.Settings
 
             var layoutConfigPath = "";
 
+
             if (keyboard_preference != "" && keyboard_preference != "None")
             {
                 layoutConfigPath = Path.Combine(layoutsPath, "Keyboard", keyboard_preference + ".json");

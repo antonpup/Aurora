@@ -206,21 +206,21 @@ namespace Aurora.Profiles.Minecraft
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(125,42,123), new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(125,42,123), new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", 1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The End
-                        .AddEntry(Color.FromArgb(255,183,0), new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(255,183,0), new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", -1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The Nether
                     )
                     .SetLookupTable("_SecondaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(49,0,59), new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(49,0,59), new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", 1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The End
-                        .AddEntry(Color.FromArgb(87,83,0), new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(87,83,0), new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", -1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The Nether
@@ -235,21 +235,21 @@ namespace Aurora.Profiles.Minecraft
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(209,232,80), new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(209,232,80), new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", 1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The End
-                        .AddEntry(Color.FromArgb(184,26,0), new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(184,26,0), new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", -1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The Nether
                     )
                     .SetLookupTable("_SecondaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(107,102,49),new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(107,102,49),new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", 1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The End
-                        .AddEntry(Color.FromArgb(59,8,0),  new BooleanAnd(new IEvaluatable<bool>[] {
+                        .AddEntry(Color.FromArgb(59,8,0),  new BooleanAnd(new Evaluatable<bool>[] {
                             new BooleanGSINumeric("World/DimensionID", -1),
                             new BooleanGSIBoolean("Player/InGame")
                         }))//The Nether

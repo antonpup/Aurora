@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_Borderlands2 : Node<Player_Borderlands2>
+    public class Player_Borderlands2 : Node
     {
         /// <summary>
         /// Player's boost amount [0.0f, 1.0f]

@@ -96,13 +96,13 @@ namespace Aurora.Settings.Layers
             triggerPathItemsAreBoolean = isTriggerBoolean;
 
             // Get a list of the parameters. If trigger is boolean mode, filters to only boolean values, else does numeric values
-            triggerPath.ItemsSource = profile?.ParameterLookup?
+            /*triggerPath.ItemsSource = profile?.ParameterLookup?
                 .Where(kvp => isTriggerBoolean
                     ? kvp.Value.Item1 == typeof(bool)
                     : TypeUtils.IsNumericType(kvp.Value.Item1)
                 )
                 .Select(kvp => kvp.Key)
-                .ToList();
+                .ToList();*/
         }
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e) {
@@ -173,9 +173,9 @@ namespace Aurora.Settings.Layers
             UpdateUI();
 
             // If the evaluatable is not the correct type or it is null, then create the default Evaluatable for it
-            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !typeof(IEvaluatable<double>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !typeof(Evaluatable<double>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
                 Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<double>();
-            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !typeof(IEvaluatable<bool>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !typeof(Evaluatable<bool>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
                 Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<bool>();
 
             // Update the evaluatable control

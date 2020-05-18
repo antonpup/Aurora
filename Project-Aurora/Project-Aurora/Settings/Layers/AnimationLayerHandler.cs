@@ -215,8 +215,8 @@ namespace Aurora.Settings.Layers
             } else if (IsTriggerNumericValueBased(Properties.TriggerMode) || IsTriggerEvaluatableNumericValueBased(Properties.TriggerMode)) {
                 // Evaluate the evaluatable or the game state path and retrieve the double
                 double resolvedTriggerValue = IsTriggerEvaluatableNumericValueBased(Properties.TriggerMode)
-                    ? ((IEvaluatable<double>)Properties.EvaluatableTrigger)?.Evaluate(gamestate) ?? 0 // Evaluatable may be null, so we need to account for that
-                    : GameStateUtils.TryGetDoubleFromState(gamestate, Properties.TriggerPath);
+                    ? ((Evaluatable<double>)Properties.EvaluatableTrigger)?.Evaluate(gamestate) ?? 0 // Evaluatable may be null, so we need to account for that
+                    : gamestate.GetNumber(Properties.TriggerPath);
 
                 // Check to see if a gamestate value change should trigger the animation
                 switch (Properties.TriggerMode) {
@@ -242,8 +242,8 @@ namespace Aurora.Settings.Layers
             } else {
                 // Evaluatable the boolean, either as an evaluatable or a game state variable.
                 bool resolvedTriggerValue = IsTriggerEvaluatableBooleanValueBased(Properties.TriggerMode)
-                    ? ((IEvaluatable<bool>)Properties.EvaluatableTrigger)?.Evaluate(gamestate) ?? false // Evaluatable may be null, so we need to account for that
-                    : GameStateUtils.TryGetBoolFromState(gamestate, Properties.TriggerPath);
+                    ? ((Evaluatable<bool>)Properties.EvaluatableTrigger)?.Evaluate(gamestate) ?? false // Evaluatable may be null, so we need to account for that
+                    : gamestate.GetBool(Properties.TriggerPath);
 
                 switch (Properties.TriggerMode) {
                     case AnimationTriggerMode.OnTrue:
@@ -291,7 +291,7 @@ namespace Aurora.Settings.Layers
 
         public override void SetApplication(Application profile) {
             // Check to ensure the property specified actually exists
-            if (profile != null && !string.IsNullOrWhiteSpace(Properties._TriggerPath) && !profile.ParameterLookup.ContainsKey(Properties._TriggerPath))
+            if (profile != null && !string.IsNullOrWhiteSpace(Properties._TriggerPath) && !profile.ParameterLookup.IsValidParameter(Properties._TriggerPath))
                 Properties._TriggerPath = string.Empty;
 
             // Tell the control to update (will update the combobox with the possible variable paths)
