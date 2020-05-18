@@ -1,4 +1,4 @@
-{
+﻿{
   "keys_to_remove": [],
   "key_modifications": {
     "99": {
@@ -17,7 +17,5 @@
       "enabled": true
     }
   },
-  "included_features": [
-    "asus_strix_flare_features.json"
-  ]
+  "included_features": []
 }
