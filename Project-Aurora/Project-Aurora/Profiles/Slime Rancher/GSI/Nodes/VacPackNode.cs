@@ -189,7 +189,7 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
             }
         }
         #endregion
-        public class SpiralNode : Node<SpiralNode>
+        public class SpiralNode : Node
         {
             public float Percentage;
             public float WarningThreshold;
