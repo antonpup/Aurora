@@ -181,11 +181,11 @@ namespace Aurora.Profiles.StardewValley
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor",new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.ForestGreen,
+                        .AddEntry(Color.FromArgb(255, 252, 39, 185),
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Spring))
-                        .AddEntry(Color.Gold,
+                        .AddEntry(Color.FromArgb(255, 63, 217, 4),
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Summer))
-                        .AddEntry(Color.Brown,
+                        .AddEntry(Color.FromArgb(255, 153, 61, 4),
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Fall))
                         .AddEntry(Color.FromArgb(255, 0, 110, 255),
                                 new BooleanGSIEnum("World/Season", GSI.Nodes.Seasons.Winter))
