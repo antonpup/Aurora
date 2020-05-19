@@ -6,9 +6,8 @@
     xmlns:enum="clr-namespace:Aurora.Settings"
     xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
     Title="Device Config"
-    MinHeight="100"
-    Height="500"
-    MinWidth="300"
+    MinHeight="100" MinWidth="300"
+    Height="500" Width="600"
     ResizeMode="CanResizeWithGrip"
     ShowInTaskbar="False"
     WindowStartupLocation="CenterOwner">

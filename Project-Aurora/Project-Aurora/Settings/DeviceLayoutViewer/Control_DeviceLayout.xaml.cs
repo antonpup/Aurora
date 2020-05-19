@@ -54,16 +54,12 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         public void ConfigChanged()
         {
-            ConfigChanged(DeviceConfig);
-        }
-        public void ConfigChanged(DeviceConfig config)
-        {
-            DeviceLayout layout = new DeviceLayout(config);
+            DeviceLayout layout = new DeviceLayout(DeviceConfig);
             Keys = layout.LoadLayout();
-            /*foreach(var key in Keys)
+            foreach(var key in Keys)
             {
                 key.Key.DeviceId = DeviceConfig.Id;
-            }*/
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

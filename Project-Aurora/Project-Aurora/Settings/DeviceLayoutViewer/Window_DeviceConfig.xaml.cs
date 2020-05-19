@@ -207,22 +207,23 @@ namespace Aurora.Settings.DeviceLayoutViewer
         private void LoadDeviceLayout()
         {
             //Config.RefreshConfig();
-            var config = Config;
             Task.Run(() =>
             {
-                Dispatcher.Invoke(() => { deviceLayout.ConfigChanged(config);
+                Dispatcher.Invoke(() => { 
+                    deviceLayout.ConfigChanged();
                 
-                foreach (var key in deviceLayout.KeyboardMap.Values)
-                {
-                    key.MouseDown += KeyMouseDown;
-                    key.MouseMove += KeyMouseMove;
-                    key.MouseUp += KeyMouseUp;
-                    key.UpdateLayout();
-                }
-                //deviceLayout.UpdateLayout();
-                InitKeycapList();
-                this.Width = deviceLayout.Width + 340;
-                this.KeyDown += OnKeyDownHandler; });
+                    foreach (var key in deviceLayout.KeyboardMap.Values)
+                    {
+                        key.MouseDown += KeyMouseDown;
+                        key.MouseMove += KeyMouseMove;
+                        key.MouseUp += KeyMouseUp;
+                        key.UpdateLayout();
+                    }
+                    //deviceLayout.UpdateLayout();
+                    InitKeycapList();
+                    this.Width = deviceLayout.Width + 340;
+                    this.KeyDown += OnKeyDownHandler; 
+                });
             });
         }
         private void InitKeycapList()
