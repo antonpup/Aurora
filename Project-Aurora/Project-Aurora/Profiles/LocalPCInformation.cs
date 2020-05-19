@@ -35,61 +35,39 @@ namespace Aurora.Profiles {
         #endregion
 
         #region Audio Properties
-        private static readonly MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
-        private static readonly NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
-
-        /// <summary>
-        /// Gets the default endpoint for output (playback) devices e.g. speakers, headphones, etc.
-        /// This will return null if there are no playback devices available.
-        /// </summary>
-        private MMDevice DefaultAudioOutDevice {
-            get {
-                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); }
-                catch { return null; }
-            }
-        }
-
-        /// <summary>
-        /// Gets the default endpoint for input (recording) devices e.g. microphones.
-        /// This will return null if there are no recording devices available.
-        /// </summary>
-        private MMDevice DefaultAudioInDevice {
-            get {
-                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console); }
-                catch { return null; }
-            }
-        }
+        private static AudioDeviceProxy captureProxy;
+        private static readonly AudioDeviceProxy renderProxy;
 
         /// <summary>
         /// Current system volume (as set from the speaker icon)
         /// </summary>
         // Note: Manually checks if muted to return 0 since this is not taken into account with the MasterVolumeLevelScalar.
-        public float SystemVolume => SystemVolumeIsMuted ? 0 : DefaultAudioOutDevice?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
+        public float SystemVolume => SystemVolumeIsMuted ? 0 : renderProxy?.Device?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the system volume is muted.
         /// </summary>
-        public bool SystemVolumeIsMuted => DefaultAudioOutDevice?.AudioEndpointVolume.Mute ?? true;
+        public bool SystemVolumeIsMuted => renderProxy?.Device?.AudioEndpointVolume.Mute ?? true;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone even when muted.
         /// </summary>
-        public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float MicrophoneLevel => captureProxy?.Device?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being emitted by the default speaker even when muted.
         /// </summary>
-        public float SpeakerLevel => DefaultAudioOutDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float SpeakerLevel => renderProxy?.Device?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone if not muted.
         /// </summary>
-        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : captureProxy?.Device?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the default microphone is muted.
         /// </summary>
-        public bool MicrophoneIsMuted => DefaultAudioInDevice?.AudioEndpointVolume.Mute ?? true;
+        public bool MicrophoneIsMuted => captureProxy?.Device?.AudioEndpointVolume.Mute ?? true;
         #endregion
 
         #region Device Properties
@@ -149,22 +127,19 @@ namespace Aurora.Profiles {
         public bool IsDesktopLocked => DesktopUtils.IsDesktopLocked;
 
         static LocalPCInformation() {
-            void StartStopRecording() {
-                // We must start recording to be able to capture audio in, but only do this if the user has the option set. Allowing them
-                // to turn it off will give them piece of mind we're not spying on them and will stop the Windows 10 mic icon appearing.
-                try {
-                    if (Global.Configuration.EnableAudioCapture)
-                        waveInEvent.StartRecording();
-                    else
-                        waveInEvent.StopRecording();
-                } catch { }
-            }
+            // Do not create a capture device if audio capture is disabled. Otherwise it will create a mic icon in win 10 and people will think we're spies.
+            if (Global.Configuration.EnableAudioCapture)
+                captureProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioCaptureDevice, DataFlow.Capture);
+            renderProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioRenderDevice, DataFlow.Render);
 
-            StartStopRecording();
-            Global.Configuration.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == "EnableAudioCapture")
-                    StartStopRecording();
-            };
+            /* Note that I tried setting up a PropertyChanged listener on the Global.Configuration instance to watch for when the audio device is
+             * changed/disabled. However, since the MMDevice needs to be re-created, this resulted in a COM exception when trying to cast to a
+             * different type, which according to NAudio's GitHub is due to it being created on a different thread (https://github.com/naudio/NAudio/issues/214)
+             * 
+             * I tried using different syncronization contexts to recreate the devices on, however I think because they were created in the static
+             * constructor (where the SyncronizationContext.Current is null), we cannot retrieve that context or something.
+             * 
+             * Idk maybe a smarter man than I can figure it out. */
         }
     }
 

@@ -14,7 +14,7 @@ namespace Aurora.Utils {
     /// </summary>
     public sealed class AudioDeviceProxy : IDisposable {
 
-        private const string DEFAULT_DEVICE_ID = ""; // special ID to indicate the default device
+        public const string DEFAULT_DEVICE_ID = ""; // special ID to indicate the default device
 
         private static readonly MMDeviceEnumerator deviceEnumerator = new MMDeviceEnumerator();
 
@@ -32,12 +32,12 @@ namespace Aurora.Utils {
         }
 
         /// <summary>Creates a new reference to the default audio device with the given flow direction.</summary>
-        public AudioDeviceProxy(DataFlow flow) : this("", flow) { }
+        public AudioDeviceProxy(DataFlow flow) : this(DEFAULT_DEVICE_ID, flow) { }
 
         /// <summary>Creates a new reference to the audio device with the given ID with the given flow direction.</summary>
         public AudioDeviceProxy(string deviceId, DataFlow flow) {
             Flow = flow;
-            DeviceId = deviceId;
+            DeviceId = deviceId ?? DEFAULT_DEVICE_ID;
         }
 
         /// <summary>Indicates recorded data is available on the selected device.</summary>
@@ -82,6 +82,7 @@ namespace Aurora.Utils {
                 ? deviceEnumerator.GetDefaultAudioEndpoint(Flow, Role.Multimedia) // Get default if no ID is provided
                 : deviceEnumerator.EnumerateAudioEndPoints(Flow, DeviceState.Active).FirstOrDefault(d => d.ID == DeviceId); // Otherwise, get the one with this ID
             if (mmDevice == null) return;
+            Device = mmDevice;
 
             // Get a WaveIn from the device and start it, adding any events as requied
             WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
