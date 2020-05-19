@@ -171,13 +171,13 @@
                     <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Minimum="0" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
                     <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
 
-                    <CheckBox Content="Enable Audio Capture (for gamestates)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
+                    <CheckBox Content="Enable Audio Capture for gamestates (restart required)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
                     <TextBlock Text="GSI Playback Device:" Margin="511,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <ComboBox SelectedValue="{Binding Path=GSIAudioRenderDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,59,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="RESTART REQUIRED FOR THIS TO TAKE EFFECT. The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="RESTART REQUIRED FOR THIS TO TAKE EFFECT. The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 </Grid>
             </TabItem>
             <TabItem Header="Away Effects">
