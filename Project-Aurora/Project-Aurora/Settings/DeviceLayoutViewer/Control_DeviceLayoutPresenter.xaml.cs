@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Timers;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -37,11 +38,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             get { return (bool)GetValue(IsLayoutMoveEnabledProperty); }
             set { SetValue(IsLayoutMoveEnabledProperty, value); }
-        }
-        
-        private void enableEditLayout_Click(object sender, RoutedEventArgs e)
-        {
-            //IsLayoutMoveEnabled = !IsLayoutMoveEnabled;
         }
 
         public Control_DeviceLayoutPresenter()
@@ -97,81 +93,53 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void Layout_DeviceLayoutUpdated(object sender)
         {
-
-            double baseline_x = double.MaxValue;
-            double baseline_y = double.MaxValue;
-            double current_width = 800;
-            double current_height = 200;
+            double current_width = double.MinValue;
+            double current_height = double.MinValue;
             foreach (FrameworkElement layout in DeviceLayouts)
             {
                 Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
 
                 if (offset.X + layout.Width > current_width)
                     current_width = offset.X + layout.Width;
-                if (offset.X < baseline_x)
-                    baseline_x = offset.X;
 
                 if (offset.Y + layout.Height > current_height)
                     current_height = offset.Y + layout.Height;
-                if (offset.Y < baseline_y)
-                    baseline_y = offset.Y;
-               //layout as Control_DeviceLayout).SaveLayoutPosition(offset);
+
+                //layout as Control_DeviceLayout).SaveLayoutPosition(offset);
             }
-            /*foreach (UIElement layout in layouts_grid.Children)
-            {
-                Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
-                /*if (offset.X + layout.Width - baseline_x > current_width)
-                    current_width = offset.X + layout.Width- baseline_x;
 
-                if (offset.Y + layout.Height - baseline_y > current_height)
-                    current_height = offset.Y + layout.Height - baseline_y;*/
-            //layout.RenderTransform = new TranslateTransform(offset
-            //layout.Margin = new Thickness(offset.X - baseline_x, offset.Y - baseline_y, 0, 0);
-            /* layout.RenderTransform = new TranslateTransform(offset.X - baseline_x, offset.Y - baseline_y);
-             if (layout is Control_DeviceLayout)
-                 (layout as Control_DeviceLayout).SaveLayoutPosition(offset);
-         }*/
+            layouts_grid.Width = current_width;
+            layouts_grid.Height = current_height;
+            Effects.grid_baseline_x = 0;
+            Effects.grid_baseline_y = 0;
+            Effects.grid_width = (float)layouts_grid.Width;
+            Effects.grid_height = (float)layouts_grid.Height;
 
-            layouts_grid.Width = current_width - baseline_x;
-            //this.Width = width + (keyboard_grid.Width - virtual_keyboard_width);
-
-            layouts_grid.Height = current_height - baseline_y;
-            foreach (UIElement layout in layouts_grid.Children)
-            {
-                Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
-                layout.RenderTransform = new TranslateTransform(offset.X - baseline_x, offset.Y - baseline_y);
-                layout.UpdateLayout();
-            }
-             //layouts_grid.RenderTransform = new TranslateTransform(-baseline_x, -baseline_y);
-             //keyboard_grid.Clip = new RectangleGeometry(new Rect(baseline_x, baseline_x, current_width - baseline_x, current_height - baseline_y));
-             //this.Height = height + (keyboard_grid.Height - virtual_keyboard_height);
-             Effects.grid_baseline_x = 0;// (float)-baseline_x;
-             Effects.grid_baseline_y = 0;// (float)-baseline_y;
-             Effects.grid_width = (float)layouts_grid.Width;
-             Effects.grid_height = (float)layouts_grid.Height;
-
-
-             //keyboard_grid.Margin = new Thickness(-baseline_x, -baseline_y, 0, 0);
-             //layout2.LayoutTransform = new TranslateTransform(layout2.Region.X, layout2.Region.Y);
-             layouts_viewbox.MaxWidth = layouts_grid.Width;
-             layouts_viewbox.MaxHeight = layouts_grid.Height;
-             layouts_grid.UpdateLayout();
-             layouts_viewbox.UpdateLayout();
-             this.UpdateLayout();
-             CalculateBitmap();
+            layouts_viewbox.MaxWidth = layouts_grid.Width;
+            layouts_viewbox.MaxHeight = layouts_grid.Height;
+            layouts_grid.UpdateLayout();
+            layouts_viewbox.UpdateLayout();
+            this.UpdateLayout();
+            CalculateBitmap();
 
         }
         public void CalculateBitmap()
         {
             if (IsLayoutMoveEnabled)
             {
-                Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
-                var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
-                DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x => {
-                    if (!bitmap.ContainsKey(x.Key))
-                        bitmap.Add(x.Key, x.Value);
-                }));
-                Global.effengine.SetBitmapping(bitmap);
+                Task.Run(() =>
+                {
+                    Dispatcher.Invoke(() => {
+                        Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
+                        var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
+                        DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x =>
+                        {
+                            if (!bitmap.ContainsKey(x.Key))
+                                bitmap.Add(x.Key, x.Value);
+                        }));
+                        Global.effengine.SetBitmapping(bitmap);
+                    });
+                });
             }
         }
         private void DeviceLayoutNumberChanged(object sender)
@@ -225,6 +193,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 //Update size
                 layouts_grid.Width = 450;
                 layouts_grid.Height = 200;
+                layouts_viewbox.MaxWidth = 800;
+                layouts_viewbox.MaxHeight = 300;
             }
         }
         private void DeviceLayout_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -272,17 +242,17 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         private void DeviceLayout_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var layout = sender as Control_DeviceLayout;
-            if (layout.IsMouseCaptured)
+            var senderLayout = sender as Control_DeviceLayout;
+            if (senderLayout.IsMouseCaptured)
             {
                 // release this control.
-                layout.ReleaseMouseCapture();
+                senderLayout.ReleaseMouseCapture();
 
-                if (layout.RenderTransform is TranslateTransform)
+                if (senderLayout.RenderTransform is TranslateTransform layoutTranslate)
                 {
-                    layout.DeviceConfig.Offset.X = (int)(layout.RenderTransform as TranslateTransform).X;
-                    layout.DeviceConfig.Offset.Y = (int)(layout.RenderTransform as TranslateTransform).Y;
-                    Global.devicesLayout.SaveConfiguration(layout.DeviceConfig);
+                    senderLayout.DeviceConfig.Offset.X = layoutTranslate.X;
+                    senderLayout.DeviceConfig.Offset.Y = layoutTranslate.Y;
+                    Global.devicesLayout.SaveConfiguration(senderLayout.DeviceConfig);
                 }
             }
         }

@@ -134,6 +134,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
+            Config.Offset = originalDeviceLayout.DeviceConfig.Offset;
             originalDeviceLayout.DeviceConfig = Config;
             Global.devicesLayout.SaveConfiguration(Config);
             Close();

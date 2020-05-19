@@ -600,8 +600,24 @@ namespace Aurora.Settings
         }
         public void SaveConfiguration(DeviceConfig config)
         {
+
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
             DevicesConfig[config.Id] = config;
+            double baseline_x = double.MaxValue;
+            double baseline_y = double.MaxValue;
+            foreach (DeviceConfig dc in DevicesConfig.Values)
+            {
+                if (dc.Offset.X < baseline_x)
+                    baseline_x = dc.Offset.X;
+
+                if (dc.Offset.Y < baseline_y)
+                    baseline_y = dc.Offset.Y;
+            }
+            foreach (DeviceConfig dc in DevicesConfig.Values)
+            {
+                dc.Offset = new Point((int)(dc.Offset.X - baseline_x), (int)(dc.Offset.Y - baseline_y));
+            }
+
             var fileName = "DevicesConfig.json";
             var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
             var content = JsonConvert.SerializeObject(this, Formatting.Indented);
