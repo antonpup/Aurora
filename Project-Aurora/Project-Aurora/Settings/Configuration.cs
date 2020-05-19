@@ -249,6 +249,8 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+        [Description("Asus Strix Scope")]
+        Asus_Strix_Scope = 901,
 
         //Drevo range is 1000-1099
         [Description("Drevo BladeMaster")]
