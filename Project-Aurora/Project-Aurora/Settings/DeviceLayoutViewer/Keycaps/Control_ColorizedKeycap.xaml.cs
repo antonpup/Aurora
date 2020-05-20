@@ -51,7 +51,7 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
 
         }
 
-        public override void SetColor(Color key_color, bool isSelected)
+        public override void SetColor(Color key_color)
         {
             if (!key_color.Equals(current_color))
             {
@@ -61,7 +61,7 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
                 current_color = key_color;
             }
 
-            if (isSelected)
+            if (IsSelected)
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
             else
             {

@@ -35,8 +35,16 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
         {
             Config = conf;
         }
-        public abstract void SetColor(Color key_color, bool isSelected);
+        public abstract void SetColor(Color key_color);
         public virtual DeviceKey GetKey() { return Config.Key; }
+
+        protected bool IsSelected = false;
+
+        public void SelectKey(bool isSelected)
+        {
+            IsSelected = isSelected;
+        }
+
         public void UpdateText(TextBlock keycapName)
         {
             if (Config.VisualNameUpdateEnabled)

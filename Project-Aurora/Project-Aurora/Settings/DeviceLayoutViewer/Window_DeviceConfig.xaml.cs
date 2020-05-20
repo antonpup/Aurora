@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +24,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
     public partial class Window_DeviceConfig : Window
     {
         private Control_DeviceLayout originalDeviceLayout;
+        private CancellationTokenSource tokenSource = new CancellationTokenSource();
         public DeviceConfig Config
         {
             get { return deviceLayout.DeviceConfig; }
@@ -40,9 +42,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             get { return _selectedKey; }
             set{
-                _selectedKey?.SelectionChanged();
+                _selectedKey?.SelectKey(false);
                 _selectedKey = value;
-                _selectedKey.SelectionChanged();
+                _selectedKey?.SelectKey(true);
             }
         }
         public Window_DeviceConfig(Control_DeviceLayout config)
@@ -58,6 +60,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (Config is KeyboardConfig keyboardConfig) 
                 this.keyboard_layout.SelectedItem = keyboardConfig.SelectedKeyboardLayout;
             DataContext = this;
+            this.KeyDown += OnKeyDownHandler;
+            Task.Run(() => UpdateKeysThread(tokenSource.Token));
         }
         private List<string> GetBrandsName(string dicName)
         {
@@ -137,10 +141,12 @@ namespace Aurora.Settings.DeviceLayoutViewer
             Config.Offset = originalDeviceLayout.DeviceConfig.Offset;
             originalDeviceLayout.DeviceConfig = Config;
             Global.devicesLayout.SaveConfiguration(Config);
+            tokenSource.Cancel();
             Close();
         }
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
+            tokenSource.Cancel();
             Close();
         }
         private void deviceDelete_Click(object sender, RoutedEventArgs e)
@@ -148,6 +154,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (MessageBox.Show("Are you sure that remove the device layout?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 Global.devicesLayout.DeleteConfiguration(Config);
+                tokenSource.Cancel();
                 Close();
             }
 
@@ -160,7 +167,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 var offset = new Point();
                 if(Config.Type == 0 && deviceLayout.KeyboardMap.ContainsKey(Devices.DeviceKeys.ESC))
                 {
-                    var escConfig = deviceLayout.KeyboardMap[Devices.DeviceKeys.ESC].GetConfiguration();
+                    var escConfig = deviceLayout.KeyboardMap[Devices.DeviceKeys.ESC].Config;
                     offset.X = -escConfig.X;
                     offset.Y = -escConfig.Y;
                 }
@@ -213,7 +220,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 Dispatcher.Invoke(() => { 
                     deviceLayout.ConfigChanged();
                 
-                    foreach (var key in deviceLayout.KeyboardMap.Values)
+                    foreach (var key in deviceLayout.KeycapLayouts)
                     {
                         key.MouseDown += KeyMouseDown;
                         key.MouseMove += KeyMouseMove;
@@ -221,17 +228,10 @@ namespace Aurora.Settings.DeviceLayoutViewer
                         key.UpdateLayout();
                     }
                     //deviceLayout.UpdateLayout();
-                    InitKeycapList();
                     this.Width = deviceLayout.Width + 340;
-                    this.KeyDown += OnKeyDownHandler; 
+                    keycap_list.ItemsSource = deviceLayout.KeycapLayouts;
                 });
             });
-        }
-        private void InitKeycapList()
-        {
-            //keycap_list.ItemsSource = deviceLayout.KeyboardMap.Keys.ToList().ConvertAll(k => k.VisualName);
-            keycap_list.ItemsSource = deviceLayout.KeyboardMap.Values.ToList().ConvertAll(k => k.GetConfiguration());
-            keycap_list.UpdateLayout();
         }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
@@ -253,9 +253,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if(sender is ListView listView)
             {
-                if (listView.SelectedItem is DeviceKeyConfiguration conf)
+                if (listView.SelectedItem is Control_Keycap key)
                 {
-                    SelectedKey = deviceLayout.KeyboardMap.Values.ToList().Where(k => k.GetConfiguration() == conf).First();
+                    SelectedKey = key;
                 }
             }
         }
@@ -264,15 +264,34 @@ namespace Aurora.Settings.DeviceLayoutViewer
             var keyConf = new DeviceKeyConfiguration();
             keyConf.Height = 30;
             keyConf.Width = 30;
-            deviceLayout.AddDeviceKey(keyConf);
-            InitKeycapList();
+
+            var keycap = new Control_Keycap(keyConf);
+            keycap.MouseDown += KeyMouseDown;
+            keycap.MouseMove += KeyMouseMove;
+            keycap.MouseUp += KeyMouseUp;
+            keycap.UpdateLayout();
+            deviceLayout.KeycapLayouts.Add(keycap);
         }
         private void removeKey_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedKey != null)
             {
-                deviceLayout.RemoveDeviceKey(SelectedKey.GetConfiguration());
-                InitKeycapList();
+                deviceLayout.KeycapLayouts.Remove(SelectedKey);
+                SelectedKey = null;
+            }
+        }
+        private void UpdateKeysThread(CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    for (int i = 0; i < deviceLayout.KeycapLayouts.Count; i++)
+                    {
+                        deviceLayout.KeycapLayouts[i].SetColor(Color.FromRgb(200, 200, 200));
+                    }
+                });
+                Thread.Sleep(100);
             }
         }
 

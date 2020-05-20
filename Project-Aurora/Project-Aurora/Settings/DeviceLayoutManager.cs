@@ -259,7 +259,7 @@ namespace Aurora.Settings
             List<DeviceKeyConfiguration> saveKeys = new List<DeviceKeyConfiguration>();
             foreach (var key in layoutKey)
             {
-                var conf = key.GetConfiguration();
+                var conf = key.Config;
                 conf.Key.DeviceId = null;
                 conf.X += (int)offset.X;
                 conf.Y += (int)offset.Y;

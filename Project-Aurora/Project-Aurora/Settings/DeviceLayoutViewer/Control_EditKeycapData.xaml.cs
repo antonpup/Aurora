@@ -40,10 +40,10 @@ namespace Aurora.Settings.DeviceLayoutViewer
             InitializeComponent();
             IsCollapsed = true;
         }
-        public Control_EditKeycapData(DeviceKeyConfiguration configuration)
+        public Control_EditKeycapData(Control_Keycap layout)
         {
             InitializeComponent();
-            DataContext = configuration;
+            DataContext = layout;
             IsCollapsed = true;
         }
         private void collapseButton_Click(object sender, RoutedEventArgs e)

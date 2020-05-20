@@ -93,8 +93,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void Layout_DeviceLayoutUpdated(object sender)
         {
-            double current_width = double.MinValue;
-            double current_height = double.MinValue;
+            double current_width = 800;
+            double current_height = 200;
             foreach (FrameworkElement layout in DeviceLayouts)
             {
                 Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
@@ -158,6 +158,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     layout.MouseDown += DeviceLayout_MouseDown;
                     layout.MouseMove += DeviceLayout_MouseMove;
                     layout.MouseUp += DeviceLayout_MouseUp;
+                    //layout.RenderTransform = new TranslateTransform(layout.DeviceConfig.Offset.X, layout.DeviceConfig.Offset.Y);
                 }
                 layouts_grid.Children.Add(new LayerEditor(layouts_grid));
             }

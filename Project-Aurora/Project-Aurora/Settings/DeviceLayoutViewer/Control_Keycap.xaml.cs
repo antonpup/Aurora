@@ -41,7 +41,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
     /// </summary>
     public partial class Control_Keycap : UserControl
     {
-        private bool IsSelected = false;
         private void PositionChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "X" || e.PropertyName == "Y")
@@ -52,7 +51,13 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 Keycap = GetKeycapViewer(sender as DeviceKeyConfiguration);
             }
+            else if (e.PropertyName == "VisualName")
+            {
+                Keycap = GetKeycapViewer(sender as DeviceKeyConfiguration);
+            }
         }
+
+        public DeviceKeyConfiguration Config => Keycap.Config;
         private KeycapViewer _keycap;
         public KeycapViewer Keycap
         {
@@ -65,11 +70,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 this.Content = _keycap;
                 RenderTransform = new TranslateTransform(_keycap.Config.X, _keycap.Config.Y);
                 _keycap.Config.PropertyChanged += PositionChanged;
-                //this.AddLogicalChild(_keycap);
-                //AddChild(_keycap);
-                //keycap = _keycap;
-                //keycap.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
-                //OnPropertyChanged(nameof(Config));
             }
         }
 
@@ -111,77 +111,21 @@ namespace Aurora.Settings.DeviceLayoutViewer
             DataContext = Keycap;
 
         }
-        private string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
-
-        /*private void LoadImage()
-        {
-            if (string.IsNullOrWhiteSpace(Config.Image))
-            {
-                keyCap.Visibility = Visibility.Visible;
-                keyCap.Text = Config.Key.VisualName;
-                //keyCap.Tag = associatedKey.Tag;
-                if (Config.FontSize != null)
-                    keyCap.FontSize = Config.FontSize.Value;
-            }
-            else
-            {
-                string image_path = System.IO.Path.Combine(layoutsPath, "Images", Config.Image);
-
-                keyCap.Visibility = Visibility.Hidden;
-
-                if (System.IO.File.Exists(image_path))
-                {
-                    var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(image_path));
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.StreamSource = memStream;
-                    image.EndInit();
-
-                    grid_backglow.Visibility = Visibility.Hidden;
-                    if (Config.Tag == -1)
-                    {
-                        keyBorder.Background = new ImageBrush(image);
-                    }
-                    else
-                    {
-                        keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
-                        keyBorder.OpacityMask = new ImageBrush(image);
-                    }
-
-                    IsImage = true;
-                }
-            }
-            
-        }*/
 
         public DeviceKey GetKey()
         {
             return Keycap.Config.Key;
         }
 
-
-        public void SetColor(Color key_color)
+        public void SetColor(Color key_color, bool isSelected = false)
         {
-            Keycap.SetColor(key_color, Global.key_recorder.HasRecorded(GetKey()));
-        }
-        public void SelectionChanged()
-        {
-            IsSelected = !IsSelected;
-            Keycap.SetColor(IsSelected ? new Color() { A = 255, R = 10, G = 255, B = 10 } : new Color(),  false);
+            //Keycap.SelectKey(isSelected || Global.key_recorder.HasRecorded(GetKey()));
+            Keycap.SetColor(key_color);
         }
 
-
-        internal DeviceKeyConfiguration GetConfiguration()
+        public void SelectKey(bool isSelected)
         {
-            /*var offset = this.TranslatePoint(new Point(0, 0), VisualTreeHelper.GetParent(this) as UIElement) - Offset;
-            const int epsilon = 3;
-            /*if (Config.X < offset.X - epsilon || Config.X > offset.X + epsilon || Config.Y < offset.Y - epsilon || Config.Y > offset.Y + epsilon)
-            {
-                Config.X = (int)offset.X;// - (int)Offset.X;
-                Config.Y = (int)offset.Y;// - (int)Offset.Y;
-            }*/
-
-            return Keycap.Config;
+            Keycap.SelectKey(isSelected);
         }
 
     }

@@ -20,27 +20,27 @@
                       Stretch="Fill"
                       Stroke="DimGray" />
             </Grid>
-            <TextBox Text="{Binding Path=VisualName, Mode=TwoWay}" HorizontalAlignment="Left" Height="15" Width="50" Margin="10,1,0,1"/>
+            <TextBox Text="{Binding Path=Config.VisualName, Mode=TwoWay}" HorizontalAlignment="Left" Height="15" Width="50" Margin="10,1,0,1"/>
             <TextBlock Margin="100,1,0,1" Height="15" TextWrapping="Wrap" Text="X: "/>
-            <TextBox  x:Name="keycap_x" Text="{Binding Path=X, Mode=TwoWay}" Height="15" Width="30" Margin="10,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+            <TextBox  x:Name="keycap_x" Text="{Binding Path=Config.X, Mode=TwoWay}" Height="15" Width="30" Margin="10,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
             <TextBlock Margin="5,1,0,1" Height="15" TextWrapping="Wrap" Text="Y: "/>
-            <TextBox  x:Name="keycap_y" Text="{Binding Path=Y, Mode=TwoWay}" Height="15" Width="30" Margin="10,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+            <TextBox  x:Name="keycap_y" Text="{Binding Path=Config.Y, Mode=TwoWay}" Height="15" Width="30" Margin="10,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
         </StackPanel>
         <StackPanel x:Name="keycapData">
             <StackPanel Margin="5" Orientation="Horizontal">
 
                 <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Tag: "/>
-                <TextBox Text="{Binding Path=Tag, Mode=TwoWay}" Width="40" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox Text="{Binding Path=Config.Tag, Mode=TwoWay}" Width="40" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
                 <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Image: "/>
-                <TextBox Text="{Binding Path=Image, Mode=TwoWay}" Width="150" Margin="0,1,0,1"/>
+                <TextBox Text="{Binding Path=Config.Image, Mode=TwoWay}" Width="150" Margin="0,1,0,1"/>
             </StackPanel>
             <StackPanel Margin="5" Orientation="Horizontal">
 
                 
                 <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Height: "/>
-                <TextBox  x:Name="keycap_height" Text="{Binding Path=Height, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox  x:Name="keycap_height" Text="{Binding Path=Config.Height, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
                 <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Width: "/>
-                <TextBox  x:Name="keycap_width" Text="{Binding Path=Width, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+                <TextBox  x:Name="keycap_width" Text="{Binding Path=Config.Width, Mode=TwoWay}" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
             </StackPanel>
         </StackPanel>
     </StackPanel>
