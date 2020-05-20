@@ -29,7 +29,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         //private FrameworkElement device_layout = new FrameworkElement();
         public event LayoutUpdatedEventHandler DeviceLayoutUpdated;
-        public Dictionary<DeviceKey, Control_Keycap> KeyboardMap = new Dictionary<DeviceKey, Control_Keycap>(new DeviceKey.EqualityComparer());
+        public Dictionary<DeviceKey, Control_Keycap> KeyboardMap => KeycapLayouts.ToDictionary(k => k.GetKey(), k => k, new DeviceKey.EqualityComparer());
 
         public static readonly DependencyProperty DeviceHeightProperty = DependencyProperty.Register("DeviceHeight", typeof(int), typeof(Control_DeviceLayout), new PropertyMetadata(0));
         public int DeviceHeight

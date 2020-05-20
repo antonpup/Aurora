@@ -171,7 +171,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     offset.X = -escConfig.X;
                     offset.Y = -escConfig.Y;
                 }
-                new DeviceLayout(Config).SaveLayout(deviceLayout.KeyboardMap.Values.ToList(), offset);
+                new DeviceLayout(Config).SaveLayout(deviceLayout.KeycapLayouts.ToList(), offset);
             }
 
         }

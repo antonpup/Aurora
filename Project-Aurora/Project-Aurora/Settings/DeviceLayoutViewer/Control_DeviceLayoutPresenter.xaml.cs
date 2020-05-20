@@ -28,7 +28,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         List<Control_DeviceLayout> DeviceLayouts = new List<Control_DeviceLayout>();
         private System.Windows.Point _positionInBlock;
 
-        public List<Control_Keycap> Keycaps => DeviceLayouts.SelectMany(dl => dl.KeyboardMap.Values).ToList();
+        public List<Control_Keycap> Keycaps => DeviceLayouts.SelectMany(dl => dl.KeycapLayouts).ToList();
 
         public static readonly DependencyProperty IsLayoutMoveEnabledProperty = DependencyProperty.Register("IsLayoutMoveEnabled",
                                                                                                 typeof(bool),
@@ -125,22 +125,19 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         public void CalculateBitmap()
         {
-            if (IsLayoutMoveEnabled)
+            Task.Run(() =>
             {
-                Task.Run(() =>
-                {
-                    Dispatcher.Invoke(() => {
-                        Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
-                        var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
-                        DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x =>
-                        {
-                            if (!bitmap.ContainsKey(x.Key))
-                                bitmap.Add(x.Key, x.Value);
-                        }));
-                        Global.effengine.SetBitmapping(bitmap);
-                    });
+                Dispatcher.Invoke(() => {
+                    Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
+                    var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
+                    DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x =>
+                    {
+                        if (!bitmap.ContainsKey(x.Key))
+                            bitmap.Add(x.Key, x.Value);
+                    }));
+                    Global.effengine.SetBitmapping(bitmap);
                 });
-            }
+            });
         }
         private void DeviceLayoutNumberChanged(object sender)
         {
@@ -161,6 +158,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     //layout.RenderTransform = new TranslateTransform(layout.DeviceConfig.Offset.X, layout.DeviceConfig.Offset.Y);
                 }
                 layouts_grid.Children.Add(new LayerEditor(layouts_grid));
+                Layout_DeviceLayoutUpdated(this);
             }
             else {
                 Label error_message = new Label();
