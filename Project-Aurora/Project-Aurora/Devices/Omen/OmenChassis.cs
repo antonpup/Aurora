@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenChassis
+    public class OmenChassis : IOmenDevice
     {
         private IntPtr hChassis = IntPtr.Zero;
 
@@ -25,7 +25,7 @@ namespace Aurora.Devices.Omen
             return (ptr == IntPtr.Zero ? null : new OmenChassis(ptr));
         }
 
-        internal void Shutdown()
+        public void Shutdown()
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public void SetLights(DeviceKeys key, Color color)
+        private void SetLight(DeviceKeys key, Color color)
         {
             if (hChassis != IntPtr.Zero)
             {
@@ -64,6 +64,23 @@ namespace Aurora.Devices.Omen
                         }
                     }
                 });
+            }
+        }
+
+        public string GetDeviceName()
+        {
+            return (hChassis != IntPtr.Zero ? "Chassis Connected" : string.Empty);
+        }
+
+        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        {
+            if (hChassis != IntPtr.Zero)
+            {
+                if (keyColors.ContainsKey(DeviceKeys.Peripheral_Logo))
+                {
+                    SetLight(DeviceKeys.Peripheral_Logo, keyColors[DeviceKeys.Peripheral_Logo]);
+                    return;
+                }
             }
         }
 

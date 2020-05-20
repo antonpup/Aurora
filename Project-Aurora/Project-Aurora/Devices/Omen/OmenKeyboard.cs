@@ -10,7 +10,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenKeyboard
+    public class OmenKeyboard : IOmenDevice
     {
         private IntPtr hKB = IntPtr.Zero;
 
@@ -46,11 +46,22 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public void SetKeys(Dictionary<DeviceKeys, Color> keyColors)
+        public string GetDeviceName()
         {
-            if(hKB != IntPtr.Zero && keyColors.Count > 0)
+            return (hKB != IntPtr.Zero ? "Keyboard Connected" : string.Empty);
+        }
+
+        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        {
+            if (hKB != IntPtr.Zero && keyColors.Count > 0)
             {
-                Task.Run(() => {
+                if (Global.Configuration.devices_disable_keyboard)
+                {
+                    return;
+                }
+
+                Task.Run(() =>
+                {
                     if (Monitor.TryEnter(this))
                     {
                         try
@@ -76,7 +87,7 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        internal void Shutdown()
+        public void Shutdown()
         {
             try
             {

@@ -12,7 +12,7 @@ namespace Aurora.Devices.Omen
 
         static public int GetKey(DeviceKeys key)
         {
-            if(key == DeviceKeys.HOME)
+            if (key == DeviceKeys.HOME)
             {
                 return KEYBOARD_KEY_LOGO;
             }

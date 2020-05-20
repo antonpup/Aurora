@@ -11,7 +11,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenMousePad
+    public class OmenMousePad : IOmenDevice
     {
         private IntPtr hMousePad = IntPtr.Zero;
 
@@ -35,7 +35,7 @@ namespace Aurora.Devices.Omen
             return (ptr == IntPtr.Zero ? null : new OmenMousePad(ptr));
         }
 
-        internal void Shutdown()
+        public void Shutdown()
         {
             try
             {
@@ -53,13 +53,30 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public void SetLights(DeviceKeys key, Color color)
+        private int GetZone(DeviceKeys key)
         {
-            int zone;
-            zone = (key == DeviceKeys.MOUSEPADLIGHT15 ? (int)MousePadZone.MOUSE_PAD_ZONE_LOGO : (int)MousePadZone.MOUSE_PAD_ZONE_0 + ((int)key - (int)DeviceKeys.MOUSEPADLIGHT1));
+            return (key == DeviceKeys.MOUSEPADLIGHT15 ? (int)MousePadZone.MOUSE_PAD_ZONE_LOGO : (int)MousePadZone.MOUSE_PAD_ZONE_0 + ((int)key - (int)DeviceKeys.MOUSEPADLIGHT1));
+        }
 
+        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        {
             if (hMousePad != IntPtr.Zero)
             {
+                foreach (KeyValuePair<DeviceKeys, Color> keyColor in keyColors)
+                {
+                    if (keyColor.Key >= DeviceKeys.MOUSEPADLIGHT1 && keyColor.Key <= DeviceKeys.MOUSEPADLIGHT15)
+                    {
+                        SetLight(keyColor.Key, keyColor.Value);
+                    }
+                }
+            }
+        }
+
+        private void SetLight(DeviceKeys key, Color color)
+        {
+            if (hMousePad != IntPtr.Zero)
+            {
+                int zone = GetZone(key);
                 cachedColors.AddOrUpdate(zone, color, (_, oldValue) => color);
 
                 Task.Run(() =>
@@ -88,6 +105,11 @@ namespace Aurora.Devices.Omen
                     }
                 });
             }
+        }
+
+        public string GetDeviceName()
+        {
+            return (hMousePad != IntPtr.Zero ? "Mouse pad Connected" : string.Empty);
         }
 
         public enum MousePadZone

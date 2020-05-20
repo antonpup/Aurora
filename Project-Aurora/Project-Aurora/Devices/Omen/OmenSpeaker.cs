@@ -10,7 +10,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
-    class OmenSpeaker
+    class OmenSpeaker : IOmenDevice
     {
         private IntPtr hSpeaker = IntPtr.Zero;
 
@@ -26,7 +26,7 @@ namespace Aurora.Devices.Omen
             return (ptr == IntPtr.Zero ? null : new OmenSpeaker(ptr));
         }
 
-        internal void Shutdown()
+        public void Shutdown()
         {
             try
             {
@@ -44,11 +44,24 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public void SetLights(DeviceKeys keys, Color color)
+        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
         {
             if (hSpeaker != IntPtr.Zero)
             {
-                Task.Run(() => {
+                if (keyColors.ContainsKey(DeviceKeys.Peripheral_Logo))
+                {
+                    SetLight(DeviceKeys.Peripheral_Logo, keyColors[DeviceKeys.Peripheral_Logo]);
+                    return;
+                }
+            }
+        }
+
+        private void SetLight(DeviceKeys keys, Color color)
+        {
+            if (hSpeaker != IntPtr.Zero)
+            {
+                Task.Run(() =>
+                {
                     if (Monitor.TryEnter(this))
                     {
                         try
@@ -66,6 +79,11 @@ namespace Aurora.Devices.Omen
                     }
                 });
             }
+        }
+
+        public string GetDeviceName()
+        {
+            return (hSpeaker != IntPtr.Zero ? "Speaker Connected" : string.Empty);
         }
 
         [DllImport("OmenLightingSDK.dll")]

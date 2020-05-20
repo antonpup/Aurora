@@ -11,7 +11,7 @@ using System.Collections.Concurrent;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenMouse
+    public class OmenMouse : IOmenDevice
     {
         private IntPtr hMouse = IntPtr.Zero;
 
@@ -65,7 +65,25 @@ namespace Aurora.Devices.Omen
             MOUSE_LIGHTING_ZONE_WHEEL = 2,                          /* Wheel zone */
         }
 
-        public void SetLights(DeviceKeys key, Color color)
+        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        {
+            if (hMouse != IntPtr.Zero)
+            {
+                foreach (KeyValuePair<DeviceKeys, Color> keyColor in keyColors)
+                {
+                    switch (keyColor.Key)
+                    {
+                        case DeviceKeys.Peripheral_Logo:
+                        case DeviceKeys.Peripheral_FrontLight:
+                        case DeviceKeys.Peripheral_ScrollWheel:
+                            SetLight(keyColor.Key, keyColor.Value);
+                            break;
+                    }
+                }
+            }
+        }
+
+        public void SetLight(DeviceKeys key, Color color)
         {
             if (hMouse != IntPtr.Zero)
             {
@@ -77,7 +95,7 @@ namespace Aurora.Devices.Omen
                     {
                         try
                         {
-                            foreach(var item in cachedColors)
+                            foreach (var item in cachedColors)
                             {
                                 LightingColor c = LightingColor.FromColor(item.Value);
                                 int res = OmenLighting_Mouse_SetStatic(hMouse, item.Key, c, IntPtr.Zero);
@@ -101,10 +119,14 @@ namespace Aurora.Devices.Omen
                     }
                 });
             }
-
         }
 
-        internal void Shutdown()
+        public string GetDeviceName()
+        {
+            return (hMouse != IntPtr.Zero ? "Mouse Connected" : string.Empty);
+        }
+
+        public void Shutdown()
         {
             try
             {
