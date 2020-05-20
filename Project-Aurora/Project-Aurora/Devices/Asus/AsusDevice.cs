@@ -59,8 +59,11 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public void Shutdown()
         {
-            asusHandler.Stop();
-            isActive = false;
+            if (isActive)
+            {
+                asusHandler.Stop();
+                isActive = false;
+            }
         }
 
         /// <inheritdoc />
