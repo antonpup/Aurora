@@ -51,7 +51,7 @@ namespace Aurora.Devices.Asus
         {
             asusHandler?.Stop();
             
-            asusHandler = new AsusHandler();
+            asusHandler = new AsusHandler(Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"));
             isActive = asusHandler.Start();
             return isActive;
         }
