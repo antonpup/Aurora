@@ -137,7 +137,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Creates a copy of this mathematical comparison.</summary>
-        public override Evaluatable<bool> Clone() => new BooleanMathsComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone() };
+        public override Evaluatable<bool> Clone() => new BooleanMathsComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator };
     }
 
 

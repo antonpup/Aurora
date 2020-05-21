@@ -12,14 +12,7 @@
              mc:Ignorable="d" MinWidth="230" MinHeight="111" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" IsEnabledChanged="UserControl_IsEnabledChanged" IsVisibleChanged="UserControl_IsVisibleChanged">
 
     <Grid>
-        <DockPanel VerticalAlignment="Stretch" >
-            <Label x:Name="key_sequence_title" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Title}" Margin="0,0,0,0" Padding="0" DockPanel.Dock="Top">
-                <Label.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="TextWrapping" Value="Wrap" />
-                    </Style>
-                </Label.Resources>
-            </Label>
+        <DockPanel VerticalAlignment="Stretch">
             <Grid DockPanel.Dock="Bottom">
                 <ListBox x:Name="keys_keysequence" ItemsSource="{Binding SelectedDeviceKeyList, Mode=OneWay}"  Margin="0,0,80,25" MinWidth="150" SelectionMode="Extended" SelectionChanged="keys_keysequence_SelectionChanged" VerticalAlignment="Stretch">
                     <ListBox.ItemTemplate>

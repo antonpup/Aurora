@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -472,6 +474,7 @@ namespace Aurora.Settings
             SelectedLayout = config.SelectedLayout;
             Type = config.Type;
             ConfigurationChanged = config.ConfigurationChanged;
+            LightingEnabled = config.LightingEnabled;
         }
 
         public DeviceConfig()
@@ -505,14 +508,17 @@ namespace Aurora.Settings
 
         public KeyboardConfig(DeviceConfig config) : base(config)
         {
-            if(config is KeyboardConfig keyboardConfig)
+            if (config is KeyboardConfig keyboardConfig)
                 SelectedKeyboardLayout = keyboardConfig.SelectedKeyboardLayout;
+            else
+                SelectedKeyboardLayout = GetSystemKeyboardCulture();
             Type = 0;
         }
 
         public KeyboardConfig()
         {
             Type = 0;
+            SelectedKeyboardLayout = GetSystemKeyboardCulture();
         }
         private string ConvertEnumToFileName()
         {
@@ -532,6 +538,86 @@ namespace Aurora.Settings
         }
         public string PhysicalLayoutPath => Path.Combine(layoutsPath, "Keyboard\\Plain Keyboard\\" + ConvertEnumToFileName() + ".json");
         public override string LayoutPath => Path.Combine(layoutsPath, "Keyboard", SelectedLayout + ".json");
+
+        [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
+        [DllImport("user32.dll")] static extern IntPtr GetKeyboardLayout(uint thread);
+        private CultureInfo GetCurrentKeyboardLayout()
+        {
+            try
+            {
+                IntPtr foregroundWindow = GetForegroundWindow();
+                uint foregroundProcess = GetWindowThreadProcessId(foregroundWindow, IntPtr.Zero);
+                int keyboardLayout = GetKeyboardLayout(foregroundProcess).ToInt32() & 0xFFFF;
+                return new CultureInfo(keyboardLayout);
+            }
+            catch (Exception _)
+            {
+                return new CultureInfo(1033); // Assume English if something went wrong.
+            }
+        }
+        private KeyboardPhysicalLayout GetSystemKeyboardCulture()
+        {
+            string culture = GetCurrentKeyboardLayout().Name;
+            switch (culture)
+            {
+                case ("tr-TR"):
+                    return KeyboardPhysicalLayout.ISO;
+                case ("ja-JP"):
+                    return KeyboardPhysicalLayout.JIS;
+                case ("de-DE"):
+                case ("hsb-DE"):
+                case ("dsb-DE"):
+                case ("fr-CH"):
+                case ("de-CH"):
+                case ("fr-FR"):
+                case ("br-FR"):
+                case ("oc-FR"):
+                case ("co-FR"):
+                case ("gsw-FR"):
+                case ("cy-GB"):
+                case ("gd-GB"):
+                case ("en-GB"):
+                case ("da-DK"):
+                case ("se-SE"):
+                case ("nb-NO"):
+                case ("nn-NO"):
+                case ("nordic"):
+                    return KeyboardPhysicalLayout.ISO;
+                case ("ru-RU"):
+                case ("tt-RU"):
+                case ("ba-RU"):
+                case ("sah-RU"):
+                case ("en-US"):
+                case ("pt-BR"):
+                case ("dvorak"):
+                    return KeyboardPhysicalLayout.ANSI;
+                case ("dvorak_int"):
+                case ("hu-HU"):
+                case ("it-IT"):
+                case ("es-AR"):
+                case ("es-BO"):
+                case ("es-CL"):
+                case ("es-CO"):
+                case ("es-CR"):
+                case ("es-EC"):
+                case ("es-MX"):
+                case ("es-PA"):
+                case ("es-PY"):
+                case ("es-PE"):
+                case ("es-UY"):
+                case ("es-VE"):
+                case ("es-419"):
+                case ("es-ES"):
+                case ("iso"):
+                    return KeyboardPhysicalLayout.ISO;
+                case ("ansi"):
+                    return KeyboardPhysicalLayout.ANSI;
+                default:
+                    return KeyboardPhysicalLayout.ISO;
+
+            }
+        }
 
     }
 
@@ -584,6 +670,8 @@ namespace Aurora.Settings
 
             foreach (var layout in DevicesConfig.Values)
             {
+                if (layout.Offset.X < 0 || layout.Offset.Y < 0)
+                    layout.Offset = new Point(0, 0);
                 /*
                 if (layout.Offset.X + layout.Region.Width > current_width)
                     current_width = layout.Region.X + layout.Region.Width;

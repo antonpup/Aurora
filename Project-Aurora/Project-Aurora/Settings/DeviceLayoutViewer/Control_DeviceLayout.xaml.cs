@@ -48,8 +48,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
         public ObservableCollection<Control_Keycap> KeycapLayouts => _keycapLayouts;
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
         {
-            int layout_height = 20;
-            int layout_width = 20;
+            int layout_height = 100;
+            int layout_width = 100;
             foreach (Control_Keycap key in KeycapLayouts)
             {
                 var keyConfig = key.Config;
@@ -62,9 +62,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
             }
 
             //Update size
-            DeviceWidth = layout_width;
+            DeviceWidth = layout_width +5;
             DeviceHeight = layout_height;
-            this.Width = DeviceWidth + 5;
+            this.Width = DeviceWidth;
             this.Height = DeviceHeight;
             if (KeycapLayouts.Count == 0)
             {
@@ -72,15 +72,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 this.Height = 200;
             }
             RenderTransform = new TranslateTransform(DeviceConfig.Offset.X, DeviceConfig.Offset.Y);
-            //ItemsSource = KeycapLayouts;
-            //var device_viewbox = this.Template.FindVisualChild<Viewbox>(this); //FindName("device_viewbox") as Viewbox;
-            /*device_viewbox.Height = Height;
-            device_viewbox.Width = Width;*/
-            UpdateLayout();
-            //device_viewbox.UpdateLayout();
-            //this.UpdateLayout();
-            DeviceConfig.ConfigurationChanged += ConfigChanged;
-            //(GetValue(KeycapLayoutsProperty) as ObservableCollection<Control_Keycap>).p
+
             DeviceLayoutUpdated?.Invoke(this);
         }
 
@@ -146,7 +138,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 KeycapLayouts.Clear();
                 Keys.ForEach(k => KeycapLayouts.Add(new Control_Keycap(k)));
 
-                DeviceLayoutUpdated?.Invoke(this);
+                //DeviceLayoutUpdated?.Invoke(this);
 
             } 
         }
@@ -179,15 +171,17 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         public void SetKeyboardColors(Dictionary<DeviceKey, System.Drawing.Color> keylights)
         {
-            foreach (var kvp in keylights)
+            if (DeviceConfig.LightingEnabled)
             {
-                if (KeyboardMap.ContainsKey(kvp.Key))
+                foreach (var kvp in keylights)
                 {
-                    System.Drawing.Color key_color = kvp.Value;
-                    KeyboardMap[kvp.Key].SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
+                    if (KeyboardMap.ContainsKey(kvp.Key))
+                    {
+                        System.Drawing.Color key_color = kvp.Value;
+                        KeyboardMap[kvp.Key].SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
+                    }
                 }
             }
         }
-
     }
 }

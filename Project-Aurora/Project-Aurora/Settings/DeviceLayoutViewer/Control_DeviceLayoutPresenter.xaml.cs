@@ -128,13 +128,13 @@ namespace Aurora.Settings.DeviceLayoutViewer
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() => {
-                    Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
                     var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
                     DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x =>
                     {
                         if (!bitmap.ContainsKey(x.Key))
                             bitmap.Add(x.Key, x.Value);
                     }));
+                    Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
                     Global.effengine.SetBitmapping(bitmap);
                 });
             });
@@ -203,6 +203,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 var layout = sender as Control_DeviceLayout;
                 layout.ReleaseMouseCapture();
                 Window_DeviceConfig configWindow = new Window_DeviceConfig(layout);
+                configWindow.WindowState = WindowState.Normal;
+                configWindow.Activate();
                 configWindow.Show();
             }
 
@@ -249,8 +251,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
                 if (senderLayout.RenderTransform is TranslateTransform layoutTranslate)
                 {
-                    senderLayout.DeviceConfig.Offset.X = layoutTranslate.X;
-                    senderLayout.DeviceConfig.Offset.Y = layoutTranslate.Y;
+                    senderLayout.DeviceConfig.Offset = new Point(layoutTranslate.X, layoutTranslate.Y);
                     Global.devicesLayout.SaveConfiguration(senderLayout.DeviceConfig);
                 }
             }

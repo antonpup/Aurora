@@ -59,6 +59,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             layoutName.Text = Config.SelectedLayout;
             if (Config is KeyboardConfig keyboardConfig) 
                 this.keyboard_layout.SelectedItem = keyboardConfig.SelectedKeyboardLayout;
+            this.devices_disable_lighting.IsChecked = !Config.LightingEnabled;
             DataContext = this;
             this.KeyDown += OnKeyDownHandler;
             Task.Run(() => UpdateKeysThread(tokenSource.Token));
@@ -90,6 +91,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     this.keyboard_layout.Visibility = Visibility.Visible;
                     this.keyboard_layout_tb.Visibility = Visibility.Visible;
                     Config = new KeyboardConfig(Config);
+                    this.keyboard_layout.SelectedItem = (Config as KeyboardConfig).SelectedKeyboardLayout;
                     break;
                 default:
                     this.device_type.SelectedItem = "Other Devices";
@@ -128,11 +130,11 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void device_disable_lighting_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && sender is CheckBox)
+            if (IsLoaded && sender is CheckBox checkBox)
             {
-                Config.LightingEnabled = ((sender as CheckBox).IsChecked.HasValue) ? !(sender as CheckBox).IsChecked.Value : true;
+                Config.LightingEnabled = (checkBox.IsChecked.HasValue) ? !checkBox.IsChecked.Value : true;
             }
-            deviceLayout = new Control_DeviceLayout(Config);
+            //deviceLayout = new Control_DeviceLayout(Config);
             
         }
 
@@ -225,10 +227,10 @@ namespace Aurora.Settings.DeviceLayoutViewer
                         key.MouseDown += KeyMouseDown;
                         key.MouseMove += KeyMouseMove;
                         key.MouseUp += KeyMouseUp;
-                        key.UpdateLayout();
+                        //key.UpdateLayout();
                     }
                     //deviceLayout.UpdateLayout();
-                    this.Width = deviceLayout.Width + 340;
+                    //this.Width = deviceLayout.Width + 340;
                     keycap_list.ItemsSource = deviceLayout.KeycapLayouts;
                 });
             });
@@ -264,12 +266,18 @@ namespace Aurora.Settings.DeviceLayoutViewer
             var keyConf = new DeviceKeyConfiguration();
             keyConf.Height = 30;
             keyConf.Width = 30;
-
+            if(SelectedKey != null)
+            {
+                keyConf.X = SelectedKey.Config.X + SelectedKey.Config.Width + 7;
+                keyConf.Y = SelectedKey.Config.Y;
+                keyConf.Tag = SelectedKey.Config.Tag + 1;
+            }
             var keycap = new Control_Keycap(keyConf);
             keycap.MouseDown += KeyMouseDown;
             keycap.MouseMove += KeyMouseMove;
             keycap.MouseUp += KeyMouseUp;
             keycap.UpdateLayout();
+            SelectedKey = keycap;
             deviceLayout.KeycapLayouts.Add(keycap);
         }
         private void removeKey_Click(object sender, RoutedEventArgs e)
@@ -295,5 +303,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
             }
         }
 
+        private void enable_layout_preview_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

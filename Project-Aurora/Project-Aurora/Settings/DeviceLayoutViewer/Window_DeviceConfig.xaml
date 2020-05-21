@@ -6,10 +6,12 @@
     xmlns:enum="clr-namespace:Aurora.Settings"
     xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
     Title="Device Config"
-    MinHeight="100" MinWidth="300"
-    Height="500" Width="600"
-    ResizeMode="CanResizeWithGrip"
-    ShowInTaskbar="False"
+    MinHeight="54" MinWidth="400"
+    Height="Auto" Width="Auto"
+    SizeToContent="WidthAndHeight"
+         
+    ResizeMode="CanMinimize"
+    ShowInTaskbar="True"
     WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <ObjectDataProvider x:Key="KeyboardPhysicalLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -21,63 +23,86 @@
         <DataTemplate x:Key="KeyboardPhysicalLayoutTemplate">
             <TextBlock Text="{Binding Converter={StaticResource KeyboardPhysicalLayoutToStringVC}}" />
         </DataTemplate>
+        <BooleanToVisibilityConverter x:Key="b2v" />
     </Window.Resources>
         
-    <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="340" />
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="800"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <local:Control_DeviceLayout x:Name="deviceLayout"  Grid.Column="0" Margin="5"/>
-        <StackPanel Grid.Column="1" Margin="5" Background="Gray">
+        <StackPanel Grid.Column="0" Margin="0">
+            <StackPanel Margin="5" Background="Gray" Grid.Row="0">
 
-            <StackPanel Margin="5" Orientation="Horizontal">
-                <StackPanel Orientation="Vertical" Width="150">
-                    <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Type:"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Layout:" VerticalAlignment="Top"/>
-                    <TextBlock x:Name="keyboard_layout_tb" HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keyboard Layout:" VerticalAlignment="Top"/>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical" Width="150">
+                        <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Type:"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Layout:" VerticalAlignment="Top"/>
+                        <TextBlock x:Name="keyboard_layout_tb" HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keyboard Layout:" VerticalAlignment="Top"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <ComboBox x:Name="device_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_type_SelectionChanged"/>
+                        <ComboBox x:Name="device_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_layout_SelectionChanged"/>
+                        <ComboBox x:Name="keyboard_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="keyboard_layout_SelectionChanged" ItemsSource="{Binding Source={StaticResource KeyboardPhysicalLayout}}" ItemTemplate="{Binding Source={StaticResource KeyboardPhysicalLayoutTemplate}}"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Vertical">
-                    <ComboBox x:Name="device_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_type_SelectionChanged"/>
-                    <ComboBox x:Name="device_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_layout_SelectionChanged"/>
-                    <ComboBox x:Name="keyboard_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="keyboard_layout_SelectionChanged" ItemsSource="{Binding Source={StaticResource KeyboardPhysicalLayout}}" ItemTemplate="{Binding Source={StaticResource KeyboardPhysicalLayoutTemplate}}"/>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="enable_preview" Content="Enable Layout Preview" Margin="0,1,0,1" Checked="enable_layout_preview_Checked" Unchecked="enable_layout_preview_Checked" />
+                    <CheckBox x:Name="devices_disable_lighting" Content="Disable Device Lighting" Margin="0,1,0,1" Checked="device_disable_lighting_Checked" Unchecked="device_disable_lighting_Checked" />
+
+                </StackPanel>
+                <StackPanel Visibility="{Binding IsChecked, ElementName=enable_preview, Converter={StaticResource b2v}}">
+                    <ListView x:Name="keycap_list"  
+                        VerticalContentAlignment="Top"
+                        Margin="5"
+                        SelectionMode="Single"
+                        SelectionChanged="keycap_list_SelectionChanged"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        ScrollViewer.CanContentScroll="False" Height="206">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <local:Control_EditKeycapData DataContext="{Binding}"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <!-- etc. -->
+                    </ListView>
+                    <StackPanel Orientation="Horizontal" Height="20">
+                        <Button Click="addKey_Click" Height="15" Margin="1">Add Key</Button>
+                        <Button  Click="removeKey_Click" Height="15" Margin="1">Remove Key</Button>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
-            <StackPanel>
-                <CheckBox x:Name="devices_disable_lighting" Content="Disable Device Lighting" Margin="0,1,0,1" Checked="device_disable_lighting_Checked" Unchecked="device_disable_lighting_Checked" />
-            </StackPanel>
-            <ListView x:Name="keycap_list"  
-                    VerticalContentAlignment="Top"
-                    SelectionMode="Single"
-                    SelectionChanged="keycap_list_SelectionChanged"
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
-                    ScrollViewer.CanContentScroll="False" Height="206">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <local:Control_EditKeycapData DataContext="{Binding}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <!-- etc. -->
-            </ListView>
-            <StackPanel Orientation="Horizontal" Height="20">
-                <Button Click="addKey_Click" Height="15" Margin="1">Add Key</Button>
-                <Button  Click="removeKey_Click" Height="15" Margin="1">Remove Key</Button>
+            <!-- Accept or Cancel -->
+            <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom"  HorizontalAlignment="Right" Grid.Column="0" Margin="5">
+                <Button Name="deleteButton" Click="deviceDelete_Click" IsDefault="True" Margin="5">Delete Device</Button>
+                <Button Name="okButton" Click="okButton_Click" IsDefault="True" Margin="5">OK</Button>
+                <Button Name="cancelButton" Click="cancelButton_Click" IsCancel="True" Margin="5">Cancel</Button>
             </StackPanel>
         </StackPanel>
-        <StackPanel  Orientation="Horizontal" VerticalAlignment="Bottom"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="0">
-            <TextBox x:Name="layoutName" Width="100" />
-            <Button Name="saveLayoutButton" Click="saveLayout_Click" IsDefault="True" Margin="5">Save Layout</Button>
-            <Button Name="deleteButton" Click="deviceDelete_Click" IsDefault="True" Margin="5">Delete Device</Button>
-            
-        </StackPanel>
-        <!-- Accept or Cancel -->
-        <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom"  HorizontalAlignment="Right"  Grid.Row="1" Grid.Column="1">
-            <Button Name="okButton" Click="okButton_Click" IsDefault="True" Margin="5">OK</Button>
-            <Button Name="cancelButton" Click="cancelButton_Click" IsCancel="True" Margin="5">Cancel</Button>
-        </StackPanel>
+        <Grid x:Name="layoutPreview" HorizontalAlignment="Stretch" Grid.Column="1">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, ElementName=enable_preview}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid VerticalAlignment="Center">
+                <local:Control_DeviceLayout x:Name="deviceLayout"  Margin="2"/>
+            </Grid>
+
+            <StackPanel  Orientation="Horizontal" VerticalAlignment="Bottom"  HorizontalAlignment="Right"  Grid.Row="1">
+                <TextBox x:Name="layoutName" Width="100" />
+                <Button Name="saveLayoutButton" Click="saveLayout_Click" IsDefault="True" Margin="5">Save Layout</Button>
+
+            </StackPanel>
+        </Grid>
+
     </Grid>
 </Window>

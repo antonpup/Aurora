@@ -270,7 +270,8 @@ namespace Aurora
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKey key)
         {
             if (bitmap_map.ContainsKey(key))
-                    return bitmap_map[key];
+                return bitmap_map[key];
+
             return new BitmapRectangle();
         }
 

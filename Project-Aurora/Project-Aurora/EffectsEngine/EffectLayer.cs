@@ -633,10 +633,10 @@ namespace Aurora.EffectsEngine
             {
                 BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                    if (keymaping.IsEmpty)
-                        return Color.FromArgb(0, 0, 0);
+                if (keymaping.IsEmpty || keymaping.Height + keymaping.Top > colormap.Height || keymaping.Width + keymaping.Left > colormap.Width)
+                    return Color.FromArgb(0, 0, 0);
 
-                    return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
+                return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
             }
             catch (Exception exc)
             {
