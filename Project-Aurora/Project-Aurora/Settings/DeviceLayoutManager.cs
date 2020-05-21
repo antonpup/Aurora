@@ -2,7 +2,10 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -627,16 +630,40 @@ namespace Aurora.Settings
     {
         public Dictionary<int, DeviceConfig> DevicesConfig = new Dictionary<int, DeviceConfig>();
 
-        public delegate void LayoutUpdatedEventHandler(object sender);
-
-        public event LayoutUpdatedEventHandler DeviceLayoutNumberChanged;
-
         public double Height = 0;
 
         public double Width = 0;
 
+        [JsonIgnore]
+        public ObservableCollection<Control_DeviceLayout> DeviceLayouts { get; } = new ObservableCollection<Control_DeviceLayout>();
         public DeviceLayoutManager()
         {
+            DeviceLayouts.CollectionChanged += HandleChange;
+        }
+        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                throw new Exception("The device layouts shouldn't been replaced");
+            }
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Control_DeviceLayout item in e.NewItems)
+                {
+                    item.DeviceConfig.Id = DevicesConfig.Count;
+                    DevicesConfig[item.DeviceConfig.Id] = item.DeviceConfig;
+                }
+                Save();
+            }
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Control_DeviceLayout item in e.OldItems)
+                {
+                    DevicesConfig.Remove(item.DeviceConfig.Id);
+                }
+                Save();
+            }
+
         }
         public void Load()
         {
@@ -647,50 +674,35 @@ namespace Aurora.Settings
                 string devicesConfigContent = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
                 DeviceLayoutManager manager = JsonConvert.DeserializeObject<DeviceLayoutManager>(devicesConfigContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                DevicesConfig = manager?.DevicesConfig ?? new Dictionary<int, DeviceConfig>();
+                var devicesConfig = manager?.DevicesConfig ?? new Dictionary<int, DeviceConfig>();
+
+                DeviceLayouts.Clear();
+
+                foreach (var config in devicesConfig.Values)
+                {
+                    if (config.Offset.X < 0 || config.Offset.Y < 0)
+                        config.Offset = new Point(0, 0);
+
+                    var layout = new Control_DeviceLayout(config);
+
+                    DeviceLayouts.Add(layout);
+
+                }
             }
-            /*DevicesConfig.Add(new DeviceConfig());
-            DevicesConfig[0].Id = 0;
-            DevicesConfig[0].Type = 0;
-            DevicesConfig[0].SelectedKeyboardLayout = "ansi";
-            DevicesConfig[0].SelectedLayout = "asus_strix_flare";
-            DevicesConfig.Add(new DeviceConfig());
-            DevicesConfig[1].Id = 1;
-            DevicesConfig[1].Type = 1;
-            DevicesConfig[1].SelectedLayout = "Corsair - Katar";
-            Save();*/
-            /*DevicesConfig.Add(new DeviceConfig());
-            DevicesConfig[0].Id = 0;
-            DevicesConfig[0].Type = 0;
-            DevicesConfig[0].SelectedKeyboardLayout = "ansi_layout";
-            DevicesConfig[0].SelectedLayout = "asus_strix_flare";
-            DevicesConfig[2].Id = 2;
-            DevicesConfig[2].Type = 0;*/
-            //DevicesLayout[1].Region.X = 825;
-
-            foreach (var layout in DevicesConfig.Values)
-            {
-                if (layout.Offset.X < 0 || layout.Offset.Y < 0)
-                    layout.Offset = new Point(0, 0);
-                /*
-                if (layout.Offset.X + layout.Region.Width > current_width)
-                    current_width = layout.Region.X + layout.Region.Width;
-                else if (layout.Region.X < baseline_x)
-                    baseline_x = layout.Region.X;
-
-                if (layout.Region.Y + layout.Region.Height > current_height)
-                    current_height = layout.Region.Y + layout.Region.Height;
-                else if (layout.Region.Y < baseline_y)
-                    baseline_y = layout.Region.Y;*/
-            }
-
-            DeviceLayoutNumberChanged?.Invoke(this);
+        }
+        private void Save()
+        {
+            var fileName = "DevicesConfig.json";
+            var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
+            var content = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
         }
         public void SaveConfiguration(DeviceConfig config)
         {
 
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
             DevicesConfig[config.Id] = config;
+            DeviceLayouts.Where(dl => dl.DeviceConfig.Id == config.Id).FirstOrDefault().DeviceConfig = config;
             double baseline_x = double.MaxValue;
             double baseline_y = double.MaxValue;
             foreach (DeviceConfig dc in DevicesConfig.Values)
@@ -710,54 +722,6 @@ namespace Aurora.Settings
             var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
             var content = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
-            DeviceLayoutNumberChanged?.Invoke(this);
-        }
-        public void DeleteConfiguration(DeviceConfig config)
-        {
-            DevicesConfig.Remove(config.Id);
-
-            var fileName = "DevicesConfig.json";
-            var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
-            var content = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
-            DeviceLayoutNumberChanged?.Invoke(this);
-        }
-        public void AddNewDevice()
-        {
-            var config = new DeviceConfig();
-            config.Id = DevicesConfig.Count;
-            DevicesConfig[config.Id] = config;
-            DeviceLayoutNumberChanged?.Invoke(this);
-        }
-        private void Layout_DeviceLayoutUpdated(object sender)
-        {
-            /*var layout = (sender as Control_DeviceLayout);
-            DeviceConfig config = DevicesConfig.Where(c => c == layout.DeviceConfig).First();
-
-            var offset = layout.TranslatePoint(new System.Windows.Point(0, 0), (UIElement)VisualTreeHelper.GetParent(layout));
-
-
-            Save();*/
-        }
-        public List<Control_DeviceLayout> GetDeviceLayouts(bool abstractKeycaps = false)
-        {
-            List<Control_DeviceLayout> deviceLayouts = new List<Control_DeviceLayout>();
-            foreach (var item in DevicesConfig.Values)
-            {
-                /*Grid deviceControl = item.CreateUserControl();
-                deviceControl.VerticalAlignment = VerticalAlignment.Top;
-                deviceControl.HorizontalAlignment = HorizontalAlignment.Left;*/
-                //item.Margin = new Thickness(item.Region.Left, item.Region.Top, 0, 0);
-                var layout = new Control_DeviceLayout(item);
-                //layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
-                deviceLayouts.Add(layout);
-
-
-            }
-
-            return deviceLayouts;
-
-
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -25,44 +26,65 @@ namespace Aurora.Settings.DeviceLayoutViewer
     {
         private Control_DeviceLayout originalDeviceLayout;
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
-        public DeviceConfig Config
-        {
-            get { return deviceLayout.DeviceConfig; }
-            set
-            {
-                deviceLayout.DeviceConfig = value;
-                LoadDeviceLayout();
-            }
-        }
+        public DeviceConfig Config => deviceLayout.DeviceConfig;
+
         public bool DeleteDevice = false;
         private System.Windows.Point _positionInBlock;
 
-        private Control_Keycap _selectedKey;
-        public Control_Keycap SelectedKey
-        {
-            get { return _selectedKey; }
-            set{
-                _selectedKey?.SelectKey(false);
-                _selectedKey = value;
-                _selectedKey?.SelectKey(true);
-            }
-        }
+        private Control_Keycap SelectedKey;
         public Window_DeviceConfig(Control_DeviceLayout config)
         {
             InitializeComponent();
             originalDeviceLayout = config;
             deviceLayout.DeviceConfig = config.DeviceConfig;
+            deviceLayout.KeycapLayouts.CollectionChanged += HandleChange;
             deviceLayout.ConfigChanged();
+            
+
             LoadDeviceType(Config.Type);
+
             this.device_type.ItemsSource = new string[2]{"Keyboard", "Other Devices"};
             this.device_layout.SelectedItem = Config.SelectedLayout;
+
             layoutName.Text = Config.SelectedLayout;
             if (Config is KeyboardConfig keyboardConfig) 
                 this.keyboard_layout.SelectedItem = keyboardConfig.SelectedKeyboardLayout;
             this.devices_disable_lighting.IsChecked = !Config.LightingEnabled;
             DataContext = this;
+
             this.KeyDown += OnKeyDownHandler;
             Task.Run(() => UpdateKeysThread(tokenSource.Token));
+        }
+        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Replace || e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Control_Keycap key in e.NewItems)
+                {
+                    //keycap_list.Items.Clear();
+                    key.MouseDown += KeyMouseDown;
+                    key.MouseMove += KeyMouseMove;
+                    key.MouseUp += KeyMouseUp;
+                    key.UpdateLayout();
+                    keycap_list.Items.Add(key);
+                    
+                    //keycap_list.InvalidateProperty(ListView.ItemsSourceProperty);
+                    keycap_list.InvalidateVisual();
+                    keycap_list.UpdateLayout();
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (Control_Keycap layout in e.OldItems)
+                {
+                    keycap_list.Items.Remove(layout);
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                keycap_list.Items.Clear();
+            }
+
         }
         private List<string> GetBrandsName(string dicName)
         {
@@ -90,7 +112,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     this.device_layout.ItemsSource = GetBrandsName("Keyboard");
                     this.keyboard_layout.Visibility = Visibility.Visible;
                     this.keyboard_layout_tb.Visibility = Visibility.Visible;
-                    Config = new KeyboardConfig(Config);
+                    deviceLayout.DeviceConfig = new KeyboardConfig(Config);
                     this.keyboard_layout.SelectedItem = (Config as KeyboardConfig).SelectedKeyboardLayout;
                     break;
                 default:
@@ -98,7 +120,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     this.device_layout.ItemsSource = GetBrandsName("Mouse");
                     this.keyboard_layout.Visibility = Visibility.Collapsed;
                     this.keyboard_layout_tb.Visibility = Visibility.Collapsed;
-                    Config = new DeviceConfig(Config);
+                    deviceLayout.DeviceConfig = new DeviceConfig(Config);
                     break;
             }
         }
@@ -116,8 +138,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (IsLoaded)
             {
                 Config.SelectedLayout = this.device_layout.SelectedItem.ToString();
-                LoadDeviceLayout();
+                deviceLayout.ConfigChanged();
                 layoutName.Text = this.device_layout.SelectedItem.ToString();
+
             }
         }
         private void keyboard_layout_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -125,7 +148,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (IsLoaded && Config is KeyboardConfig keyboardConfig)
             {
                 keyboardConfig.SelectedKeyboardLayout = (KeyboardPhysicalLayout)Enum.Parse(typeof(KeyboardPhysicalLayout), this.keyboard_layout.SelectedItem.ToString());
-                LoadDeviceLayout();
+                deviceLayout.ConfigChanged();
             }
         }
         private void device_disable_lighting_Checked(object sender, RoutedEventArgs e)
@@ -155,7 +178,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if (MessageBox.Show("Are you sure that remove the device layout?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                Global.devicesLayout.DeleteConfiguration(Config);
+                Global.devicesLayout.DeviceLayouts.Remove(originalDeviceLayout);
                 tokenSource.Cancel();
                 Close();
             }
@@ -214,27 +237,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
             (sender as Control_Keycap)?.ReleaseMouseCapture();
 
         }
-        private void LoadDeviceLayout()
-        {
-            //Config.RefreshConfig();
-            Task.Run(() =>
-            {
-                Dispatcher.Invoke(() => { 
-                    deviceLayout.ConfigChanged();
-                
-                    foreach (var key in deviceLayout.KeycapLayouts)
-                    {
-                        key.MouseDown += KeyMouseDown;
-                        key.MouseMove += KeyMouseMove;
-                        key.MouseUp += KeyMouseUp;
-                        //key.UpdateLayout();
-                    }
-                    //deviceLayout.UpdateLayout();
-                    //this.Width = deviceLayout.Width + 340;
-                    keycap_list.ItemsSource = deviceLayout.KeycapLayouts;
-                });
-            });
-        }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
             /*if (e.Key == Key.Z && Keyboard.Modifiers == ModifierKeys.Control)
@@ -253,7 +255,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         private void keycap_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(sender is ListView listView)
+            if(sender is ListBox listView)
             {
                 if (listView.SelectedItem is Control_Keycap key)
                 {
@@ -296,7 +298,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 {
                     for (int i = 0; i < deviceLayout.KeycapLayouts.Count; i++)
                     {
-                        deviceLayout.KeycapLayouts[i].SetColor(Color.FromRgb(200, 200, 200));
+                        deviceLayout.KeycapLayouts[i].SetColor(Color.FromRgb(200, 200, 200), deviceLayout.KeycapLayouts[i] == SelectedKey);
                     }
                 });
                 Thread.Sleep(100);

@@ -54,21 +54,23 @@
                     <CheckBox x:Name="devices_disable_lighting" Content="Disable Device Lighting" Margin="0,1,0,1" Checked="device_disable_lighting_Checked" Unchecked="device_disable_lighting_Checked" />
 
                 </StackPanel>
-                <StackPanel Visibility="{Binding IsChecked, ElementName=enable_preview, Converter={StaticResource b2v}}">
-                    <ListView x:Name="keycap_list"  
+                <StackPanel Visibility="{Binding IsChecked, ElementName=enable_preview, Converter={StaticResource b2v}}"> <!--ItemsSource="{Binding KeycapLayouts, ElementName=deviceLayout}" -->
+                    <ListBox x:Name="keycap_list"  
                         VerticalContentAlignment="Top"
+                        VirtualizingPanel.IsVirtualizing="False"
+                        VirtualizingPanel.VirtualizationMode="Standard"
                         Margin="5"
                         SelectionMode="Single"
                         SelectionChanged="keycap_list_SelectionChanged"
                         ScrollViewer.VerticalScrollBarVisibility="Visible"
                         ScrollViewer.CanContentScroll="False" Height="206">
-                        <ListView.ItemTemplate>
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <local:Control_EditKeycapData DataContext="{Binding}"/>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
+                        </ListBox.ItemTemplate>
                         <!-- etc. -->
-                    </ListView>
+                    </ListBox>
                     <StackPanel Orientation="Horizontal" Height="20">
                         <Button Click="addKey_Click" Height="15" Margin="1">Add Key</Button>
                         <Button  Click="removeKey_Click" Height="15" Margin="1">Remove Key</Button>

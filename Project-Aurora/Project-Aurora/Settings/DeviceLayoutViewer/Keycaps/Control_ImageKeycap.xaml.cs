@@ -70,14 +70,18 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
             if (GetKey() == DeviceKeys.NONE)
                 return;
 
-            if (!key_color.Equals(current_color))
+            if (current_color == null ||  !key_color.Equals(current_color))
             {
                 keyBorder.Background = new SolidColorBrush(key_color);
                 current_color = key_color;
             }
 
             if (IsSelected)
+            {
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+                current_color = null;
+            }
+                
         }
     }
 }

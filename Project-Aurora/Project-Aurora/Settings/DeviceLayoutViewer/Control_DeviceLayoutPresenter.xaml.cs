@@ -16,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace Aurora.Settings.DeviceLayoutViewer
 {
@@ -25,7 +27,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
     /// </summary>
     public partial class Control_DeviceLayoutPresenter : UserControl
     {
-        List<Control_DeviceLayout> DeviceLayouts = new List<Control_DeviceLayout>();
+        //List<Control_DeviceLayout> DeviceLayouts = new List<Control_DeviceLayout>();
         private System.Windows.Point _positionInBlock;
 
         public List<Control_Keycap> Keycaps => DeviceLayouts.SelectMany(dl => dl.KeycapLayouts).ToList();
@@ -34,6 +36,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                                                                                                 typeof(bool),
                                                                                                 typeof(Control_DeviceLayoutPresenter), new PropertyMetadata(false));
 
+        public ObservableCollection<Control_DeviceLayout> DeviceLayouts => Global.devicesLayout.DeviceLayouts;
         public bool IsLayoutMoveEnabled
         {
             get { return (bool)GetValue(IsLayoutMoveEnabledProperty); }
@@ -45,23 +48,50 @@ namespace Aurora.Settings.DeviceLayoutViewer
             InitializeComponent();
             layouts_viewbox.DataContext = this;
 
-            Global.devicesLayout.DeviceLayoutNumberChanged += DeviceLayoutNumberChanged;
             Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
             this.keyboard_record_message.Visibility = Visibility.Hidden;
-            
+            DeviceLayouts.CollectionChanged += HandleChange;
+            editor_canvas.Children.Add(new LayerEditor(editor_canvas));
             //DeviceLayoutNumberChanged(this);
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Global.devicesLayout.Load();
-            //DeviceLayoutNumberChanged(this);
         }
+        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                throw new Exception("The device layouts shouldn't been replaced");
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (Control_DeviceLayout layout in e.NewItems)
+                {
+                    layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
+                    ///layout.DeviceConfig.ConfigurationChanged += Layout_DeviceConfigUpdated;
+                    layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
+                    layout.MouseDown += DeviceLayout_MouseDown;
+                    layout.MouseMove += DeviceLayout_MouseMove;
+                    layout.MouseUp += DeviceLayout_MouseUp;
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                Layout_DeviceLayoutUpdated(this);
+            }
+
+        }
+
 
         public void Refresh()
         {
             var keylights = Global.effengine.GetDevicesColor();
-            DeviceLayouts.ForEach(dp => dp.SetKeyboardColors(keylights));
+            foreach (Control_DeviceLayout layout in DeviceLayouts)
+            {
+                layout.SetKeyboardColors(keylights);
+            }
 
             if (Global.key_recorder.IsRecording())
                 this.keyboard_record_message.Visibility = Visibility.Visible;
@@ -77,8 +107,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void AddNewDeviceLayout(object sender, RoutedEventArgs e)
         {
-            Global.devicesLayout.AddNewDevice();
-            //DeviceLayoutNumberChanged(this);
+            Global.devicesLayout.DeviceLayouts.Add(new Control_DeviceLayout(new DeviceConfig()));
         }
         
         private void OpenEnableMenu(object sender, RoutedEventArgs e)
@@ -95,9 +124,18 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             double current_width = 800;
             double current_height = 200;
+            double baseline_x = double.MaxValue;
+            double baseline_y = double.MaxValue;
+
             foreach (FrameworkElement layout in DeviceLayouts)
             {
-                Point offset = layout.TranslatePoint(new Point(0, 0), layouts_grid);
+                Point offset = layout.TranslatePoint(new Point(0, 0), layout_container);
+
+                if (offset.X < baseline_x)
+                    baseline_x = offset.X;
+
+                if (offset.Y < baseline_y)
+                    baseline_y = offset.Y;
 
                 if (offset.X + layout.Width > current_width)
                     current_width = offset.X + layout.Width;
@@ -107,17 +145,21 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
                 //layout as Control_DeviceLayout).SaveLayoutPosition(offset);
             }
+            foreach (Control_DeviceLayout layout in DeviceLayouts)
+            {
+                layout.DeviceConfig.Offset = new Point((int)(layout.DeviceConfig.Offset.X - baseline_x), (int)(layout.DeviceConfig.Offset.Y - baseline_y));
+                layout.RenderTransform = new TranslateTransform(layout.DeviceConfig.Offset.X, layout.DeviceConfig.Offset.Y);
+            }
 
-            layouts_grid.Width = current_width;
-            layouts_grid.Height = current_height;
+            layout_container.Width = current_width;
+            layout_container.Height = current_height;
             Effects.grid_baseline_x = 0;
             Effects.grid_baseline_y = 0;
-            Effects.grid_width = (float)layouts_grid.Width;
-            Effects.grid_height = (float)layouts_grid.Height;
+            Effects.grid_width = (float)layout_container.Width;
+            Effects.grid_height = (float)layout_container.Height;
 
-            layouts_viewbox.MaxWidth = layouts_grid.Width;
-            layouts_viewbox.MaxHeight = layouts_grid.Height;
-            layouts_grid.UpdateLayout();
+            layouts_viewbox.MaxWidth = layout_container.Width;
+            layouts_viewbox.MaxHeight = layout_container.Height;
             layouts_viewbox.UpdateLayout();
             this.UpdateLayout();
             CalculateBitmap();
@@ -129,72 +171,19 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 Dispatcher.Invoke(() => {
                     var bitmap = new Dictionary<DeviceKey, BitmapRectangle>(new DeviceKey.EqualityComparer());
-                    DeviceLayouts.ForEach(item => item.GetBitmap().ToList().ForEach(x =>
+
+                    foreach (Control_DeviceLayout layout in DeviceLayouts)
                     {
-                        if (!bitmap.ContainsKey(x.Key))
-                            bitmap.Add(x.Key, x.Value);
-                    }));
-                    Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layouts_grid.Width) + 1, Control_DeviceLayout.PixelToByte(layouts_grid.Height) + 1);
+                        foreach (var b in layout.GetBitmap())
+                        {
+                            if (!bitmap.ContainsKey(b.Key))
+                                bitmap.Add(b.Key, b.Value);
+                        }
+                    }
+                    Global.effengine.SetCanvasSize(Control_DeviceLayout.PixelToByte(layout_container.Width) + 1, Control_DeviceLayout.PixelToByte(layout_container.Height) + 1);
                     Global.effengine.SetBitmapping(bitmap);
                 });
             });
-        }
-        private void DeviceLayoutNumberChanged(object sender)
-        {
-            DeviceLayouts = Global.devicesLayout.GetDeviceLayouts();
-            //keyboard_grid.ClipToBounds = true;
-
-            layouts_grid.Children.Clear();
-            if (DeviceLayouts.Count != 0)
-            {
-                foreach (var layout in DeviceLayouts)
-                {
-                    layouts_grid.Children.Add(layout);
-                    layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
-                    layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
-                    layout.MouseDown += DeviceLayout_MouseDown;
-                    layout.MouseMove += DeviceLayout_MouseMove;
-                    layout.MouseUp += DeviceLayout_MouseUp;
-                    //layout.RenderTransform = new TranslateTransform(layout.DeviceConfig.Offset.X, layout.DeviceConfig.Offset.Y);
-                }
-                layouts_grid.Children.Add(new LayerEditor(layouts_grid));
-                Layout_DeviceLayoutUpdated(this);
-            }
-            else {
-                Label error_message = new Label();
-
-                /*DockPanel info_panel = new DockPanel()
-                {
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };*/
-
-                TextBlock info_message = new TextBlock()
-                {
-                    Text = "To enable/disable layout editor right click on this box",
-                    TextAlignment = TextAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0)),
-                };
-
-                DockPanel.SetDock(info_message, Dock.Top);
-                //info_panel.Children.Add(info_message);
-
-                error_message.Content = info_message;
-
-                error_message.FontSize = 16.0;
-                error_message.FontWeight = FontWeights.Bold;
-                error_message.HorizontalContentAlignment = HorizontalAlignment.Center;
-                error_message.VerticalContentAlignment = VerticalAlignment.Center;
-
-                layouts_grid.Children.Add(error_message);
-                //Update size
-                layouts_grid.Width = 450;
-                layouts_grid.Height = 200;
-                layouts_viewbox.MaxWidth = 800;
-                layouts_viewbox.MaxHeight = 300;
-            }
         }
         private void DeviceLayout_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -254,6 +243,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     senderLayout.DeviceConfig.Offset = new Point(layoutTranslate.X, layoutTranslate.Y);
                     Global.devicesLayout.SaveConfiguration(senderLayout.DeviceConfig);
                 }
+
             }
         }
 

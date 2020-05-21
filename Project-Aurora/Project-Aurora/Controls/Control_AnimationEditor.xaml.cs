@@ -58,19 +58,10 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            Global.devicesLayout.DeviceLayoutNumberChanged += Layout_DevicesNumberChanged;
-
         }
-        private void Layout_DevicesNumberChanged(object sender)
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            deviceLayerPresenter.UpdateLayout();
-            //deviceLayerPresenter.MaxWidth = deviceLayerPresenter.MaxWidth + 15;
-            //deviceLayerPresenter.MaxHeight = deviceLayerPresenter.MaxHeight + 15;
-            //viewbxAnimationView.UpdateLayout();
-
-            this.UpdateLayout();
-
-            //Generate a new mapping
             foreach (Settings.DeviceLayoutViewer.Control_Keycap key in deviceLayerPresenter.Keycaps)
             {
                 if (key.GetKey() != DeviceKeys.NONE)
@@ -79,10 +70,6 @@ namespace Aurora.Controls
                     key.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
                 }
             }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
         }
 
         private void KeyboardKey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

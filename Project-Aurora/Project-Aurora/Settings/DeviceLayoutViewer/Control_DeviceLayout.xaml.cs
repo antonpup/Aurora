@@ -44,12 +44,31 @@ namespace Aurora.Settings.DeviceLayoutViewer
             set { SetValue(DeviceWidthProperty, value); }
         }
 
-        private ObservableCollection<Control_Keycap> _keycapLayouts = new ObservableCollection<Control_Keycap>();
-        public ObservableCollection<Control_Keycap> KeycapLayouts => _keycapLayouts;
+        public ObservableCollection<Control_Keycap> KeycapLayouts { get; } = new ObservableCollection<Control_Keycap>();
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
         {
-            int layout_height = 100;
-            int layout_width = 100;
+            if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                foreach (Control_Keycap item in e?.NewItems)
+                {
+                    item.Config.PropertyChanged += KeycapPositionChanged;
+                }
+            }
+            
+            RenderTransform = new TranslateTransform(DeviceConfig.Offset.X, DeviceConfig.Offset.Y);
+            ResizeLayout();
+        }
+        private void KeycapPositionChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "X" || e.PropertyName == "Y" || e.PropertyName == "Width" || e.PropertyName == "Height")
+            {
+                ResizeLayout();
+            }
+        }
+        public void ResizeLayout()
+        {
+            int layout_height = 10;
+            int layout_width = 10;
             foreach (Control_Keycap key in KeycapLayouts)
             {
                 var keyConfig = key.Config;
@@ -62,7 +81,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             }
 
             //Update size
-            DeviceWidth = layout_width +5;
+            DeviceWidth = layout_width;
             DeviceHeight = layout_height;
             this.Width = DeviceWidth;
             this.Height = DeviceHeight;
@@ -71,8 +90,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 this.Width = 450;
                 this.Height = 200;
             }
-            RenderTransform = new TranslateTransform(DeviceConfig.Offset.X, DeviceConfig.Offset.Y);
-
+            UpdateLayout();
             DeviceLayoutUpdated?.Invoke(this);
         }
 
@@ -85,7 +103,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 SetValue(DeviceConfigProperty, value);
                 DeviceConfig.ConfigurationChanged += ConfigChanged;
-                //ConfigChanged();
+                ConfigChanged();
             }
         }
         public Control_DeviceLayout()
@@ -114,12 +132,18 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         public void ConfigChanged()
         {
-            DeviceLayout layout = new DeviceLayout(DeviceConfig);
-            Keys = layout.LoadLayout();
-            foreach(var key in Keys)
+            Task.Run(() =>
             {
-                key.Key.DeviceId = DeviceConfig.Id;
-            }
+                Dispatcher.Invoke(() =>
+                {
+                    DeviceLayout layout = new DeviceLayout(DeviceConfig);
+                    Keys = layout.LoadLayout();
+                    foreach (var key in Keys)
+                    {
+                        key.Key.DeviceId = DeviceConfig.Id;
+                    }
+                });
+            });
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

@@ -119,13 +119,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
         public void SetColor(Color key_color, bool isSelected = false)
         {
-            Keycap.SelectKey(Global.key_recorder.HasRecorded(GetKey()));
+            Keycap.SelectKey(isSelected || Global.key_recorder.HasRecorded(GetKey()));
             Keycap.SetColor(key_color);
-        }
-
-        public void SelectKey(bool isSelected)
-        {
-            Keycap.SelectKey(isSelected);
         }
 
     }
