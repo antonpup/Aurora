@@ -73,7 +73,7 @@ namespace Aurora.Devices.Asus.Config
 
         private bool LoadAuraSdk()
         {
-            asusHandler = new AsusHandler();
+            asusHandler = new AsusHandler(Global.Configuration.VarRegistry.GetVariable<bool>($"Asus_enable_unsupported_version"));
             asusHandler.AuraSdk?.SwitchMode();
 
             if (asusHandler.HasSdk)
