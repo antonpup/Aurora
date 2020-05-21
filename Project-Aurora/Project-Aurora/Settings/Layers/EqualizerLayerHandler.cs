@@ -151,6 +151,15 @@ namespace Aurora.Settings.Layers
         public event NewLayerRendered NewLayerRender = delegate { };
 
         private AudioDeviceProxy deviceProxy;
+        private AudioDeviceProxy DeviceProxy {
+            get {
+                if (deviceProxy == null) {
+                    deviceProxy = new AudioDeviceProxy(DataFlow.Render);
+                    deviceProxy.WaveInDataAvailable += OnDataAvailable;
+                }
+                return deviceProxy;
+            }
+        }
 
         private List<float> flux_array = new List<float>();
         private static int fftLength = 1024; // NAudio fft wants powers of two! was 8192
@@ -173,9 +182,6 @@ namespace Aurora.Settings.Layers
 
             sampleAggregator.FftCalculated += new EventHandler<FftEventArgs>(FftCalculated);
             sampleAggregator.PerformFFT = true;
-
-            deviceProxy = new AudioDeviceProxy(DataFlow.Render);
-            deviceProxy.WaveInDataAvailable += OnDataAvailable;
         }
 
         protected override UserControl CreateControl()
@@ -188,10 +194,10 @@ namespace Aurora.Settings.Layers
             try
             {
                 // Update device ID. If it has changed, it will re-assign itself to the new device
-                deviceProxy.DeviceId = Properties.DeviceId;
+                DeviceProxy.DeviceId = Properties.DeviceId;
 
                 // The system sound as a value between 0.0 and 1.0
-                float system_sound_normalized = deviceProxy.Device?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 1f;
+                float system_sound_normalized = DeviceProxy.Device?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 1f;
 
                 // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
                 // Replaces all Properties.MaxAmplitude calls with the scaled value
@@ -347,12 +353,12 @@ namespace Aurora.Settings.Layers
             {
                 byte[] buffer = e.Buffer;
                 int bytesRecorded = e.BytesRecorded;
-                int bufferIncrement = deviceProxy.WaveIn.WaveFormat.BlockAlign;
+                int bufferIncrement = DeviceProxy.WaveIn.WaveFormat.BlockAlign;
 
                 // 4 bytes per channel, bufferIncrement is numChannels * 4
                 for (int index = 0; index < bytesRecorded; index += bufferIncrement) // Loop over the bytes, respecting the channel grouping
                 {
-                    if (deviceProxy.WaveIn.WaveFormat.Channels == 2)
+                    if (DeviceProxy.WaveIn.WaveFormat.Channels == 2)
                         // If recording has two channels, take the largest value and add that to the sampleAggregator.
                         sampleAggregator.Add(Math.Max(BitConverter.ToSingle(buffer, index), BitConverter.ToSingle(buffer, index + 4)));
                     else
@@ -413,7 +419,7 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            deviceProxy?.Dispose();
+            DeviceProxy?.Dispose();
             deviceProxy = null;
         }
     }
