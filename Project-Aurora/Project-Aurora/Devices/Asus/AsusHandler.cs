@@ -240,14 +240,13 @@ namespace Aurora.Devices.Asus
             return false;
         }
 
-        public void DisconnectDevice(AuraSyncDevice device, bool deleteDevice = true)
+        public void DisconnectDevice(AuraSyncDevice device)
         {
             lock (deviceLock)
             {
                 Log($"Device {device.Name} was disconnected");
                 device.Stop();
-                if(deleteDevice)
-                    devices.Remove(device);
+                devices.Remove(device);
             }
         }
         
