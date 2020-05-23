@@ -10,19 +10,19 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
     {
         None = -1,
         TheRanch = 0,
-        REEF = 1,
-        QUARRY = 2,
-        MOSS = 3,
-        DESERT = 4,
-        SEA = 5,
-        RUINS = 7,
-        RUINS_TRANSITION = 8,
-        WILDS = 9,
-        OGDEN_RANCH = 10,
-        VALLEY = 11,
-        MOCHI_RANCH = 12,
-        SLIMULATIONS = 13,
-        VIKTOR_LAB = 14
+        TheDryReef = 1,
+        TheIndigoQuarry = 2,
+        TheMossBlanket = 3,
+        TheGlassDesert = 4,
+        TheSlimeSea = 5,
+        TheAncientRuins = 7,
+        TheAncientRuinsCourtyard = 8,
+        TheWilds = 9,
+        OgdensRetreat = 10,
+        NimbleValley = 11,
+        MochisManor = 12,
+        TheSlimeulation = 13,
+        ViktorsWorkshop = 14
     }
 
     public class LocationNode : AutoJsonNode<LocationNode>
@@ -47,19 +47,19 @@ namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes
 
         public bool None => Location == SRZone.None;
         public bool TheRanch => Location == SRZone.TheRanch;
-        public bool TheDryReef => Location == SRZone.REEF;
-        public bool TheIndigoQuarry => Location == SRZone.QUARRY;
-        public bool TheMossBlanket => Location == SRZone.MOSS;
-        public bool TheGlassDesert => Location == SRZone.DESERT;
-        public bool TheSlimeSea => Location == SRZone.SEA;
-        public bool TheAncientRuins => Location == SRZone.RUINS;
-        public bool TheAncientRuinsCourtyard => Location == SRZone.RUINS_TRANSITION;
-        public bool TheWilds => Location == SRZone.WILDS;
-        public bool OgdensRetreat => Location == SRZone.OGDEN_RANCH;
-        public bool NimbleValley => Location == SRZone.VALLEY;
-        public bool MochisManor => Location == SRZone.MOCHI_RANCH;
-        public bool TheSlimeulation => Location == SRZone.SLIMULATIONS;
-        public bool ViktorsWorkshop => Location == SRZone.VIKTOR_LAB;
+        public bool TheDryReef => Location == SRZone.TheDryReef;
+        public bool TheIndigoQuarry => Location == SRZone.TheIndigoQuarry;
+        public bool TheMossBlanket => Location == SRZone.TheMossBlanket;
+        public bool TheGlassDesert => Location == SRZone.TheGlassDesert;
+        public bool TheSlimeSea => Location == SRZone.TheSlimeSea;
+        public bool TheAncientRuins => Location == SRZone.TheAncientRuins;
+        public bool TheAncientRuinsCourtyard => Location == SRZone.TheAncientRuinsCourtyard;
+        public bool TheWilds => Location == SRZone.TheWilds;
+        public bool OgdensRetreat => Location == SRZone.OgdensRetreat;
+        public bool NimbleValley => Location == SRZone.NimbleValley;
+        public bool MochisManor => Location == SRZone.MochisManor;
+        public bool TheSlimeulation => Location == SRZone.TheSlimeulation;
+        public bool ViktorsWorkshop => Location == SRZone.ViktorsWorkshop;
 
         internal BiomeNode(string json) : base(json) { }
     }
