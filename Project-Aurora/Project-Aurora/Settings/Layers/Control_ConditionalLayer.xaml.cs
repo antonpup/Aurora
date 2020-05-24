@@ -21,7 +21,6 @@ namespace Aurora.Settings.Layers {
     public partial class Control_ConditionalLayer : UserControl {
 
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_ConditionalLayer() {
             InitializeComponent();
@@ -45,14 +44,6 @@ namespace Aurora.Settings.Layers {
         }
 
         internal void SetProfile(Profiles.Application profile) {
-            if (profile != null && !profileset) {
-                var var_types_boolean = profile.ParameterLookup?.Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean);
-                conditionPath.Items.Clear();
-                foreach (var item in var_types_boolean)
-                    conditionPath.Items.Add(item.Key);
-
-                profileset = true;
-            }
             settingsset = false;
             this.SetSettings();
         }

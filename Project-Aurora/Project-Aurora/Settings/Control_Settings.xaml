@@ -173,18 +173,12 @@
                     <CheckBox Content="Enable Audio Capture (for gamestates)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Volume Overlay">
-                <Grid>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="The Volume Overlay has moved to the Overlays section of Desktop! If you cannot find it try creating a new profile and copying the Volume Overlay layer over to your profile! To control the delay go into the Overrides section of the layer, go to Enabled, find the 'For x seconds' and change those" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Skype Overlay">
-                <Grid>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="This Overlay has moved to the Overlay layers section of the Skype Application" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
             <TabItem Header="Away Effects">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="587*"/>
+                        <ColumnDefinition Width="257*"/>
+                    </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="10,12,0,0" TextWrapping="Wrap" Text="Away Effect Type: " VerticalAlignment="Top"/>
                     <ComboBox x:Name="idle_effects_type" HorizontalAlignment="Left" Margin="110,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource IdleEffects}}" ItemTemplate="{Binding Source={StaticResource IdleEffectsTemplate}}" SelectionChanged="idle_effects_type_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="Delay:" VerticalAlignment="Top"/>
@@ -319,6 +313,11 @@
                                     <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
                                 </StackPanel>
                             </TabItem>
+                            <TabItem Header="Asus">
+                                <StackPanel Orientation="Vertical" Margin="5">
+                                    <Button x:Name="wrapper_asus_configure_devices" Content="Configure Peripheral Devices" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
+                                </StackPanel>
+                            </TabItem>
                         </TabControl>
                     </Grid>
                 </Grid>
@@ -345,18 +344,28 @@
             <TabItem Header="About">
                 <Grid>
                     <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-                    <!--<Label Content="by Antonpup &amp; simon-wh" HorizontalAlignment="Left" Margin="294,12,0,0" VerticalAlignment="Top"/>-->
                     <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
-                        <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/>
-                        <Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/SimonWhyte/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Steam"/></Hyperlink><LineBreak/>
-                        <Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/>
-                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><LineBreak/>
-                        <Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/>
-                        <Run Text="Some icons are used with the free license from"/><Hyperlink NavigateUri="https://icons8.com" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Icons8"/></Hyperlink><LineBreak/><LineBreak/>
-                        <Run Text="I can be contacted at me@simonwwhyte.com"/><LineBreak/><LineBreak/>
+                        <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="You can report problems and give suggestions by "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Game logos and other images are owned by their respective owners."/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Some icons are used with the free license from "/><Hyperlink NavigateUri="https://icons8.com" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Icons8"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
                         <Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Made by all the"/> <Hyperlink NavigateUri="https://github.com/antonpup/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
                     </TextBlock>
-                    <Label x:Name="lblVersion" Content="beta v0.6.0-dev2" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                     <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
                 </Grid>
             </TabItem>
@@ -423,6 +432,13 @@
                             Margin="0,50,0,0"
                             Width="150"
                             Height="30"
+                        />
+                        <Button
+                            x:Name="btnDumpSensors"
+                            Margin="0,10,0,0"
+                            Width="150"
+                            Height="30"
+                            Content="Dump hardware sensors" Click="btnDumpSensors_Click"
                         />
                     </StackPanel>
                 </Grid>

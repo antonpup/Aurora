@@ -12,15 +12,11 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Profiles.Minecraft.Layers {
-
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class MinecraftBurnLayerHandler : LayerHandler<LayerHandlerProperties> {
 
         private List<FireParticle> particles = new List<FireParticle>();
         private Random rnd = new Random();
-
-        public MinecraftBurnLayerHandler() {
-            _ID = "MinecraftBurningLayer";
-        }
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftBurnLayer();

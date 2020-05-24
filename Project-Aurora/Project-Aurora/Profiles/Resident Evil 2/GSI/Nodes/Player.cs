@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_ResidentEvil2 : Node<Player_ResidentEvil2>
+    public class Player_ResidentEvil2 : Node
     {
         public enum PlayerStatus
         {

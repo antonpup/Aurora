@@ -24,7 +24,7 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_Dota2 : Node<Player_Dota2>
+    public class Player_Dota2 : Node
     {
         /// <summary>
         /// Player's steam ID

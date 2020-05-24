@@ -18,6 +18,7 @@ using RazerSdkWrapper.Utils;
 using System.Net;
 using RazerSdkWrapper.Data;
 using System.Windows.Threading;
+using Aurora.Devices.Asus.Config;
 using Aurora.Utils;
 
 namespace Aurora.Settings
@@ -83,7 +84,7 @@ namespace Aurora.Settings
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
-            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}" + " by Antonpup & simon-wh";
+            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}";
 
             this.start_silently_enabled.IsChecked = Global.Configuration.start_silently;
 
@@ -908,6 +909,12 @@ namespace Aurora.Settings
             }
         }
 
+        private void wrapper_asus_configure_devices_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new AsusConfigWindow();
+            window.Show();
+        }
+        
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
@@ -940,6 +947,14 @@ namespace Aurora.Settings
                     task.RegisterChanges();
                 }
             }
+        }
+
+        private void btnDumpSensors_Click(object sender, RoutedEventArgs e)
+        {
+            if (HardwareMonitor.TryDump())
+                Xceed.Wpf.Toolkit.MessageBox.Show("Successfully wrote sensor info to logs folder");
+            else
+                Xceed.Wpf.Toolkit.MessageBox.Show("Eror dumping file. Consult log for details.");
         }
     }
 }

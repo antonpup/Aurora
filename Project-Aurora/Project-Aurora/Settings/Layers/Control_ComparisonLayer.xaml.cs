@@ -23,7 +23,6 @@ namespace Aurora.Settings.Layers {
     public partial class Control_ComparisonLayer : UserControl {
 
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_ComparisonLayer() {
             InitializeComponent();
@@ -55,17 +54,6 @@ namespace Aurora.Settings.Layers {
         }
 
         internal void SetProfile(Profiles.Application profile) {
-            if (profile != null && !profileset) {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-                operand1Path.Items.Clear();
-                operand2Path.Items.Clear();
-                foreach (var item in var_types_numerical) {
-                    operand1Path.Items.Add(item.Key);
-                    operand2Path.Items.Add(item.Key);
-                }
-
-                profileset = true;
-            }
             settingsset = false;
             this.SetSettings();
         }

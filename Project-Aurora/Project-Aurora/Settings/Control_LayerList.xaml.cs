@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings.Layers;
+using PropertyChanged;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 
 namespace Aurora.Settings {
 
+    [DoNotNotify]
     public partial class Control_LayerList : UserControl, INotifyPropertyChanged {
         
         public Control_LayerList() {
@@ -143,7 +145,7 @@ namespace Aurora.Settings {
         /// Adds a new layer to the currently active collection. Will also setup the event listener to make the profile save and set the layer's application.
         /// </summary>
         private void AddLayer(Layer layer) {
-            layer.AnythingChanged += FocusedApplication.SaveProfilesEvent;
+            layer.PropertyChanged += FocusedApplication.SaveProfilesEvent;
             layer.SetProfile(FocusedApplication);
             ActiveLayerCollection.Insert(0, layer);
             SelectedLayer = layer;
@@ -172,10 +174,14 @@ namespace Aurora.Settings {
         private void PasteButton_Click(object sender, RoutedEventArgs e) {
             // Check if clipboard is layer and also that either: The layer on the clipboard is available to ALL applications OR the layer is available to the current application type.
             // This check is to avoid being able to copy application specific layers to other applications, e.g. prevent copying Minecraft health layer to CSGO.
-            if (Global.Clipboard is Layer clipboardLayer && (Global.LightingStateManager.DefaultLayerHandlers.Contains(clipboardLayer.Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(clipboardLayer.Handler.ID))) {
-                var newLayer = (Layer)clipboardLayer.Clone();
-                newLayer.Name += " - Copy";
-                AddLayer(newLayer);
+            if (Global.Clipboard is Layer clipboardLayer) {
+                if (FocusedApplication.IsAllowedLayer(clipboardLayer.Handler.GetType())) {
+                    var newLayer = (Layer)clipboardLayer.Clone();
+                    newLayer.Name += " - Copy";
+                    AddLayer(newLayer);
+                } else {
+                    MessageBox.Show("Cannot use this type of layer on this profile.");
+                }
             }
         }
 

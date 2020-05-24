@@ -1,6 +1,7 @@
 ﻿using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
+using Aurora.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -234,7 +235,7 @@ namespace Aurora.Settings
 
         private void btnCopyProfile_Click(object sender, RoutedEventArgs e)
         {
-            Global.Clipboard = (lstProfiles.SelectedItem as ApplicationProfile)?.Clone();
+            Global.Clipboard = (lstProfiles.SelectedItem as ApplicationProfile)?.TryClone(true);
         }
 
         private void btnPasteProfile_Click(object sender, RoutedEventArgs e)
@@ -254,7 +255,7 @@ namespace Aurora.Settings
             // Check all the layers types to ensure that they can be added to this application (to prevent
             // crashes when copying a layer from an application that has a special layer unique to that app)
             for (int i = 0; i < src.Layers.Count; i++)
-                if (Global.LightingStateManager.DefaultLayerHandlers.Contains(src.Layers[i].Handler.ID) || FocusedApplication.Config.ExtraAvailableLayers.Contains(src.Layers[i].Handler.ID))
+                if (FocusedApplication.IsAllowedLayer(src.Layers[i].Handler.GetType()))
                     @new.Layers.Add((Layer)src.Layers[i].Clone());
             
             FocusedApplication.SaveProfiles();

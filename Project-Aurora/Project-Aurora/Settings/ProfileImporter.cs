@@ -4,6 +4,7 @@ using Aurora.Settings.Layers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -734,12 +735,16 @@ namespace Aurora.Settings
                 // Create a new profile on the current application (so that profiles can be imported from different applications)
                 ApplicationProfile newProf = app.AddNewProfile(inProf.ProfileName);
                 newProf.TriggerKeybind = inProf.TriggerKeybind.Clone();
-                newProf.Layers.Clear();
 
                 // Copy any valid layers from the read profile to the new one
-                for (int i = 0; i < inProf.Layers.Count; i++)
-                    if (Global.LightingStateManager.DefaultLayerHandlers.Contains(inProf.Layers[i].Handler.ID) || app.Config.ExtraAvailableLayers.Contains(inProf.Layers[i].Handler.ID))
-                        newProf.Layers.Add((Layer)inProf.Layers[i].Clone());
+                void ImportLayers(ObservableCollection<Layer> source, ObservableCollection<Layer> target) {
+                    target.Clear();
+                    for (int i = 0; i < source.Count; i++)
+                        if (app.IsAllowedLayer(source[i].Handler.GetType()))
+                            target.Add((Layer)source[i].Clone());
+                }
+                ImportLayers(inProf.Layers, newProf.Layers);
+                ImportLayers(inProf.OverlayLayers, newProf.OverlayLayers);
 
                 // Force a save to write the new profile to disk in the appdata dir
                 app.SaveProfiles();

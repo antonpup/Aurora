@@ -1,11 +1,4 @@
-﻿//using Aurora.Profiles.Subnautica.Layers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Aurora.Profiles.Slime_Rancher
+﻿namespace Aurora.Profiles.Slime_Rancher
 {
 
     public class Slime_Rancher : Application {
@@ -22,12 +15,6 @@ namespace Aurora.Profiles.Slime_Rancher
             Event = new GameEvent_Generic(),
             IconURI = "Resources/Slime_Rancher.png"
         })
-        {
-
-            List<LayerHandlerEntry> SlimeRancherLayers = new List<LayerHandlerEntry> {
-                
-            };
-        }
-        
+        { }        
     }
 }

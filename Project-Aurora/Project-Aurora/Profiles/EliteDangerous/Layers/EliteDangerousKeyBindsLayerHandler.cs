@@ -246,11 +246,6 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             ControlGroupSets.UI_PANEL_TABS,
         };
 
-        public EliteDangerousKeyBindsLayerHandler() : base()
-        {
-            _ID = "EliteDangerousKeyBinds";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_EliteDangerousKeyBindsLayer(this);

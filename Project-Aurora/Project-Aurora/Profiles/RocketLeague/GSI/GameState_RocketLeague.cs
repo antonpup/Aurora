@@ -32,7 +32,7 @@ namespace Aurora.Profiles.RocketLeague.GSI
     /// <summary>
     /// A class representing various information relating to Rocket League
     /// </summary>
-    public class GameState_RocketLeague : GameState<GameState_RocketLeague>
+    public class GameState_RocketLeague : GameState
     {
         public Match_RocketLeague Match => NodeFor<Match_RocketLeague>("match");
         public Player_RocketLeague Player => NodeFor<Player_RocketLeague>("player");
@@ -48,12 +48,6 @@ namespace Aurora.Profiles.RocketLeague.GSI
         /// </summary>
         /// <param name="json_data">The passed json data</param>
         public GameState_RocketLeague(string json_data) : base(json_data) { }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_RocketLeague instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_RocketLeague(IGameState other_state) : base(other_state) { }
 
         /// <summary>
         /// Returns true if all the color values for both teams are between zero and one.
