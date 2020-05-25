@@ -110,6 +110,7 @@ namespace Aurora.Devices.Asus
                 }
                 catch (TaskCanceledException)
                 {
+                    asusHandler.DisconnectDevice(this);
                     return;
                 }
                 catch (Exception exception)
