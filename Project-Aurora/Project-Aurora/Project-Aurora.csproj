@@ -247,7 +247,7 @@
       <DependentUpon>Control_StardewValley.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\Stardew Valley\GSI\GameState_StardewValley.cs" />
-    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\GameStateNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\GameStatusNode.cs" />
     <Compile Include="Profiles\Stardew Valley\GSI\Nodes\InventoryNode.cs" />
     <Compile Include="Profiles\Stardew Valley\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Stardew Valley\GSI\Nodes\JournalNode.cs" />

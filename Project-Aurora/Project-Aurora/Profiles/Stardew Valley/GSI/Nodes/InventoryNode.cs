@@ -8,26 +8,25 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes {
 
     public class InventoryNode : AutoJsonNode<InventoryNode>
     {
-        public SellectedSlotNode SellectedSlot => NodeFor<SellectedSlotNode>("SellectedSlot");
+        public SelectedSlotNode SelectedSlot => NodeFor<SelectedSlotNode>("SelectedSlot");
 
         internal InventoryNode(string json) : base(json) { }
     }
-    public class SellectedSlotNode : AutoJsonNode<SellectedSlotNode>
+    public class SelectedSlotNode : AutoJsonNode<SelectedSlotNode>
     {
         public int Number;
         public string ItemName;
-        public SellectedSlotColorNode CategoryColor => NodeFor<SellectedSlotColorNode>("CategoryColor");
+        public SelectedSlotColorNode CategoryColor => NodeFor<SelectedSlotColorNode>("CategoryColor");
 
-        internal SellectedSlotNode(string JSON) : base(JSON) { }
+        internal SelectedSlotNode(string JSON) : base(JSON) { }
     }
 
-    public class SellectedSlotColorNode : AutoJsonNode<SellectedSlotColorNode>
+    public class SelectedSlotColorNode : AutoJsonNode<SelectedSlotColorNode>
     {
         public float Red;
         public float Green;
         public float Blue;
-        public float Alpha;
 
-        internal SellectedSlotColorNode(string JSON) : base(JSON) { }
+        internal SelectedSlotColorNode(string JSON) : base(JSON) { }
     }
 }

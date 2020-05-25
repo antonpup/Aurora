@@ -9,8 +9,50 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes
 
     public class PlayerNode : AutoJsonNode<PlayerNode>
     {
+        public enum Locations
+        {
+            Unknown = -1,
+            Farm,
+            Beach,
+            AnimalHouse,
+            SlimeHutch,
+            Shed,
+            LibraryMuseum,
+            AdventureGuild,
+            Woods,
+            Railroad,
+            Summit,
+            Forest,
+            ShopLocation,
+            SeedShop,
+            FishShop,
+            BathHousePool,
+            FarmHouse,
+            Cabin,
+            Club,
+            BusStop,
+            CommunityCenter,
+            Desert,
+            FarmCave,
+            JojaMart,
+            MineShaft,
+            Mountain,
+            Sewer,
+            WizardHouse,
+            Town,
+            Cellar,
+            Submarine,
+            MermaidHouse,
+            BeachNightMarket,
+            MovieTheater,
+            ManorHouse,
+            AbandonedJojaMart,
+            Mine
+        }
+
         public HealthNode Health => NodeFor<HealthNode>("Health");
-        public string CurrentLocation;
+        public string LocationName;
+        public Locations Location;
         public bool IsOutdoor;
         public EnergyNode Energy => NodeFor<EnergyNode>("Energy");
 

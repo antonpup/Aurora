@@ -41,7 +41,7 @@ namespace Aurora.Profiles.StardewValley.GSI.Nodes {
         public bool isFestivalDay;
         public bool isWeddingToday;
         public int Hour;
-        public int Min;
+        public int Minute;
         public TimeRange Range;
 
         internal TimeNode(string JSON) : base(JSON) { }

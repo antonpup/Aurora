@@ -13,10 +13,10 @@ namespace Aurora.Profiles.StardewValley.GSI {
 
         public WorldNode World => NodeFor<WorldNode>("World");
         public PlayerNode Player => NodeFor<PlayerNode>("Player");
-        public InventoryNode Inv => NodeFor<InventoryNode>("Inv");
+        public InventoryNode Inventory => NodeFor<InventoryNode>("Inventory");
 
         public JournalNode Journal => NodeFor<JournalNode>("Journal");
-        public GameStateNode GameState => NodeFor<GameStateNode>("GameState");
+        public GameStatusNode Game => NodeFor<GameStatusNode>("Game");
 
         public GameState_StardewValley() : base() { }
 
