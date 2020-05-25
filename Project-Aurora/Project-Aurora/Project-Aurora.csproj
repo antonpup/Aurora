@@ -544,7 +544,6 @@
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\LocationNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\MailNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\VacPackNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Slime Rancher\SlimeRancherApplication.cs" />
