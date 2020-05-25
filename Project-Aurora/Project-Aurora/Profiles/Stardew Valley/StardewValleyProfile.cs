@@ -29,10 +29,10 @@ namespace Aurora.Profiles.StardewValley
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_Enabled", new BooleanOr(new List<Evaluatable<bool>> { new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.TitleMenu), new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.Loading) }))
+                    .SetDynamicBoolean("_Enabled", new BooleanOr(new List<Evaluatable<bool>> { new BooleanGSIEnum("Game/Status", GSI.Nodes.GameStatus.TitleScreen), new BooleanGSIEnum("Game/Status", GSI.Nodes.GameStatus.Loading) }))
                     .SetLookupTable("_PrimaryColor",new OverrideLookupTableBuilder<Color>()
                         .AddEntry(Color.FromArgb(255, 255, 210, 132),
-                                new BooleanGSIEnum("GameState/GameState", GSI.Nodes.GameStates.Loading))
+                                new BooleanGSIEnum("Game/Status", GSI.Nodes.GameStatus.Loading))
                     )
                 ),
 
