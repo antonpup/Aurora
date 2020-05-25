@@ -59,6 +59,8 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public void Shutdown()
         {
+            if (!isActive) return;
+            
             asusHandler.Stop();
             isActive = false;
         }
@@ -75,6 +77,7 @@ namespace Aurora.Devices.Asus
         {
             Shutdown();
             Initialize();
+            
             return isActive;
         }
 
