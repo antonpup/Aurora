@@ -1,4 +1,4 @@
-#define public Version "0.6.1"
+#define public Version "0.8.0"
 
 #ifdef EXTERNAL_VERSION
  #if len(EXTERNAL_VERSION)>0
