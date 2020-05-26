@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -696,8 +696,12 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-			else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
-                    layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+			else if (keyboard_preference == PreferredKeyboard.Logitech_G815)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g815.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G513)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g513.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
@@ -710,6 +714,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
+            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE_MK2)
+                layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe_mk2.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
             else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
@@ -728,6 +734,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
+                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -740,6 +748,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
             else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
                 layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Scope)
+                layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_scope.json");
             else if (keyboard_preference == PreferredKeyboard.SoundBlasterX_Vanguard_K08)
                 layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
             else if (keyboard_preference == PreferredKeyboard.GenericLaptop)
@@ -750,6 +760,35 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
+ 
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_1)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_1.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_2)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_2.json");
+            //keyboare 2.1
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_US)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_US.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_UK)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_UK.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_BR)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_BR.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_JP)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_JP.json");
+            //keyboare 2.2
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_US)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_US.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_UK)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_UK.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_BR)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_BR.json");
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_JP)
+                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_JP.json");
+ 
+            else if (keyboard_preference == PreferredKeyboard.Ducky_Shine_7)
+                layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
+            else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
+                layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
+ 
             else
             {
                 LoadNone();
@@ -839,6 +878,9 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.Clevo_Touchpad:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
+                        break;
+                    case PreferredMouse.Roccat_Kone_Pure:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "roccat_kone_pure_features.json");
                         break;
                     case PreferredMouse.SteelSeries_Rival_300:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");

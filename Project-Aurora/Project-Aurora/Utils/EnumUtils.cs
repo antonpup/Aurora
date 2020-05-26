@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Aurora.Utils
 {
@@ -42,6 +43,65 @@ namespace Aurora.Utils
                 enumType.GetMember(@enum.ToString()).FirstOrDefault()?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString(),
                 @enum
             ));
+
+        /// <summary>Returns the attribute of the given type for this enum.</summary>
+        public static TAttr GetCustomAttribute<TAttr>(this Enum enumObj) where TAttr : Attribute =>
+            enumObj.GetType().GetField(enumObj.ToString()).GetCustomAttribute(typeof(TAttr), false) as TAttr;
+
+        /// <summary>
+        /// Tries to parse a string into a given enum. Returns the parsed enum if successful, and <paramref name="defaultValue"/> if not.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static T TryParseOr<T>(string value, bool ignoreCase, T defaultValue) where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException("T must be an enum");
+
+            if (Enum.TryParse<T>(value, ignoreCase, out var res))
+                return res;
+            else
+                return defaultValue;
+        }
+    }
+
+    /// <summary>
+    /// Markup Extension that takes an enum type and returns a collection of anonymous objects containing all the enum values, with "Text"
+    /// as the <see cref="DescriptionAttribute"/> of the enum item, "Value" as the enum value itself and "Group" as the <see cref="CategoryAttribute"/>.
+    /// <para>Set the <see cref="System.Windows.Controls.ItemsControl.DisplayMemberPath"/> to "Text" and
+    /// <see cref="System.Windows.Controls.Primitives.Selector.SelectedValuePath"/> to "Value".</para>
+    /// </summary>
+    public class EnumToItemsSourceExtension : MarkupExtension {
+
+        private readonly Type enumType;
+
+        public bool DoGroup { get; set; } = false;
+
+        public EnumToItemsSourceExtension(Type enumType) {
+            this.enumType = enumType;
+        }
+
+        public override object ProvideValue(IServiceProvider serviceProvider) => enumType == null ? (object)new { } : GetListFor(enumType, DoGroup);
+
+        /// <summary>
+        /// Creates a <see cref="ListCollectionView"/> for the given enum type. The items in the collection have properties: 'Text', 'Value',
+        /// 'Group', 'LocalizationKey' and 'LocalizationPackage'.
+        /// </summary>
+        public static ListCollectionView GetListFor(Type enumType, bool doGroup = false) {
+            var lcv = new ListCollectionView(Enum.GetValues(enumType)
+                .Cast<Enum>()
+                .Select(e => new {
+                    Text = e.GetDescription(),
+                    Value = e,
+                    Group = e.GetCustomAttribute<CategoryAttribute>()?.Category ?? ""
+                })
+                .ToList()
+            );
+            if (doGroup) lcv.GroupDescriptions.Add(new PropertyGroupDescription("Group"));
+            return lcv;
+        }
     }
 
     public static class IValueConverterExt
@@ -73,12 +133,24 @@ namespace Aurora.Utils
 
             if (CustomDesc.ContainsKey(value as int? ?? 0))
                 return CustomDesc[(int)value];
-
-
+ 
             if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
                 return DefaultEnum.GetDescription();
+
+            string descriptionString = (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+            if (EnumType == typeof(PreferredKeyboard) && descriptionString.Contains("UNIWILL"))
+            {
+               string _CustomDescription =  CustomDescription(EnumType, descriptionString);
+                if (_CustomDescription != null)
+                    return _CustomDescription;
+             }
+
+
             return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
         }
+
+         
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (EnumType == null)
@@ -88,6 +160,42 @@ namespace Aurora.Utils
                 return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString());
             return this.StringToEnum(EnumType, value.ToString());
         }
+   
+    
+        private string CustomDescription(Type EnumType  ,string descriptionString)
+        {
+             
+            try
+            {
+                string oemstring = UniwillSDKDLL.KeyboardFactory.GetOEMName();
+                if (oemstring.Equals("XMG"))
+                {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " FUSION");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " NEO");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " NEO 15");
+                }
+                else
+                {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " 550");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " 35X");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " 650");
+                }
+            }
+            catch
+            {
+                return null;
+            }
+  
+            return null;
+        }
+    
+    
     }
 
     public class DeviceKeysToStringVC : IValueConverter

@@ -38,10 +38,6 @@ namespace Aurora.Settings.Layers {
 
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class ComparisonLayerHandler : LayerHandler<ComparisonLayerProperties> {
-        
-        public ComparisonLayerHandler() {
-            _ID = "Comparison";
-        }
 
         protected override UserControl CreateControl() {
             return new Control_ComparisonLayer(this);
@@ -49,8 +45,8 @@ namespace Aurora.Settings.Layers {
 
         public override EffectLayer Render(IGameState gamestate) {
             // Parse the operands
-            double op1 = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.Operand1Path);
-            double op2 = Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.Operand2Path);
+            double op1 = gamestate.GetNumber(Properties.Operand1Path);
+            double op2 = gamestate.GetNumber(Properties.Operand2Path);
 
             // Evaluate the operands
             bool cond = false;
@@ -71,9 +67,9 @@ namespace Aurora.Settings.Layers {
 
         public override void SetApplication(Application profile) {
             if (profile != null) {
-                if (!double.TryParse(Properties._Operand1Path, out double value) && !string.IsNullOrWhiteSpace(Properties._Operand1Path) && !profile.ParameterLookup.ContainsKey(Properties._Operand1Path))
+                if (!double.TryParse(Properties._Operand1Path, out double value) && !string.IsNullOrWhiteSpace(Properties._Operand1Path) && !profile.ParameterLookup.IsValidParameter(Properties._Operand1Path))
                     Properties._Operand1Path = string.Empty;
-                if (!double.TryParse(Properties._Operand2Path, out value) && !string.IsNullOrWhiteSpace(Properties._Operand2Path) && !profile.ParameterLookup.ContainsKey(Properties._Operand2Path))
+                if (!double.TryParse(Properties._Operand2Path, out value) && !string.IsNullOrWhiteSpace(Properties._Operand2Path) && !profile.ParameterLookup.IsValidParameter(Properties._Operand2Path))
                     Properties._Operand2Path = string.Empty;
             }
             (Control as Control_ComparisonLayer).SetProfile(profile);

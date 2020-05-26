@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI.Nodes {
-    public class NotificationNode : Node<NotificationNode> {
+    public class NotificationNode : Node {
 
         public int UndefinedNotificationCount;
         public int InventoryNotificationCount;

@@ -20,12 +20,10 @@ namespace Aurora.Settings.Overrides.Logic {
     public partial class Control_OverrideLookupTable : UserControl {
 
         public OverrideLookupTable Table { get; }
-        public Profiles.Application Application { get; }
 
-        public Control_OverrideLookupTable(OverrideLookupTable context, Profiles.Application application) {
+        public Control_OverrideLookupTable(OverrideLookupTable context) {
             InitializeComponent();
             Table = context;
-            Application = application;
             DataContext = this;
         }
 

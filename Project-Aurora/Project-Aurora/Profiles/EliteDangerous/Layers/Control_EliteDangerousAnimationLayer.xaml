@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Aurora.Profiles.EliteDangerous.Layers.Control_EliteDangerousAnimationLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Profiles.EliteDangerous.Layers"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <Grid>
+        <xctk:ColorPicker x:Name="ColorPicker_Default" Margin="85,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="159" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_Default_SelectedColorChanged" UsingAlphaChannel="True" />
+        <Label HorizontalAlignment="Left" Margin="0,0,0,0" Padding="0" Content="Default Color:" VerticalAlignment="Top"/>
+    </Grid>
+</UserControl>

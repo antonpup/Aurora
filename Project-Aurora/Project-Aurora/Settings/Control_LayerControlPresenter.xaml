@@ -29,7 +29,7 @@
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Layer name:" VerticalAlignment="Top" Margin="10,10,0,0"/>
             <TextBox x:Name="txtLayerName" HorizontalAlignment="Left" Height="23" Margin="78,9,0,0" TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="200"/>
             <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="Layer type:" VerticalAlignment="Top"/>
-            <ComboBox x:Name="cmbLayerType" HorizontalAlignment="Left" Margin="72,37,0,0" VerticalAlignment="Top" Width="206" SelectionChanged="cmbLayerType_SelectionChanged"/><!-- ItemTemplate="{Binding Source={StaticResource LayerTypeTemplate}}"/>-->
+            <ComboBox x:Name="cmbLayerType" DisplayMemberPath="Name" SelectedValuePath="Type" HorizontalAlignment="Left" Margin="72,37,0,0" VerticalAlignment="Top" Width="206" SelectionChanged="cmbLayerType_SelectionChanged"/>
             <UserControl x:Name="ctrlLayerTypeConfig" Margin="10,64,10,10"/>
             <Button x:Name="btnReset" Content="Reset Layer" HorizontalAlignment="Left" Margin="283,39,0,0" VerticalAlignment="Top" Width="75" Click="btnReset_Click"/>
         </Grid>

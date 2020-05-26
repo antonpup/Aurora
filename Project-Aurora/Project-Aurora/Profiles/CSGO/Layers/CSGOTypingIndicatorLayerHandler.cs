@@ -41,13 +41,9 @@ namespace Aurora.Profiles.CSGO.Layers
         }
     }
 
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class CSGOTypingIndicatorLayerHandler : LayerHandler<CSGOTypingIndicatorLayerHandlerProperties>
     {
-        public CSGOTypingIndicatorLayerHandler() : base()
-        {
-            _ID = "CSGOTyping";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOTypingIndicatorLayer(this);

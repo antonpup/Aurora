@@ -17,16 +17,6 @@ namespace Aurora.Profiles.CSGO.Layers
 {
     public class CSGOBombLayerHandlerProperties : LayerHandlerProperties2Color<CSGOBombLayerHandlerProperties>
     {
-        public Color? _CTColor { get; set; }
-
-        [JsonIgnore]
-        public Color CTColor { get { return Logic._CTColor ?? _CTColor ?? Color.Empty; } }
-
-        public Color? _TColor { get; set; }
-
-        [JsonIgnore]
-        public Color TColor { get { return Logic._TColor ?? _TColor ?? Color.Empty; } }
-
         public Color? _FlashColor { get; set; }
 
         [JsonIgnore]
@@ -61,8 +51,6 @@ namespace Aurora.Profiles.CSGO.Layers
             base.Default();
 
             this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.NUM_LOCK, Devices.DeviceKeys.NUM_SLASH, Devices.DeviceKeys.NUM_ASTERISK, Devices.DeviceKeys.NUM_MINUS, Devices.DeviceKeys.NUM_SEVEN, Devices.DeviceKeys.NUM_EIGHT, Devices.DeviceKeys.NUM_NINE, Devices.DeviceKeys.NUM_PLUS, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE, Devices.DeviceKeys.NUM_SIX, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_ZERO, Devices.DeviceKeys.NUM_PERIOD, Devices.DeviceKeys.NUM_ENTER });
-            this._CTColor = Color.FromArgb(158, 205, 255);
-            this._TColor = Color.FromArgb(221, 99, 33);
             this._FlashColor = Color.FromArgb(255, 0, 0);
             this._PrimedColor = Color.FromArgb(0, 255, 0);
             this._DisplayWinningTeamColor = true;
@@ -79,11 +67,6 @@ namespace Aurora.Profiles.CSGO.Layers
         private static int bombflashcount = 0;
         private static long bombflashtime = 0;
         private static long bombflashedat = 0;
-
-        public CSGOBombLayerHandler() : base()
-        {
-            _ID = "CSGOBomb";
-        }
 
         protected override UserControl CreateControl()
         {
@@ -160,28 +143,6 @@ namespace Aurora.Profiles.CSGO.Layers
 
                     if (Properties.PeripheralUse)
                         bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, bombcolor);
-                }
-                else if (csgostate.Round.Bomb == BombState.Defused)
-                {
-                    bombtimer.Stop();
-                    if (Properties.DisplayWinningTeamColor)
-                    {
-                        bomb_effect_layer.Set(Properties.Sequence, Properties.CTColor);
-
-                        if (Properties.PeripheralUse)
-                            bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, Properties.CTColor);
-                    }
-                }
-                else if (csgostate.Round.Bomb == BombState.Exploded)
-                {
-                    bombtimer.Stop();
-                    if (Properties.DisplayWinningTeamColor)
-                    {
-                        bomb_effect_layer.Set(Properties.Sequence, Properties.TColor);
-
-                        if (Properties.PeripheralUse)
-                            bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, Properties.TColor);
-                    }
                 }
                 else
                 {

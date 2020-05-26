@@ -12,31 +12,27 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that detects when the value of the given numeric evaluatable changes by a particular amount.
     /// <para>Can be used in conjunction with the <see cref="BooleanExtender"/> to make the 'true' last longer than a single eval tick.</para>
     /// </summary>
-    [OverrideLogic("Number Change Detector", category: OverrideLogicCategory.Maths)]
-    public class NumericChangeDetector : IEvaluatable<bool> {
+    [Evaluatable("Number Change Detector", category: EvaluatableCategory.Maths)]
+    public class NumericChangeDetector : Evaluatable<bool> {
 
         private double? lastValue;
 
         public NumericChangeDetector() { }
-        public NumericChangeDetector(IEvaluatable<double> eval, bool detectRising = true, bool detectFalling = true, double threshold = 0) {
+        public NumericChangeDetector(Evaluatable<double> eval, bool detectRising = true, bool detectFalling = true, double threshold = 0) {
             Evaluatable = eval;
             DetectRising = detectRising;
             DetectFalling = detectFalling;
             DetectionThreshold = threshold;
         }
 
-        public IEvaluatable<double> Evaluatable { get; set; } = new NumberConstant();
+        public Evaluatable<double> Evaluatable { get; set; } = new NumberConstant();
         public bool DetectRising { get; set; } = true;
         public bool DetectFalling { get; set; } = true;
         public double DetectionThreshold { get; set; } = 0;
 
-        private StackPanel control;
-        private Control_EvaluatablePresenter ep;
-        public Visual GetControl(Application a) => control ?? (control = new StackPanel()
-            .WithChild(new DockPanel { LastChildFill = true }
-                .WithChild(new Label { Content = "Expression", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
-                .WithChild(ep = new Control_EvaluatablePresenter { EvalType = EvaluatableType.Number, Margin = new System.Windows.Thickness(24, 0, 0, 0) }
-                    .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay)))
+        public override Visual GetControl() => new StackPanel()
+            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(double) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay))
             .WithChild(new CheckBox { Content = "Trigger on increase" }
                 .WithBinding(CheckBox.IsCheckedProperty, this, "DetectRising"))
             .WithChild(new CheckBox { Content = "Trigger on decrease" }
@@ -44,9 +40,9 @@ namespace Aurora.Settings.Overrides.Logic {
             .WithChild(new DockPanel { LastChildFill = true }
                 .WithChild(new Label { Content = "Change required", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
                 .WithChild(new DoubleUpDown { Minimum = 0 }
-                    .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold"))));
+                    .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold")));
 
-        public bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var val = Evaluatable.Evaluate(gameState);
             var @out = false;
             if (lastValue.HasValue) {
@@ -60,14 +56,7 @@ namespace Aurora.Settings.Overrides.Logic {
             lastValue = val;
             return @out;
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) {
-            ep.Application = application;
-            Evaluatable?.SetApplication(application);
-        }
-
-        public IEvaluatable<bool> Clone() => new NumericChangeDetector { Evaluatable = Evaluatable.Clone(), DetectRising = DetectRising, DetectFalling = DetectFalling, DetectionThreshold = DetectionThreshold };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new NumericChangeDetector { Evaluatable = Evaluatable.Clone(), DetectRising = DetectRising, DetectFalling = DetectFalling, DetectionThreshold = DetectionThreshold };
     }
 }

@@ -5,7 +5,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about a player
     /// </summary>
-    public class PlayerNode : Node<PlayerNode>
+    public class PlayerNode : AutoJsonNode<PlayerNode>
     {
         /// <summary>
         /// Player name
@@ -35,65 +35,55 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         /// <summary>
         /// Player health information
         /// </summary>
-        public HealthNode Health;
+        public HealthNode Health => NodeFor<HealthNode>("health");
 
         /// <summary>
         /// Player armor information
         /// </summary>
-        public ArmorNode Armor;
+        public ArmorNode Armor => NodeFor<ArmorNode>("armor");
 
         /// <summary>
         /// Player weapons information
         /// </summary>
-        public WeaponsNode Weapons;
+        public WeaponsNode Weapons => NodeFor<WeaponsNode>("weapons");
 
         /// <summary>
         /// The time left on downed timer
         /// </summary>
+        [AutoJsonPropertyName("down_time")]
         public int DownTime;
 
         /// <summary>
         /// The suspicion amount [0.0f - 1.0f]
         /// </summary>
+        [AutoJsonPropertyName("suspicion")]
         public float SuspicionAmount;
 
         /// <summary>
         /// The flashed amount [0.0f - 1.0f]
         /// </summary>
+        [AutoJsonPropertyName("flashbang_amount")]
         public float FlashAmount;
 
         /// <summary>
         /// A boolean representing if this is the local player
         /// </summary>
+        [AutoJsonPropertyName("is_local")]
         public bool IsLocalPlayer;
 
         /// <summary>
         /// A boolean representing if this player is in swan song
         /// </summary>
+        [AutoJsonPropertyName("is_swansong")]
         public bool IsSwanSong;
 
-        internal PlayerNode(string JSON) : base(JSON)
-        {
-            Name = GetString("name");
-            Character = GetString("character");
-            Level = GetInt("level");
-            Rank = GetInt("rank");
-            State = GetEnum<PlayerState>("state");
-            Health = new HealthNode(_ParsedData["health"]?.ToString() ?? "");
-            Armor = new ArmorNode(_ParsedData["armor"]?.ToString() ?? "");
-            Weapons = new WeaponsNode(_ParsedData["weapons"]?.ToString() ?? "");
-            DownTime = GetInt("down_time");
-            SuspicionAmount = GetFloat("suspicion");
-            FlashAmount = GetFloat("flashbang_amount");
-            IsLocalPlayer = GetBool("is_local");
-            IsSwanSong = GetBool("is_swansong");
-        }
+        internal PlayerNode(string JSON) : base(JSON) { }
     }
 
     /// <summary>
     /// Information about player's health
     /// </summary>
-    public class HealthNode : Node<HealthNode>
+    public class HealthNode : AutoJsonNode<HealthNode>
     {
         /// <summary>
         /// Current health amount
@@ -103,6 +93,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         /// <summary>
         /// Maximum health amount
         /// </summary>
+        [AutoJsonPropertyName("total")]
         public float Max;
 
         /// <summary>
@@ -110,18 +101,13 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         /// </summary>
         public int Revives;
 
-        internal HealthNode(string JSON) : base(JSON)
-        {
-            Current = GetFloat("current");
-            Max = GetFloat("total");
-            Revives = GetInt("revives");
-        }
+        internal HealthNode(string JSON) : base(JSON) { }
     }
 
     /// <summary>
     /// Information about player's armor
     /// </summary>
-    public class ArmorNode : Node<ArmorNode>
+    public class ArmorNode : AutoJsonNode<ArmorNode>
     {
         /// <summary>
         /// Maximum amount of armor
@@ -138,12 +124,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
         /// </summary>
         public float Total;
 
-        internal ArmorNode(string JSON) : base(JSON)
-        {
-            Max = GetFloat("max");
-            Current = GetFloat("current");
-            Total = GetFloat("total");
-        }
+        internal ArmorNode(string JSON) : base(JSON) { }
     }
 
     /// <summary>

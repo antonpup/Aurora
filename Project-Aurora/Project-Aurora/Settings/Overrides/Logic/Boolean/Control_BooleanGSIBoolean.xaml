@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
+             xmlns:c="clr-namespace:Aurora.Controls"
+             xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d">
-    <ComboBox x:Name="ValidPathsCombo" SelectedItem="{Binding VariablePath}" Margin="0,0,0,6" />
+    <c:GameStateParameterPicker SelectedPath="{Binding VariablePath}" PropertyType="Boolean" Application="{u:AttachedApplicationBinding}" />
 </UserControl>
