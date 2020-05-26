@@ -176,9 +176,12 @@ namespace Aurora.Devices.Asus
         {
             lock (deviceLock)
             {
-                foreach (var device in devices)
-                    device.Stop();
-            
+                for (var i = devices.Count - 1; i >= 0; i--)
+                {
+                    var device = devices[i];
+                    device.Stop(false);
+                }
+
                 devices.Clear();
                 AuraSdk?.ReleaseControl(0);
             }
