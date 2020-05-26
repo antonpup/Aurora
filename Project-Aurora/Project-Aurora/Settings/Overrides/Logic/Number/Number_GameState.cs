@@ -13,7 +13,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that accesses some specified game state variables (of numeric type) and returns it.
     /// </summary>
     [Evaluatable("Numeric State Variable", category: EvaluatableCategory.State)]
-    public class NumberGSINumeric : IEvaluatable<double> {
+    public class NumberGSINumeric : Evaluatable<double> {
 
         /// <summary>Creates a new numeric game state lookup evaluatable that doesn't target anything.</summary>
         public NumberGSINumeric() { }
@@ -24,15 +24,13 @@ namespace Aurora.Settings.Overrides.Logic {
         public string VariablePath { get; set; }
 
         // Control assigned to this evaluatable
-        public Visual GetControl() => new GameStateParameterPicker { PropertyType = PropertyType.Number }
+        public override Visual GetControl() => new GameStateParameterPicker { PropertyType = GSIPropertyType.Number }
             .WithBinding(GameStateParameterPicker.ApplicationProperty, new AttachedApplicationBinding())
             .WithBinding(GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this });
 
         /// <summary>Parses the numbers, compares the result, and returns the result.</summary>
-        public double Evaluate(IGameState gameState) => GameStateUtils.TryGetDoubleFromState(gameState, VariablePath);
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+        protected override double Execute(IGameState gameState) => gameState.GetNumber(VariablePath);
 
-        public IEvaluatable<double> Clone() => new NumberGSINumeric { VariablePath = VariablePath };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        public override Evaluatable<double> Clone() => new NumberGSINumeric { VariablePath = VariablePath };
     }
 }

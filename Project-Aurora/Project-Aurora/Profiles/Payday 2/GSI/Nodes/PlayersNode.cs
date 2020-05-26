@@ -8,7 +8,7 @@ namespace Aurora.Profiles.Payday_2.GSI.Nodes
     /// <summary>
     /// Information about players in the lobby
     /// </summary>
-    public class PlayersNode : Node<PlayersNode>, IEnumerable<PlayerNode>
+    public class PlayersNode : Node, IEnumerable<PlayerNode>
     {
         private List<PlayerNode> _Players = new List<PlayerNode>();
         private PlayerNode _LocalPlayer = new PlayerNode("");

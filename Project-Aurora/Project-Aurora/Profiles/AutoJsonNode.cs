@@ -8,9 +8,9 @@ using static System.Linq.Expressions.Expression;
 namespace Aurora.Profiles {
 
     /// <summary>
-    /// A version of <see cref="Node{TClass}"/> which automatically populates the fields defined on it from the parsed JSON data.
+    /// A version of <see cref="Node"/> which automatically populates the fields defined on it from the parsed JSON data.
     /// </summary>
-    public class AutoJsonNode<TSelf> : Node<TSelf> where TSelf : AutoJsonNode<TSelf> {
+    public class AutoJsonNode<TSelf> : Node where TSelf : AutoJsonNode<TSelf> {
         // Did consider implementing this auto feature as a Fody weaver however, should profiles become plugin-based, each plugin would need to use Fody if they
         // wished to have the automatic capability. Doing it as a class that can be extended means that no additional setup is required for plugin authors.
 

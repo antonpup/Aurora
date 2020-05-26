@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:c="clr-namespace:Aurora.Controls"
              xmlns:u="clr-namespace:Aurora.Utils"
+             Loaded="UserControl_Loaded"
              mc:Ignorable="d">
     <StackPanel Orientation="Horizontal">
         <c:GameStateParameterPicker SelectedPath="{Binding StatePath}" PropertyType="Enum" Application="{u:AttachedApplicationBinding}" VerticalAlignment="Center" SelectedPathChanged="GameStateParameterPicker_SelectedPathChanged" />

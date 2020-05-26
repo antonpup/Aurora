@@ -11,7 +11,7 @@ namespace Aurora.Settings.Overrides.Logic {
     /// Evaluatable that returns true/false depending on whether the given process name is running.
     /// </summary>
     [Evaluatable("Process Running", category: EvaluatableCategory.Misc)]
-    public class BooleanProcessRunning : IEvaluatable<bool>, INotifyPropertyChanged {
+    public class BooleanProcessRunning : Evaluatable<bool>, INotifyPropertyChanged {
 
         public string ProcessName { get; set; } = "";
 
@@ -20,7 +20,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Visual GetControl() {
+        public override Visual GetControl() {
             var selectButton = new Button { Content = "Select", Padding = new System.Windows.Thickness(8, 0, 8, 0), Margin = new System.Windows.Thickness(8, 0, 0, 0) };
             selectButton.Click += (sender, e) => {
                 var wnd = new Window_ProcessSelection { ButtonLabel = "Select" };
@@ -36,11 +36,9 @@ namespace Aurora.Settings.Overrides.Logic {
                 .WithChild(new Label { Content = "running" });
         }
 
-        public bool Evaluate(IGameState gameState)
+        protected override bool Execute(IGameState gameState)
             => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public IEvaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
     }
 }

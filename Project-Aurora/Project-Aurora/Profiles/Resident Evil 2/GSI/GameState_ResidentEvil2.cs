@@ -6,7 +6,7 @@ namespace Aurora.Profiles.ResidentEvil2.GSI
     /// <summary>
     /// A class representing various information relating to Resident Evil 2
     /// </summary>
-    public class GameState_ResidentEvil2 : GameState<GameState_ResidentEvil2>
+    public class GameState_ResidentEvil2 : GameState
     {
         private Player_ResidentEvil2 player;
 
@@ -36,14 +36,6 @@ namespace Aurora.Profiles.ResidentEvil2.GSI
         /// </summary>
         /// <param name="json_data">The passed json data</param>
         public GameState_ResidentEvil2(string json_data) : base(json_data)
-        {
-        }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_ResidentEvil2 instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_ResidentEvil2(IGameState other_state) : base(other_state)
         {
         }
     }

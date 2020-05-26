@@ -8,7 +8,7 @@ namespace Aurora.Settings.Overrides.Logic.Generic {
     /// <summary>
     /// Generic evaluatable that delays the source input by a set amount of time.
     /// </summary>
-    public abstract class DelayGeneric<T> : IEvaluatable<T> {
+    public abstract class DelayGeneric<T> : Evaluatable<T> {
 
         /// <summary>Keeps track of all changes that have happened and which will need to be repeated.</summary>
         private readonly Queue<(DateTime changeTime, T value)> history = new Queue<(DateTime changeTime, T value)>();
@@ -20,20 +20,20 @@ namespace Aurora.Settings.Overrides.Logic.Generic {
         private T currentValue;
 
         /// <summary>An evaluatable that will be delayed bu the desired amount.</summary>
-        public IEvaluatable<T> Source { get; set; }
+        public Evaluatable<T> Source { get; set; }
 
         /// <summary>The amount of time to delay the evaluatable by (in seconds).</summary>
         public double Delay { get; set; } = 3;
 
         // Ctors
         public DelayGeneric() { Source = EvaluatableDefaults.Get<T>(); }
-        public DelayGeneric(IEvaluatable<T> source, double delay) { Source = source; Delay = delay; }
+        public DelayGeneric(Evaluatable<T> source, double delay) { Source = source; Delay = delay; }
 
         // Control
-        public Visual GetControl() => new Control_Delay<T>(this);
+        public override Visual GetControl() => new Control_Delay<T>(this);
 
         // Eval
-        public T Evaluate(IGameState gameState) {
+        protected override T Execute(IGameState gameState) {
             // First, evaluate the source evaluatable and check if the returned value is different from the last one we read.
             var val = Source.Evaluate(gameState);
             if (!EqualityComparer<T>.Default.Equals(val, lastValue)) {
@@ -49,11 +49,6 @@ namespace Aurora.Settings.Overrides.Logic.Generic {
 
             return currentValue;
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        // Clone
-        public abstract IEvaluatable<T> Clone();
-        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -61,21 +56,21 @@ namespace Aurora.Settings.Overrides.Logic.Generic {
     [Evaluatable("Delay", category: EvaluatableCategory.Misc)]
     public class DelayBoolean : DelayGeneric<bool> {
         public DelayBoolean() : base() { }
-        public DelayBoolean(IEvaluatable<bool> source, double delay) : base(source, delay) { }
-        public override IEvaluatable<bool> Clone() => new DelayBoolean(Source, Delay);
+        public DelayBoolean(Evaluatable<bool> source, double delay) : base(source, delay) { }
+        public override Evaluatable<bool> Clone() => new DelayBoolean(Source, Delay);
     }
 
     [Evaluatable("Delay", category: EvaluatableCategory.Misc)]
     public class DelayNumeric : DelayGeneric<double> {
         public DelayNumeric() : base() { }
-        public DelayNumeric(IEvaluatable<double> source, double delay) : base(source, delay) { }
-        public override IEvaluatable<double> Clone() => new DelayNumeric(Source, Delay);
+        public DelayNumeric(Evaluatable<double> source, double delay) : base(source, delay) { }
+        public override Evaluatable<double> Clone() => new DelayNumeric(Source, Delay);
     }
 
     [Evaluatable("Delay", category: EvaluatableCategory.Misc)]
     public class DelayString : DelayGeneric<string> {
         public DelayString() : base() { }
-        public DelayString(IEvaluatable<string> source, double delay) : base(source, delay) { }
-        public override IEvaluatable<string> Clone() => new DelayString(Source, Delay);
+        public DelayString(Evaluatable<string> source, double delay) : base(source, delay) { }
+        public override Evaluatable<string> Clone() => new DelayString(Source, Delay);
     }
 }

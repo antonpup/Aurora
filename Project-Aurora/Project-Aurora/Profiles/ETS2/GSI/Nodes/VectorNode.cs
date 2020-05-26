@@ -1,5 +1,5 @@
 ﻿namespace Aurora.Profiles.ETS2.GSI.Nodes {
-    public class VectorNode : Node<VectorNode> {
+    public class VectorNode : Node {
 
         public float x;
         public float y;

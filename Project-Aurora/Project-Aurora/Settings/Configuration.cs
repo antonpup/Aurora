@@ -182,7 +182,11 @@ namespace Aurora.Settings
         Logitech_GPRO = 103,
         [Description("Logitech - G213")]
         Logitech_G213 = 104,
-
+		[Description("Logitech - G815")]
+        Logitech_G815 = 105,
+        [Description("Logitech - G513")]
+        Logitech_G513 = 106,
+		
         //Corsair range is 200-299
         [Description("Corsair - K95")]
         Corsair_K95 = 200,
@@ -244,6 +248,8 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+        [Description("Asus Strix Scope")]
+        Asus_Strix_Scope = 901,
 
         //Drevo range is 1000-1099
         [Description("Drevo BladeMaster")]

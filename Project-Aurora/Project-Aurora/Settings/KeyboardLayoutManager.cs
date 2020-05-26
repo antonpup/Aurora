@@ -696,6 +696,10 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
+			else if (keyboard_preference == PreferredKeyboard.Logitech_G815)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g815.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G513)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g513.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
@@ -744,6 +748,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
             else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
                 layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
+            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Scope)
+                layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_scope.json");
             else if (keyboard_preference == PreferredKeyboard.SoundBlasterX_Vanguard_K08)
                 layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
             else if (keyboard_preference == PreferredKeyboard.GenericLaptop)

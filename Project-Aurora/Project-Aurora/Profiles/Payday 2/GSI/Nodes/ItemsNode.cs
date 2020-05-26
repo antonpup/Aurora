@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Aurora.Profiles.Payday_2.GSI.Nodes
 {
-    public class ItemsNode : Node<ItemsNode>
+    public class ItemsNode : Node
     {
         private List<ItemNode> _Items = new List<ItemNode>();
 
