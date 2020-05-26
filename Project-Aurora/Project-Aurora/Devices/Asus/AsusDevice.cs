@@ -51,7 +51,7 @@ namespace Aurora.Devices.Asus
         {
             asusHandler?.Stop();
             
-            asusHandler = new AsusHandler();
+            asusHandler = new AsusHandler(Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"));
             isActive = asusHandler.Start();
             return isActive;
         }
@@ -59,6 +59,8 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public void Shutdown()
         {
+            if (!isActive) return;
+            
             asusHandler.Stop();
             isActive = false;
         }
@@ -75,6 +77,7 @@ namespace Aurora.Devices.Asus
         {
             Shutdown();
             Initialize();
+            
             return isActive;
         }
 

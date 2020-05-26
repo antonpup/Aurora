@@ -25,11 +25,11 @@ namespace Aurora.Devices.Asus
         /// </summary>
         public bool HasSdk => AuraSdk != null;
 
-        public AsusHandler()
+        public AsusHandler(bool enableUnsupportedVersion = false)
         {
             try
             {
-                if (CheckVersion(out string message))
+                if (CheckVersion(enableUnsupportedVersion, out string message))
                     AuraSdk = new AuraSdk() as IAuraSdk2;
                 else
                     AuraSdk = null;
@@ -47,12 +47,10 @@ namespace Aurora.Devices.Asus
         /// Checks to see if the version of Aura installed is the correct one
         /// </summary>
         /// <returns>true if the registry entry equals to <see cref="RecommendedAsusVersion"/></returns>
-        private bool CheckVersion(out string message)
+        private bool CheckVersion(bool enableUnsupportedVersion, out string message)
         {
             message = null;
-            
-            bool enableUnsupportedVersion = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_disconnect_when_stop");
-            
+
             //Computer\HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Asus\AURA\Version
             using (var root = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
             {
@@ -178,9 +176,12 @@ namespace Aurora.Devices.Asus
         {
             lock (deviceLock)
             {
-                foreach (var device in devices)
-                    device.Stop();
-            
+                for (var i = devices.Count - 1; i >= 0; i--)
+                {
+                    var device = devices[i];
+                    device.Stop(false);
+                }
+
                 devices.Clear();
                 AuraSdk?.ReleaseControl(0);
             }

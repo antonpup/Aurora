@@ -6,6 +6,7 @@ using System.Text;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Witcher3.GSI;
 using Aurora.Profiles.Witcher3.GSI.Nodes;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Witcher3
 {
@@ -28,14 +29,9 @@ namespace Aurora.Profiles.Witcher3
                     NotifyFilter = NotifyFilters.LastWrite,
                     EnableRaisingEvents = true
                 };
-                watcher.Changed += OnConfigFileChanged;
+                watcher.Changed += (o, e) => ReadConfigFile();
             }
 
-            ReadConfigFile();
-        }
-
-        private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
-        {
             ReadConfigFile();
         }
 
@@ -54,7 +50,6 @@ namespace Aurora.Profiles.Witcher3
                 catch (IOException) { }//ignore read exception
             }
         }
-
 
         /// <summary>
         /// Returns each useful field parsed from the game file, or null if nothing found
@@ -102,46 +97,33 @@ namespace Aurora.Profiles.Witcher3
             _game_state = new GameState_Witcher3();
         }
 
-        public override void UpdateLights(EffectFrame frame)
+        public override void UpdateTick()
         {
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
+            if (!File.Exists(configFile))
+                return;
 
-            if (File.Exists(configFile))
+            if (configContent != null && isGameStateDirty)
             {
-                if (configContent != null && isGameStateDirty)
+                try
                 {
-                    try
-                    {
-                        var data = GetUsefulData(configContent);
-                        if (data != null)//if this is null, no useful data was found
-                        {
-                            var player = (_game_state as GameState_Witcher3).Player;
+                    var data = GetUsefulData(configContent);
+                    if (data == null)//if this is null, no useful data was found
+                        return;
 
-                            player.Toxicity = GetInt(data, "Toxicity");
-                            player.Stamina = GetInt(data, "Stamina");
-                            player.MaximumHealth = GetInt(data, "MaxHealth");
-                            player.CurrentHealth = GetInt(data, "CurrHealth");
-                            if (Enum.TryParse(data.FirstOrDefault(d => d.Contains("ActiveSign")).Split('=').Last().Replace("ST_", ""), out WitcherSign sign)) ;
-                                player.ActiveSign = sign;//tries to parse the sign text into the enum
+                    var player = (_game_state as GameState_Witcher3).Player;
 
-                            isGameStateDirty = false;
-                        }
-                    }
-                    catch
-                    { }
+                    player.Toxicity = GetInt(data, "Toxicity");
+                    player.Stamina = GetInt(data, "Stamina");
+                    player.MaximumHealth = GetInt(data, "MaxHealth");
+                    player.CurrentHealth = GetInt(data, "CurrHealth");
+                    var enumText = data.FirstOrDefault(d => d.Contains("ActiveSign"))?.Split('_')?.Last() ?? "";
+                    player.ActiveSign = EnumUtils.TryParseOr(enumText, true, WitcherSign.None);
+
+                    isGameStateDirty = false;
                 }
+                catch
+                { }
             }
-
-            foreach (var layer in this.Application.Profile.Layers.Reverse().ToArray())
-            {
-                if (layer.Enabled)
-                    layers.Enqueue(layer.Render(_game_state));
-            }
-
-            //Scripts
-            this.Application.UpdateEffectScripts(layers);
-
-            frame.AddLayers(layers.ToArray());
         }
     }
 }
