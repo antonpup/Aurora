@@ -15,8 +15,9 @@ namespace Aurora.Devices.Bloody
     {
         private string deviceName = "Bloody";
         private long lastUpdateTime = 0;
-        private bool isInitialized => BloodyKeyboard.IsConnected;
+        private bool isInitialized;
         private readonly Stopwatch watch = new Stopwatch();
+        private BloodyKeyboard keyboard;
 
         public string GetDeviceDetails()
         {
@@ -40,13 +41,13 @@ namespace Aurora.Devices.Bloody
 
         public bool Initialize()
         {
-            if (BloodyKeyboard.Initialize())
-                return true;
-            else
+            keyboard = BloodyKeyboard.Initialize();
+
+            if (keyboard == null)
             {
-                Global.logger.Info("Bloody device not initialized");
-                return false;
+                return isInitialized = false;
             }
+            return isInitialized = true;
         }
 
         public bool IsConnected()
@@ -76,12 +77,14 @@ namespace Aurora.Devices.Bloody
 
         public void Reset()
         {
-
+            Shutdown();
+            Initialize();
         }
 
         public void Shutdown()
         {
-            BloodyKeyboard.Disconnect();
+            keyboard.Disconnect();
+            isInitialized = false;
         }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -93,10 +96,10 @@ namespace Aurora.Devices.Bloody
             {
                 Color clr = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
                 if (KeyMap.TryGetValue(key.Key, out var bloodyKey))
-                    BloodyKeyboard.SetKeyColor(bloodyKey, clr);
+                    keyboard.SetKeyColor(bloodyKey, clr);
             }
 
-            return BloodyKeyboard.Update();
+            return keyboard.Update();
         }
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
