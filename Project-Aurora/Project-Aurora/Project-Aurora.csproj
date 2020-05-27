@@ -248,6 +248,17 @@
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
+    <Compile Include="Profiles\Stardew Valley\Control_StardewValley.xaml.cs">
+      <DependentUpon>Control_StardewValley.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Stardew Valley\GSI\GameState_StardewValley.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\GameStatusNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\InventoryNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\JournalNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\StardewValleyApplication.cs" />
+    <Compile Include="Profiles\Stardew Valley\StardewValleyProfile.cs" />
     <Compile Include="Profiles\TModLoader\GSI\GameState_TModLoader.cs" />
     <Compile Include="Profiles\TModLoader\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\TModLoader\GSI\Nodes\WorldNode.cs" />
@@ -1691,6 +1702,7 @@
     <Resource Include="Resources\betterdiscord.png" />
     <Resource Include="Resources\icons8-font-size-30.png" />
     <Resource Include="Resources\icons8-folder-30.png" />
+    <Resource Include="Resources\stardew_valley_32x32.png" />
     <Resource Include="Resources\tmodloader.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1823,6 +1835,10 @@
     <Page Include="Controls\Control_LayerPreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Profiles\Stardew Valley\Control_StardewValley.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\TModLoader\Control_TModLoader.xaml">
       <Generator>MSBuild:Compile</Generator>
