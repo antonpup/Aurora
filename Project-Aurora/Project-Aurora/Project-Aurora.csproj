@@ -176,6 +176,7 @@
     <Compile Include="Controls\Window_Prompt.xaml.cs">
       <DependentUpon>Window_Prompt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Bloody\Bloody.cs" />
     <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
@@ -2643,6 +2644,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Bloody.NET">
+      <Version>1.0.4</Version>
+    </PackageReference>
     <PackageReference Include="Colore">
       <Version>5.2.0</Version>
     </PackageReference>
