@@ -248,8 +248,6 @@
     </Compile>
     <Compile Include="Profiles\Spotify\GSI\GameState_Spotify.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\ColorNode.cs" />
-    <Compile Include="Profiles\Spotify\GSI\Nodes\ColorsNode.cs" />
-    <Compile Include="Profiles\Spotify\GSI\Nodes\ColorThiefNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\PaletteNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\PlayerNode.cs" />
     <Compile Include="Profiles\Spotify\GSI\Nodes\TrackNode.cs" />

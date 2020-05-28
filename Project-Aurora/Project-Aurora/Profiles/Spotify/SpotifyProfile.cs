@@ -24,11 +24,11 @@ namespace Aurora.Profiles.Spotify
 
             OverlayLayers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                //GetLayer("Thief 1", DeviceKeys.ONE,   "Colors/ColorThief/Palette/Color1/"),
-                //GetLayer("Thief 2", DeviceKeys.TWO,   "Colors/ColorThief/Palette/Color2/"),
-                //GetLayer("Thief 3", DeviceKeys.THREE, "Colors/ColorThief/Palette/Color3/"),
-                //GetLayer("Thief 4", DeviceKeys.FOUR,  "Colors/ColorThief/Palette/Color4/"),
-                //GetLayer("Thief 5", DeviceKeys.FIVE,  "Colors/ColorThief/Palette/Color5/"),
+                //GetLayer("Thief 1", DeviceKeys.ONE,   "AlbumArtColors/Color1/"),
+                //GetLayer("Thief 2", DeviceKeys.TWO,   "AlbumArtColors/Color2/"),
+                //GetLayer("Thief 3", DeviceKeys.THREE, "AlbumArtColors/Color3/"),
+                //GetLayer("Thief 4", DeviceKeys.FOUR,  "AlbumArtColors/Color4/"),
+                //GetLayer("Thief 5", DeviceKeys.FIVE,  "AlbumArtColors/Color5/"),
                 //
                 //GetLayer("Old 1", DeviceKeys.Q, "Colors/Desaturated/"),
                 //GetLayer("Old 2", DeviceKeys.W, "Colors/LightVibrant/"),
@@ -47,13 +47,13 @@ namespace Aurora.Profiles.Spotify
                 },
                 new OverrideLogicBuilder()
                 .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/ColorThief/Palette/Color1/Red"),
-                    new NumberGSINumeric("Colors/ColorThief/Palette/Color1/Green"),
-                    new NumberGSINumeric("Colors/ColorThief/Palette/Color1/Blue"))
+                    new NumberGSINumeric("AlbumArtColors/Color1/Red"),
+                    new NumberGSINumeric("AlbumArtColors/Color1/Green"),
+                    new NumberGSINumeric("AlbumArtColors/Color1/Blue"))
                 .SetDynamicColor("_DimColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/ColorThief/Palette/Color2/Red"),
-                    new NumberGSINumeric("Colors/ColorThief/Palette/Color2/Green"),
-                    new NumberGSINumeric("Colors/ColorThief/Palette/Color2/Blue"))
+                    new NumberGSINumeric("AlbumArtColors/Color2/Red"),
+                    new NumberGSINumeric("AlbumArtColors/Color2/Green"),
+                    new NumberGSINumeric("AlbumArtColors/Color2/Blue"))
                 .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
                 )
             };    

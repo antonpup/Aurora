@@ -15,7 +15,7 @@ namespace Aurora.Profiles.Spotify.GSI
 
         public PlayerNode Player => NodeFor<PlayerNode>("player");
 
-        public ColorsNode Colors => NodeFor<ColorsNode>("colors");
+        public PaletteNode AlbumArtColors => NodeFor<PaletteNode>("colors");
 
         public TrackNode Track => NodeFor<TrackNode>("track");
 
