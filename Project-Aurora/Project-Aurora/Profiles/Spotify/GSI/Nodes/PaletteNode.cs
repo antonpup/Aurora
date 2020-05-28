@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Spotify.GSI.Nodes
 {
-    public class PaletteNode : Node<PaletteNode>
+    public class PaletteNode : Node
     {
         public ColorNode Color1 => NodeFor<ColorNode>("color_1");
         public ColorNode Color2 => NodeFor<ColorNode>("color_2");
