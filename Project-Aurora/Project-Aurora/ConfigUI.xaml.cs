@@ -22,9 +22,11 @@ using Aurora.Profiles.Aurora_Wrapper;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using PropertyChanged;
 
 namespace Aurora
 {
+    [DoNotNotify]
     partial class ConfigUI : Window, INotifyPropertyChanged
     {
         Control_Settings settingsControl = new Control_Settings();
@@ -670,7 +672,7 @@ namespace Aurora
             }
         }
 
-        private void DesktopControl_MouseDown(object sender, MouseButtonEventArgs e)
+        private void DesktopControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.FocusedApplication = null;
             SelectedControl = settingsControl;
@@ -680,6 +682,9 @@ namespace Aurora
 
             UpdateProfileStackBackground(sender as FrameworkElement);
         }
+        private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
+        private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open();
+
 
         private void UpdateProfileStackBackground(FrameworkElement item)
         {

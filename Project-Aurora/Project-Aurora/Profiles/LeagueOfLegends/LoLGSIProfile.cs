@@ -77,11 +77,11 @@ namespace Aurora.Profiles.LeagueOfLegends
             };
         }
 
-        public static OverrideLogicBuilder InGameAnd(IEvaluatable<bool> eval)
+        public static OverrideLogicBuilder InGameAnd(Evaluatable<bool> eval)
         {
             return new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",
                 new BooleanAnd(
-                    new IEvaluatable<bool>[] {
+                    new Evaluatable<bool>[] {
                         new BooleanGSIBoolean("Match/InGame"),
                         eval
                     }
@@ -89,7 +89,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             );
         }
 
-        public static OverrideLogicBuilder EnabledWhen(IEvaluatable<bool> condition)
+        public static OverrideLogicBuilder EnabledWhen(Evaluatable<bool> condition)
         {
             return new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", condition);
         }

@@ -12,7 +12,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" x:Name="ctrlSettings">
+             d:DesignHeight="400" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" x:Name="ctrlSettings">
     <UserControl.Resources>
         <ResourceDictionary>
             <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
@@ -173,18 +173,12 @@
                     <CheckBox Content="Enable Audio Capture (for gamestates)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
                 </Grid>
             </TabItem>
-            <TabItem Header="Volume Overlay">
-                <Grid>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="The Volume Overlay has moved to the Overlays section of Desktop! If you cannot find it try creating a new profile and copying the Volume Overlay layer over to your profile! To control the delay go into the Overrides section of the layer, go to Enabled, find the 'For x seconds' and change those" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Skype Overlay">
-                <Grid>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="This Overlay has moved to the Overlay layers section of the Skype Application" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
             <TabItem Header="Away Effects">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="587*"/>
+                        <ColumnDefinition Width="257*"/>
+                    </Grid.ColumnDefinitions>
                     <TextBlock HorizontalAlignment="Left" Margin="10,12,0,0" TextWrapping="Wrap" Text="Away Effect Type: " VerticalAlignment="Top"/>
                     <ComboBox x:Name="idle_effects_type" HorizontalAlignment="Left" Margin="110,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource IdleEffects}}" ItemTemplate="{Binding Source={StaticResource IdleEffectsTemplate}}" SelectionChanged="idle_effects_type_SelectionChanged"/>
                     <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="Delay:" VerticalAlignment="Top"/>
@@ -319,6 +313,11 @@
                                     <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
                                 </StackPanel>
                             </TabItem>
+                            <TabItem Header="Asus">
+                                <StackPanel Orientation="Vertical" Margin="5">
+                                    <Button x:Name="wrapper_asus_configure_devices" Content="Configure Peripheral Devices" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
+                                </StackPanel>
+                            </TabItem>
                         </TabControl>
                     </Grid>
                 </Grid>
@@ -345,31 +344,103 @@
             <TabItem Header="About">
                 <Grid>
                     <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-                    <!--<Label Content="by Antonpup &amp; simon-wh" HorizontalAlignment="Left" Margin="294,12,0,0" VerticalAlignment="Top"/>-->
                     <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
-                        <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/><LineBreak/><LineBreak/>
-                        <Run Text="You can report problems and give suggestions to me via "/><Hyperlink NavigateUri="http://steamcommunity.com/id/SimonWhyte/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Steam"/></Hyperlink><LineBreak/>
-                        <Run Text="or you can create an issue on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><Run Text="."/><LineBreak/><LineBreak/>
-                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink><LineBreak/>
-                        <Run Text="Game logos and other images are owned by their respective owners."/><LineBreak/><LineBreak/>
-                        <Run Text="Some icons are used with the free license from"/><Hyperlink NavigateUri="https://icons8.com" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Icons8"/></Hyperlink><LineBreak/><LineBreak/>
-                        <Run Text="I can be contacted at me@simonwwhyte.com"/><LineBreak/><LineBreak/>
+                        <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="You can report problems and give suggestions by "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Game logos and other images are owned by their respective owners."/>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Some icons are used with the free license from "/><Hyperlink NavigateUri="https://icons8.com" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Icons8"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
                         <Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink>
+                        <LineBreak/>
+                        <LineBreak/>
+                        <Run Text="Made by all the"/> <Hyperlink NavigateUri="https://github.com/antonpup/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
                     </TextBlock>
-                    <Label x:Name="lblVersion" Content="beta v0.6.0-dev2" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                     <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Debug">
                 <Grid>
-                    <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Current Keyboard bitmap:" VerticalAlignment="Top"/>
-                    <Image x:Name="debug_bitmap_preview" HorizontalAlignment="Left" Margin="152,10,0,0" VerticalAlignment="Top" MaxWidth="400" MaxHeight="400"/>
-                    <Button x:Name="btnShowBitmapWindow" Content="Show Bitmap Window" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="btnShowBitmapWindow_Click"/>
-                    <CheckBox x:Name="chkBitmapTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button x:Name="btnShowLogsFolder" Content="Show Logs Folder" HorizontalAlignment="Left" Margin="10,121,0,0" VerticalAlignment="Top" Click="btnShowLogsFolder_Click"/>
-                    <Button x:Name="btnShowGSILog" Content="Show GSI HTTP requests" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Click="btnShowGSILog_Click" />
-                    <CheckBox x:Name="chkHttpDebugTopMost" Content="Always on top" HorizontalAlignment="Left" Margin="10,101,0,0" VerticalAlignment="Top" IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Record" HorizontalAlignment="Left" Margin="10,81,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" IsEnabled="False" Visibility="Collapsed"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                        <Button 
+                            x:Name="btnShowBitmapWindow" 
+                            Content="Show Bitmap Window" 
+                            Click="btnShowBitmapWindow_Click"
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                        <CheckBox 
+                            x:Name="chkBitmapTopMost" 
+                            Content="Always on top" 
+                            IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                        <CheckBox 
+                            x:Name="chkBitmapStartUp" 
+                            Content="Open at startup"  
+                            IsChecked="{Binding BitmapWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Button 
+                            x:Name="btnShowGSILog" 
+                            Content="Show GSI HTTP requests"
+                            Click="btnShowGSILog_Click" 
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                        <CheckBox 
+                            x:Name="chkHttpDebugTopMost" 
+                            Content="Always on top" 
+                            IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,10,0,0"
+                        />
+                        <CheckBox 
+                            x:Name="chkHttpStartUp" 
+                            Content="Open at startup" 
+                            IsChecked="{Binding HttpWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        Margin="0,10,0,0"
+
+                        />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                        <Button 
+                            x:Name="btnShowLogsFolder" 
+                            Content="Show Logs Folder" 
+                            Click="btnShowLogsFolder_Click"
+                            Margin="0,50,0,0"
+                            Width="150"
+                            Height="30"
+                        />
+                        <Button
+                            x:Name="btnDumpSensors"
+                            Margin="0,10,0,0"
+                            Width="150"
+                            Height="30"
+                            Content="Dump hardware sensors" Click="btnDumpSensors_Click"
+                        />
+                    </StackPanel>
                 </Grid>
             </TabItem>
         </TabControl>

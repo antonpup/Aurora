@@ -21,7 +21,6 @@ namespace Aurora.Settings.Layers
     public partial class Control_GlitchLayer : UserControl
     {
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_GlitchLayer()
         {
@@ -47,14 +46,6 @@ namespace Aurora.Settings.Layers
 
         internal void SetProfile(Profiles.Application profile)
         {
-            if (profile != null && !profileset)
-            {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
-
-                profileset = true;
-            }
-            settingsset = false;
-            this.SetSettings();
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)

@@ -5,6 +5,7 @@ using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides.Logic.Builder;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -13,13 +14,16 @@ using System.Text;
 using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
 
-namespace Aurora.Profiles.Minecraft {
+namespace Aurora.Profiles.Minecraft
+{
 
-    public class MinecraftProfile : ApplicationProfile {
+    public class MinecraftProfile : ApplicationProfile
+    {
 
         public MinecraftProfile() : base() { }
 
-        public override void Reset() {
+        public override void Reset()
+        {
             base.Reset();
 
             // Keys that do something and should be highlighted in a static color
@@ -28,8 +32,13 @@ namespace Aurora.Profiles.Minecraft {
             Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>() {
                 new Layer("Controls Assistant Layer", new MinecraftKeyConflictLayerHandler()),
 
-                new Layer("Health Bar", new MinecraftHealthBarLayerHandler() {
-                    Properties = new MinecraftHealthBarLayerHandlerProperties() {
+                new Layer("Health Bar", new PercentLayerHandler() {
+                    Properties = new PercentLayerHandlerProperties()
+                    {
+                        _VariablePath = "Player/Health",
+                        _MaxVariablePath = "Player/HealthMax",
+                        _PrimaryColor = Color.Red,
+                        _SecondaryColor = Color.Transparent,
                         _Sequence = new KeySequence(new[] {
                             DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH
                         })
@@ -37,6 +46,12 @@ namespace Aurora.Profiles.Minecraft {
                 },
                 new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
+                    .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
+                        .AddEntry(Color.FromArgb(255, 210, 0), new BooleanGSIBoolean("Player/PlayerEffects/HasAbsorption"))
+                        .AddEntry(Color.FromArgb(240, 75, 100), new BooleanGSIBoolean("Player/PlayerEffects/HasRegeneration"))
+                        .AddEntry(Color.FromArgb(145, 160, 30), new BooleanGSIBoolean("Player/PlayerEffects/HasPoison"))
+                        .AddEntry(Color.FromArgb(70, 5, 5), new BooleanGSIBoolean("Player/PlayerEffects/HasWither"))
+                    )
                 ),
 
                 new Layer("Experience Bar", new PercentLayerHandler() {
@@ -77,7 +92,7 @@ namespace Aurora.Profiles.Minecraft {
                     }
                 },
                 new OverrideLogicBuilder()
-                    .SetDynamicBoolean("_Enabled", new BooleanAnd(new List<BooleanGSIBoolean>(new[] { 
+                    .SetDynamicBoolean("_Enabled", new BooleanAnd(new List<BooleanGSIBoolean>(new[] {
                         new BooleanGSIBoolean("Player/IsInWater"),new BooleanGSIBoolean("Player/InGame") }
                     )))
                 ),
@@ -119,9 +134,68 @@ namespace Aurora.Profiles.Minecraft {
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/InGame"))
                 ),
 
-                new Layer("On Fire", new MinecraftBurnLayerHandler()),
+                new Layer("On Fire", new SimpleParticleLayerHandler()
+                {
+                    Properties = new SimpleParticleLayerProperties()
+                    {
+                        _SpawnLocation = ParticleSpawnLocations.BottomEdge,
+                        _ParticleColorStops = new Utils.ColorStopCollection()
+                        {
+                            { 0f, Color.Orange },
+                            { 0.6f , Color.Red },
+                            { 1f, Color.Black }
+                        },
+                        _MinSpawnTime = 0.05f,
+                        _MaxSpawnTime = 0.05f,
+                        _MinSpawnAmount = 8,
+                        _MaxSpawnAmount = 10,
+                        _MinLifetime = 0.5f,
+                        _MaxLifetime = 2f,
+                        _MinInitialVelocityX = 0,
+                        _MaxInitialVelocityX = 0,
+                        _MinInitialVelocityY = -5f,
+                        _MaxInitialVelocityY = -0.8f,
+                        _AccelerationX = 0f,
+                        _AccelerationY = 0.5f,
+                        _MinSize = 8,
+                        _MaxSize = 12,
+                        _DeltaSize = -4,
+                    }
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanGSIBoolean("Player/IsBurning"))
+                ),
 
-                new Layer("Raining", new MinecraftRainLayerHandler()),
+                new Layer("Raining", new SimpleParticleLayerHandler()
+                {
+                    Properties = new SimpleParticleLayerProperties()
+                    {
+                        _SpawnLocation = ParticleSpawnLocations.TopEdge,
+                        _ParticleColorStops = new Utils.ColorStopCollection
+                        {
+                            { 0f, Color.Cyan },
+                            { 1f, Color.Cyan }
+                        },
+                        _MinSpawnTime = .1f,
+                        _MaxSpawnTime = .2f,
+                        _MinSpawnAmount = 1,
+                        _MaxSpawnAmount = 2,
+                        _MinLifetime = 1,
+                        _MaxLifetime = 1,
+                        _MinInitialVelocityX = 0,
+                        _MaxInitialVelocityX = 0,
+                        _MinInitialVelocityY =3,
+                        _MaxInitialVelocityY = 3,
+                        _AccelerationX = 0,
+                        _AccelerationY = 0,
+                        _MinSize = 2,
+                        _MaxSize = 4,
+                        _DeltaSize = 0,
+                    }
+                },
+                new OverrideLogicBuilder()
+                    .SetDynamicBoolean("_SpawningEnabled", new BooleanGSIBoolean("World/IsRaining"))
+                ),
 
                 new Layer("Grass Block Top", new MinecraftBackgroundLayerHandler() {
                     Properties = new MinecraftBackgroundLayerHandlerProperties() {
@@ -129,15 +203,27 @@ namespace Aurora.Profiles.Minecraft {
                         _SecondaryColor = Color.FromArgb(30, 80, 25),
                         _Sequence = new KeySequence(new FreeFormObject(0, -60, 900, 128))
                     }
-                }, 
+                },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(125,42,123), new BooleanGSINumeric("World/DimensionID", 1))//The End
-                        .AddEntry(Color.FromArgb(255,183,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                        .AddEntry(Color.FromArgb(125,42,123), new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", 1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The End
+                        .AddEntry(Color.FromArgb(255,183,0), new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", -1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The Nether
                     )
                     .SetLookupTable("_SecondaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(49,0,59), new BooleanGSINumeric("World/DimensionID", 1))//The End
-                        .AddEntry(Color.FromArgb(87,83,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                        .AddEntry(Color.FromArgb(49,0,59), new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", 1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The End
+                        .AddEntry(Color.FromArgb(87,83,0), new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", -1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The Nether
                     )
                 ),
 
@@ -149,12 +235,24 @@ namespace Aurora.Profiles.Minecraft {
                 },
                 new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(209,232,80), new BooleanGSINumeric("World/DimensionID", 1))//The End
-                        .AddEntry(Color.FromArgb(184,26,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                        .AddEntry(Color.FromArgb(209,232,80), new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", 1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The End
+                        .AddEntry(Color.FromArgb(184,26,0), new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", -1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The Nether
                     )
                     .SetLookupTable("_SecondaryColor", new OverrideLookupTableBuilder<Color>()
-                        .AddEntry(Color.FromArgb(107,102,49), new BooleanGSINumeric("World/DimensionID", 1))//The End
-                        .AddEntry(Color.FromArgb(59,8,0), new BooleanGSINumeric("World/DimensionID", -1))//Nether
+                        .AddEntry(Color.FromArgb(107,102,49),new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", 1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The End
+                        .AddEntry(Color.FromArgb(59,8,0),  new BooleanAnd(new Evaluatable<bool>[] {
+                            new BooleanGSINumeric("World/DimensionID", -1),
+                            new BooleanGSIBoolean("Player/InGame")
+                        }))//The Nether
                     )
                 ),
             };

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -97,7 +98,7 @@ namespace Aurora.Settings
         }
     }
 
-    public class PluginManagerSettings : Settings
+    public class PluginManagerSettings
     {
         public Dictionary<string, bool> PluginManagement { get; private set; } = new Dictionary<string, bool>();
 

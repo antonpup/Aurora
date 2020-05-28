@@ -1,5 +1,5 @@
 ﻿namespace Aurora.Profiles.ETS2.GSI.Nodes {
-    public class NavigationNode : Node<NavigationNode> {
+    public class NavigationNode : Node {
 
         private Box<ETS2MemoryStruct> _memdat;
 

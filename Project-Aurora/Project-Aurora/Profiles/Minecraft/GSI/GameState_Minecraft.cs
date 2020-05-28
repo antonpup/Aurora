@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Minecraft.GSI {
 
-    public class GameState_Minecraft : GameState<GameState_Minecraft> {
+    public class GameState_Minecraft : GameState {
 
         /// <summary>
         /// Provider node provides information about the data source so that Aurora can update the correct gamestate.
@@ -41,11 +41,6 @@ namespace Aurora.Profiles.Minecraft.GSI {
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_Minecraft(string JSONstring) : base(JSONstring) { }
-
-        /// <summary>
-        /// Creates a GameState_Minecraft instance based on the data from the passed GameState instance.
-        /// </summary>
-        public GameState_Minecraft(IGameState other) : base(other) { }
         
     }
 }

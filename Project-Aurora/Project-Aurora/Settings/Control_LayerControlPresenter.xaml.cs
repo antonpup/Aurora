@@ -41,7 +41,6 @@ namespace Aurora.Settings
         public Control_LayerControlPresenter(Layers.Layer layer) : this()
         {
             Layer = layer;
-            cmbLayerType.SelectedItem = Layer.Handler.ID;
             grdLayerConfigs.Visibility = Visibility.Hidden;
             grd_LayerControl.IsHitTestVisible = true;
             grd_LayerControl.Effect = null;
@@ -53,13 +52,9 @@ namespace Aurora.Settings
 
             DataContext = layer;
 
-            cmbLayerType.Items.Clear();
+            cmbLayerType.ItemsSource = layer.AssociatedApplication.AllowedLayers.OrderBy(l => l.Order).ThenBy(l => l.Name);
+            cmbLayerType.SelectedValue = Layer.Handler.GetType();
 
-            cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers["Default"]);
-            foreach (var layertype in Global.LightingStateManager.DefaultLayerHandlers.Concat(layer.AssociatedApplication.Config.ExtraAvailableLayers).Where(s => s != "Default").OrderBy(s => Global.LightingStateManager.LayerHandlers[s].Title))
-                cmbLayerType.Items.Add(Global.LightingStateManager.LayerHandlers[layertype]);
-
-            cmbLayerType.SelectedItem = Global.LightingStateManager.LayerHandlers[Layer.Handler.ID];
             ctrlLayerTypeConfig.Content = layer.Control;
             chkLayerSmoothing.IsChecked = Layer.Handler.EnableSmoothing;
             chk_ExcludeMask.IsChecked = Layer.Handler._EnableExclusionMask ?? false;
@@ -82,18 +77,16 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is ComboBox)
             {
-                LayerHandlerEntry enumVal = (LayerHandlerEntry)((sender as ComboBox).SelectedItem);
-
                 _Layer?.Dispose();
-                ResetLayer(enumVal);
+                ResetLayer((Type)(sender as ComboBox).SelectedValue);
             }
         }
 
-        private void ResetLayer(LayerHandlerEntry type)
+        private void ResetLayer(Type type)
         {
             if (IsLoaded && !isSettingNewLayer && type != null)
             {
-                _Layer.Handler = Global.LightingStateManager.GetLayerHandlerInstance(type);
+                _Layer.Handler = (ILayerHandler)Activator.CreateInstance(type);
 
                 ctrlLayerTypeConfig.Content = _Layer.Control;
                 chkLayerSmoothing.IsChecked = _Layer.Handler.EnableSmoothing;
@@ -111,9 +104,7 @@ namespace Aurora.Settings
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
-                LayerHandlerEntry enumVal = (LayerHandlerEntry)(cmbLayerType.SelectedItem);
-
-                ResetLayer(enumVal);
+                ResetLayer((Type)cmbLayerType.SelectedValue);
             }
         }
 

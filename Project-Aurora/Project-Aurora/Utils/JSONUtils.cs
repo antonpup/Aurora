@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using Aurora.Settings.Overrides.Logic;
 
 namespace Aurora.Utils
 {
@@ -23,13 +24,13 @@ namespace Aurora.Utils
             switch (typeName)
             {
                 case "System.Collections.Generic.List`1[[System.Drawing.Color, System.Drawing]]":
-                    return typeof(List<System.Drawing.Color>);
+                    return typeof(List<Color>);
                 case "System.Collections.Generic.SortedDictionary`2[[System.Single, mscorlib],[System.Drawing.Color, System.Drawing]]":
-                    return typeof(SortedDictionary<float, System.Drawing.Color>);
+                    return typeof(SortedDictionary<float, Color>);
                 case "System.Collections.Generic.Queue`1[[System.Windows.Forms.Keys, System.Windows.Forms]]":
                     return typeof(Queue<System.Windows.Forms.Keys>);
                 case "System.Collections.Generic.Dictionary`2[[Aurora.Devices.DeviceKeys, Aurora],[System.Drawing.Color, System.Drawing]]":
-                    return typeof(Dictionary<Devices.DeviceKeys, System.Drawing.Color>);
+                    return typeof(Dictionary<Devices.DeviceKeys, Color>);
                     //Resolve typo'd AbilityLayerHandler type
                 case "Aurora.Profiles.Dota_2.Layers.Dota2AbiltiyLayerHandler":
                     return typeof(Profiles.Dota_2.Layers.Dota2AbilityLayerHandler);
@@ -46,15 +47,25 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.ColorEnhanceProfile":
                     return typeof(Profiles.WrapperProfile);
                 case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
-                    return typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice);
+                    return typeof(Devices.UnifiedHID.UnifiedHIDDevice);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
-                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<bool>);
+                case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]]":
+                    return typeof(Evaluatable<bool>);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableNumber":
-                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<double>);
+                case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Double, mscorlib]]":
+                    return typeof(Evaluatable<double>);
                 case "Aurora.Settings.Overrides.Logic.IEvaluatableString":
-                    return typeof(Aurora.Settings.Overrides.Logic.IEvaluatable<string>);
+                case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.String, mscorlib]]":
+                    return typeof(Evaluatable<string>);
                 case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableBoolean, Aurora]]":
-                    return typeof(ObservableCollection<Settings.Overrides.Logic.IEvaluatable<bool>>);
+                case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]], Aurora]]":
+                    return typeof(ObservableCollection<Evaluatable<bool>>);
+                case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableNumber, Aurora]]":
+                case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Double, mscorlib]], Aurora]]":
+                    return typeof(ObservableCollection<Evaluatable<double>>);
+                case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableString, Aurora]]":
+                case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.String, mscorlib]], Aurora]]":
+                    return typeof(ObservableCollection<Evaluatable<string>>);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));
@@ -77,17 +88,23 @@ namespace Aurora.Utils
         public override bool CanConvert(Type objectType) => true;
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-            // TODO: add some sort of error handling, e.g. in case of the targetType being inaccessible?
+            // If this is a null token, then the original value was null.
+            if (reader.TokenType == JsonToken.Null) return null;
 
-            reader.Read(); // Read "$type" property name
-            reader.Read(); // Read "$type" value
-            var typeName = reader.Value?.ToString(); // Find the type based on the fully-qualified name from the $type. This will be null if the original value was null
-            reader.Read(); // Read "$value" property name
-            reader.Read(); // Read "$value" value
-            var value = typeName == null ? null : JsonConvert.DeserializeObject(reader.Value.ToString(), Type.GetType(typeName)); // The $value is a JSON-encoded string, so decode as the requested type
-            reader.Read(); // Read end of object (if this is not done, it breaks the next converter)
+            // Read "$type" property
+            reader.Read(); // Property name
+            reader.Read(); // Property value
+            var typeName = reader.Value.ToString(); // Find the type based on the fully-qualified name from the $type. This will be null if the original value was null
 
-            return value;
+            // Read "$value" property
+            reader.Read(); // Property name
+            reader.Read(); // Property value
+            var value = reader.Value.ToString();
+
+            // Read end of object '}' (if this is not done, it breaks the next converter)
+            reader.Read();
+
+            return JsonConvert.DeserializeObject(value.ToString(), Type.GetType(typeName)); // The $value is a JSON-encoded string, so decode as the requested type;
         }
         
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {

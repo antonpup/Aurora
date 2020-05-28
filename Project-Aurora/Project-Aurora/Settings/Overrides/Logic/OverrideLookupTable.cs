@@ -61,7 +61,7 @@ namespace Aurora.Settings.Overrides.Logic {
         /// <summary>
         /// Gets the control allowing the user to edit this LookupTable.
         /// </summary>   
-        public Visual GetControl(Application application) => _control ?? (_control = new Control_OverrideLookupTable(this, application));
+        public Visual GetControl() => _control ?? (_control = new Control_OverrideLookupTable(this));
         [JsonIgnore]
         private Control_OverrideLookupTable _control;
 
@@ -79,9 +79,9 @@ namespace Aurora.Settings.Overrides.Logic {
             public object Value { get; set; }
 
             /// <summary>A boolean condition that should be met for this entry to be valid.</summary>
-            public IEvaluatable<bool> Condition { get; set; }
+            public Evaluatable<bool> Condition { get; set; }
             
-            public LookupTableEntry(object value, IEvaluatable<bool> condition) {
+            public LookupTableEntry(object value, Evaluatable<bool> condition) {
                 Value = value;
                 Condition = condition;
             }

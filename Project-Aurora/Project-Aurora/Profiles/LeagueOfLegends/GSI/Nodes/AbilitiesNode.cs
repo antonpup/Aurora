@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 {
-    public class AbilitiesNode : Node<AbilitiesNode>
+    public class AbilitiesNode : Node
     {
         public AbilityNode Q = new AbilityNode();
 

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:Aurora.Settings.Overrides.Logic"
              xmlns:controls="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
@@ -12,6 +13,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         
@@ -59,7 +61,10 @@
                                     <!-- Main item content -->
                                     <controls:Control_FieldPresenter Value="{Binding Value, Mode=TwoWay}" Type="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Table.VarType}" Grid.Column="0" VerticalAlignment="Center" Margin="8,4,8,8" />
                                     <TextBlock Text="When" FontStyle="Italic" FontWeight="Bold" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <local:Control_EvaluatablePresenter Application="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.Application}" Expression="{Binding Condition, Mode=TwoWay}" EvalType="Boolean" Grid.Column="2" VerticalAlignment="Center" Margin="8,4,8,8" />
+
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Column="2">
+                                        <local:Control_EvaluatablePresenter Expression="{Binding Condition, Mode=TwoWay}" EvalType="{x:Type sys:Boolean}" VerticalAlignment="Center" Margin="8,4,8,8" />
+                                    </ScrollViewer>
 
                                     <!-- Delete button -->
                                     <Button Margin="6" Grid.Column="3" VerticalAlignment="Center" ToolTip="Remove this lookup entry" Click="DeleteLookupEntry_Click">
@@ -79,5 +84,8 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
+
+        <!-- Toolbox -->
+        <local:Control_EvaluatableToolbox Grid.Row="4" />
     </Grid>
 </UserControl>

@@ -49,23 +49,8 @@ namespace Aurora.Settings.Layers
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private Exception scriptException = null;
-
         [JsonIgnore]
-        public Exception ScriptException { get { return scriptException; }
-            private set
-            {
-                bool diff = !(scriptException?.Equals(value) ?? false);
-                scriptException = value;
-                if (diff)
-                    InvokePropertyChanged();
-            }
-        }
-
-        public ScriptLayerHandler() : base()
-        {
-            _ID = "Script";
-        }
+        public Exception ScriptException { get; private set; }
 
         public override EffectLayer Render(IGameState gamestate)
         {
@@ -130,11 +115,6 @@ namespace Aurora.Settings.Layers
         protected override UserControl CreateControl()
         {
             return new Control_ScriptLayer(this);
-        }
-
-        protected void InvokePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

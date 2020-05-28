@@ -10,33 +10,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using FastMember;
 
 namespace Aurora.Settings.Layers
 {
-    public interface IValueOverridable
+    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
     {
-        IStringProperty Overrides { get; set; }
-    }
+        private static readonly Lazy<TypeAccessor> accessor = new Lazy<TypeAccessor>(() => TypeAccessor.Create(typeof(TProperty)));
 
-    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
-    {
-        [GameStateIgnoreAttribute]
-        [JsonIgnore]
+        [GameStateIgnore, JsonIgnore]
         public TProperty Logic { get; set; }
-        IStringProperty IValueOverridable.Overrides {
-            get => (IStringProperty)Logic;
-            set => Logic = value as TProperty;
-        }
 
         [LogicOverridable("Primary Color")]
-        public Color? _PrimaryColor { get; set; }
+        public virtual Color? _PrimaryColor { get; set; }
         [JsonIgnore]
-        public Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
+        public virtual Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
 
         [LogicOverridable("Affected Keys")]
-        public KeySequence _Sequence { get; set; }
+        public virtual KeySequence _Sequence { get; set; }
         [JsonIgnore]
-        public KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
+        public virtual KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
 
 
         #region Override Special Properties
@@ -79,14 +72,28 @@ namespace Aurora.Settings.Layers
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Sequence = new KeySequence();
         }
+
+        public object GetOverride(string propertyName) {
+            try {
+                return accessor.Value[Logic, propertyName];
+            } catch (ArgumentOutOfRangeException) {
+                return null;
+            }
+        }
+
+        public void SetOverride(string propertyName, object value) {
+            try {
+                accessor.Value[Logic, propertyName] = value;
+            } catch (ArgumentOutOfRangeException) { }
+        }
     }
 
     public class LayerHandlerProperties2Color<TProperty> : LayerHandlerProperties<TProperty> where TProperty : LayerHandlerProperties2Color<TProperty>
     {
         [LogicOverridable("Secondary Color")]
-        public Color? _SecondaryColor { get; set; }
+        public virtual Color? _SecondaryColor { get; set; }
         [JsonIgnore]
-        public Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
+        public virtual Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
 
         public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) { }
 
@@ -108,9 +115,7 @@ namespace Aurora.Settings.Layers
     {
         UserControl Control { get; }
 
-        string ID { get; }
-
-        IStringProperty Properties { get; set; }
+        object Properties { get; set; }
 
         bool EnableSmoothing { get; set; }
 
@@ -143,15 +148,9 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public UserControl Control => _Control ?? (_Control = this.CreateControl());
 
-        [JsonIgnore]
-        protected string _ID;
-
-        [JsonIgnore]
-        public string ID { get { return _ID; } }
-
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
-        IStringProperty ILayerHandler.Properties {
+        object ILayerHandler.Properties {
             get => Properties;
             set => Properties = value as TProperty;
         }
@@ -250,8 +249,22 @@ namespace Aurora.Settings.Layers
         }
     }
 
+    [LayerHandlerMeta(Exclude = true)]
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {
 
+    }
+
+
+    public interface IValueOverridable {
+        /// <summary>
+        /// Gets the overriden value of the speicifed property.
+        /// </summary>
+        object GetOverride(string propertyName);
+
+        /// <summary>
+        /// Sets the overriden value of the speicifed property to the given value.
+        /// </summary>
+        void SetOverride(string propertyName, object value);
     }
 }

@@ -6,7 +6,7 @@ namespace Aurora.Profiles.Witcher3.GSI
     /// <summary>
     /// A class representing various information retaining to Game State Integration of Witcher 3
     /// </summary>
-    public class GameState_Witcher3 : GameState<GameState_Witcher3>
+    public class GameState_Witcher3 : GameState
     {
         private Player_Witcher3 player;
 
@@ -33,14 +33,6 @@ namespace Aurora.Profiles.Witcher3.GSI
         /// </summary>
         /// <param name="json_data">The passed json data</param>
         public GameState_Witcher3(string json_data) : base(json_data)
-        {
-        }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_Witcher3 instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_Witcher3(IGameState other_state) : base(other_state)
         {
         }
     }

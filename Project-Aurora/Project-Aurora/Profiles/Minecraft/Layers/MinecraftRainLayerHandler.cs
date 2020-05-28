@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Profiles.Minecraft.Layers {
-
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class MinecraftRainLayerHandlerProperties : LayerHandlerProperties<MinecraftRainLayerHandlerProperties> {
 
         [JsonIgnore]
@@ -39,10 +39,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
         private List<Droplet> raindrops = new List<Droplet>();
         private Random rnd = new Random();
         private int frame = 0;
-
-        public MinecraftRainLayerHandler() : base() {
-            _ID = "MinecraftRainLayer";
-        }
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftRainLayer(this);

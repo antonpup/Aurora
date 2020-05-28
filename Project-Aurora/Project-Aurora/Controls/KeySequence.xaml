@@ -20,14 +20,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <DockPanel VerticalAlignment="Stretch" >
-            <Label x:Name="key_sequence_title" HorizontalAlignment="Left" VerticalAlignment="Top" Content="{Binding Title}" Margin="0,0,0,0" Padding="0" DockPanel.Dock="Top">
-                <Label.Resources>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="TextWrapping" Value="Wrap" />
-                    </Style>
-                </Label.Resources>
-            </Label>
+        <DockPanel VerticalAlignment="Stretch">
             <Grid DockPanel.Dock="Bottom">
                 <ListBox x:Name="keys_keysequence" Margin="0,0,80,25" ItemTemplate="{Binding Source={StaticResource DeviceKeys}}" MinWidth="150" SelectionMode="Extended" SelectionChanged="keys_keysequence_SelectionChanged" VerticalAlignment="Stretch"/>
                 <Button x:Name="sequence_up" Margin="0,50,40,0" VerticalAlignment="Top" Click="sequence_up_keys_Click" HorizontalAlignment="Right" Width="35">&#x2191;</Button>

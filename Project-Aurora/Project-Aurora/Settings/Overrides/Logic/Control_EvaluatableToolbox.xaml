@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="Aurora.Settings.Overrides.Logic.Control_EvaluatableToolbox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:o="clr-namespace:Aurora.Settings.Overrides"
+             xmlns:ol="clr-namespace:Aurora.Settings.Overrides.Logic"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ol:EvaluatableBackgroundSelector x:Key="EvaluatableBackgroundSelector" />
+        <o:TypeToIconConverter x:Key="TypeToIconConverter" />
+        <u:ValueConverterGroup x:Key="TemplateEvaluatableBackgroundSelector">
+            <ol:TemplateEvaluatableTypeSelector />
+            <ol:EvaluatableBackgroundSelector />
+        </u:ValueConverterGroup>
+        <u:ValueConverterGroup x:Key="TemplateEvaluatableIconConverter">
+            <ol:TemplateEvaluatableTypeSelector />
+            <o:TypeToIconConverter />
+        </u:ValueConverterGroup>
+        <ol:TabContentTemplateSelector x:Key="TabContentTemplateSelector" />
+    </UserControl.Resources>
+
+    
+    <!-- Main tab control -->
+    <TabControl ItemsSource="{Binding AvailableTabs, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" TabStripPlacement="Top" AllowDrop="True" DragEnter="EvaluatableTemplateList_DragEnter" Drop="EvaluatableTemplateList_Drop" >
+        <TabControl.ItemContainerStyle>
+            <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                <Setter Property="Header" Value="{Binding Key}" />
+                <Setter Property="ContentTemplateSelector" Value="{StaticResource TabContentTemplateSelector}" />
+            </Style>
+        </TabControl.ItemContainerStyle>
+        <TabControl.Resources>
+            <!-- Data template for the default evaluatables. -->
+            <DataTemplate x:Key="DefaultEvaluatableDT">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding .}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Path=ResultType, Converter={StaticResource EvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableSpawnerItem_StartDrag">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding Path=ResultType, Converter={StaticResource TypeToIconConverter}}" Width="18" Height="18" Margin="4,0,0,0" />
+                                        <TextBlock Text="{Binding Path=Metadata.Name}" Margin="4" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </DataTemplate>
+
+            <!-- Data template for the template evaluatables. -->
+            <DataTemplate x:Key="TemplateEvaluatableDT">
+                <StackPanel>
+                    <TextBlock Text="Drag evaluatables from the canvas onto the toolbox to save them for future use." Margin="4" />
+                    <ItemsControl ItemsSource="{Binding TemplateSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" u:AttachedApplication.Application="{x:Null}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableTemplateItem_StartDrag" Padding="4">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableIconConverter}}" Width="18" Height="18" Margin="4,0" />
+                                        <TextBlock Text="{Binding Path=Key}" Margin="0,0,12,0" />
+                                        <!-- Note these buttons use MouseDown because otherwise if the user uses enter on the rename prompt window, it re-triggers a click on this button. -->
+                                        <Button Content="R" ToolTip="Rename this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="RenameTemplateButton_Click" />
+                                        <Button Content="X" ToolTip="Remove this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="DeleteTemplateButton_Click" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DataTemplate>
+        </TabControl.Resources>
+    </TabControl>
+</UserControl>
