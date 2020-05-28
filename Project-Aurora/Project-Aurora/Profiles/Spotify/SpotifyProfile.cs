@@ -24,26 +24,38 @@ namespace Aurora.Profiles.Spotify
 
             OverlayLayers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                GetLayer("Thief Main", DeviceKeys.TILDE, "Colors/ColorThief/Main/"),
-                GetLayer("Thief 1", DeviceKeys.ONE,   "Colors/ColorThief/Palette/Color1/"),
-                GetLayer("Thief 2", DeviceKeys.TWO,   "Colors/ColorThief/Palette/Color2/"),
-                GetLayer("Thief 3", DeviceKeys.THREE, "Colors/ColorThief/Palette/Color3/"),
-                GetLayer("Thief 4", DeviceKeys.FOUR,  "Colors/ColorThief/Palette/Color4/"),
-                GetLayer("Thief 5", DeviceKeys.FIVE,  "Colors/ColorThief/Palette/Color5/"),
+                //GetLayer("Thief 1", DeviceKeys.ONE,   "Colors/ColorThief/Palette/Color1/"),
+                //GetLayer("Thief 2", DeviceKeys.TWO,   "Colors/ColorThief/Palette/Color2/"),
+                //GetLayer("Thief 3", DeviceKeys.THREE, "Colors/ColorThief/Palette/Color3/"),
+                //GetLayer("Thief 4", DeviceKeys.FOUR,  "Colors/ColorThief/Palette/Color4/"),
+                //GetLayer("Thief 5", DeviceKeys.FIVE,  "Colors/ColorThief/Palette/Color5/"),
+                //
+                //GetLayer("Old 1", DeviceKeys.Q, "Colors/Desaturated/"),
+                //GetLayer("Old 2", DeviceKeys.W, "Colors/LightVibrant/"),
+                //GetLayer("Old 3", DeviceKeys.E, "Colors/Prominent/"),
+                //GetLayer("Old 4", DeviceKeys.R, "Colors/Vibrant/"),
+                //GetLayer("Old 5", DeviceKeys.T, "Colors/VibrantNonAlarming/"),
 
-                GetLayer("Old 1", DeviceKeys.Q, "Colors/Desaturated/"),
-                GetLayer("Old 2", DeviceKeys.W, "Colors/LightVibrant/"),
-                GetLayer("Old 3", DeviceKeys.E, "Colors/Prominent/"),
-                GetLayer("Old 4", DeviceKeys.R, "Colors/Vibrant/"),
-                GetLayer("Old 5", DeviceKeys.T, "Colors/VibrantNonAlarming/"),
-
-                new Layer("black", new SolidFillLayerHandler()
+                new Layer("EQ", new EqualizerLayerHandler()
                 {
-                    Properties = new SolidFillLayerHandlerProperties()
+                    Properties = new EqualizerLayerHandlerProperties()
                     {
-                        _PrimaryColor = Color.Black
+                        _PrimaryColor = Color.Transparent,
+                        _SecondaryColor = Color.Transparent,
+                        _BackgroundMode = EqualizerBackgroundMode.AlwaysOn
                     }
-                })
+                },
+                new OverrideLogicBuilder()
+                .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
+                    new NumberGSINumeric("Colors/ColorThief/Palette/Color1/Red"),
+                    new NumberGSINumeric("Colors/ColorThief/Palette/Color1/Green"),
+                    new NumberGSINumeric("Colors/ColorThief/Palette/Color1/Blue"))
+                .SetDynamicColor("_DimColor", new NumberConstant(1),
+                    new NumberGSINumeric("Colors/ColorThief/Palette/Color2/Red"),
+                    new NumberGSINumeric("Colors/ColorThief/Palette/Color2/Green"),
+                    new NumberGSINumeric("Colors/ColorThief/Palette/Color2/Blue"))
+                .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
+                )
             };    
         }
 

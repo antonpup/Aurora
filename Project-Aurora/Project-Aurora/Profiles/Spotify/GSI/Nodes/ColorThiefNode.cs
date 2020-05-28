@@ -8,8 +8,6 @@ namespace Aurora.Profiles.Spotify.GSI.Nodes
 {
     public class ColorThiefNode : Node
     {
-        public ColorNode Main => NodeFor<ColorNode>("Main");
-
         public PaletteNode Palette => NodeFor<PaletteNode>("Palette");
 
         public ColorThiefNode(string json) : base(json) { }

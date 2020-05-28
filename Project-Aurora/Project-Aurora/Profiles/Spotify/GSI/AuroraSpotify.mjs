@@ -128,11 +128,6 @@ class AuroraSpotify {
                 })
             img.addEventListener('load', function () {
                 var paletteColorArray = colorThief.getPalette(img, 5);
-                var mainColorArray = colorThief.getColor(img);
-
-                self.json.colors.colorThief.Main.r = mainColorArray[0] / 255 || 0;
-                self.json.colors.colorThief.Main.g = mainColorArray[1] / 255 || 0;
-                self.json.colors.colorThief.Main.b = mainColorArray[2] / 255 || 0;
 
                 self.json.colors.colorThief.Palette.color_1.r = (paletteColorArray[0][0]) / 255 || 0;
                 self.json.colors.colorThief.Palette.color_1.g = (paletteColorArray[0][1]) / 255 || 0;
@@ -149,8 +144,6 @@ class AuroraSpotify {
                 self.json.colors.colorThief.Palette.color_5.r = (paletteColorArray[4][0]) / 255 || 0;
                 self.json.colors.colorThief.Palette.color_5.g = (paletteColorArray[4][1]) / 255 || 0;
                 self.json.colors.colorThief.Palette.color_5.b = (paletteColorArray[4][2]) / 255 || 0;
-
-
             });
 
             this.sendJsonToAurora(this.json);
