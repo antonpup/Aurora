@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Spotify.GSI
 {
-    public class GameState_Spotify : GameState<GameState_Spotify>
+    public class GameState_Spotify : GameState
     {
         public ProviderNode Provider => NodeFor<ProviderNode>("provider");
 
@@ -22,7 +22,5 @@ namespace Aurora.Profiles.Spotify.GSI
         public GameState_Spotify() : base() { }
 
         public GameState_Spotify(string JSONstring) : base(JSONstring) { }
-
-        public GameState_Spotify(IGameState other) : base(other) { }
     }
 }
