@@ -43,7 +43,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public bool hasShieldCellBank;
     }
     
-    public class Journal : Node<Controls>
+    public class Journal : Node
     {
         public FighterStatus fighterStatus = FighterStatus.None;
         

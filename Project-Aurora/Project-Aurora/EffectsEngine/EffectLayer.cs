@@ -221,11 +221,11 @@ namespace Aurora.EffectsEngine
                         if (!rect.IsEmpty)
                         {
                             (brush as LinearGradientBrush).TranslateTransform(rect.X, rect.Y);
-                            (brush as LinearGradientBrush).ScaleTransform(rect.Width, rect.Height);
+                            (brush as LinearGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
                         }
                         else
                         {
-                            (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height, Effects.canvas_height);
+                            (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
                         }
 
                         (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
@@ -249,11 +249,11 @@ namespace Aurora.EffectsEngine
                                 y_offset = (rect.Height / 2.0f) * percent;
 
                                 (brush as PathGradientBrush).TranslateTransform(rect.X + x_offset, rect.Y + y_offset);
-                                (brush as PathGradientBrush).ScaleTransform(rect.Width - (2.0f * x_offset), rect.Height - (2.0f * y_offset));
+                                (brush as PathGradientBrush).ScaleTransform((rect.Width - (2.0f * x_offset)) * 100 / effect_config.gradient_size, (rect.Height - (2.0f * y_offset)) * 100 / effect_config.gradient_size);
                             }
                             else
                             {
-                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height + x_offset, Effects.canvas_height + y_offset);
+                                (brush as PathGradientBrush).ScaleTransform((Effects.canvas_height + x_offset) * 100 / effect_config.gradient_size, (Effects.canvas_height + y_offset) * 100 / effect_config.gradient_size);
                             }
                         }
                         else
@@ -261,11 +261,11 @@ namespace Aurora.EffectsEngine
                             if (!rect.IsEmpty)
                             {
                                 (brush as PathGradientBrush).TranslateTransform(rect.X, rect.Y);
-                                (brush as PathGradientBrush).ScaleTransform(rect.Width, rect.Height);
+                                (brush as PathGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
                             }
                             else
                             {
-                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height, Effects.canvas_height);
+                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
                             }
                         }
 
@@ -441,12 +441,20 @@ namespace Aurora.EffectsEngine
         /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(KeySequence sequence, Color color)
+        public EffectLayer Set(KeySequence sequence, Color color) => Set(sequence, new SolidBrush(color));
+
+        /// <summary>
+        /// Sets a specific KeySequence on the bitmap with a specified brush.
+        /// </summary>
+        /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>
+        /// <param name="brush">Brush to be used</param>
+        /// <returns>Itself</returns>
+        public EffectLayer Set(KeySequence sequence, Brush brush)
         {
             if (sequence.type == KeySequenceType.Sequence)
             {
                 foreach (var key in sequence.keys)
-                    Set(key, color);
+                    SetOneKey(key, brush);
             }
             else
             {
@@ -454,8 +462,8 @@ namespace Aurora.EffectsEngine
                 {
                     float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                     float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                    float width = (float)(sequence.freeform.Width * Effects.editor_to_canvas_width);
-                    float height = (float)(sequence.freeform.Height * Effects.editor_to_canvas_height);
+                    float width = (float)Math.Round((sequence.freeform.Width * Effects.editor_to_canvas_width));
+                    float height = (float)Math.Round((sequence.freeform.Height * Effects.editor_to_canvas_height));
 
                     if (width < 3) width = 3;
                     if (height < 3) height = 3;
@@ -468,7 +476,7 @@ namespace Aurora.EffectsEngine
                     myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
 
                     g.Transform = myMatrix;
-                    g.FillRectangle(new SolidBrush(color), rect);
+                    g.FillRectangle(brush, rect);
                 }
             }
 
@@ -562,13 +570,24 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        private EffectLayer SetOneKey(Devices.DeviceKeys key, Color color)
+        private EffectLayer SetOneKey(Devices.DeviceKeys key, Color color) => SetOneKey(key, new SolidBrush(color));
+
+        /// <summary>
+        /// Sets one DeviceKeys key with a specific brush on the bitmap
+        /// </summary>
+        /// <param name="key">DeviceKey to be set</param>
+        /// <param name="brush">Brush to be used</param>
+        /// <returns>Itself</returns>
+        private EffectLayer SetOneKey(Devices.DeviceKeys key, Brush brush)
         {
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
             if (key == Devices.DeviceKeys.Peripheral)
             {
-                peripheral = color;
+                if (brush is SolidBrush solidBrush)
+                    peripheral = solidBrush.Color;
+                // TODO Add support for this ^ to other brush types
+
                 using (Graphics g = Graphics.FromImage(colormap))
                 {
                     foreach (Devices.DeviceKeys peri_key in possible_peripheral_keys)
@@ -576,7 +595,7 @@ namespace Aurora.EffectsEngine
                         BitmapRectangle peri_keymaping = Effects.GetBitmappingFromDeviceKey(peri_key);
 
                         if (peri_keymaping.IsValid)
-                            g.FillRectangle(new SolidBrush(color), peri_keymaping.Rectangle);
+                            g.FillRectangle(brush, peri_keymaping.Rectangle);
                     }
 
                     needsRender = true;
@@ -588,13 +607,13 @@ namespace Aurora.EffectsEngine
                     keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
                     Global.logger.Warn("Coudln't set key color " + key.ToString());
-                    return this; ;
+                    return this;
                 }
                 else
                 {
                     using (Graphics g = Graphics.FromImage(colormap))
                     {
-                        g.FillRectangle(new SolidBrush(color), keymaping.Rectangle);
+                        g.FillRectangle(brush, keymaping.Rectangle);
                         needsRender = true;
                     }
                 }

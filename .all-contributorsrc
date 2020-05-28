@@ -48,7 +48,8 @@
         "code",
         "question",
         "doc",
-        "maintenance"
+        "maintenance",
+        "review"
       ]
     },
     {
@@ -59,7 +60,10 @@
       "contributions": [
         "code",
         "question",
-        "maintenance"
+        "maintenance",
+        "projectManagement",
+        "review",
+        "doc"
       ]
     },
     {
@@ -184,6 +188,51 @@
       "profile": "https://github.com/Popat0",
       "contributions": [
         "question"
+      ]
+    },
+    {
+      "login": "Fluto",
+      "name": "Fluto",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/7686594?v=4",
+      "profile": "https://github.com/Fluto",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "stuntguy3000",
+      "name": "Luke Anderson",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1522389?v=4",
+      "profile": "http://stuntguy3000.com",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "thingamajig0",
+      "name": "thingamajig0",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/31176843?v=4",
+      "profile": "https://github.com/thingamajig0",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "rushdie99",
+      "name": "polinyeh",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/9208301?v=4",
+      "profile": "https://github.com/rushdie99",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "xQwexx",
+      "name": "Qwex",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/17799600?v=4",
+      "profile": "https://github.com/xQwexx",
+      "contributions": [
+        "code"
       ]
     }
   ],

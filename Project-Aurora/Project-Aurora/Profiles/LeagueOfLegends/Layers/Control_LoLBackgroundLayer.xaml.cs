@@ -48,7 +48,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
 
         private void SetSettings()
         {
-            this.championPicker.SelectedItem = Champion.Undefined;
+            this.championPicker.SelectedItem = Champion.None;
         }
 
         private void championPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)

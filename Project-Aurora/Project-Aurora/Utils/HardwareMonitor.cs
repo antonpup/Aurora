@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +24,19 @@ namespace Aurora.Utils
         private static RAMUpdater _ram;
         public static RAMUpdater RAM => _ram ?? (_ram = new RAMUpdater(_hardware));
 
+        private static NETUpdater _net;
+        public static NETUpdater NET => _net ?? (_net = new NETUpdater(_hardware));
+
+#pragma warning disable CA1810 // Initialize reference type static fields inline
         static HardwareMonitor()
+#pragma warning restore CA1810 // Initialize reference type static fields inline
         {
             _computer = new Computer()
             {
                 IsCpuEnabled = true,
                 IsGpuEnabled = true,
-                IsMemoryEnabled = true
+                IsMemoryEnabled = true,
+                IsNetworkEnabled = true
             };
             try
             {
@@ -42,9 +49,52 @@ namespace Aurora.Utils
             }
         }
 
+        public static bool TryDump()
+        {
+            var lines = new List<string>();
+            foreach (var hw in _hardware)
+            {
+                lines.Add("-----");
+                lines.Add(hw.Name);
+                lines.Add("Sensors:");
+                foreach (var sensor in hw.Sensors.OrderBy(s => s.SensorType))
+                {
+                    lines.Add($"Name: {sensor.Name}, Id: {sensor.Identifier}, Type: {sensor.SensorType}");
+                }
+                lines.Add("-----");
+            }
+            try
+            {
+                File.WriteAllLines(Path.Combine(Global.LogsDirectory, "sensors.txt"), lines);
+                return true;
+            }
+            catch (IOException e)
+            {
+                Global.logger.Error("Failed to write sensors dump: " + e);
+                return false;
+            }
+        }
+
         private static ISensor FindSensor(this IHardware hardware, string identifier)
         {
-            return Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
+            var result = Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
+            if (result is null)
+            {
+                Global.logger.Error(
+                    $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
+            }
+            return result;
+        }
+
+        private static ISensor FindSensor(this IHardware hardware, SensorType type)
+        {
+            var result = Array.Find(hardware.Sensors, s => s.SensorType == type);
+            if (result is null)
+            {
+                Global.logger.Error(
+                    $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hardware.Name} of type {hardware.HardwareType}.");
+            }
+            return result;
         }
 
         public abstract class HardwareUpdater
@@ -65,7 +115,7 @@ namespace Aurora.Utils
                 };
                 _useTimer.Start();
 
-                _updateTimer = new Timer(200);
+                _updateTimer = new Timer(Global.Configuration.HardwareMonitorUpdateRate);
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
@@ -79,7 +129,7 @@ namespace Aurora.Utils
                 inUse = true;
                 _useTimer.Stop();
                 _useTimer.Start();
-                return sensor.Value ?? 0;
+                return sensor?.Value ?? 0;
             }
 
             public void SetUpdateTimer(int interval)
@@ -90,38 +140,17 @@ namespace Aurora.Utils
             }
         }
 
-        public class GPUUpdater : HardwareUpdater
+        public sealed class GPUUpdater : HardwareUpdater
         {
             #region Sensors
-            private readonly ISensor _GPUCoreTemp;
-            public float GPUCoreTemp => GetValue(_GPUCoreTemp);
+            private readonly ISensor _GPUTemp;
+            public float GPUCoreTemp => GetValue(_GPUTemp);
 
             private readonly ISensor _GPUFan;
             public float GPUFan => GetValue(_GPUFan);
 
-            private readonly ISensor _GPUCoreClock;
-            public float GPUCoreClock => GetValue(_GPUCoreClock);
-
-            private readonly ISensor _GPUMemoryClock;
-            public float GPUMemoryClock => GetValue(_GPUMemoryClock);
-
-            private readonly ISensor _GPUShaderClock;
-            public float GPUShaderClock => GetValue(_GPUShaderClock);
-
-            private readonly ISensor _GPUCoreLoad;
-            public float GPUCoreLoad => GetValue(_GPUCoreLoad);
-
-            private readonly ISensor _GPUMemoryCLoad;
-            public float GPUMemoryCLoad => GetValue(_GPUMemoryCLoad);
-
-            private readonly ISensor _GPUVideoEngineLoad;
-            public float GPUVideoEngineLoad => GetValue(_GPUVideoEngineLoad);
-
-            private readonly ISensor _GPUMemoryTotal;
-            public float GPUMemoryTotal => GetValue(_GPUMemoryTotal);
-
-            private readonly ISensor _GPUMemoryUsed;
-            public float GPUMemoryUsed => GetValue(_GPUMemoryUsed);
+            private readonly ISensor _GPULoad;
+            public float GPULoad => GetValue(_GPULoad);
 
             private readonly ISensor _GPUPower;
             public float GPUPower => GetValue(_GPUPower);
@@ -131,34 +160,26 @@ namespace Aurora.Utils
             {
                 hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.GpuAmd ||
                                                    hw.HardwareType == HardwareType.GpuNvidia);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _GPUCoreLoad = hw.FindSensor("load/0");
-                    _GPUMemoryCLoad = hw.FindSensor("load/1");
-                    _GPUVideoEngineLoad = hw.FindSensor("load/2");
-
-                    _GPUCoreClock = hw.FindSensor("clock/0");
-                    _GPUMemoryClock = hw.FindSensor("clock/1");
-                    _GPUShaderClock = hw.FindSensor("clock/2");
-
-                    _GPUCoreTemp = hw.FindSensor("temperature/0");
-                    _GPUFan = hw.FindSensor("fan/0");
-                    _GPUPower = hw.FindSensor("power/0");
-
-                    _GPUMemoryTotal = hw.FindSensor("smalldata/3");
-                    _GPUMemoryUsed = hw.FindSensor("smalldata/2");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type GPU");
+                    return;
                 }
+                _GPULoad = hw.FindSensor(SensorType.Load);
+                _GPUTemp = hw.FindSensor(SensorType.Temperature);
+                _GPUFan = hw.FindSensor(SensorType.Fan);
+                _GPUPower = hw.FindSensor(SensorType.Power);
             }
         }
 
-        public class CPUUpdater : HardwareUpdater
+        public sealed class CPUUpdater : HardwareUpdater
         {
             #region Sensors
-            private readonly ISensor _CPUDieTemp;
-            public float CPUDieTemp => GetValue(_CPUDieTemp);
+            private readonly ISensor _CPUTemp;
+            public float CPUTemp => GetValue(_CPUTemp);
 
-            private readonly ISensor _CPUTotalLoad;
-            public float CPUTotalLoad => GetValue(_CPUTotalLoad);
+            private readonly ISensor _CPULoad;
+            public float CPULoad => GetValue(_CPULoad);
 
             private readonly ISensor _CPUPower;
             public float CPUPower => GetValue(_CPUPower);
@@ -167,16 +188,18 @@ namespace Aurora.Utils
             public CPUUpdater(IEnumerable<IHardware> hardware)
             {
                 hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Cpu);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _CPUDieTemp = hw.FindSensor("temperature/0");
-                    _CPUTotalLoad = hw.FindSensor("load/0");
-                    _CPUPower = hw.FindSensor("power/0");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type CPU");
+                    return;
                 }
+                _CPUTemp = hw.FindSensor(SensorType.Temperature);
+                _CPULoad = hw.FindSensor(SensorType.Load);
+                _CPUPower = hw.FindSensor(SensorType.Power);
             }
         }
 
-        public class RAMUpdater : HardwareUpdater
+        public sealed class RAMUpdater : HardwareUpdater
         {
             #region Sensors
             private readonly ISensor _RAMUsed;
@@ -189,11 +212,40 @@ namespace Aurora.Utils
             public RAMUpdater(IEnumerable<IHardware> hws)
             {
                 hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Memory);
-                if (hw != null)
+                if (hw is null)
                 {
-                    _RAMUsed = hw.FindSensor("data/0");
-                    _RAMFree = hw.FindSensor("data/1");
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type RAM");
+                    return;
                 }
+                _RAMUsed = hw.FindSensor("data/0");
+                _RAMFree = hw.FindSensor("data/1");
+            }
+        }
+
+        public sealed class NETUpdater : HardwareUpdater
+        {
+            #region Sensors
+            private readonly ISensor _BandwidthUsed;
+            public float BandwidthUsed => GetValue(_BandwidthUsed);
+
+            private readonly ISensor _UploadSpeed;
+            public float UploadSpeedBytes => GetValue(_UploadSpeed);
+
+            private readonly ISensor _DownloadSpeed;
+            public float DownloadSpeedBytes => GetValue(_DownloadSpeed);
+            #endregion
+
+            public NETUpdater(IEnumerable<IHardware> hws)
+            {
+                hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Network);
+                if (hw is null)
+                {
+                    Global.logger.Error("[HardwareMonitor] Could not find hardware of type Network");
+                    return;
+                }
+                _BandwidthUsed = hw.FindSensor(SensorType.Load);
+                _UploadSpeed = hw.FindSensor("throughput/7");
+                _DownloadSpeed = hw.FindSensor("throughput/8");
             }
         }
     }

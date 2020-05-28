@@ -9,7 +9,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class PlayerNode : Node<PlayerNode>
+    public class PlayerNode : Node
     {
         internal string _SteamID;
 

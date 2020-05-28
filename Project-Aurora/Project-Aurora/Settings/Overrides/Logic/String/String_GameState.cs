@@ -1,4 +1,6 @@
-﻿using Aurora.Profiles;
+﻿using Aurora.Controls;
+using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Linq;
 using System.Windows.Controls;
@@ -7,47 +9,21 @@ using System.Windows.Media;
 
 namespace Aurora.Settings.Overrides.Logic {
 
-    [OverrideLogic("String State Variable", category: OverrideLogicCategory.State)]
-    public class StringGSIString : IEvaluatable<string> {
+    [Evaluatable("String State Variable", category: EvaluatableCategory.State)]
+    public class StringGSIString : Evaluatable<string> {
 
         /// <summary>Path to the GSI variable</summary>
         public string VariablePath { get; set; } = "";
 
         /// <summary>Control assigned to this logic node.</summary>
-        [Newtonsoft.Json.JsonIgnore]
-        private ComboBox control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new ComboBox { Margin = new System.Windows.Thickness(0, 0, 0, 6) };
-                control.SetBinding(ComboBox.SelectedItemProperty, new Binding("VariablePath") { Source = this });
-                SetApplication(application);
-            }
-            return control;
-        }
+        public override Visual GetControl() => new GameStateParameterPicker { PropertyType = GSIPropertyType.String }
+            .WithBinding(GameStateParameterPicker.ApplicationProperty, new AttachedApplicationBinding())
+            .WithBinding(GameStateParameterPicker.SelectedPathProperty, new Binding("VariablePath") { Source = this });
 
         /// <summary>Attempts to return the string at the given state variable.</summary>
-        public string Evaluate(IGameState gameState) {
-            if (VariablePath.Length > 0)
-                try { return (string)Utils.GameStateUtils.RetrieveGameStateParameter(gameState, VariablePath); }
-                catch { }
-            return "";
-        }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        /// <summary>Update the assigned combobox with the new application context.</summary>
-        public void SetApplication(Application application) {
-            if (control != null)
-                control.ItemsSource = application?.ParameterLookup?
-                    .Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.String)
-                    .Select(kvp => kvp.Key);
-
-            // Check to ensure var path is valid
-            if (application != null && !string.IsNullOrWhiteSpace(VariablePath) && !application.ParameterLookup.ContainsKey(VariablePath))
-                VariablePath = string.Empty;
-        }
+        protected override string Execute(IGameState gameState) => gameState.GetString(VariablePath);
 
         /// <summary>Clones this StringGSIString.</summary>
-        public IEvaluatable<string> Clone() => new StringGSIString { VariablePath = VariablePath };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        public override Evaluatable<string> Clone() => new StringGSIString { VariablePath = VariablePath };
     }
 }

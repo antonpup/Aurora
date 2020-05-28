@@ -5,27 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
-    public class GameStateNode : Node<GameStateNode> {
+    public enum GameStateEnum
+    {
+        Menu,
+        Loading,
+        InGame
+    }
 
-        public bool InMenu;
-        public bool loading;
-        public bool InGame;
+    public class GameStateNode : AutoJsonNode<GameStateNode>
+    {
+        [AutoJsonPropertyName("game_state")]
+        public GameStateEnum State;
+
+        public bool InMenu => State == GameStateEnum.Menu; //legacy
+        public bool loading => State == GameStateEnum.Loading; //legacy
+        public bool InGame => State == GameStateEnum.InGame; //legacy
+
+        [AutoJsonPropertyName("pause_menu")]
         public bool IsPaused;
 
-        internal GameStateNode(string json) : base(json) {
-
-            GameStateEnum GameState = (GameStateEnum)GetInt("game_state");
-            InMenu = GameState == GameStateEnum.Menu;
-            loading = GameState == GameStateEnum.Loading;
-            InGame = GameState == GameStateEnum.InGame;
-            IsPaused = GetBool("pause_menu");
-        }
-
-        public enum GameStateEnum
-        {
-            Menu,
-            Loading,
-            InGame
-        }
+        internal GameStateNode(string json) : base(json) { }
     }
 }

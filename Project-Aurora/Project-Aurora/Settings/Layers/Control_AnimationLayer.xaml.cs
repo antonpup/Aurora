@@ -79,7 +79,7 @@ namespace Aurora.Settings.Layers
         internal void SetProfile(Profiles.Application profile) {
             if (profile != null && !profileset) {
                 this.profile = profile;
-                triggerEvaluatable.Application = profile;
+                AttachedApplication.SetApplication(triggerEvaluatable, profile);
                 UpdatePathCombobox();
                 profileset = true;
             }
@@ -96,13 +96,13 @@ namespace Aurora.Settings.Layers
             triggerPathItemsAreBoolean = isTriggerBoolean;
 
             // Get a list of the parameters. If trigger is boolean mode, filters to only boolean values, else does numeric values
-            triggerPath.ItemsSource = profile?.ParameterLookup?
+            /*triggerPath.ItemsSource = profile?.ParameterLookup?
                 .Where(kvp => isTriggerBoolean
                     ? kvp.Value.Item1 == typeof(bool)
                     : TypeUtils.IsNumericType(kvp.Value.Item1)
                 )
                 .Select(kvp => kvp.Key)
-                .ToList();
+                .ToList();*/
         }
 
         private void btnEditAnimation_Click(object sender, RoutedEventArgs e) {
@@ -173,13 +173,13 @@ namespace Aurora.Settings.Layers
             UpdateUI();
 
             // If the evaluatable is not the correct type or it is null, then create the default Evaluatable for it
-            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatable<double>)))
-                Context.Properties._EvaluatableTrigger = EvaluatableTypeResolver.GetDefault(EvaluatableType.Number);
-            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !TypeUtils.IsInterface(Context.Properties._EvaluatableTrigger?.GetType(), typeof(IEvaluatable<bool>)))
-                Context.Properties._EvaluatableTrigger = EvaluatableTypeResolver.GetDefault(EvaluatableType.Boolean);
+            if (AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) && !typeof(Evaluatable<double>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+                Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<double>();
+            else if (AnimationLayerHandler.IsTriggerEvaluatableBooleanValueBased(selectedItem) && !typeof(Evaluatable<bool>).IsAssignableFrom(Context.Properties._EvaluatableTrigger?.GetType()))
+                Context.Properties._EvaluatableTrigger = EvaluatableDefaults.Get<bool>();
 
             // Update the evaluatable control
-            triggerEvaluatable.EvalType = AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) ? EvaluatableType.Number : EvaluatableType.Boolean;
+            triggerEvaluatable.EvalType = AnimationLayerHandler.IsTriggerEvaluatableNumericValueBased(selectedItem) ? typeof(double) : typeof(bool);
             triggerEvaluatable.Expression = Context.Properties._EvaluatableTrigger;
         }
 
@@ -238,7 +238,7 @@ namespace Aurora.Settings.Layers
 
         private void btnInfo_Click(object sender, RoutedEventArgs e) {
             // Open the online documentation for the Animation Trigger properties
-            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/docs/advanced-topics/animation-editor.html"));
+            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/advanced-topics/animation-editor/"));
         }
 
         private void whileKeyHeldTerminate_Checked(object sender, RoutedEventArgs e) {

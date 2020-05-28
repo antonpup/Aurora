@@ -9,16 +9,9 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     public partial class Control_ConditionGSIBoolean : UserControl {
 
-        public Control_ConditionGSIBoolean(BooleanGSIBoolean context, Application application) {
+        public Control_ConditionGSIBoolean(BooleanGSIBoolean context) {
             InitializeComponent();
             DataContext = context;
-            SetApplication(application);
-        }
-
-        internal void SetApplication(Application application) {
-            ValidPathsCombo.ItemsSource = application?.ParameterLookup?
-                .Where(kvp => Type.GetTypeCode(kvp.Value.Item1) == TypeCode.Boolean)
-                .Select(kvp => kvp.Key);
         }
     }
 }

@@ -30,23 +30,22 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         }
     }
 
+    [LayerHandlerMeta(Name = "League of Legends Background")]
     public class LoLBackgroundLayerHandler : LayerHandler<LoLBackgroundLayerHandlerProperties>
     {
-        public  LoLBackgroundLayerHandler() : base()
-        {
-            _ID = "LoLBackgroundLayer";
-        }
 
         private readonly EffectLayer layer = new EffectLayer();
-        private Champion lastChampion = Champion.Undefined;
+        private Champion lastChampion = Champion.None;
         private Color lastColor = Color.Transparent;
         private int lastWidth;
         private int lastHeight;
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            var currentChampion = (gamestate as GSI.GameState_LoL)?.Player.Champion ?? Champion.Undefined;
-            var currentColor = Properties.ChampionColors[currentChampion];
+            var currentChampion = (gamestate as GSI.GameState_LoL)?.Player.Champion ?? Champion.None;
+            if (!Properties.ChampionColors.TryGetValue(currentChampion, out var currentColor))
+                currentColor = Color.Black;
+
             //if the player changes champion
             //or if the color is adjusted in the UI
             //or if the canvas size changes due to the layout being changed

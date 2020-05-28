@@ -8,35 +8,33 @@ namespace Aurora.Settings.Overrides.Logic {
 
     public partial class Control_BooleanGSIEnum : UserControl {
 
-        private Profiles.Application application;
-
         public Control_BooleanGSIEnum(BooleanGSIEnum context) {
             InitializeComponent();
             ((FrameworkElement)Content).DataContext = context;
         }
 
-        /// <summary>Updates the application providing data to this evaluatable context. Updates the dropdowns.</summary>
-        public void SetApplication(Profiles.Application application) {
-            this.application = application;
-            GSIPath.ItemsSource = application?.ParameterLookup?.Where(kvp => kvp.Value.Item1.IsEnum).Select(x => x.Key);
-            UpdateEnumDropDown();
-        }
-
         /// <summary>Updates the enum value dropdown with a list of enum values for the current application and selected variable path.</summary>
         private void UpdateEnumDropDown() {
             Type selectedEnumType = null;
+            var application = Utils.AttachedApplication.GetApplication(this);
             var isValid = ((FrameworkElement)Content).DataContext is BooleanGSIEnum ctx
                 && !string.IsNullOrWhiteSpace(ctx.StatePath) // If the path to the enum GSI isn't empty
                 && application?.ParameterLookup != null // If the application parameter lookup is ready (and application isn't null)
-                && application.ParameterLookup.ContainsKey(ctx.StatePath) // If the param lookup has the specified GSI key
-                && (selectedEnumType = application.ParameterLookup[ctx.StatePath].Item1).IsEnum; // And the GSI variable is an enum type
+                && application.ParameterLookup.IsValidParameter(ctx.StatePath) // If the param lookup has the specified GSI key
+                && (selectedEnumType = application.ParameterLookup[ctx.StatePath].ClrType).IsEnum; // And the GSI variable is an enum type
 
             EnumVal.IsEnabled = isValid;
             EnumVal.ItemsSource = isValid ? Utils.EnumUtils.GetEnumItemsSource(selectedEnumType) : null;
         }
 
+        // We don't do UpdateEnumDropDown in the constructor because it won't have been added to the visual tree at the point and therefore
+        // the attached application property won't be set. If we wait til the control has added to the tree, the property is set.
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+            UpdateEnumDropDown();
+        }
+
         // Update the enum dropdown when the user selects a different enum path
-        private void GSIPath_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void GameStateParameterPicker_SelectedPathChanged(object sender, Controls.SelectedPathChangedEventArgs e) {
             UpdateEnumDropDown();
         }
     }

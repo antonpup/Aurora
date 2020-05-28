@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Aurora.Controls.GameStateParameterPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:l="clr-namespace:Aurora.Controls" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             Height="22" MinWidth="60">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConv" />
+        <DataTemplate x:Key="ListItemTemplate">
+            <Grid>
+                <TextBlock Text="{Binding DisplayName}" Padding="4,1" Margin="0,0,16,0" />
+                <Image Source="/Aurora;component/Resources/icons8-folder-30.png" Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding IsFolder, Converter={StaticResource BoolToVisConv}}" />
+            </Grid>
+        </DataTemplate>
+        <l:IsStringNotNullOrWhitespaceConverter x:Key="IsStringNotNullConv" />
+        <l:PropertyTypeToGridLengthConverter x:Key="PropTypeToHeightConv" />
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- Main dropdown toggle button -->
+        <ToggleButton x:Name="pickerToggleButton" HorizontalContentAlignment="Left" Padding="4,1,25,1" Content="{Binding SelectedPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" IsChecked="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" />
+        <Path Width="10" Height="6" HorizontalAlignment="Right" Margin="0,0,9,0" Fill="#FF858585" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z " Stretch="Fill" IsHitTestVisible="False" />
+
+        <!-- Dropdown content -->
+        <Popup x:Name="pickerPopup" StaysOpen="False" IsOpen="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}">
+            <Grid x:Name="popupContent" Background="#1A1A1A" Height="280" Width="200">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="{Binding PropertyType, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}, Converter={StaticResource PropTypeToHeightConv}}" />
+                </Grid.RowDefinitions>
+
+                <!-- Up button and current "directory" -->
+                <StackPanel Grid.Row="0" Orientation="Vertical">
+                    <Button Content="⬅ Previous" IsEnabled="{Binding WorkingPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}, Converter={StaticResource IsStringNotNullConv}}" Margin="6" Padding="6,2" Click="BackBtn_Click" />
+                    <TextBlock Text="{Binding WorkingPath, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" Margin="6,0,6,6" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- List boxes (aux is for animation) -->
+                <ListBox x:Name="mainListBox" Grid.Row="1" ItemsSource="{Binding CurrentParameterListItems, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type l:GameStateParameterPicker}}}" ItemTemplate="{StaticResource ListItemTemplate}" SelectedValuePath="Path" Width="{Binding ActualWidth, ElementName=popupContent}" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="0" RenderTransform="{l:DoubleToRelativeTransformOffset}" PreviewMouseLeftButtonDown="MainListBox_PreviewMouseLeftButtonDown" />
+                <ListBox x:Name="auxillaryListbox" Grid.Row="1" ItemTemplate="{StaticResource ListItemTemplate}" Width="{Binding ActualWidth, ElementName=popupContent}" SelectedValuePath="Path" HorizontalAlignment="Left" l:GameStateParameterPicker.TransformRelativeOffset="-1" RenderTransform="{l:DoubleToRelativeTransformOffset}" />
+
+                <!-- Numeric input for numeric types -->
+                <DockPanel Grid.Row="2" LastChildFill="True">
+                    <TextBlock Text="Or enter number:" VerticalAlignment="Center" Margin="6,4,0,6" DockPanel.Dock="Left" />
+                    <xctk:DoubleUpDown x:Name="numericEntry" Margin="6" ValueChanged="NumericEntry_ValueChanged" />
+                </DockPanel>
+
+                <!-- Border around all popup content -->
+                <Border BorderBrush="#454545" BorderThickness="1" Grid.RowSpan="999" />
+            </Grid>
+        </Popup>
+    </Grid>
+</UserControl>
