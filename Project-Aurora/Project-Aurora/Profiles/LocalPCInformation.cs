@@ -1,7 +1,6 @@
 ﻿using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -144,9 +143,9 @@ namespace Aurora.Profiles {
         public NETInfo NET => _netInfo ?? (_netInfo = new NETInfo());
         #endregion
 
-        #region Mouse Positionn
-        private static MousePositionNode _mousePosition;
-        public MousePositionNode MousePosition => _mousePosition ?? (_mousePosition = new MousePositionNode());
+        #region Cursor Position
+        private static CursorPositionNode _cursorPosition;
+        public CursorPositionNode CursorPosition => _cursorPosition ?? (_cursorPosition = new CursorPositionNode());
         #endregion
 
         /// <summary>
@@ -225,7 +224,7 @@ namespace Aurora.Profiles {
         public float DownloadSpeed => HardwareMonitor.NET.DownloadSpeedBytes;
     }
 
-    public class MousePositionNode : Node
+    public class CursorPositionNode : Node
     {
         public float X => System.Windows.Forms.Cursor.Position.X;
         public float Y => System.Windows.Forms.Cursor.Position.Y;
