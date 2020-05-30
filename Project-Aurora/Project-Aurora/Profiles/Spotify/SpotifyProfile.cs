@@ -24,106 +24,58 @@ namespace Aurora.Profiles.Spotify
 
             OverlayLayers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
             {
-                new Layer("Desaturated", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.ONE})
-                    }
-                },
-                new OverrideLogicBuilder()
-                .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/Desaturated/Red"),
-                    new NumberGSINumeric("Colors/Desaturated/Green"),
-                    new NumberGSINumeric("Colors/Desaturated/Blue"))
-                .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
-                ),
-
-                new Layer("LightVibrant", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.TWO})
-                    }
-                },
-                new OverrideLogicBuilder()
-                .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/LightVibrant/Red"),
-                    new NumberGSINumeric("Colors/LightVibrant/Green"),
-                    new NumberGSINumeric("Colors/LightVibrant/Blue"))
-                .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
-                ),
-
-                new Layer("Prominent", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.THREE})
-                    }
-                },
-                new OverrideLogicBuilder()
-                .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/Prominent/Red"),
-                    new NumberGSINumeric("Colors/Prominent/Green"),
-                    new NumberGSINumeric("Colors/Prominent/Blue"))
-                .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
-                ),
-
-                new Layer("Vibrant", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.FOUR})
-                    }
-                },
-                new OverrideLogicBuilder()
-                .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/Vibrant/Red"),
-                    new NumberGSINumeric("Colors/Vibrant/Green"),
-                    new NumberGSINumeric("Colors/Vibrant/Blue"))
-                .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
-                ),
-
-                new Layer("VibrantNonAlarming", new SolidColorLayerHandler()
-                {
-                    Properties = new LayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Transparent,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.FIVE})
-                    }
-                },
-                new OverrideLogicBuilder()
-                .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/VibrantNonAlarming/Red"),
-                    new NumberGSINumeric("Colors/VibrantNonAlarming/Green"),
-                    new NumberGSINumeric("Colors/VibrantNonAlarming/Blue"))
-                .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
-                ),
+                //GetLayer("Thief 1", DeviceKeys.ONE,   "AlbumArtColors/Color1/"),
+                //GetLayer("Thief 2", DeviceKeys.TWO,   "AlbumArtColors/Color2/"),
+                //GetLayer("Thief 3", DeviceKeys.THREE, "AlbumArtColors/Color3/"),
+                //GetLayer("Thief 4", DeviceKeys.FOUR,  "AlbumArtColors/Color4/"),
+                //GetLayer("Thief 5", DeviceKeys.FIVE,  "AlbumArtColors/Color5/"),
+                //
+                //GetLayer("Old 1", DeviceKeys.Q, "Colors/Desaturated/"),
+                //GetLayer("Old 2", DeviceKeys.W, "Colors/LightVibrant/"),
+                //GetLayer("Old 3", DeviceKeys.E, "Colors/Prominent/"),
+                //GetLayer("Old 4", DeviceKeys.R, "Colors/Vibrant/"),
+                //GetLayer("Old 5", DeviceKeys.T, "Colors/VibrantNonAlarming/"),
 
                 new Layer("EQ", new EqualizerLayerHandler()
                 {
                     Properties = new EqualizerLayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Transparent,
+                        _SecondaryColor = Color.Transparent,
                         _BackgroundMode = EqualizerBackgroundMode.AlwaysOn
                     }
                 },
                 new OverrideLogicBuilder()
                 .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/Desaturated/Red"),
-                    new NumberGSINumeric("Colors/Desaturated/Green"),
-                    new NumberGSINumeric("Colors/Desaturated/Blue"))
+                    new NumberGSINumeric("AlbumArtColors/Color1/Red"),
+                    new NumberGSINumeric("AlbumArtColors/Color1/Green"),
+                    new NumberGSINumeric("AlbumArtColors/Color1/Blue"))
                 .SetDynamicColor("_DimColor", new NumberConstant(1),
-                    new NumberGSINumeric("Colors/Prominent/Red"),
-                    new NumberGSINumeric("Colors/Prominent/Green"),
-                    new NumberGSINumeric("Colors/Prominent/Blue"))
+                    new NumberGSINumeric("AlbumArtColors/Color2/Red"),
+                    new NumberGSINumeric("AlbumArtColors/Color2/Green"),
+                    new NumberGSINumeric("AlbumArtColors/Color2/Blue"))
                 .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
                 )
             };    
         }
+
+        Layer GetLayer(string name, DeviceKeys key, string id) =>
+                new Layer(
+                    name, 
+                    new SolidColorLayerHandler()
+                    {
+                        Properties = new LayerHandlerProperties()
+                        {
+                            _PrimaryColor = Color.Transparent,
+                            _Sequence = new KeySequence(new DeviceKeys[] { key })
+                        }
+                    },
+                    new OverrideLogicBuilder()
+                    .SetDynamicColor("_PrimaryColor", new NumberConstant(1),
+                        new NumberGSINumeric(id + "Red"),
+                        new NumberGSINumeric(id + "Green"),
+                        new NumberGSINumeric(id + "Blue"))
+                    .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/Playing"))
+                );
     }
 }

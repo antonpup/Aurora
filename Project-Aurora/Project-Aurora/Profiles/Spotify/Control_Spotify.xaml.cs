@@ -64,14 +64,20 @@ namespace Aurora.Profiles.Spotify
         {
             string userprofile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string pluginDirectory = Path.Combine(userprofile, ".spicetify", "Extensions");
+            string libraryDirectory = Path.Combine(pluginDirectory, "node_modules", "colorthief", "dist");
 
             if (!Directory.Exists(pluginDirectory))
                 Directory.CreateDirectory(pluginDirectory);
 
-            string pluginFile = Path.Combine(pluginDirectory, "AuroraSpotify.js");
-            if (File.Exists(pluginFile))
+            if (!Directory.Exists(libraryDirectory))
+                Directory.CreateDirectory(libraryDirectory);
+
+            string pluginFile = Path.Combine(pluginDirectory, "AuroraSpotify.mjs");
+            string colorthiefFile = Path.Combine(pluginDirectory, "node_modules", "colorthief", "dist", "color-thief.mjs");
+
+            if (File.Exists(pluginFile) && File.Exists(colorthiefFile))
             {
-                MessageBox.Show("Plugin already installed");
+                MessageBox.Show("Plugin and library already installed");
                 return;
             }
 
@@ -82,6 +88,12 @@ namespace Aurora.Profiles.Spotify
                     pluginStream.Write(Properties.Resources.AuroraSpotify, 0, Properties.Resources.AuroraSpotify.Length);
                 }
                 MessageBox.Show("Plugin installed successfully");
+
+                using (FileStream libraryStream = File.Create(colorthiefFile))
+                {
+                    libraryStream.Write(Properties.Resources.color_thief, 0, Properties.Resources.color_thief.Length);
+                }
+                MessageBox.Show("Library installed successfully");
             }
             catch (Exception e)
             {
@@ -93,11 +105,15 @@ namespace Aurora.Profiles.Spotify
         {
             string userprofile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string path = Path.Combine(userprofile, ".spicetify", "Extensions", "AuroraSpotify.js");
+            string libpath = Path.Combine(userprofile, ".spicetify", "Extensions", "node_modules", "colorthief", "dist", "color-thief.mjs");
 
-            if (File.Exists(path))
+            if (File.Exists(path) || File.Exists(libpath))
             {
                 File.Delete(path);
                 MessageBox.Show("Plugin uninstalled successfully");
+
+                File.Delete(libpath);
+                MessageBox.Show("Library uninstalled successfully");
                 return;
             }
             else

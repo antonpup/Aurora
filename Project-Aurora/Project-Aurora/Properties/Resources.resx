@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -314,7 +314,10 @@
     <value>..\Profiles\Discord\GSI\AuroraGSI.plugin.js;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="AuroraSpotify" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Profiles\Spotify\GSI\AuroraSpotify.js;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Profiles\Spotify\GSI\AuroraSpotify.mjs;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="color-thief" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Profiles\Spotify\GSI\color-thief.mjs;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="stardew_valley_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\stardew_valley_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
