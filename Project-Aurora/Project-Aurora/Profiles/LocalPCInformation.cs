@@ -143,6 +143,11 @@ namespace Aurora.Profiles {
         public NETInfo NET => _netInfo ?? (_netInfo = new NETInfo());
         #endregion
 
+        #region Cursor Position
+        private static CursorPositionNode _cursorPosition;
+        public CursorPositionNode CursorPosition => _cursorPosition ?? (_cursorPosition = new CursorPositionNode());
+        #endregion
+
         /// <summary>
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
@@ -217,5 +222,11 @@ namespace Aurora.Profiles {
         public float Usage => HardwareMonitor.NET.BandwidthUsed;
         public float UploadSpeed => HardwareMonitor.NET.UploadSpeedBytes;
         public float DownloadSpeed => HardwareMonitor.NET.DownloadSpeedBytes;
+    }
+
+    public class CursorPositionNode : Node
+    {
+        public float X => System.Windows.Forms.Cursor.Position.X;
+        public float Y => System.Windows.Forms.Cursor.Position.Y;
     }
 }
