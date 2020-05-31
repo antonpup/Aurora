@@ -129,17 +129,12 @@ namespace Aurora.Devices.RGBFusion
             }
         }
 
-        private void InitializeDeviceMap()
+        private void UpdateDeviceMap()
         {
-            _deviceMap = new List<DeviceMapState>();
+            if (_deviceMap == null)
+                _deviceMap = new List<DeviceMapState>();
+            _deviceMap.Clear();
             _deviceMap.Add(new DeviceMapState(255, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_devicekey"))); // Led 255 is equal to set all areas at the same time.
-            Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
-        }
-
-        private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            Global.logger.Error("ELIMINAR Configuration_PropertyChanged.");
-            InitializeDeviceMap();
         }
 
         bool _deviceChanged = true;
@@ -152,7 +147,6 @@ namespace Aurora.Devices.RGBFusion
                 _variableRegistry = new VariableRegistry();
                 _variableRegistry.Register($"{_devicename}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
             }
-            Global.logger.Error("ELIMINAR var reg created.");
             return _variableRegistry;
         }
 
@@ -212,7 +206,6 @@ namespace Aurora.Devices.RGBFusion
                     {
                         if ((_deviceMap[d].deviceKey == key.Key) && (key.Value != _deviceMap[d].color))
                         {
-                            Global.logger.Error("ELIMINAR Processing key." + key.Key);
                             SendCommandToRGBFusion(new byte[]
                             {
                                 1, // Operation code 1 is used to set color for an led or area index but without apply
@@ -222,11 +215,9 @@ namespace Aurora.Devices.RGBFusion
                                 Convert.ToByte(key.Value.B * key.Value.A / 255), //Blue Register
                                 Convert.ToByte(_deviceMap[d].led)
                             });
-                            Global.logger.Error("ELIMINAR Color command sent.");
 
                             if ((_deviceMap[d].deviceKey == key.Key) && (key.Value != _deviceMap[d].color))
                             {
-                                Global.logger.Error("ELIMINAR Device Changed");
                                 //If at least one led change, set deviceChanged flag
                                 _deviceMap[d] = new DeviceMapState(_deviceMap[d].led, key.Value, _deviceMap[d].deviceKey);
                                 _deviceChanged = true;
@@ -241,7 +232,6 @@ namespace Aurora.Devices.RGBFusion
                         if (_deviceChanged)
                         {
                             SendCommandToRGBFusion(new byte[] { 2, 0, 0, 0, 0, 0 }); // Command code 2 is used to apply changes.
-                            Global.logger.Error("ELIMINAR Apply command sent.");
                         }
                         _deviceChanged = false;
                     }
@@ -260,17 +250,13 @@ namespace Aurora.Devices.RGBFusion
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            if (_deviceMap == null || _deviceMap.Count == 0)
-            {
-                InitializeDeviceMap();
-            }
+            UpdateDeviceMap();
             _ellapsedTimeWatch.Restart();
             bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
             _ellapsedTimeWatch.Stop();
             _lastUpdateTime = _ellapsedTimeWatch.ElapsedMilliseconds;
             return update_result;
         }
-
         #region RGBFusion Specific Methods
         private bool IsRGBFusionInstalled()
         {
