@@ -15,6 +15,7 @@ using System.ComponentModel;
 using Aurora.Utils;
 using Mono.CSharp;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Xml;
 
 namespace Aurora.Devices.RGBFusion
 {
@@ -32,12 +33,15 @@ namespace Aurora.Devices.RGBFusion
         private List<DeviceMapState> _deviceMap;
         private Color _initialColor = Color.FromArgb(0, 0, 0);
         private string _defaultProfileFileName = "pro1.xml";
+        private string _defaultExtProfileFileName = "ExtPro1.xml";
         private string[] _RGBFusionBridgeFiles = new string[]
         {
             "RGBFusionAuroraListener.exe",
             "LedLib2.dll",
             "RGBFusionBridge.dll"
         };
+
+        private HashSet<byte> _rgbFusionLedIndexes;
 
         public bool Initialize()
         {
@@ -131,22 +135,36 @@ namespace Aurora.Devices.RGBFusion
 
         private void UpdateDeviceMap()
         {
-            if (_deviceMap == null)
+           if (_deviceMap == null)
                 _deviceMap = new List<DeviceMapState>();
+
             _deviceMap.Clear();
-            _deviceMap.Add(new DeviceMapState(255, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_devicekey"))); // Led 255 is equal to set all areas at the same time.
+            foreach (byte ledIndex in _rgbFusionLedIndexes)
+            {
+                _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
+            }
         }
 
         bool _deviceChanged = true;
 
         public VariableRegistry GetRegisteredVariables()
         {
+            if (_rgbFusionLedIndexes == null)
+            {
+                _rgbFusionLedIndexes = GetLedIndexes();
+            }
+
             if (_variableRegistry == null)
             {
                 var devKeysEnumAsEnumerable = System.Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
                 _variableRegistry = new VariableRegistry();
-                _variableRegistry.Register($"{_devicename}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
+
+                foreach (byte ledIndex in _rgbFusionLedIndexes)
+                {
+                    _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.Peripheral_Logo, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
+                }
             }
+            UpdateDeviceMap();
             return _variableRegistry;
         }
 
@@ -222,11 +240,10 @@ namespace Aurora.Devices.RGBFusion
                                 _deviceMap[d] = new DeviceMapState(_deviceMap[d].led, key.Value, _deviceMap[d].deviceKey);
                                 _deviceChanged = true;
                             }
-                            break;
                         }
                     }
 
-                    if (key.Key == _deviceMap.Last().deviceKey)
+                    if (key.Key == _deviceMap.Max(k => k.deviceKey))
                     {
                         // Send changes to device only if device actually changed.
                         if (_deviceChanged)
@@ -248,9 +265,46 @@ namespace Aurora.Devices.RGBFusion
             }
         }
 
+        private HashSet<byte> GetLedIndexes()
+        {
+            HashSet<byte> rgbFusionLedIndexes = new HashSet<byte>();
+
+            string mainProfileFilePath = _RGBFusionDirectory + _defaultProfileFileName;
+            if (!IsRGBFusinMainProfileCreated())
+            {
+                Global.logger.Warn(string.Format("Main profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
+                return rgbFusionLedIndexes;
+            }
+
+            XmlDocument mainProfileXml = new XmlDocument();
+            mainProfileXml.Load(mainProfileFilePath);
+            XmlNode ledInfoNode = mainProfileXml.DocumentElement.SelectSingleNode("/LED_info");
+            foreach (XmlNode node in ledInfoNode.ChildNodes)
+            {
+                rgbFusionLedIndexes.Add(Convert.ToByte(node.Attributes["Area_index"]?.InnerText));
+            }
+
+            string extMainProfileFilePath = _RGBFusionDirectory + _defaultExtProfileFileName;
+            if (!IsRGBFusinMainProfileCreated())
+            {
+                Global.logger.Warn(string.Format("Main external devices profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
+                return rgbFusionLedIndexes;
+            }
+
+            XmlDocument extMainProfileXml = new XmlDocument();
+            extMainProfileXml.Load(extMainProfileFilePath);
+            XmlNode extLedInfoNode = extMainProfileXml.DocumentElement.SelectSingleNode("/LED_info");
+            foreach (XmlNode node in extLedInfoNode.ChildNodes)
+            {
+                rgbFusionLedIndexes.Add(Convert.ToByte(node.Attributes["Area_index"]?.InnerText));
+            }
+            return rgbFusionLedIndexes;
+
+        }
+
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            UpdateDeviceMap();
+            //UpdateDeviceMap(); //Is ther any way to know when a config in VariableRegistry change to avoid do this task every time?
             _ellapsedTimeWatch.Restart();
             bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
             _ellapsedTimeWatch.Stop();
