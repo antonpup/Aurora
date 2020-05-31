@@ -216,7 +216,7 @@ namespace Aurora.Devices.RGBFusion
                                 Convert.ToByte(_deviceMap[d].led)
                             });
 
-                            if ((_deviceMap[d].deviceKey == key.Key) && (key.Value != _deviceMap[d].color))
+                            if (key.Value != _deviceMap[d].color)
                             {
                                 //If at least one led change, set deviceChanged flag
                                 _deviceMap[d] = new DeviceMapState(_deviceMap[d].led, key.Value, _deviceMap[d].deviceKey);
