@@ -763,7 +763,7 @@ bool WriteToPipe(const std::string command_cargo)
 	return false;
 }
 
-void _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage, int custom_mode = 0)
+bool _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage, int custom_mode = 0)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -936,7 +936,7 @@ void _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercent
 				)
 			{
 				//No need to write on pipe, color did not change
-				return;
+				return true;
 			}
 
 			current_bg[0] = blueValue;
@@ -962,11 +962,13 @@ void _LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercent
 
 		contents += '}';
 
-		WriteToPipe(contents);
+		return WriteToPipe(contents);
 	}
+
+	return false;
 }
 
-void _LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
+bool _LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -984,10 +986,10 @@ void _LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePerce
 
 	contents += '}';
 
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
-void _LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
+bool _LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -1005,20 +1007,20 @@ void _LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePerce
 
 	contents += '}';
 
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
-void _LogiLedStopEffects()
+bool _LogiLedStopEffects()
 {
 	std::string contents = "";
 	contents += "\"command\": \"StopEffects\",";
 	contents += "\"command_data\": {";
 	contents += '}';
 
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
-void _LogiLedSetLightingFromBitmap(unsigned char bitmap[])
+bool _LogiLedSetLightingFromBitmap(unsigned char bitmap[])
 {
 	if (isInitialized && (current_device == LOGI_DEVICETYPE_ALL || current_device == LOGI_DEVICETYPE_PERKEY_RGB))
 	{
@@ -1044,11 +1046,13 @@ void _LogiLedSetLightingFromBitmap(unsigned char bitmap[])
 		}
 		contents += "]";
 
-		WriteToPipe(contents);
+		return WriteToPipe(contents);
 	}
+
+	return false;
 }
 
-void _LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
+bool _LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -1068,7 +1072,7 @@ void _LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int g
 			)
 		{
 			//No need to write on pipe, color did not change
-			return;
+			return true;
 		}
 
 		current_bitmap[(int)bit_location] = blueValue;
@@ -1086,11 +1090,13 @@ void _LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int g
 
 		contents += "}";
 
-		WriteToPipe(contents);
+		return WriteToPipe(contents);
 	}
+
+	return false;
 }
 
-void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
+bool _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -1110,7 +1116,7 @@ void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int gr
 			)
 		{
 			//No need to write on pipe, color did not change
-			return;
+			return true;
 		}
 
 		current_bitmap[(int)bit_location] = blueValue;
@@ -1128,11 +1134,13 @@ void _LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int gr
 
 		contents += "}";
 
-		WriteToPipe(contents);
+		return WriteToPipe(contents);
 	}
+
+	return false;
 }
 
-void _LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
+bool _LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -1163,10 +1171,10 @@ void _LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int
 	return WriteToPipe(current_bitmap, ss.str());
 	}
 	*/
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
-void _LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage)
+bool _LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -1185,7 +1193,7 @@ void _LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPerce
 			)
 		{
 			//No need to write on pipe, color did not change
-			return;
+			return true;
 		}
 
 		current_bitmap[(int)bit_location] = blueValue;
@@ -1203,11 +1211,13 @@ void _LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPerce
 
 		contents += "}";
 
-		WriteToPipe(contents);
+		return WriteToPipe(contents);
 	}
+
+	return false;
 }
 
-void _LogiLedFlashSingleKey(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval)
+bool _LogiLedFlashSingleKey(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval)
 {
 	unsigned char redValue = (unsigned char)((redPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((greenPercentage / 100.0f) * 255);
@@ -1226,10 +1236,10 @@ void _LogiLedFlashSingleKey(LogiLed::KeyName keyName, int redPercentage, int gre
 
 	contents += '}';
 
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
-void _LogiLedPulseSingleKey(LogiLed::KeyName keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite)
+bool _LogiLedPulseSingleKey(LogiLed::KeyName keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite)
 {
 	unsigned char redValue = (unsigned char)((startRedPercentage / 100.0f) * 255);
 	unsigned char greenValue = (unsigned char)((startGreenPercentage / 100.0f) * 255);
@@ -1257,10 +1267,10 @@ void _LogiLedPulseSingleKey(LogiLed::KeyName keyName, int startRedPercentage, in
 
 	contents += '}';
 
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
-void _LogiLedStopEffectsOnKey(LogiLed::KeyName keyName)
+bool _LogiLedStopEffectsOnKey(LogiLed::KeyName keyName)
 {
 	std::string contents = "";
 	contents += "\"command\": \"StopEffectsOnKey\",";
@@ -1268,7 +1278,7 @@ void _LogiLedStopEffectsOnKey(LogiLed::KeyName keyName)
 	contents += "\"key\": " + std::to_string(keyName);
 	contents += '}';
 
-	WriteToPipe(contents);
+	return WriteToPipe(contents);
 }
 
 bool LogiLedInitWithName(const char name[])
@@ -1369,9 +1379,7 @@ bool LogiLedSaveCurrentLighting()
 
 bool LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage, int custom_mode = 0)
 {
-	_LogiLedSetLighting(redPercentage, greenPercentage, bluePercentage, custom_mode);
-
-	return isInitialized;
+	return isInitialized &_LogiLedSetLighting(redPercentage, greenPercentage, bluePercentage, custom_mode);
 }
 
 bool LogiLedRestoreLighting()
@@ -1381,58 +1389,42 @@ bool LogiLedRestoreLighting()
 
 bool LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
 {
-	_LogiLedFlashLighting(redPercentage, greenPercentage, bluePercentage, milliSecondsDuration, milliSecondsInterval);
-
-	return isInitialized;
+	return isInitialized & _LogiLedFlashLighting(redPercentage, greenPercentage, bluePercentage, milliSecondsDuration, milliSecondsInterval);
 }
 
 bool LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval)
 {
-	_LogiLedPulseLighting(redPercentage, greenPercentage, bluePercentage, milliSecondsDuration, milliSecondsInterval);
-
-	return isInitialized;
+	return isInitialized & _LogiLedPulseLighting(redPercentage, greenPercentage, bluePercentage, milliSecondsDuration, milliSecondsInterval);
 }
 
 bool LogiLedStopEffects()
 {
-	_LogiLedStopEffects();
-
-	return isInitialized;
+	return isInitialized & _LogiLedStopEffects();
 }
 
 bool LogiLedSetLightingFromBitmap(unsigned char bitmap[])
 {
-	_LogiLedSetLightingFromBitmap(bitmap);
-
-	return isInitialized;
+	return isInitialized & _LogiLedSetLightingFromBitmap(bitmap);
 }
 
 bool LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	_LogiLedSetLightingForKeyWithScanCode(keyCode, redPercentage, greenPercentage, bluePercentage);
-
-	return isInitialized;
+	return isInitialized & _LogiLedSetLightingForKeyWithScanCode(keyCode, redPercentage, greenPercentage, bluePercentage);
 }
 
 bool LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	_LogiLedSetLightingForKeyWithHidCode(keyCode, redPercentage, greenPercentage, bluePercentage);
-
-	return isInitialized;
+	return isInitialized & _LogiLedSetLightingForKeyWithHidCode(keyCode, redPercentage, greenPercentage, bluePercentage);
 }
 
 bool LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	_LogiLedSetLightingForKeyWithQuartzCode(keyCode, redPercentage, greenPercentage, bluePercentage);
-
-	return isInitialized;
+	return isInitialized & _LogiLedSetLightingForKeyWithQuartzCode(keyCode, redPercentage, greenPercentage, bluePercentage);
 }
 
 bool LogiLedSetLightingForKeyWithKeyName(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage)
 {
-	_LogiLedSetLightingForKeyWithKeyName(keyName, redPercentage, greenPercentage, bluePercentage);
-
-	return isInitialized;
+	return isInitialized & _LogiLedSetLightingForKeyWithKeyName(keyName, redPercentage, greenPercentage, bluePercentage);
 }
 
 bool LogiLedSaveLightingForKey(LogiLed::KeyName keyName)
@@ -1447,23 +1439,17 @@ bool LogiLedRestoreLightingForKey(LogiLed::KeyName keyName)
 
 bool LogiLedFlashSingleKey(LogiLed::KeyName keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval)
 {
-	_LogiLedFlashSingleKey(keyName, redPercentage, greenPercentage, bluePercentage, msDuration, msInterval);
-
-	return isInitialized;
+	return isInitialized & _LogiLedFlashSingleKey(keyName, redPercentage, greenPercentage, bluePercentage, msDuration, msInterval);
 }
 
 bool LogiLedPulseSingleKey(LogiLed::KeyName keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite)
 {
-	_LogiLedPulseSingleKey(keyName, startRedPercentage, startGreenPercentage, startBluePercentage, finishRedPercentage, finishGreenPercentage, finishBluePercentage, msDuration, isInfinite);
-
-	return isInitialized;
+	return isInitialized & _LogiLedPulseSingleKey(keyName, startRedPercentage, startGreenPercentage, startBluePercentage, finishRedPercentage, finishGreenPercentage, finishBluePercentage, msDuration, isInfinite);
 }
 
 bool LogiLedStopEffectsOnKey(LogiLed::KeyName keyName)
 {
-	_LogiLedStopEffectsOnKey(keyName);
-
-	return isInitialized;
+	return isInitialized & _LogiLedStopEffectsOnKey(keyName);
 }
 
 void LogiLedShutdown()

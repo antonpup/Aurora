@@ -72,9 +72,16 @@ namespace Aurora.Profiles
         /// Adds new layers to the overlay of the passed EffectFrame.
         /// </summary>
         public virtual void UpdateOverlayLights(EffectFrame frame) {
-            var overlayLayers = new Queue<EffectLayer>(Application.Profile.OverlayLayers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
-            Application.UpdateEffectScripts(overlayLayers);
-            frame.AddOverlayLayers(overlayLayers.ToArray());
+            try
+            {
+                var overlayLayers = new Queue<EffectLayer>(Application.Profile.OverlayLayers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
+                Application.UpdateEffectScripts(overlayLayers);
+                frame.AddOverlayLayers(overlayLayers.ToArray());
+            }
+            catch(Exception e)
+            {
+                Global.logger.Error("Error updating overlay layers: " + e);
+            }
         }
 
         /// <summary>
