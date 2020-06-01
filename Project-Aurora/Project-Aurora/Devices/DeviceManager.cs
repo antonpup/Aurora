@@ -116,7 +116,7 @@ namespace Aurora.Devices
             devices.Add(new DeviceContainer(new Devices.Vulcan.VulcanDevice()));
             devices.Add(new DeviceContainer(new Devices.Uniwill.UniwillDevice()));
             devices.Add(new DeviceContainer(new Devices.Ducky.DuckyDevice()));               //Ducky Device
-         //   devices.Add(new DeviceContainer(new Devices.RGBFusion.RGBFusionDevice()));       //RGBFusion Device
+            devices.Add(new DeviceContainer(new Devices.RGBFusion.RGBFusionDevice()));       //RGBFusion Device
 
             
 

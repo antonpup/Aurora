@@ -135,13 +135,15 @@ namespace Aurora.Devices.RGBFusion
 
         private void UpdateDeviceMap()
         {
-           if (_deviceMap == null)
+            if (_deviceMap == null)
+            {
                 _deviceMap = new List<DeviceMapState>();
 
-            _deviceMap.Clear();
-            foreach (byte ledIndex in _rgbFusionLedIndexes)
-            {
-                _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
+                _deviceMap.Clear();
+                foreach (byte ledIndex in _rgbFusionLedIndexes)
+                {
+                    _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
+                }
             }
         }
 
@@ -161,10 +163,9 @@ namespace Aurora.Devices.RGBFusion
 
                 foreach (byte ledIndex in _rgbFusionLedIndexes)
                 {
-                    _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.Peripheral_Logo, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
+                    _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
                 }
             }
-            UpdateDeviceMap();
             return _variableRegistry;
         }
 
@@ -242,13 +243,13 @@ namespace Aurora.Devices.RGBFusion
                             }
                         }
                     }
-
+                    
                     if (key.Key == _deviceMap.Max(k => k.deviceKey))
                     {
                         // Send changes to device only if device actually changed.
                         if (_deviceChanged)
                         {
-                            SendCommandToRGBFusion(new byte[] { 2, 0, 0, 0, 0, 0 }); // Command code 2 is used to apply changes.
+                             SendCommandToRGBFusion(new byte[] { 2, 0, 0, 0, 0, 0 }); // Command code 2 is used to apply changes.
                         }
                         _deviceChanged = false;
                     }
@@ -304,7 +305,7 @@ namespace Aurora.Devices.RGBFusion
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            //UpdateDeviceMap(); //Is ther any way to know when a config in VariableRegistry change to avoid do this task every time?
+            UpdateDeviceMap(); //Is ther any way to know when a config in VariableRegistry change to avoid do this task every time?
             _ellapsedTimeWatch.Restart();
             bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
             _ellapsedTimeWatch.Stop();
@@ -356,6 +357,6 @@ namespace Aurora.Devices.RGBFusion
             return true;
         }
 
-        #endregion 
+        #endregion
     }
 }
