@@ -295,7 +295,6 @@ namespace Aurora.Devices.RGBFusion
             if (!IsRGBFusinMainProfileCreated())
             {
                 Global.logger.Warn(string.Format("Main profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
-                return rgbFusionLedIndexes;
             }
             else
             {
@@ -309,10 +308,9 @@ namespace Aurora.Devices.RGBFusion
                 }
             }
             string extMainProfileFilePath = _RGBFusionDirectory + _defaultExtProfileFileName;
-            if (!IsRGBFusinMainProfileCreated())
+            if (!IsRGBFusinMainExtProfileCreated())
             {
                 Global.logger.Warn(string.Format("Main external devices profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
-                return rgbFusionLedIndexes;
             }
             else
             {
@@ -354,6 +352,14 @@ namespace Aurora.Devices.RGBFusion
         {
 
             string defaulprofileFullpath = _RGBFusionDirectory + _defaultProfileFileName;
+            bool result = (File.Exists(defaulprofileFullpath));
+            return result;
+        }
+
+        private bool IsRGBFusinMainExtProfileCreated()
+        {
+
+            string defaulprofileFullpath = _RGBFusionDirectory + _defaultExtProfileFileName;
             bool result = (File.Exists(defaulprofileFullpath));
             return result;
         }
