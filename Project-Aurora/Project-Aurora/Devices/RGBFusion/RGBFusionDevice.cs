@@ -35,6 +35,7 @@ namespace Aurora.Devices.RGBFusion
         private Color _initialColor = Color.FromArgb(0, 0, 0);
         private string _defaultProfileFileName = "pro1.xml";
         private string _defaultExtProfileFileName = "ExtPro1.xml";
+        private string _ignoreLedsParam = string.Empty;
         private Dictionary<string, string> _RGBFusionBridgeFiles = new Dictionary<string, string>()
         {
             {"RGBFusionAuroraListener.exe","9c41ff73a5bb99c28ea4ff260ff70111"},
@@ -86,7 +87,7 @@ namespace Aurora.Devices.RGBFusion
 
                 //Start RGBFusion Bridge
                 Global.logger.Info("Starting RGBFusion Bridge.");
-                Process.Start(_RGBFusionDirectory + _RGBFusionBridgeExeName);
+                Process.Start(_RGBFusionDirectory + _RGBFusionBridgeExeName, ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : "");
                 _isConnected = true;
                 return true;
             }
@@ -181,13 +182,29 @@ namespace Aurora.Devices.RGBFusion
             {
                 var devKeysEnumAsEnumerable = System.Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
                 _variableRegistry = new VariableRegistry();
-
+                _variableRegistry.Register($"{_devicename}_ignore_leds", "0,8,9", "Area index to be ignored by RGBFusion Bridge", null, null, "Comma separated. Require Aurora restart.");
                 foreach (byte ledIndex in _rgbFusionLedIndexes)
                 {
-                    _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min(), "Require restart.");
+                    _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min(), "Require Aurora restart.");
                 }
             }
+            _ignoreLedsParam = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_ignore_leds");
             return _variableRegistry;
+        }
+
+        private bool ValidateIgnoreLedParam()
+        {
+            string[] ignoreLedsParam = _ignoreLedsParam.Split(',');
+
+            foreach (string s in ignoreLedsParam)
+            {
+                if (!byte.TryParse(s, out _))
+                {
+                    Global.logger.Error("RGBFusion Bridge --ignoreled bad param {0}. Running Bridge in default mode.", s);
+                    return false;
+                }
+            }
+            return true;
         }
 
         public string GetDeviceName()
