@@ -1,4 +1,4 @@
-﻿using Aurora;
+using Aurora;
 using Aurora.Devices;
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace Aurora.Devices.RGBFusion
         private Dictionary<string, string> _RGBFusionBridgeFiles = new Dictionary<string, string>()
         {
             {"RGBFusionAuroraListener.exe","9c41ff73a5bb99c28ea4ff260ff70111"},
-            {"LedLib2.dll","eb9faee9f0e3ef5f22d880bc1c7b905e"},
+            {"LedLib2.dll","3ded5ba736aefa9b6ae07b0311e0ccb0"},
             {"RGBFusionBridge.dll","04a589b8f0ea16eeddbdfb0b996e1683"}
         };
 
@@ -393,7 +393,8 @@ namespace Aurora.Devices.RGBFusion
                 using (var stream = File.OpenRead(filename))
                 {
                     var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    var md5String = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    return md5String;
                 }
             }
         }
