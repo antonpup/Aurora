@@ -1,4 +1,4 @@
-version: 0.7.2+{build}
+version: 0.8.0+{build}
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -47,7 +47,7 @@ deploy:
   description: 'Release description'
   provider: GitHub
   auth_token:
-    secure: BawzLen0V83DjFE11VqpdO3eDPMDDsrWTaQsswrLcKcn2DF/hviRKkdTbGOX6kSL
+    secure: fH71/PvnIYe92vatcu/GCBXaAHNcwGWG7Olubsw5DCUy7eHWSs7QcY2u/WalhMfg
   artifact: Build\Aurora-v$(appveyor_build_version).zip,Aurora-setup-v$(appveyor_build_version).exe          
   draft: true
   prerelease: false

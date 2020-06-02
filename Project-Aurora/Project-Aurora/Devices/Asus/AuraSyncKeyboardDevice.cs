@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using AuraServiceLib;
 
@@ -40,6 +39,9 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         protected override void ApplyColors(Dictionary<DeviceKeys, Color> colors)
         {
+            if (Global.Configuration.devices_disable_keyboard)
+                return;
+
             foreach (var keyPair in colors)
             {
                 if (!deviceKeyToKey.TryGetValue(keyPair.Key, out var light))

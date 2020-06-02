@@ -1,7 +1,7 @@
 ---
 name: Device Request
 about: Request support for a new hardware device.
-labels: hardware support
+labels: 'Type: Enhancement,Area: Hardware Support'
 ---
 <!--
 Please make sure you SEARCH for any other issues requesting your device before submitting your issue - it might already have been requested.

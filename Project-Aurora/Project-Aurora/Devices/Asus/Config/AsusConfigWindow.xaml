@@ -35,7 +35,11 @@
                     VerticalAlignment="Stretch"
                     Height="auto">
                     <StackPanel Orientation="Vertical">
-                        <CheckBox Content="Enabled" Name="DeviceEnabledCheckBox" IsChecked="False"/>
+                        <StackPanel Orientation="Horizontal" > 
+                            <CheckBox Content="Enabled" Name="DeviceEnabledCheckBox" IsChecked="False"/>
+                            <Button Name="SetAllNone" Content="Set All None" DockPanel.Dock="Top" Click="SetAllNone_Click" ToolTip="Set all of the lights to NONE"/>
+                            <Button Name="SetAllLogo" Content="Set All Logo" DockPanel.Dock="Top" Click="SetAllLogo_Click" ToolTip="Set all of the lights to PERIPHERAL_LOGO"/>
+                        </StackPanel>
                         <StackPanel Orientation="Vertical" Name="AsusDeviceKeys">
                             <config:AsusKeyToDeviceKeyControl/>
                         </StackPanel>
