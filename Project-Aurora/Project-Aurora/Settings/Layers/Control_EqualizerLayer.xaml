@@ -6,7 +6,7 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox"
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
+             xmlns:u="clr-namespace:Aurora.Utils" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:c="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
@@ -17,7 +17,7 @@
                     <x:Type TypeName="local:EqualizerType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:EqualizerTypeToStringVC x:Key="EqualizerTypeToStringVC"/>
+            <u:EqualizerTypeToStringVC x:Key="EqualizerTypeToStringVC"/>
             <DataTemplate x:Key="EqualizerTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource EqualizerTypeToStringVC}}" />
             </DataTemplate>
@@ -27,7 +27,7 @@
                     <x:Type TypeName="local:EqualizerPresentationType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:EqualizerPresentationTypeToStringVC x:Key="EqualizerPresentationTypeToStringVC"/>
+            <u:EqualizerPresentationTypeToStringVC x:Key="EqualizerPresentationTypeToStringVC"/>
             <DataTemplate x:Key="EqualizerPresentationTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource EqualizerPresentationTypeToStringVC}}" />
             </DataTemplate>
@@ -37,7 +37,7 @@
                     <x:Type TypeName="local:EqualizerBackgroundMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:EqualizerBackgroundModeToStringVC x:Key="EqualizerBackgroundModeToStringVC"/>
+            <u:EqualizerBackgroundModeToStringVC x:Key="EqualizerBackgroundModeToStringVC"/>
             <DataTemplate x:Key="EqualizerBackgroundModeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource EqualizerBackgroundModeToStringVC}}" />
             </DataTemplate>
@@ -90,5 +90,8 @@
         <Button x:Name="btn_ShowPreviewWindow" Content="Show Preview Window" HorizontalAlignment="Left" Margin="0,220,0,-2" VerticalAlignment="Top" Click="btn_ShowPreviewWindow_Click"/>
 
         <c:KeySequence x:Name="affectedKeys" Title="Affected Rectangle" RecordingTag="EqAffectedRect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="511,7,0,0" SequenceUpdated="KeySequence_keys_SequenceUpdated" />
+
+        <TextBlock Text="Audio Device:" Margin="511,127,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox SelectedValue="{Binding Path=Properties._DeviceId, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="589,125,0,0" Width="152" HorizontalAlignment="Left" VerticalAlignment="Top" />
     </Grid>
 </UserControl>
