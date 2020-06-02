@@ -346,7 +346,18 @@ namespace Aurora.Settings.Layers
                     break;
 
                 case AmbilightType.AverageColor:
-                    ambilight_layer.Set(Properties.Sequence, BitmapUtils.GetAverageColor(screen));
+                    var average = BitmapUtils.GetAverageColor(screen);
+
+                    if (Properties.BrightenImage)
+                        average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
+
+                    if (Properties.SaturateImage)
+                        average = ColorUtils.ChangeSaturation(average, Properties.SaturationChange);
+
+                    if (Properties.HueShiftImage)
+                        average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
+
+                    ambilight_layer.Set(Properties.Sequence, average);
                     break;
             }
 

@@ -8,7 +8,7 @@
              xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
              xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
@@ -20,12 +20,12 @@
                     <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
+            <u:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
             <DataTemplate x:Key="PercentEffectTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
             </DataTemplate>
 
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
+            <u:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
             <DataTemplate x:Key="DeviceKeys">
                 <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
             </DataTemplate>
@@ -35,7 +35,7 @@
                     <x:Type TypeName="EnumPercentEffectType:IdleEffects" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
+            <u:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
             <DataTemplate x:Key="IdleEffectsTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource IdleEffectsToStringVC}}" />
             </DataTemplate>
@@ -45,7 +45,7 @@
                     <x:Type TypeName="local:PreferredKeyboardLocalization" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
+            <u:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
             <DataTemplate x:Key="KbLayoutTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource KbLayoutToStringVC}}" />
             </DataTemplate>
@@ -55,7 +55,7 @@
                     <x:Type TypeName="local:PreferredKeyboard" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
+            <u:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
             <DataTemplate x:Key="KbBrandTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
             </DataTemplate>
@@ -65,7 +65,7 @@
                     <x:Type TypeName="local:PreferredMouse" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
+            <u:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
             <DataTemplate x:Key="MouseBrandTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
             </DataTemplate>
@@ -75,7 +75,7 @@
                     <x:Type TypeName="local:MouseOrientationType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
+            <u:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
             <DataTemplate x:Key="MouseOrientationTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource MouseOrientationToStringVC}}" />
             </DataTemplate>
@@ -85,7 +85,7 @@
                     <x:Type TypeName="local:KeycapType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
+            <u:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
             <DataTemplate x:Key="KeycapTypeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
             </DataTemplate>
@@ -95,7 +95,7 @@
                     <x:Type TypeName="local:BitmapAccuracy" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
+            <u:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
             <DataTemplate x:Key="BitmapAccuracyTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
             </DataTemplate>
@@ -105,7 +105,7 @@
                     <x:Type TypeName="local:AppExitMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
+            <u:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
             <DataTemplate x:Key="appexitmodeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource appexitmodeToStringVC}}" />
             </DataTemplate>
@@ -115,7 +115,7 @@
                     <x:Type TypeName="local:ApplicationDetectionMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
-            <EnumValueConverters:AppDetectionModeToStringVC x:Key="AppDetectionModeToStringVC"/>
+            <u:AppDetectionModeToStringVC x:Key="AppDetectionModeToStringVC"/>
             <DataTemplate x:Key="AppDetectionModeTemplate">
                 <TextBlock Text="{Binding Converter={StaticResource AppDetectionModeToStringVC}}" />
             </DataTemplate>
@@ -132,10 +132,10 @@
                     <TextBlock HorizontalAlignment="Left" Margin="11,230,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
                     <TextBlock HorizontalAlignment="Left" Margin="12,254,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,205,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
-                    <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="199" Margin="512,83,0,-30" VerticalAlignment="Top" Width="160"/>
-                    <TextBlock Text="Excluded Processes" HorizontalAlignment="Left" Margin="512,62,0,0" VerticalAlignment="Top" Width="113"/>
-                    <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="677,83,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
-                    <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="677,111,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
+                    <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="199" Margin="512,139,0,0" VerticalAlignment="Top" Width="160"/>
+                    <TextBlock Text="Excluded Processes" HorizontalAlignment="Left" Margin="512,117,0,0" VerticalAlignment="Top" Width="113"/>
+                    <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="677,139,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
+                    <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="677,167,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
                     <TextBlock HorizontalAlignment="Left" Margin="12,132,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
                     <TextBlock x:Name="lblKeyboardBrightness" HorizontalAlignment="Left" Margin="335,132,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
                     <Slider x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="180,132,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding KeyboardBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblKeyboardBrightness, Path=.}"/>
@@ -170,7 +170,14 @@
                     <TextBlock Text="Delay:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="278,10,0,0" />
                     <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Minimum="0" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
                     <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
-                    <CheckBox Content="Enable Audio Capture (for gamestates)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
+
+                    <CheckBox Content="Enable Audio Capture for gamestates (restart required)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
+                    <TextBlock Text="GSI Playback Device:" Margin="511,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding Path=GSIAudioRenderDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,59,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 </Grid>
             </TabItem>
             <TabItem Header="Away Effects">
@@ -376,7 +383,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" >
                         <Button 
                             x:Name="btnShowBitmapWindow" 
