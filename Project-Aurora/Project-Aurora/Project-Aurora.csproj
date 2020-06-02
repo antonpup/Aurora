@@ -702,6 +702,7 @@
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AttachedApplication.cs" />
+    <Compile Include="Utils\AudioDeviceProxy.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\DragBehaviour.cs" />
     <Compile Include="Utils\FastMemberExtensions.cs" />

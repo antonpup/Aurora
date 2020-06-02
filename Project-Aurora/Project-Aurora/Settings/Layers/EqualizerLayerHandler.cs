@@ -114,6 +114,9 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public SortedSet<float> Frequencies { get { return Logic._Frequencies ?? _Frequencies ?? new SortedSet<float>(); } }
 
+        public string _DeviceId { get; set; }
+        [JsonIgnore] public string DeviceId => Logic?._DeviceId ?? _DeviceId ?? "";
+
         public EqualizerLayerHandlerProperties() : base()
         {
 
@@ -138,6 +141,7 @@ namespace Aurora.Settings.Layers
             _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
             _Frequencies = new SortedSet<float>() { 50, 95, 130, 180, 250, 350, 500, 620, 700, 850, 1200, 1600, 2200, 3000, 4100, 5600, 7700, 10000 };
+            _DeviceId = "";
         }
     }
 
@@ -146,12 +150,18 @@ namespace Aurora.Settings.Layers
     {
         public event NewLayerRendered NewLayerRender = delegate { };
 
-        MMDeviceEnumerator audio_device_enumerator = new MMDeviceEnumerator();
-        MMDevice default_device = null;
+        private AudioDeviceProxy deviceProxy;
+        private AudioDeviceProxy DeviceProxy {
+            get {
+                if (deviceProxy == null) {
+                    deviceProxy = new AudioDeviceProxy(DataFlow.Render);
+                    deviceProxy.WaveInDataAvailable += OnDataAvailable;
+                }
+                return deviceProxy;
+            }
+        }
 
         private List<float> flux_array = new List<float>();
-
-        private IWaveIn waveIn;
         private static int fftLength = 1024; // NAudio fft wants powers of two! was 8192
 
         // Base rectangle that defines the region that is used to render the audio output
@@ -179,57 +189,15 @@ namespace Aurora.Settings.Layers
             return new Control_EqualizerLayer(this);
         }
 
-        long startTime;
-        private void UpdateAudioCapture(MMDevice defaultDevice)
-        {
-            if (waveIn != null)
-            {
-                waveIn.StopRecording();
-                waveIn.Dispose();
-            }
-
-            default_device?.Dispose();
-            default_device = defaultDevice;
-
-            // Here you decide what you want to use as the waveIn.
-            // There are many options in NAudio and you can use other streams/files.
-            // Note that the code varies for each different source.
-            waveIn = new WasapiLoopbackCapture(default_device);
-            
-            waveIn.DataAvailable += OnDataAvailable;
-
-            waveIn.StartRecording();
-            startTime = Time.GetSecondsSinceEpoch();
-        }
-
-        private void CheckForDeviceChange()
-        {
-            MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-
-            if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped
-                || default_device == null
-                || default_device.ID != current_device.ID
-                || (((WasapiLoopbackCapture)waveIn)?.CaptureState != CaptureState.Capturing && (Time.GetSecondsSinceEpoch() - startTime) > 20)) //Check if it has taken over 20 seconds to start the capture which may indicate that there has been an issue
-            {
-                Global.logger.LogLine($"CaptureState is {((WasapiLoopbackCapture)waveIn)?.CaptureState}");
-                UpdateAudioCapture(current_device);
-            }
-            else
-                current_device.Dispose();
-
-            current_device = null;
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             try
             {
-                //if (current_device != null)
-                //current_device.Dispose();
-                CheckForDeviceChange();
+                // Update device ID. If it has changed, it will re-assign itself to the new device
+                DeviceProxy.DeviceId = Properties.DeviceId;
 
                 // The system sound as a value between 0.0 and 1.0
-                float system_sound_normalized = default_device.AudioEndpointVolume.MasterVolumeLevelScalar;
+                float system_sound_normalized = DeviceProxy.Device?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 1f;
 
                 // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
                 // Replaces all Properties.MaxAmplitude calls with the scaled value
@@ -385,12 +353,12 @@ namespace Aurora.Settings.Layers
             {
                 byte[] buffer = e.Buffer;
                 int bytesRecorded = e.BytesRecorded;
-                int bufferIncrement = waveIn.WaveFormat.BlockAlign;
+                int bufferIncrement = DeviceProxy.WaveIn.WaveFormat.BlockAlign;
 
                 // 4 bytes per channel, bufferIncrement is numChannels * 4
                 for (int index = 0; index < bytesRecorded; index += bufferIncrement) // Loop over the bytes, respecting the channel grouping
                 {
-                    if (waveIn.WaveFormat.Channels == 2)
+                    if (DeviceProxy.WaveIn.WaveFormat.Channels == 2)
                         // If recording has two channels, take the largest value and add that to the sampleAggregator.
                         sampleAggregator.Add(Math.Max(BitConverter.ToSingle(buffer, index), BitConverter.ToSingle(buffer, index + 4)));
                     else
@@ -451,8 +419,8 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            waveIn?.Dispose();
-            waveIn = null;
+            DeviceProxy?.Dispose();
+            deviceProxy = null;
         }
     }
 
