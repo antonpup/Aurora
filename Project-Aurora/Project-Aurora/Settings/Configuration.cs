@@ -529,6 +529,9 @@ namespace Aurora.Settings
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
+        public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
+        public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
+
         public Configuration()
         {
             //First Time Installs
