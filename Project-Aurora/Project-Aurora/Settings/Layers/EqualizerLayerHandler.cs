@@ -197,7 +197,7 @@ namespace Aurora.Settings.Layers
                 DeviceProxy.DeviceId = Properties.DeviceId;
 
                 // The system sound as a value between 0.0 and 1.0
-                float system_sound_normalized = DeviceProxy.Device?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 1f;
+                float system_sound_normalized = DeviceProxy.Device?.AudioMeterInformation?.MasterPeakValue ?? 1f;
 
                 // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
                 // Replaces all Properties.MaxAmplitude calls with the scaled value
