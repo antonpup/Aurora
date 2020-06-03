@@ -36,11 +36,11 @@ namespace Aurora.Devices.RGBFusion
         private string _defaultProfileFileName = "pro1.xml";
         private string _defaultExtProfileFileName = "ExtPro1.xml";
         private string _ignoreLedsParam = string.Empty;
+        private byte[] _commandDataPacket = new byte[1024];
         private Dictionary<string, string> _RGBFusionBridgeFiles = new Dictionary<string, string>()
         {
-            {"RGBFusionAuroraListener.exe","9c41ff73a5bb99c28ea4ff260ff70111"},
-            {"LedLib2.dll","3ded5ba736aefa9b6ae07b0311e0ccb0"},
-            {"RGBFusionBridge.dll","04a589b8f0ea16eeddbdfb0b996e1683"}
+            {"RGBFusionAuroraListener.exe","204503BFB993CE02ED495E190D16F757"},
+            {"RGBFusionBridge.dll","DAC4AA9C104D8132D9284F15A0BDABBF"}
         };
 
         private HashSet<byte> _rgbFusionLedIndexes;
@@ -114,7 +114,7 @@ namespace Aurora.Devices.RGBFusion
             using (var pipe = new NamedPipeClientStream(".", "RGBFusionAuroraListener", PipeDirection.Out))
             using (var stream = new BinaryWriter(pipe))
             {
-                pipe.Connect(timeout: 10);
+                pipe.Connect(100);
                 stream.Write(args);
             }
         }
@@ -129,13 +129,12 @@ namespace Aurora.Devices.RGBFusion
         {
             try
             {
-                SendCommandToRGBFusion(new byte[] { 5, 0, 0, 0, 0, 0 }); // Operatin code 5 set all leds to black and close the listener application.
+                SendCommandToRGBFusion(new byte[] { 1, 5, 0, 0, 0, 0, 0 }); // Operatin code 5 set all leds to black and close the listener application.
             }
             catch
             {
                 //Just in case Bridge is not responding or already closed
             }
-
 
             Thread.Sleep(1000); // Time to shutdown leds and close listener application.
             KillProcessByName("RGBFusionAuroraListener");
@@ -254,6 +253,7 @@ namespace Aurora.Devices.RGBFusion
             {
                 return false;
             }
+            byte commandIndex = 0;
 
             try
             {
@@ -263,15 +263,13 @@ namespace Aurora.Devices.RGBFusion
                     {
                         if ((_deviceMap[d].deviceKey == key.Key) && (key.Value != _deviceMap[d].color))
                         {
-                            SendCommandToRGBFusion(new byte[]
-                            {
-                                1, // Operation code 1 is used to set color for an led or area index but without apply
-                                10, // Device 10 is for motherboard and all other peripherals controlled by RGBFusion it self without use any of the RGBFusion custom drivers. It is the safest way.
-								Convert.ToByte(key.Value.R * key.Value.A / 255), //Red Register
-                                Convert.ToByte(key.Value.G * key.Value.A / 255), //Green Register
-                                Convert.ToByte(key.Value.B * key.Value.A / 255), //Blue Register
-                                Convert.ToByte(_deviceMap[d].led)
-                            });
+                            commandIndex++;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 1] = 1;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 2] = 10;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 3] = Convert.ToByte(key.Value.R * key.Value.A / 255);
+                            _commandDataPacket[(commandIndex - 1) * 6 + 4] = Convert.ToByte(key.Value.G * key.Value.A / 255);
+                            _commandDataPacket[(commandIndex - 1) * 6 + 5] = Convert.ToByte(key.Value.B * key.Value.A / 255);
+                            _commandDataPacket[(commandIndex - 1) * 6 + 6] = Convert.ToByte(_deviceMap[d].led);
 
                             if (key.Value != _deviceMap[d].color)
                             {
@@ -287,8 +285,17 @@ namespace Aurora.Devices.RGBFusion
                         // Send changes to device only if device actually changed.
                         if (_deviceChanged)
                         {
-                            SendCommandToRGBFusion(new byte[] { 2, 0, 0, 0, 0, 0 }); // Command code 2 is used to apply changes.
+                            commandIndex++;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 1] = 2;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 2] = 0;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 3] = 0;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 4] = 0;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 5] = 0;
+                            _commandDataPacket[(commandIndex - 1) * 6 + 6] = 0;
+                            _commandDataPacket[0] = commandIndex;
+                            SendCommandToRGBFusion(_commandDataPacket);
                         }
+                        commandIndex = 0;
                         _deviceChanged = false;
                     }
                 }
@@ -391,8 +398,7 @@ namespace Aurora.Devices.RGBFusion
                     Global.logger.Error(String.Format("File {0} not installed.", file.Key));
                     error = true;
                 }
-
-                if (CalculateMD5(_RGBFusionDirectory + file.Key) != file.Value)
+                else if (CalculateMD5(_RGBFusionDirectory + file.Key).ToLower() != file.Value.ToLower())
                 {
                     Global.logger.Error(String.Format("File {0} MD5 incorrect.", file.Key));
                     error = true;
