@@ -181,7 +181,7 @@ namespace Aurora.Devices.RGBFusion
             {
                 var devKeysEnumAsEnumerable = System.Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
                 _variableRegistry = new VariableRegistry();
-                _variableRegistry.Register($"{_devicename}_ignore_leds", "0,8,9", "Area index to be ignored by RGBFusion Bridge", null, null, "Comma separated. Require Aurora restart.");
+                _variableRegistry.Register($"{_devicename}_ignore_leds", "", "Area index to be ignored by RGBFusion Bridge", null, null, "Comma separated. Require Aurora restart.");
                 foreach (byte ledIndex in _rgbFusionLedIndexes)
                 {
                     _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min(), "Require Aurora restart.");
