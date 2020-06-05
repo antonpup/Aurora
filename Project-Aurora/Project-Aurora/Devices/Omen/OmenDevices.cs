@@ -98,6 +98,8 @@ namespace Aurora.Devices.Omen
                         peripheralConnected = true;
                     }
 
+                    devices.Add(new OmenFourZoneLighting());
+
                     Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
 
                     isInitialized = true;

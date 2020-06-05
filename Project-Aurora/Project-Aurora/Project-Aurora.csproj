@@ -177,6 +177,7 @@
       <DependentUpon>Window_Prompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Omen\IOmenDevice.cs" />
+    <Compile Include="Devices\Omen\OmenFourZoneLighting.cs" />
     <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
