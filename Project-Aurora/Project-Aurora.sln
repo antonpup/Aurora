@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A759300D-9550-47BA-8616-C24B6BC05A02} = {A759300D-9550-47BA-8616-C24B6BC05A02}
 		{40085232-ACED-4CBE-945B-90BA8153C151} = {40085232-ACED-4CBE-945B-90BA8153C151}
