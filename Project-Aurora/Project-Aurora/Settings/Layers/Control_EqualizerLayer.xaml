@@ -45,11 +45,11 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Width="800" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left">
+    <Grid Width="700" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1.5*" />
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width=".5*" />
+            <ColumnDefinition Width=".75*" />
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.ColumnDefinitions>
@@ -114,9 +114,9 @@
                 <RowDefinition Height="28px" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width=".5*" />
-                <ColumnDefinition Width=".4*" />
-                <ColumnDefinition Width=".1*" />
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="22px" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Margin="3" HorizontalAlignment="Left" Text="Frequencies" />
