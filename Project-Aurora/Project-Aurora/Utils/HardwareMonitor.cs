@@ -77,23 +77,25 @@ namespace Aurora.Utils
 
         private static ISensor FindSensor(this IHardware hardware, string identifier)
         {
-            var result = Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
+            var result = hardware.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.Identifier.ToString().Contains(identifier));
             if (result is null)
             {
                 Global.logger.Error(
                     $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
             }
+            result.ValuesTimeWindow = TimeSpan.FromSeconds(2);
             return result;
         }
 
         private static ISensor FindSensor(this IHardware hardware, SensorType type)
         {
-            var result = Array.Find(hardware.Sensors, s => s.SensorType == type);
+            var result = hardware.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.SensorType == type);
             if (result is null)
             {
                 Global.logger.Error(
                     $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hardware.Name} of type {hardware.HardwareType}.");
             }
+            result.ValuesTimeWindow = TimeSpan.FromSeconds(2);
             return result;
         }
 
@@ -119,7 +121,9 @@ namespace Aurora.Utils
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
-                        hw.Update();
+                        hw?.Update();
+                    if (_updateTimer.Interval != Global.Configuration.HardwareMonitorUpdateRate)
+                        _updateTimer.Interval = Global.Configuration.HardwareMonitorUpdateRate;
                 };
                 _updateTimer.Start();
             }
@@ -129,6 +133,8 @@ namespace Aurora.Utils
                 inUse = true;
                 _useTimer.Stop();
                 _useTimer.Start();
+                if (sensor.Values.Any() && Global.Configuration.HardwareMonitorUseAverageValues)
+                    return sensor?.Values?.Average(v => v.Value) ?? 0;
                 return sensor?.Value ?? 0;
             }
 

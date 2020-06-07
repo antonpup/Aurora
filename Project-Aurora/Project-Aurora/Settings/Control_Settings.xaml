@@ -178,6 +178,11 @@
                     <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+                    <CheckBox Content="Use average CPU/GPU usage values instead of instant values" ToolTip="This is used to smoothen the harware sensor values, in case the changes are too sudden" HorizontalAlignment="Left" Margin="12,278,0,0" VerticalAlignment="Top" IsChecked="{Binding HardwareMonitorUseAverageValues}" />
+                    <TextBlock HorizontalAlignment="Left" Margin="12,300,0,0" TextWrapping="Wrap" Text="Hardware sensors update rate:" VerticalAlignment="Top" />
+                    <xctk:IntegerUpDown HorizontalAlignment="Left" Height="24" Margin="180,300,0,0" VerticalAlignment="Top" Width="50" Value="{Binding HardwareMonitorUpdateRate}" Maximum="2000" Minimum="100" MouseWheelActiveOnFocus="True" />
+
                 </Grid>
             </TabItem>
             <TabItem Header="Away Effects">
