@@ -130,7 +130,7 @@
                     <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
                     <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Application Preview" HorizontalAlignment="Left" Margin="12,62,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
                     <TextBlock HorizontalAlignment="Left" Margin="11,230,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="12,254,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="11,254,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
                     <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,205,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
                     <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="199" Margin="512,139,0,0" VerticalAlignment="Top" Width="160"/>
                     <TextBlock Text="Excluded Processes" HorizontalAlignment="Left" Margin="512,117,0,0" VerticalAlignment="Top" Width="113"/>
@@ -178,6 +178,10 @@
                     <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+                    <TextBlock HorizontalAlignment="Left" Margin="12,278,0,0" TextWrapping="Wrap" Text="Hardware sensors update rate:" VerticalAlignment="Top" ToolTip="Used for CPU and GPU usage, etc"/>
+                    <xctk:IntegerUpDown HorizontalAlignment="Left" Height="24" Margin="178,278,0,0" VerticalAlignment="Top" Width="50" Value="{Binding HardwareMonitorUpdateRate}" Maximum="2000" Minimum="100" MouseWheelActiveOnFocus="True" />
+
                 </Grid>
             </TabItem>
             <TabItem Header="Away Effects">
