@@ -28,7 +28,10 @@ namespace Aurora.Devices.Asus.Config
         public AsusConfigWindow()
         {
             if (windowOpen)
+            {
                 Close();
+                return;
+            }
             
             windowOpen = true;
             InitializeComponent();
@@ -122,6 +125,12 @@ namespace Aurora.Devices.Asus.Config
             selectedDevice = index;
             keys.Clear();
 
+            for (int i = 0; i < AsusDeviceList.Children.Count; i++)
+            {
+                if (AsusDeviceList.Children[i] is Button button) 
+                    button.IsEnabled = i != index;
+            }
+
             // Rebuild the key area
             AsusDeviceKeys.Children.Clear();
             var device = devices[index];
@@ -140,6 +149,8 @@ namespace Aurora.Devices.Asus.Config
                 keyControl.KeyIdValue.Text = i.ToString();
                 if (configDevice.HasValue && configDevice.Value.KeyMapper.TryGetValue(i, out var deviceKey))
                     keyControl.DeviceKey.SelectedValue = deviceKey;
+                else
+                    keyControl.DeviceKey.SelectedValue = DeviceKeys.NONE;
                 
                 keys.Add(keyControl);
                 
@@ -160,26 +171,31 @@ namespace Aurora.Devices.Asus.Config
                 tokenSource.Cancel();
             
             tokenSource = new CancellationTokenSource();
-            for (int i = 0; i < BlinkCount; i++)
+            var token = tokenSource.Token;
+            try
             {
-                if (tokenSource.IsCancellationRequested || device == null)
-                    return;
-                
-                // set everything to black
-                foreach (IAuraRgbLight light in device.Lights)
-                    light.Color = 0;
-                
-                // set this one key to white
-                if (i % 2 == 1)
+                for (int i = 0; i < BlinkCount; i++)
                 {
-                    device.Lights[lightId].Red = 255;
-                    device.Lights[lightId].Green = 255;
-                    device.Lights[lightId].Blue = 255;
+                    if (token.IsCancellationRequested || device == null)
+                        return;
+
+                    // set everything to black
+                    foreach (IAuraRgbLight light in device.Lights)
+                        light.Color = 0;
+
+                    // set this one key to white
+                    if (i % 2 == 1)
+                    {
+                        device.Lights[lightId].Red = 255;
+                        device.Lights[lightId].Green = 255;
+                        device.Lights[lightId].Blue = 255;
+                    }
+
+                    device.Apply();
+                    await Task.Delay(200, token); // ms
                 }
-                
-                device.Apply();
-                await Task.Delay(200); // ms
             }
+            catch { }
         }
         
         private void SaveDevice()
@@ -244,6 +260,18 @@ namespace Aurora.Devices.Asus.Config
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveToFile();
+        }
+        
+        private void SetAllNone_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var key in keys)
+                key.DeviceKey.SelectedValue = DeviceKeys.NONE;
+        }
+        
+        private void SetAllLogo_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var key in keys)
+                key.DeviceKey.SelectedValue = DeviceKeys.Peripheral_Logo;
         }
         #endregion
     }

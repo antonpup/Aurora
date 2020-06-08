@@ -157,11 +157,11 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" Grid.Row="0" Grid.Column="0"/>
-                    <Slider Value="{Binding Properties._BrightnessChange}" x:Name="BrightnessSlider" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" Minimum="-0.5" Maximum="0.5" TickFrequency="0.1" Grid.Row="0" Grid.Column="1"/>
+                    <Slider Value="{Binding Properties._BrightnessChange}" x:Name="BrightnessSlider" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" Minimum="0" Maximum="3" TickFrequency="0.1" Grid.Row="0" Grid.Column="1"/>
                     <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" ContentStringFormat="N1" Grid.Row="0" Grid.Column="2" />
 
                     <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:"  Grid.Row="1" Grid.Column="0"/>
-                    <Slider Value="{Binding Properties._SaturationChange}" x:Name="SaturationSlider" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}" Minimum="0" Maximum="4" TickFrequency="0.1" Grid.Row="1" Grid.Column="1"/>
+                    <Slider Value="{Binding Properties._SaturationChange}" x:Name="SaturationSlider" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}" Minimum="0" Maximum="3" TickFrequency="0.1" Grid.Row="1" Grid.Column="1"/>
                     <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" ContentStringFormat="N1" Grid.Row="1" Grid.Column="2"/>
 
                     <CheckBox IsChecked="{Binding Properties._HueShiftImage}" x:Name="EnableHueMod" Content="Hue:" Grid.Row="2" Grid.Column="0"/>

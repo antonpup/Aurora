@@ -145,7 +145,14 @@ namespace Aurora.Settings
         {
             foreach (var plugin in this.Plugins)
             {
-                plugin.Value.ProcessManager(manager);
+                try
+                {
+                    plugin.Value.ProcessManager(manager);
+                }
+                catch(Exception e)
+                {
+                    Global.logger.Error($"Failed to load plugin {plugin.Key}: {e.Message}");
+                }
             }
         }
 
