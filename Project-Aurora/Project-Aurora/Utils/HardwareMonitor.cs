@@ -77,7 +77,7 @@ namespace Aurora.Utils
 
         private static ISensor FindSensor(this IHardware hardware, string identifier)
         {
-            var result = Array.Find(hardware.Sensors, s => s.Identifier.ToString().Contains(identifier));
+            var result = hardware.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.Identifier.ToString().Contains(identifier));
             if (result is null)
             {
                 Global.logger.Error(
@@ -88,7 +88,7 @@ namespace Aurora.Utils
 
         private static ISensor FindSensor(this IHardware hardware, SensorType type)
         {
-            var result = Array.Find(hardware.Sensors, s => s.SensorType == type);
+            var result = hardware.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.SensorType == type);
             if (result is null)
             {
                 Global.logger.Error(
@@ -119,7 +119,9 @@ namespace Aurora.Utils
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
-                        hw.Update();
+                        hw?.Update();
+                    if (_updateTimer.Interval != Global.Configuration.HardwareMonitorUpdateRate)
+                        _updateTimer.Interval = Global.Configuration.HardwareMonitorUpdateRate;
                 };
                 _updateTimer.Start();
             }
@@ -129,14 +131,8 @@ namespace Aurora.Utils
                 inUse = true;
                 _useTimer.Stop();
                 _useTimer.Start();
-                return sensor?.Value ?? 0;
-            }
 
-            public void SetUpdateTimer(int interval)
-            {
-                _updateTimer.Interval = interval;
-                _updateTimer.Stop();
-                _updateTimer.Start();
+                return sensor?.Value ?? 0;
             }
         }
 
