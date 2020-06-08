@@ -346,7 +346,7 @@ namespace Aurora.Settings.Layers
                     break;
 
                 case AmbilightType.AverageColor:
-                    var average = BitmapUtils.GetAverageColor(screen);
+                    var average = BitmapUtils.GetRegionColor(screen, cropRegion);
 
                     if (Properties.BrightenImage)
                         average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);

@@ -13,6 +13,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.ServiceModel.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -175,6 +177,8 @@ namespace Aurora.Settings.Layers
 
         private float[] previous_freq_results = null;
 
+        private bool first = true;
+
         public EqualizerLayerHandler()
         {
             _ffts = new Complex[fftLength];
@@ -193,11 +197,34 @@ namespace Aurora.Settings.Layers
         {
             try
             {
+                //this initialization has to be done on this method 
+                //because of threading issues with the NAudio stuff.
+                //it should only be done once, so we set this bool to true right after.
+                //should prevent the layer from spamming the log with errors and throwing
+                //exceptions left and right if the users has nahimic drivers installed
+                if (first)
+                {
+                    try
+                    {
+                        DeviceProxy.DeviceId = Properties.DeviceId;
+                    }
+                    catch (COMException e)
+                    {
+                        Global.logger.Error("Error binding to audio device in the audio visualizer layer. This is probably caused by an incompatibility with audio software: " + e);
+                    }
+                    first = false;
+                }
+
+                EffectLayer equalizer_layer = new EffectLayer();
+
+                if (deviceProxy is null)
+                    return equalizer_layer;
+
                 // Update device ID. If it has changed, it will re-assign itself to the new device
                 DeviceProxy.DeviceId = Properties.DeviceId;
 
                 // The system sound as a value between 0.0 and 1.0
-                float system_sound_normalized = DeviceProxy.Device?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 1f;
+                float system_sound_normalized = DeviceProxy.Device?.AudioMeterInformation?.MasterPeakValue ?? 1f;
 
                 // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
                 // Replaces all Properties.MaxAmplitude calls with the scaled value
@@ -213,8 +240,6 @@ namespace Aurora.Settings.Layers
                 //Maintain local copies of fft, to prevent data overwrite
                 Complex[] _local_fft = new List<Complex>(_ffts).ToArray();
                 Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
-
-                EffectLayer equalizer_layer = new EffectLayer();
 
                 bool BgEnabled = false;
                 switch (Properties.BackgroundMode)
@@ -419,7 +444,7 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            DeviceProxy?.Dispose();
+            deviceProxy?.Dispose();
             deviceProxy = null;
         }
     }
