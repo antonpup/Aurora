@@ -83,7 +83,6 @@ namespace Aurora.Utils
                 Global.logger.Error(
                     $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
             }
-            result.ValuesTimeWindow = TimeSpan.FromSeconds(2);
             return result;
         }
 
@@ -95,7 +94,6 @@ namespace Aurora.Utils
                 Global.logger.Error(
                     $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hardware.Name} of type {hardware.HardwareType}.");
             }
-            result.ValuesTimeWindow = TimeSpan.FromSeconds(2);
             return result;
         }
 
@@ -133,16 +131,8 @@ namespace Aurora.Utils
                 inUse = true;
                 _useTimer.Stop();
                 _useTimer.Start();
-                if (sensor.Values.Any() && Global.Configuration.HardwareMonitorUseAverageValues)
-                    return sensor?.Values?.Average(v => v.Value) ?? 0;
-                return sensor?.Value ?? 0;
-            }
 
-            public void SetUpdateTimer(int interval)
-            {
-                _updateTimer.Interval = interval;
-                _updateTimer.Stop();
-                _updateTimer.Start();
+                return sensor?.Value ?? 0;
             }
         }
 
