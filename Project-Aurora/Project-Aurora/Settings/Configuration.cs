@@ -498,6 +498,7 @@ namespace Aurora.Settings
 
         //Hardware Monitor
         public int HardwareMonitorUpdateRate { get; set; } = 300;
+        public bool HardwareMonitorUseAverageValues { get; set; } = true;
 
         public VariableRegistry VarRegistry;
 
