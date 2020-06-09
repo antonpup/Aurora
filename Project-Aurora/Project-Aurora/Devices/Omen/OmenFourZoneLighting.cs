@@ -42,7 +42,6 @@ namespace Aurora.Devices.Omen
             }
             catch (Exception err)
             {
-                //Console.WriteLine("WmiCommand.Execute occurs exception: " + err);
                 Global.logger.Error("OMEN Four zone lighting - WmiCommand.Execute occurs exception: " + err);
                 return -1;
             }
