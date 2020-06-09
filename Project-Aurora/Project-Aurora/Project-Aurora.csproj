@@ -602,8 +602,8 @@
     <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
       <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_Latch.cs" />
-    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_NumericChangeDetector.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_FlipFlop.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ChangeDetector.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ProcessRunning.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_TrueExtender.cs" />

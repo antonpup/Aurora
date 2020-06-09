@@ -1,6 +1,7 @@
 ﻿using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -48,7 +49,8 @@ namespace Aurora.Profiles {
 
         private MMDevice RenderDevice {
             get {
-                renderProxy.DeviceId = Global.Configuration.GSIAudioRenderDevice;
+                if (renderProxy != null)
+                    renderProxy.DeviceId = Global.Configuration.GSIAudioRenderDevice;
                 return renderProxy?.Device;
             }
         }
@@ -150,9 +152,16 @@ namespace Aurora.Profiles {
 
         static LocalPCInformation() {
             // Do not create a capture device if audio capture is disabled. Otherwise it will create a mic icon in win 10 and people will think we're spies.
-            if (Global.Configuration.EnableAudioCapture)
-                captureProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioCaptureDevice, DataFlow.Capture);
-            renderProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioRenderDevice, DataFlow.Render);
+            try
+            {
+                if (Global.Configuration.EnableAudioCapture)
+                    captureProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioCaptureDevice, DataFlow.Capture);
+                renderProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioRenderDevice, DataFlow.Render);
+            }
+            catch(COMException e)
+            {
+                Global.logger.Error("Error initializing audio device proxy in LocalPCInfo, this is probably caused by an incompatible audio software: " + e);
+            }
         }
     }
 
