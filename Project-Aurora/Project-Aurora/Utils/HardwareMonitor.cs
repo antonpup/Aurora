@@ -57,7 +57,7 @@ namespace Aurora.Utils
                 lines.Add("-----");
                 lines.Add(hw.Name);
                 lines.Add("Sensors:");
-                foreach (var sensor in hw.Sensors.OrderBy(s => s.SensorType))
+                foreach (var sensor in hw.Sensors.OrderBy(s => s.Identifier))
                 {
                     lines.Add($"Name: {sensor.Name}, Id: {sensor.Identifier}, Type: {sensor.SensorType}");
                 }
