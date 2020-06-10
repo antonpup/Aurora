@@ -17,7 +17,7 @@ namespace Aurora.EffectsEngine
         protected System.Drawing.Brush _drawingBrush = null;
         protected System.Windows.Media.Brush _mediaBrush = null;
 
-        protected System.Windows.Media.GradientStopCollection GetGradientStopCollection()
+        public System.Windows.Media.GradientStopCollection GetGradientStopCollection()
         {
             System.Windows.Media.GradientStopCollection collection = new System.Windows.Media.GradientStopCollection();
 
@@ -80,7 +80,7 @@ namespace Aurora.EffectsEngine
             return new System.Drawing.Color();
         }
 
-        public abstract System.Drawing.Brush GetDrawingBrush(float shift = 0, float window_size = 0);
+        public abstract System.Drawing.Brush GetDrawingBrush(float shift = 0, System.Drawing.Rectangle rect = new System.Drawing.Rectangle());
 
         public abstract System.Windows.Media.Brush GetMediaBrush();
 
@@ -170,7 +170,7 @@ namespace Aurora.EffectsEngine
             CheckColorGradients();
         }
 
-        public override System.Drawing.Brush GetDrawingBrush(float shift, float window_size)
+        public override System.Drawing.Brush GetDrawingBrush(float shift, System.Drawing.Rectangle rect)
         {
             if (true/*_drawingbrush == null*/)
             {
@@ -269,7 +269,7 @@ namespace Aurora.EffectsEngine
             CheckColorGradients();
         }
 
-        public override System.Drawing.Brush GetDrawingBrush(float shift = 0, float window_size = 0)
+        public override System.Drawing.Brush GetDrawingBrush(float shift, System.Drawing.Rectangle rect)
         {
             if (true/*_drawingbrush == null*/)
             {
@@ -281,13 +281,15 @@ namespace Aurora.EffectsEngine
                 else
                 {
                     double angle = (Angle) / 360.0 * 2 * Math.PI;
-                    float sin = (float)Math.Sin(angle)/2; //* (1 / SampleWindowSize)/2;
-                    float cos = (float)Math.Cos(angle)/2;// * (1 / SampleWindowSize)/2;
-                    float move = shift;// + (float)(Math.Sin((Angle + 45) % 90 * 2 / 360.0 * 2 * Math.PI) * (Math.Sqrt(2) - 1)) * shift;
-
+                    float sin = (float)Math.Sin(angle); //* (1 / SampleWindowSize)/2;
+                    float cos = (float)Math.Cos(angle);// * (1 / SampleWindowSize)/2;
+                    double angle2 = (Angle)%90 / 360.0 * 2 * Math.PI;
+                    float move = shift;// (float)(Math.Cos(angle2) > Math.Sin(angle2) ? shift / Math.Cos(angle2) : shift /  Math.Sin(angle2));// + (float)(Math.Sin((Angle + 45) % 90 * 2 / 360.0 * 2 * Math.PI) * (Math.Sqrt(2) - 1)) * shift;
+                    var start = new System.Drawing.PointF(move * (1 / SampleWindowSize), 0f);
+                    var end = new System.Drawing.PointF((move + 1) * (1 / SampleWindowSize), 0f);
                     System.Drawing.Drawing2D.LinearGradientBrush brush = new System.Drawing.Drawing2D.LinearGradientBrush(
-                        new System.Drawing.PointF(move * (1 / SampleWindowSize), move * (1 / SampleWindowSize)),
-                        new System.Drawing.PointF((move + cos) * (1 / SampleWindowSize), (move + sin) * (1 / SampleWindowSize)),
+                        start,
+                        end,
                         System.Drawing.Color.Red,
                         System.Drawing.Color.Red
                         );
@@ -307,6 +309,13 @@ namespace Aurora.EffectsEngine
                     brush.InterpolationColors = color_blend;
 
                     brush.WrapMode = System.Drawing.Drawing2D.WrapMode.Tile;
+
+                    if(!rect.IsEmpty)
+                    {
+                        brush.TranslateTransform(rect.X, rect.Y);
+                        brush.ScaleTransform(rect.Width, rect.Height);
+                    }
+                    brush.RotateTransform((float)Angle);
                     _drawingBrush = brush;
                 }
             }
@@ -340,7 +349,6 @@ namespace Aurora.EffectsEngine
                         break;
                 }*/
                 brush.SpreadMethod = System.Windows.Media.GradientSpreadMethod.Repeat;
-
                 _mediaBrush = brush;
             }
 
@@ -464,12 +472,12 @@ namespace Aurora.EffectsEngine
             }
             return gradients;
         }
-        public override System.Drawing.Brush GetDrawingBrush(float shift, float window_size)
+        public override System.Drawing.Brush GetDrawingBrush(float shift, System.Drawing.Rectangle rect)
         {
             if (true/*_drawingbrush == null*/)
             {
                 System.Drawing.Drawing2D.GraphicsPath g_path = new System.Drawing.Drawing2D.GraphicsPath();
-                g_path.AddEllipse(new System.Drawing.RectangleF(-(float)(Math.Sqrt(2) - 1), -(float)(Math.Sqrt(2) - 1), 2f, 2f));
+                g_path.AddEllipse(new System.Drawing.RectangleF(-(float)(Math.Sqrt(2)/2 - 0.5), -(float)(Math.Sqrt(2)/2 - 0.5), (float)Math.Sqrt(2), (float)Math.Sqrt(2)));
 
                 System.Drawing.Drawing2D.PathGradientBrush brush = new System.Drawing.Drawing2D.PathGradientBrush(
                     g_path
@@ -500,6 +508,12 @@ namespace Aurora.EffectsEngine
                 color_blend.Positions = brush_positions.ToArray();
                 brush.InterpolationColors = color_blend;
 
+                //brush.TranslateTransform(0, -(brush_width - brush_height) / 2);
+                if (!rect.IsEmpty)
+                {
+                    brush.TranslateTransform(rect.X, rect.Y);
+                    brush.ScaleTransform(rect.Width, rect.Height);
+                }
                 _drawingBrush = brush;
             }
 

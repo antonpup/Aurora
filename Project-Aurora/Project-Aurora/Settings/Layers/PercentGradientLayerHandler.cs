@@ -31,13 +31,9 @@ namespace Aurora.Settings.Layers
 
     [LogicOverrideIgnoreProperty("_PrimaryColor")]
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
+    [LayerHandlerMeta(Name = "Percent (Gradient)", IsDefault = true)]
     public class PercentGradientLayerHandler : PercentLayerHandler<PercentGradientLayerHandlerProperties>
     { 
-        public PercentGradientLayerHandler() : base()
-        {
-            _ID = "PercentGradient";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_PercentGradientLayer(this);
@@ -45,8 +41,8 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            double value = Properties.Logic._Value ?? Utils.GameStateUtils.TryGetDoubleFromState(state, Properties.VariablePath);
-            double maxvalue = Properties.Logic._MaxValue ?? Utils.GameStateUtils.TryGetDoubleFromState(state, Properties.MaxVariablePath);
+            double value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
+            double maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 
             return new EffectLayer().PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
         }
@@ -56,10 +52,10 @@ namespace Aurora.Settings.Layers
             if (profile != null)
             {
                 double value;
-                if (!double.TryParse(Properties._VariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._VariablePath) && !profile.ParameterLookup.ContainsKey(Properties._VariablePath))
+                if (!double.TryParse(Properties._VariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._VariablePath) && !profile.ParameterLookup.IsValidParameter(Properties._VariablePath))
                     Properties._VariablePath = string.Empty;
 
-                if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.ContainsKey(Properties._MaxVariablePath))
+                if (!double.TryParse(Properties._MaxVariablePath, out value) && !string.IsNullOrWhiteSpace(Properties._MaxVariablePath) && !profile.ParameterLookup.IsValidParameter(Properties._MaxVariablePath))
                     Properties._MaxVariablePath = string.Empty;
             }
             (Control as Control_PercentGradientLayer).SetApplication(profile);

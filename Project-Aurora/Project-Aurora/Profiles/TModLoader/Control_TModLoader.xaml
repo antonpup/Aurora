@@ -1,0 +1,27 @@
+<UserControl x:Class="Aurora.Profiles.TModLoader.Control_TModLoader"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings"
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for TModLoader">
+                <StackPanel Margin="10">
+                    <CheckBox x:Name="GameEnabled" Content="Enable Aurora to provide lighting effects with TModLoader. Ensure you have read the below text." Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,10" TextWrapping="Wrap" MaxWidth="824">
+                        <Run Text="Support for Terraria requires a mod so that Aurora is able to fetch the variables from the game. This mod requires TModLoader." />
+                        <Run Text="You can also install the mod through the in-game Mod Browser"/>
+                    </TextBlock>
+                    <Button Content="TModLoader download" HorizontalAlignment="Left" Margin="0,0,0,0" Padding="10,2" Click="GoToTModLoaderPage_Click" Width="224" />
+                    <Button Content="Aurora GSI Mod for Terraria download" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="10,2" Click="GoToModDownloadPage_Click" />
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

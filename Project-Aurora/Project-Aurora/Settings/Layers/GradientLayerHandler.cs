@@ -38,11 +38,6 @@ namespace Aurora.Settings.Layers
     {
         private EffectLayer temp_layer;
 
-        public GradientLayerHandler()
-        {
-            _ID = "Gradient";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_GradientLayer(this);

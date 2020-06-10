@@ -133,12 +133,24 @@ namespace Aurora.Utils
 
             if (CustomDesc.ContainsKey(value as int? ?? 0))
                 return CustomDesc[(int)value];
-
-
+ 
             if (value == null || string.IsNullOrEmpty(value.ToString()) || (value.GetType() != EnumType && value.GetType() != typeof(string)))
                 return DefaultEnum.GetDescription();
+
+            string descriptionString = (this.StringToEnum(EnumType, value.ToString())).GetDescription();
+            if (EnumType == typeof(PreferredKeyboard) && descriptionString.Contains("UNIWILL"))
+            {
+               string _CustomDescription =  CustomDescription(EnumType, descriptionString);
+                if (_CustomDescription != null)
+                    return _CustomDescription;
+             }
+
+
             return (this.StringToEnum(EnumType, value.ToString())).GetDescription();
         }
+
+         
+
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (EnumType == null)
@@ -148,6 +160,42 @@ namespace Aurora.Utils
                 return (Enum)Enum.Parse(EnumType, DefaultEnum.ToString());
             return this.StringToEnum(EnumType, value.ToString());
         }
+   
+    
+        private string CustomDescription(Type EnumType  ,string descriptionString)
+        {
+             
+            try
+            {
+                string oemstring = UniwillSDKDLL.KeyboardFactory.GetOEMName();
+                if (oemstring.Equals("XMG"))
+                {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " FUSION");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " NEO");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " NEO 15");
+                }
+                else
+                {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " 550");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " 35X");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " 650");
+                }
+            }
+            catch
+            {
+                return null;
+            }
+  
+            return null;
+        }
+    
+    
     }
 
     public class DeviceKeysToStringVC : IValueConverter

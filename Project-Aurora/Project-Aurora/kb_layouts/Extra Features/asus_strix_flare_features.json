@@ -1,0 +1,51 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 2,
+  "grouped_keys": [
+    {
+      "visualName": "LOGO",
+      "tag": 128,
+      "margin_left": -177.0,
+      "margin_top": -55,
+      "width": 100.0,
+      "height": 40.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -6,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "R",
+      "tag": 143,
+      "margin_left": 10,
+      "margin_top": 0,
+      "width": 30.0,
+      "height": 160.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -6,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "L",
+      "tag": 142,
+      "margin_left": -860,
+      "margin_top": 0,
+      "width": 30.0,
+      "height": 160.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -6,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

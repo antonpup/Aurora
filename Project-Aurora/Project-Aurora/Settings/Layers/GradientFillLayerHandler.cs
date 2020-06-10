@@ -42,11 +42,6 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientFillLayerHandler : LayerHandler<GradientFillLayerHandlerProperties>
     {
-        public GradientFillLayerHandler()
-        {
-            _ID = "GradientFill";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_GradientFillLayer(this);

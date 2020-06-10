@@ -99,7 +99,7 @@ namespace Aurora.EffectsEngine
             peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
-
+            var brushRect = !rect.IsEmpty ? new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height) : new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
             switch (effect)
             {
                 case LayerEffects.ColorOverlay:
@@ -202,38 +202,10 @@ namespace Aurora.EffectsEngine
 
                     shift = effect_config.shift_amount;
 
-                    float brush_width = !rect.IsEmpty ? rect.Width : Effects.canvas_width;
-                    float brush_height = !rect.IsEmpty ? rect.Height : Effects.canvas_height;
-
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
                     float percent = shift;
-                    brush = effect_config.brush.GetDrawingBrush(percent % 1 , effect_config.gradient_size);
-                    if (brush is LinearGradientBrush linear_brush)
-                    {
-                        linear_brush.ScaleTransform(brush_width, brush_height);
-                        linear_brush.RotateTransform(effect_config.angle);
-                        //linear_brush.TranslateTransform(shift, shift);
-
-                    }
-                    else if (brush is PathGradientBrush radial_brush)
-                    {
-                        /*brush_height *= (float)Math.Sqrt(2);
-                        brush_width *= (float)Math.Sqrt(2);
-                        float x_offset = -(float)(Math.Sqrt(2) - 1) * brush_width / 2;
-                        float y_offset = -(float)(Math.Sqrt(2) - 1) * brush_height / 2;
-
-                        if (!rect.IsEmpty)
-                        {
-                            x_offset += rect.X;
-                            y_offset += rect.Y;
-                        }*/
-                        //radial_brush.TranslateTransform(0, -(brush_width) / 2);
-                        radial_brush.TranslateTransform(0, -(brush_width-brush_height)/2);
-                        radial_brush.ScaleTransform(brush_width, brush_width);
-
-                        radial_brush.WrapMode = WrapMode.Clamp;
-                    }
+                    brush = effect_config.brush.GetDrawingBrush(percent % 1 , brushRect);
 
                     Fill(brush);
 
@@ -296,19 +268,6 @@ namespace Aurora.EffectsEngine
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                /*if(brush is PathGradientBrush)
-                {
-                    GraphicsPath gp = new GraphicsPath();
-                    gp.AddEllipse((brush as PathGradientBrush).Rectangle);
-
-                    g.FillPath(brush, gp);
-                }
-                else
-                {
-                    Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
-                    g.FillRectangle(brush, rect);
-                }
-                */
                 Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
                 g.FillRectangle(brush, rect);
                 needsRender = true;

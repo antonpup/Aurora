@@ -73,7 +73,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
     /// <summary>
     /// Class representing player status
     /// </summary>
-    public class Status : Node<Status>
+    public class Status : Node
     {
         public DateTime timestamp;
         public string @event;

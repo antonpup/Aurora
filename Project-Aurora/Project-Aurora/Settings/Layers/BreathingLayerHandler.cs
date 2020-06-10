@@ -49,11 +49,6 @@ namespace Aurora.Settings.Layers
         private Color current_primary_color = Color.Transparent;
         private Color current_secondary_color = Color.Transparent;
 
-        public BreathingLayerHandler()
-        {
-            _ID = "Breathing";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_BreathingLayer(this);

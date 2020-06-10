@@ -34,10 +34,6 @@ namespace Aurora.Settings.Layers {
 
     public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerProperties> {
 
-        public BinaryCounterLayerHandler() : base() {
-            _ID = "BinaryCounter";
-        }
-
         private Control_BinaryCounterLayer control;
         protected override UserControl CreateControl() => control ?? (control = new Control_BinaryCounterLayer(this));
 
@@ -48,7 +44,7 @@ namespace Aurora.Settings.Layers {
 
         public override EffectLayer Render(IGameState gamestate) {
             // Get the current game state value
-            double value = Properties.Logic._Value ?? Utils.GameStateUtils.TryGetDoubleFromState(gamestate, Properties.VariablePath);
+            double value = Properties.Logic._Value ?? gamestate.GetNumber(Properties.VariablePath);
 
             // Set the active key
             var layer = new EffectLayer("BinaryCounterCustomLayer");

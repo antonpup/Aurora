@@ -105,11 +105,6 @@ namespace Aurora.Profiles.Payday_2.Layers
         private float no_return_flashamount = 1.0f;
         private float no_return_timeleft;
 
-        public PD2BackgroundLayerHandler() : base()
-        {
-            _ID = "PD2Background";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_PD2BackgroundLayer(this);

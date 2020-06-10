@@ -374,8 +374,8 @@ namespace ColorBox
 
         public static readonly DependencyProperty MediaBrushProperty =
             DependencyProperty.Register("MediaBrush", typeof(Brush), typeof(ColorBox)
-            , new FrameworkPropertyMetadata(null, new PropertyChangedCallback(MediaBrushChangedInternal)));
-        static void MediaBrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
+            , new FrameworkPropertyMetadata(null));//, new PropertyChangedCallback(MediaBrushChangedInternal)));
+        /*static void MediaBrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox c = property as ColorBox;
             Brush brush = args.NewValue as Brush;
@@ -398,12 +398,7 @@ namespace ColorBox
                 {
                     LinearGradientBrush lgb = brush as LinearGradientBrush;
                     //c.Opacity = lgb.Opacity;
-                    /* c.StartX = lgb.StartPoint.X;
-                     c.StartY = lgb.StartPoint.Y;
-                     c.EndX = lgb.EndPoint.X;
-                     c.EndY = lgb.EndPoint.Y;
-                     c.MappingMode = lgb.MappingMode;
-                     c.SpreadMethod = lgb.SpreadMethod;*/
+
                     c.Gradients = new ObservableCollection<GradientStop>(lgb.GradientStops);
                     c.BrushType = BrushTypes.Linear;
                     //c.Color = lgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
@@ -411,20 +406,10 @@ namespace ColorBox
                 }
                 else
                 {
-                    /*
-                    c.BrushType = BrushTypes.Solid;
-                    c.Color = Color.FromArgb(255, 255, 0, 0);
-                    */
+
 
                     RadialGradientBrush rgb = brush as RadialGradientBrush;
-                    /*c.GradientOriginX = rgb.GradientOrigin.X;
-                    c.GradientOriginY = rgb.GradientOrigin.Y;
-                    c.RadiusX = rgb.RadiusX;
-                    c.RadiusY = rgb.RadiusY;
-                    c.CenterX = rgb.Center.X;
-                    c.CenterY = rgb.Center.Y;
-                    c.MappingMode = rgb.MappingMode;
-                    c.SpreadMethod = rgb.SpreadMethod;*/
+
                     c.Gradients = new ObservableCollection<GradientStop>(rgb.GradientStops);
                     c.BrushType = BrushTypes.Radial;
                     //c.Color = rgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
@@ -438,19 +423,16 @@ namespace ColorBox
             {
                 c.RaiseBrushChangedEvent((Brush)args.NewValue);
             }
-        }
+        }*/
         public EffectBrush Brush
         {
             get { return (EffectBrush)GetValue(BrushProperty); }
-            set {
-                SetValue(BrushProperty, value);
-                SetValue(MediaBrushProperty, value.MediaBrush);
-            }
+            set { SetValue(BrushProperty, value); }
         }
         public static readonly DependencyProperty BrushProperty =
             DependencyProperty.Register("Brush", typeof(EffectBrush), typeof(ColorBox)
-            , new FrameworkPropertyMetadata(null));//, new PropertyChangedCallback(BrushChangedInternal)));
-        /*static void BrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
+            , new FrameworkPropertyMetadata(null, new PropertyChangedCallback(BrushChangedInternal)));
+        static void BrushChangedInternal(DependencyObject property, DependencyPropertyChangedEventArgs args)
         {
             ColorBox c = property as ColorBox;
             EffectBrush brush = args.NewValue as EffectBrush;
@@ -464,43 +446,41 @@ namespace ColorBox
                     c.BrushType = BrushTypes.Solid;
                     c.Color = Color.FromArgb(255, 255, 0, 0);
                 }
-                else if (brush is SolidEffectBrush)
+                else if (brush is SolidEffectBrush seb)
                 {
                     c.BrushType = BrushTypes.Solid;
-                    c.Color = ColorExt.ToMediaColor(brush.colorGradients[0]);
+                    c.Color = seb.GetGradientStopCollection()[0].Color;
                 }
-                else if (brush is LinearEffectBrush lgb)
+                else if (brush is LinearEffectBrush leb)
                 {
-
-                    c.SpreadMethod = lgb.wrap;                       
-                    c.Gradients = new ObservableCollection<GradientStop>(lgb.GetGradientStops());
+                   
+                    c.Gradients = new ObservableCollection<GradientStop>(leb.GetGradientStopCollection());
                     c.BrushType = BrushTypes.Linear;
-                    //c.SampleWindowSize = lgb.SampleWindowSize;
-                    //c.Color = lgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
-                    //c.SelectedGradient = lgb.GradientStops.OrderBy(x => x.Offset).Last();
+                    c.Angle = leb.Angle;
+                    c.SampleWindowSize = leb.SampleWindowSize;
                 }
                 else
                 {
 
-                    RadialEffectBrush rgb = brush as RadialEffectBrush;
+                    RadialEffectBrush reb = brush as RadialEffectBrush;
 
-                    //c.SampleWindowSize = rgb.SampleWindowSize;
-                    c.SpreadMethod = rgb.wrap;
-                    c.Gradients = new ObservableCollection<GradientStop>(rgb.GetGradientStops());
+                    c.Gradients = new ObservableCollection<GradientStop>(reb.GetGradientStopCollection());
+                    c.SampleWindowSize = reb.SampleWindowSize;
                     c.BrushType = BrushTypes.Radial;
+                    c.CenterX = reb.Center.X;
+                    c.CenterY = reb.Center.Y;
                     //c.Color = rgb.GradientStops.OrderBy(x => x.Offset).Last().Color;
                     //c.SelectedGradient = rgb.GradientStops.OrderBy(x => x.Offset).Last();
                     
                 }
-
                 c._BrushTypeSetInternally = false;
             }
             else
             {
                 c.RaiseBrushChangedEvent(((EffectBrush)args.NewValue).MediaBrush);
             }
-            //c.MediaBrush = brush.GetMediaBrush();
-        }   */     
+            c.MediaBrush = brush.MediaBrush;
+        }       
 
         public Color Color
         {

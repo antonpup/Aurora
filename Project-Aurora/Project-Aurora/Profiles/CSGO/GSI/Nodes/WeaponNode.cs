@@ -12,7 +12,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// A class representing weapon information
     /// </summary>
-    public class WeaponNode : Node<WeaponNode>
+    public class WeaponNode : Node
     {
         /// <summary>
         /// Weapon's name

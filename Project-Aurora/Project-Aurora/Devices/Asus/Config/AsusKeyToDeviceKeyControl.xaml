@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="Aurora.Devices.Asus.Config.AsusKeyToDeviceKeyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:devices="clr-namespace:Aurora.Devices"
+             mc:Ignorable="d" 
+             d:DesignHeight="22" d:DesignWidth="240">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="DeviceKeyEnum" MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="devices:DeviceKeys"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock Name="KeyIdText" Text="Key ID" VerticalAlignment="Center" Padding="10,0,10,0"/>
+        <TextBlock Name="KeyIdValue" Text="0" Padding="0,0,10,0" VerticalAlignment="Center"/>
+        <Button Content="Test" Padding="10,0,10,0" ToolTip="This will blink the key on the keyboard" Click="TestBlink"/>
+        <ComboBox Name="DeviceKey" ItemsSource="{Binding Source={StaticResource DeviceKeyEnum}}"/>
+    </DockPanel>
+</UserControl>

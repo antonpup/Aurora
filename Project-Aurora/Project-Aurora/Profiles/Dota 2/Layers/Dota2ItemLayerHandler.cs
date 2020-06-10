@@ -337,11 +337,6 @@ namespace Aurora.Profiles.Dota_2.Layers
             { "regen", Color.FromArgb(146, 85, 183) }
         };
 
-        public Dota2ItemLayerHandler() : base()
-        {
-            _ID = "Dota2Items";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_Dota2ItemLayer(this);
