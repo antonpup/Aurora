@@ -9,7 +9,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing information about player's weapons
     /// </summary>
-    public class WeaponsNode : Node<WeaponsNode>
+    public class WeaponsNode : Node
     {
         private List<WeaponNode> _Weapons = new List<WeaponNode>();
 

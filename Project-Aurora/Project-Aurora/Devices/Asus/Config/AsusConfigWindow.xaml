@@ -1,0 +1,51 @@
+﻿<Window x:Class="Aurora.Devices.Asus.Config.AsusConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:config="clr-namespace:Aurora.Devices.Asus.Config"
+        Title="Asus Config" Height="350" Width="525">
+    <Grid Name="MainGrid" Background="#FF111111">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width = "*"/>
+            <ColumnDefinition Width = "5"/>
+            <ColumnDefinition Width = "*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel
+            Grid.Column="0">
+            <Button Name="ReloadButton" Content="Reload Devices" DockPanel.Dock="Top" Click="ReloadButton_Click" />
+            <Separator DockPanel.Dock="Top" Height="10"/>
+            <ScrollViewer>
+                <DockPanel
+                    VerticalAlignment="Stretch"
+                    Height="auto">
+                    <StackPanel Orientation="Vertical" Name="AsusDeviceList">
+                        <Button Content=""></Button>
+                    </StackPanel>
+                </DockPanel>
+            </ScrollViewer>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1">
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        </StackPanel>
+        <DockPanel
+            Grid.Column="2">
+            <Button Name="SaveButton" Content="Save" DockPanel.Dock="Top" Click="SaveButton_Click"/>
+            <Separator DockPanel.Dock="Top" Height="10"/>
+            <ScrollViewer>
+                <DockPanel
+                    VerticalAlignment="Stretch"
+                    Height="auto">
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" > 
+                            <CheckBox Content="Enabled" Name="DeviceEnabledCheckBox" IsChecked="False"/>
+                            <Button Name="SetAllNone" Content="Set All None" DockPanel.Dock="Top" Click="SetAllNone_Click" ToolTip="Set all of the lights to NONE"/>
+                            <Button Name="SetAllLogo" Content="Set All Logo" DockPanel.Dock="Top" Click="SetAllLogo_Click" ToolTip="Set all of the lights to PERIPHERAL_LOGO"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Name="AsusDeviceKeys">
+                            <config:AsusKeyToDeviceKeyControl/>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</Window>

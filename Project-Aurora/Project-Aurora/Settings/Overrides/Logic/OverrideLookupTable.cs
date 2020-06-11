@@ -79,9 +79,9 @@ namespace Aurora.Settings.Overrides.Logic {
             public object Value { get; set; }
 
             /// <summary>A boolean condition that should be met for this entry to be valid.</summary>
-            public IEvaluatable<bool> Condition { get; set; }
+            public Evaluatable<bool> Condition { get; set; }
             
-            public LookupTableEntry(object value, IEvaluatable<bool> condition) {
+            public LookupTableEntry(object value, Evaluatable<bool> condition) {
                 Value = value;
                 Condition = condition;
             }

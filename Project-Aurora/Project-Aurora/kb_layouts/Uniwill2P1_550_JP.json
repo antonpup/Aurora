@@ -1,0 +1,223 @@
+﻿{
+  "keys_to_remove": [
+    14,
+    15,
+    16,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    73,74,75,
+    90,91,92,93,
+    99,
+    100,
+    105,
+    106,
+    153
+
+  ],
+  "key_modifications": {
+    "2": {
+      "tag": 2,
+      "margin_left": 7.0
+    },
+    "3": {
+      "tag": 3,
+      "margin_left": 7.0
+    },
+    "4": {
+      "tag": 4,
+      "margin_left": 7.0
+    },
+    "5": {
+      "tag": 5,
+      "margin_left": 7.0
+    },
+    "6": {
+      "tag": 6,
+      "margin_left": 7.0
+    },
+    "7": {
+      "tag": 7,
+      "margin_left": 7.0
+    },
+    "8": {
+      "tag": 8,
+      "margin_left": 7.0
+    },
+    "9": {
+      "tag": 9,
+      "margin_left": 7.0
+    },
+    "10": {
+      "tag": 10,
+      "margin_left": 7.0
+    },
+    "11": {
+      "tag": 11,
+      "margin_left": 7.0
+    },
+    "12": {
+      "tag": 12,
+      "margin_left": 7.0
+    },
+    "13": {
+      "tag": 13,
+      "line_break": true,
+      "margin_left": 7.0
+    },
+
+    "30": {
+      "tag": 30,
+      "width": 30,
+      "line_break": true,
+      "margin_left": 7.0
+    },
+
+
+
+    "50": {
+      "line_break": true,
+      "width": 30
+    },
+    "51": {
+      "margin_left": 7,
+
+      "width": 30
+    },
+
+    //key ~
+    "71": {
+      "visualName": "]",
+
+      "tag": 71
+
+    },
+    //ENTER
+    "72": {
+      "tag": 72,
+      "line_break": true,
+      "margin_left": 7.0,
+      "margin_top": -40.0,
+      "width": 37.0,
+      "height": 70.0,
+      "font_size": 12.0
+    },
+    //"73": {
+    //  "margin_left": 7
+    //},
+    ////number 6
+    //"75": {
+    //  "line_break": true
+    //},
+    //left shift
+    "76": {
+      "tag": 76,
+      "margin_left": 0.0,
+      "margin_top": 0.0,
+      "width": 68.0,
+      "height": 30.0,
+      "font_size": 12.0
+    },
+    // \
+    "77": {
+      "tag": 77,
+      "line_break": null
+
+    },
+ 
+    //right shift
+    "88": {
+      "tag": 88,
+      "line_break": null,
+      "width": 30
+    },
+
+    //"↑"
+    "89": {
+      "tag": 89,
+      "line_break": true,
+      "margin_left": 7
+    },
+    "90": {
+      "margin_left": 7.0
+    },
+    ////Number enter
+    //"93": {
+    //  "line_break": true
+    //},
+    //LeftControl
+    "94": {
+      "tag": 94,
+      "width": 41
+    },
+    "95": {
+      "tag": 95,
+      "margin_left": 44,
+      "width": 30
+    },
+    "96": {
+      "tag": 96,
+      "margin_left": 7,
+      "width": 30
+    },
+    "97": {
+      "tag": 97,
+      "width": 178
+    },
+    "98": {
+      "tag": 98,
+      "margin_left": 7,
+      "width": 30
+    },
+    "100": {
+      "visualName": "App",
+      "tag": 100,
+      "margin_left": 7,
+      "width": 30
+    },
+    //Rith control
+    "101": {
+      "tag": 101,
+      "margin_left": 7,
+      "width": 58
+    },
+    "102": {
+      "tag": 102,
+      "margin_left": 7.0
+
+    },
+    "104": {
+      "tag": 104,
+      "line_break": true
+
+    }
+    //"105": {
+    //  "margin_left": 7.0,
+    //  "width": 30
+    //},
+    //"106": {
+    //  "line_break": true
+    //}
+
+
+  },
+
+  "included_features": [
+    "keyboard21jp_numpad_left_bottom_features.json" ,
+    //"keyboard102_numpad_right_features.json"
+
+  ]
+}

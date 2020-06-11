@@ -182,7 +182,11 @@ namespace Aurora.Settings
         Logitech_GPRO = 103,
         [Description("Logitech - G213")]
         Logitech_G213 = 104,
-
+		[Description("Logitech - G815")]
+        Logitech_G815 = 105,
+        [Description("Logitech - G513")]
+        Logitech_G513 = 106,
+		
         //Corsair range is 200-299
         [Description("Corsair - K95")]
         Corsair_K95 = 200,
@@ -244,6 +248,8 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+        [Description("Asus Strix Scope")]
+        Asus_Strix_Scope = 901,
 
         //Drevo range is 1000-1099
         [Description("Drevo BladeMaster")]
@@ -253,11 +259,39 @@ namespace Aurora.Settings
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
+ 
+
+        [Description("UNIWILL2ND (ANSI)")]
+        Uniwill2ND_35X_1 = 2101,
+        [Description("UNIWILL2ND (ISO)")]
+        Uniwill2ND_35X_2 = 2102,
+
+        [Description("UNIWILL2P1 (ISO)")]
+        Uniwill2P1_550_UK = 2103,
+        [Description("UNIWILL2P1 (ANSI)")]
+        Uniwill2P1_550_US = 2104,
+        [Description("UNIWILL2P1 (ABNT)")]
+        Uniwill2P1_550_BR = 2105,
+        [Description("UNIWILL2P1 (JIS)")]
+        Uniwill2P1_550_JP = 2106,
+
+
+        [Description("UNIWILL2P2 (ISO)")]
+        Uniwill2P2_650_UK = 2107,
+        [Description("UNIWILL2P2 (ANSI)")]
+        Uniwill2P2_650_US = 2108,
+        [Description("UNIWILL2P2 (ABNT)")]
+        Uniwill2P2_650_BR = 2109,
+        [Description("UNIWILL2P2 (JIS)")]
+        Uniwill2P2_650_JP = 2110,
+
+ 
         //Ducky range is 1200-1299
         [Description("Ducky Shine 7/One 2 RGB")]
         Ducky_Shine_7 = 1200,
         [Description("Ducky One 2 RGB TKL")]
         Ducky_One_2_RGB_TKL = 1201,
+ 
     }
 
     public enum PreferredKeyboardLocalization
@@ -386,8 +420,10 @@ namespace Aurora.Settings
         Fine = 12
     }
 
-    public class Configuration : Settings
+    public class Configuration : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         //First Time Installs
         public bool redist_first_time;
         public bool logitech_first_time;
@@ -402,36 +438,23 @@ namespace Aurora.Settings
         public bool allow_wrappers_in_background;
         public bool allow_all_logitech_bitmaps;
 
-        private bool useVolumeAsBrightness = false;
-        [JsonProperty(PropertyName = "use_volume_as_brightness")]
-        public bool UseVolumeAsBrightness { get { return useVolumeAsBrightness; } set { useVolumeAsBrightness = value; InvokePropertyChanged(); } }
+        [JsonProperty("use_volume_as_brightness")]
+        public bool UseVolumeAsBrightness { get; set; }
 
-        private float globalBrightness = 1.0f;
-        [JsonProperty(PropertyName = "global_brightness")]
-        public float GlobalBrightness { get { return globalBrightness; } set { globalBrightness = value; InvokePropertyChanged(); } }
+        [JsonProperty("global_brightness")]
+        public float GlobalBrightness { get; set; } = 1.0f;
 
-        private float keyboardBrightness = 1.0f;
-        [JsonProperty(PropertyName = "keyboard_brightness_modifier")]
-        public float KeyboardBrightness { get { return keyboardBrightness; } set { keyboardBrightness = value; InvokePropertyChanged(); } }
+        [JsonProperty("keyboard_brightness_modifier")]
+        public float KeyboardBrightness { get; set; } = 1.0f;
 
-        private float peripheralBrightness = 1.0f;
-        [JsonProperty(PropertyName = "peripheral_brightness_modifier")]
-        public float PeripheralBrightness { get { return peripheralBrightness; } set { peripheralBrightness = value; InvokePropertyChanged(); } }
+        [JsonProperty("peripheral_brightness_modifier")]
+        public float PeripheralBrightness { get; set; } = 1.0f;
 
-        private bool getDevReleases = false;
-        public bool GetDevReleases { get { return getDevReleases; } set { getDevReleases = value; InvokePropertyChanged(); } }
-
-        private bool getPointerUpdates = true;
-        public bool GetPointerUpdates { get { return getPointerUpdates; } set { getPointerUpdates = value; InvokePropertyChanged(); } }
-
-        private bool highPriority = false;
-        public bool HighPriority { get { return highPriority; } set { highPriority = value; InvokePropertyChanged(); } }
-
-        private BitmapAccuracy bitmapAccuracy = BitmapAccuracy.Okay;
-        public BitmapAccuracy BitmapAccuracy { get { return bitmapAccuracy; } set { bitmapAccuracy = value; InvokePropertyChanged(); } }
-
-        private bool enableAudioCapture;
-        public bool EnableAudioCapture { get => enableAudioCapture; set { enableAudioCapture = value; InvokePropertyChanged(); } }
+        public bool GetDevReleases { get; set; } = false;
+        public bool GetPointerUpdates { get; set; } = true;
+        public bool HighPriority { get; set; } = false;
+        public BitmapAccuracy BitmapAccuracy { get; set; } = BitmapAccuracy.Okay;
+        public bool EnableAudioCapture { get; set; } = false;
 
         public bool updates_check_on_start_up;
         public bool start_silently;
@@ -474,34 +497,26 @@ namespace Aurora.Settings
         public float idle_frequency;
 
         //Hardware Monitor
-        public int HardwareMonitorUpdateRate;
+        public int HardwareMonitorUpdateRate { get; set; } = 300;
 
         public VariableRegistry VarRegistry;
 
         //BitmapDebug Data
-        private bool bitmapDebugTopMost;
-        public bool BitmapDebugTopMost { get { return bitmapDebugTopMost; } set { bitmapDebugTopMost = value; InvokePropertyChanged(); } }
-
-        private WINDOWPLACEMENT bitmapPlacement;
-        public WINDOWPLACEMENT BitmapPlacement { get { return bitmapPlacement; } set { bitmapPlacement = value; InvokePropertyChanged(); } }
-
-        private bool bitmapWindowOnStartUp;
-        public bool BitmapWindowOnStartUp { get { return bitmapWindowOnStartUp; } set { bitmapWindowOnStartUp = value; InvokePropertyChanged(); } }
+        public bool BitmapDebugTopMost { get; set; } = false;
+        public WINDOWPLACEMENT BitmapPlacement { get; set; }
+        public bool BitmapWindowOnStartUp { get; set; } = false;
 
         //httpDebug Data
-        private bool httpDebugTopMost;
-        public bool HttpDebugTopMost { get { return httpDebugTopMost; } set { httpDebugTopMost = value; InvokePropertyChanged(); } }
+        public bool HttpDebugTopMost { get; set; } = false;
+        public WINDOWPLACEMENT HttpDebugPlacement { get; set; }
+        public bool HttpWindowOnStartUp { get; set; } = false;
 
-        private WINDOWPLACEMENT httpDebugPlacement;
-        public WINDOWPLACEMENT HttpDebugPlacement { get { return httpDebugPlacement; } set { httpDebugPlacement = value; InvokePropertyChanged(); } }
-
-        private bool httpWindowOnStartUp;
-        public bool HttpWindowOnStartUp { get { return httpWindowOnStartUp; } set { httpWindowOnStartUp = value; InvokePropertyChanged(); } }
-
-        private ObservableConcurrentDictionary<string, IEvaluatable> evaluatableTemplates;
-        public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get => evaluatableTemplates; set { evaluatableTemplates = value; InvokePropertyChanged(); } }
+        public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
+
+        public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
+        public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
 
         public Configuration()
         {
@@ -520,7 +535,7 @@ namespace Aurora.Settings
             allow_all_logitech_bitmaps = true;
             GlobalBrightness = 1.0f;
             KeyboardBrightness = 1.0f;
-            peripheralBrightness = 1.0f;
+            PeripheralBrightness = 1.0f;
             updates_check_on_start_up = true;
             start_silently = false;
             close_mode = AppExitMode.Ask;
@@ -564,17 +579,15 @@ namespace Aurora.Settings
             idle_amount = 5;
             idle_frequency = 2.5f;
 
-            HardwareMonitorUpdateRate = 200;
-
             //Debug
-            bitmapDebugTopMost = false;
-            httpDebugTopMost = false;
+            BitmapDebugTopMost = false;
+            HttpDebugTopMost = false;
 
             //ProfileOrder = new List<string>(ApplicationProfiles.Keys);
 
             VarRegistry = new VariableRegistry();
 
-            evaluatableTemplates = new ObservableConcurrentDictionary<string, IEvaluatable>();
+            EvaluatableTemplates = new ObservableConcurrentDictionary<string, IEvaluatable>();
         }
 
         /// <summary>
@@ -586,7 +599,7 @@ namespace Aurora.Settings
                 unified_hid_disabled = true;
             }
 
-            evaluatableTemplates.CollectionChanged += (sender, e) => InvokePropertyChanged(nameof(EvaluatableTemplates));
+            EvaluatableTemplates.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluatableTemplates)));
         }
     }
 

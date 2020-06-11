@@ -83,10 +83,7 @@ namespace Aurora.Utils
 
         public static Task<string> GetDownloadUrlAsync() => Task.Run(() =>
         {
-            return @"http://cdn.razersynapse.com/1574305048IqV1JPE5RazerChromaBroadcasterSetup_v3.4.1112.112110.exe";
-
-            // Commenting out in case it is usefull in future
-            /*using (var client = new WebClient())
+            using (var client = new WebClient())
             {
                 var endpoint = "prod";
                 var json = JObject.Parse(client.DownloadString("https://discovery.razerapi.com/user/endpoints"));
@@ -119,7 +116,7 @@ namespace Aurora.Utils
                         return node["DownloadURL"].InnerText;
 
                 return null;
-            }*/
+            }
         });
 
         public static Task<string> DownloadAsync() => Task.Run(async () =>

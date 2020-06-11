@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_CloneHero : Node<Player_CloneHero>
+    public class Player_CloneHero : Node
     {
         /// <summary>
         /// Player's boost amount [0.0f, 1.0f]

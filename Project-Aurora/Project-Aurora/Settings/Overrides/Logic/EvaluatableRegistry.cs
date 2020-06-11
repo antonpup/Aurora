@@ -18,7 +18,7 @@ namespace Aurora.Settings.Overrides.Logic {
             .Select(kvp => new EvaluatableTypeContainer {
                 Evaluatable = kvp.Key,
                 Metadata = kvp.Value,
-                ResultType = kvp.Key.GetGenericInterfaceTypes(typeof(IEvaluatable<>))[0]
+                ResultType = kvp.Key.GetGenericParentTypes(typeof(Evaluatable<>))[0]
             });
 
         /// <summary>Fetches a specific subset of logic operand types (e.g. all booleans).

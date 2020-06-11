@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing ability attributes
     /// </summary>
-    public class Attributes : Node<Attributes>
+    public class Attributes : Node
     {
         /// <summary>
         /// Amount of levels to spend

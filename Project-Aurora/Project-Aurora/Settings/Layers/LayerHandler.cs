@@ -10,23 +10,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using FastMember;
 
 namespace Aurora.Settings.Layers
 {
-    public interface IValueOverridable
+    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
     {
-        IStringProperty Overrides { get; set; }
-    }
+        private static readonly Lazy<TypeAccessor> accessor = new Lazy<TypeAccessor>(() => TypeAccessor.Create(typeof(TProperty)));
 
-    public abstract class LayerHandlerProperties<TProperty> : StringProperty<TProperty>, IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
-    {
-        [GameStateIgnoreAttribute]
-        [JsonIgnore]
+        [GameStateIgnore, JsonIgnore]
         public TProperty Logic { get; set; }
-        IStringProperty IValueOverridable.Overrides {
-            get => (IStringProperty)Logic;
-            set => Logic = value as TProperty;
-        }
 
         [LogicOverridable("Primary Color")]
         public virtual Color? _PrimaryColor { get; set; }
@@ -79,6 +72,20 @@ namespace Aurora.Settings.Layers
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Sequence = new KeySequence();
         }
+
+        public object GetOverride(string propertyName) {
+            try {
+                return accessor.Value[Logic, propertyName];
+            } catch (ArgumentOutOfRangeException) {
+                return null;
+            }
+        }
+
+        public void SetOverride(string propertyName, object value) {
+            try {
+                accessor.Value[Logic, propertyName] = value;
+            } catch (ArgumentOutOfRangeException) { }
+        }
     }
 
     public class LayerHandlerProperties2Color<TProperty> : LayerHandlerProperties<TProperty> where TProperty : LayerHandlerProperties2Color<TProperty>
@@ -108,7 +115,7 @@ namespace Aurora.Settings.Layers
     {
         UserControl Control { get; }
 
-        IStringProperty Properties { get; set; }
+        object Properties { get; set; }
 
         bool EnableSmoothing { get; set; }
 
@@ -143,7 +150,7 @@ namespace Aurora.Settings.Layers
 
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
-        IStringProperty ILayerHandler.Properties {
+        object ILayerHandler.Properties {
             get => Properties;
             set => Properties = value as TProperty;
         }
@@ -246,5 +253,18 @@ namespace Aurora.Settings.Layers
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {
 
+    }
+
+
+    public interface IValueOverridable {
+        /// <summary>
+        /// Gets the overriden value of the speicifed property.
+        /// </summary>
+        object GetOverride(string propertyName);
+
+        /// <summary>
+        /// Sets the overriden value of the speicifed property to the given value.
+        /// </summary>
+        void SetOverride(string propertyName, object value);
     }
 }

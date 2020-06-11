@@ -3,7 +3,7 @@
     /// <summary>
     /// A class representing the authentication information for GSI
     /// </summary>
-    public class Auth_Dota2 : Node<Auth_Dota2>
+    public class Auth_Dota2 : Node
     {
         /// <summary>
         /// The auth token sent by this GSI
