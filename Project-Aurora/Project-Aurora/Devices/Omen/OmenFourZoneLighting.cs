@@ -14,7 +14,9 @@ namespace Aurora.Devices.Omen
 {
     class OmenFourZoneLighting : IOmenDevice
     {
-        private static byte[] sign = new byte[4] { (byte)'S', (byte)'E', (byte)'C', (byte)'U' };
+        private const int ColorSize = 3;
+        private const int ColorOffset = 25;
+        private static byte[] Sign = new byte[4] { (byte)'S', (byte)'E', (byte)'C', (byte)'U' };
 
         public static OmenFourZoneLighting GetFourZoneLighting()
         {
@@ -37,7 +39,7 @@ namespace Aurora.Devices.Omen
                 ManagementBaseObject inParams = classInstance.GetMethodParameters("hpqBIOSInt128");
                 ManagementBaseObject DataOut = new ManagementClass("root\\wmi:hpqBDataOut128");
 
-                DataIn["Sign"] = sign;
+                DataIn["Sign"] = Sign;
                 DataIn["Command"] = command;
                 DataIn["CommandType"] = commandType;
                 DataIn["Size"] = inputDataSize;
@@ -62,7 +64,6 @@ namespace Aurora.Devices.Omen
 
         public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
         {
-            const int colorOffset = 25;
             Task.Run(() => {
                 if (Monitor.TryEnter(this))
                 {
@@ -72,30 +73,30 @@ namespace Aurora.Devices.Omen
                         inData[0] = 0x3;
                         if(keyColors.ContainsKey(DeviceKeys.ENTER))
                         {
-                            inData[colorOffset + 0] = keyColors[DeviceKeys.ENTER].R;
-                            inData[colorOffset + 1] = keyColors[DeviceKeys.ENTER].G;
-                            inData[colorOffset + 2] = keyColors[DeviceKeys.ENTER].B;
+                            inData[ColorOffset + 0] = keyColors[DeviceKeys.ENTER].R;
+                            inData[ColorOffset + 1] = keyColors[DeviceKeys.ENTER].G;
+                            inData[ColorOffset + 2] = keyColors[DeviceKeys.ENTER].B;
                         }
 
                         if (keyColors.ContainsKey(DeviceKeys.J))
                         {
-                            inData[colorOffset + 1 * 3 + 0] = keyColors[DeviceKeys.J].R;
-                            inData[colorOffset + 1 * 3 + 1] = keyColors[DeviceKeys.J].G;
-                            inData[colorOffset + 1 * 3 + 2] = keyColors[DeviceKeys.J].B;
+                            inData[ColorOffset + 1 * ColorSize + 0] = keyColors[DeviceKeys.J].R;
+                            inData[ColorOffset + 1 * ColorSize + 1] = keyColors[DeviceKeys.J].G;
+                            inData[ColorOffset + 1 * ColorSize + 2] = keyColors[DeviceKeys.J].B;
                         }
 
                         if (keyColors.ContainsKey(DeviceKeys.J))
                         {
-                            inData[colorOffset + 2 * 3 + 0] = keyColors[DeviceKeys.D].R;
-                            inData[colorOffset + 2 * 3 + 1] = keyColors[DeviceKeys.D].G;
-                            inData[colorOffset + 2 * 3 + 2] = keyColors[DeviceKeys.D].B;
+                            inData[ColorOffset + 2 * ColorSize + 0] = keyColors[DeviceKeys.D].R;
+                            inData[ColorOffset + 2 * ColorSize + 1] = keyColors[DeviceKeys.D].G;
+                            inData[ColorOffset + 2 * ColorSize + 2] = keyColors[DeviceKeys.D].B;
                         }
 
                         if (keyColors.ContainsKey(DeviceKeys.A))
                         {
-                            inData[colorOffset + 2 * 3 + 0] = keyColors[DeviceKeys.A].R;
-                            inData[colorOffset + 2 * 3 + 1] = keyColors[DeviceKeys.A].G;
-                            inData[colorOffset + 2 * 3 + 2] = keyColors[DeviceKeys.A].B;
+                            inData[ColorOffset + 2 * ColorSize + 0] = keyColors[DeviceKeys.A].R;
+                            inData[ColorOffset + 2 * ColorSize + 1] = keyColors[DeviceKeys.A].G;
+                            inData[ColorOffset + 2 * ColorSize + 2] = keyColors[DeviceKeys.A].B;
                         }
 
                         byte[] outData;
