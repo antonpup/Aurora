@@ -1,0 +1,94 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 1,
+  "grouped_keys": [
+    {
+      "tag": -27,
+      "margin_left": 20.0,
+      "margin_top": 200.0,
+      "width": 0.0,
+      "height": 0.0,
+      "margin_left_bits": 1,
+      "margin_top_bits": -19,
+      "width_bits": 13,
+      "height_bits": 19,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Zone 1",
+      "tag": 62,
+      "margin_left": -45.0,
+      "margin_top": 10.0,
+      "width": 260.0,
+      "height": 220.0,
+      "font_size": 20.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -4,
+      "margin_top_bits": 3,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Zone 0",
+      "tag": 60,
+      "margin_left": 40.0,
+      "margin_top": 55.0,
+      "width": 80.0,
+      "height": 50.0,
+      "font_size": 20.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -4,
+      "margin_top_bits": 12,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Zone 2",
+      "tag": 66,
+      "margin_left": 221.0,
+      "margin_top": 10.0,
+      "width": 260.0,
+      "height": 220.0,
+      "font_size": 20.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -4,
+      "margin_top_bits": 6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Zone 3",
+      "tag": 72,
+      "margin_left": 487.0,
+      "margin_top": 10.0,
+      "width": 260.0,
+      "height": 220.0,
+      "font_size": 20.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -4,
+      "margin_top_bits": 9,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": -1,
+      "margin_left": 780.0,
+      "margin_top": -30.0,
+      "width": 0.0,
+      "height": 0.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 10,
+      "margin_top_bits": 0,
+      "enabled": false,
+      "absolute_location": true
+    }
+
+  ]
+}

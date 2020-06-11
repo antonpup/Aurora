@@ -790,6 +790,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
             else if (keyboard_preference == PreferredKeyboard.OMEN_Sequencer)
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
+                layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
             else
             {
                 LoadNone();

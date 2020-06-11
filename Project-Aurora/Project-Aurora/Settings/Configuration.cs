@@ -296,6 +296,8 @@ namespace Aurora.Settings
         //OMEN range 1300-1399
         [Description("OMEN Sequencer")]
         OMEN_Sequencer = 1300,
+        [Description("OMEN Four Zone")]
+        OMEN_Four_Zone = 1301,
     }
 
     public enum PreferredKeyboardLocalization

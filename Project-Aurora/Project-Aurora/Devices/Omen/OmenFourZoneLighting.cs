@@ -8,11 +8,24 @@ using System.Threading;
 using Newtonsoft.Json.Linq;
 using System.Management;
 
+using Aurora.Settings;
+
 namespace Aurora.Devices.Omen
 {
     class OmenFourZoneLighting : IOmenDevice
     {
         private static byte[] sign = new byte[4] { (byte)'S', (byte)'E', (byte)'C', (byte)'U' };
+
+        public static OmenFourZoneLighting GetFourZoneLighting()
+        {
+            switch (Global.Configuration.keyboard_brand)
+            {
+                case PreferredKeyboard.OMEN_Four_Zone:
+                    return new OmenFourZoneLighting();
+            }
+
+            return null;
+        }
 
         internal static int Execute(int command, int commandType, int inputDataSize, byte[] inputData, out byte[] returnData)
         {
@@ -57,22 +70,37 @@ namespace Aurora.Devices.Omen
                     {
                         byte[] inData = new byte[128];
                         inData[0] = 0x3;
-                        inData[colorOffset + 0] = keyColors[DeviceKeys.ENTER].R;
-                        inData[colorOffset + 1] = keyColors[DeviceKeys.ENTER].G;
-                        inData[colorOffset + 2] = keyColors[DeviceKeys.ENTER].B;
-                        inData[colorOffset + 1 * 3 + 0] = keyColors[DeviceKeys.K].R;
-                        inData[colorOffset + 1 * 3 + 1] = keyColors[DeviceKeys.K].G;
-                        inData[colorOffset + 1 * 3 + 2] = keyColors[DeviceKeys.K].B;
-                        inData[colorOffset + 2 * 3 + 0] = keyColors[DeviceKeys.D].R;
-                        inData[colorOffset + 2 * 3 + 1] = keyColors[DeviceKeys.D].G;
-                        inData[colorOffset + 2 * 3 + 2] = keyColors[DeviceKeys.D].B;
-                        inData[colorOffset + 3 * 3 + 0] = (byte)(255 - keyColors[DeviceKeys.D].R);
-                        inData[colorOffset + 3 * 3 + 1] = (byte)(255 - keyColors[DeviceKeys.D].G);
-                        inData[colorOffset + 3 * 3 + 2] = (byte)(255 - keyColors[DeviceKeys.D].B);
+                        if(keyColors.ContainsKey(DeviceKeys.ENTER))
+                        {
+                            inData[colorOffset + 0] = keyColors[DeviceKeys.ENTER].R;
+                            inData[colorOffset + 1] = keyColors[DeviceKeys.ENTER].G;
+                            inData[colorOffset + 2] = keyColors[DeviceKeys.ENTER].B;
+                        }
+
+                        if (keyColors.ContainsKey(DeviceKeys.J))
+                        {
+                            inData[colorOffset + 1 * 3 + 0] = keyColors[DeviceKeys.J].R;
+                            inData[colorOffset + 1 * 3 + 1] = keyColors[DeviceKeys.J].G;
+                            inData[colorOffset + 1 * 3 + 2] = keyColors[DeviceKeys.J].B;
+                        }
+
+                        if (keyColors.ContainsKey(DeviceKeys.J))
+                        {
+                            inData[colorOffset + 2 * 3 + 0] = keyColors[DeviceKeys.D].R;
+                            inData[colorOffset + 2 * 3 + 1] = keyColors[DeviceKeys.D].G;
+                            inData[colorOffset + 2 * 3 + 2] = keyColors[DeviceKeys.D].B;
+                        }
+
+                        if (keyColors.ContainsKey(DeviceKeys.A))
+                        {
+                            inData[colorOffset + 2 * 3 + 0] = keyColors[DeviceKeys.A].R;
+                            inData[colorOffset + 2 * 3 + 1] = keyColors[DeviceKeys.A].G;
+                            inData[colorOffset + 2 * 3 + 2] = keyColors[DeviceKeys.A].B;
+                        }
 
                         byte[] outData;
                         var res = Execute(0x20009, 0x03, 128, inData, out outData);
-                        if(res != 0)
+                        if (res != 0)
                         {
                             Global.logger.Error("OMEN Four zone lighting fail: " + res);
                         }
