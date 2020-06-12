@@ -513,7 +513,8 @@ namespace Aurora.Settings
         public float idle_frequency;
 
         //Hardware Monitor
-        public int HardwareMonitorUpdateRate { get; set; } = 300;
+        public int HardwareMonitorUpdateRate { get; set; } = 500;
+        public bool HardwareMonitorUseAverageValues { get; set; } = true;
 
         public VariableRegistry VarRegistry;
 

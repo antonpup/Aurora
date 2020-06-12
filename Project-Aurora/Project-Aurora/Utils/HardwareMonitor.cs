@@ -57,7 +57,7 @@ namespace Aurora.Utils
                 lines.Add("-----");
                 lines.Add(hw.Name);
                 lines.Add("Sensors:");
-                foreach (var sensor in hw.Sensors.OrderBy(s => s.SensorType))
+                foreach (var sensor in hw.Sensors.OrderBy(s => s.Identifier))
                 {
                     lines.Add($"Name: {sensor.Name}, Id: {sensor.Identifier}, Type: {sensor.SensorType}");
                 }
@@ -99,14 +99,17 @@ namespace Aurora.Utils
 
         public abstract class HardwareUpdater
         {
+            private const int MAX_QUEUE = 8;
             protected IHardware hw;
             protected bool inUse;
 
             private readonly Timer _useTimer;
             private readonly Timer _updateTimer;
+            private readonly Queue<float> _values;
 
             protected HardwareUpdater()
             {
+                _values = new Queue<float>(MAX_QUEUE);
                 _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
                 {
@@ -132,7 +135,13 @@ namespace Aurora.Utils
                 _useTimer.Stop();
                 _useTimer.Start();
 
-                return sensor?.Value ?? 0;
+                if (_values.Count == MAX_QUEUE)
+                    _values.Dequeue();
+                _values.Enqueue(sensor?.Value ?? 0);
+
+                return Global.Configuration.HardwareMonitorUseAverageValues ? 
+                    _values.Average() : 
+                    sensor?.Value ?? 0;
             }
         }
 
