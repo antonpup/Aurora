@@ -69,7 +69,10 @@ namespace Aurora.Devices.Omen
                 {
                     try
                     {
-                        byte[] inData = new byte[128];
+                        byte[] outData;
+                        int res = Execute(0x20009, 0x02, 0, null, out outData);
+
+                        byte[] inData = outData;
                         inData[0] = 0x3;
                         if(keyColors.ContainsKey(DeviceKeys.ENTER))
                         {
@@ -99,8 +102,8 @@ namespace Aurora.Devices.Omen
                             inData[ColorOffset + 2 * ColorSize + 2] = keyColors[DeviceKeys.A].B;
                         }
 
-                        byte[] outData;
-                        var res = Execute(0x20009, 0x03, 128, inData, out outData);
+                        outData = null;
+                        res = Execute(0x20009, 0x03, 128, inData, out outData);
                         if (res != 0)
                         {
                             Global.logger.Error("OMEN Four zone lighting fail: " + res);
