@@ -17,7 +17,7 @@
     },
     {
       "visualName": "Zone 1",
-      "tag": 62,
+      "tag": 41,
       "margin_left": -45.0,
       "margin_top": 10.0,
       "width": 260.0,
@@ -89,6 +89,5 @@
       "enabled": false,
       "absolute_location": true
     }
-
   ]
 }

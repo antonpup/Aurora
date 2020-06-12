@@ -88,11 +88,11 @@ namespace Aurora.Devices.Omen
                             inData[ColorOffset + 1 * ColorSize + 2] = keyColors[DeviceKeys.J].B;
                         }
 
-                        if (keyColors.ContainsKey(DeviceKeys.J))
+                        if (keyColors.ContainsKey(DeviceKeys.E))
                         {
-                            inData[ColorOffset + 2 * ColorSize + 0] = keyColors[DeviceKeys.D].R;
-                            inData[ColorOffset + 2 * ColorSize + 1] = keyColors[DeviceKeys.D].G;
-                            inData[ColorOffset + 2 * ColorSize + 2] = keyColors[DeviceKeys.D].B;
+                            inData[ColorOffset + 2 * ColorSize + 0] = keyColors[DeviceKeys.E].R;
+                            inData[ColorOffset + 2 * ColorSize + 1] = keyColors[DeviceKeys.E].G;
+                            inData[ColorOffset + 2 * ColorSize + 2] = keyColors[DeviceKeys.E].B;
                         }
 
                         if (keyColors.ContainsKey(DeviceKeys.A))
