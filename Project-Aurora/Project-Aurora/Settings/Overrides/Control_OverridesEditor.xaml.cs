@@ -141,7 +141,7 @@ namespace Aurora.Settings.Overrides {
 
         private void HelpButton_Click(object sender, RoutedEventArgs e) {
             // Open the overrides page on the documentation page
-            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/advanced-topics/overrides-system/"));
+            Process.Start(new ProcessStartInfo(@"https://aurora-rgb.github.io/Docs/advanced-topics/overrides-system/"));
         }
         #endregion
     }

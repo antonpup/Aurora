@@ -75,28 +75,6 @@ namespace Aurora.Utils
             }
         }
 
-        private static ISensor FindSensor(this IHardware hardware, string identifier)
-        {
-            var result = hardware.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.Identifier.ToString().Contains(identifier));
-            if (result is null)
-            {
-                Global.logger.Error(
-                    $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hardware.Name} of type {hardware.HardwareType}.");
-            }
-            return result;
-        }
-
-        private static ISensor FindSensor(this IHardware hardware, SensorType type)
-        {
-            var result = hardware.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.SensorType == type);
-            if (result is null)
-            {
-                Global.logger.Error(
-                    $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hardware.Name} of type {hardware.HardwareType}.");
-            }
-            return result;
-        }
-
         public abstract class HardwareUpdater
         {
             private const int MAX_QUEUE = 8;
@@ -105,11 +83,11 @@ namespace Aurora.Utils
 
             private readonly Timer _useTimer;
             private readonly Timer _updateTimer;
-            private readonly Queue<float> _values;
+            private readonly Dictionary<Identifier, Queue<float>> _queues;
 
             protected HardwareUpdater()
             {
-                _values = new Queue<float>(MAX_QUEUE);
+                _queues = new Dictionary<Identifier, Queue<float>>();
                 _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
                 {
@@ -135,13 +113,42 @@ namespace Aurora.Utils
                 _useTimer.Stop();
                 _useTimer.Start();
 
-                if (_values.Count == MAX_QUEUE)
-                    _values.Dequeue();
-                _values.Enqueue(sensor?.Value ?? 0);
+                if (!_queues.TryGetValue(sensor.Identifier, out var values))
+                    return 0;
 
-                return Global.Configuration.HardwareMonitorUseAverageValues ? 
-                    _values.Average() : 
+                if (values.Count == MAX_QUEUE)
+                    values.Dequeue();
+                values.Enqueue(sensor?.Value ?? 0);
+
+                return Global.Configuration.HardwareMonitorUseAverageValues ?
+                    values.Average() : 
                     sensor?.Value ?? 0;
+            }
+
+            protected ISensor FindSensor(string identifier)
+            {
+                var result = hw.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.Identifier.ToString().Contains(identifier));
+                if (result is null)
+                {
+                    Global.logger.Error(
+                        $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hw.Name} of type {hw.HardwareType}.");
+                    return null;
+                }
+                _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
+                return result;
+            }
+
+            protected ISensor FindSensor(SensorType type)
+            {
+                var result = hw.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.SensorType == type);
+                if (result is null)
+                {
+                    Global.logger.Error(
+                        $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hw.Name} of type {hw.HardwareType}.");
+                    return null;
+                }
+                _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
+                return result;
             }
         }
 
@@ -170,10 +177,10 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type GPU");
                     return;
                 }
-                _GPULoad = hw.FindSensor(SensorType.Load);
-                _GPUTemp = hw.FindSensor(SensorType.Temperature);
-                _GPUFan = hw.FindSensor(SensorType.Fan);
-                _GPUPower = hw.FindSensor(SensorType.Power);
+                _GPULoad = FindSensor(SensorType.Load);
+                _GPUTemp = FindSensor(SensorType.Temperature);
+                _GPUFan = FindSensor(SensorType.Fan);
+                _GPUPower = FindSensor(SensorType.Power);
             }
         }
 
@@ -198,9 +205,9 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type CPU");
                     return;
                 }
-                _CPUTemp = hw.FindSensor(SensorType.Temperature);
-                _CPULoad = hw.FindSensor(SensorType.Load);
-                _CPUPower = hw.FindSensor(SensorType.Power);
+                _CPUTemp = FindSensor(SensorType.Temperature);
+                _CPULoad = FindSensor(SensorType.Load);
+                _CPUPower = FindSensor(SensorType.Power);
             }
         }
 
@@ -222,8 +229,8 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type RAM");
                     return;
                 }
-                _RAMUsed = hw.FindSensor("data/0");
-                _RAMFree = hw.FindSensor("data/1");
+                _RAMUsed = FindSensor("data/0");
+                _RAMFree = FindSensor("data/1");
             }
         }
 
@@ -248,9 +255,9 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type Network");
                     return;
                 }
-                _BandwidthUsed = hw.FindSensor(SensorType.Load);
-                _UploadSpeed = hw.FindSensor("throughput/7");
-                _DownloadSpeed = hw.FindSensor("throughput/8");
+                _BandwidthUsed = FindSensor(SensorType.Load);
+                _UploadSpeed = FindSensor("throughput/7");
+                _DownloadSpeed = FindSensor("throughput/8");
             }
         }
     }
