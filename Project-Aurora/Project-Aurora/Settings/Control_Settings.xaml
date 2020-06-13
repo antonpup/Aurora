@@ -181,6 +181,7 @@
 
                     <TextBlock HorizontalAlignment="Left" Margin="12,278,0,0" TextWrapping="Wrap" Text="Hardware sensors update rate:" VerticalAlignment="Top" ToolTip="Used for CPU and GPU usage, etc"/>
                     <xctk:IntegerUpDown HorizontalAlignment="Left" Height="24" Margin="178,278,0,0" VerticalAlignment="Top" Width="50" Value="{Binding HardwareMonitorUpdateRate}" Maximum="2000" Minimum="100" MouseWheelActiveOnFocus="True" />
+                    <CheckBox Content="Use average hardware sensor values instead of real-time ones " ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="10,302,0,0" VerticalAlignment="Top" IsChecked="{Binding HardwareMonitorUseAverageValues}" />
 
                 </Grid>
             </TabItem>
