@@ -18,6 +18,10 @@ namespace Aurora.EffectsEngine
         private Bitmap colormap;
 
         private object bufferLock = new object();
+        private static object bitmapLock = new object();
+        private static object brushLock = new object();
+
+        private static Bitmap bitmap;
 
         private bool needsRender = false;
 
@@ -38,7 +42,14 @@ namespace Aurora.EffectsEngine
         public EffectLayer()
         {
             name = "Effect Layer";
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            lock (bitmapLock)
+            {
+                if (bitmap == null || bitmap.Height != Effects.canvas_height || bitmap.Height != Effects.canvas_height)
+                {
+                    bitmap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                }
+                colormap = (Bitmap) bitmap.Clone();
+            }
             peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
@@ -51,7 +62,7 @@ namespace Aurora.EffectsEngine
         public EffectLayer(EffectLayer another_layer)
         {
             this.name = another_layer.name;
-            colormap = new Bitmap(another_layer.colormap);
+            colormap = (Bitmap) another_layer.colormap.Clone();
             peripheral = another_layer.peripheral;
 
             needsRender = another_layer.needsRender;
@@ -64,7 +75,14 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name)
         {
             this.name = name;
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            lock (bitmapLock)
+            {
+                if (bitmap == null || bitmap.Height != Effects.canvas_height || bitmap.Height != Effects.canvas_height)
+                {
+                    bitmap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                }
+                colormap = (Bitmap) bitmap.Clone();
+            }
             peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
@@ -78,7 +96,14 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name, Color color)
         {
             this.name = name;
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            lock (bitmapLock)
+            {
+                if (bitmap == null || bitmap.Height != Effects.canvas_height || bitmap.Height != Effects.canvas_height)
+                {
+                    bitmap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                }
+                colormap = (Bitmap) bitmap.Clone();
+            }
             peripheral = color;
 
             Fill(color);
@@ -95,7 +120,14 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config, RectangleF rect = new RectangleF())
         {
             this.name = name;
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            lock (bitmapLock)
+            {
+                if (bitmap == null || bitmap.Height != Effects.canvas_height || bitmap.Height != Effects.canvas_height)
+                {
+                    bitmap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+                }
+                colormap = (Bitmap) bitmap.Clone();
+            }
             peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
@@ -214,68 +246,69 @@ namespace Aurora.EffectsEngine
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
-
-                    brush = effect_config.brush.GetDrawingBrush();
-                    if (effect_config.brush.type == EffectBrush.BrushType.Linear)
+                    lock (brushLock)
                     {
-                        if (!rect.IsEmpty)
-                        {
-                            (brush as LinearGradientBrush).TranslateTransform(rect.X, rect.Y);
-                            (brush as LinearGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
-                        }
-                        else
-                        {
-                            (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
-                        }
-
-                        (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
-                        (brush as LinearGradientBrush).TranslateTransform(shift, shift);
-                    }
-                    else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
-                    {
-                        if (effect_config.animation_type == AnimationType.Zoom_in || effect_config.animation_type == AnimationType.Zoom_out)
-                        {
-                            float percent = shift / Effects.canvas_biggest;
-
-                            float x_offset = (Effects.canvas_width / 2.0f) * percent;
-                            float y_offset = (Effects.canvas_height / 2.0f) * percent;
-
-
-                            (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
-
-                            if (!rect.IsEmpty)
-                            {
-                                x_offset = (rect.Width / 2.0f) * percent;
-                                y_offset = (rect.Height / 2.0f) * percent;
-
-                                (brush as PathGradientBrush).TranslateTransform(rect.X + x_offset, rect.Y + y_offset);
-                                (brush as PathGradientBrush).ScaleTransform((rect.Width - (2.0f * x_offset)) * 100 / effect_config.gradient_size, (rect.Height - (2.0f * y_offset)) * 100 / effect_config.gradient_size);
-                            }
-                            else
-                            {
-                                (brush as PathGradientBrush).ScaleTransform((Effects.canvas_height + x_offset) * 100 / effect_config.gradient_size, (Effects.canvas_height + y_offset) * 100 / effect_config.gradient_size);
-                            }
-                        }
-                        else
+                        brush = effect_config.brush.GetDrawingBrush();
+                        if (effect_config.brush.type == EffectBrush.BrushType.Linear)
                         {
                             if (!rect.IsEmpty)
                             {
-                                (brush as PathGradientBrush).TranslateTransform(rect.X, rect.Y);
-                                (brush as PathGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
+                                (brush as LinearGradientBrush).TranslateTransform(rect.X, rect.Y);
+                                (brush as LinearGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
                             }
                             else
                             {
-                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
+                                (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
                             }
+
+                            (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
+                            (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                        }
+                        else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
+                        {
+                            if (effect_config.animation_type == AnimationType.Zoom_in || effect_config.animation_type == AnimationType.Zoom_out)
+                            {
+                                float percent = shift / Effects.canvas_biggest;
+
+                                float x_offset = (Effects.canvas_width / 2.0f) * percent;
+                                float y_offset = (Effects.canvas_height / 2.0f) * percent;
+
+
+                                (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
+
+                                if (!rect.IsEmpty)
+                                {
+                                    x_offset = (rect.Width / 2.0f) * percent;
+                                    y_offset = (rect.Height / 2.0f) * percent;
+
+                                    (brush as PathGradientBrush).TranslateTransform(rect.X + x_offset, rect.Y + y_offset);
+                                    (brush as PathGradientBrush).ScaleTransform((rect.Width - (2.0f * x_offset)) * 100 / effect_config.gradient_size, (rect.Height - (2.0f * y_offset)) * 100 / effect_config.gradient_size);
+                                }
+                                else
+                                {
+                                    (brush as PathGradientBrush).ScaleTransform((Effects.canvas_height + x_offset) * 100 / effect_config.gradient_size, (Effects.canvas_height + y_offset) * 100 / effect_config.gradient_size);
+                                }
+                            }
+                            else
+                            {
+                                if (!rect.IsEmpty)
+                                {
+                                    (brush as PathGradientBrush).TranslateTransform(rect.X, rect.Y);
+                                    (brush as PathGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
+                                }
+                                else
+                                {
+                                    (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
+                                }
+                            }
+
+                            (brush as PathGradientBrush).RotateTransform(effect_config.angle);
+
+                            //(brush as PathGradientBrush).TranslateTransform(x_shift, y_shift);
                         }
 
-                        (brush as PathGradientBrush).RotateTransform(effect_config.angle);
-
-                        //(brush as PathGradientBrush).TranslateTransform(x_shift, y_shift);
+                        Fill(brush);
                     }
-
-                    Fill(brush);
-
                     effect_config.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
                     break;
                 default:
