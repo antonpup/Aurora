@@ -536,7 +536,7 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
     /// <summary>
     /// Class representing current controls configuration
     /// </summary>
-    public class Controls : Node<Controls>
+    public class Controls : Node
     {
         public HashSet<string> modifierKeys = new HashSet<string>();
         public Dictionary<string, Bind> commandToBind = new Dictionary<string, Bind>();

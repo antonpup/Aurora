@@ -8,7 +8,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
     /// <summary>
     /// Class representing hero abilities
     /// </summary>
-    public class Abilities_Dota2 : Node<Abilities_Dota2>, IEnumerable<Ability>
+    public class Abilities_Dota2 : Node, IEnumerable<Ability>
     {
         private List<Ability> abilities = new List<Ability>();
 
@@ -52,11 +52,6 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
 
                 return abilities[index];
             }
-        }
-
-        public override string ToString()
-        {
-            return json;
         }
 
         public IEnumerator<Ability> GetEnumerator()

@@ -42,12 +42,14 @@ namespace Aurora.Profiles.Desktop
             }
 
             frame.AddLayers(layers.ToArray());
+
         }
         public override void UpdateOverlayLights(EffectFrame frame)
         {
             var overlayLayers = new Queue<EffectLayer>(Application.Profile.OverlayLayers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
 
             frame.AddOverlayLayers(overlayLayers.ToArray());
+
         }
 
         public override void SetGameState(IGameState new_game_state)

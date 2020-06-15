@@ -85,6 +85,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\DS4WindowsApi.dll</HintPath>
     </Reference>
+    <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>.\Interop.AuraServiceLib.dll</HintPath>
+    </Reference>
     <Reference Include="LibreHardwareMonitorLib">
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
@@ -153,6 +158,18 @@
     <Compile Include="Controls\Control_FieldPresenter.xaml.cs">
       <DependentUpon>Control_FieldPresenter.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\Asus\AsusHandler.cs" />
+    <Compile Include="Devices\Asus\AsusSyncClaymoreDevice.cs" />
+    <Compile Include="Devices\Asus\AsusSyncConfiguredDevice.cs" />
+    <Compile Include="Devices\Asus\AuraSyncDevice.cs" />
+    <Compile Include="Devices\Asus\AuraSyncKeyboardDevice.cs" />
+    <Compile Include="Devices\Asus\Config\AsusConfig.cs" />
+    <Compile Include="Devices\Asus\Config\AsusConfigWindow.xaml.cs">
+      <DependentUpon>AsusConfigWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Devices\Asus\Config\AsusKeyToDeviceKeyControl.xaml.cs">
+      <DependentUpon>AsusKeyToDeviceKeyControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GameStateParameterPicker.xaml.cs">
       <DependentUpon>GameStateParameterPicker.xaml</DependentUpon>
     </Compile>
@@ -160,6 +177,7 @@
       <DependentUpon>Window_Prompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
+    <Compile Include="Devices\Vulcan\Vulcan.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
     <Compile Include="Profiles\EliteDangerous\GSI\Nodes\Journal\Events\DockFighter.cs" />
@@ -204,9 +222,7 @@
     <Compile Include="Profiles\Discord\GSI\Nodes\UserNode.cs" />
     <Compile Include="Profiles\Discord\DiscordApplication.cs" />
     <Compile Include="Profiles\Discord\DiscordProfile.cs" />
-    <Compile Include="Devices\Vulcan\Vulcan.cs" />
-    <Compile Include="Profiles\ProcessManager.cs" />
-    <Compile Include="Profiles\LightingStateManager.cs" />
+    <Compile Include="Profiles\GameStateParameterLookup.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GameEvent_LoL.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameData.cs" />
     <Compile Include="Profiles\LeagueOfLegends\GSI\GameState_LoL.cs" />
@@ -223,16 +239,28 @@
       <DependentUpon>Control_LoLBackgroundLayer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Profiles\AutoJsonNode.cs" />
+    <Compile Include="Profiles\LocalPCInformation.cs" />
     <Compile Include="Profiles\RocketLeague\GSI\Nodes\Team.cs" />
     <Compile Include="Profiles\RocketLeague\Layers\RocketLeagueGoalExplosionLayerHandler.cs" />
     <Compile Include="Profiles\Osu\GSI\Enums.cs" />
-    <Compile Include="Profiles\Terraria\GSI\GameState_Terraria.cs" />
-    <Compile Include="Profiles\Terraria\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\Terraria\GSI\Nodes\WorldNode.cs" />
-    <Compile Include="Profiles\Terraria\TerrariaApplication.cs" />
-    <Compile Include="Profiles\Terraria\TerrariaProfile.cs" />
-    <Compile Include="Profiles\Terraria\Control_Terraria.xaml.cs">
-      <DependentUpon>Control_Terraria.xaml</DependentUpon>
+    <Compile Include="Profiles\Stardew Valley\Control_StardewValley.xaml.cs">
+      <DependentUpon>Control_StardewValley.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\Stardew Valley\GSI\GameState_StardewValley.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\GameStatusNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\InventoryNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\JournalNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\Stardew Valley\StardewValleyApplication.cs" />
+    <Compile Include="Profiles\Stardew Valley\StardewValleyProfile.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\GameState_TModLoader.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\Nodes\PlayerNode.cs" />
+    <Compile Include="Profiles\TModLoader\GSI\Nodes\WorldNode.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderApplication.cs" />
+    <Compile Include="Profiles\TModLoader\TModLoaderProfile.cs" />
+    <Compile Include="Profiles\TModLoader\Control_TModLoader.xaml.cs">
+      <DependentUpon>Control_TModLoader.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\Control_LayerList.xaml.cs">
       <DependentUpon>Control_LayerList.xaml</DependentUpon>
@@ -277,7 +305,6 @@
       <DependentUpon>LayerEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\Asus\AsusDevice.cs" />
-    <Compile Include="Devices\Asus\AsusRGBNetBrush.cs" />
     <Compile Include="Devices\NZXT\NZXTDevice.cs" />
     <Compile Include="Controls\ReorderableListBox.cs" />
     <Compile Include="Devices\AtmoOrb\AtmoOrbDevice.cs" />
@@ -519,7 +546,6 @@
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\LocationNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\MailNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\PlayerNode.cs" />
-    <Compile Include="Profiles\Slime Rancher\GSI\Nodes\ProviderNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\VacPackNode.cs" />
     <Compile Include="Profiles\Slime Rancher\GSI\Nodes\WorldNode.cs" />
     <Compile Include="Profiles\Slime Rancher\SlimeRancherApplication.cs" />
@@ -567,8 +593,8 @@
     <Compile Include="Settings\Layers\Control_BinaryCounterLayer.xaml.cs">
       <DependentUpon>Control_BinaryCounterLayer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_Latch.cs" />
-    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_NumericChangeDetector.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_FlipFlop.cs" />
+    <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ChangeDetector.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_PeripheralInput.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_ProcessRunning.cs" />
     <Compile Include="Settings\Overrides\Logic\Boolean\Boolean_TrueExtender.cs" />
@@ -627,7 +653,7 @@
     <Compile Include="Settings\Overrides\Logic\Control_SublogicHolder.xaml.cs">
       <DependentUpon>Control_SublogicHolder.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\Overrides\Logic\IEvaluatable.cs" />
+    <Compile Include="Settings\Overrides\Logic\Evaluatable.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLogicBuilder.cs" />
     <Compile Include="Settings\Overrides\Logic\OverrideLookupTable.cs" />
     <Compile Include="Settings\Overrides\LogicOverridableAttribute.cs" />
@@ -675,8 +701,10 @@
       <DependentUpon>Window_ProcessSelection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AttachedApplication.cs" />
+    <Compile Include="Utils\AudioDeviceProxy.cs" />
     <Compile Include="Utils\CollectionUtils.cs" />
     <Compile Include="Utils\DragBehaviour.cs" />
+    <Compile Include="Utils\FastMemberExtensions.cs" />
     <Compile Include="Utils\GridHelper.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
     <Compile Include="Utils\TextUtils.cs" />
@@ -823,15 +851,36 @@
     <Compile Include="Profiles\Metro Last Light\MetroLLApplication.cs" />
     <Compile Include="Profiles\Metro Last Light\MetroLLProfile.cs" />
     <Resource Include="Profiles\Discord\GSI\AuroraGSI.plugin.js" />
+    <Content Include="Interop.AuraServiceLib.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_outline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g513.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\logitech_g815.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="kb_layouts\Extra Features\asus_strix_flare_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Asus_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\SkypeOverlaySettings.cs" />
     <Content Include="Profiles\Overlays\SkypeOverlay\State_SkypeOverlay.cs" />
+    <None Include="kb_layouts\asus_strix_scope.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\keyboard101_numpad_right_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -934,7 +983,8 @@
     <Compile Include="Profiles\Payday 2\Layers\PD2FlashbangLayerHandler.cs" />
     <Compile Include="Profiles\Payday 2\Layers\PD2BackgroundLayerHandler.cs" />
     <Compile Include="Profiles\LightingEngine.cs" />
-    <Compile Include="Profiles\StringProperty.cs" />
+    <Compile Include="Profiles\ProcessManager.cs" />
+    <Compile Include="Profiles\LightingStateManager.cs" />
     <Compile Include="Profiles\Worms_WMD\Control_WormsWMD.xaml.cs">
       <DependentUpon>Control_WormsWMD.xaml</DependentUpon>
     </Compile>
@@ -1481,7 +1531,6 @@
     </Compile>
     <Compile Include="Utils\BitmapUtils.cs" />
     <Compile Include="Utils\BrushUtils.cs" />
-    <Compile Include="Utils\GameStateUtils.cs" />
     <Compile Include="Utils\GenericUtils.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Devices\Logitech\LogitechGSDK.cs" />
@@ -1522,9 +1571,6 @@
     </Content>
     <Content Include="DS4WindowsApi.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Interop.AuraServiceLib.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Asus_Pugio_backlights.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1602,9 +1648,10 @@
     <Resource Include="Resources\elite_dangerous_256x256.png" />
     <Content Include="RazerSdkWrapper.dll" />
     <Resource Include="Resources\betterdiscord.png" />
-    <Resource Include="Resources\terraria_512x512.png" />
     <Resource Include="Resources\icons8-font-size-30.png" />
     <Resource Include="Resources\icons8-folder-30.png" />
+    <Resource Include="Resources\stardew_valley_32x32.png" />
+    <Resource Include="Resources\tmodloader.png" />
     <Content Include="RGB.NET.Devices.Asus.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1706,6 +1753,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Devices\Asus\Config\AsusConfigWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Devices\Asus\Config\AsusKeyToDeviceKeyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Profiles\CSGO\Layers\Control_CSGODeathLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1726,7 +1781,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Profiles\Terraria\Control_Terraria.xaml">
+    <Page Include="Profiles\Stardew Valley\Control_StardewValley.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\TModLoader\Control_TModLoader.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -2596,6 +2655,9 @@
     <PackageReference Include="DotNetZip">
       <Version>1.13.7</Version>
     </PackageReference>
+    <PackageReference Include="FastMember">
+      <Version>1.5.0</Version>
+    </PackageReference>
     <PackageReference Include="Fody">
       <Version>6.1.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -2609,6 +2671,9 @@
     </PackageReference>
     <PackageReference Include="IronPython">
       <Version>2.7.8.1</Version>
+    </PackageReference>
+    <PackageReference Include="JsonSubTypes">
+      <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="MouseKeyHook">
       <Version>5.6.0</Version>
@@ -2628,17 +2693,11 @@
     <PackageReference Include="PropertyChanged.Fody">
       <Version>3.2.8</Version>
     </PackageReference>
-    <PackageReference Include="RGB.NET.Devices.Asus">
-      <Version>0.1.32</Version>
-    </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Corsair">
       <Version>0.1.32</Version>
     </PackageReference>
     <PackageReference Include="RGB.NET.Groups">
       <Version>0.1.32</Version>
-    </PackageReference>
-    <PackageReference Include="RGB.NET.Resources.Asus">
-      <Version>0.3.0</Version>
     </PackageReference>
     <PackageReference Include="RGB.NET.Resources.Corsair">
       <Version>0.3.0.234</Version>
@@ -2677,7 +2736,7 @@
       <Version>2.9.15603.14400</Version>
     </PackageReference>
     <PackageReference Include="YeeLightAPI_SnakePin">
-      <Version>0.0.1</Version>
+      <Version>0.0.6</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

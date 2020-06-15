@@ -1,4 +1,4 @@
-using Aurora.Profiles.Terraria.GSI;
+using Aurora.Profiles.TModLoader.GSI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,12 +19,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 
-namespace Aurora.Profiles.Terraria {
-    public partial class Control_Terraria : UserControl
+namespace Aurora.Profiles.TModLoader
+{
+    public partial class Control_TModLoader : UserControl
     {
         private Application profile;
 
-        public Control_Terraria(Application profile)
+        public Control_TModLoader(Application profile)
         {
             this.profile = profile;
 

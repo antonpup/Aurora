@@ -307,7 +307,7 @@ namespace Aurora.Profiles
             {
                 IGameState gameState = gs;
                 if (profile.Config.GameStateType != null)
-                    gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.json);
+                    gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
                 profile.SetGameState(gameState);
             }
             else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)

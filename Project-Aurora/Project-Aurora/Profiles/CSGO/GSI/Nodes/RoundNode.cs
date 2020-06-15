@@ -5,7 +5,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing information about the round
     /// </summary>
-    public class RoundNode : Node<RoundNode>
+    public class RoundNode : Node
     {
         /// <summary>
         /// Current round phase

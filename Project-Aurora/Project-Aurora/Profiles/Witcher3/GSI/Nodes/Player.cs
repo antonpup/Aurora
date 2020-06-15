@@ -3,7 +3,7 @@
     /// <summary>
     /// Class representing player information
     /// </summary>
-    public class Player_Witcher3 : Node<Player_Witcher3>
+    public class Player_Witcher3 : Node
     {
         public int MaximumHealth = 0;
         public int CurrentHealth = 0;
@@ -14,6 +14,7 @@
 
     public enum WitcherSign
     {
+        None,
         Axii,
         Aard,
         Igni,

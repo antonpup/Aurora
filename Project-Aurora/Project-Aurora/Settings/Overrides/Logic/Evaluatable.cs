@@ -1,6 +1,7 @@
 ﻿using Aurora.Profiles;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -12,6 +13,9 @@ namespace Aurora.Settings.Overrides.Logic {
     /// that can be used to edit the operand.
     /// </summary>
     public interface IEvaluatable {
+        /// <summary>The most recent value that was output from the evaluatable.</summary>
+        object LastValue { get; }
+
         /// <summary>Should evaluate the operand and return the evaluation result.</summary>
         object Evaluate(IGameState gameState);
 
@@ -22,13 +26,28 @@ namespace Aurora.Settings.Overrides.Logic {
         IEvaluatable Clone();
     }
 
-    public interface IEvaluatable<T> : IEvaluatable
-    {
+    public abstract class Evaluatable<T> : IEvaluatable, System.ComponentModel.INotifyPropertyChanged {
+
+        /// <summary>The most recent value that was output from the evaluatable.</summary>
+        public T LastValue { get; private set; } = default;
+        object IEvaluatable.LastValue => LastValue;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         /// <summary>Should evaluate the operand and return the evaluation result.</summary>
-        new T Evaluate(IGameState gameState);
+        protected abstract T Execute(IGameState gameState);
+
+        /// <summary>Evaluates the result of this evaluatable with the given gamestate and returns the result.</summary>
+        // Execute the evaluatable logic, store the latest value and return this value
+        public T Evaluate(IGameState gameState) => (LastValue = Execute(gameState));
+        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
+
+        /// <summary>Should return a control that is bound to this logic element.</summary>
+        public abstract Visual GetControl();
 
         /// <summary>Creates a copy of this IEvaluatable.</summary>
-        new IEvaluatable<T> Clone();
+        public abstract Evaluatable<T> Clone();
+        IEvaluatable IEvaluatable.Clone() => Clone();
     }
 
 
@@ -43,7 +62,7 @@ namespace Aurora.Settings.Overrides.Logic {
             [typeof(string)] = typeof(StringConstant)
         };
 
-        public static IEvaluatable<T> Get<T>() => (IEvaluatable<T>)Get(typeof(T));
+        public static Evaluatable<T> Get<T>() => (Evaluatable<T>)Get(typeof(T));
 
         public static IEvaluatable Get(Type t) {
             if (!defaultsMap.TryGetValue(t, out Type @default))
@@ -58,10 +77,10 @@ namespace Aurora.Settings.Overrides.Logic {
     /// </summary>
     public static class EvaluatableHelpers {
         /// <summary>Attempts to get an evaluatable from the suppliied data object. Will return true/false indicating if data is of correct format
-        /// (an <see cref="IEvaluatable{T}"/> where T matches the given type. If the eval type is null, no type check is performed, the returned
+        /// (an <see cref="Evaluatable{T}"/> where T matches the given type. If the eval type is null, no type check is performed, the returned
         /// evaluatable may be of any sub-type.</summary>
         internal static bool TryGetData(IDataObject @do, out IEvaluatable evaluatable, out Control_EvaluatablePresenter source, Type evalType) {
-            if (@do.GetData(@do.GetFormats().FirstOrDefault(x => x != "SourcePresenter")) is IEvaluatable data && (evalType == null || Utils.TypeUtils.ImplementsGenericInterface(data.GetType(), typeof(IEvaluatable<>), evalType))) {
+            if (@do.GetData(@do.GetFormats().FirstOrDefault(x => x != "SourcePresenter")) is IEvaluatable data && (evalType == null || Utils.TypeUtils.GetGenericParentTypes(data.GetType(), typeof(Evaluatable<>))[0] == evalType)) {
                 evaluatable = data;
                 source = @do.GetData("SourcePresenter") as Control_EvaluatablePresenter;
                 return true;

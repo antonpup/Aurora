@@ -182,7 +182,11 @@ namespace Aurora.Settings
         Logitech_GPRO = 103,
         [Description("Logitech - G213")]
         Logitech_G213 = 104,
-
+		[Description("Logitech - G815")]
+        Logitech_G815 = 105,
+        [Description("Logitech - G513")]
+        Logitech_G513 = 106,
+		
         //Corsair range is 200-299
         [Description("Corsair - K95")]
         Corsair_K95 = 200,
@@ -244,6 +248,8 @@ namespace Aurora.Settings
 
         [Description("Asus Strix Flare")]
         Asus_Strix_Flare = 900,
+        [Description("Asus Strix Scope")]
+        Asus_Strix_Scope = 901,
 
         //Drevo range is 1000-1099
         [Description("Drevo BladeMaster")]
@@ -493,7 +499,8 @@ namespace Aurora.Settings
         public float idle_frequency;
 
         //Hardware Monitor
-        public int HardwareMonitorUpdateRate;
+        public int HardwareMonitorUpdateRate { get; set; } = 500;
+        public bool HardwareMonitorUseAverageValues { get; set; } = true;
 
         public VariableRegistry VarRegistry;
 
@@ -510,6 +517,9 @@ namespace Aurora.Settings
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
+
+        public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
+        public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
 
         public Configuration()
         {
@@ -547,7 +557,7 @@ namespace Aurora.Settings
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
             devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
-            OverlaysInPreview = false;
+            OverlaysInPreview = true;
             FrameRate = 30;
             ProfileChangeAnimation = true;
 
@@ -574,8 +584,6 @@ namespace Aurora.Settings
             idle_effect_secondary_color = Color.FromArgb(0, 0, 0);
             idle_amount = 5;
             idle_frequency = 2.5f;
-
-            HardwareMonitorUpdateRate = 200;
 
             //Debug
             BitmapDebugTopMost = false;

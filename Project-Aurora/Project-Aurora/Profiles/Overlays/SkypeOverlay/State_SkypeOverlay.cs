@@ -45,7 +45,7 @@ namespace Aurora.Profiles.Overlays.SkypeOverlay
         }
     }
 
-    public class Skype_Integration : Node<Skype_Integration>
+    public class Skype_Integration : Node
     {
         public int MissedMessagesCount;
         public bool IsCalled;
