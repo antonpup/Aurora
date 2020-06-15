@@ -21,6 +21,7 @@ namespace Aurora.Profiles.Discord.GSI.Nodes {
         [AutoJsonPropertyName("self_deafen")] public bool SelfDeafen;
         public bool Mentions;
         [AutoJsonPropertyName("unread_messages")] public bool UnreadMessages;
+        [AutoJsonPropertyName("being_called")] public bool BeingCalled;
 
         internal UserNode(string json) : base(json) {
             Status = GetStatus(GetString("status"));

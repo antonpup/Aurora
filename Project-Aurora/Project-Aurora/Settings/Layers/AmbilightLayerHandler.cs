@@ -176,7 +176,7 @@ namespace Aurora.Settings.Layers
             this._Coordinates = new Rectangle(0, 0, 0, 0);
             this._AmbilightQuality = AmbilightQuality.Medium;
             this._BrightenImage = false;
-            this._BrightnessChange = 0.0f;
+            this._BrightnessChange = 1.0f;
             this._SaturateImage = false;
             this._SaturationChange = 1.0f;
             this._FlipVertically = false;
@@ -346,7 +346,18 @@ namespace Aurora.Settings.Layers
                     break;
 
                 case AmbilightType.AverageColor:
-                    ambilight_layer.Set(Properties.Sequence, BitmapUtils.GetAverageColor(screen));
+                    var average = BitmapUtils.GetRegionColor(screen, cropRegion);
+
+                    if (Properties.BrightenImage)
+                        average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
+
+                    if (Properties.SaturateImage)
+                        average = ColorUtils.ChangeSaturation(average, Properties.SaturationChange);
+
+                    if (Properties.HueShiftImage)
+                        average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
+
+                    ambilight_layer.Set(Properties.Sequence, average);
                     break;
             }
 

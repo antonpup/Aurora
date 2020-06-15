@@ -66,6 +66,8 @@ namespace Aurora.Utils
                 case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatableString, Aurora]]":
                 case "System.Collections.ObjectModel.ObservableCollection`1[[Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.String, mscorlib]], Aurora]]":
                     return typeof(ObservableCollection<Evaluatable<string>>);
+                case "Aurora.Settings.Overrides.Logic.Boolean.Boolean_Latch":
+                    return typeof(Settings.Overrides.Logic.Boolean.Boolean_FlipFlopSR);
                 default:
                     if (!typeName.Contains("Overlays") && new Regex(@"Aurora.Profiles.\w+.\w+Settings").IsMatch(typeName))
                         return base.BindToType(assemblyName, typeName.Replace("Settings", "Profile"));

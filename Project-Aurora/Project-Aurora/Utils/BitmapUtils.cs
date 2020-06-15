@@ -83,21 +83,21 @@ namespace Aurora.Utils
         /// Returns a color matrix that when applied to an image alters its brightness.
         /// Taken from https://docs.rainmeter.net/tips/colormatrix-guide/
         /// </summary>
-        /// <param name="b">Brightness (-1..1)</param>
+        /// <param name="b">Brightness (0..4)</param>
         /// <returns></returns>
         public static float[][] GetBrightnessColorMatrix(float b) => new float[][] {
-                new float[] {1, 0, 0, 0, 0},//red
-                new float[] {0, 1, 0, 0, 0},//green
-                new float[] {0, 0, 1, 0, 0},//blue
+                new float[] {b, 0, 0, 0, 0},//red
+                new float[] {0, b, 0, 0, 0},//green
+                new float[] {0, 0, b, 0, 0},//blue
                 new float[] {0, 0, 0, 1, 0},//alpha
-                new float[] {b, b, b, 0, 1}
+                new float[] {0, 0, 0, 0, 1}
         };
 
         /// <summary>
         /// Returns a color matrix that when applied to an image alters its saturation.
         /// Taken from https://docs.rainmeter.net/tips/colormatrix-guide/
         /// </summary>
-        /// <param name="s">Saturation (0..~5)</param>
+        /// <param name="s">Saturation (0..4)</param>
         /// <returns></returns>
         public static float[][] GetSaturationColorMatrix(float s)
         {
