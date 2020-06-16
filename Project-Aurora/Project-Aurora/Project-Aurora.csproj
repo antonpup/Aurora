@@ -94,6 +94,9 @@
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="OpenRGB.NET">
+      <HintPath>.\OpenRGB.NET.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -176,6 +179,7 @@
     <Compile Include="Controls\Window_Prompt.xaml.cs">
       <DependentUpon>Window_Prompt.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Devices\OpenRGB\OpenRGBDevice.cs" />
     <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
