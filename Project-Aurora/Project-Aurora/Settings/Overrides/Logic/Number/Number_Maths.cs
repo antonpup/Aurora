@@ -219,10 +219,10 @@ namespace Aurora.Settings.Overrides.Logic {
         public override Evaluatable<double> Clone() => new NumberConstant { Value = Value };
     }
 
-    [Evaluatable("Number Random", category: EvaluatableCategory.Maths)]
+    [Evaluatable("Random Number", category: EvaluatableCategory.Maths)]
     public class NumberRandom : Evaluatable<double>
     {
-        private readonly Random _random = new Random();
+        private static readonly Random _random = new Random();
 
         private double _value = 0;
 
@@ -235,7 +235,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public NumberRandom() { }
 
         public override Visual GetControl() => new StackPanel { Orientation = Orientation.Vertical }
-            .WithChild(new TextBlock() { Text = "Update?:" })
+            .WithChild(new TextBlock() { Text = "Randomize:" })
             .WithChild(new Control_EvaluatablePresenter() { EvalType = typeof(bool) }
                 .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(Condition)) { Source = this, Mode = BindingMode.TwoWay }))
             .WithChild(new TextBlock() { Text = "Maximum:"})
