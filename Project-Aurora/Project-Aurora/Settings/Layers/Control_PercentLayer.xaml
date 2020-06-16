@@ -2,27 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Settings.Layers"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             xmlns:s="clr-namespace:Aurora.Settings"
              mc:Ignorable="d" Loaded="UserControl_Loaded" d:DesignHeight="195.98">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
-            <DataTemplate x:Key="PercentEffectTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <Label HorizontalAlignment="Left" Padding="0" Content="Progress Color:" VerticalAlignment="Top" Margin="0,60,0,0"/>
@@ -33,7 +18,7 @@
         <Controls:GameStateParameterPicker x:Name="variablePicker" SelectedPath="{Binding Path=Properties._VariablePath}" PropertyType="Number" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="79,0,0,0" Width="188" />
         <Label HorizontalAlignment="Left" Padding="0" Content="Maximum Value:" VerticalAlignment="Top" Margin="0,31,0,0"/>
         <Label HorizontalAlignment="Left" Margin="0,145,0,-23" Padding="0" Content="Blink threshold: " VerticalAlignment="Top"/>
-        <ComboBox x:Name="ComboBox_effect_type" HorizontalAlignment="Left" Margin="67,114,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="ComboBox_effect_type_SelectionChanged" ItemsSource="{Binding Source={StaticResource PercentEffectType}}" ItemTemplate="{Binding Source={StaticResource PercentEffectTypeTemplate}}" />
+        <ComboBox x:Name="ComboBox_effect_type" HorizontalAlignment="Left" Margin="67,114,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="ComboBox_effect_type_SelectionChanged" ItemsSource="{u:EnumToItemsSource {x:Type s:PercentEffectType}}" DisplayMemberPath="Text" SelectedValuePath="Value" />
         <Label HorizontalAlignment="Left" Margin="0,117,0,0" Padding="0" Content="Effect Type:" VerticalAlignment="Top"/>
         <xctk:IntegerUpDown x:Name="updown_blink_value" HorizontalAlignment="Left" Height="24" Margin="90,141,0,-27" VerticalAlignment="Top" Width="50" Value="1" Maximum="100" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="updown_blink_value_ValueChanged"/>
         <Label HorizontalAlignment="Left" Margin="145,145,0,-23" Padding="0" Content="%" VerticalAlignment="Top" RenderTransformOrigin="0.6,0.542"/>

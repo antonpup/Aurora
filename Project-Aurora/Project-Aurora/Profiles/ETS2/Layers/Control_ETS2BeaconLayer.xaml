@@ -3,27 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Profiles.ETS2.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:EnumETS2="clr-namespace:Aurora.Profiles.ETS2"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             xmlns:e="clr-namespace:Aurora.Profiles.ETS2"
+             xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600" Loaded="UserControl_Loaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="ETS2_BeaconStyle" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumETS2:ETS2_BeaconStyle" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:ETS2_BeaconStyleToStringVC x:Key="ETS2_BeaconStyleToStringVC"/>
-            <DataTemplate x:Key="ETS2_BeaconStyleTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource ETS2_BeaconStyleToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="28px" />
@@ -41,7 +27,7 @@
         </Grid.ColumnDefinitions>
 
         <Label Content="Light Mode" Grid.Row="0" />
-        <ComboBox x:Name="lightMode" Grid.Row="0" Grid.Column="1" Margin="4" SelectionChanged="lightMode_SelectionChanged" ItemsSource="{Binding Source={StaticResource ETS2_BeaconStyle}}" ItemTemplate="{Binding Source={StaticResource ETS2_BeaconStyleTemplate}}"/>
+        <ComboBox x:Name="lightMode" Grid.Row="0" Grid.Column="1" Margin="4" SelectionChanged="lightMode_SelectionChanged" ItemsSource="{u:EnumToItemsSource {x:Type e:ETS2_BeaconStyle}}" DisplayMemberPath="Text" SelectedValuePath="Value" />
 
         <Label Content="Speed (simple only)" Grid.Row="1" />
         <Slider x:Name="speedSlider" Grid.Row="1" Grid.Column="1" Margin="4" Minimum="0.1" Maximum="5" ValueChanged="speedSlider_ValueChanged" />

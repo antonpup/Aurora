@@ -42,7 +42,7 @@ namespace Aurora.Settings.Layers
                 //this.ColorPicker_primaryColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).PrimaryColor);
                 //this.KeySequence_keys.Sequence = (this.DataContext as InteractiveLayerHandler).AffectedSequence;
 
-                this.interactive_effects_type.SelectedIndex = (int)(this.DataContext as InteractiveLayerHandler).Properties._InteractiveEffect;
+                this.interactive_effects_type.SelectedValue = (this.DataContext as InteractiveLayerHandler).Properties._InteractiveEffect;
                 this.interactive_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
                 this.interactive_effects_random_primary_color_enabled.IsChecked = (this.DataContext as InteractiveLayerHandler).Properties._RandomPrimaryColor;
                 this.interactive_effects_secondary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as InteractiveLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
@@ -88,7 +88,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is InteractiveLayerHandler && sender is ComboBox)
             {
-                (this.DataContext as InteractiveLayerHandler).Properties._InteractiveEffect = (InteractiveEffects)Enum.Parse(typeof(InteractiveEffects), (sender as ComboBox).SelectedIndex.ToString());
+                (this.DataContext as InteractiveLayerHandler).Properties._InteractiveEffect = (InteractiveEffects)(sender as ComboBox).SelectedValue;
             }
         }
 

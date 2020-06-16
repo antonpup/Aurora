@@ -4,26 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
-             xmlns:utils="clr-namespace:Aurora.Utils"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
+             xmlns:u="clr-namespace:Aurora.Utils" 
              mc:Ignorable="d">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <utils:ColorConverter x:Key="colorConverter"/>
-
-            <ObjectDataProvider x:Key="ShortcutAssistantPresentationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:ShortcutAssistantPresentationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:ShortcutAssistantPresentationTypeToStringVC x:Key="ShortcutAssistantPresentationTypeToStringVC"/>
-            <DataTemplate x:Key="ShortcutAssistantPresentationTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource ShortcutAssistantPresentationTypeToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
+        <u:ColorConverter x:Key="colorConverter"/>
     </UserControl.Resources>
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="404,34,0,0" TextWrapping="Wrap" Text="Color:" VerticalAlignment="Top"/>
@@ -39,7 +24,7 @@
         <ScrollViewer HorizontalAlignment="Left" Margin="0,55,0,0" Width="347" MinHeight="80">
             <StackPanel x:Name="stackPanelShortcuts" Background="#7F646464"/>
         </ScrollViewer>
-        <ComboBox x:Name="comboboxPresentationType" HorizontalAlignment="Left" Margin="457,58,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource ShortcutAssistantPresentationType}}" ItemTemplate="{Binding Source={StaticResource ShortcutAssistantPresentationTypeTemplate}}" SelectionChanged="comboboxPresentationType_SelectionChanged"/>
+        <ComboBox x:Name="comboboxPresentationType" HorizontalAlignment="Left" Margin="457,58,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{u:EnumToItemsSource {x:Type local:ShortcutAssistantPresentationType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="comboboxPresentationType_SelectionChanged"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Presentation Type: " VerticalAlignment="Top" Margin="352,60,0,0"/>
     </Grid>
 </UserControl>

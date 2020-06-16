@@ -45,7 +45,7 @@ namespace Aurora.Settings.Layers
                 this.effect_speed_slider.Value = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.speed;
                 this.effect_speed_label.Text = "x " + (this.DataContext as GradientLayerHandler).Properties._GradientConfig.speed;
                 this.effect_angle.Text = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.angle.ToString();
-                this.effect_animation_type.SelectedIndex = (int)(this.DataContext as GradientLayerHandler).Properties._GradientConfig.animation_type;
+                this.effect_animation_type.SelectedValue = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.animation_type;
                 this.effect_animation_reversed.IsChecked = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.animation_reverse;
                 Brush brush = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.brush.GetMediaBrush();
                 try
@@ -150,7 +150,7 @@ namespace Aurora.Settings.Layers
         private void effect_animation_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is ComboBox)
-                (this.DataContext as GradientLayerHandler).Properties._GradientConfig.animation_type = (AnimationType)Enum.Parse(typeof(AnimationType), (sender as ComboBox).SelectedIndex.ToString());
+                (this.DataContext as GradientLayerHandler).Properties._GradientConfig.animation_type = (AnimationType)(sender as ComboBox).SelectedValue;
         }
 
         private void effect_animation_reversed_Checked(object sender, RoutedEventArgs e)

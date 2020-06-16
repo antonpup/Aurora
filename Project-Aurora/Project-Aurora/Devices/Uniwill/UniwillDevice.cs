@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Aurora.Devices.RGBNet;
 using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Win32;
 using UniwillSDKDLL;
 
@@ -41,6 +42,10 @@ namespace Aurora.Devices.Uniwill
         GAMECENTERTYPE GamingCenterType = 0;
 
         float brightness = 1f;
+
+        static UniwillDevice() {
+            // Setup custom enum description resolver (for changing how some UNIWILL enums appear to the user)
+            EnumUtils.RegisterCustomDescriptionResolver<PreferredKeyboard>(UniwillEnumDescriptionResolver);        }
 
         public UniwillDevice()
         {
@@ -257,6 +262,33 @@ namespace Aurora.Devices.Uniwill
         public VariableRegistry GetRegisteredVariables()
         {
             return new VariableRegistry();
+        }
+
+
+        private static string UniwillEnumDescriptionResolver(Enum @enum) {
+            try {
+                string descriptionString = @enum.GetCustomAttribute<DescriptionAttribute>()?.Description;
+                string oemstring = UniwillSDKDLL.KeyboardFactory.GetOEMName();
+                if (oemstring.Equals("XMG")) {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " FUSION");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " NEO");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " NEO 15");
+                } else {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " 550");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " 35X");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " 650");
+                }
+            } catch {
+                return null;
+            }
+
+            return null;
         }
     }
 }

@@ -4,66 +4,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Profiles.Payday_2"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
-             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-             xmlns:EnumPD2="clr-namespace:Aurora.Profiles.Payday_2"
-             xmlns:EnumPD2_GSI="clr-namespace:Aurora.Profiles.Payday_2.GSI.Nodes"
-             xmlns:devices="clr-namespace:Aurora.Devices"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.Payday_2.Control_PD2"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             xmlns:e="clr-namespace:Aurora.Profiles.Payday_2.GSI.Nodes"
+             x:Class="Aurora.Profiles.Payday_2.Control_PD2"
              mc:Ignorable="d"
              d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
-            <DataTemplate x:Key="PercentEffectTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="PD2_LevelPhaseType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPD2_GSI:LevelPhase" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:PD2_LevelPhaseTypeToStringVC x:Key="PD2_LevelPhaseTypeToStringVC"/>
-            <DataTemplate x:Key="PD2_LevelPhaseTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PD2_LevelPhaseTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="PD2_PlayerStateType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPD2_GSI:PlayerState" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:PD2_PlayerStateTypeToStringVC x:Key="PD2_PlayerStateTypeToStringVC"/>
-            <DataTemplate x:Key="PD2_PlayerStateTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PD2_PlayerStateTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="PD2_GameStateType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPD2_GSI:GameStates" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:PD2_GameStateTypeToStringVC x:Key="PD2_GameStateTypeToStringVC"/>
-            <DataTemplate x:Key="PD2_GameStateTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PD2_GameStateTypeToStringVC}}" />
-            </DataTemplate>
-
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <TabControl>
@@ -79,7 +24,7 @@
             <TabItem Header="Preview">
                 <Grid>
                     <Label Content="Level Phase:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="preview_levelphase" HorizontalAlignment="Left" Margin="90,43,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_LevelPhaseType}}" ItemTemplate="{Binding Source={StaticResource PD2_LevelPhaseTypeTemplate}}" SelectionChanged="preview_levelphase_SelectionChanged"/>
+                    <ComboBox x:Name="preview_levelphase" HorizontalAlignment="Left" Margin="90,43,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{u:EnumToItemsSource {x:Type e:LevelPhase}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="preview_levelphase_SelectionChanged"/>
                     <Label Content="Health:" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
                     <Slider x:Name="preview_health_slider" HorizontalAlignment="Left" Margin="62,107,0,0" VerticalAlignment="Top" Width="114" Maximum="100" SmallChange="1" ValueChanged="preview_health_slider_ValueChanged"/>
                     <Label x:Name="preview_health_amount" Content="0%" HorizontalAlignment="Left" Margin="181,103,0,0" VerticalAlignment="Top"/>
@@ -90,13 +35,13 @@
                     <Slider x:Name="preview_suspicion_slider" HorizontalAlignment="Left" Margin="78,169,0,0" VerticalAlignment="Top" Width="98" Maximum="100" SmallChange="1" ValueChanged="preview_suspicion_slider_ValueChanged"/>
                     <Label x:Name="preview_suspicion_amount" Content="0%" HorizontalAlignment="Left" Margin="181,165,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.692,3.115"/>
                     <Label Content="Player State:" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="preview_playerstate" HorizontalAlignment="Left" Margin="90,74,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_PlayerStateType}}" ItemTemplate="{Binding Source={StaticResource PD2_PlayerStateTypeTemplate}}" SelectionChanged="preview_playerstate_SelectionChanged"/>
+                    <ComboBox x:Name="preview_playerstate" HorizontalAlignment="Left" Margin="90,74,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{u:EnumToItemsSource {x:Type e:PlayerState}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="preview_playerstate_SelectionChanged"/>
                     <CheckBox x:Name="preview_swansong" Content="Is player in Swan Song" HorizontalAlignment="Left" Margin="13,196,0,0" VerticalAlignment="Top" Checked="preview_swansong_Checked" Unchecked="preview_swansong_Checked"/>
                     <Label Content="Flashbang amount:" HorizontalAlignment="Left" Margin="10,216,0,0" VerticalAlignment="Top"/>
                     <Slider x:Name="preview_flashbang_slider" HorizontalAlignment="Left" Margin="126,222,0,0" VerticalAlignment="Top" Width="98" Maximum="100" SmallChange="1" ValueChanged="preview_flashbang_slider_ValueChanged"/>
                     <Label x:Name="preview_flashbang_amount" Content="0%" HorizontalAlignment="Left" Margin="229,218,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.692,3.115"/>
                     <Label Content="Game State:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="preview_gamestate" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource PD2_GameStateType}}" ItemTemplate="{Binding Source={StaticResource PD2_GameStateTypeTemplate}}" SelectionChanged="preview_gamestate_SelectionChanged"/>
+                    <ComboBox x:Name="preview_gamestate" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{u:EnumToItemsSource {x:Type e:PlayerState}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="preview_gamestate_SelectionChanged"/>
                 </Grid>
             </TabItem>
         </TabControl>

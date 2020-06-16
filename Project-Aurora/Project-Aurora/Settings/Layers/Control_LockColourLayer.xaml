@@ -9,13 +9,8 @@
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              mc:Ignorable="d" x:Name="ctrlMain">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <utils:ColorConverter x:Key="ColorConverter"/>
-            <utils:KeysToStringVC x:Key="KeysToStringVC"/>
-            <DataTemplate x:Key="KeysTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KeysToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
+        <utils:ColorConverter x:Key="ColorConverter"/>
+        <utils:EnumToDescriptionConverter x:Key="EnumDescriptionConverter" />
     </UserControl.Resources>
     <Grid>
         <Label HorizontalAlignment="Left" Margin="0,27,0,0" Content="Off Color:" VerticalAlignment="Top" Height="24" Padding="0" VerticalContentAlignment="Center"  />
@@ -27,7 +22,13 @@
         <CheckBox Content="Pulse" Margin="10,85,324,0" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._Pulse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Label Content="Lock Key:" Padding="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbKey" Margin="54,0,0,0" VerticalAlignment="Top" ItemTemplate="{StaticResource KeysTemplate}" SelectedItem="{Binding Path=Properties._ToggledKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="211"/>
+        <ComboBox x:Name="cmbKey" Margin="54,0,0,0" VerticalAlignment="Top" SelectedItem="{Binding Path=Properties._ToggledKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="211">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <Controls:KeySequence x:Name="keysLock" HorizontalAlignment="Left" Margin="270,36,0,10" Title="Lock Colour Affected Keys" RecordingTag="Lock Colour Affected Keys" SequenceUpdated="keysLock_SequenceUpdated"/>
         <!--="{Binding Path=Properties._Sequence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
     </Grid>
