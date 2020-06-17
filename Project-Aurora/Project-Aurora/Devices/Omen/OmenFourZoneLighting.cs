@@ -69,8 +69,14 @@ namespace Aurora.Devices.Omen
                 {
                     try
                     {
-                        byte[] outData;
-                        int res = Execute(0x20009, 0x02, 0, null, out outData);
+                        // Check Fn + F4 status.
+                        byte[] outData = null;
+                        int res = Execute(0x20009, 0x04, 0, null, out outData);
+                        if (!Convert.ToBoolean(outData[0] & 0x80)) return;
+
+                        // Get colors of four zonesss.
+                        outData = null;
+                        res = Execute(0x20009, 0x02, 0, null, out outData);
 
                         byte[] inData = outData;
                         inData[0] = 0x3;
@@ -102,6 +108,7 @@ namespace Aurora.Devices.Omen
                             inData[ColorOffset + 3 * ColorSize + 2] = keyColors[DeviceKeys.A].B;
                         }
 
+                        // Set colors of four zonesss.
                         outData = null;
                         res = Execute(0x20009, 0x03, 128, inData, out outData);
                         if (res != 0)
