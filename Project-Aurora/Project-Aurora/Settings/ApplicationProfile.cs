@@ -38,6 +38,10 @@ namespace Aurora.Settings
 
     public class ApplicationProfile : INotifyPropertyChanged, IDisposable
     {
+        public string SavedWithVer { get; set; }
+        public string[] ProcessNames { get; set; }
+        public string[] ProcessTitles { get; set; }
+
         public string ProfileName { get; set; }
         public Keybind TriggerKeybind { get; set; }
         [JsonIgnore] public string ProfileFilepath { get; set; }
