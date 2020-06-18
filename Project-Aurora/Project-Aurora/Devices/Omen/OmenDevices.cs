@@ -73,6 +73,11 @@ namespace Aurora.Devices.Omen
                         devices.Add(dev);
                         kbConnected = true;
                     }
+                    else if ((dev = OmenFourZoneLighting.GetFourZoneLighting()) != null)
+                    {
+                        devices.Add(dev);
+                        kbConnected = true;
+                    }
 
                     if ((dev = OmenMouse.GetOmenMouse()) != null)
                     {
