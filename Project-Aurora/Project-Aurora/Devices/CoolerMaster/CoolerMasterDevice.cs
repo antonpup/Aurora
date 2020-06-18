@@ -697,7 +697,7 @@ namespace Aurora.Devices.CoolerMaster
 
         private void SendColorsToKeyboard(bool forced = false)
         {
-            if (Global.Configuration.devices_disable_keyboard)
+            if (Global.Configuration.DevicesDisableKeyboard)
                 return;
 
             if (!CoolerMasterSDK.Keyboards.Contains(CurrentDevice))

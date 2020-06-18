@@ -81,7 +81,7 @@ namespace Aurora.Controls {
             { typeof(float), bind => new SingleUpDown{ Increment = .1f }.SetBindingChain(SingleUpDown.ValueProperty, bind) },
 
             // Colours
-            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.ColorConverter()) },
+            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.DrawingMediaColorConverter()) },
             { typeof(RealColor), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new RealColorConverter()) },
 
             // Gradient colour

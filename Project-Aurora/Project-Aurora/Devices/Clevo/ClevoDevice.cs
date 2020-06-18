@@ -269,23 +269,23 @@ namespace Aurora.Devices.Clevo
         {
             if (forced || ColorUpdated)
             {
-                if ((forced || !LastColorKBLeft.Equals(ColorKBLeft)) && !Global.Configuration.devices_disable_keyboard)
+                if ((forced || !LastColorKBLeft.Equals(ColorKBLeft)) && !Global.Configuration.DevicesDisableKeyboard)
                 {
                     // MYSTERY: // Why is it B,R,G instead of R,G,B? SetKBLED uses R,G,B but only B,R,G returns the correct colors. Is bitshifting different in C# than in C++?
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBLeft, ColorKBLeft.B, ColorKBLeft.R, ColorKBLeft.G, (double)(ColorKBLeft.A / 0xff));
                     LastColorKBLeft = ColorKBLeft;
                 }
-                if ((forced || !LastColorKBCenter.Equals(ColorKBCenter)) && !Global.Configuration.devices_disable_keyboard)
+                if ((forced || !LastColorKBCenter.Equals(ColorKBCenter)) && !Global.Configuration.DevicesDisableKeyboard)
                 {
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBCenter, ColorKBCenter.B, ColorKBCenter.R, ColorKBCenter.G, (double)(ColorKBCenter.A / 0xff));
                     LastColorKBCenter = ColorKBCenter;
                 }
-                if ((forced || !LastColorKBRight.Equals(ColorKBRight)) && !Global.Configuration.devices_disable_keyboard)
+                if ((forced || !LastColorKBRight.Equals(ColorKBRight)) && !Global.Configuration.DevicesDisableKeyboard)
                 {
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBRight, ColorKBRight.B, ColorKBRight.R, ColorKBRight.G, (double)(ColorKBRight.A / 0xff));
                     LastColorKBRight = ColorKBRight;
                 }
-                if ((forced || (useTouchpad && !LastColorTouchpad.Equals(ColorTouchpad))) && !Global.Configuration.devices_disable_mouse)
+                if ((forced || (useTouchpad && !LastColorTouchpad.Equals(ColorTouchpad))) && !Global.Configuration.DevicesDisableMouse)
                 {
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorTouchpad, ColorTouchpad.B, ColorTouchpad.R, ColorTouchpad.G, (double)(ColorTouchpad.A / 0xff));
                     LastColorTouchpad = ColorTouchpad;

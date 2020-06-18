@@ -365,7 +365,7 @@ namespace Aurora.Profiles
 
         private void UpdateProcess()
         {
-            if (Global.Configuration.detection_mode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
             {
                 processMonitor.GetActiveWindowsProcessname();
                 nextProcessNameUpdate = currentTick + 1000L;
@@ -383,10 +383,10 @@ namespace Aurora.Profiles
             {
                 IdleTime = System.Environment.TickCount - LastInput.dwTime;
 
-                if (IdleTime >= Global.Configuration.idle_delay * 60 * 1000)
+                if (IdleTime >= Global.Configuration.IdleDelay * 60 * 1000)
                 {
-                    if (!(Global.Configuration.time_based_dimming_enabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute))
+                    if (!(Global.Configuration.TimeBasedDimmingEnabled &&
+                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingStartMinute, Global.Configuration.TimeBasedDimmingEndHour, Global.Configuration.TimeBasedDimmingEndMinute))
                     )
                     {
                         UpdateEvent(idle_e, newFrame);
@@ -435,8 +435,8 @@ namespace Aurora.Profiles
             UpdatedEvents.Clear();
 
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
-            if ((Global.Configuration.time_based_dimming_enabled &&
-               Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_start_minute, Global.Configuration.time_based_dimming_end_hour, Global.Configuration.time_based_dimming_end_minute)))
+            if ((Global.Configuration.TimeBasedDimmingEnabled &&
+               Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingStartMinute, Global.Configuration.TimeBasedDimmingEndHour, Global.Configuration.TimeBasedDimmingEndMinute)))
             {
                 StopUnUpdatedEvents();
                 return;
@@ -457,7 +457,7 @@ namespace Aurora.Profiles
             timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
             // If the current foreground process is excluded from Aurora, disable the lighting manager
-            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.excluded_programs.Contains(raw_process_name))
+            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(raw_process_name))
             {
                 StopUnUpdatedEvents();
                 Global.dev_manager.Shutdown();
@@ -506,7 +506,7 @@ namespace Aurora.Profiles
             {
                 profile = tempProfile;
                 preview = true;
-            } else if (Global.Configuration.allow_wrappers_in_background && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.IsEnabled)
+            } else if (Global.Configuration.AllowWrappersInBackground && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.IsEnabled)
                 profile = tempProfile;
 
             profile = profile ?? DesktopProfile;
@@ -579,7 +579,7 @@ namespace Aurora.Profiles
                         gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
                     profile.SetGameState(gameState);
                 }
-                else if (gs is GameState_Wrapper && Global.Configuration.allow_all_logitech_bitmaps)
+                else if (gs is GameState_Wrapper && Global.Configuration.AllowAllLogitechBitmaps)
                 {
                     string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                     lock (Events)
