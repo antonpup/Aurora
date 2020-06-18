@@ -103,6 +103,10 @@ namespace Aurora.Devices.OpenRGB
 
         public void Shutdown()
         {
+            for (int i = 0; i < colors.Length; i++)
+                colors[i] = new OpenRGBColor(255, 255, 255);
+            client.UpdateLeds(deviceIndex, colors);
+
             client.Disconnect();
             isInitialized = false;
         }
@@ -111,12 +115,12 @@ namespace Aurora.Devices.OpenRGB
         {
             foreach (var dk in keyColors)
             {
-                if (dict.TryGetValue(dk.Key, out var idx))
+                if (G810Dict.TryGetValue(dk.Key, out var idx))
                     colors[idx] = new OpenRGBColor(dk.Value.R, dk.Value.G, dk.Value.B);
             }
 
             client.UpdateLeds(deviceIndex, colors);
-            Thread.Sleep(30);
+            Thread.Sleep(25);
             return true;
         }
 
@@ -132,7 +136,7 @@ namespace Aurora.Devices.OpenRGB
             return update_result;
         }
 
-        private readonly Dictionary<DK, int> dict = new Dictionary<DK, int>()
+        private readonly Dictionary<DK, int> G810Dict = new Dictionary<DK, int>()
         {
             { DK.A, 0 },
             { DK.B, 1 },
