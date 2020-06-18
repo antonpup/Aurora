@@ -571,7 +571,7 @@ namespace Aurora.Settings
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
             devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
-            OverlaysInPreview = false;
+            OverlaysInPreview = true;
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;
