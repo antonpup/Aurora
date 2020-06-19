@@ -25,6 +25,7 @@ namespace Aurora.Controls
             InitializeComponent();
 
             Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
+            Dev_manager_NewDevicesInitialized(null, null);
         }
 
         private void Dev_manager_NewDevicesInitialized(object sender, EventArgs e)
