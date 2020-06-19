@@ -498,7 +498,7 @@ namespace Aurora.Utils
     /// Class to convert between a <see cref="EffectsEngine.EffectBrush"></see> and a <see cref="System.Windows.Media.Brush"></see> so that it can be
     /// used with the ColorBox gradient editor control.
     /// </summary>
-    public class EffectBrushToBrushConverter : IValueConverter {
+    public class EffectMediaBrushConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((EffectsEngine.EffectBrush)value).GetMediaBrush();
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new EffectsEngine.EffectBrush((System.Windows.Media.Brush)value);
     }

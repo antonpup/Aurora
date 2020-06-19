@@ -6,7 +6,6 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:utils="clr-namespace:Aurora.Utils"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:local="clr-namespace:Aurora.Settings.Layers"
              mc:Ignorable="d" x:Name="ctrlMain">
     <UserControl.Resources>
         <utils:EnumToDescriptionConverter x:Key="EnumDescriptionConverter" />
@@ -28,7 +27,6 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <Controls:KeySequence x:Name="keysLock" HorizontalAlignment="Left" Margin="270,36,0,10" Title="Lock Colour Affected Keys" RecordingTag="Lock Colour Affected Keys" SequenceUpdated="keysLock_SequenceUpdated"/>
-        <!--="{Binding Path=Properties._Sequence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+        <Controls:KeySequence Sequence="{Binding Path=Properties._Sequence}" HorizontalAlignment="Left" Margin="270,36,0,10" Title="Lock Colour Affected Keys" RecordingTag="Lock Colour Affected Keys" />
     </Grid>
 </UserControl>

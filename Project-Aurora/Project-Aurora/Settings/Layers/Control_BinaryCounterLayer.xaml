@@ -31,7 +31,7 @@
         <Controls:GameStateParameterPicker x:Name="varPathPicker" SelectedPath="{Binding Properties._VariablePath}" PropertyType="Number" Grid.Row="1" Grid.Column="1" Width="178" HorizontalAlignment="Stretch" Margin="4,2" />
 
         <StackPanel Grid.Column="3" Grid.RowSpan="3">
-            <Controls:KeySequence x:Name="sequence" Margin="0,4,0,0" Height="280px" VerticalAlignment="Top" RecordingTag="BinaryCounterLayer" Title="Affected Keys" SequenceUpdated="KeySequence_SequenceUpdated" />
+            <Controls:KeySequence Sequence="{Binding Properties._Sequence}" Margin="0,4,0,0" Height="280px" VerticalAlignment="Top" RecordingTag="BinaryCounterLayer" Title="Affected Keys" />
             <TextBlock Margin="0,8,0,0" Text="Enter the keys in ascending binary order, e.g. the first key will represent the right-most bit." TextWrapping="Wrap" />
         </StackPanel>
     </Grid>

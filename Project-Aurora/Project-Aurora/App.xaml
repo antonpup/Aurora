@@ -9,6 +9,7 @@
         <ResourceDictionary>
             <!-- Global converters -->
             <u:DrawingMediaColorConverter x:Key="DrawingToMediaColorConv" />
+            <u:EffectMediaBrushConverter x:Key="EffectToMediaBrushConv" />
 
             <!-- Dictionary containing the colors of the evalutable presenters for each type of override type. -->
             <ResourceDictionary x:Key="OverridesTypeColors">
