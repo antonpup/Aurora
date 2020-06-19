@@ -222,7 +222,7 @@ namespace Aurora.Settings.Overrides.Logic {
     [Evaluatable("Random Number", category: EvaluatableCategory.Maths)]
     public class NumberRandom : Evaluatable<double>
     {
-        private static readonly Random _random = new Random();
+        private readonly Random _random = new Random();
 
         private double _value = 0;
 
