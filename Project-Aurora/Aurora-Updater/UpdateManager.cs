@@ -120,9 +120,9 @@ namespace Aurora_Updater
             try
             {
                 if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
-                    LatestRelease = gClient.Repository.Release.GetAll("antonpup", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
+                    LatestRelease = gClient.Repository.Release.GetAll("Aurora-RGB", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
                 else
-                    LatestRelease = gClient.Repository.Release.GetLatest("antonpup", "Aurora").Result;
+                    LatestRelease = gClient.Repository.Release.GetLatest("Aurora-RGB", "Aurora").Result;
 
                 //Console.WriteLine(reply);
             }
