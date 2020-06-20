@@ -72,7 +72,6 @@
   <ItemGroup>
     <PackageReference Include="Colore" Version="5.2.0" />
     <PackageReference Include="CS-Script" Version="3.30.0" />
-    <PackageReference Include="DotNetZip" Version="1.13.7" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.1.1" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
     <PackageReference Include="hidlibrary" Version="3.2.46" />
