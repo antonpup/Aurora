@@ -3,7 +3,6 @@
     <TargetFramework>net48</TargetFramework>
     <Platforms>AnyCPU;x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>3</WarningLevel>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
