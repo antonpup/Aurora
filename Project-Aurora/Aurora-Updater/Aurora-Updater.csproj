@@ -20,6 +20,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
     <OutputPath>$(SolutionDir)..\Build\$(Configuration)</OutputPath>
   </PropertyGroup>
 
