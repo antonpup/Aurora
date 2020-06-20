@@ -171,6 +171,11 @@ namespace LedCSharp
             initd = true;
         }
 
+        public static void ReleaseDLL()
+        {
+            initd = false;
+        }
+
         //LED SDK
         private const int LOGI_DEVICETYPE_MONOCHROME_ORD = 0;
         private const int LOGI_DEVICETYPE_RGB_ORD = 1;
