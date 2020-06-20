@@ -11,8 +11,6 @@
     <FileVersion Condition=" '$(FileVersion)' == '' ">$(BUILD_BUILDNUMBER)</FileVersion>
     <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.0</FileVersion>
 
-    <InformationalVersion Condition=" '$(APPVEYOR_REPO_COMMIT)' != '' ">$(Version) - Commit Hash: $(APPVEYOR_REPO_COMMIT)</InformationalVersion>
-    <InformationalVersion Condition=" '$(BUILD_SOURCEVERSION)' != '' ">$(Version) - Commit Hash: $(BUILD_SOURCEVERSION)</InformationalVersion>
   </PropertyGroup>
 
 </Project>
