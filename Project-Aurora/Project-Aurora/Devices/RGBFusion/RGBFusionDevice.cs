@@ -85,13 +85,17 @@ namespace Aurora.Devices.RGBFusion
 
                 //Start RGBFusion Bridge
                 Global.logger.Info("Starting RGBFusion Bridge.");
-                Process.Start(_RGBFusionDirectory + _RGBFusionBridgeExeName, _customArgs + " " + (ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : ""));
-                if (!TestRGBFusionBridgeListener(10))
-                    throw new Exception("RGBFusion bridge listener didn't start.");
+                string pStart = _RGBFusionDirectory + _RGBFusionBridgeExeName;
+                string pArgs = _customArgs + " " + (ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : "");
+                Process.Start(pStart, pArgs);
+                if (!TestRGBFusionBridgeListener(15))
+                    throw new Exception("RGBFusion bridge listener didn't start on " + _RGBFusionDirectory + _RGBFusionBridgeExeName + " with params ");
 
                 //If device is restarted, re-send last color command.
                 if (_setColorCommandDataPacket[0] != 0)
+                {
                     SendCommandToRGBFusion(_setColorCommandDataPacket);
+                }
 
                 UpdateDeviceMap();
                 _isConnected = true;
@@ -128,9 +132,8 @@ namespace Aurora.Devices.RGBFusion
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Global.logger.Error(string.Format("RGBFusion Device has encountered an error while sending the command {0} to RGBFusion Bridge. Error: {1}", BitConverter.ToString(args), ex.Message));
                 return false;
             }
         }
@@ -206,6 +209,9 @@ namespace Aurora.Devices.RGBFusion
 
         private bool ValidateIgnoreLedParam()
         {
+            if (_ignoreLedsParam == null)
+                return false;
+            
             string[] ignoreLedsParam = _ignoreLedsParam.Split(',');
 
             foreach (string s in ignoreLedsParam)
@@ -445,7 +451,7 @@ namespace Aurora.Devices.RGBFusion
             {
                 if (SendCommandToRGBFusion(new byte[] { 1, 255, 0, 0, 0, 0, 0 }))
                     return true;
-                //Test listener every 100ms until pipe is up or timeout
+                //Test listener every 500ms until pipe is up or timeout
                 Thread.Sleep(500);
             }
             return result;
