@@ -167,16 +167,15 @@ namespace Aurora.Devices.RGBFusion
 
         private void UpdateDeviceMap()
         {
-            if (_deviceMap == null)
-            {
-                _deviceMap = new List<DeviceMapState>();
 
-                _deviceMap.Clear();
-                foreach (byte ledIndex in _rgbFusionLedIndexes)
-                {
-                    _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
-                }
+            _deviceMap = new List<DeviceMapState>();
+
+            _deviceMap.Clear();
+            foreach (byte ledIndex in _rgbFusionLedIndexes)
+            {
+                _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
             }
+
             _commitKey = _deviceMap.Max(k => k.deviceKey);
         }
 
@@ -308,7 +307,6 @@ namespace Aurora.Devices.RGBFusion
                             _setColorCommandDataPacket[(commandIndex - 1) * 6 + 6] = 0;
                             _setColorCommandDataPacket[0] = commandIndex;
                             SendCommandToRGBFusion(_setColorCommandDataPacket);
-                            Debug.WriteLine("Set color");
                         }
                         commandIndex = 0;
                         _deviceChanged = false;
@@ -442,7 +440,6 @@ namespace Aurora.Devices.RGBFusion
 
         private bool TestRGBFusionBridgeListener(byte secondsTimeOut)
         {
-            Debug.WriteLine("Scan start");
             bool result = false;
             for (int i = 0; i < secondsTimeOut * 2; i++)
             {
@@ -451,7 +448,6 @@ namespace Aurora.Devices.RGBFusion
                 //Test listener every 100ms until pipe is up or timeout
                 Thread.Sleep(500);
             }
-            Debug.WriteLine("Return");
             return result;
         }
 
