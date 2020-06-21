@@ -33,6 +33,7 @@ namespace Aurora.Devices.RGBFusion
         private List<DeviceMapState> _deviceMap;
         private Color _initialColor = Color.Black;
         private string _ignoreLedsParam = string.Empty;
+        private string _customArgs = string.Empty;
         private byte[] _setColorCommandDataPacket = new byte[1024];
         private List<string> _RGBFusionBridgeFiles = new List<string>()
         {
@@ -84,13 +85,15 @@ namespace Aurora.Devices.RGBFusion
 
                 //Start RGBFusion Bridge
                 Global.logger.Info("Starting RGBFusion Bridge.");
-                Process.Start(_RGBFusionDirectory + _RGBFusionBridgeExeName, ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : "");
+                Process.Start(_RGBFusionDirectory + _RGBFusionBridgeExeName, _customArgs + " " + (ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : ""));
                 if (!TestRGBFusionBridgeListener(10))
                     throw new Exception("RGBFusion bridge listener didn't start.");
 
                 //If device is restarted, re-send last color command.
                 if (_setColorCommandDataPacket[0] != 0)
                     SendCommandToRGBFusion(_setColorCommandDataPacket);
+
+                UpdateDeviceMap();
                 _isConnected = true;
                 return true;
             }
@@ -191,12 +194,14 @@ namespace Aurora.Devices.RGBFusion
                 var devKeysEnumAsEnumerable = System.Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
                 _variableRegistry = new VariableRegistry();
                 _variableRegistry.Register($"{_devicename}_ignore_leds", "", "Area index to be ignored by RGBFusion Bridge", null, null, "Comma separated. Require Aurora restart.");
+                _variableRegistry.Register($"{_devicename}_custom_args", "", "Custom command line arguments", null, null, "Just for advanced users.");
                 foreach (byte ledIndex in _rgbFusionLedIndexes)
                 {
                     _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min(), "Require Aurora restart.");
                 }
             }
             _ignoreLedsParam = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_ignore_leds");
+            _customArgs = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_custom_args");
             return _variableRegistry;
         }
 
@@ -362,7 +367,6 @@ namespace Aurora.Devices.RGBFusion
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            UpdateDeviceMap(); //Is ther any way to know when a config in VariableRegistry change to avoid do this task every time?
             _ellapsedTimeWatch.Restart();
             bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
             _ellapsedTimeWatch.Stop();
