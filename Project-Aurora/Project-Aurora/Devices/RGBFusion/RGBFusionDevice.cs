@@ -29,6 +29,7 @@ namespace Aurora.Devices.RGBFusion
         private Stopwatch _ellapsedTimeWatch = new Stopwatch();
         private VariableRegistry _variableRegistry = null;
         private string _RGBFusionDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\GIGABYTE\\RGBFusion\\";
+        private DeviceKeys _commitKey;
         private List<DeviceMapState> _deviceMap;
         private Color _initialColor = Color.Black;
         private string _ignoreLedsParam = string.Empty;
@@ -173,6 +174,7 @@ namespace Aurora.Devices.RGBFusion
                     _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
                 }
             }
+            _commitKey = _deviceMap.Max(k => k.deviceKey);
         }
 
         bool _deviceChanged = true;
@@ -287,7 +289,7 @@ namespace Aurora.Devices.RGBFusion
                         }
                     }
 
-                    if (key.Key == _deviceMap.Max(k => k.deviceKey))
+                    if (key.Key == _commitKey)
                     {
                         // Send changes to device only if device actually changed.
                         if (_deviceChanged)
