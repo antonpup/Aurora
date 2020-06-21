@@ -176,7 +176,7 @@ namespace Aurora.Settings.Layers
             this._Coordinates = new Rectangle(0, 0, 0, 0);
             this._AmbilightQuality = AmbilightQuality.Medium;
             this._BrightenImage = false;
-            this._BrightnessChange = 0.0f;
+            this._BrightnessChange = 1.0f;
             this._SaturateImage = false;
             this._SaturationChange = 1.0f;
             this._FlipVertically = false;
