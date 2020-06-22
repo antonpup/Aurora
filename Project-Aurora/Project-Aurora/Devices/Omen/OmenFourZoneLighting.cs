@@ -34,7 +34,6 @@ namespace Aurora.Devices.Omen
                                     keyColors[DeviceKeys.ADDITIONALLIGHT3], 
                                     keyColors[DeviceKeys.ADDITIONALLIGHT4] });
                         }
-
                     }
                     finally
                     {

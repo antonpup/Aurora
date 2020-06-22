@@ -90,7 +90,7 @@ namespace Aurora.Devices.Omen
 
                     if ((dev = OmenChassis.GetOmenChassis()) != null)
                     {
-                        devices.Add(OmenChassis.GetOmenChassis());
+                        devices.Add(dev);
                         peripheralConnected = true;
                     }
 
