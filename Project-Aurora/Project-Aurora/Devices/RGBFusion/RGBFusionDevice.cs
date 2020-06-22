@@ -51,7 +51,8 @@ namespace Aurora.Devices.RGBFusion
         {
             try
             {
-                Shutdown();
+                if (!TestRGBFusionBridgeListener(1))
+                    Shutdown();
 
                 if (!IsRGBFusionInstalled())
                 {
@@ -148,9 +149,9 @@ namespace Aurora.Devices.RGBFusion
         {
             if (IsRGBFusionBridgeRunning())
             {
-                if (SendCommandToRGBFusion(new byte[] { 1, 5, 0, 0, 0, 0, 0 })) // Operatin code 5 set all leds to black and close the listener application.
-                    Thread.Sleep(1000); // Time to shutdown leds and close listener application.
-                KillProcessByName("RGBFusionAuroraListener"); //Just in case RGBFusionAuroraListener did not close
+                SendCommandToRGBFusion(new byte[] { 1, 5, 0, 0, 0, 0, 0 });
+                Thread.Sleep(1000);
+                KillProcessByName(_RGBFusionBridgeExeName);
             }
             _isConnected = false;
         }
@@ -211,7 +212,7 @@ namespace Aurora.Devices.RGBFusion
         {
             if (_ignoreLedsParam == null)
                 return false;
-            
+
             string[] ignoreLedsParam = _ignoreLedsParam.Split(',');
 
             foreach (string s in ignoreLedsParam)
