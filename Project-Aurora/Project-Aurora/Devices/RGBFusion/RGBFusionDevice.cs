@@ -89,9 +89,9 @@ namespace Aurora.Devices.RGBFusion
                 string pStart = _RGBFusionDirectory + _RGBFusionBridgeExeName;
                 string pArgs = _customArgs + " " + (ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : "");
                 Process.Start(pStart, pArgs);
-                if (!TestRGBFusionBridgeListener(15))
+                if (!TestRGBFusionBridgeListener(60))
                     throw new Exception("RGBFusion bridge listener didn't start on " + _RGBFusionDirectory + _RGBFusionBridgeExeName + " with params ");
-
+                Global.logger.Info("RGBFusion bridge is listening");
                 //If device is restarted, re-send last color command.
                 if (_setColorCommandDataPacket[0] != 0)
                 {
@@ -219,7 +219,7 @@ namespace Aurora.Devices.RGBFusion
             {
                 if (!byte.TryParse(s, out _))
                 {
-                    Global.logger.Error("RGBFusion Bridge --ignoreled bad param {0}. Running Bridge in default mode.", s);
+                    Global.logger.Warn("RGBFusion Bridge --ignoreled bad param {0}. Running Bridge in default mode.", s);
                     return false;
                 }
             }
@@ -340,7 +340,7 @@ namespace Aurora.Devices.RGBFusion
             string mainProfileFilePath = _RGBFusionDirectory + _defaultProfileFileName;
             if (!IsRGBFusinMainProfileCreated())
             {
-                Global.logger.Warn(string.Format("Main profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
+                Global.logger.Error(string.Format("Main profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
             }
             else
             {
@@ -355,7 +355,7 @@ namespace Aurora.Devices.RGBFusion
             string extMainProfileFilePath = _RGBFusionDirectory + _defaultExtProfileFileName;
             if (!IsRGBFusinMainExtProfileCreated())
             {
-                Global.logger.Warn(string.Format("Main external devices profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
+                Global.logger.Error(string.Format("Main external devices profile file not found at {0}. Launch RGBFusion at least one time.", mainProfileFilePath));
             }
             else
             {
@@ -418,12 +418,12 @@ namespace Aurora.Devices.RGBFusion
             {
                 if (!File.Exists(_RGBFusionDirectory + file))
                 {
-                    Global.logger.Error(String.Format("File {0} not installed.", file));
+                    Global.logger.Warn(String.Format("File {0} not installed.", file));
                     error = true;
                 }
                 else if (CalculateMD5(_RGBFusionDirectory + file).ToLower() != CalculateMD5("RGBFusionBridge\\" + file).ToLower())
                 {
-                    Global.logger.Error(String.Format("File {0} MD5 incorrect.", file));
+                    Global.logger.Warn(String.Format("File {0} MD5 incorrect.", file));
                     error = true;
                 }
             }
