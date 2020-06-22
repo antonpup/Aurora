@@ -17,7 +17,7 @@
     },
     {
       "visualName": "Zone 2",
-      "tag": 41,
+      "tag": 144,
       "margin_left": -45.0,
       "margin_top": -10.0,
       "width": 216.0,
@@ -33,7 +33,7 @@
     },
     {
       "visualName": "Zone 3",
-      "tag": 60,
+      "tag": 145,
       "margin_left": 11.0,
       "margin_top": 58.0,
       "width": 105.0,
@@ -49,7 +49,7 @@
     },
     {
       "visualName": "Zone 1",
-      "tag": 66,
+      "tag": 143,
       "margin_left": 103.0,
       "margin_top": -10.0,
       "width": 338.0,
@@ -65,7 +65,7 @@
     },
     {
       "visualName": "Zone 0",
-      "tag": 72,
+      "tag": 142,
       "margin_left": 399.0,
       "margin_top": -10.0,
       "width": 192.0,

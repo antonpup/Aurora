@@ -23,12 +23,16 @@ namespace Aurora.Devices.Omen
                     try
                     {
                         if(FourZoneLighting.IsTurnOn() 
-                            && keyColors.ContainsKey(DeviceKeys.ENTER)
-                            && keyColors.ContainsKey(DeviceKeys.J)
-                            && keyColors.ContainsKey(DeviceKeys.E)
-                            && keyColors.ContainsKey(DeviceKeys.A))
+                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT1)
+                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT2)
+                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT3)
+                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT4))
                         {
-                            FourZoneLighting.SetZoneColors(new Color[] { keyColors[DeviceKeys.ENTER], keyColors[DeviceKeys.J], keyColors[DeviceKeys.E], keyColors[DeviceKeys.A] });
+                            FourZoneLighting.SetZoneColors(
+                                new Color[] { keyColors[DeviceKeys.ADDITIONALLIGHT1], 
+                                    keyColors[DeviceKeys.ADDITIONALLIGHT2], 
+                                    keyColors[DeviceKeys.ADDITIONALLIGHT3], 
+                                    keyColors[DeviceKeys.ADDITIONALLIGHT4] });
                         }
 
                     }
