@@ -19,17 +19,21 @@ namespace Aurora.Devices.Omen
             this.hKB = hKB;
         }
 
-        public static OmenKeyboard GetOmenKeyboard()
+        internal static IOmenDevice GetOmenKeyboard()
         {
-            IntPtr kboardPointer = IntPtr.Zero;
             switch (Global.Configuration.keyboard_brand)
             {
                 case PreferredKeyboard.OMEN_Sequencer:
-                    kboardPointer = OmenLighting_Keyboard_OpenByName("Woodstock");
-                    break;
+                    {
+                        IntPtr kboardPointer = IntPtr.Zero;
+                        kboardPointer = OmenLighting_Keyboard_OpenByName("Woodstock");
+                        return (kboardPointer == IntPtr.Zero ? null : new OmenKeyboard(kboardPointer));
+                    }
+                case PreferredKeyboard.OMEN_Four_Zone:
+                    return new OmenFourZoneLighting();
             }
 
-            return (kboardPointer == IntPtr.Zero ? null : new OmenKeyboard(kboardPointer));
+            return null;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
