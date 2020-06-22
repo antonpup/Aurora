@@ -5,11 +5,11 @@
     <Description>Unified Lighting Effects across different RGB devices</Description>
     <Product>Aurora</Product>
     <Copyright>Copyright ©  2017</Copyright>
-    <Version>1.0.0.0</Version>
 
-    <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_NUMBER)</FileVersion>
-    <FileVersion Condition=" '$(FileVersion)' == '' ">$(BUILD_BUILDNUMBER)</FileVersion>
-    <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.0</FileVersion>
+    <VersionPrefix>0.8.0</VersionPrefix>
+
+    <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_VERSION)</FileVersion>
+    <FileVersion Condition=" '$(FileVersion)' == '' ">$(VersionPrefix)</FileVersion>
 
   </PropertyGroup>
 
