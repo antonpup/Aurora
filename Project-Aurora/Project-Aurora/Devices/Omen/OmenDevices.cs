@@ -61,6 +61,8 @@ namespace Aurora.Devices.Omen
 
         public bool Initialize()
         {
+            Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
+            Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
 
             lock (this)
             {
@@ -69,11 +71,6 @@ namespace Aurora.Devices.Omen
                     devices = new List<IOmenDevice>();
                     IOmenDevice dev;
                     if ((dev = OmenKeyboard.GetOmenKeyboard()) != null)
-                    {
-                        devices.Add(dev);
-                        kbConnected = true;
-                    }
-                    else if ((dev = OmenFourZoneLighting.GetFourZoneLighting()) != null)
                     {
                         devices.Add(dev);
                         kbConnected = true;
@@ -103,9 +100,7 @@ namespace Aurora.Devices.Omen
                         peripheralConnected = true;
                     }
 
-                    Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
-
-                    isInitialized = true;
+                    isInitialized = (devices.Count != 0);
                 }
             }
             return isInitialized;
@@ -164,8 +159,6 @@ namespace Aurora.Devices.Omen
                         devices.Clear();
                         devices = null;
                         kbConnected = peripheralConnected = false;
-
-                        Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
                     }
                 }
                 catch (Exception e)
