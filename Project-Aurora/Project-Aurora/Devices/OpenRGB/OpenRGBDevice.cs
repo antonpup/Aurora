@@ -61,7 +61,7 @@ namespace Aurora.Devices.OpenRGB
             for (uint i = 0; i < controllerCount; i++)
                 devices.Add(client.GetControllerData(i));
 
-            deviceIndex = (uint)devices.FindIndex(d => d.name.Contains("G810"));
+            deviceIndex = (uint)devices.FindIndex(d => d.name.Contains("HyperX"));
             var data = devices[(int)deviceIndex];
             colors = new OpenRGBColor[data.leds.Length];
             for (int i = 0; i < data.leds.Length; i++)
@@ -115,7 +115,7 @@ namespace Aurora.Devices.OpenRGB
         {
             foreach (var dk in keyColors)
             {
-                if (G810Dict.TryGetValue(dk.Key, out var idx))
+                if (AlloyEliteRGBISODict.TryGetValue(dk.Key, out var idx))
                 {
                     colors[idx] = new OpenRGBColor(dk.Value.R, dk.Value.G, dk.Value.B);
                 }
@@ -257,6 +257,124 @@ namespace Aurora.Devices.OpenRGB
             { DK.G1                , 114 },
             { DK.G2                , 115 },
             { DK.G3                , 116 },
+        };
+
+
+        //ISO Dictionary, i don't have an ANSI keyboard lol
+        private readonly Dictionary<DK, int> AlloyEliteRGBISODict = new Dictionary<DK, int>()
+        {
+            { DK.A                 , 18  },
+            { DK.B                 , 77  },
+            { DK.C                 , 56  },
+            { DK.D                 , 45  },
+            { DK.E                 , 44  },
+            { DK.F                 , 55  },
+            { DK.G                 , 66  },
+            { DK.H                 , 76  },
+            { DK.I                 , 95  },
+            { DK.J                 , 85  },
+            { DK.K                 , 96  },
+            { DK.L                 , 11  },
+            { DK.M                 , 97  },
+            { DK.N                 , 86  },
+            { DK.O                 , 10  },
+            { DK.P                 , 23  },
+            { DK.Q                 , 17  },
+            { DK.R                 , 54  },
+            { DK.S                 , 31  },
+            { DK.T                 , 65  },
+            { DK.U                 , 84  },
+            { DK.V                 , 67  },
+            { DK.W                 , 30  },
+            { DK.X                 , 46  },
+            { DK.Y                 , 75  },
+            { DK.Z                 , 32  },
+            { DK.ONE               , 16  },
+            { DK.TWO               , 29  },
+            { DK.THREE             , 43  },
+            { DK.FOUR              , 53  },
+            { DK.FIVE              , 64  },
+            { DK.SIX               , 74  },
+            { DK.SEVEN             , 83  },
+            { DK.EIGHT             , 94  },
+            { DK.NINE              , 9   },
+            { DK.ZERO              , 22  },
+            { DK.ENTER             , 99  },
+            { DK.ESC               , 0   },
+            { DK.BACKSPACE         , 35  },
+            { DK.TAB               , 2   },
+            { DK.SPACE             , 57  },
+            { DK.MINUS             , 37  },
+            { DK.EQUALS            , 7   },
+            { DK.OPEN_BRACKET      , 38  },
+            { DK.CLOSE_BRACKET     , 88  },
+            { DK.BACKSLASH         , 45  },
+            { DK.HASHTAG           , 26  },
+            { DK.SEMICOLON         , 24  },
+            { DK.APOSTROPHE        , 39  },
+            { DK.TILDE             , 1   },
+            { DK.COMMA             , 12  },
+            { DK.PERIOD            , 25  },
+            { DK.FORWARD_SLASH     , 40  },
+            { DK.CAPS_LOCK         , 3   },
+            { DK.F1                , 15  },
+            { DK.F2                , 28  },
+            { DK.F3                , 42  },
+            { DK.F4                , 52  },
+            { DK.F5                , 63  },
+            { DK.F6                , 73  },
+            { DK.F7                , 82  },
+            { DK.F8                , 93  },
+            { DK.F9                , 8   },
+            { DK.F10               , 21  },
+            { DK.F11               , 36  },
+            { DK.F12               , 6   },
+            { DK.PRINT_SCREEN      , 20  },
+            { DK.SCROLL_LOCK       , 34  },
+            { DK.PAUSE_BREAK       , 47  },
+            { DK.INSERT            , 58  },
+            { DK.HOME              , 68  },
+            { DK.PAGE_UP           , 78  },
+            { DK.DELETE            , 48  },
+            { DK.END               , 59  },
+            { DK.PAGE_DOWN         , 69  },
+            { DK.ARROW_RIGHT       , 41  },
+            { DK.ARROW_LEFT        , 14  },
+            { DK.ARROW_DOWN        , 27  },
+            { DK.ARROW_UP          , 100 },
+            { DK.NUM_LOCK          , 50  },
+            { DK.NUM_SLASH         , 61  },
+            { DK.NUM_ASTERISK      , 71  },
+            { DK.NUM_MINUS         , 80  },
+            { DK.NUM_PLUS          , 91  },
+            { DK.NUM_ENTER         , 102 },
+            { DK.NUM_ONE           , 62  },
+            { DK.NUM_TWO           , 72  },
+            { DK.NUM_THREE         , 81  },
+            { DK.NUM_FOUR          , 90  },
+            { DK.NUM_FIVE          , 101 },
+            { DK.NUM_SIX           , 51  },
+            { DK.NUM_SEVEN         , 49  },
+            { DK.NUM_EIGHT         , 60  },
+            { DK.NUM_NINE          , 70  },
+            { DK.NUM_ZERO          , 92  },
+            { DK.NUM_PERIOD        , 103 },
+            { DK.BACKSLASH_UK      , 104 },
+            { DK.APPLICATION_SELECT, 13  },
+            { DK.FN_Key            , 13  },
+            { DK.LEFT_CONTROL      , 5   },
+            { DK.LEFT_SHIFT        , 4   },
+            { DK.LEFT_ALT          , 33  },
+            { DK.LEFT_WINDOWS      , 19  },
+            { DK.RIGHT_CONTROL     , 89  },
+            { DK.RIGHT_SHIFT       , 79  },
+            { DK.RIGHT_ALT         , 87  },
+            { DK.RIGHT_WINDOWS     , 98  },
+            { DK.MEDIA_NEXT        , 106 },
+            { DK.MEDIA_PREVIOUS    , 107 },
+            { DK.MEDIA_STOP        , 108 },
+            { DK.MEDIA_PLAY        , 109 },
+            { DK.VOLUME_MUTE       , 110 },
         };
     }
 }
