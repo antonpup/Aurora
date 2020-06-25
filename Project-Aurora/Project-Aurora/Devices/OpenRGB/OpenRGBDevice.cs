@@ -299,6 +299,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.EIGHT             , 94  },
             { DK.NINE              , 9   },
             { DK.ZERO              , 22  },
+            //Needs testing
             { DK.ENTER             , 99  },
             { DK.ESC               , 0   },
             { DK.BACKSPACE         , 35  },
@@ -359,6 +360,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.NUM_NINE          , 70  },
             { DK.NUM_ZERO          , 92  },
             { DK.NUM_PERIOD        , 103 },
+            //Needs testing
             { DK.BACKSLASH_UK      , 104 },
             { DK.APPLICATION_SELECT, 13  },
             { DK.FN_Key            , 13  },
