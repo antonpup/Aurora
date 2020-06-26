@@ -238,7 +238,7 @@ namespace Aurora.Settings.Layers
 
         private void btnInfo_Click(object sender, RoutedEventArgs e) {
             // Open the online documentation for the Animation Trigger properties
-            Process.Start(new ProcessStartInfo(@"https://wibble199.github.io/Aurora-Docs/advanced-topics/animation-editor/"));
+            Process.Start(new ProcessStartInfo(@"https://aurora-rgb.github.io/Docs/advanced-topics/animation-editor/"));
         }
 
         private void whileKeyHeldTerminate_Checked(object sender, RoutedEventArgs e) {

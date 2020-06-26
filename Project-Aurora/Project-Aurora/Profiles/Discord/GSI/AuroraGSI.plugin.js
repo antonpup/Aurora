@@ -28,7 +28,7 @@ class AuroraGSI {
 	
     getName() { return "AuroraGSI"; }
     getDescription() { return "Sends information to Aurora about users connecting to/disconnecting from, mute/deafen status"; }
-    getVersion() { return "1.1"; }
+    getVersion() { return "2.1.1"; }
 	getAuthor() { return "Popato & DrMeteor"; }
 	getChanges() {
 		return {
@@ -52,6 +52,20 @@ class AuroraGSI {
             "1.1" :
             `
                 Made the state only be sent if it changed.
+            `,
+            "2.0" :
+            `
+                Version bump to stop the update prompt derping.
+            `,
+            "2.1.0":
+            `
+                Allow to track mute/deafen statuses outside voice channels.
+                Fix unread status for Enhanced Discord users.
+                Actually fix self-updating loop
+            `,
+            "2.1.1":
+            `
+                Fix "being_called" boolean so it's now usable (triggers when user calls and getting called in DMs)
             `
 		};
     }
@@ -124,9 +138,132 @@ class AuroraGSI {
 
         let getVoiceStates = NeatoLib.Modules.get(["getVoiceState"]).getVoiceStates,
             getUser = NeatoLib.Modules.get(["getUser"]).getUser,
-            getChannel = NeatoLib.Modules.get(["getChannel"]).getChannel;
+            getChannel = NeatoLib.Modules.get(["getChannel"]).getChannel,
+	      getCalls = NeatoLib.Modules.get(["getCalls"]).getCalls,
+            getLanguage = document.documentElement.lang;
 		
 		// this.jsonTimer = setInterval( this.sendJsonToAurora, 50, this.json );
+
+        switch (getLanguage) {
+            case "en-US":
+                var mute = '[aria-label="Mute"]';
+                var deafen = '[aria-label="Deafen"]';
+                break;
+            case "en-GB":
+                var mute = '[aria-label="Mute"]';
+                var deafen = '[aria-label="Deafen"]';
+                break;
+            case "pl":
+                var mute = '[aria-label="Wycisz"]';
+                var deafen = '[aria-label="Wyłącz dźwięk"]';
+                break;
+            case "da":
+                var mute = '[aria-label="Gør stum"]';
+                var deafen = '[aria-label="Gør døv"]';
+                break;
+            case "de":
+                var mute = '[aria-label="Stummschalten"]';
+                var deafen = '[aria-label="Ein- und Ausgabe deaktivieren"]';
+                break;
+            case "es-ES":
+                var mute = '[aria-label="Silenciar"]';
+                var deafen = '[aria-label="Ensordecer"]';
+                break;
+            case "fr":
+                var mute = '[aria-label="Rendre muet"]';
+                var deafen = '[aria-label="Mettre en sourdine"]';
+                break;
+            case "hr":
+                var mute = '[aria-label="Isključi mikrofon"]';
+                var deafen = '[aria-label="Isključi zvuk"]';
+                break;
+            case "it":
+                var mute = '[aria-label="Silenzia"]';
+                var deafen = '[aria-label="Silenzia l\'audio"]';
+                break;
+            case "lt":
+                var mute = '[aria-label="Nutildyti"]';
+                var deafen = '[aria-label="Išjungti garsą"]';
+                break;
+            case "hu":
+                var mute = '[aria-label="Némítás"]';
+                var deafen = '[aria-label="Süketítés"]';
+                break;
+            case "hl":
+                var mute = '[aria-label="Dempen"]';
+                var deafen = '[aria-label="Hoorbaar maken"]';
+                break;
+            case "no":
+                var mute = '[aria-label="Demp"]';
+                var deafen = '[aria-label="Slå av lyd"]';
+                break;
+            case "pt-BR":
+                var mute = '[aria-label="Desativar microfone"]';
+                var deafen = '[aria-label="Desativar áudio"]';
+                break;
+            case "ro":
+                var mute = '[aria-label="Dezactivează microfonul"]';
+                var deafen = '[aria-label="Dezactivează sunetul"]';
+                break;
+            case "fi":
+                var mute = '[aria-label="Mykistä"]';
+                var deafen = '[aria-label="Hiljennä"]';
+                break;
+            case "sv-SE":
+                var mute = '[aria-label="Mikrofon av"]';
+                var deafen = '[aria-label="Ljud av"]';
+                break;
+            case "vi":
+                var mute = '[aria-label="Tắt âm"]';
+                var deafen = '[aria-label="Tắt tiếng"]';
+                break;
+            case "tr":
+                var mute = '[aria-label="Sustur"]';
+                var deafen = '[aria-label="Sağırlaştır"]';
+                break;
+            case "cs":
+                var mute = '[aria-label="Ztlumit mikrofon"]';
+                var deafen = '[aria-label="Ztlumit zvuk"]';
+                break;
+            case "el":
+                var mute = '[aria-label="Σίγαση"]';
+                var deafen = '[aria-label="Κώφωση"]';
+                break;
+            case "bg":
+                var mute = '[aria-label="Изкл. на микрофона"]';
+                var deafen = '[aria-label="Заглушаване"]';
+                break;
+            case "ru":
+                var mute = '[aria-label="Откл. микрофон"]';
+                var deafen = '[aria-label="Откл. звук"]';
+                break;
+            case "uk":
+                var mute = '[aria-label="Вимкнути мікрофон"]';
+                var deafen = '[aria-label="Вимкнути звук"]';
+                break;
+            case "th":
+                var mute = '[aria-label="ปิดเสียง"]';
+                var deafen = '[aria-label="ปิดการได้ยิน"]';
+                break;
+            case "zh-CN":
+                var mute = '[aria-label="麦克风静音"]';
+                var deafen = '[aria-label="耳机静音"]';
+                break;
+            case "ja":
+                var mute = '[aria-label="ミュート"]';
+                var deafen = '[aria-label="スピーカーミュート"]';
+                break;
+            case "zh-TW":
+                var mute = '[aria-label="靜音"]';
+                var deafen = '[aria-label="拒聽"]';
+                break;
+            case "ko":
+                var mute = '[aria-label="마이크 음소거 "]';
+                var deafen = '[aria-label="헤드셋 음소거 "]';
+                break;
+            default:
+                console.log("Something is fucked up... can't find language");
+        }
 
         this.updatetimer = setInterval(() => { 
             var self = this;
@@ -206,21 +343,18 @@ class AuroraGSI {
                 self.json.voice.name = "";
             }
 
-            if(voiceStates){
-                let userVoiceState = voiceStates[localUser.id];
-                if(userVoiceState){
-                    self.json.user.self_mute = userVoiceState.selfMute;
-                    self.json.user.self_deafen = userVoiceState.selfDeaf;
-                }        
-            }
+            self.json.user.self_mute = document.querySelector(mute).getAttribute("aria-checked");
+            self.json.user.self_deafen = document.querySelector(deafen).getAttribute("aria-checked");
 			
 			self.json.user.unread_messages = false;
 			self.json.user.mentions = false;
 			
 			if (document.querySelector('[class^="numberBadge-"]'))
 				self.json.user.mentions = true;
-			if (document.getElementsByClassName("bd-unread").length > 0)
+            if (Object.values(NeatoLib.Modules.get("getUnreadGuilds").getUnreadGuilds()).length > 0)
                 self.json.user.unread_messages = true;
+            if (getCalls().filter(function(x){return x.ringing.length > 0;}).length > 0)
+		  self.json.user.being_called = true;
 
             if(JSON.stringify(this.json) !== this.lastJson){
                 console.log("false");
