@@ -122,7 +122,7 @@ namespace Aurora.Devices.OpenRGB
             {
                 for (var j = 0; j < controllers[i].colors.Length; j++)
                 {
-                    controllers[i].colors[j] = new OpenRGBColor();
+                    controllers[i].colors[j] = new OpenRGBColor(255, 255, 255);
                 }
 
                 client.UpdateLeds(i, controllers[i].colors);
@@ -144,11 +144,11 @@ namespace Aurora.Devices.OpenRGB
                     controllerDict = G810Dict;
                 else if (controllers[i].name.Contains("HyperX"))
                     controllerDict = AlloyEliteRGBISODict;
-                else return false;
+                else continue;
 
-                foreach(var kc in keyColors)
+                foreach (var kc in keyColors)
                 {
-                    if(controllerDict.TryGetValue(kc.Key, out var index))
+                    if (controllerDict.TryGetValue(kc.Key, out var index))
                     {
                         controllers[i].colors[index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
                     }
