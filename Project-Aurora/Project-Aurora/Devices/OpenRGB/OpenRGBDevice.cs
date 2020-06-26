@@ -22,6 +22,7 @@ namespace Aurora.Devices.OpenRGB
 
         OpenRGBClient client = new OpenRGBClient("localhost", 6742, "Aurora\0");
         List<OpenRGBDevice> controllers;
+        List<OpenRGBColor[]> colors;
 
         public string GetDeviceDetails()
         {
@@ -72,10 +73,16 @@ namespace Aurora.Devices.OpenRGB
 
             var controllerCount = client.GetControllerCount();
             controllers = new List<OpenRGBDevice>();
+            colors = new List<OpenRGBColor[]>();
 
             for (var i = 0; i < controllerCount; i++)
             {
-                controllers.Add(client.GetControllerData(i));
+                var dev = client.GetControllerData(i);
+                controllers.Add(dev);
+                var array = new OpenRGBColor[dev.colors.Length];
+                for (var j = 0; j < dev.colors.Length; j++)
+                    array[j] = new OpenRGBColor();
+                colors.Add(array);
             }
 
             isInitialized = true;
@@ -120,11 +127,6 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < controllers.Count; i++)
             {
-                for (var j = 0; j < controllers[i].colors.Length; j++)
-                {
-                    controllers[i].colors[j] = new OpenRGBColor(255, 255, 255);
-                }
-
                 client.UpdateLeds(i, controllers[i].colors);
             }
 
@@ -150,13 +152,12 @@ namespace Aurora.Devices.OpenRGB
                 {
                     if (controllerDict.TryGetValue(kc.Key, out var index))
                     {
-                        controllers[i].colors[index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                        colors[i][index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
                     }
                 }
 
-                client.UpdateLeds(i, controllers[i].colors);
+                client.UpdateLeds(i, colors[i]);
             }
-            Thread.Sleep(25);
 
             return true;
         }
