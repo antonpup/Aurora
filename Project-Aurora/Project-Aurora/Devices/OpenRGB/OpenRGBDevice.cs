@@ -1,36 +1,36 @@
 ﻿using Aurora.Settings;
+using OpenRGB.NET;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using OpenRGB.NET;
 using System.Threading;
+using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
 
 namespace Aurora.Devices.OpenRGB
 {
     class OpenRGBAuroraDevice : Device
     {
+        private string devicename = "OpenRGB";
         VariableRegistry varReg = new VariableRegistry();
         bool isInitialized = false;
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
-        OpenRGBClient client = new OpenRGBClient("localhost", 1338, "Aurora\0");
-        uint deviceIndex;
-        List<OpenRGBDevice> devices;
-        List<uint> devicesIndex;
-        OpenRGBColor[] colors;
-        private string devicename = "OpenRGB";
+
+        OpenRGBClient client = new OpenRGBClient("localhost", 6742, "Aurora\0");
+        List<OpenRGBDevice> controllers;
 
         public string GetDeviceDetails()
         {
             if (isInitialized)
             {
                 string devString = devicename + ": ";
-                devString += "Connected";
+                devString += "Connected ";
+                var names = controllers.Select(c => c.name);
+                devString += string.Join(",", names);
                 return devString;
             }
             else
@@ -56,27 +56,27 @@ namespace Aurora.Devices.OpenRGB
 
         public bool Initialize()
         {
-            client.Connect();
+            if (isInitialized)
+                return true;
+
+            try
+            {
+                client.Connect();
+            }
+            catch (Exception e)
+            {
+                Global.logger.Error("error in OpenRGB device: " + e);
+                isInitialized = false;
+                return false;
+            }
+
             var controllerCount = client.GetControllerCount();
-            devices = new List<OpenRGBDevice>();
-            devicesIndex = new List<uint>();
+            controllers = new List<OpenRGBDevice>();
 
-            for (uint i = 0; i < controllerCount; i++)
-                if(client.GetControllerData(i).name.Contains("HyperX") ||
-				   client.GetControllerData(i).name.Contains("G810")) { 
-                    devices.Add(client.GetControllerData(i));
-                    devicesIndex.Add(i);
-                }
-
-            for (var i = 0; i<devices.Count;i++)
-			{
-                var data = devices[i];
-                devices[i].colors = new OpenRGBColor[data.leds.Length];
-                for (int j = 0; j < data.leds.Length; j++)
-                    devices[i].colors[j] = new OpenRGBColor();
-                
-			}
-            
+            for (var i = 0; i < controllerCount; i++)
+            {
+                controllers.Add(client.GetControllerData(i));
+            }
 
             isInitialized = true;
             return isInitialized;
@@ -115,14 +115,18 @@ namespace Aurora.Devices.OpenRGB
 
         public void Shutdown()
         {
-            for (var i = 0; i < devices.Count; i++)
-			{
-                for (int j = 0; j < devices[i].colors.Length; j++)
-                    colors[j] = new OpenRGBColor(255, 255, 255);
+            if (!isInitialized)
+                return;
 
-                client.UpdateLeds(devicesIndex[i], colors);
+            for (var i = 0; i < controllers.Count; i++)
+            {
+                for (var j = 0; j < controllers[i].colors.Length; j++)
+                {
+                    controllers[i].colors[j] = new OpenRGBColor();
+                }
+
+                client.UpdateLeds(i, controllers[i].colors);
             }
-            
 
             client.Disconnect();
             isInitialized = false;
@@ -130,22 +134,30 @@ namespace Aurora.Devices.OpenRGB
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            for(var i = 0; i < devices.Count; i++) {
-                foreach (var dk in keyColors)
+            if (!isInitialized)
+                return false;
+
+            for (var i = 0; i < controllers.Count; i++)
+            {
+                Dictionary<DK, int> controllerDict;
+                if (controllers[i].name.Contains("G810"))
+                    controllerDict = G810Dict;
+                else if (controllers[i].name.Contains("HyperX"))
+                    controllerDict = AlloyEliteRGBISODict;
+                else return false;
+
+                foreach(var kc in keyColors)
                 {
-                    if (AlloyEliteRGBISODict.TryGetValue(dk.Key, out var idAlloyElite))
+                    if(controllerDict.TryGetValue(kc.Key, out var index))
                     {
-                        devices[i].colors[idAlloyElite] = new OpenRGBColor(dk.Value.R, dk.Value.G, dk.Value.B);
-                    } else if (G810Dict.TryGetValue(dk.Key, out var idG810))
-                    {
-                        devices[i].colors[idG810] = new OpenRGBColor(dk.Value.R, dk.Value.G, dk.Value.B);
+                        controllers[i].colors[index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
                     }
                 }
 
-                client.UpdateLeds(devicesIndex[i], devices[i].colors);
+                client.UpdateLeds(i, controllers[i].colors);
             }
-            
             Thread.Sleep(25);
+
             return true;
         }
 
