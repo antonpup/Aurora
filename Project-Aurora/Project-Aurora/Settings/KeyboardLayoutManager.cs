@@ -788,8 +788,10 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
             else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
- 
-            else
+            else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
+                layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
+
+                else
             {
                 LoadNone();
                 return;

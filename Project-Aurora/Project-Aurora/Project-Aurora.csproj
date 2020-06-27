@@ -864,6 +864,7 @@
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_outline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="kb_layouts\Extra Features\hyperx_alloy_elite_rgb_features.json" />
     <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -970,6 +971,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\masterkeys_mk730.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\hyperx_alloy_elite_rgb.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Profiles\Overlays\VolumeOverlay\Event_VolumeOverlay.cs" />
