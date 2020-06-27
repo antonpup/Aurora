@@ -346,7 +346,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.EQUALS            , 7   },
             { DK.OPEN_BRACKET      , 40  },
             { DK.CLOSE_BRACKET     , 90  },
-            { DK.BACKSLASH         , 45  },
+            { DK.BACKSLASH         , 101  },
             { DK.HASHTAG           , 28  },
             { DK.SEMICOLON         , 26  },
             { DK.APOSTROPHE        , 41  },
