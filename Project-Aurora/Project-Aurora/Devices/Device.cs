@@ -1302,9 +1302,9 @@ namespace Aurora.Devices
         CALC = 216,
 
         /// <summary>
-		/// Mouse Scroll Wheel
-		/// </summary>
-		[Description("ScrollWheel")]
+        /// Mouse Scroll Wheel
+        /// </summary>
+        [Description("ScrollWheel")]
         SCROLLWHEEL = 217,
 
         /// <summary>
