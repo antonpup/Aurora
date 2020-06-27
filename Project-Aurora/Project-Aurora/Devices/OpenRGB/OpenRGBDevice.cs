@@ -15,7 +15,7 @@ namespace Aurora.Devices.OpenRGB
     class OpenRGBAuroraDevice : Device
     {
         private string devicename = "OpenRGB";
-        VariableRegistry varReg = new VariableRegistry();
+        VariableRegistry varReg;
         bool isInitialized = false;
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
@@ -52,6 +52,11 @@ namespace Aurora.Devices.OpenRGB
 
         public VariableRegistry GetRegisteredVariables()
         {
+            if (varReg == null)
+            {
+                varReg = new VariableRegistry();
+                varReg.Register($"{devicename}_sleep", 25, "Sleep for", 1000, 0);
+            }
             return varReg;
         }
 
@@ -141,16 +146,32 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < controllers.Count; i++)
             {
+                bool g810 = controllers[i].name.Contains("G810");
+                bool hyperx = controllers[i].name.Contains("HyperX");
                 Dictionary<DK, int> controllerDict;
-                if (controllers[i].name.Contains("G810"))
+                if (g810)
                     controllerDict = G810Dict;
-                else if (controllers[i].name.Contains("HyperX"))
+                else if (hyperx)
                     controllerDict = AlloyEliteRGBISODict;
                 else continue;
 
                 foreach (var kc in keyColors)
                 {
-                    if (controllerDict.TryGetValue(kc.Key, out var index))
+                    if(hyperx && kc.Key == DK.ENTER)
+                    {
+                        //hack
+
+                        //ansi
+                        if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us)
+                        {
+                            colors[i][28] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                        }
+                        else//iso
+                        {
+                            colors[i][14] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                        }
+                    }
+                    else if (controllerDict.TryGetValue(kc.Key, out var index))
                     {
                         colors[i][index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
                     }
@@ -158,7 +179,9 @@ namespace Aurora.Devices.OpenRGB
 
                 client.UpdateLeds(i, colors[i]);
             }
-
+            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_sleep");
+            if (sleep > 0)
+                Thread.Sleep(sleep);
             return true;
         }
 
@@ -336,7 +359,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.NINE              , 9   },
             { DK.ZERO              , 24  },
 
-            { DK.ENTER             , 14 | 28  },
+            //{ DK.ENTER             , 14 },
 
             { DK.ESC               , 0   },
             { DK.BACKSPACE         , 37  },
