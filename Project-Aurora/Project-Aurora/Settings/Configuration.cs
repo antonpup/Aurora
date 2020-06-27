@@ -291,6 +291,10 @@ namespace Aurora.Settings
         Ducky_Shine_7 = 1200,
         [Description("Ducky One 2 RGB TKL")]
         Ducky_One_2_RGB_TKL = 1201,
+
+        //HyperX range is 1300-1399
+        [Description("HyperX Alloy Elite RGB")]
+        HyperX_Alloy_Elite_RGB = 1300,
  
     }
 
