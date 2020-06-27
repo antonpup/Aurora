@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Aurora.Settings;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
 using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
-using MouseCustom = Corale.Colore.Razer.Mouse.Effects.CustomGrid;
+using MouseCustom    = Corale.Colore.Razer.Mouse   .Effects.Custom;
 using System.ComponentModel;
 
 namespace Aurora.Devices.Razer
@@ -24,7 +24,7 @@ namespace Aurora.Devices.Razer
         private bool peripheral_updated = false;
         private KeyboardCustom grid = KeyboardCustom.Create();
         private MousepadCustom MousepadGrid = MousepadCustom.Create();
-        private MouseCustom MouseGrid = MouseCustom.Create();
+        private MouseCustom    MouseGrid    = MouseCustom.Create();
         //private bool bladeLayout = true;
 
         IKeyboard keyboard = null;
@@ -274,67 +274,67 @@ namespace Aurora.Devices.Razer
                     // Mouse
                     else if (key.Key == DeviceKeys.SCROLLWHEEL)
                     {
-                        SendColorToMouse(515, key.Value);
+                        SendColorToMouse(1, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LOGO4)
                     {
-                        SendColorToMouse(1795, key.Value);
+                        SendColorToMouse(2, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide1) // Doesn't work
                     {
-                        SendColorToMouse(256, key.Value);
+                        SendColorToMouse(4, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide1) // Doesn't work
                     {
-                        SendColorToMouse(262, key.Value);
+                        SendColorToMouse(5, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide2)
                     {
-                        SendColorToMouse(512, key.Value);
+                        SendColorToMouse(6, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide2)
                     {
-                        SendColorToMouse(518, key.Value);
+                        SendColorToMouse(7, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide3)
                     {
-                        SendColorToMouse(768, key.Value);
+                        SendColorToMouse(8, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide3) // Doesn't work
                     {
-                        SendColorToMouse(774, key.Value);
+                        SendColorToMouse(9, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide4) // Doesn't work
                     {
-                        SendColorToMouse(1024, key.Value);
+                        SendColorToMouse(10, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide4) // Doesn't work
                     {
-                        SendColorToMouse(1030, key.Value);
+                        SendColorToMouse(11, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide5)
                     {
-                        SendColorToMouse(1280, key.Value);
+                        SendColorToMouse(12, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide5)
                     {
-                        SendColorToMouse(1286, key.Value);
+                        SendColorToMouse(13, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide6)
                     {
-                        SendColorToMouse(1536, key.Value);
+                        SendColorToMouse(14, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide6) // Doesn't work
                     {
-                        SendColorToMouse(1542, key.Value);
+                        SendColorToMouse(15, key.Value);
                     }
                     else if (key.Key == DeviceKeys.LeftSide7)
                     {
-                        SendColorToMouse(1792, key.Value);
+                        SendColorToMouse(16, key.Value);
                     }
                     else if (key.Key == DeviceKeys.RightSide7)
                     {
-                        SendColorToMouse(1798, key.Value);
+                        SendColorToMouse(17, key.Value);
                     }
                     else if ((coord = GetKeyCoord(key.Key)) != null)
                     {
@@ -428,8 +428,8 @@ namespace Aurora.Devices.Razer
             {
                 if (mouse != null && !Global.Configuration.devices_disable_mouse)
                 {
-                    MouseGrid[(GridLed)index] = new Color(color.R, color.G, color.B);
-                    mouse.SetGrid(MouseGrid);
+                    MouseGrid[index] = new Color(color.R, color.G, color.B);
+                    mouse.SetCustom(MouseGrid);
                 }
                 previous_peripheral_Color = color;
                 peripheral_updated = true;
