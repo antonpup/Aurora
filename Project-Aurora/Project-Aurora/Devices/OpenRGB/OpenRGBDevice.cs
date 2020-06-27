@@ -147,7 +147,7 @@ namespace Aurora.Devices.OpenRGB
             for (var i = 0; i < controllers.Count; i++)
             {
                 bool g810 = controllers[i].name.Contains("G810");
-                bool hyperx = controllers[i].name.Contains("HyperX");
+                bool hyperx = controllers[i].name.Contains("HyperX Alloy Elite RGB");
                 Dictionary<DK, int> controllerDict;
                 if (g810)
                     controllerDict = G810Dict;
