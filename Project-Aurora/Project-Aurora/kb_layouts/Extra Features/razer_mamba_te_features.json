@@ -18,7 +18,7 @@
 	},
 	{
 	  "visualName": "Scroll Wheel",
-	  "tag": 216,
+	  "tag": 217,
 	  "margin_left": 54.0,
 	  "margin_top": -204.0,
 	  "width": 16.0,
@@ -29,7 +29,7 @@
 	},
 	{
 	  "visualName": "Logo",
-	  "tag": 217,
+	  "tag": 218,
 	  "margin_left": 41.0,
 	  "margin_top": -70.0,
 	  "width": 38.0,
@@ -40,7 +40,7 @@
 	},
 	{
 	  "visualName": "Left Side 1",
-	  "tag": 219,
+	  "tag": 220,
 	  "margin_left": 3.0,
 	  "margin_top": -186.0,
 	  "width": 5.0,
@@ -51,7 +51,7 @@
 	},
 	{
 	  "visualName": "Right Side 1",
-	  "tag": 220,
+	  "tag": 221,
 	  "margin_left": 117.0,
 	  "margin_top": -184.0,
 	  "width": 5.0,
@@ -62,7 +62,7 @@
 	},
 	{
 	  "visualName": "Left Side 2",
-	  "tag": 221,
+	  "tag": 222,
 	  "margin_left": 4.0,
 	  "margin_top": -165.0,
 	  "width": 10.0,
@@ -73,7 +73,7 @@
 	},
 	{
 	  "visualName": "Right Side 2",
-	  "tag": 222,
+	  "tag": 223,
 	  "margin_left": 113.0,
 	  "margin_top": -165.0,
 	  "width": 7.0,
@@ -84,7 +84,7 @@
 	},
 	{
 	  "visualName": "Left Side 3",
-	  "tag": 223,
+	  "tag": 224,
 	  "margin_left": 10.0,
 	  "margin_top": -142.0,
 	  "width": 8.0,
@@ -95,7 +95,7 @@
 	},
 	{
 	  "visualName": "Right Side 3",
-	  "tag": 224,
+	  "tag": 225,
 	  "margin_left": 112.0,
 	  "margin_top": -142.0,
 	  "width": 5.0,
@@ -106,7 +106,7 @@
 	},
 	{
 	  "visualName": "Left Side 4",
-	  "tag": 225,
+	  "tag": 226,
 	  "margin_left": 13.0,
 	  "margin_top": -119.0,
 	  "width": 6.0,
@@ -117,7 +117,7 @@
 	},
 	{
 	  "visualName": "Right Side 4",
-	  "tag": 226,
+	  "tag": 227,
 	  "margin_left": 112.0,
 	  "margin_top": -119.0,
 	  "width": 5.0,
@@ -128,7 +128,7 @@
 	},
 	{
 	  "visualName": "Left Side 5",
-	  "tag": 227,
+	  "tag": 228,
 	  "margin_left": 10.0,
 	  "margin_top": -95.0,
 	  "width": 8.0,
@@ -139,7 +139,7 @@
 	},
 	{
 	  "visualName": "Right Side 5",
-	  "tag": 228,
+	  "tag": 229,
 	  "margin_left": 113.0,
 	  "margin_top": -95.0,
 	  "width": 7.0,
@@ -150,7 +150,7 @@
 	},
 	{
 	  "visualName": "Left Side 6",
-	  "tag": 229,
+	  "tag": 230,
 	  "margin_left": 7.0,
 	  "margin_top": -73.0,
 	  "width": 8.0,
@@ -161,7 +161,7 @@
 	},
 	{
 	  "visualName": "Right Side 6",
-	  "tag": 230,
+	  "tag": 231,
 	  "margin_left": 114.0,
 	  "margin_top": -73.0,
 	  "width": 6.0,
@@ -172,7 +172,7 @@
 	},
 	{
 	  "visualName": "Left Side 7",
-	  "tag": 231,
+	  "tag": 232,
 	  "margin_left": 7.0,
 	  "margin_top": -51.0,
 	  "width": 9.0,
@@ -183,7 +183,7 @@
 	},
 	{
 	  "visualName": "Right Side 7",
-	  "tag": 232,
+	  "tag": 233,
 	  "margin_left": 108.0,
 	  "margin_top": -52.0,
 	  "width": 10.0,
