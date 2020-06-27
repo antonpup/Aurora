@@ -336,7 +336,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.NINE              , 9   },
             { DK.ZERO              , 24  },
 
-            { DK.ENTER             , 14  },
+            { DK.ENTER             , 14 | 28  },
 
             { DK.ESC               , 0   },
             { DK.BACKSPACE         , 37  },
