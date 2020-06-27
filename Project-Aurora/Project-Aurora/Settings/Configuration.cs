@@ -363,7 +363,7 @@ namespace Aurora.Settings
         Corsair_Katar = 202,
 
         //Razer range is 300-399
-        [Description("Razer Mamba TE")]
+        [Description("Razer - Mamba TE")]
         Razer_Mamba_TE = 300,
 
         //Clevo range is 400-499
