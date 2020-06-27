@@ -864,7 +864,9 @@
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_outline.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="kb_layouts\Extra Features\hyperx_alloy_elite_rgb_features.json" />
+    <None Include="kb_layouts\Extra Features\hyperx_alloy_elite_rgb_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
