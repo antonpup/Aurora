@@ -56,6 +56,7 @@ namespace Aurora.Devices.OpenRGB
             {
                 varReg = new VariableRegistry();
                 varReg.Register($"{devicename}_sleep", 25, "Sleep for", 1000, 0);
+                varReg.Register($"{devicename}_generic", false, "Set colors on generic devices");
             }
             return varReg;
         }
@@ -146,35 +147,51 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < controllers.Count; i++)
             {
-                bool g810 = controllers[i].name.Contains("G810");
-                bool hyperx = controllers[i].name.Contains("HyperX Alloy Elite RGB");
-                Dictionary<DK, int> controllerDict;
-                if (g810)
-                    controllerDict = G810Dict;
-                else if (hyperx)
-                    controllerDict = AlloyEliteRGBISODict;
-                else continue;
-
-                foreach (var kc in keyColors)
+                switch (controllers[i].name)
                 {
-                    if(hyperx && kc.Key == DK.ENTER)
-                    {
-                        //hack
+                    case G810:
+                        foreach (var kc in keyColors)
+                        {
+                            if (G810Dict.TryGetValue(kc.Key, out var index))
+                            {
+                                colors[i][index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                            }
+                        }
+                        break;
+                    case AlloyElite:
+                        foreach (var kc in keyColors)
+                        {
+                            if (kc.Key == DK.ENTER)
+                            {
+                                //hack
 
-                        //ansi
-                        if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us)
-                        {
-                            colors[i][28] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                                //ansi
+                                if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us)
+                                {
+                                    colors[i][28] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                                }
+                                else//iso
+                                {
+                                    colors[i][14] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                                }
+                            }
+                            else if (AlloyEliteRGBISODict.TryGetValue(kc.Key, out var index))
+                            {
+                                colors[i][index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                            }
                         }
-                        else//iso
+                        break;
+                    default:
+                        if (!Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_generic"))
+                            continue;
+                        if (keyColors.TryGetValue(DK.Peripheral_Logo, out var color))
                         {
-                            colors[i][14] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
+                            for (int j = 0; j < colors[i].Length; j++)
+                            {
+                                colors[i][j] = new OpenRGBColor(color.R, color.G, color.B);
+                            }
                         }
-                    }
-                    else if (controllerDict.TryGetValue(kc.Key, out var index))
-                    {
-                        colors[i][index] = new OpenRGBColor(kc.Value.R, kc.Value.G, kc.Value.B);
-                    }
+                        break;
                 }
 
                 client.UpdateLeds(i, colors[i]);
@@ -317,7 +334,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.G2                , 115 },
             { DK.G3                , 116 },
         };
-
+        private const string G810 = "Logitech G810 Orion Spectrum";
 
         //ISO Dictionary, i don't have an ANSI keyboard lol
         private readonly Dictionary<DK, int> AlloyEliteRGBISODict = new Dictionary<DK, int>()
@@ -460,5 +477,6 @@ namespace Aurora.Devices.OpenRGB
             { DK.MEDIA_NEXT        , 126 },
             { DK.VOLUME_MUTE       , 127 },
         };
+        private const string AlloyElite = "HyperX Alloy Elite RGB";
     }
 }
