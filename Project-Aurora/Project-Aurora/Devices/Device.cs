@@ -1302,6 +1302,108 @@ namespace Aurora.Devices
         CALC = 216,
 
         /// <summary>
+		/// Mouse Scroll Wheel
+		/// </summary>
+		[Description("ScrollWheel")]
+        SCROLLWHEEL = 217,
+
+        /// <summary>
+        /// Brand Logo #4
+        /// </summary>
+        [Description("Brand Logo #4")]
+        LOGO4 = 218,
+
+        /// <summary>
+        /// Backlight
+        /// </summary>
+        [Description("Backlight")]
+        BACKLIGHT = 219,
+
+        /// <summary>
+        /// LED Strip 1
+        /// </summary>
+        [Description("First LED on left side.")]
+        LeftSide1 = 220,
+
+        /// <summary>
+        /// LED Strip 2
+        /// </summary>
+        [Description("First LED on right side.")]
+        RightSide1 = 221,
+
+        /// <summary>
+        /// LED Strip 3
+        /// </summary>
+        [Description("Second LED on left side.")]
+        LeftSide2 = 222,
+
+        /// <summary>
+        /// LED Strip 4
+        /// </summary>
+        [Description("Second LED on right side.")]
+        RightSide2 = 223,
+
+        /// <summary>
+        /// LED Strip 5
+        /// </summary>
+        [Description("Third LED on left side.")]
+        LeftSide3 = 224,
+
+        /// <summary>
+        /// LED Strip 6
+        /// </summary>
+        [Description("Third LED on right side.")]
+        RightSide3 = 225,
+
+        /// <summary>
+        /// LED Strip 7
+        /// </summary>
+        [Description("Fourth LED on left side.")]
+        LeftSide4 = 226,
+
+        /// <summary>
+        /// LED Strip 8
+        /// </summary>
+        [Description("Fourth LED on right side.")]
+        RightSide4 = 227,
+
+        /// <summary>
+        /// LED Strip 9
+        /// </summary>
+        [Description("Fifth LED on left side.")]
+        LeftSide5 = 228,
+
+        /// <summary>
+        /// LED Strip 10
+        /// </summary>
+        [Description("Fifth LED on right side.")]
+        RightSide5 = 229,
+
+        /// <summary>
+        /// LED Strip 11
+        /// </summary>
+        [Description("Sixth LED on left side.")]
+        LeftSide6 = 230,
+
+        /// <summary>
+        /// LED Strip 12
+        /// </summary>
+        [Description("Sixth LED on right side.")]
+        RightSide6 = 231,
+
+        /// <summary>
+        /// LED Strip 13
+        /// </summary>
+        [Description("Seventh LED on left side.")]
+        LeftSide7 = 232,
+
+        /// <summary>
+        /// LED Strip 14
+        /// </summary>
+        [Description("Seventh LED on right side.")]
+        RightSide7 = 233,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
