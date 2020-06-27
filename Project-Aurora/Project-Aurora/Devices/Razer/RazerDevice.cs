@@ -284,51 +284,51 @@ namespace Aurora.Devices.Razer
                     {
                         SendColorToMouse(4, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.RightSide1) // Doesn't work
+                    else if (key.Key == DeviceKeys.LeftSide2) // Doesn't work
                     {
                         SendColorToMouse(5, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.LeftSide2)
+                    else if (key.Key == DeviceKeys.LeftSide3)
                     {
                         SendColorToMouse(6, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.RightSide2)
+                    else if (key.Key == DeviceKeys.LeftSide4)
                     {
                         SendColorToMouse(7, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.LeftSide3)
+                    else if (key.Key == DeviceKeys.LeftSide5)
                     {
                         SendColorToMouse(8, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.RightSide3) // Doesn't work
+                    else if (key.Key == DeviceKeys.LeftSide6) // Doesn't work
                     {
                         SendColorToMouse(9, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.LeftSide4) // Doesn't work
+                    else if (key.Key == DeviceKeys.LeftSide7) // Doesn't work
                     {
                         SendColorToMouse(10, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.RightSide4) // Doesn't work
+                    else if (key.Key == DeviceKeys.RightSide1) // Doesn't work
                     {
                         SendColorToMouse(11, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.LeftSide5)
+                    else if (key.Key == DeviceKeys.RightSide2)
                     {
                         SendColorToMouse(12, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.RightSide5)
+                    else if (key.Key == DeviceKeys.RightSide3)
                     {
                         SendColorToMouse(13, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.LeftSide6)
+                    else if (key.Key == DeviceKeys.RightSide4)
                     {
                         SendColorToMouse(14, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.RightSide6) // Doesn't work
+                    else if (key.Key == DeviceKeys.RightSide5) // Doesn't work
                     {
                         SendColorToMouse(15, key.Value);
                     }
-                    else if (key.Key == DeviceKeys.LeftSide7)
+                    else if (key.Key == DeviceKeys.RightSide6)
                     {
                         SendColorToMouse(16, key.Value);
                     }
