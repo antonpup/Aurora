@@ -56,32 +56,45 @@ namespace Aurora.Profiles.Witcher3
         
         private void install_mod_button_Click(object sender, RoutedEventArgs e)
         {
-            String installpath = SteamUtils.GetGamePath(292030);
-            if (!String.IsNullOrWhiteSpace(installpath))//if we find the path through steam
+            String Steaminstallpath = SteamUtils.GetGamePath(292030);
+            String Epicinstallpath = EpicUtils.GetGameManifestByExe("Witcher3.exe")?.InstallLocation;
+
+            if (!String.IsNullOrWhiteSpace(Steaminstallpath) || !String.IsNullOrWhiteSpace(Epicinstallpath))
             {
-                InstallMod(installpath);
+                if (!String.IsNullOrWhiteSpace(Steaminstallpath))
+                InstallMod(Steaminstallpath);
+                
+                if (!String.IsNullOrWhiteSpace(Epicinstallpath))
+                    InstallMod(Epicinstallpath);
             }
             else//user could have the GOG version of the game
             {
-                System.Windows.MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
+                System.Windows.MessageBox.Show("Witcher 3 was not installed through Steam or Epic Games, please pick the path manually");
                 var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     InstallMod(dialog.SelectedPath);
                 }
             }
+
         }
 
         private void uninstall_mod_button_Click(object sender, RoutedEventArgs e)
         {
-            String installpath = SteamUtils.GetGamePath(292030);
-            if (!String.IsNullOrWhiteSpace(installpath))
+            String Steaminstallpath = SteamUtils.GetGamePath(292030);
+            String Epicinstallpath = EpicUtils.GetGameManifestByExe("Witcher3.exe")?.InstallLocation;
+
+            if (!String.IsNullOrWhiteSpace(Steaminstallpath) || !String.IsNullOrWhiteSpace(Epicinstallpath))
             {
-                UninstallMod(installpath);
+                if (!String.IsNullOrWhiteSpace(Steaminstallpath))
+                    UninstallMod(Steaminstallpath);
+
+                if (!String.IsNullOrWhiteSpace(Epicinstallpath))
+                    UninstallMod(Epicinstallpath);
             }
             else
             {
-                MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
+                MessageBox.Show("Witcher 3 was not installed through Steam or Epic, please pick the path manually");
                 var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {

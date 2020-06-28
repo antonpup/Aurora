@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.TheTalosPrinciple
 {
@@ -25,7 +26,14 @@ namespace Aurora.Profiles.TheTalosPrinciple
             //Apply LightFX Wrapper, if needed.
             if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
-                InstallWrapper();
+                var installpath = SteamUtils.GetGamePath(257510);
+                if (!String.IsNullOrWhiteSpace(installpath))
+                    InstallWrapper(installpath);
+
+                installpath = EpicUtils.GetGameManifestByExe("talos.exe")?.InstallLocation ?? EpicUtils.GetGameManifestByExe("talos_unrestricted.exe")?.InstallLocation;
+                if (!String.IsNullOrWhiteSpace(installpath))
+                    InstallWrapper(installpath);
+
                 (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
@@ -44,15 +52,33 @@ namespace Aurora.Profiles.TheTalosPrinciple
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            if (InstallWrapper())
+            bool success = false;
+            var installpath = SteamUtils.GetGamePath(257510);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = InstallWrapper(installpath);
+
+            installpath = EpicUtils.GetGameManifestByExe("talos.exe")?.InstallLocation ?? EpicUtils.GetGameManifestByExe("talos_unrestricted.exe")?.InstallLocation;
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = InstallWrapper(installpath);
+
+            if (success)
                 MessageBox.Show("Aurora LightFX Wrapper installed successfully.");
             else
-                MessageBox.Show("Aurora LightFX Wrapper could not be installed.\r\nGame is not installed.");
+                MessageBox.Show("Aurora LightFX Wrapper could not be installed.\r\nGame is not installed over Steam or Epic Games.");
         }
 
         private void unpatch_button_Click(object sender, RoutedEventArgs e)
         {
-            if (UninstallWrapper())
+            bool success = false;
+            var installpath = SteamUtils.GetGamePath(257510);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = UninstallWrapper(installpath);
+
+            installpath = EpicUtils.GetGameManifestByExe("talos.exe")?.InstallLocation ?? EpicUtils.GetGameManifestByExe("talos_unrestricted.exe")?.InstallLocation;
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = UninstallWrapper(installpath);
+
+            if (success)
                 MessageBox.Show("Aurora LightFX Wrapper uninstalled successfully.");
             else
                 MessageBox.Show("Aurora LightFX Wrapper could not be uninstalled.\r\nGame is not installed.");
@@ -75,12 +101,8 @@ namespace Aurora.Profiles.TheTalosPrinciple
         {
         }
 
-        private bool InstallWrapper(string installpath = "")
+        private bool InstallWrapper(string installpath)
         {
-            if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(257510);
-
-
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 //86
@@ -113,9 +135,8 @@ namespace Aurora.Profiles.TheTalosPrinciple
             }
         }
 
-        private bool UninstallWrapper()
+        private bool UninstallWrapper(string installpath)
         {
-            String installpath = Utils.SteamUtils.GetGamePath(257510);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 //86
