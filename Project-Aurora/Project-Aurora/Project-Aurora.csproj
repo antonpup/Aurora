@@ -706,6 +706,7 @@
     <Compile Include="Utils\DragBehaviour.cs" />
     <Compile Include="Utils\FastMemberExtensions.cs" />
     <Compile Include="Utils\GridHelper.cs" />
+    <Compile Include="Utils\LauncherUtils\GOGUtils.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
     <Compile Include="Utils\LauncherUtils\EpicUtils.cs" />
     <Compile Include="Utils\TextUtils.cs" />
