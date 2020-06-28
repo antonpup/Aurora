@@ -1302,106 +1302,100 @@ namespace Aurora.Devices
         CALC = 216,
 
         /// <summary>
-        /// Mouse Scroll Wheel
-        /// </summary>
-        [Description("ScrollWheel")]
-        SCROLLWHEEL = 217,
-
-        /// <summary>
-        /// Brand Logo #4
-        /// </summary>
-        [Description("Brand Logo #4")]
-        LOGO4 = 218,
-
-        /// <summary>
-        /// Backlight
-        /// </summary>
-        [Description("Backlight")]
-        BACKLIGHT = 219,
-
-        /// <summary>
         /// LED Strip 1
         /// </summary>
         [Description("First LED on left side.")]
-        LeftSide1 = 220,
+        LeftSide1 = 217,
 
         /// <summary>
         /// LED Strip 2
         /// </summary>
         [Description("First LED on right side.")]
-        RightSide1 = 221,
+        RightSide1 = 218,
 
         /// <summary>
         /// LED Strip 3
         /// </summary>
         [Description("Second LED on left side.")]
-        LeftSide2 = 222,
+        LeftSide2 = 219,
 
         /// <summary>
         /// LED Strip 4
         /// </summary>
         [Description("Second LED on right side.")]
-        RightSide2 = 223,
+        RightSide2 = 220,
 
         /// <summary>
         /// LED Strip 5
         /// </summary>
         [Description("Third LED on left side.")]
-        LeftSide3 = 224,
+        LeftSide3 = 221,
 
         /// <summary>
         /// LED Strip 6
         /// </summary>
         [Description("Third LED on right side.")]
-        RightSide3 = 225,
+        RightSide3 = 222,
 
         /// <summary>
         /// LED Strip 7
         /// </summary>
         [Description("Fourth LED on left side.")]
-        LeftSide4 = 226,
+        LeftSide4 = 223,
 
         /// <summary>
         /// LED Strip 8
         /// </summary>
         [Description("Fourth LED on right side.")]
-        RightSide4 = 227,
+        RightSide4 = 224,
 
         /// <summary>
         /// LED Strip 9
         /// </summary>
         [Description("Fifth LED on left side.")]
-        LeftSide5 = 228,
+        LeftSide5 = 225,
 
         /// <summary>
         /// LED Strip 10
         /// </summary>
         [Description("Fifth LED on right side.")]
-        RightSide5 = 229,
+        RightSide5 = 226,
 
         /// <summary>
         /// LED Strip 11
         /// </summary>
         [Description("Sixth LED on left side.")]
-        LeftSide6 = 230,
+        LeftSide6 = 227,
 
         /// <summary>
         /// LED Strip 12
         /// </summary>
         [Description("Sixth LED on right side.")]
-        RightSide6 = 231,
+        RightSide6 = 228,
 
         /// <summary>
         /// LED Strip 13
         /// </summary>
         [Description("Seventh LED on left side.")]
-        LeftSide7 = 232,
+        LeftSide7 = 229,
 
         /// <summary>
         /// LED Strip 14
         /// </summary>
         [Description("Seventh LED on right side.")]
-        RightSide7 = 233,
+        RightSide7 = 230,
+
+        /// <summary>
+        /// Logo #4
+        /// </summary>
+        [Description("Brand Logo #4")]
+        LOGO4 = 231,
+
+        /// <summary>
+        /// Scroll Wheel
+        /// </summary>
+        [Description("Scroll Wheel")]
+        SCROLLWHEEL = 232,
 
         /// <summary>
         /// None
