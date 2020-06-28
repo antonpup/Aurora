@@ -192,160 +192,119 @@ namespace Aurora.Devices.Razer
                     //Key localKey = ToRazer(key.Key);
 
                     int[] coord = null;
-                    if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral)
-                    {
-                        SendColorToPeripheral(key.Value, forced);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT1)
-                    {
-                      
-                        SendColorToMousepad(14,key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT2)
-                    {
+					switch (key.Key)
+					{
+						case DeviceKeys.Peripheral_Logo:
+						case DeviceKeys.Peripheral:
+							SendColorToPeripheral(key.Value, forced);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT1:
+							SendColorToMousepad(14, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT2:
+							SendColorToMousepad(13, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT3:
+							SendColorToMousepad(12, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT4:
+							SendColorToMousepad(11, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT5:
+							SendColorToMousepad(10, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT6:
+							SendColorToMousepad(9, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT7:
+							SendColorToMousepad(8, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT8:
+							SendColorToMousepad(7, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT9:
+							SendColorToMousepad(6, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT10:
+							SendColorToMousepad(5, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT11:
+							SendColorToMousepad(4, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT12:
+							SendColorToMousepad(3, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT13:
+							SendColorToMousepad(2, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT14:
+							SendColorToMousepad(1, key.Value);
+							break;
+						case DeviceKeys.MOUSEPADLIGHT15:
+							SendColorToMousepad(0, key.Value);
+							break;
+						case DeviceKeys.Peripheral_ScrollWheel:
+							SendColorToMouse(1, key.Value);
+							break;
+						case DeviceKeys.LOGO4:
+							SendColorToMouse(2, key.Value);
+							break;
+						case DeviceKeys.LeftSide1:
+							SendColorToMouse(4, key.Value);
+							break;
+						case DeviceKeys.LeftSide2:
+							SendColorToMouse(5, key.Value);
+							break;
+						case DeviceKeys.LeftSide3:
+							SendColorToMouse(6, key.Value);
+							break;
+						case DeviceKeys.LeftSide4:
+							SendColorToMouse(7, key.Value);
+							break;
+						case DeviceKeys.LeftSide5:
+							SendColorToMouse(8, key.Value);
+							break;
+						case DeviceKeys.LeftSide6:
+							SendColorToMouse(9, key.Value);
+							break;
+						case DeviceKeys.LeftSide7:
+							SendColorToMouse(10, key.Value);
+							break;
+						case DeviceKeys.RightSide1:
+							SendColorToMouse(11, key.Value);
+							break;
+						case DeviceKeys.RightSide2:
+							SendColorToMouse(12, key.Value);
+							break;
+						case DeviceKeys.RightSide3:
+							SendColorToMouse(13, key.Value);
+							break;
+						case DeviceKeys.RightSide4:
+							SendColorToMouse(14, key.Value);
+							break;
+						case DeviceKeys.RightSide5:
+							SendColorToMouse(15, key.Value);
+							break;
+						case DeviceKeys.RightSide6:
+							SendColorToMouse(16, key.Value);
+							break;
+						case DeviceKeys.RightSide7:
+							SendColorToMouse(17, key.Value);
+							break;
+						default:
+							if ((coord = GetKeyCoord(key.Key)) != null)
+							{
+								SetOneKey(coord, key.Value);
+							}
+							else
+							{
+								Key localKey = ToRazer(key.Key);
+								SetOneKey(localKey, key.Value);
+							}
 
-                        SendColorToMousepad(13, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT3)
-                    {
-
-                        SendColorToMousepad(12, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT4)
-                    {
-
-                        SendColorToMousepad(11, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT5)
-                    {
-
-                        SendColorToMousepad(10, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT6)
-                    {
-
-                        SendColorToMousepad(9, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT7)
-                    {
-
-                        SendColorToMousepad(8, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT8)
-                    {
-
-                        SendColorToMousepad(7, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT9)
-                    {
-
-                        SendColorToMousepad(6, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT10)
-                    {
-
-                        SendColorToMousepad(5, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT11)
-                    {
-
-                        SendColorToMousepad(4, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT12)
-                    {
-
-                        SendColorToMousepad(3, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT13)
-                    {
-
-                        SendColorToMousepad(2, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT14)
-                    {
-
-                        SendColorToMousepad(1, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.MOUSEPADLIGHT15)
-                    {
-
-                        SendColorToMousepad(0, key.Value);
-                    }
-                    // Mouse
-                    else if (key.Key == DeviceKeys.SCROLLWHEEL)
-                    {
-                        SendColorToMouse(1, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LOGO4)
-                    {
-                        SendColorToMouse(2, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide1) // Doesn't work
-                    {
-                        SendColorToMouse(4, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide2)
-                    {
-                        SendColorToMouse(5, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide3)
-                    {
-                        SendColorToMouse(6, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide4) // Doesn't work
-                    {
-                        SendColorToMouse(7, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide5)
-                    {
-                        SendColorToMouse(8, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide6) 
-                    {
-                        SendColorToMouse(9, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.LeftSide7)
-                    {
-                        SendColorToMouse(10, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide1) // Doesn't work
-                    {
-                        SendColorToMouse(11, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide2)
-                    {
-                        SendColorToMouse(12, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide3) // Doesn't work
-                    {
-                        SendColorToMouse(13, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide4) // Doesn't work
-                    {
-                        SendColorToMouse(14, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide5)
-                    {
-                        SendColorToMouse(15, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide6) // Doesn't work
-                    {
-                        SendColorToMouse(16, key.Value);
-                    }
-                    else if (key.Key == DeviceKeys.RightSide7)
-                    {
-                        SendColorToMouse(17, key.Value);
-                    }
-                    else if ((coord = GetKeyCoord(key.Key)) != null)
-                    {
-                        SetOneKey(coord, key.Value);
-                    }
-                    else
-                    {
-                        Key localKey = ToRazer(key.Key);
-                        SetOneKey(localKey, key.Value);
-                    }
-                }
+							break;
+					}
+				}
 
                 if (e.Cancel) return false;
                 SendColorsToKeyboard(forced);
