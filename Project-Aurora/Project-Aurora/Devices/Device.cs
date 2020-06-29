@@ -1308,79 +1308,79 @@ namespace Aurora.Devices
         Peripheral_Light1 = 217,
 
         /// <summary>
-        /// Peripheral Light 1
+        /// Peripheral Light 2
         /// </summary>
         [Description("Peripheral Light 2")]
         Peripheral_Light2 = 218,
 
         /// <summary>
-        /// LED Strip 3
+        /// Peripheral Light 3
         /// </summary>
         [Description("Peripheral Light 3")]
         Peripheral_Light3 = 219,
 
         /// <summary>
-        /// LED Strip 4
+        /// Peripheral Light 4
         /// </summary>
         [Description("Peripheral Light 4")]
         Peripheral_Light4 = 220,
 
         /// <summary>
-        /// LED Strip 5
+        /// Peripheral Light 5
         /// </summary>
         [Description("Peripheral Light 5")]
         Peripheral_Light5 = 221,
 
         /// <summary>
-        /// LED Strip 6
+        /// Peripheral Light 6
         /// </summary>
         [Description("Peripheral Light 6")]
         Peripheral_Light6 = 222,
 
         /// <summary>
-        /// LED Strip 7
+        /// Peripheral Light 7
         /// </summary>
         [Description("Peripheral Light 7")]
         Peripheral_Light7 = 223,
 
         /// <summary>
-        /// LED Strip 8
+        /// Peripheral Light 8
         /// </summary>
         [Description("Peripheral Light 8")]
         Peripheral_Light8 = 224,
 
         /// <summary>
-        /// LED Strip 9
+        /// Peripheral Light 9
         /// </summary>
         [Description("Peripheral Light 9")]
         Peripheral_Light9 = 225,
 
         /// <summary>
-        /// LED Strip 10
+        /// Peripheral Light 10
         /// </summary>
         [Description("Peripheral Light 10")]
         Peripheral_Light10 = 226,
 
         /// <summary>
-        /// LED Strip 11
+        /// Peripheral Light 11
         /// </summary>
         [Description("Peripheral Light 11")]
         Peripheral_Light11 = 227,
 
         /// <summary>
-        /// LED Strip 12
+        /// Peripheral Light 12
         /// </summary>
         [Description("Peripheral Light 12")]
         Peripheral_Light12 = 228,
 
         /// <summary>
-        /// LED Strip 13
+        /// Peripheral Light 13
         /// </summary>
         [Description("Peripheral Light 13")]
         Peripheral_Light13 = 229,
 
         /// <summary>
-        /// LED Strip 14
+        /// Peripheral Light 14
         /// </summary>
         [Description("Peripheral Light 14")]
         Peripheral_Light14 = 230,
