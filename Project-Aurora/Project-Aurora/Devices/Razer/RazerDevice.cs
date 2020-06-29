@@ -250,7 +250,7 @@ namespace Aurora.Devices.Razer
 							SendColorToMouse(2, key.Value);
 							break;
 						case DeviceKeys.LeftSide1:
-							SendColorToMouse(4, key.Value); // Doesn't work
+							SendColorToMouse(4, key.Value);
 							break;
 						case DeviceKeys.LeftSide2:
 							SendColorToMouse(5, key.Value);
@@ -259,7 +259,7 @@ namespace Aurora.Devices.Razer
 							SendColorToMouse(6, key.Value);
 							break;
 						case DeviceKeys.LeftSide4:
-							SendColorToMouse(7, key.Value); // Doesn't work
+							SendColorToMouse(7, key.Value);
 							break;
 						case DeviceKeys.LeftSide5:
 							SendColorToMouse(8, key.Value);
@@ -271,22 +271,22 @@ namespace Aurora.Devices.Razer
 							SendColorToMouse(10, key.Value);
 							break;
 						case DeviceKeys.RightSide1:
-							SendColorToMouse(11, key.Value); // Doesn't work
+							SendColorToMouse(11, key.Value);
 							break;
 						case DeviceKeys.RightSide2:
 							SendColorToMouse(12, key.Value);
 							break;
 						case DeviceKeys.RightSide3:
-							SendColorToMouse(13, key.Value); // Doesn't work
+                            SendColorToMouse(13, key.Value);
 							break;
 						case DeviceKeys.RightSide4:
-							SendColorToMouse(14, key.Value);  // Doesn't work
+							SendColorToMouse(14, key.Value);
 							break;
 						case DeviceKeys.RightSide5:
 							SendColorToMouse(15, key.Value);
 							break;
 						case DeviceKeys.RightSide6:
-							SendColorToMouse(16, key.Value);  // Doesn't work
+							SendColorToMouse(16, key.Value);
 							break;
 						case DeviceKeys.RightSide7:
 							SendColorToMouse(17, key.Value);
