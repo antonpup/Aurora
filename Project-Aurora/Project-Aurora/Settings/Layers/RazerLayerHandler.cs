@@ -188,7 +188,7 @@ namespace Aurora.Settings.Layers
                 color = _keyboardColors[position[1] + position[0] * 22];
             else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                 color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
-            else if (key >= DeviceKeys.Peripheral_Light1 && key <= DeviceKeys.LOGO4)
+            else if (key >= DeviceKeys.Peripheral_Light1 && key <= DeviceKeys.SCROLLWHEEL)
                 color = _mouseColors[DeviceKeys.SCROLLWHEEL - key];
             else
                 return false;
