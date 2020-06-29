@@ -224,6 +224,21 @@ namespace Aurora.Profiles
         public Color G18;
         public Color G19;
         public Color G20;
+        public Color left1;
+        public Color left2;
+        public Color left3;
+        public Color left4;
+        public Color left5;
+        public Color left6;
+        public Color left7;
+        public Color Right1;
+        public Color Right2;
+        public Color Right3;
+        public Color Right4;
+        public Color Right5;
+        public Color Right6;
+        public Color Right7;
+        public Color ScrollWheel;
 
         internal Extra_Keys_Wrapper(string JSON)
             : base(JSON)
@@ -266,6 +281,21 @@ namespace Aurora.Profiles
             G18 = Utils.ColorUtils.GetColorFromInt( GetInt("G18"));
             G19 = Utils.ColorUtils.GetColorFromInt( GetInt("G19"));
             G20 = Utils.ColorUtils.GetColorFromInt( GetInt("G20"));
+            left1 = Utils.ColorUtils.GetColorFromInt(GetInt("left1"));
+            left2 = Utils.ColorUtils.GetColorFromInt(GetInt("left2"));
+            left3 = Utils.ColorUtils.GetColorFromInt(GetInt("left3"));
+            left4 = Utils.ColorUtils.GetColorFromInt(GetInt("left4"));
+            left5 = Utils.ColorUtils.GetColorFromInt(GetInt("left5"));
+            left6 = Utils.ColorUtils.GetColorFromInt(GetInt("left6"));
+            left7 = Utils.ColorUtils.GetColorFromInt(GetInt("left7"));
+            Right1 = Utils.ColorUtils.GetColorFromInt(GetInt("Right1"));
+            Right2 = Utils.ColorUtils.GetColorFromInt(GetInt("Right2"));
+            Right3 = Utils.ColorUtils.GetColorFromInt(GetInt("Right3"));
+            Right4 = Utils.ColorUtils.GetColorFromInt(GetInt("Right4"));
+            Right5 = Utils.ColorUtils.GetColorFromInt(GetInt("Right5"));
+            Right6 = Utils.ColorUtils.GetColorFromInt(GetInt("Right6"));
+            Right7 = Utils.ColorUtils.GetColorFromInt(GetInt("Right7"));
+            ScrollWheel = Utils.ColorUtils.GetColorFromInt(GetInt("ScrollWheel"));
         }
     }
 

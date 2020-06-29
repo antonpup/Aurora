@@ -221,6 +221,20 @@ namespace Aurora.Settings.Layers
             SetExtraKey(Devices.DeviceKeys.G18, ngw_state.Extra_Keys.G18);
             SetExtraKey(Devices.DeviceKeys.G19, ngw_state.Extra_Keys.G19);
             SetExtraKey(Devices.DeviceKeys.G20, ngw_state.Extra_Keys.G20);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light1, ngw_state.Extra_Keys.left1);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light3, ngw_state.Extra_Keys.left2);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light5, ngw_state.Extra_Keys.left3);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light7, ngw_state.Extra_Keys.left4);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light9, ngw_state.Extra_Keys.left5);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light11, ngw_state.Extra_Keys.left6);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light13, ngw_state.Extra_Keys.left7);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light2, ngw_state.Extra_Keys.Right1);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light4, ngw_state.Extra_Keys.Right2);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light6, ngw_state.Extra_Keys.Right3);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light8, ngw_state.Extra_Keys.Right4);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light10, ngw_state.Extra_Keys.Right5);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light12, ngw_state.Extra_Keys.Right6);
+            SetExtraKey(Devices.DeviceKeys.Peripheral_Light14, ngw_state.Extra_Keys.Right7);
 
             if (ngw_state.Command.Equals("SetLighting"))
             {
