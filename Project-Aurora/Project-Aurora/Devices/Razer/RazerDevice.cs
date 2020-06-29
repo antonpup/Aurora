@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Aurora.Settings;
 using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
 using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
-using MouseCustom    = Corale.Colore.Razer.Mouse   .Effects.Custom;
+using MouseCustom = Corale.Colore.Razer.Mouse.Effects.Custom;
 using System.ComponentModel;
 
 namespace Aurora.Devices.Razer
@@ -249,46 +249,46 @@ namespace Aurora.Devices.Razer
 						case DeviceKeys.LOGO4:
 							SendColorToMouse(2, key.Value);
 							break;
-						case DeviceKeys.LeftSide1:
+						case DeviceKeys.Peripheral_Light1:
 							SendColorToMouse(4, key.Value);
 							break;
-						case DeviceKeys.LeftSide2:
+						case DeviceKeys.Peripheral_Light3:
 							SendColorToMouse(5, key.Value);
 							break;
-						case DeviceKeys.LeftSide3:
+						case DeviceKeys.Peripheral_Light5:
 							SendColorToMouse(6, key.Value);
 							break;
-						case DeviceKeys.LeftSide4:
+						case DeviceKeys.Peripheral_Light7:
 							SendColorToMouse(7, key.Value);
 							break;
-						case DeviceKeys.LeftSide5:
+						case DeviceKeys.Peripheral_Light9:
 							SendColorToMouse(8, key.Value);
 							break;
-						case DeviceKeys.LeftSide6:
+						case DeviceKeys.Peripheral_Light11:
 							SendColorToMouse(9, key.Value);
 							break;
-						case DeviceKeys.LeftSide7:
+						case DeviceKeys.Peripheral_Light13:
 							SendColorToMouse(10, key.Value);
 							break;
-						case DeviceKeys.RightSide1:
+						case DeviceKeys.Peripheral_Light2:
 							SendColorToMouse(11, key.Value);
 							break;
-						case DeviceKeys.RightSide2:
+						case DeviceKeys.Peripheral_Light4:
 							SendColorToMouse(12, key.Value);
 							break;
-						case DeviceKeys.RightSide3:
+						case DeviceKeys.Peripheral_Light6:
                             SendColorToMouse(13, key.Value);
 							break;
-						case DeviceKeys.RightSide4:
+						case DeviceKeys.Peripheral_Light8:
 							SendColorToMouse(14, key.Value);
 							break;
-						case DeviceKeys.RightSide5:
+						case DeviceKeys.Peripheral_Light10:
 							SendColorToMouse(15, key.Value);
 							break;
-						case DeviceKeys.RightSide6:
+						case DeviceKeys.Peripheral_Light12:
 							SendColorToMouse(16, key.Value);
 							break;
-						case DeviceKeys.RightSide7:
+						case DeviceKeys.Peripheral_Light14:
 							SendColorToMouse(17, key.Value);
 							break;
 						default:

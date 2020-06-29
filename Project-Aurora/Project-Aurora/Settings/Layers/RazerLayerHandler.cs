@@ -65,7 +65,7 @@ namespace Aurora.Settings.Layers
     {
         private Color[] _keyboardColors;
         private Color[] _mousepadColors;
-        private Color _mouseColor;
+        private Color[] _mouseColors;
         private string _currentAppExecutable;
         private int _currentAppPid;
         private bool _isDumping;
@@ -74,6 +74,7 @@ namespace Aurora.Settings.Layers
         {
             _keyboardColors = new Color[22 * 6];
             _mousepadColors = new Color[16];
+            _mouseColors = new Color[7 * 9];
 
             if (Global.razerSdkManager != null)
             {
@@ -108,7 +109,8 @@ namespace Aurora.Settings.Layers
             }
             else if (provider is RzMouseDataProvider mouse)
             {
-                _mouseColor = mouse.GetZoneColor(55);
+                for (var i = 0; i < mouse.Grids[0].Height * mouse.Grids[0].Width; i++)
+                    _mouseColors[i] = mouse.GetZoneColor(i);
             }
             else if (provider is RzMousepadDataProvider mousePad)
             {
@@ -186,8 +188,8 @@ namespace Aurora.Settings.Layers
                 color = _keyboardColors[position[1] + position[0] * 22];
             else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                 color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
-            else if (key == DeviceKeys.Peripheral)
-                color = _mouseColor;
+            else if (key >= DeviceKeys.Peripheral_Light1 && key <= DeviceKeys.LOGO4)
+                color = _mouseColors[DeviceKeys.SCROLLWHEEL - key];
             else
                 return false;
 

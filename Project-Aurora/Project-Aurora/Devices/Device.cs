@@ -1302,88 +1302,88 @@ namespace Aurora.Devices
         CALC = 216,
 
         /// <summary>
-        /// LED Strip 1
+        /// Peripheral Light 1
         /// </summary>
-        [Description("First LED on left side.")]
-        LeftSide1 = 217,
+        [Description("Peripheral Light 1")]
+        Peripheral_Light1 = 217,
 
         /// <summary>
-        /// LED Strip 2
+        /// Peripheral Light 1
         /// </summary>
-        [Description("First LED on right side.")]
-        RightSide1 = 218,
+        [Description("Peripheral Light 2")]
+        Peripheral_Light2 = 218,
 
         /// <summary>
         /// LED Strip 3
         /// </summary>
-        [Description("Second LED on left side.")]
-        LeftSide2 = 219,
+        [Description("Peripheral Light 3")]
+        Peripheral_Light3 = 219,
 
         /// <summary>
         /// LED Strip 4
         /// </summary>
-        [Description("Second LED on right side.")]
-        RightSide2 = 220,
+        [Description("Peripheral Light 4")]
+        Peripheral_Light4 = 220,
 
         /// <summary>
         /// LED Strip 5
         /// </summary>
-        [Description("Third LED on left side.")]
-        LeftSide3 = 221,
+        [Description("Peripheral Light 5")]
+        Peripheral_Light5 = 221,
 
         /// <summary>
         /// LED Strip 6
         /// </summary>
-        [Description("Third LED on right side.")]
-        RightSide3 = 222,
+        [Description("Peripheral Light 6")]
+        Peripheral_Light6 = 222,
 
         /// <summary>
         /// LED Strip 7
         /// </summary>
-        [Description("Fourth LED on left side.")]
-        LeftSide4 = 223,
+        [Description("Peripheral Light 7")]
+        Peripheral_Light7 = 223,
 
         /// <summary>
         /// LED Strip 8
         /// </summary>
-        [Description("Fourth LED on right side.")]
-        RightSide4 = 224,
+        [Description("Peripheral Light 8")]
+        Peripheral_Light8 = 224,
 
         /// <summary>
         /// LED Strip 9
         /// </summary>
-        [Description("Fifth LED on left side.")]
-        LeftSide5 = 225,
+        [Description("Peripheral Light 9")]
+        Peripheral_Light9 = 225,
 
         /// <summary>
         /// LED Strip 10
         /// </summary>
-        [Description("Fifth LED on right side.")]
-        RightSide5 = 226,
+        [Description("Peripheral Light 10")]
+        Peripheral_Light10 = 226,
 
         /// <summary>
         /// LED Strip 11
         /// </summary>
-        [Description("Sixth LED on left side.")]
-        LeftSide6 = 227,
+        [Description("Peripheral Light 11")]
+        Peripheral_Light11 = 227,
 
         /// <summary>
         /// LED Strip 12
         /// </summary>
-        [Description("Sixth LED on right side.")]
-        RightSide6 = 228,
+        [Description("Peripheral Light 12")]
+        Peripheral_Light12 = 228,
 
         /// <summary>
         /// LED Strip 13
         /// </summary>
-        [Description("Seventh LED on left side.")]
-        LeftSide7 = 229,
+        [Description("Peripheral Light 13")]
+        Peripheral_Light13 = 229,
 
         /// <summary>
         /// LED Strip 14
         /// </summary>
-        [Description("Seventh LED on right side.")]
-        RightSide7 = 230,
+        [Description("Peripheral Light 14")]
+        Peripheral_Light14 = 230,
 
         /// <summary>
         /// Logo #4
