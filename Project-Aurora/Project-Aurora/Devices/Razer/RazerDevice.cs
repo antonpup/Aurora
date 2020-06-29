@@ -277,7 +277,7 @@ namespace Aurora.Devices.Razer
 							SendColorToMouse(12, key.Value);
 							break;
 						case DeviceKeys.Peripheral_Light6:
-                            SendColorToMouse(13, key.Value);
+							SendColorToMouse(13, key.Value);
 							break;
 						case DeviceKeys.Peripheral_Light8:
 							SendColorToMouse(14, key.Value);
