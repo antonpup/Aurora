@@ -226,7 +226,7 @@ namespace Aurora.Devices.Razer
             { DeviceKeys.Peripheral_Light10, new int[] { 5, 6 } },
             { DeviceKeys.Peripheral_Light12, new int[] { 6, 6 } },
             { DeviceKeys.Peripheral_Light14, new int[] { 7, 6 } },
-            { DeviceKeys.LOGO4, new int[] { 7, 2 } },
+            { DeviceKeys.LOGO4, new int[] { 7, 3 } },
             { DeviceKeys.SCROLLWHEEL, new int[] { 2, 3 } }
         };
     }
