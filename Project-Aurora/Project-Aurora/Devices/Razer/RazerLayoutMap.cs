@@ -208,5 +208,26 @@ namespace Aurora.Devices.Razer
             {DeviceKeys.ARROW_DOWN, new int [] {5, 14} },
             {DeviceKeys.ARROW_RIGHT, new int [] {5, 15} }
         };
+
+        public static readonly Dictionary<DeviceKeys, int[]> MambaTE = new Dictionary<DeviceKeys, int[]>
+        {
+            { DeviceKeys.Peripheral_Light1, new int[] { 0, 7 } },
+            { DeviceKeys.Peripheral_Light3, new int[] { 1, 7 } },
+            { DeviceKeys.Peripheral_Light5, new int[] { 2, 7 } },
+            { DeviceKeys.Peripheral_Light7, new int[] { 3, 7 } },
+            { DeviceKeys.Peripheral_Light9, new int[] { 4, 7 } },
+            { DeviceKeys.Peripheral_Light11, new int[] { 5, 7 } },
+            { DeviceKeys.Peripheral_Light13, new int[] { 6, 7 } },
+
+            { DeviceKeys.Peripheral_Light2, new int[] { 1, 6 } },
+            { DeviceKeys.Peripheral_Light4, new int[] { 2, 6 } },
+            { DeviceKeys.Peripheral_Light6, new int[] { 3, 6 } },
+            { DeviceKeys.Peripheral_Light8, new int[] { 4, 6 } },
+            { DeviceKeys.Peripheral_Light10, new int[] { 5, 6 } },
+            { DeviceKeys.Peripheral_Light12, new int[] { 6, 6 } },
+            { DeviceKeys.Peripheral_Light14, new int[] { 7, 6 } },
+            { DeviceKeys.LOGO4, new int[] { 7, 2 } },
+            { DeviceKeys.SCROLLWHEEL, new int[] { 2, 3 } }
+        };
     }
 }

@@ -188,8 +188,8 @@ namespace Aurora.Settings.Layers
                 color = _keyboardColors[position[1] + position[0] * 22];
             else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                 color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
-            else if (key >= DeviceKeys.Peripheral_Light1 && key <= DeviceKeys.SCROLLWHEEL)
-                color = _mouseColors[DeviceKeys.SCROLLWHEEL - key];
+            else if (RazerLayoutMap.MambaTE.TryGetValue(key, out int[] position1))
+                color = _mouseColors[position1[1] + position1[0] * 7];
             else
                 return false;
 
