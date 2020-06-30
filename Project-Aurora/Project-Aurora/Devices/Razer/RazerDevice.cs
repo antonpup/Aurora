@@ -243,7 +243,7 @@ namespace Aurora.Devices.Razer
 						case DeviceKeys.MOUSEPADLIGHT15:
 							SendColorToMousepad(0, key.Value);
 							break;
-						case DeviceKeys.SCROLLWHEEL:
+						case DeviceKeys.Peripheral_ScrollWheel:
 							SendColorToMouse(1, key.Value);
 							break;
 						case DeviceKeys.LOGO4:

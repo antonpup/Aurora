@@ -1392,12 +1392,6 @@ namespace Aurora.Devices
         LOGO4 = 231,
 
         /// <summary>
-        /// Scroll Wheel
-        /// </summary>
-        [Description("Scroll Wheel")]
-        SCROLLWHEEL = 232,
-
-        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
