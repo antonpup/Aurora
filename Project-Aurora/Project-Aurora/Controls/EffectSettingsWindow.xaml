@@ -28,9 +28,9 @@
 
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="10,13,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="primary_color" HorizontalAlignment="Left" Height="24" Margin="90,10,0,0" VerticalAlignment="Top" Width="169" SelectedColorChanged="primary_color_SelectedColorChanged" UsingAlphaChannel="True" ShowAdvancedButton="True" ColorMode="ColorCanvas"/>
+        <xctk:ColorPicker x:Name="primary_color" HorizontalAlignment="Left" Height="24" Margin="90,10,0,0" VerticalAlignment="Top" Width="169" SelectedColorChanged="primary_color_SelectedColorChanged" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,42,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="secondary_color" HorizontalAlignment="Left" Height="24" Margin="105,39,0,0" VerticalAlignment="Top" Width="154" SelectedColorChanged="secondary_color_SelectedColorChanged" ShowAdvancedButton="True" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
+        <xctk:ColorPicker x:Name="secondary_color" HorizontalAlignment="Left" Height="24" Margin="105,39,0,0" VerticalAlignment="Top" Width="154" SelectedColorChanged="secondary_color_SelectedColorChanged" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,68,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
         <Slider x:Name="effect_speed_slider" HorizontalAlignment="Left" Margin="90,68,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="5" ValueChanged="effect_speed_slider_ValueChanged"/>
         <TextBlock x:Name="effect_speed_label" HorizontalAlignment="Left" Margin="235,68,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
