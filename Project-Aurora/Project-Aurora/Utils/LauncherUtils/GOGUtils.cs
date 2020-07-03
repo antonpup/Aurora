@@ -7,12 +7,12 @@ using System.IO;
 namespace Aurora.Utils
 {
     /// <summary>
-    /// A class for handling GOG games
+    /// A class for handling GOG games. You can use <see href="https://www.gogdb.org/products">gogdb.org</see> to find the GameID (Type should be "Game")
     /// </summary>
     public static class GOGUtils
     {
         /// <summary>
-        /// Retrieves a path to a specified AppID
+        /// Retrieves a path to a specified AppID. You can use <see href="https://www.gogdb.org/products">gogdb.org</see> to find the GameID (Type should be "Game")
         /// </summary>
         /// <param name="gameId">The game's AppID</param>
         /// <returns>Path to the location of AppID's install</returns>
