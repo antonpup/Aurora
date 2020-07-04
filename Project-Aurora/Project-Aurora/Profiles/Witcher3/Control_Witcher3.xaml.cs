@@ -56,20 +56,29 @@ namespace Aurora.Profiles.Witcher3
         
         private void install_mod_button_Click(object sender, RoutedEventArgs e)
         {
-            String Steaminstallpath = SteamUtils.GetGamePath(292030);
-            String Epicinstallpath = EpicUtils.GetGameManifestByExe("Witcher3.exe")?.InstallLocation;
+            string Steaminstallpath = SteamUtils.GetGamePath(292030);
+            string Epicinstallpath = EpicUtils.GetGameManifestByExe("Witcher3.exe")?.InstallLocation;
+            string GOGinstallpath = GOGUtils.GetGamePath(1207664643); //Normal version
+            string GOGGotyinstallpath = GOGUtils.GetGamePath(1495134320); //GOTY version
 
-            if (!String.IsNullOrWhiteSpace(Steaminstallpath) || !String.IsNullOrWhiteSpace(Epicinstallpath))
+
+            if (!String.IsNullOrWhiteSpace(Steaminstallpath) || !String.IsNullOrWhiteSpace(Epicinstallpath) || !String.IsNullOrWhiteSpace(GOGinstallpath) || !String.IsNullOrWhiteSpace(GOGGotyinstallpath))
             {
                 if (!String.IsNullOrWhiteSpace(Steaminstallpath))
-                InstallMod(Steaminstallpath);
+                    InstallMod(Steaminstallpath);
                 
                 if (!String.IsNullOrWhiteSpace(Epicinstallpath))
                     InstallMod(Epicinstallpath);
+                
+                if (!String.IsNullOrWhiteSpace(GOGinstallpath))
+                    InstallMod(GOGinstallpath);
+
+                if (!String.IsNullOrWhiteSpace(GOGGotyinstallpath))
+                    InstallMod(GOGGotyinstallpath);
             }
-            else//user could have the GOG version of the game
+            else//user could have the Origin version of the game
             {
-                System.Windows.MessageBox.Show("Witcher 3 was not installed through Steam or Epic Games, please pick the path manually");
+                System.Windows.MessageBox.Show("Witcher 3 was not installed through Steam, Epic Games or GOG, please pick the path manually");
                 var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -81,20 +90,28 @@ namespace Aurora.Profiles.Witcher3
 
         private void uninstall_mod_button_Click(object sender, RoutedEventArgs e)
         {
-            String Steaminstallpath = SteamUtils.GetGamePath(292030);
-            String Epicinstallpath = EpicUtils.GetGameManifestByExe("Witcher3.exe")?.InstallLocation;
+            string Steaminstallpath = SteamUtils.GetGamePath(292030);
+            string Epicinstallpath = EpicUtils.GetGameManifestByExe("Witcher3.exe")?.InstallLocation;
+            string GOGinstallpath = GOGUtils.GetGamePath(1207664643); //Normal version
+            string GOGGotyinstallpath = GOGUtils.GetGamePath(1495134320); //GOTY version
 
-            if (!String.IsNullOrWhiteSpace(Steaminstallpath) || !String.IsNullOrWhiteSpace(Epicinstallpath))
+            if (!String.IsNullOrWhiteSpace(Steaminstallpath) || !String.IsNullOrWhiteSpace(Epicinstallpath) || !String.IsNullOrWhiteSpace(GOGinstallpath) || !String.IsNullOrWhiteSpace(GOGGotyinstallpath))
             {
                 if (!String.IsNullOrWhiteSpace(Steaminstallpath))
                     UninstallMod(Steaminstallpath);
 
                 if (!String.IsNullOrWhiteSpace(Epicinstallpath))
                     UninstallMod(Epicinstallpath);
+
+                if (!String.IsNullOrWhiteSpace(GOGinstallpath))
+                    UninstallMod(GOGinstallpath);
+
+                if (!String.IsNullOrWhiteSpace(GOGGotyinstallpath))
+                    UninstallMod(GOGGotyinstallpath);
             }
             else
             {
-                MessageBox.Show("Witcher 3 was not installed through Steam or Epic, please pick the path manually");
+                MessageBox.Show("Witcher 3 was not installed through Steam, Epic Games or GOG, please pick the path manually");
                 var dialog = new System.Windows.Forms.FolderBrowserDialog();
                 if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
