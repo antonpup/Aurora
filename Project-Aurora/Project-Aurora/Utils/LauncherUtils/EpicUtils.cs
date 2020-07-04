@@ -86,7 +86,8 @@ namespace Aurora.Utils
             {
                 //alternative data source "C:\ProgramData\Epic\UnrealEngineLauncher\LauncherInstalled.dat"
                 //default is C:\ProgramData\Epic\EpicGamesLauncher\Data\(Manifests)
-                manifestPath = Path.Combine((string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Epic Games\EpicGamesLauncher", "AppDataPath", null), "Manifests");
+                manifestPath = Path.Combine((string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Epic Games\EpicGamesLauncher", "AppDataPath", null) 
+                    ?? (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Epic Games\EpicGamesLauncher", "AppDataPath", null), "Manifests");
             }
             catch (Exception exc)
             {

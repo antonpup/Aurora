@@ -16,6 +16,7 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="gameId">The game's AppID</param>
         /// <returns>Path to the location of AppID's install</returns>
-        public static string GetGamePath(int gameId) => (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\" + gameId, "path", null);
+        public static string GetGamePath(int gameId) => (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\GOG.com\Games\" + gameId, "path", null) 
+            ?? (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\GOG.com\Games\" + gameId, "path", null);
     }
 }
