@@ -20,7 +20,7 @@ namespace Aurora.Devices.OpenRGB
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
 
-        OpenRGBClient client = new OpenRGBClient("localhost", 6742, "Aurora\0");
+        OpenRGBClient client;
         List<OpenRGBDevice> controllers;
         List<OpenRGBColor[]> colors;
 
@@ -30,7 +30,7 @@ namespace Aurora.Devices.OpenRGB
             {
                 string devString = devicename + ": ";
                 devString += "Connected ";
-                var names = controllers.Select(c => c.name);
+                var names = controllers.Select(c => c.Name);
                 devString += string.Join(",", names);
                 return devString;
             }
@@ -68,27 +68,28 @@ namespace Aurora.Devices.OpenRGB
 
             try
             {
+                client = new OpenRGBClient(name: "Aurora");
                 client.Connect();
+
+                var controllerCount = client.GetControllerCount();
+                controllers = new List<OpenRGBDevice>();
+                colors = new List<OpenRGBColor[]>();
+
+                for (var i = 0; i < controllerCount; i++)
+                {
+                    var dev = client.GetControllerData(i);
+                    controllers.Add(dev);
+                    var array = new OpenRGBColor[dev.Colors.Length];
+                    for (var j = 0; j < dev.Colors.Length; j++)
+                        array[j] = new OpenRGBColor();
+                    colors.Add(array);
+                }
             }
             catch (Exception e)
             {
                 Global.logger.Error("error in OpenRGB device: " + e);
                 isInitialized = false;
                 return false;
-            }
-
-            var controllerCount = client.GetControllerCount();
-            controllers = new List<OpenRGBDevice>();
-            colors = new List<OpenRGBColor[]>();
-
-            for (var i = 0; i < controllerCount; i++)
-            {
-                var dev = client.GetControllerData(i);
-                controllers.Add(dev);
-                var array = new OpenRGBColor[dev.colors.Length];
-                for (var j = 0; j < dev.colors.Length; j++)
-                    array[j] = new OpenRGBColor();
-                colors.Add(array);
             }
 
             isInitialized = true;
@@ -133,10 +134,11 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < controllers.Count; i++)
             {
-                client.UpdateLeds(i, controllers[i].colors);
+                client.UpdateLeds(i, controllers[i].Colors);
             }
 
             client.Disconnect();
+            client = null;
             isInitialized = false;
         }
 
@@ -147,7 +149,7 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < controllers.Count; i++)
             {
-                switch (controllers[i].name)
+                switch (controllers[i].Name)
                 {
                     case G810:
                         foreach (var kc in keyColors)
