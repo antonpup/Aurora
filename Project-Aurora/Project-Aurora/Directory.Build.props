@@ -6,7 +6,8 @@
     <Product>Aurora</Product>
     <Copyright>Copyright ©  2017</Copyright>
 
-    <Version>1.0.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
 
     <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_VERSION)</FileVersion>
     <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.0</FileVersion>
