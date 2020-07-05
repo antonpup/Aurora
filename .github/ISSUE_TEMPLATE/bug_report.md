@@ -1,7 +1,7 @@
 ---
 name: Bug Report
 about: Report an issue with how the program works.
-labels: bug
+labels: 'Type: Bug'
 ---
 <!--
 Thank you for reporting your issues to us, helping to make Aurora better! :)

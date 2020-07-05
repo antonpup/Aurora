@@ -1,14 +1,4 @@
 ﻿using Aurora.Settings;
-using Aurora.Profiles.Witcher3.Layers;
-using System;
-using System.Text;
-using System.Windows.Media.Imaging;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.IO;
-using Newtonsoft.Json;
-using Aurora.Settings.Layers;
-using System.Collections.Generic;
 
 namespace Aurora.Profiles.Witcher3
 {
@@ -28,18 +18,7 @@ namespace Aurora.Profiles.Witcher3
                 IconURI = "Resources/Witcher3_256x256.png"
             })
         {
-
-            var extra = new List<LayerHandlerEntry>
-            {
-                new LayerHandlerEntry("Witcher3Background", "Witcher 3 Background Layer", typeof(Witcher3BackgroundLayerHandler)),
-            };
-
-            Global.LightingStateManager.RegisterLayerHandlers(extra, false);
-
-            foreach (var entry in extra)
-            {
-                Config.ExtraAvailableLayers.Add(entry.Key);
-            }
+            AllowLayer<Layers.Witcher3BackgroundLayerHandler>();
         }
     }
 }

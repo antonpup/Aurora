@@ -40,6 +40,8 @@ namespace Aurora.Settings.Layers
         {
             if(this.DataContext is GradientLayerHandler && !settingsset)
             {
+                this.wave_size_slider.Value = (this.DataContext as GradientLayerHandler).Properties.GradientConfig.gradient_size;
+                this.wave_size_label.Text = (this.DataContext as GradientLayerHandler).Properties.GradientConfig.gradient_size + " %";
                 this.effect_speed_slider.Value = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.speed;
                 this.effect_speed_label.Text = "x " + (this.DataContext as GradientLayerHandler).Properties._GradientConfig.speed;
                 this.effect_angle.Text = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.angle.ToString();
@@ -96,7 +98,6 @@ namespace Aurora.Settings.Layers
                 Global.logger.Error("Could not set brush, exception: " + exc);
             }
         }
-
         private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is Slider)
@@ -105,6 +106,24 @@ namespace Aurora.Settings.Layers
 
                 if (this.effect_speed_label is TextBlock)
                     this.effect_speed_label.Text = "x " + (sender as Slider).Value;
+            }
+        }
+
+        private void wave_size_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is Slider)
+            {
+                (this.DataContext as GradientLayerHandler).Properties.GradientConfig.gradient_size = (float)(sender as Slider).Value;
+                
+                if (this.wave_size_label is TextBlock)
+                    
+                {
+                    this.wave_size_label.Text = (sender as Slider).Value + " %";
+                    if ((sender as Slider).Value == 0)
+                    {
+                        this.wave_size_label.Text = "Stop";
+                    }
+                }
             }
         }
 

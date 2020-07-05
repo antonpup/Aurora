@@ -5,54 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Slime_Rancher.GSI.Nodes {
-    public class PlayerNode : Node<PlayerNode> {
+    public class PlayerNode : AutoJsonNode<PlayerNode>
+    {
+        public CurrentMaxNode Health => NodeFor<CurrentMaxNode>("health");
+        public CurrentMaxNode Energy => NodeFor<CurrentMaxNode>("energy");
+        public CurrentMaxNode Radiation => NodeFor<CurrentMaxNode>("rad");
 
-        public HealthNode Health;
-        public EnergyNode Energy;
-        public RadNode Radiation;
-
-        internal PlayerNode(string json) : base(json) {
-            
-            Health = new HealthNode(_ParsedData["health"]?.ToString() ?? "");
-            Energy = new EnergyNode(_ParsedData["energy"]?.ToString() ?? "");
-            Radiation = new RadNode(_ParsedData["rad"]?.ToString() ?? "");
-        }
-
+        internal PlayerNode(string json) : base(json) { }
     }
 
-    public class HealthNode : Node<HealthNode>
+    public class CurrentMaxNode : AutoJsonNode<CurrentMaxNode>
     {
         public int Current;
         public int Max;
 
-        internal HealthNode(string json) : base(json)
-        {
-            Current = GetInt("current");
-            Max = GetInt("max");
-        }
-    }
-
-    public class EnergyNode : Node<EnergyNode>
-    {
-        public int Current;
-        public int Max;
-
-        internal EnergyNode(string json) : base(json)
-        {
-            Current = GetInt("current");
-            Max = GetInt("max");
-        }
-    }
-
-    public class RadNode : Node<RadNode>
-    {
-        public int Current;
-        public int Max;
-
-        internal RadNode(string json) : base(json)
-        {
-            Current = GetInt("current");
-            Max = GetInt("max");
-        }
+        internal CurrentMaxNode(string json) : base(json) { }
     }
 }

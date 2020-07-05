@@ -113,38 +113,19 @@ namespace Aurora.Profiles
         /// <summary>
         /// Creates a default GameState_Wrapper instance.
         /// </summary>
-        public GameState_Wrapper()
-        {
-            json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
-        }
+        public GameState_Wrapper() { }
 
         /// <summary>
         /// Creates a GameState_Wrapper instance based on the passed json data.
         /// </summary>
         /// <param name="json_data">The passed json data</param>
-        public GameState_Wrapper(string json_data) : base(json_data)
-        {
-            if (String.IsNullOrWhiteSpace(json_data))
-                json_data = "{}";
-
-            json = json_data;
-            _ParsedData = JObject.Parse(json_data);
-        }
-
-        /// <summary>
-        /// A copy constructor, creates a GameState_Wrapper instance based on the data from the passed GameState instance.
-        /// </summary>
-        /// <param name="other_state">The passed GameState</param>
-        public GameState_Wrapper(GameState other_state) : base(other_state)
-        {
-        }
+        public GameState_Wrapper(string json_data) : base(json_data) { }
     }
 
     /// <summary>
     /// Class representing provider information for the wrapper
     /// </summary>
-    public class Provider_Wrapper : Node<Provider_Wrapper>
+    public class Provider_Wrapper : Node
     {
         /// <summary>
         /// Name of the program
@@ -167,7 +148,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper command data such as effects and colors
     /// </summary>
-    public class Command_Wrapper : Node<Command_Wrapper>
+    public class Command_Wrapper : Node
     {
         public int red_start;
         public int green_start;
@@ -203,7 +184,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class for additional wrapper keys
     /// </summary>
-    public class Extra_Keys_Wrapper : Node<Extra_Keys_Wrapper>
+    public class Extra_Keys_Wrapper : Node
     {
         public Color peripheral;
         public Color logo;

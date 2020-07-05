@@ -59,13 +59,6 @@ namespace Aurora.Profiles.Witcher3.Layers
 
     public class Witcher3BackgroundLayerHandler : LayerHandler<Witcher3BackgroundLayerHandlerProperties>
     {
-
-
-        public Witcher3BackgroundLayerHandler() : base()
-        {
-            _ID = "Witcher3Background";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_Witcher3BackgroundLayer(this);
@@ -97,6 +90,9 @@ namespace Aurora.Profiles.Witcher3.Layers
                         break;
                     case WitcherSign.Axii:
                         bg_color = this.Properties.AxiiColor;
+                        break;
+                    case WitcherSign.None:
+                        bg_color = Properties.DefaultColor;
                         break;
                 }
                 bg_layer.Fill(bg_color);

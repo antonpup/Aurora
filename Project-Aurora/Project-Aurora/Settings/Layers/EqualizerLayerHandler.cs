@@ -11,7 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.ServiceModel.Configuration;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -113,6 +116,9 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public SortedSet<float> Frequencies { get { return Logic._Frequencies ?? _Frequencies ?? new SortedSet<float>(); } }
 
+        public string _DeviceId { get; set; }
+        [JsonIgnore] public string DeviceId => Logic?._DeviceId ?? _DeviceId ?? "";
+
         public EqualizerLayerHandlerProperties() : base()
         {
 
@@ -137,20 +143,33 @@ namespace Aurora.Settings.Layers
             _BackgroundMode = EqualizerBackgroundMode.Disabled;
             _DimColor = Color.FromArgb(169, 0, 0, 0);
             _Frequencies = new SortedSet<float>() { 50, 95, 130, 180, 250, 350, 500, 620, 700, 850, 1200, 1600, 2200, 3000, 4100, 5600, 7700, 10000 };
+            _DeviceId = "";
         }
     }
 
+    [LayerHandlerMeta(Name = "Audio Visualizer", IsDefault = true)]
     public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerProperties>
     {
         public event NewLayerRendered NewLayerRender = delegate { };
 
-        MMDeviceEnumerator audio_device_enumerator = new MMDeviceEnumerator();
-        MMDevice default_device = null;
+        private AudioDeviceProxy deviceProxy;
+        private AudioDeviceProxy DeviceProxy {
+            get {
+                if (deviceProxy == null) {
+                    deviceProxy = new AudioDeviceProxy(DataFlow.Render);
+                    deviceProxy.WaveInDataAvailable += OnDataAvailable;
+                }
+                return deviceProxy;
+            }
+        }
 
         private List<float> flux_array = new List<float>();
-
-        private IWaveIn waveIn;
         private static int fftLength = 1024; // NAudio fft wants powers of two! was 8192
+
+        // Base rectangle that defines the region that is used to render the audio output
+        // Higher values mean a higher initial resolution, but may increase memory usage (looking at you, waveform).
+        // KEEP X AND Y AT 0
+        private static readonly RectangleF sourceRect = new RectangleF(0, 0, 80, 40);
 
         private SampleAggregator sampleAggregator = new SampleAggregator(fftLength);
         private Complex[] _ffts = { };
@@ -158,10 +177,10 @@ namespace Aurora.Settings.Layers
 
         private float[] previous_freq_results = null;
 
+        private bool first = true;
+
         public EqualizerLayerHandler()
         {
-            _ID = "Equalizer";
-
             _ffts = new Complex[fftLength];
             _ffts_prev = new Complex[fftLength];
 
@@ -174,57 +193,38 @@ namespace Aurora.Settings.Layers
             return new Control_EqualizerLayer(this);
         }
 
-        long startTime;
-        private void UpdateAudioCapture(MMDevice defaultDevice)
-        {
-            if (waveIn != null)
-            {
-                waveIn.StopRecording();
-                waveIn.Dispose();
-            }
-
-            default_device?.Dispose();
-            default_device = defaultDevice;
-
-            // Here you decide what you want to use as the waveIn.
-            // There are many options in NAudio and you can use other streams/files.
-            // Note that the code varies for each different source.
-            waveIn = new WasapiLoopbackCapture(default_device);
-            
-            waveIn.DataAvailable += OnDataAvailable;
-
-            waveIn.StartRecording();
-            startTime = Time.GetSecondsSinceEpoch();
-        }
-
-        private void CheckForDeviceChange()
-        {
-            MMDevice current_device = audio_device_enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-
-            if (((WasapiLoopbackCapture)waveIn)?.CaptureState == CaptureState.Stopped
-                || default_device == null
-                || default_device.ID != current_device.ID
-                || (((WasapiLoopbackCapture)waveIn)?.CaptureState != CaptureState.Capturing && (Time.GetSecondsSinceEpoch() - startTime) > 20)) //Check if it has taken over 20 seconds to start the capture which may indicate that there has been an issue
-            {
-                Global.logger.LogLine($"CaptureState is {((WasapiLoopbackCapture)waveIn)?.CaptureState}");
-                UpdateAudioCapture(current_device);
-            }
-            else
-                current_device.Dispose();
-
-            current_device = null;
-        }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             try
             {
-                //if (current_device != null)
-                //current_device.Dispose();
-                CheckForDeviceChange();
+                //this initialization has to be done on this method 
+                //because of threading issues with the NAudio stuff.
+                //it should only be done once, so we set this bool to true right after.
+                //should prevent the layer from spamming the log with errors and throwing
+                //exceptions left and right if the users has nahimic drivers installed
+                if (first)
+                {
+                    try
+                    {
+                        DeviceProxy.DeviceId = Properties.DeviceId;
+                    }
+                    catch (COMException e)
+                    {
+                        Global.logger.Error("Error binding to audio device in the audio visualizer layer. This is probably caused by an incompatibility with audio software: " + e);
+                    }
+                    first = false;
+                }
+
+                EffectLayer equalizer_layer = new EffectLayer();
+
+                if (deviceProxy is null)
+                    return equalizer_layer;
+
+                // Update device ID. If it has changed, it will re-assign itself to the new device
+                DeviceProxy.DeviceId = Properties.DeviceId;
 
                 // The system sound as a value between 0.0 and 1.0
-                float system_sound_normalized = default_device.AudioEndpointVolume.MasterVolumeLevelScalar;
+                float system_sound_normalized = DeviceProxy.Device?.AudioMeterInformation?.MasterPeakValue ?? 1f;
 
                 // Scale the Maximum amplitude with the system sound if enabled, so that at 100% volume the max_amp is unchanged.
                 // Replaces all Properties.MaxAmplitude calls with the scaled value
@@ -240,8 +240,6 @@ namespace Aurora.Settings.Layers
                 //Maintain local copies of fft, to prevent data overwrite
                 Complex[] _local_fft = new List<Complex>(_ffts).ToArray();
                 Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
-
-                EffectLayer equalizer_layer = new EffectLayer();
 
                 bool BgEnabled = false;
                 switch (Properties.BackgroundMode)
@@ -261,54 +259,44 @@ namespace Aurora.Settings.Layers
                         break;
                 }
 
-                // The region in which to draw the equalizer.
-                var rect = Properties.Sequence.GetAffectedRegion(); //new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
-                if (rect.Width == 0 || rect.Height == 0)
-                {
-                    // No region to draw in, prevents filling log with exceptions
-                    return new EffectLayer();
-                }
 
-                if (BgEnabled)
-                    equalizer_layer.Set(Properties.Sequence, Properties.DimColor);
+                // Use the new transform render method to draw the equalizer layer
+                equalizer_layer.DrawTransformed(Properties.Sequence, g => {
+                    // Here we draw the equalizer relative to our source rectangle and the DrawTransformed method handles sizing and positioning it correctly for us
 
-                using (Graphics g = equalizer_layer.GetGraphics())
-                {
-                    g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceCopy;
+                    // Draw a rectangle background over the entire source rect if bg is enabled
+                    if (BgEnabled)
+                        g.FillRectangle(new SolidBrush(Properties.DimColor), sourceRect);
 
-                    int wave_step_amount = _local_fft.Length / (int)rect.Width;
+                    g.CompositingMode = CompositingMode.SourceCopy;
+                    
+                    int wave_step_amount = _local_fft.Length / (int)sourceRect.Width;
 
-                    switch (Properties.EQType)
-                    {
+                    switch (Properties.EQType) {
                         case EqualizerType.Waveform:
-                            for (int x = 0; x < (int)rect.Width; x++)
-                            {
+                            var halfHeight = sourceRect.Height / 2f;
+                            for (int x = 0; x < (int)sourceRect.Width; x++) {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-
-                                Brush brush = GetBrush(fft_val, x, rect.Width);
-
-                                g.DrawLine(new Pen(brush), x + rect.X, (rect.Height / 2) + rect.Y, x + rect.X, (rect.Height / 2) + rect.Y - Math.Max(Math.Min(fft_val / scaled_max_amplitude * 500.0f, rect.Height / 2), -rect.Height / 2));
+                                Brush brush = GetBrush(fft_val, x, sourceRect.Width);
+                                var yOff = -Math.Max(Math.Min(fft_val / scaled_max_amplitude * 1000.0f, halfHeight), -halfHeight);
+                                g.DrawLine(new Pen(brush), x, halfHeight, x, halfHeight + yOff);
                             }
                             break;
+
                         case EqualizerType.Waveform_Bottom:
-                            for (int x = 0; x < (int)rect.Width; x++)
-                            {
+                            for (int x = 0; x < (int)sourceRect.Width; x++) {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
-
-                                Brush brush = GetBrush(fft_val, x, rect.Width);
-
-                                g.DrawLine(new Pen(brush), x + rect.X, rect.Height + rect.Y, x + rect.X, rect.Height + rect.Y - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, rect.Height));
+                                Brush brush = GetBrush(fft_val, x, sourceRect.Width);
+                                g.DrawLine(new Pen(brush), x, sourceRect.Height, x, sourceRect.Height - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, sourceRect.Height));
                             }
                             break;
-                        case EqualizerType.PowerBars:
 
+                        case EqualizerType.PowerBars:
                             //Perform FFT again to get frequencies
                             FastFourierTransform.FFT(false, (int)Math.Log(fftLength, 2.0), _local_fft);
 
                             while (flux_array.Count < freqs.Length)
-                            {
                                 flux_array.Add(0.0f);
-                            }
 
                             int startF = 0;
                             int endF = 0;
@@ -340,7 +328,7 @@ namespace Aurora.Settings.Layers
 
                             //System.Diagnostics.Debug.WriteLine($"flux max: {flux_array.Max()}");
 
-                            float bar_width = rect.Width / (float)(freqs.Length - 1);
+                            float bar_width = sourceRect.Width / (float)(freqs.Length - 1);
 
                             for (int f_x = 0; f_x < freq_results.Length - 1; f_x++)
                             {
@@ -351,9 +339,9 @@ namespace Aurora.Settings.Layers
                                 if (previous_freq_results[f_x] - fft_val > 0.10)
                                     fft_val = previous_freq_results[f_x] - 0.15f;
 
-                                float x = (f_x * bar_width) + rect.X;
-                                float y = rect.Height + rect.Y;
-                                float height = fft_val * rect.Height;
+                                float x = f_x * bar_width;
+                                float y = sourceRect.Height;
+                                float height = fft_val * sourceRect.Height;
 
                                 previous_freq_results[f_x] = fft_val;
 
@@ -361,10 +349,11 @@ namespace Aurora.Settings.Layers
 
                                 g.FillRectangle(brush, x, y - height, bar_width, height);
                             }
-
                             break;
                     }
-                }
+
+                }, sourceRect);
+                
 
                 var hander = NewLayerRender;
                 if (hander != null)
@@ -389,12 +378,12 @@ namespace Aurora.Settings.Layers
             {
                 byte[] buffer = e.Buffer;
                 int bytesRecorded = e.BytesRecorded;
-                int bufferIncrement = waveIn.WaveFormat.BlockAlign;
+                int bufferIncrement = DeviceProxy.WaveIn.WaveFormat.BlockAlign;
 
                 // 4 bytes per channel, bufferIncrement is numChannels * 4
                 for (int index = 0; index < bytesRecorded; index += bufferIncrement) // Loop over the bytes, respecting the channel grouping
                 {
-                    if (waveIn.WaveFormat.Channels == 2)
+                    if (DeviceProxy.WaveIn.WaveFormat.Channels == 2)
                         // If recording has two channels, take the largest value and add that to the sampleAggregator.
                         sampleAggregator.Add(Math.Max(BitConverter.ToSingle(buffer, index), BitConverter.ToSingle(buffer, index + 4)));
                     else
@@ -420,7 +409,6 @@ namespace Aurora.Settings.Layers
 
         private Brush GetBrush(float value, float position, float max_position)
         {
-            var rect = Properties.Sequence.GetAffectedRegion();
             if (Properties.ViewType == EqualizerPresentationType.AlternatingColor)
             {
                 if (value >= 0)
@@ -432,9 +420,10 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position));
             else if (Properties.ViewType == EqualizerPresentationType.GradientHorizontal)
             {
-                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(rect.X, 0);
-                e_brush.end = new PointF(rect.Width + rect.X, 0);
+                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum()) {
+                    start = PointF.Empty,
+                    end = new PointF(sourceRect.Width, 0)
+                };
 
                 return e_brush.GetDrawingBrush();
             }
@@ -442,9 +431,10 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000));
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
-                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum());
-                e_brush.start = new PointF(0, rect.Height + rect.Y);
-                e_brush.end = new PointF(0, rect.Y);
+                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum()) {
+                    start = new PointF(0, sourceRect.Height),
+                    end = PointF.Empty
+                };
 
                 return e_brush.GetDrawingBrush();
             }
@@ -454,8 +444,8 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            waveIn?.Dispose();
-            waveIn = null;
+            deviceProxy?.Dispose();
+            deviceProxy = null;
         }
     }
 
@@ -494,7 +484,7 @@ namespace Aurora.Settings.Layers
             if (PerformFFT && FftCalculated != null)
             {
                 // Remember the window function! There are many others as well.
-                fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HammingWindow(fftPos, fftLength));
+                fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HannWindow(fftPos, fftLength));
                 fftBuffer[fftPos].Y = 0; // This is always zero with audio.
                 fftPos++;
                 if (fftPos >= fftLength)

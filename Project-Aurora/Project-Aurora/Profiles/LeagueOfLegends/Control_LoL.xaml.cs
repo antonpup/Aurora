@@ -1,5 +1,6 @@
 ﻿using Aurora.Controls;
 using Aurora.Settings;
+using Aurora.Utils;
 using System;
 using System.IO;
 using System.Windows;
@@ -35,58 +36,6 @@ namespace Aurora.Profiles.LeagueOfLegends
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void patch_button_manual_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new System.Windows.Forms.FolderBrowserDialog();
-            System.Windows.Forms.DialogResult result = dialog.ShowDialog();
-
-            if (result == System.Windows.Forms.DialogResult.OK)
-            {
-                using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
-                {
-                    lightfx_wrapper_86.Write(Properties.Resources.Aurora_LightFXWrapper86);
-                }
-
-                MessageBox.Show("Aurora Wrapper Patch for LightFX applied to\r\n" + dialog.SelectedPath);
-            }
-        }
-
-        private void patch_button_Click(object sender, RoutedEventArgs e)
-        {
-            string lolpath;
-            try
-            {
-                lolpath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Riot Games, Inc\League of Legends", "Location", null);
-            }
-            catch
-            {
-                lolpath = String.Empty;
-            }
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(lolpath))
-                {
-                    lolpath = Path.Combine(lolpath, "Game");
-                    if (Directory.Exists(lolpath))
-                    {
-                        using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(Path.Combine(lolpath, "LightFX.dll"), FileMode.Create)))
-                        {
-                            lightfx_wrapper_86.Write(Properties.Resources.Aurora_LightFXWrapper86);
-                        }
-                        MessageBox.Show("Aurora Wrapper Patch for LightFX applied to\r\n" + lolpath);
-                        return;
-                    }
-                }
-                MessageBox.Show("Couldn't find League of Legends path automatically, please patch manually");
-                return;
-            }
-            catch(Exception exc)
-            {
-                Global.logger.Error("Error patching League of Legends:" + exc.Message);
-                MessageBox.Show("Error patching League of Legends: " + exc.Message);
-            }
-        }
-
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
@@ -102,6 +51,41 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string lolpath;
+            try
+            {
+                lolpath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Riot Games, Inc\League of Legends", "Location", null);
+            }
+            catch
+            {
+                lolpath = String.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(lolpath))
+            {
+                MessageBox.Show("Could not find the league of legends path automatically. Please select the correct location(Usually in c:\\Riot Games\\League of Legends)");
+                var fp = new System.Windows.Forms.FolderBrowserDialog();
+                if(fp.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    MessageBox.Show("Could not remove wrapper patch");
+                    return;
+                }
+                if(!fp.SelectedPath.EndsWith("League of Legends"))
+                {
+                    MessageBox.Show("Could not remove wrapper patch");
+                    return;
+                }
+                lolpath = fp.SelectedPath;
+            }
+
+            if (FileUtils.TryDelete(Path.Combine(lolpath, "Game", "LightFx.dll")))
+                MessageBox.Show("Deleted file successfully");
+            else
+                MessageBox.Show("Could not find the wrapper file.");
         }
     }
 }

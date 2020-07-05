@@ -14,7 +14,6 @@ namespace Aurora.Settings.Layers
     {
         public SolidColorLayerHandler()
         {
-            _ID = "Solid";
         }
 
         protected override UserControl CreateControl()

@@ -26,13 +26,6 @@ namespace Aurora.Settings.Layers {
             InitializeComponent();
             DataContext = context;
             Loaded += (obj, e) => SetSettings();
-
-            animationType.Items.Add(TimerLayerAnimationType.OnOff);
-            animationType.Items.Add(TimerLayerAnimationType.Fade);
-
-            repeatAction.Items.Add(TimerLayerRepeatPressAction.Reset);
-            repeatAction.Items.Add(TimerLayerRepeatPressAction.Extend);
-            repeatAction.Items.Add(TimerLayerRepeatPressAction.Ignore);
         }
 
         public void SetSettings() {
@@ -41,8 +34,6 @@ namespace Aurora.Settings.Layers {
                 defaultColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(ctxProps._PrimaryColor ?? System.Drawing.Color.Empty);
                 activeColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(ctxProps._SecondaryColor ?? System.Drawing.Color.Empty);
                 timerDuration.Value = ctxProps._Duration;
-                animationType.SelectedItem = ctxProps._AnimationType;
-                repeatAction.SelectedItem = ctxProps._RepeatAction;
                 triggerKeyList.Keybinds = ctxProps._TriggerKeys;
                 KeySequence_Keys.Sequence = ctxProps._Sequence;
                 settingsset = true;

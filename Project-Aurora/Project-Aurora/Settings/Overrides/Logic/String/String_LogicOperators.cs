@@ -1,4 +1,5 @@
 ﻿using Aurora.Profiles;
+using Aurora.Utils;
 using System;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,30 +10,26 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Logic that compares two strings using a selection of operators.
     /// </summary>
-    [OverrideLogic("String Comparison", category: OverrideLogicCategory.String)]
-    public class StringComparison : IEvaluatable<bool> {
+    [Evaluatable("String Comparison", category: EvaluatableCategory.String)]
+    public class StringComparison : Evaluatable<bool> {
 
         // Operands and operator
-        public IEvaluatable<string> Operand1 { get; set; } = new StringConstant();
-        public IEvaluatable<string> Operand2 { get; set; } = new StringConstant();
+        public Evaluatable<string> Operand1 { get; set; } = new StringConstant();
+        public Evaluatable<string> Operand2 { get; set; } = new StringConstant();
         public StringComparisonOperator Operator { get; set; } = StringComparisonOperator.Equal;
         public bool CaseInsensitive { get; set; } = false;
 
         // Control allowing the user to edit the comparison
-        [Newtonsoft.Json.JsonIgnore]
-        private Control_BinaryOperationHolder control;
-        public Visual GetControl(Application application) {
-            if (control == null) {
-                control = new Control_BinaryOperationHolder(application, EvaluatableType.String, typeof(StringComparisonOperator));
-                control.SetBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay });
-                control.SetBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay });
-            }
-            return control;
-        }
+        public override Visual GetControl() => new StackPanel()
+            .WithChild(new Control_BinaryOperationHolder(typeof(string), typeof(StringComparisonOperator))
+                .WithBinding(Control_BinaryOperationHolder.Operand1Property, new Binding("Operand1") { Source = this, Mode = BindingMode.TwoWay })
+                .WithBinding(Control_BinaryOperationHolder.Operand2Property, new Binding("Operand2") { Source = this, Mode = BindingMode.TwoWay })
+                .WithBinding(Control_BinaryOperationHolder.SelectedOperatorProperty, new Binding("Operator") { Source = this, Mode = BindingMode.TwoWay }))
+            .WithChild(new CheckBox { Content = "Ignore case" }
+                .WithBinding(CheckBox.IsCheckedProperty, this, nameof(CaseInsensitive), BindingMode.TwoWay));
 
         /// <summary>Compares the two strings with the given operator</summary>
-        public bool Evaluate(IGameState gameState) {
+        protected override bool Execute(IGameState gameState) {
             var op1 = Operand1.Evaluate(gameState);
             var op2 = Operand2.Evaluate(gameState);
 
@@ -55,17 +52,8 @@ namespace Aurora.Settings.Overrides.Logic {
                 default: return false;
             }
         }
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        /// <summary>Updates the application for this IEvaluatable.</summary>
-        public void SetApplication(Application application) {
-            control?.SetApplication(application);
-            Operand1?.SetApplication(application);
-            Operand2?.SetApplication(application);
-        }
-
+        
         /// <summary>Clones this StringComparison.</summary>
-        public IEvaluatable<bool> Clone() => new StringComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator, CaseInsensitive = CaseInsensitive };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        public override Evaluatable<bool> Clone() => new StringComparison { Operand1 = Operand1.Clone(), Operand2 = Operand2.Clone(), Operator = Operator, CaseInsensitive = CaseInsensitive };
     }
 }

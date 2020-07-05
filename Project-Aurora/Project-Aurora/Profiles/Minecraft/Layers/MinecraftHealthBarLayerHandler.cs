@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Profiles.Minecraft.Layers {
-
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class MinecraftHealthBarLayerHandlerProperties : LayerHandlerProperties<MinecraftHealthBarLayerHandlerProperties> {
 
         [JsonIgnore]
@@ -72,11 +72,6 @@ namespace Aurora.Profiles.Minecraft.Layers {
     }
 
     public class MinecraftHealthBarLayerHandler : LayerHandler<MinecraftHealthBarLayerHandlerProperties> {
-
-        public MinecraftHealthBarLayerHandler() {
-            _ID = "MinecraftHealthBarLayer";
-        }
-
         protected override UserControl CreateControl() {
             return new Control_MinecraftHealthBarLayer(this);
         }

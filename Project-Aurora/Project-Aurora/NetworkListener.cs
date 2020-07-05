@@ -228,7 +228,7 @@ namespace Aurora
                 response.ContentLength64 = 0;
                 response.Close();
             }
-            CurrentGameState = new GameState(JSON);
+            CurrentGameState = new EmptyGameState(JSON);
         }
 
         private void HandleNewIPCGameState(string gs_data)

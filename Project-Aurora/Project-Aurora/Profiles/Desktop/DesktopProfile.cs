@@ -58,7 +58,7 @@ namespace Aurora.Profiles.Desktop
                     _MaxVariablePath = "100"
                 },
 
-            }, new Settings.Overrides.Logic.Builder.OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanOr(new List<IEvaluatable<bool>> { new BooleanKeyDownWithTimer(Keys.VolumeUp, 3), new BooleanKeyDownWithTimer(Keys.VolumeDown, 3) }))));
+            }, new Settings.Overrides.Logic.Builder.OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanOr(new List<Evaluatable<bool>> { new BooleanKeyDownWithTimer(Keys.VolumeUp, 3), new BooleanKeyDownWithTimer(Keys.VolumeDown, 3) }))));
         }
 
         public override void Reset()
@@ -160,9 +160,10 @@ namespace Aurora.Profiles.Desktop
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "LocalPCInfo/CPUUsage",
+                        _VariablePath = "LocalPCInfo/CPU/Usage",
                         _MaxVariablePath = "100"
                     },
+                    EnableSmoothing = true
                 }),
                 new Layer("RAM Usage", new PercentLayerHandler()
                 {
@@ -178,9 +179,10 @@ namespace Aurora.Profiles.Desktop
                         }),
                         _BlinkThreshold = 0.0,
                         _BlinkDirection = false,
-                        _VariablePath = "LocalPCInfo/MemoryUsed",
-                        _MaxVariablePath = "LocalPCInfo/MemoryTotal"
+                        _VariablePath = "LocalPCInfo/RAM/Used",
+                        _MaxVariablePath = "LocalPCInfo/RAM/Total"
                     },
+                    EnableSmoothing = true
                 }),
                 new Layer("Interactive Layer", new InteractiveLayerHandler()
                 {

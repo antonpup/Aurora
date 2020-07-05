@@ -1,3 +1,4 @@
+using Aurora.Profiles.Generic.GSI.Nodes;
 using Aurora.Profiles.Subnautica.GSI.Nodes;
 using Newtonsoft.Json.Linq;
 using System;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI {
 
-    public class GameState_Subnautica : GameState<GameState_Subnautica> {
+    public class GameState_Subnautica : GameState {
 
         private ProviderNode _Provider;
         private GameStateNode _GameState;
@@ -83,11 +84,6 @@ namespace Aurora.Profiles.Subnautica.GSI {
         /// </summary>
         /// <param name="JSONstring"></param>
         public GameState_Subnautica(string JSONstring) : base(JSONstring) { }
-
-        /// <summary>
-        /// Creates a GameState_Subnautica instance based on the data from the passed GameState instance.
-        /// </summary>
-        public GameState_Subnautica(IGameState other) : base(other) { }
         
     }
 }

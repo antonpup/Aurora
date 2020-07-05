@@ -1,5 +1,6 @@
 ﻿using Aurora.Profiles;
 using Aurora.Utils;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -9,25 +10,35 @@ namespace Aurora.Settings.Overrides.Logic {
     /// <summary>
     /// Evaluatable that returns true/false depending on whether the given process name is running.
     /// </summary>
-    [OverrideLogic("Process Running", category: OverrideLogicCategory.Misc)]
-    public class BooleanProcessRunning : IEvaluatable<bool> {
+    [Evaluatable("Process Running", category: EvaluatableCategory.Misc)]
+    public class BooleanProcessRunning : Evaluatable<bool>, INotifyPropertyChanged {
 
         public string ProcessName { get; set; } = "";
 
         public BooleanProcessRunning() { }
         public BooleanProcessRunning(string processName) { ProcessName = processName; }
 
-        private TextBox control;
-        public Visual GetControl(Application application) => control ?? (control = new TextBox { MinWidth = 80 }
-            .WithBinding(TextBox.TextProperty, new Binding("ProcessName") { Source = this, Mode = BindingMode.TwoWay }));
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public bool Evaluate(IGameState gameState)
+        public override Visual GetControl() {
+            var selectButton = new Button { Content = "Select", Padding = new System.Windows.Thickness(8, 0, 8, 0), Margin = new System.Windows.Thickness(8, 0, 0, 0) };
+            selectButton.Click += (sender, e) => {
+                var wnd = new Window_ProcessSelection { ButtonLabel = "Select" };
+                if (wnd.ShowDialog() == true && !string.IsNullOrWhiteSpace(wnd.ChosenExecutableName))
+                    ProcessName = wnd.ChosenExecutableName;
+            };
+
+            return new StackPanel { Orientation = Orientation.Horizontal }
+                .WithChild(new Label { Content = "Is process" })
+                .WithChild(new TextBox { MinWidth = 80 }
+                    .WithBinding(TextBox.TextProperty, this, "ProcessName", BindingMode.TwoWay))
+                .WithChild(selectButton)
+                .WithChild(new Label { Content = "running" });
+        }
+
+        protected override bool Execute(IGameState gameState)
             => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
-        object IEvaluatable.Evaluate(IGameState gameState) => Evaluate(gameState);
-
-        public void SetApplication(Application application) { }
-
-        public IEvaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
-        IEvaluatable IEvaluatable.Clone() => Clone();
+        
+        public override Evaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
     }
 }

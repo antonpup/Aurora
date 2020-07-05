@@ -1,0 +1,37 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 1,
+  "grouped_keys": [
+    {
+      "visualName": "LOGO",
+      "tag": 128,
+      "margin_left": 350.0,
+      "margin_top": -37.0,
+      "width": 90.0,
+      "height": 30.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": 0,
+      "margin_top_bits": -3,
+      "image": "Corsair_strafe_mk2_logo.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "LIGHTS",
+      "tag": 131,
+      "margin_left": 90.0,
+      "margin_top": -30,
+      "width": 30.0,
+      "height": 20.0,
+      "font_size": 9.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -6,
+      "margin_top_bits": 0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

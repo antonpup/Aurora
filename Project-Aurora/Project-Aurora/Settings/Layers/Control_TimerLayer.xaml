@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
@@ -39,11 +40,10 @@
         <xctk:IntegerUpDown x:Name="timerDuration" Grid.Row="2" Grid.Column="1" Margin="4,2" ValueChanged="timerDuration_ValueChanged" />
 
         <Label Content="Animation type:" Grid.Row="3" HorizontalAlignment="Right" />
-        <ComboBox x:Name="animationType" Grid.Row="3" Grid.Column="1" Margin="4,2" SelectionChanged="animationType_SelectionChanged" />
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="4,2" ItemsSource="{u:EnumToItemsSource {x:Type local:TimerLayerAnimationType}}" SelectedValue="{Binding Properties._AnimationType}" DisplayMemberPath="Text" SelectedValuePath="Value" />
 
         <Label Content="Repeat action:" Grid.Row="4" HorizontalAlignment="Right" />
-        <ComboBox x:Name="repeatAction" Grid.Row="4" Grid.Column="1" Margin="4,2" SelectionChanged="repeatAction_SelectionChanged" />
-        <TextBlock Text="?" ToolTip="What action to take when the key is pressed again while the timer is active." Grid.Row="4" Grid.Column="2" TextDecorations="Underline" HorizontalAlignment="Left" VerticalAlignment="Center" Cursor="Help" />
+        <ComboBox Grid.Row="4" Grid.Column="1" Margin="4,2" ItemsSource="{u:EnumToItemsSource {x:Type local:TimerLayerRepeatPressAction}}" SelectedValue="{Binding Properties._RepeatAction}" DisplayMemberPath="Text" SelectedValuePath="Value" />
 
         <Label Content="Trigger Keys:" Grid.Row="5" HorizontalAlignment="Right" />
         <Controls:KeyBindList x:Name="triggerKeyList" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="4,2" KeybindsChanged="triggerKeyList_KeybindsChanged" />

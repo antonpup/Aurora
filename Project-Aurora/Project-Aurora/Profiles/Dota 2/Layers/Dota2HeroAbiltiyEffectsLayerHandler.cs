@@ -125,11 +125,6 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         private static Abilities_Dota2 abilities;
 
-        public Dota2HeroAbilityEffectsLayerHandler() : base()
-        {
-            _ID = "Dota2Abilities";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_Dota2HeroAbilityEffectsLayer(this);

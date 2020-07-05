@@ -1,4 +1,5 @@
 using Aurora.Profiles.Slime_Rancher.GSI;
+using Aurora.Profiles.Slime_Rancher.GSI.Nodes;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -73,15 +74,11 @@ namespace Aurora.Profiles.Slime_Rancher
         {
             if ((sender as CheckBox).IsChecked == true)
             {
-                State.GameState.InGame = true;
-                State.GameState.InMenu = false;
-                State.GameState.loading = false;
+                State.GameState.State = GameStateEnum.InGame;
             }
             else
             {
-                State.GameState.InGame = false;
-                State.GameState.InMenu = true;
-                State.GameState.loading = false;
+                State.GameState.State = GameStateEnum.Menu;
             }
         }
 

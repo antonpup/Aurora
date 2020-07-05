@@ -35,13 +35,9 @@ namespace Aurora.Profiles.CSGO.Layers
 
     }
 
+    [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class CSGOFlashbangLayerHandler : LayerHandler<CSGOFlashbangLayerHandlerProperties>
     {
-        public CSGOFlashbangLayerHandler() : base()
-        {
-            _ID = "CSGOFlashbang";
-        }
-
         protected override UserControl CreateControl()
         {
             return new Control_CSGOFlashbangLayer(this);

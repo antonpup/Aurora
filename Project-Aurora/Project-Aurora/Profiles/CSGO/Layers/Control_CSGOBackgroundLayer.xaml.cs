@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -22,7 +23,6 @@ namespace Aurora.Profiles.CSGO.Layers
     public partial class Control_CSGOBackgroundLayer : UserControl
     {
         private bool settingsset = false;
-        private bool profileset = false;
 
         public Control_CSGOBackgroundLayer()
         {
@@ -46,6 +46,7 @@ namespace Aurora.Profiles.CSGO.Layers
                 this.Checkbox_DimEnabled.IsChecked = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimEnabled;
                 this.TextBox_DimValue.Content = (int)(this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay + "s";
                 this.Slider_DimSelector.Value = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay.Value;
+                this.IntegerUpDown_DimAmount.Value = (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimAmount.Value;
 
                 settingsset = true;
             }
@@ -53,12 +54,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         internal void SetProfile(Application profile)
         {
-            if (profile != null && !profileset)
-            {
-                var var_types_numerical = profile.ParameterLookup?.Where(kvp => Utils.TypeUtils.IsNumericType(kvp.Value.Item1));
 
-                profileset = true;
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -99,6 +95,14 @@ namespace Aurora.Profiles.CSGO.Layers
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimDelay = (sender as Slider).Value;
 
                 this.TextBox_DimValue.Content = (int)(sender as Slider).Value + "s";
+            }
+        }
+
+        private void IntegerUpDown_DimAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is IntegerUpDown)
+            {
+                (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimAmount = (sender as IntegerUpDown).Value;
             }
         }
     }

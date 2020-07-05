@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Aurora.Profiles.Subnautica.GSI.Nodes {
-    public class WorldNode : Node<WorldNode> {
+    public class WorldNode : Node {
 
         public float DayScalar;
         //public bool IsDay;

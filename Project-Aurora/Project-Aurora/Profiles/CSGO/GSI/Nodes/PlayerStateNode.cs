@@ -5,7 +5,7 @@ namespace Aurora.Profiles.CSGO.GSI.Nodes
     /// <summary>
     /// Class representing various player states
     /// </summary>
-    public class PlayerStateNode : Node<PlayerStateNode>
+    public class PlayerStateNode : Node
     {
         /// <summary>
         /// Player's health
