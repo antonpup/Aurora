@@ -49,7 +49,7 @@ namespace Aurora.Profiles.Payday_2
 
         private void get_hook_button_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"http://paydaymods.com/download/"));
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"https://superblt.znix.xyz/#superblt"));
         }
 
         private void install_mod_button_Click(object sender, RoutedEventArgs e)
@@ -92,83 +92,9 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_gamestate_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Game.State = (GSI.Nodes.GameStates)Enum.Parse(typeof(GSI.Nodes.GameStates), this.preview_gamestate.SelectedIndex.ToString());
-            }
-        }
-
-        private void preview_levelphase_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Level.Phase = (GSI.Nodes.LevelPhase)Enum.Parse(typeof(GSI.Nodes.LevelPhase), this.preview_levelphase.SelectedIndex.ToString());
-            }
-        }
-
-        private void preview_playerstate_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.State = (GSI.Nodes.PlayerState)Enum.Parse(typeof(GSI.Nodes.PlayerState), this.preview_playerstate.SelectedIndex.ToString());
-            }
-        }
-
-        private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            int hp_val = (int)this.preview_health_slider.Value;
-            if (this.preview_health_amount is Label)
-            {
-                this.preview_health_amount.Content = hp_val + "%";
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Current = hp_val;
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Max = 100;
-            }
-        }
-
-        private void preview_ammo_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            int ammo_val = (int)this.preview_ammo_slider.Value;
-            if (this.preview_ammo_amount is Label)
-            {
-                this.preview_ammo_amount.Content = ammo_val + "%";
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Current_Clip = ammo_val;
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Max_Clip = 100;
-            }
-        }
-
-        private void preview_suspicion_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            float susp_val = (float)this.preview_suspicion_slider.Value;
-            if (this.preview_suspicion_amount is Label)
-            {
-                this.preview_suspicion_amount.Content = (int)susp_val + "%";
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.SuspicionAmount = susp_val / 100.0f;
-            }
-        }
-
-        private void preview_flashbang_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            float flash_val = (float)this.preview_flashbang_slider.Value;
-            if (this.preview_flashbang_amount is Label)
-            {
-                this.preview_flashbang_amount.Content = (int)flash_val + "%";
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.FlashAmount = flash_val / 100.0f;
-            }
-        }
-
-        private void preview_swansong_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-            {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.IsSwanSong = (sender as CheckBox).IsChecked.Value;
-            }
-        }
-
         private void get_lib_button_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"https://github.com/simon-wh/PAYDAY-2-BeardLib"));
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"https://modworkshop.net/mod/14924"));
         }
     }
 }

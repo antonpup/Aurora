@@ -17,9 +17,7 @@ namespace Aurora.Profiles.Payday_2
                 IconURI = "Resources/pd2_64x64.png"
             })
         {
-            AllowLayer<PD2BackgroundLayerHandler>();
-            AllowLayer<PD2FlashbangLayerHandler>();
-            AllowLayer<PD2StatesLayerHandler>();            
+            AllowLayer<PD2MaskOnAnimationLayerHandler>();
         }
     }
 }

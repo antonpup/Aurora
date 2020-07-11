@@ -17,38 +17,25 @@ using System.Windows.Shapes;
 namespace Aurora.Profiles.Payday_2.Layers
 {
     /// <summary>
-    /// Interaction logic for Control_PD2StatesLayer.xaml
+    /// Interaction logic for Control_WinningTeamLayer.xaml
     /// </summary>
-    public partial class Control_PD2StatesLayer : UserControl
+    public partial class Control_PD2MaskOnAnimationLayer : UserControl
     {
-        private bool settingsset = false;
-        private bool profileset = false;
-
-        public Control_PD2StatesLayer()
+        public Control_PD2MaskOnAnimationLayer()
         {
             InitializeComponent();
         }
 
-        public Control_PD2StatesLayer(PD2StatesLayerHandler datacontext)
+        public Control_PD2MaskOnAnimationLayer(PD2MaskOnAnimationLayerHandler datacontext)
         {
-            this.DataContext = datacontext.Properties;
             InitializeComponent();
-        }
 
-
-        internal void SetProfile(Application profile)
-        {
+            this.DataContext = datacontext;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-
             this.Loaded -= UserControl_Loaded;
-        }
-
-        private void sldSwanSongSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            this.lblSwanSongSpeed.Content = $"x {sldSwanSongSpeed.Value.ToString("0.00")}";
         }
     }
 }
