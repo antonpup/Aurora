@@ -197,12 +197,6 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         private async void UpdateData(object sender, ElapsedEventArgs e)
         {
-            if (!Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("league of legends.exe"))
-            {
-                allGameData = null;
-                return;
-            }
-
 
             string jsonData = "";
             try

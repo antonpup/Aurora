@@ -472,6 +472,8 @@ namespace Aurora.Settings
         public bool unified_hid_disabled = false;
         public HashSet<Type> devices_disabled;
         public bool OverlaysInPreview;
+        public int FrameRate;
+        public bool ProfileChangeAnimation;
 
         //Blackout and Night theme
         public bool time_based_dimming_enabled;
@@ -556,6 +558,9 @@ namespace Aurora.Settings
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
             devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
             OverlaysInPreview = true;
+            FrameRate = 30;
+            ProfileChangeAnimation = true;
+
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;

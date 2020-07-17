@@ -46,7 +46,8 @@ namespace Aurora
         private bool settingsloaded = false;
         private bool shownHiddenMessage = false;
 
-        private string saved_preview_key = "";
+        private string saved_preview_key = null;
+        public string preview_key => saved_preview_key;
 
         private Timer virtual_keyboard_timer;
         private Stopwatch recording_stopwatch = new Stopwatch();
@@ -66,7 +67,9 @@ namespace Aurora
             set
             {
                 SetValue(FocusedApplicationProperty, value);
-                Global.LightingStateManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
+                saved_preview_key = value != null ? value.Config.ID : null;
+
+                Global.LightingStateManager.FocusedApplicationChanged(saved_preview_key);
             }
         }
 
@@ -334,8 +337,6 @@ namespace Aurora
                 shownHiddenMessage = true;
             }
 
-            Global.LightingStateManager.PreviewProfileKey = string.Empty;
-
             //Hide Window
             System.Windows.Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (System.Windows.Threading.DispatcherOperationCallback)delegate (object o)
             {
@@ -347,13 +348,12 @@ namespace Aurora
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            Global.LightingStateManager.PreviewProfileKey = saved_preview_key;
+            Global.LightingStateManager.FocusedApplicationChanged(saved_preview_key);
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            saved_preview_key = Global.LightingStateManager.PreviewProfileKey;
-            Global.LightingStateManager.PreviewProfileKey = string.Empty;
+            Global.LightingStateManager.FocusedApplicationChanged(null);
         }
 
         private Image profile_add;

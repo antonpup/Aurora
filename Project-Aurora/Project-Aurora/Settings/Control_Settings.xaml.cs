@@ -109,6 +109,9 @@ namespace Aurora.Settings
             this.nighttime_end_hour_updown.Value = Global.Configuration.nighttime_end_hour;
             this.nighttime_end_minute_updown.Value = Global.Configuration.nighttime_end_minute;
 
+            this.frame_rate_updown.Value = Global.Configuration.FrameRate;
+            this.profile_change_animation_Checkbox.IsChecked  = Global.Configuration.ProfileChangeAnimation;
+
             this.idle_effects_type.SelectedIndex = (int)Global.Configuration.idle_type;
             this.idle_effects_delay.Value = Global.Configuration.idle_delay;
             this.idle_effects_primary_color_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(Global.Configuration.idle_effect_primary_color);
@@ -948,7 +951,15 @@ namespace Aurora.Settings
                 }
             }
         }
-
+        private void chkProfileChangeAnimation_IsCheckedChanged(object sender, RoutedEventArgs e)
+        {
+            Global.Configuration.ProfileChangeAnimation = (bool)((CheckBox) sender).IsChecked;
+        }
+        private void frame_rate_updown_ValueChanged(object sender, RoutedEventArgs e)
+        {
+            Global.Configuration.FrameRate = (int)((IntegerUpDown)sender).Value;
+            Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
+        }
         private void btnDumpSensors_Click(object sender, RoutedEventArgs e)
         {
             if (HardwareMonitor.TryDump())

@@ -1044,14 +1044,14 @@ namespace Aurora.Settings
         {
             if (e.PropertyName.Equals(nameof(Configuration.BitmapAccuracy)))
             {
-                Global.LightingStateManager.PostUpdate += this.LightingStateManager_PostUpdate;
+                Global.LightingStateManager.LightingEngine.PostUpdate += this.LightingStateManager_PostUpdate;
             }
         }
 
         private void LightingStateManager_PostUpdate(object sender, EventArgs e)
         {
             this.LoadBrandDefault();
-            Global.LightingStateManager.PostUpdate -= this.LightingStateManager_PostUpdate;
+            Global.LightingStateManager.LightingEngine.PostUpdate -= this.LightingStateManager_PostUpdate;
         }
 
         public void CalculateBitmap()

@@ -1,5 +1,8 @@
 ﻿using Aurora.Profiles;
 using Aurora.Utils;
+
+using System.Diagnostics;
+using System.IO;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -37,8 +40,9 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         protected override bool Execute(IGameState gameState)
-            => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
-        
+        => Process.GetProcessesByName(Path.GetFileNameWithoutExtension(ProcessName)).Length > 0;
+
         public override Evaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
+
     }
 }

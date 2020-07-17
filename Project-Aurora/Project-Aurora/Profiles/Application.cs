@@ -44,8 +44,6 @@ namespace Aurora.Profiles
 
         public LightEvent Event { get; set; }
 
-        public int? UpdateInterval { get; set; } = null;
-
         public string IconURI { get; set; }
 
         public HashSet<Type> ExtraAvailableLayers { get; } = new HashSet<Type>();

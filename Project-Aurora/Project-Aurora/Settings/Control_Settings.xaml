@@ -182,6 +182,11 @@
                     <TextBlock HorizontalAlignment="Left" Margin="12,278,0,0" TextWrapping="Wrap" Text="Hardware sensors update rate:" VerticalAlignment="Top" ToolTip="Used for CPU and GPU usage, etc"/>
                     <xctk:IntegerUpDown HorizontalAlignment="Left" Height="24" Margin="178,278,0,0" VerticalAlignment="Top" Width="50" Value="{Binding HardwareMonitorUpdateRate}" Maximum="2000" Minimum="100" MouseWheelActiveOnFocus="True" />
                     <CheckBox Content="Use average hardware sensor values instead of real-time ones " ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="10,302,0,0" VerticalAlignment="Top" IsChecked="{Binding HardwareMonitorUseAverageValues}" />
+                    
+                    <TextBlock HorizontalAlignment="Left" Margin="12,326,0,0" TextWrapping="Wrap" Text="Frame rate:" VerticalAlignment="Top"/>
+                    <xctk:IntegerUpDown x:Name="frame_rate_updown" HorizontalAlignment="Left" Height="24" Margin="116,326,0,0" VerticalAlignment="Top" Width="50" Maximum="200" Minimum="1" MouseWheelActiveOnFocus="True" Value="30" ValueChanged="frame_rate_updown_ValueChanged"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="180,326,0,0" TextWrapping="Wrap" Text="Fps" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="profile_change_animation_Checkbox" Content="Profile change animation" HorizontalAlignment="Left" Margin="224,326,0,0" VerticalAlignment="Top" Checked="chkProfileChangeAnimation_IsCheckedChanged" Unchecked="chkProfileChangeAnimation_IsCheckedChanged"/>
 
                 </Grid>
             </TabItem>
