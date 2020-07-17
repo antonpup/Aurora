@@ -45,11 +45,8 @@ namespace Aurora.Profiles.TModLoader {
                 }),
                 new Layer("Background", new PercentGradientLayerHandler() {
                     Properties = new PercentGradientLayerHandlerProperties {
-                        _Gradient = new EffectBrush() {
-                            type = EffectBrush.BrushType.Linear,
-                            start = new PointF(0, 0),
-                            end = new PointF(1, 0),
-                            colorGradients = new SortedDictionary<float, Color> {
+                        _Gradient = new LinearEffectBrush() {
+                            ColorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.White },
                                 { 1, Color.DarkGray }
                             }
@@ -79,12 +76,9 @@ namespace Aurora.Profiles.TModLoader {
 
         private static EffectBrush GetColorGradient(Color start, Color end)
         {
-            return new EffectBrush()
+            return new LinearEffectBrush()
             {
-                type = EffectBrush.BrushType.Linear,
-                start = new PointF(0, 0),
-                end = new PointF(1, 0),
-                colorGradients = new SortedDictionary<float, Color> {
+                ColorGradients = new SortedDictionary<float, Color> {
                     { 0, start },
                     { 1, end }
                 }

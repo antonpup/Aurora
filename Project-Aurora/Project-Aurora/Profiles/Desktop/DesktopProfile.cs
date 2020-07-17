@@ -45,10 +45,9 @@ namespace Aurora.Profiles.Desktop
                             Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
                             Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
                         }),
-                    _Gradient = new EffectsEngine.EffectBrush()
+                    _Gradient = new EffectsEngine.LinearEffectBrush()
                     {
-                        type = EffectBrush.BrushType.Linear,
-                        colorGradients = new SortedDictionary<float, Color> {
+                        ColorGradients = new SortedDictionary<float, Color> {
                                 { 0f, Color.FromArgb(255, 0, 255, 0) },
                                 { 0.5f, Color.OrangeRed },
                                 { 1f, Color.Red }

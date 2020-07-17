@@ -37,9 +37,7 @@ namespace Aurora.EffectsEngine.Animations
 
             PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
 
-            EffectBrush _newbrush = new EffectBrush(_gradientBrush);
-            _newbrush.start = new PointF(_newbrush.start.X * scale, _newbrush.start.Y * scale);
-            _newbrush.end = new PointF(_newbrush.end.X * scale, _newbrush.end.Y * scale);
+            EffectBrush _newbrush = (EffectBrush)_gradientBrush.Clone();
 
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
@@ -79,7 +77,7 @@ namespace Aurora.EffectsEngine.Animations
                 _dimension.Height
                 );
 
-            return new AnimationFilledGradientRectangle(newrect, new EffectBrush(_gradientBrush), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationFilledGradientRectangle(newrect, (EffectBrush)_gradientBrush.Clone(), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
         }
 
         public override bool Equals(object obj)

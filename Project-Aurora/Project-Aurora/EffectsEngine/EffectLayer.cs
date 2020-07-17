@@ -30,7 +30,7 @@ namespace Aurora.EffectsEngine
                 Devices.DeviceKeys.Peripheral_Logo
             };
 
-        static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
+        static private ColorBox.ColorSpectrum rainbow = new ColorBox.ColorSpectrum(ColorBox.ColorSpectrum.RainbowLoop);
 
         /// <summary>
         /// Creates a new instance of the EffectLayer class with default parameters.
@@ -99,7 +99,7 @@ namespace Aurora.EffectsEngine
             peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
-
+            var brushRect = !rect.IsEmpty ? new Rectangle((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height) : new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
             switch (effect)
             {
                 case LayerEffects.ColorOverlay:
@@ -114,8 +114,7 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
-                    if (effect_config.animation_type == AnimationType.Translate_XY)
-                        shift = effect_config.shift_amount;
+                    shift = effect_config.shift_amount;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
@@ -132,8 +131,7 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
-                    if (effect_config.animation_type == AnimationType.Translate_XY)
-                        shift = effect_config.shift_amount;
+                    shift = effect_config.shift_amount;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
@@ -150,8 +148,7 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
-                    if (effect_config.animation_type == AnimationType.Translate_XY)
-                        shift = effect_config.shift_amount;
+                    shift = effect_config.shift_amount;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
@@ -168,8 +165,7 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 5.0f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
-                    if (effect_config.animation_type == AnimationType.Translate_XY)
-                        shift = effect_config.shift_amount;
+                    shift = effect_config.shift_amount;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
@@ -187,8 +183,7 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
 
-                    if (effect_config.animation_type == AnimationType.Translate_XY)
-                        shift = effect_config.shift_amount;
+                    shift = effect_config.shift_amount;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
@@ -205,74 +200,12 @@ namespace Aurora.EffectsEngine
                     effect_config.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - effect_config.last_effect_call) / 1000.0f) * 0.067f * effect_config.speed;
                     effect_config.shift_amount = effect_config.shift_amount % Effects.canvas_biggest;
 
-                    if (effect_config.animation_type == AnimationType.Translate_XY)
-                        shift = effect_config.shift_amount;
-                    else if (effect_config.animation_type == AnimationType.Zoom_in && effect_config.brush.type == EffectBrush.BrushType.Radial)
-                        shift = ((Effects.canvas_biggest - effect_config.shift_amount) * 40.0f) % Effects.canvas_biggest;
-                    else if (effect_config.animation_type == AnimationType.Zoom_out && effect_config.brush.type == EffectBrush.BrushType.Radial)
-                        shift = (effect_config.shift_amount * 40.0f) % Effects.canvas_biggest;
+                    shift = effect_config.shift_amount;
 
                     if (effect_config.animation_reverse)
                         shift *= -1.0f;
-
-                    brush = effect_config.brush.GetDrawingBrush();
-                    if (effect_config.brush.type == EffectBrush.BrushType.Linear)
-                    {
-                        if (!rect.IsEmpty)
-                        {
-                            (brush as LinearGradientBrush).TranslateTransform(rect.X, rect.Y);
-                            (brush as LinearGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
-                        }
-                        else
-                        {
-                            (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
-                        }
-
-                        (brush as LinearGradientBrush).RotateTransform(effect_config.angle);
-                        (brush as LinearGradientBrush).TranslateTransform(shift, shift);
-                    }
-                    else if (effect_config.brush.type == EffectBrush.BrushType.Radial)
-                    {
-                        if (effect_config.animation_type == AnimationType.Zoom_in || effect_config.animation_type == AnimationType.Zoom_out)
-                        {
-                            float percent = shift / Effects.canvas_biggest;
-
-                            float x_offset = (Effects.canvas_width / 2.0f) * percent;
-                            float y_offset = (Effects.canvas_height / 2.0f) * percent;
-
-
-                            (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
-
-                            if (!rect.IsEmpty)
-                            {
-                                x_offset = (rect.Width / 2.0f) * percent;
-                                y_offset = (rect.Height / 2.0f) * percent;
-
-                                (brush as PathGradientBrush).TranslateTransform(rect.X + x_offset, rect.Y + y_offset);
-                                (brush as PathGradientBrush).ScaleTransform((rect.Width - (2.0f * x_offset)) * 100 / effect_config.gradient_size, (rect.Height - (2.0f * y_offset)) * 100 / effect_config.gradient_size);
-                            }
-                            else
-                            {
-                                (brush as PathGradientBrush).ScaleTransform((Effects.canvas_height + x_offset) * 100 / effect_config.gradient_size, (Effects.canvas_height + y_offset) * 100 / effect_config.gradient_size);
-                            }
-                        }
-                        else
-                        {
-                            if (!rect.IsEmpty)
-                            {
-                                (brush as PathGradientBrush).TranslateTransform(rect.X, rect.Y);
-                                (brush as PathGradientBrush).ScaleTransform(rect.Width * 100 / effect_config.gradient_size, rect.Height * 100 / effect_config.gradient_size);
-                            }
-                            else
-                            {
-                                (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effect_config.gradient_size, Effects.canvas_height * 100 / effect_config.gradient_size);
-                            }
-                        }
-
-                        (brush as PathGradientBrush).RotateTransform(effect_config.angle);
-
-                        //(brush as PathGradientBrush).TranslateTransform(x_shift, y_shift);
-                    }
+                    float percent = shift;
+                    brush = effect_config.brush.GetDrawingBrush(percent % 1 , brushRect);
 
                     Fill(brush);
 
@@ -335,19 +268,6 @@ namespace Aurora.EffectsEngine
         {
             using (Graphics g = Graphics.FromImage(colormap))
             {
-                /*if(brush is PathGradientBrush)
-                {
-                    GraphicsPath gp = new GraphicsPath();
-                    gp.AddEllipse((brush as PathGradientBrush).Rectangle);
-
-                    g.FillPath(brush, gp);
-                }
-                else
-                {
-                    Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
-                    g.FillRectangle(brush, rect);
-                }
-                */
                 Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
                 g.FillRectangle(brush, rect);
                 needsRender = true;
@@ -799,7 +719,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
+        public EffectLayer PercentEffect(ColorBox.ColorSpectrum spectrum, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed);
@@ -888,7 +808,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorBox.ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -1022,7 +942,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorBox.ColorSpectrum spectrum, Settings.FreeFormObject freeform, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)

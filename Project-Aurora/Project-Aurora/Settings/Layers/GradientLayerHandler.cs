@@ -28,7 +28,7 @@ namespace Aurora.Settings.Layers
         public override void Default()
         {
             base.Default();
-            this._GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()) { AnimationType = AnimationType.None };
+            this._GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()) { AnimationSpeed = 0 };
         }
     }
 

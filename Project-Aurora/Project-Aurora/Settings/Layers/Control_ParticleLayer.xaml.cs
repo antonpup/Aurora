@@ -28,7 +28,7 @@ namespace Aurora.Settings.Layers {
         private void ApplyGradientToEditor() {
             // Note that I tried using a binding instead of this but since it'd need a IValueConverter which would have to create a new brush and
             // the _values_ on that brush change not the brush itself, the binding was not actually being triggered.
-            gradientEditor.Brush = handler.Properties._ParticleColorStops.ToMediaBrush();
+            gradientEditor.Brush = new EffectsEngine.LinearEffectBrush(handler.Properties._ParticleColorStops.ToMediaBrush());
         }
 
         private void GradientEditor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e) {

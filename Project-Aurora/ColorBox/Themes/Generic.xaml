@@ -28,7 +28,7 @@
     </Style>
 
     <Style TargetType="Slider" x:Key="OpacitySliderStyle">
-        <Setter Property="Value" Value="{Binding Brush.Opacity, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
+        <Setter Property="Value" Value="{Binding MediaBrush.Opacity, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"/>
         <Setter Property="IsMoveToPointEnabled" Value="True"/>
         <Setter Property="Margin" Value="2"/>
         <Setter Property="Minimum" Value="0"/>
@@ -59,6 +59,7 @@
     <Style x:Key="SliderThumbStyle" TargetType="Thumb">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="BorderBrush" Value="Black" />
+        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Thumb">
@@ -191,13 +192,90 @@
                                           MinHeight="20"
                                           Padding="1"
                                           Foreground="{TemplateBinding Foreground}"
-                                          Background="{TemplateBinding Brush}">
+                                          Background="{TemplateBinding MediaBrush}">
                                 <ToggleButton.Style>
                                     <Style TargetType="{x:Type ToggleButton}">
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                                                     <DockPanel Background="Transparent" Margin="{TemplateBinding Padding}">
+                                                        <!-- Available brush types -->
+                                                        <ListBox x:Name="listAvailableBrushType"                                                
+                                                 HorizontalContentAlignment="Center"
+                                                 SelectedItem="{Binding BrushType, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" 
+                                                 ItemsSource="{Binding AvailableBrushTypes, RelativeSource={RelativeSource TemplatedParent}}">
+                                                            <ListBox.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <UniformGrid Rows="1" Columns="4"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ListBox.ItemsPanel>
+                                                            <ListBox.ItemContainerStyle>
+                                                                <Style TargetType="ListBoxItem">
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                                <Border x:Name="Border" Background="Transparent" Padding="0,3">
+                                                                                    <Path x:Name="Icon" Height="12" Width="20" Stretch="Fill" Fill="#FF5F5F5F" StrokeThickness="1" Stroke="White"
+                                                                          Data="M371,190L557,190 557,293 371,293 371,190z"/>
+                                                                                </Border>
+
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter Property="Background" Value="Gray" TargetName="Border"/>
+                                                                                        <Setter Property="Foreground" Value="White"/>
+                                                                                    </Trigger>
+                                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                                        <Setter Property="Background" Value="Gray" TargetName="Border"/>
+                                                                                        <Setter Property="Foreground" Value="White"/>
+                                                                                    </Trigger>
+
+                                                                                    <!--
+                                                                    <DataTrigger Binding="{Binding}" Value="None">
+                                                                        <Setter Property="ToolTip" Value="No Brush"/>
+                                                                        <Setter Property="StrokeThickness" TargetName="Icon" Value="0"/>
+                                                                        <Setter TargetName="Icon" Property="Data">
+                                                                            <Setter.Value>
+                                                                                <Geometry>M612,189L452.949,189L452.949,266.024L612,189 M612,196.999L452.949,273.999L612,273.999L612,196.999</Geometry>
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </DataTrigger>
+                                                                    -->
+                                                                                    <DataTrigger Binding="{Binding}" Value="Solid">
+                                                                                        <Setter Property="ToolTip" Value="Solid Color Brush"/>
+                                                                                        <Setter Property="Fill" TargetName="Icon" Value="#FF403C3C"/>
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding}" Value="Linear">
+                                                                                        <Setter Property="ToolTip" Value="Linear Gradient Brush"/>
+                                                                                        <Setter Property="Fill" TargetName="Icon">
+                                                                                            <Setter.Value>
+                                                                                                <LinearGradientBrush StartPoint="0,.5" EndPoint="1,.5">
+                                                                                                    <GradientStop Color="#FF403C3C" Offset="0"></GradientStop>
+                                                                                                    <GradientStop Color="White" Offset="1"></GradientStop>
+                                                                                                </LinearGradientBrush>
+                                                                                            </Setter.Value>
+                                                                                        </Setter>
+                                                                                    </DataTrigger>
+
+                                                                                    <DataTrigger Binding="{Binding}" Value="Radial">
+                                                                                        <Setter Property="ToolTip" Value="Radial Gradient Brush"/>
+                                                                                        <Setter Property="Fill" TargetName="Icon">
+                                                                                            <Setter.Value>
+                                                                                                <RadialGradientBrush>
+                                                                                                    <GradientStop Color="#FF403C3C" Offset="1"/>
+                                                                                                    <GradientStop Color="White"/>
+                                                                                                </RadialGradientBrush>
+                                                                                            </Setter.Value>
+                                                                                        </Setter>
+                                                                                    </DataTrigger>
+
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </ListBox.ItemContainerStyle>
+
+                                                        </ListBox>
                                                         <Border MinWidth="20" Background="{StaticResource AlphaBrush}">
                                                             <Border Background="{TemplateBinding Background}" />
                                                         </Border>
@@ -452,7 +530,7 @@
                                                                          FocusVisualStyle="{x:Null}"
                                                                          ColorBox="{Binding RelativeSource={RelativeSource TemplatedParent}}">
                                                     <local:GradientStopAdder.Background>
-                                                        <LinearGradientBrush GradientStops="{Binding Brush.GradientStops, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                        <LinearGradientBrush GradientStops="{Binding MediaBrush.GradientStops, RelativeSource={RelativeSource TemplatedParent}}" 
                                                                              StartPoint="0, .5" EndPoint="1, .5"/>
                                                     </local:GradientStopAdder.Background>
                                                     <Button.Style>
@@ -666,7 +744,7 @@
                                                 <DockPanel>
                                                     <DockPanel.Style>
                                                         <Style TargetType="DockPanel">
-                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ElementName=listAvailableBrushType, Path=SelectedValue}" Value="Linear">
                                                                     <Setter Property="Visibility" Value="Visible"/>
@@ -675,37 +753,34 @@
                                                         </Style>
                                                     </DockPanel.Style>
 
-                                                    <UniformGrid Rows="5" DockPanel.Dock="Left" Margin="0,0,5,0" >
-                                                        <TextBlock Text="Start Point" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="End Point" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="Mapping Mode" VerticalAlignment="Center"/>
+                                                    <UniformGrid Rows="6" DockPanel.Dock="Left" Margin="0,0,5,0" >
+                                                        <TextBlock Text="Sample Window Size" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Angle" VerticalAlignment="Center"/>
+                                                        <!-- <TextBlock Text="Mapping Mode" VerticalAlignment="Center"/>
                                                         <TextBlock Text="Spread Method" VerticalAlignment="Center"/>
-                                                        <!-- <TextBlock Text="Opacity" VerticalAlignment="Center"/> -->
+                                                        <TextBlock Text="Opacity" VerticalAlignment="Center"/> -->
                                                     </UniformGrid>
-
-                                                    <UniformGrid Rows="5" DockPanel.Dock="Right">
+                                                    
+                                                    <UniformGrid Rows="6" DockPanel.Dock="Right">
                                                         <UniformGrid Rows="1">
-                                                            <local:DoubleUpDown Value="{Binding StartX, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                            <local:DoubleUpDown Value="{Binding StartY, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                            <Slider  Minimum="0" SmallChange="0.01" SelectionStart="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Maximum="1" Value="{Binding SampleWindowSize, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                         </UniformGrid>
-
                                                         <UniformGrid Rows="1">
-                                                            <local:DoubleUpDown Value="{Binding EndX, RelativeSource={RelativeSource TemplatedParent}}"/>
-                                                            <local:DoubleUpDown Value="{Binding EndY, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                            <local:DoubleUpDown Value="{Binding Angle, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                         </UniformGrid>
-
+                                                        <!--
                                                         <ComboBox Margin="2" ItemsSource="{Binding MappingModeTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding MappingMode, RelativeSource={RelativeSource TemplatedParent}}"/>
 
                                                         <ComboBox Margin="2" ItemsSource="{Binding SpreadMethodTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding SpreadMethod, RelativeSource={RelativeSource TemplatedParent}}"/>
-
+                                                        -->
                                                         <!-- <Slider Style="{StaticResource OpacitySliderStyle}"/> -->
                                                     </UniformGrid>
                                                 </DockPanel>
 
                                                 <!-- Radial brush -->
-                                                <!--
+                                                
                                                 <DockPanel>
                                                     <DockPanel.Style>
                                                         <Style TargetType="DockPanel">
@@ -719,16 +794,25 @@
                                                     </DockPanel.Style>
 
                                                     <UniformGrid Rows="7" DockPanel.Dock="Left" Margin="0,0,5,0">
-                                                        <TextBlock Text="Gradient Origin" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="Center" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Sample Window Size" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Center Point" VerticalAlignment="Center"/>
+                                                        <!--
                                                         <TextBlock Text="Radius X" VerticalAlignment="Center"/>
                                                         <TextBlock Text="Radius Y" VerticalAlignment="Center"/>
                                                         <TextBlock Text="Mapping Mode" VerticalAlignment="Center"/>
                                                         <TextBlock Text="Spread Method" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="Opacity" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="Opacity" VerticalAlignment="Center"/>-->
                                                     </UniformGrid>
 
                                                     <UniformGrid Rows="7" DockPanel.Dock="Right">
+                                                        <UniformGrid Rows="1">
+                                                            <Slider  Minimum="0" SmallChange="0.01" SelectionStart="1" IsSnapToTickEnabled="True" TickFrequency="0.01" Maximum="1" Value="{Binding SampleWindowSize, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                        </UniformGrid>
+                                                        <UniformGrid Rows="1">
+                                                            <local:DoubleUpDown Value="{Binding CenterX, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                            <local:DoubleUpDown Value="{Binding CenterY, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                                        </UniformGrid>
+                                                        <!--
                                                         <UniformGrid Rows="1">
                                                             <local:DoubleUpDown Value="{Binding GradientOriginX, RelativeSource={RelativeSource TemplatedParent}}"/>
                                                             <local:DoubleUpDown Value="{Binding GradientOriginY, RelativeSource={RelativeSource TemplatedParent}}"/>
@@ -751,10 +835,10 @@
                                                                   ItemsSource="{Binding SpreadMethodTypes, RelativeSource={RelativeSource TemplatedParent}}"
                                                                   SelectedItem="{Binding SpreadMethod, RelativeSource={RelativeSource TemplatedParent}}"/>
 
-                                                        <Slider Style="{StaticResource OpacitySliderStyle}"/>
+                                                        <Slider Style="{StaticResource OpacitySliderStyle}"/>-->
                                                     </UniformGrid>
                                                 </DockPanel>    
-                                                -->
+                                                
                                             </StackPanel>
                                         </StackPanel>
                                     </StackPanel>

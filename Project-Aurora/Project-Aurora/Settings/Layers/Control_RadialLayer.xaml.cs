@@ -1,5 +1,7 @@
-﻿using Aurora.Utils;
+﻿using Aurora.EffectsEngine;
+using Aurora.Utils;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Aurora.Settings.Layers {
 
@@ -13,12 +15,12 @@ namespace Aurora.Settings.Layers {
         }
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e) {
-            GradientPicker.Brush = handler.Properties.Brush.Colors.ToMediaBrush();
+            GradientPicker.Brush = new LinearEffectBrush(handler.Properties.Brush.Colors.ToMediaBrush());
             Loaded -= UserControl_Loaded;
         }
 
         private void GradientPicker_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e) {
-            handler.Properties.Brush.Colors = ColorStopCollection.FromMediaBrush(GradientPicker.Brush);
+            handler.Properties.Brush.Colors = ColorStopCollection.FromMediaBrush(GradientPicker.Brush.GetMediaBrush());
         }
     }
 }

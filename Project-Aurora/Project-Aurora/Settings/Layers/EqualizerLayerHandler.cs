@@ -80,7 +80,7 @@ namespace Aurora.Settings.Layers
         [LogicOverridable("Gradient")]
         public EffectBrush _Gradient { get; set; }
         [JsonIgnore]
-        public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new EffectBrush().SetBrushType(EffectBrush.BrushType.Linear); } }
+        public EffectBrush Gradient { get { return Logic._Gradient ?? _Gradient ?? new LinearEffectBrush(); } }
 
         [LogicOverridable("Equalizer Type")]
         public EqualizerType? _EQType { get; set; }
@@ -135,7 +135,7 @@ namespace Aurora.Settings.Layers
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
-            _Gradient = new EffectBrush(ColorSpectrum.RainbowLoop).SetBrushType(EffectBrush.BrushType.Linear);
+            _Gradient = new LinearEffectBrush(ColorBox.ColorSpectrum.RainbowLoop);
             _EQType = EqualizerType.PowerBars;
             _ViewType = EqualizerPresentationType.SolidColor;
             _MaxAmplitude = 20.0f;
@@ -420,9 +420,8 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(position, max_position));
             else if (Properties.ViewType == EqualizerPresentationType.GradientHorizontal)
             {
-                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum()) {
-                    start = PointF.Empty,
-                    end = new PointF(sourceRect.Width, 0)
+                EffectBrush e_brush = new LinearEffectBrush(Properties.Gradient.GetColorSpectrum()) {
+                    SampleWindowSize = 1 / sourceRect.Width
                 };
 
                 return e_brush.GetDrawingBrush();
@@ -431,9 +430,9 @@ namespace Aurora.Settings.Layers
                 return new SolidBrush(Properties.Gradient.GetColorSpectrum().GetColorAt(Utils.Time.GetMilliSeconds(), 1000));
             else if (Properties.ViewType == EqualizerPresentationType.GradientVertical)
             {
-                EffectBrush e_brush = new EffectBrush(Properties.Gradient.GetColorSpectrum()) {
-                    start = new PointF(0, sourceRect.Height),
-                    end = PointF.Empty
+                EffectBrush e_brush = new LinearEffectBrush(Properties.Gradient.GetColorSpectrum()) {
+                    SampleWindowSize = 1 / sourceRect.Width,
+                    Angle = 90
                 };
 
                 return e_brush.GetDrawingBrush();

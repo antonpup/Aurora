@@ -41,10 +41,14 @@
     <AssemblyOriginatorKeyFile>ColorBox.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -67,6 +71,9 @@
     <Compile Include="Implementation\SaturationBrightnessSelector.cs" />
     <Compile Include="Implementation\SpinEventArgs.cs" />
     <Compile Include="Implementation\Spinner.cs" />
+    <Compile Include="Utils\ColorSpectrum.cs" />
+    <Compile Include="Utils\ColorUtils.cs" />
+    <Compile Include="Utils\EffectBrush.cs" />
     <Compile Include="Utils\TextBoxBehavior.cs" />
     <Compile Include="Implementation\UpDownBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ColorBox.snk" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />

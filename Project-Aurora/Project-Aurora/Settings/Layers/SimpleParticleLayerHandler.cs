@@ -109,7 +109,7 @@ namespace Aurora.Settings.Layers {
 
         // An override proxy for setting the particle color stops
         [JsonIgnore, LogicOverridable("Color over time")] public EffectBrush _ParticleBrush {
-            get => new EffectBrush(_ParticleColorStops.ToMediaBrush());
+            get => new LinearEffectBrush(_ParticleColorStops.ToMediaBrush());
             set => _ParticleColorStops = value == null ? null : ColorStopCollection.FromMediaBrush(value.GetMediaBrush());
         }
 

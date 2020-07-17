@@ -53,33 +53,15 @@ namespace Aurora.Profiles.CloneHero
                             secondary = Color.FromArgb(39, 73, 167),
                             speed = 3,
                             angle = 0,
-                            animation_type = AnimationType.Translate_XY,
                             animation_reverse = false,
                             brush =
-                            {
-                                type = EffectBrush.BrushType.Linear,
-                                wrap = EffectBrush.BrushWrap.Repeat,
-                                colorGradients = new SortedDictionary<float, Color>()
+                            new LinearEffectBrush{
+                                ColorGradients = new SortedDictionary<float, Color>()
                                 {
                                     {0, Color.FromArgb(9, 43, 83) },
                                     {0.298960835f, Color.FromArgb(187, 18, 194) },
                                     {0.685535133f, Color.FromArgb(17, 185, 217) },
                                     {1, Color.FromArgb(9, 43, 83) }
-                                },
-                                start =
-                                {
-                                    X = 0,
-                                    Y = -0.5f
-                                },
-                                end =
-                                {
-                                    X = 1,
-                                    Y = 1
-                                },
-                                center =
-                                {
-                                    X = 0,
-                                    Y = 0
                                 }
 
                             },

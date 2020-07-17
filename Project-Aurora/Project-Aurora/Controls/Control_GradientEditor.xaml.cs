@@ -11,7 +11,6 @@ namespace Aurora.Controls {
 
         public Control_GradientEditor(LayerEffectConfig gradient) {
             InitializeComponent();
-            animTypeCb.ItemsSource = Utils.EnumUtils.GetEnumItemsSource<AnimationType>();
             DataContext = gradient;
         }
     }

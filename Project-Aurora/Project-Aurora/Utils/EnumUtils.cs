@@ -314,11 +314,6 @@ namespace Aurora.Utils
         public appexitmodeToStringVC() : base(AppExitMode.Ask) { }
     }
 
-    public class AnimationTypeToStringVC : EnumToStringVC
-    {
-        public AnimationTypeToStringVC() : base(AnimationType.None) { }
-    }
-
     /*public class LayerTypeToStringVC : EnumToStringVC
     {
         public LayerTypeToStringVC() : base(LayerType.Solid) { }
