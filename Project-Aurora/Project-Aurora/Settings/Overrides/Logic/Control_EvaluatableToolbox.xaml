@@ -63,6 +63,12 @@
                     <StackPanel>
                         <TextBlock Text="Drag evaluatables from the canvas onto the toolbox to save them for future use." Margin="4" />
                         <ItemsControl ItemsSource="{Binding TemplateSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" u:AttachedApplication.Application="{x:Null}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Background="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableTemplateItem_StartDrag" Padding="4">
