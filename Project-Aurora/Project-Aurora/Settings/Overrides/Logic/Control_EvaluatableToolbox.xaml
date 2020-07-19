@@ -37,6 +37,12 @@
             <DataTemplate x:Key="DefaultEvaluatableDT">
                 <ScrollViewer>
                     <ItemsControl ItemsSource="{Binding .}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{Binding Path=ResultType, Converter={StaticResource EvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableSpawnerItem_StartDrag">
