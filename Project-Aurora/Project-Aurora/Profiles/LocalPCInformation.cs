@@ -233,6 +233,6 @@ namespace Aurora.Profiles {
         public BatteryChargeStatus ChargeStatus => SystemInformation.PowerStatus.BatteryChargeStatus;
         public bool PluggedIn => SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Offline; //If it is unknown I assume it is plugedIn
         public float LifePercent => SystemInformation.PowerStatus.BatteryLifePercent;
-        public float SecondsRemaining => SystemInformation.PowerStatus.BatteryLifeRemaining;
+        public int SecondsRemaining => SystemInformation.PowerStatus.BatteryLifeRemaining;
     }
 }
