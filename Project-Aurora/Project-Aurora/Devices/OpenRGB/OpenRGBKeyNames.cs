@@ -47,7 +47,7 @@ namespace Aurora.Devices.OpenRGB
             { "Key: 8"                , DK.EIGHT             },
             { "Key: 9"                , DK.NINE              },
             { "Key: 0"                , DK.ZERO              },
-            { "Key: Enter"            , DK.ENTER             },
+            { "Key: Enter"            , DK.ENTER             },//TODO: Fix
             { "Key: Enter (ISO)"      , DK.ENTER             },
             { "Key: Escape"           , DK.ESC               },
             { "Key: Backspace"        , DK.BACKSPACE         },

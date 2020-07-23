@@ -1,18 +1,18 @@
 ﻿using Aurora.Settings;
 using OpenRGB.NET;
 using OpenRGB.NET.Enums;
-using Roccat_Talk.RyosTalkFX;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
-using OpenRGBDevice = OpenRGB.NET.Models.Device;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
+using OpenRGBDevice = OpenRGB.NET.Models.Device;
 using OpenRGBDeviceType = OpenRGB.NET.Enums.DeviceType;
 
 namespace Aurora.Devices.OpenRGB
@@ -20,9 +20,9 @@ namespace Aurora.Devices.OpenRGB
     public class OpenRGBAuroraDevice : Device
     {
         const string deviceName = "OpenRGB";
-        VariableRegistry varReg;
-        bool isInitialized = false;
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private VariableRegistry varReg;
+        private bool isInitialized = false;
+        private readonly Stopwatch watch = new Stopwatch();
         private long lastUpdateTime = 0;
 
         private OpenRGBClient _openRgb;
@@ -53,11 +53,19 @@ namespace Aurora.Devices.OpenRGB
 
                     _keyMappings = new Dictionary<DK, int>[_devices.Length];
                     _keyMappings[i] = new Dictionary<DK, int>();
+
                     for (int j = 0; j < dev.Leds.Length; j++)
                     {
                         if (OpenRGBKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
                         {
-                            _keyMappings[i].Add(dk, j);
+                            try
+                            {
+                                _keyMappings[i].Add(dk, j);
+                            }
+                            catch (ArgumentException e)
+                            {
+                                Global.logger.Error($"Failed adding key of device {dev.Name} with name {dev.Leds[j].Name}: " + e);
+                            }
                         }
                     }
                 }
