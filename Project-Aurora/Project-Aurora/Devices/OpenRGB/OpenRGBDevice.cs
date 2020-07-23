@@ -301,6 +301,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.NUM_NINE          , "Key: Number Pad 9"        },
             { DK.NUM_ZERO          , "Key: Number Pad 0"        },
             { DK.NUM_PERIOD        , "Key: Number Pad ."        },
+            { DK.FN_Key            , "Key: Fn"                  },
             { DK.BACKSLASH_UK      , "Key: \\ (UK)"             },
             { DK.APPLICATION_SELECT, "Key: Context"             },
             { DK.LEFT_CONTROL      , "Key: Left Control"        },
