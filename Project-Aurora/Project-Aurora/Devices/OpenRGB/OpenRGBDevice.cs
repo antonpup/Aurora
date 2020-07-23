@@ -28,7 +28,7 @@ namespace Aurora.Devices.OpenRGB
         private OpenRGBClient _openRgb;
         private OpenRGBDevice[] _devices;
         private OpenRGBColor[][] _deviceColors;
-        private Dictionary<DK, int>[] _keyMappings;
+        private List<DK>[] _keyMappings;
 
         public bool Initialize()
         {
@@ -41,31 +41,27 @@ namespace Aurora.Devices.OpenRGB
                 _openRgb.Connect();
 
                 _devices = _openRgb.GetAllControllerData();
-
+                _keyMappings = new List<DK>[_devices.Length];
                 for (var i = 0; i < _devices.Length; i++)
                 {
                     var dev = _devices[i];
 
                     _deviceColors = new OpenRGBColor[_devices.Length][];
                     _deviceColors[i] =
-                        Enumerable.Range(0, dev.Colors.Length)
+                        Enumerable.Range(0, dev.Leds.Length)
                                   .Select(_ => new OpenRGBColor()).ToArray();
 
-                    _keyMappings = new Dictionary<DK, int>[_devices.Length];
-                    _keyMappings[i] = new Dictionary<DK, int>();
+                    _keyMappings[i] = new List<DK>();
 
                     for (int j = 0; j < dev.Leds.Length; j++)
                     {
                         if (OpenRGBKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
                         {
-                            try
-                            {
-                                _keyMappings[i].Add(dk, j);
-                            }
-                            catch (ArgumentException e)
-                            {
-                                Global.logger.Error($"Failed adding key of device {dev.Name} with name {dev.Leds[j].Name}: " + e);
-                            }
+                            _keyMappings[i].Add(dk);
+                        }
+                        else
+                        {
+                            _keyMappings[i].Add(DK.NONE);
                         }
                     }
                 }
@@ -106,12 +102,11 @@ namespace Aurora.Devices.OpenRGB
                 switch (_devices[i].Type)
                 {
                     case OpenRGBDeviceType.Keyboard:
-
-                        foreach (var led in keyColors)
+                        for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
                         {
-                            if (_keyMappings[i].TryGetValue(led.Key, out int index))
+                            if (keyColors.TryGetValue(_keyMappings[i][ledIdx], out var keyColor))
                             {
-                                _deviceColors[i][index] = new OpenRGBColor(led.Value.R, led.Value.G, led.Value.B);
+                                _deviceColors[i][ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
                             }
                         }
                         break;
