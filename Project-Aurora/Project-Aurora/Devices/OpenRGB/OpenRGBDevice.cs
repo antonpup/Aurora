@@ -316,7 +316,7 @@ namespace Aurora.Devices.OpenRGB
             { DK.MEDIA_NEXT        , "Key: Media Next"          },
             { DK.MEDIA_PREVIOUS    , "Key: Media Previous"      },
             { DK.MEDIA_STOP        , "Key: Media Stop"          },
-            { DK.MEDIA_PLAY        , "Key: Media Play"          },
+            { DK.MEDIA_PLAY        , "Key: Media Play/Pause"    },
             { DK.VOLUME_MUTE       , "Key: Media Mute"          },
             { DK.LOGO              , "Logo"                     },
             { DK.BRIGHTNESS_SWITCH , "Key: Brightness"          },
