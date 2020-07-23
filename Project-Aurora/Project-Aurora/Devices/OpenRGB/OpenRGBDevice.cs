@@ -41,15 +41,17 @@ namespace Aurora.Devices.OpenRGB
                 _openRgb.Connect();
 
                 _devices = _openRgb.GetAllControllerData();
+
+                _deviceColors = new OpenRGBColor[_devices.Length][];
                 _keyMappings = new List<DK>[_devices.Length];
+
                 for (var i = 0; i < _devices.Length; i++)
                 {
                     var dev = _devices[i];
 
-                    _deviceColors = new OpenRGBColor[_devices.Length][];
-                    _deviceColors[i] =
-                        Enumerable.Range(0, dev.Leds.Length)
-                                  .Select(_ => new OpenRGBColor()).ToArray();
+                    _deviceColors[i] = new OpenRGBColor[dev.Leds.Length];
+                    for (var ledIdx = 0; ledIdx < dev.Leds.Length; ledIdx++)
+                        _deviceColors[i][ledIdx] = new OpenRGBColor();
 
                     _keyMappings[i] = new List<DK>();
 
