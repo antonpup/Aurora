@@ -25,22 +25,22 @@ namespace Aurora.Settings.Overrides.Logic {
             DetectionThreshold = threshold;
         }
 
-        public Evaluatable<double> Evaluatable { get; set; } = new NumberConstant();
+        public Evaluatable<double> Evaluatable { get; set; } = EvaluatableDefaults.Get<double>();
         public bool DetectRising { get; set; } = true;
         public bool DetectFalling { get; set; } = true;
         public double DetectionThreshold { get; set; } = 0;
 
         public override Visual GetControl() => new StackPanel()
             .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(double) }
-                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, "Evaluatable", BindingMode.TwoWay))
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, nameof(Evaluatable), BindingMode.TwoWay))
             .WithChild(new CheckBox { Content = "Trigger on increase" }
-                .WithBinding(CheckBox.IsCheckedProperty, this, "DetectRising"))
+                .WithBinding(CheckBox.IsCheckedProperty, this, nameof(DetectRising)))
             .WithChild(new CheckBox { Content = "Trigger on decrease" }
-                .WithBinding(CheckBox.IsCheckedProperty, this, "DetectFalling"))
+                .WithBinding(CheckBox.IsCheckedProperty, this, nameof(DetectFalling)))
             .WithChild(new DockPanel { LastChildFill = true }
                 .WithChild(new Label { Content = "Change required", VerticalAlignment = System.Windows.VerticalAlignment.Center }, Dock.Left)
                 .WithChild(new DoubleUpDown { Minimum = 0 }
-                    .WithBinding(DoubleUpDown.ValueProperty, this, "DetectionThreshold")));
+                    .WithBinding(DoubleUpDown.ValueProperty, this, nameof(DetectionThreshold))));
 
         protected override bool Execute(IGameState gameState) {
             var val = Evaluatable.Evaluate(gameState);
@@ -58,5 +58,46 @@ namespace Aurora.Settings.Overrides.Logic {
         }
         
         public override Evaluatable<bool> Clone() => new NumericChangeDetector { Evaluatable = Evaluatable.Clone(), DetectRising = DetectRising, DetectFalling = DetectFalling, DetectionThreshold = DetectionThreshold };
+    }
+
+
+
+    /// <summary>
+    /// Evaluatable that detects when a boolean value changes.
+    /// </summary>
+    [Evaluatable("Boolean Change Detector", category: EvaluatableCategory.Logic)]
+    public class BooleanChangeDetector : Evaluatable<bool> {
+
+        private bool? lastValue;
+
+        public BooleanChangeDetector() { }
+        public BooleanChangeDetector(Evaluatable<bool> eval) : this(eval, true, true) { }
+        public BooleanChangeDetector(Evaluatable<bool> eval, bool detectTrue = true, bool detectFalse = true) {
+            Evaluatable = eval;
+            DetectTrue = detectTrue;
+            DetectFalse = detectFalse;
+        }
+
+        public Evaluatable<bool> Evaluatable { get; set; } = EvaluatableDefaults.Get<bool>();
+        public bool DetectTrue { get; set; } = true;
+        public bool DetectFalse { get; set; } = true;
+
+        public override Visual GetControl() => new StackPanel()
+            .WithChild(new Control_EvaluatablePresenter { EvalType = typeof(bool) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, this, nameof(Evaluatable), BindingMode.TwoWay))
+            .WithChild(new CheckBox { Content = "Trigger on become true" }
+                .WithBinding(CheckBox.IsCheckedProperty, this, nameof(DetectTrue)))
+            .WithChild(new CheckBox { Content = "Trigger on become false" }
+                .WithBinding(CheckBox.IsCheckedProperty, this, nameof(DetectFalse)));
+
+        protected override bool Execute(IGameState gameState) {
+            var val = Evaluatable.Evaluate(gameState);
+            var result = (val  && lastValue == false  && DetectTrue) // Result is true if: the next value is true, the old value was false and we are detecting true
+                      || (!val && lastValue == true && DetectFalse); // Or the next value is false, the old value was true and we are detecting false
+            lastValue = val;
+            return result;
+        }
+
+        public override Evaluatable<bool> Clone() => new BooleanChangeDetector { Evaluatable = Evaluatable.Clone(), DetectTrue = DetectTrue, DetectFalse = DetectFalse };
     }
 }

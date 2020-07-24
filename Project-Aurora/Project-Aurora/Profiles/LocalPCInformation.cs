@@ -1,6 +1,7 @@
 ﻿using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -35,28 +36,22 @@ namespace Aurora.Profiles {
         #endregion
 
         #region Audio Properties
-        private static readonly MMDeviceEnumerator mmDeviceEnumerator = new MMDeviceEnumerator();
-        private static readonly NAudio.Wave.WaveInEvent waveInEvent = new NAudio.Wave.WaveInEvent();
+        private static readonly AudioDeviceProxy captureProxy;
+        private static readonly AudioDeviceProxy renderProxy;
 
-        /// <summary>
-        /// Gets the default endpoint for output (playback) devices e.g. speakers, headphones, etc.
-        /// This will return null if there are no playback devices available.
-        /// </summary>
-        private MMDevice DefaultAudioOutDevice {
+        private MMDevice CaptureDevice {
             get {
-                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console); }
-                catch { return null; }
+                if (captureProxy != null)
+                    captureProxy.DeviceId = Global.Configuration.GSIAudioCaptureDevice;
+                return captureProxy?.Device;
             }
         }
 
-        /// <summary>
-        /// Gets the default endpoint for input (recording) devices e.g. microphones.
-        /// This will return null if there are no recording devices available.
-        /// </summary>
-        private MMDevice DefaultAudioInDevice {
+        private MMDevice RenderDevice {
             get {
-                try { return mmDeviceEnumerator.GetDefaultAudioEndpoint(DataFlow.Capture, Role.Console); }
-                catch { return null; }
+                if (renderProxy != null)
+                    renderProxy.DeviceId = Global.Configuration.GSIAudioRenderDevice;
+                return renderProxy?.Device;
             }
         }
 
@@ -64,32 +59,32 @@ namespace Aurora.Profiles {
         /// Current system volume (as set from the speaker icon)
         /// </summary>
         // Note: Manually checks if muted to return 0 since this is not taken into account with the MasterVolumeLevelScalar.
-        public float SystemVolume => SystemVolumeIsMuted ? 0 : DefaultAudioOutDevice?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
+        public float SystemVolume => SystemVolumeIsMuted ? 0 : RenderDevice?.AudioEndpointVolume.MasterVolumeLevelScalar * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the system volume is muted.
         /// </summary>
-        public bool SystemVolumeIsMuted => DefaultAudioOutDevice?.AudioEndpointVolume.Mute ?? true;
+        public bool SystemVolumeIsMuted => RenderDevice?.AudioEndpointVolume.Mute ?? true;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone even when muted.
         /// </summary>
-        public float MicrophoneLevel => DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float MicrophoneLevel => CaptureDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being emitted by the default speaker even when muted.
         /// </summary>
-        public float SpeakerLevel => DefaultAudioOutDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float SpeakerLevel => RenderDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// The volume level that is being recorded by the default microphone if not muted.
         /// </summary>
-        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : DefaultAudioInDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
+        public float MicLevelIfNotMuted => MicrophoneIsMuted ? 0 : CaptureDevice?.AudioMeterInformation.MasterPeakValue * 100 ?? 0;
 
         /// <summary>
         /// Gets whether the default microphone is muted.
         /// </summary>
-        public bool MicrophoneIsMuted => DefaultAudioInDevice?.AudioEndpointVolume.Mute ?? true;
+        public bool MicrophoneIsMuted => CaptureDevice?.AudioEndpointVolume.Mute ?? true;
         #endregion
 
         #region Device Properties
@@ -143,28 +138,30 @@ namespace Aurora.Profiles {
         public NETInfo NET => _netInfo ?? (_netInfo = new NETInfo());
         #endregion
 
+        #region Cursor Position
+        private static CursorPositionNode _cursorPosition;
+        public CursorPositionNode CursorPosition => _cursorPosition ?? (_cursorPosition = new CursorPositionNode());
+        #endregion
+
         /// <summary>
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
         public bool IsDesktopLocked => DesktopUtils.IsDesktopLocked;
 
-        static LocalPCInformation() {
-            void StartStopRecording() {
-                // We must start recording to be able to capture audio in, but only do this if the user has the option set. Allowing them
-                // to turn it off will give them piece of mind we're not spying on them and will stop the Windows 10 mic icon appearing.
-                try {
-                    if (Global.Configuration.EnableAudioCapture)
-                        waveInEvent.StartRecording();
-                    else
-                        waveInEvent.StopRecording();
-                } catch { }
-            }
+        private bool pendingAudioDeviceUpdate = false;
 
-            StartStopRecording();
-            Global.Configuration.PropertyChanged += (sender, e) => {
-                if (e.PropertyName == "EnableAudioCapture")
-                    StartStopRecording();
-            };
+        static LocalPCInformation() {
+            // Do not create a capture device if audio capture is disabled. Otherwise it will create a mic icon in win 10 and people will think we're spies.
+            try
+            {
+                if (Global.Configuration.EnableAudioCapture)
+                    captureProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioCaptureDevice, DataFlow.Capture);
+                renderProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioRenderDevice, DataFlow.Render);
+            }
+            catch(COMException e)
+            {
+                Global.logger.Error("Error initializing audio device proxy in LocalPCInfo, this is probably caused by an incompatible audio software: " + e);
+            }
         }
     }
 
@@ -217,5 +214,11 @@ namespace Aurora.Profiles {
         public float Usage => HardwareMonitor.NET.BandwidthUsed;
         public float UploadSpeed => HardwareMonitor.NET.UploadSpeedBytes;
         public float DownloadSpeed => HardwareMonitor.NET.DownloadSpeedBytes;
+    }
+
+    public class CursorPositionNode : Node
+    {
+        public float X => System.Windows.Forms.Cursor.Position.X;
+        public float Y => System.Windows.Forms.Cursor.Position.Y;
     }
 }

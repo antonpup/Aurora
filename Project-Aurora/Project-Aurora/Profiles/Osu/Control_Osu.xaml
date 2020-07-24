@@ -23,7 +23,7 @@
                     <TextBlock Text="4. Click the 'Install Plugin' button below and point the dialog to your OsuSync executable. This will copy the required Aurora DLL into the plugins directory." TextWrapping="Wrap" />
                     <TextBlock TextWrapping="Wrap">
                         <Run Text="4.1. Alternatively, you can fetch the DLL from the" />
-                        <Hyperlink NavigateUri="https://gitlab.com/wibble199/aurora-gsi-osu/tags" RequestNavigate="Hyperlink_RequestNavigate">Aurora GSI OsuSync plugin GitLab repo</Hyperlink>
+                        <Hyperlink NavigateUri="https://github.com/Aurora-RGB/AuroraGSI-Osu/releases" RequestNavigate="Hyperlink_RequestNavigate">Aurora GSI OsuSync plugin GitLab repo</Hyperlink>
                         <Run Text="and manually download it into your plugins directory. Note if you do it this way you will need to right-click the saved DLL, choose 'Properties' then click the 'Unblock' button." />
                     </TextBlock>
                     <TextBlock Text="5. Finally, restart OsuSync. You should see that when it starts up it says 'Load AuroraGSI'." />

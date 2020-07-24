@@ -497,7 +497,8 @@ namespace Aurora.Settings
         public float idle_frequency;
 
         //Hardware Monitor
-        public int HardwareMonitorUpdateRate;
+        public int HardwareMonitorUpdateRate { get; set; } = 500;
+        public bool HardwareMonitorUseAverageValues { get; set; } = true;
 
         public VariableRegistry VarRegistry;
 
@@ -514,6 +515,9 @@ namespace Aurora.Settings
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
+
+        public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
+        public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
 
         public Configuration()
         {
@@ -551,7 +555,7 @@ namespace Aurora.Settings
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
             devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
-            OverlaysInPreview = false;
+            OverlaysInPreview = true;
 
             //Blackout and Night theme
             time_based_dimming_enabled = false;
@@ -575,8 +579,6 @@ namespace Aurora.Settings
             idle_effect_secondary_color = Color.FromArgb(0, 0, 0);
             idle_amount = 5;
             idle_frequency = 2.5f;
-
-            HardwareMonitorUpdateRate = 200;
 
             //Debug
             BitmapDebugTopMost = false;
