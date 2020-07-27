@@ -14,6 +14,7 @@ using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
 using OpenRGBDevice = OpenRGB.NET.Models.Device;
 using OpenRGBDeviceType = OpenRGB.NET.Enums.DeviceType;
+using OpenRGBZoneType = OpenRGB.NET.Enums.ZoneType;
 
 namespace Aurora.Devices.OpenRGB
 {
@@ -29,6 +30,42 @@ namespace Aurora.Devices.OpenRGB
         private OpenRGBDevice[] _devices;
         private OpenRGBColor[][] _deviceColors;
         private List<DK>[] _keyMappings;
+
+        private List<DK> AdditionalLights = new List<DK>(new[]
+        {
+            DK.ADDITIONALLIGHT1,
+            DK.ADDITIONALLIGHT2,
+            DK.ADDITIONALLIGHT3,
+            DK.ADDITIONALLIGHT4,
+            DK.ADDITIONALLIGHT5,
+            DK.ADDITIONALLIGHT6,
+            DK.ADDITIONALLIGHT7,
+            DK.ADDITIONALLIGHT8,
+            DK.ADDITIONALLIGHT9,
+            DK.ADDITIONALLIGHT10,
+            DK.ADDITIONALLIGHT11,
+            DK.ADDITIONALLIGHT12,
+            DK.ADDITIONALLIGHT13,
+            DK.ADDITIONALLIGHT14,
+            DK.ADDITIONALLIGHT15,
+            DK.ADDITIONALLIGHT16,
+            DK.ADDITIONALLIGHT17,
+            DK.ADDITIONALLIGHT18,
+            DK.ADDITIONALLIGHT19,
+            DK.ADDITIONALLIGHT20,
+            DK.ADDITIONALLIGHT21,
+            DK.ADDITIONALLIGHT22,
+            DK.ADDITIONALLIGHT23,
+            DK.ADDITIONALLIGHT24,
+            DK.ADDITIONALLIGHT25,
+            DK.ADDITIONALLIGHT26,
+            DK.ADDITIONALLIGHT27,
+            DK.ADDITIONALLIGHT28,
+            DK.ADDITIONALLIGHT29,
+            DK.ADDITIONALLIGHT30,
+            DK.ADDITIONALLIGHT31,
+            DK.ADDITIONALLIGHT32,
+        });
 
         public bool Initialize()
         {
@@ -57,14 +94,45 @@ namespace Aurora.Devices.OpenRGB
 
                     for (int j = 0; j < dev.Leds.Length; j++)
                     {
-                        if (OpenRGBKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
+                        if (dev.Type == OpenRGBDeviceType.Keyboard)
                         {
-                            _keyMappings[i].Add(dk);
+                            if (OpenRGBKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
+                            {
+                                _keyMappings[i].Add(dk);
+                            }
+                            else
+                            {
+                                _keyMappings[i].Add(DK.NONE);
+                            }
+                        }
+                        else if(dev.Type == OpenRGBDeviceType.Mouse)
+                        {
+                            if (OpenRGBMouseKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
+                            {
+                                _keyMappings[i].Add(dk);
+                            }
+                            else
+                            {
+                                _keyMappings[i].Add(DK.NONE);
+                            }
                         }
                         else
                         {
-                            _keyMappings[i].Add(DK.NONE);
+                            _keyMappings[i].Add(DK.Peripheral_Logo);
                         }
+                    }
+
+                    uint LedOffset = 0;
+                    for(int j = 0; j < dev.Zones.Length; j++)
+                    {
+                        if(dev.Zones[j].Type == OpenRGBZoneType.Linear)
+                        {
+                            for(int k = 0; k < dev.Zones[j].LedCount; k++)
+                            {
+                                _keyMappings[i][(int)(LedOffset + k)] = AdditionalLights[k];
+                            }
+                        }
+                        LedOffset += dev.Zones[j].LedCount;
                     }
                 }
             }
@@ -104,6 +172,8 @@ namespace Aurora.Devices.OpenRGB
                 switch (_devices[i].Type)
                 {
                     case OpenRGBDeviceType.Keyboard:
+                    case OpenRGBDeviceType.Mouse:
+                    default:
                         for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
                         {
                             if (keyColors.TryGetValue(_keyMappings[i][ledIdx], out var keyColor))
@@ -113,20 +183,17 @@ namespace Aurora.Devices.OpenRGB
                         }
                         break;
 
-                    case OpenRGBDeviceType.Mouse:
-                        break;
-
-                    default:
-                        if (!Global.Configuration.VarRegistry.GetVariable<bool>($"{deviceName}_generic"))
-                            continue;
-                        if (keyColors.TryGetValue(DK.Peripheral_Logo, out var color))
-                        {
-                            for (int j = 0; j < _deviceColors[i].Length; j++)
-                            {
-                                _deviceColors[i][j] = new OpenRGBColor(color.R, color.G, color.B);
-                            }
-                        }
-                        break;
+                    
+                        //if (!Global.Configuration.VarRegistry.GetVariable<bool>($"{deviceName}_generic"))
+                        //    continue;
+                        //if (keyColors.TryGetValue(DK.Peripheral_Logo, out var color))
+                        //{
+                        //    for (int j = 0; j < _deviceColors[i].Length; j++)
+                        //    {
+                        //        _deviceColors[i][j] = new OpenRGBColor(color.R, color.G, color.B);
+                        //    }
+                        //}
+                        //break;
                 }
 
                 _openRgb.UpdateLeds(i, _deviceColors[i]);

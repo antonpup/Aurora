@@ -140,4 +140,12 @@ namespace Aurora.Devices.OpenRGB
             { "Key: G3"               , DK.G3                },
         };
     }
+    public static class OpenRGBMouseKeyNames
+    {
+        public static readonly Dictionary<string, DK> Names = new Dictionary<string, DK>()
+        {
+            { "Logo LED 1"           , DK.Peripheral_Logo        },
+            { "Scroll Wheel LED 1"   , DK.Peripheral_ScrollWheel },
+        };
+    }
 }
