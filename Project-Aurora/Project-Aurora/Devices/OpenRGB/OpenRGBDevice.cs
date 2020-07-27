@@ -129,7 +129,11 @@ namespace Aurora.Devices.OpenRGB
                         {
                             for(int k = 0; k < dev.Zones[j].LedCount; k++)
                             {
-                                _keyMappings[i][(int)(LedOffset + k)] = AdditionalLights[k];
+                                //TODO - scale zones with more than 32 LEDs
+                                if (k < 32)
+                                {
+                                    _keyMappings[i][(int)(LedOffset + k)] = AdditionalLights[k];
+                                }
                             }
                         }
                         LedOffset += dev.Zones[j].LedCount;
