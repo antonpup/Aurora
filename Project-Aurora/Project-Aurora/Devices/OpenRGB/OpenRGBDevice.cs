@@ -31,42 +31,6 @@ namespace Aurora.Devices.OpenRGB
         private OpenRGBColor[][] _deviceColors;
         private List<DK>[] _keyMappings;
 
-        private List<DK> AdditionalLights = new List<DK>(new[]
-        {
-            DK.ADDITIONALLIGHT1,
-            DK.ADDITIONALLIGHT2,
-            DK.ADDITIONALLIGHT3,
-            DK.ADDITIONALLIGHT4,
-            DK.ADDITIONALLIGHT5,
-            DK.ADDITIONALLIGHT6,
-            DK.ADDITIONALLIGHT7,
-            DK.ADDITIONALLIGHT8,
-            DK.ADDITIONALLIGHT9,
-            DK.ADDITIONALLIGHT10,
-            DK.ADDITIONALLIGHT11,
-            DK.ADDITIONALLIGHT12,
-            DK.ADDITIONALLIGHT13,
-            DK.ADDITIONALLIGHT14,
-            DK.ADDITIONALLIGHT15,
-            DK.ADDITIONALLIGHT16,
-            DK.ADDITIONALLIGHT17,
-            DK.ADDITIONALLIGHT18,
-            DK.ADDITIONALLIGHT19,
-            DK.ADDITIONALLIGHT20,
-            DK.ADDITIONALLIGHT21,
-            DK.ADDITIONALLIGHT22,
-            DK.ADDITIONALLIGHT23,
-            DK.ADDITIONALLIGHT24,
-            DK.ADDITIONALLIGHT25,
-            DK.ADDITIONALLIGHT26,
-            DK.ADDITIONALLIGHT27,
-            DK.ADDITIONALLIGHT28,
-            DK.ADDITIONALLIGHT29,
-            DK.ADDITIONALLIGHT30,
-            DK.ADDITIONALLIGHT31,
-            DK.ADDITIONALLIGHT32,
-        });
-
         public bool Initialize()
         {
             if (isInitialized)
@@ -96,7 +60,7 @@ namespace Aurora.Devices.OpenRGB
                     {
                         if (dev.Type == OpenRGBDeviceType.Keyboard)
                         {
-                            if (OpenRGBKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
+                            if (OpenRGBKeyNames.Keyboard.TryGetValue(dev.Leds[j].Name, out var dk))
                             {
                                 _keyMappings[i].Add(dk);
                             }
@@ -105,9 +69,9 @@ namespace Aurora.Devices.OpenRGB
                                 _keyMappings[i].Add(DK.NONE);
                             }
                         }
-                        else if(dev.Type == OpenRGBDeviceType.Mouse)
+                        else if (dev.Type == OpenRGBDeviceType.Mouse)
                         {
-                            if (OpenRGBMouseKeyNames.Names.TryGetValue(dev.Leds[j].Name, out var dk))
+                            if (OpenRGBKeyNames.Mouse.TryGetValue(dev.Leds[j].Name, out var dk))
                             {
                                 _keyMappings[i].Add(dk);
                             }
@@ -123,11 +87,11 @@ namespace Aurora.Devices.OpenRGB
                     }
 
                     uint LedOffset = 0;
-                    for(int j = 0; j < dev.Zones.Length; j++)
+                    for (int j = 0; j < dev.Zones.Length; j++)
                     {
-                        if(dev.Zones[j].Type == OpenRGBZoneType.Linear)
+                        if (dev.Zones[j].Type == OpenRGBZoneType.Linear)
                         {
-                            for(int k = 0; k < dev.Zones[j].LedCount; k++)
+                            for (int k = 0; k < dev.Zones[j].LedCount; k++)
                             {
                                 //TODO - scale zones with more than 32 LEDs
                                 if (k < 32)
@@ -158,10 +122,17 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < _devices.Length; i++)
             {
-                _openRgb.UpdateLeds(i, _devices[i].Colors);
+                try
+                {
+                    _openRgb.UpdateLeds(i, _devices[i].Colors);
+                }
+                catch
+                {
+                    //we tried.
+                }
             }
 
-            _openRgb.Dispose();
+            _openRgb?.Dispose();
             _openRgb = null;
             isInitialized = false;
         }
@@ -173,38 +144,34 @@ namespace Aurora.Devices.OpenRGB
 
             for (var i = 0; i < _devices.Length; i++)
             {
-                switch (_devices[i].Type)
-                {
-                    case OpenRGBDeviceType.Keyboard:
-                    case OpenRGBDeviceType.Mouse:
-                    default:
-                        for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
-                        {
-                            if (keyColors.TryGetValue(_keyMappings[i][ledIdx], out var keyColor))
-                            {
-                                _deviceColors[i][ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
-                            }
-                        }
-                        break;
+                //should probably store these bools somewhere when initing
+                //might also add this as a property in the library
+                if (!_devices[i].Modes.Any(m => m.Name == "Direct"))
+                    continue;
 
-                    
-                        //if (!Global.Configuration.VarRegistry.GetVariable<bool>($"{deviceName}_generic"))
-                        //    continue;
-                        //if (keyColors.TryGetValue(DK.Peripheral_Logo, out var color))
-                        //{
-                        //    for (int j = 0; j < _deviceColors[i].Length; j++)
-                        //    {
-                        //        _deviceColors[i][j] = new OpenRGBColor(color.R, color.G, color.B);
-                        //    }
-                        //}
-                        //break;
+                for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
+                {
+                    if (keyColors.TryGetValue(_keyMappings[i][ledIdx], out var keyColor))
+                    {
+                        _deviceColors[i][ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                    }
                 }
 
-                _openRgb.UpdateLeds(i, _deviceColors[i]);
+                try
+                {
+                    _openRgb.UpdateLeds(i, _deviceColors[i]);
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.Error($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
+                    Reset();
+                }
             }
+
             var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{deviceName}_sleep");
             if (sleep > 0)
                 Thread.Sleep(sleep);
+
             return true;
         }
 
@@ -227,7 +194,7 @@ namespace Aurora.Devices.OpenRGB
                 string devString = deviceName + ": ";
                 devString += "Connected ";
                 var names = _devices.Select(c => c.Name);
-                devString += string.Join(",", names);
+                devString += string.Join(", ", names);
                 return devString;
             }
             else
@@ -243,7 +210,7 @@ namespace Aurora.Devices.OpenRGB
 
         public string GetDeviceUpdatePerformance()
         {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
+            return isInitialized ? lastUpdateTime + " ms" : "";
         }
 
         public VariableRegistry GetRegisteredVariables()
@@ -252,7 +219,6 @@ namespace Aurora.Devices.OpenRGB
             {
                 varReg = new VariableRegistry();
                 varReg.Register($"{deviceName}_sleep", 25, "Sleep for", 1000, 0);
-                varReg.Register($"{deviceName}_generic", false, "Set colors on generic devices");
             }
             return varReg;
         }
@@ -287,5 +253,41 @@ namespace Aurora.Devices.OpenRGB
             Shutdown();
             Initialize();
         }
+
+        private static readonly List<DK> AdditionalLights = new List<DK>(new[]
+        {
+            DK.ADDITIONALLIGHT1,
+            DK.ADDITIONALLIGHT2,
+            DK.ADDITIONALLIGHT3,
+            DK.ADDITIONALLIGHT4,
+            DK.ADDITIONALLIGHT5,
+            DK.ADDITIONALLIGHT6,
+            DK.ADDITIONALLIGHT7,
+            DK.ADDITIONALLIGHT8,
+            DK.ADDITIONALLIGHT9,
+            DK.ADDITIONALLIGHT10,
+            DK.ADDITIONALLIGHT11,
+            DK.ADDITIONALLIGHT12,
+            DK.ADDITIONALLIGHT13,
+            DK.ADDITIONALLIGHT14,
+            DK.ADDITIONALLIGHT15,
+            DK.ADDITIONALLIGHT16,
+            DK.ADDITIONALLIGHT17,
+            DK.ADDITIONALLIGHT18,
+            DK.ADDITIONALLIGHT19,
+            DK.ADDITIONALLIGHT20,
+            DK.ADDITIONALLIGHT21,
+            DK.ADDITIONALLIGHT22,
+            DK.ADDITIONALLIGHT23,
+            DK.ADDITIONALLIGHT24,
+            DK.ADDITIONALLIGHT25,
+            DK.ADDITIONALLIGHT26,
+            DK.ADDITIONALLIGHT27,
+            DK.ADDITIONALLIGHT28,
+            DK.ADDITIONALLIGHT29,
+            DK.ADDITIONALLIGHT30,
+            DK.ADDITIONALLIGHT31,
+            DK.ADDITIONALLIGHT32,
+        });
     }
 }

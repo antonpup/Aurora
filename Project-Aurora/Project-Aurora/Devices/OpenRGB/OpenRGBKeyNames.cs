@@ -9,7 +9,7 @@ namespace Aurora.Devices.OpenRGB
 {
     public static class OpenRGBKeyNames
     {
-        public static readonly Dictionary<string, DK> Names = new Dictionary<string, DK>()
+        public static readonly Dictionary<string, DK> Keyboard = new Dictionary<string, DK>()
         {
             { "Key: A"                , DK.A                 },
             { "Key: B"                , DK.B                 },
@@ -139,10 +139,8 @@ namespace Aurora.Devices.OpenRGB
             { "Key: G2"               , DK.G2                },
             { "Key: G3"               , DK.G3                },
         };
-    }
-    public static class OpenRGBMouseKeyNames
-    {
-        public static readonly Dictionary<string, DK> Names = new Dictionary<string, DK>()
+
+        public static readonly Dictionary<string, DK> Mouse = new Dictionary<string, DK>()
         {
             { "Logo LED 1"           , DK.Peripheral_Logo        },
             { "Scroll Wheel LED 1"   , DK.Peripheral_ScrollWheel },
