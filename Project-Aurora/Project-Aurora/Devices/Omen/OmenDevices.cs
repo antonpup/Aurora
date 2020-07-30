@@ -23,12 +23,12 @@ namespace Aurora.Devices.Omen
         private readonly System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
 
-        public string GetDeviceDetails()
+        public string GetDeviceName()
         {
             return devicename;
         }
 
-        public string GetDeviceName()
+        public string GetDeviceDetails()
         {
             if (isInitialized)
             {
