@@ -20,6 +20,7 @@ namespace Aurora.Devices.Asus
             
             defaultRegistry = new VariableRegistry();
             defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
+            defaultRegistry.Register($"{DeviceName}_force_initialize", false, "Force initialization");
             return defaultRegistry;
         }
 
@@ -51,7 +52,9 @@ namespace Aurora.Devices.Asus
         {
             asusHandler?.Stop();
             
-            asusHandler = new AsusHandler(Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"));
+            asusHandler = new AsusHandler(
+                Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
+                Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
             isActive = asusHandler.Start();
             return isActive;
         }

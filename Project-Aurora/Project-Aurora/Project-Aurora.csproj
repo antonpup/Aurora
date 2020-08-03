@@ -94,6 +94,10 @@
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="OmenFourZoneLighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\OmenFourZoneLighting.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -177,6 +181,8 @@
       <DependentUpon>Window_Prompt.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\RGBFusion\RGBFusionDevice.cs" />
+    <Compile Include="Devices\Omen\IOmenDevice.cs" />
+    <Compile Include="Devices\Omen\OmenFourZoneLighting.cs" />
     <Compile Include="Devices\Uniwill\UniwillDevice.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteConfig.cs" />
     <Compile Include="Profiles\EliteDangerous\EliteDangerousSettings.cs" />
@@ -199,6 +205,10 @@
     <Compile Include="Profiles\EliteDangerous\Layers\EliteDangerousAnimationLayerHandler.cs" />
     <Compile Include="Devices\Ducky\DuckyDevice.cs" />
     <Compile Include="Devices\Ducky\DuckyRGBMappings.cs" />
+    <Compile Include="Devices\Omen\LightingColor.cs" />
+    <Compile Include="Devices\Omen\OmenChassis.cs" />
+    <Compile Include="Devices\Omen\OmenKeys.cs" />
+    <Compile Include="Devices\Omen\OmenSpeaker.cs" />
     <Compile Include="Controls\Control_LayerPreview.xaml.cs">
       <DependentUpon>Control_LayerPreview.xaml</DependentUpon>
     </Compile>
@@ -332,6 +342,10 @@
       <DependentUpon>LogitechInstallInstructions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Devices\NZXT\NZXTLayoutMap.cs" />
+    <Compile Include="Devices\Omen\OmenDevices.cs" />
+    <Compile Include="Devices\Omen\OmenKeyboard.cs" />
+    <Compile Include="Devices\Omen\OmenMouse.cs" />
+    <Compile Include="Devices\Omen\OmenMousePad.cs" />
     <Compile Include="Devices\Razer\RazerInstallInstructions.xaml.cs">
       <DependentUpon>RazerInstallInstructions.xaml</DependentUpon>
     </Compile>
@@ -855,6 +869,27 @@
     <Content Include="Interop.AuraServiceLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_vector_essentials_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_vector_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_vector_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Omen_zone_0.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Omen_zone_1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Omen_zone_2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\Omen_zone_3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\Roccat_Kone_Pure_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -862,6 +897,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="kb_layouts\Extra Features\logitech_g815_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_four_zone_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g513.json">
@@ -874,6 +912,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="kb_layouts\Extra Features\images\Asus_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OmenFourZoneLighting.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Profiles\Overlays\SkypeOverlay\Event_SkypeOverlay.cs" />
@@ -915,6 +956,9 @@
     <None Include="kb_layouts\Extra Features\keyboard_numpad_left_bottom_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\omen_four_zone.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Uniwill2ND_35X_1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -946,6 +990,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\ducky_shine_7.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_vector_essentials_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_vector_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\Extra Features\roccat_kone_pure_features.json">
@@ -1137,6 +1187,18 @@
     <None Include="kb_layouts\Extra Features\wooting_two_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\omen_outpost_plus_photon_features.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_sequencer_bottom_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_sequencer_right_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\Extra Features\omen_sequencer_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\logitech_gpro_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1260,6 +1322,9 @@
     <None Include="kb_layouts\Extra Features\steelseries_rival_300_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="kb_layouts\Extra Features\omen_photon_features.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="kb_layouts\Extra Features\steelseries_rival_300_hp_omen_edition_features.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1273,6 +1338,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_g810.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="kb_layouts\omen_sequencer.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="kb_layouts\logitech_gpro.json">
@@ -1592,6 +1660,19 @@
     <Content Include="kb_layouts\Extra Features\images\Omen_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_outpost_outline.png" />
+    <Content Include="kb_layouts\Extra Features\images\omen_outpost_plus_photon_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_photon_outline.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_photon_scrollwheel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="kb_layouts\Extra Features\images\omen_sequencer_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="kb_layouts\Extra Features\images\SoundBlasterX_logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1659,6 +1740,9 @@
     </Content>
     <Content Include="RGBFusionBridge\RGBFusionBridge.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OmenLightingSDK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -2745,7 +2829,7 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
 
        Other similar extension points exist, see Microsoft.Common.targets.
 
