@@ -1,7 +1,4 @@
-﻿using Aurora.Devices.UnifiedHID;
-using Aurora.Profiles;
-using CSScriptLibrary;
-using Microsoft.Win32;
+﻿using CSScriptLibrary;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
