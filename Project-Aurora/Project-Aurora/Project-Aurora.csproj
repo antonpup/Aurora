@@ -23,7 +23,6 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
-    <DocumentationFile>documentation\Aurora.XML</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
 
@@ -195,33 +194,6 @@
     <Resource Include="Resources\Win64\Aurora-LightFXWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
-  </ItemGroup>
-
-  <!-- These items were not included in the original project or were excluded from build and should likely be removed from source. -->
-  <ItemGroup>
-    <Compile Remove="Scripting.evaluator.cs" />
-    <Compile Remove="Scripting.Extensions.cs" />
-    <Compile Remove="Scripting.native.cs" />
-    <None Remove="FodyWeavers.xml" />
-    <None Remove="LibreHardwareMonitorLib.dll" />
-    <None Remove="LightFX.dll" />
-    <None Remove="Roccat-Talk.dll" />
-    <None Remove="UniwillSDKDLL.dll" />
-    <Compile Remove="documentation\**" />
-    <EmbeddedResource Remove="documentation\**" />
-    <None Remove="documentation\**" />
-    <Page Remove="documentation\**" />
-    <Compile Remove="EffectsEngine\Functions\**" />
-    <EmbeddedResource Remove="EffectsEngine\Functions\**" />
-    <None Remove="EffectsEngine\Functions\**" />
-    <Page Remove="EffectsEngine\Functions\**" />
-    <Compile Remove="EffectsEngine\EffectColorFunction.cs" />
-    <Compile Remove="Profiles\Overlays\SkypeOverlay\*.cs" />
-    <Content Include="Profiles\Overlays\SkypeOverlay\*.cs" />
-    <Compile Remove="Profiles\Overlays\VolumeOverlay\*.cs" />
-    <None Include="Profiles\Overlays\VolumeOverlay\*.cs" />
-    <Compile Remove="Settings\Control_ProfileManager_old.xaml.cs" />
-    <Page Remove="Settings\Control_ProfileManager_old.xaml" />
   </ItemGroup>
 
 </Project>
