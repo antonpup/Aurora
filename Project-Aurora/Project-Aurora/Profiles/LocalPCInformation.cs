@@ -2,6 +2,7 @@
 using NAudio.CoreAudioApi;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -143,6 +144,11 @@ namespace Aurora.Profiles {
         public CursorPositionNode CursorPosition => _cursorPosition ?? (_cursorPosition = new CursorPositionNode());
         #endregion
 
+        #region Battery Properties
+        private static BatteryNode _battery;
+        public BatteryNode Battery => _battery ?? (_battery = new BatteryNode());
+        #endregion
+
         /// <summary>
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
@@ -220,5 +226,13 @@ namespace Aurora.Profiles {
     {
         public float X => System.Windows.Forms.Cursor.Position.X;
         public float Y => System.Windows.Forms.Cursor.Position.Y;
+    }
+
+    public class BatteryNode : Node
+    {
+        public BatteryChargeStatus ChargeStatus => SystemInformation.PowerStatus.BatteryChargeStatus;
+        public bool PluggedIn => SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Offline; //If it is unknown I assume it is plugedIn
+        public float LifePercent => SystemInformation.PowerStatus.BatteryLifePercent;
+        public int SecondsRemaining => SystemInformation.PowerStatus.BatteryLifeRemaining;
     }
 }
