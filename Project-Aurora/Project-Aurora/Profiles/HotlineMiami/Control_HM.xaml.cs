@@ -1,5 +1,6 @@
 ﻿using Aurora.Controls;
 using Aurora.Settings;
+using Aurora.Utils;
 using System;
 using System.IO;
 using System.Windows;
@@ -25,7 +26,8 @@ namespace Aurora.Profiles.HotlineMiami
             //Apply LightFX Wrapper, if needed.
             if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
             {
-                InstallWrapper();
+                InstallWrapper(SteamUtils.GetGamePath(219150));
+                InstallWrapper(GOGUtils.GetGamePath(1207659118));
                 (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
             }
 
@@ -44,18 +46,38 @@ namespace Aurora.Profiles.HotlineMiami
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            if (InstallWrapper())
+            bool success = false;
+
+            var installpath = SteamUtils.GetGamePath(219150);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = InstallWrapper(installpath);
+
+            installpath = GOGUtils.GetGamePath(1207659118);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = InstallWrapper(installpath);
+
+            if (success)
                 MessageBox.Show("Aurora LightFX Wrapper installed successfully.");
             else
-                MessageBox.Show("Aurora LightFX Wrapper could not be installed.\r\nGame is not installed.");
+                MessageBox.Show("Aurora LightFX Wrapper could not be installed.\r\nGame is not installed over Steam or GOG.");
         }
 
         private void unpatch_button_Click(object sender, RoutedEventArgs e)
         {
-            if (UninstallWrapper())
+            bool success = false;
+
+            var installpath = SteamUtils.GetGamePath(219150);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = UninstallWrapper(installpath);
+
+            installpath = GOGUtils.GetGamePath(1207659118);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = UninstallWrapper(installpath);
+
+            if (success)
                 MessageBox.Show("Aurora LightFX Wrapper uninstalled successfully.");
             else
-                MessageBox.Show("Aurora LightFX Wrapper could not be uninstalled.\r\nGame is not installed.");
+                MessageBox.Show("Aurora LightFX Wrapper could not be uninstalled.\r\nGame is not installed over Steam or GOG.");
         }
 
         private void patch_drm_button_Click(object sender, RoutedEventArgs e)
@@ -89,12 +111,8 @@ namespace Aurora.Profiles.HotlineMiami
         {
         }
 
-        private bool InstallWrapper(string installpath = "")
+        private bool InstallWrapper(string installpath)
         {
-            if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(219150);
-
-
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "LightFX.dll");
@@ -115,9 +133,8 @@ namespace Aurora.Profiles.HotlineMiami
             }
         }
 
-        private bool UninstallWrapper()
+        private bool UninstallWrapper(string installpath)
         {
-            String installpath = Utils.SteamUtils.GetGamePath(219150);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "LightFX.dll");

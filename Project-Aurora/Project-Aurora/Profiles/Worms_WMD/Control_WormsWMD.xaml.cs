@@ -1,4 +1,5 @@
 ﻿using Aurora.Settings;
+using Aurora.Utils;
 using System;
 using System.IO;
 using System.Windows;
@@ -7,7 +8,7 @@ using System.Windows.Controls;
 namespace Aurora.Profiles.WormsWMD
 {
     /// <summary>
-    /// Interaction logic for Control_Overwatch.xaml
+    /// Interaction logic for Control_WormsWMD.xaml
     /// </summary>
     public partial class Control_WormsWMD : UserControl
     {
@@ -29,7 +30,17 @@ namespace Aurora.Profiles.WormsWMD
 
         private void patch_button_Click(object sender, RoutedEventArgs e)
         {
-            if (InstallWrapper())
+            bool success = false;
+
+            var installpath = SteamUtils.GetGamePath(327030);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = InstallWrapper(installpath);
+
+            installpath = GOGUtils.GetGamePath(1448620034);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = InstallWrapper(installpath);
+
+            if (success)
                 MessageBox.Show("Aurora Wrapper Patch installed successfully.");
             else
                 MessageBox.Show("Aurora Wrapper Patch could not be installed.\r\nGame is not installed.");
@@ -37,7 +48,17 @@ namespace Aurora.Profiles.WormsWMD
 
         private void unpatch_button_Click(object sender, RoutedEventArgs e)
         {
-            if (UninstallWrapper())
+            bool success = false;
+
+            var installpath = SteamUtils.GetGamePath(327030);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = UninstallWrapper(installpath);
+
+            installpath = GOGUtils.GetGamePath(1448620034);
+            if (!String.IsNullOrWhiteSpace(installpath))
+                success = UninstallWrapper(installpath);
+
+            if (success)
                 MessageBox.Show("Aurora Wrapper Patch uninstalled successfully.");
             else
                 MessageBox.Show("Aurora Wrapper Patch could not be uninstalled.\r\nGame is not installed.");
@@ -56,14 +77,8 @@ namespace Aurora.Profiles.WormsWMD
             }
         }
 
-        private int GameID = 327030;
-
-        private bool InstallWrapper(string installpath = "")
+        private bool InstallWrapper(string installpath)
         {
-            if (String.IsNullOrWhiteSpace(installpath))
-                installpath = Utils.SteamUtils.GetGamePath(this.GameID);
-
-
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 using (BinaryWriter razer_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(installpath, "RzChromaSDK.dll"), FileMode.Create)))
@@ -84,9 +99,8 @@ namespace Aurora.Profiles.WormsWMD
             }
         }
 
-        private bool UninstallWrapper()
+        private bool UninstallWrapper(string installpath)
         {
-            String installpath = Utils.SteamUtils.GetGamePath(this.GameID);
             if (!String.IsNullOrWhiteSpace(installpath))
             {
                 string path = System.IO.Path.Combine(installpath, "RzChromaSDK.dll");

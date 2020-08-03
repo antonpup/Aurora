@@ -720,7 +720,9 @@
     <Compile Include="Utils\DragBehaviour.cs" />
     <Compile Include="Utils\FastMemberExtensions.cs" />
     <Compile Include="Utils\GridHelper.cs" />
+    <Compile Include="Utils\LauncherUtils\GOGUtils.cs" />
     <Compile Include="Utils\ObservableConcurrentDictionary.cs" />
+    <Compile Include="Utils\LauncherUtils\EpicUtils.cs" />
     <Compile Include="Utils\TextUtils.cs" />
     <Compile Include="Utils\WindowPlacement.cs" />
     <Compile Include="Utils\Converters.cs" />
@@ -1614,7 +1616,7 @@
     <Compile Include="Utils\MemoryUtils.cs" />
     <Compile Include="Utils\RazerChromaUtils.cs" />
     <Compile Include="Utils\RunningProcessMonitor.cs" />
-    <Compile Include="Utils\SteamUtils.cs" />
+    <Compile Include="Utils\LauncherUtils\SteamUtils.cs" />
     <Compile Include="Utils\ThreadPriorityChanger.cs" />
     <Compile Include="Utils\Time.cs" />
     <Compile Include="Utils\TimedListObject.cs" />
