@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -122,20 +122,59 @@ namespace Aurora.Utils
         }
 
         /// <summary>
-        /// Adds two colors together by using the alpha component of the foreground color
+        /// Adds two colors together by using the "SRC over DST" blending algorithm by Porter and Duff
         /// </summary>
         /// <param name="background">The background color</param>
-        /// <param name="foreground">The foreground color (must have transparency to allow color blending)</param>
-        /// <returns>The sum of two colors</returns>
+        /// <param name="foreground">The foreground color</param>
+        /// <returns>The sum of two colors including combined alpha</returns>
         public static System.Drawing.Color AddColors(System.Drawing.Color background, System.Drawing.Color foreground)
+            => MediaColorToDrawingColor(AddColors(DrawingColorToMediaColor(background), DrawingColorToMediaColor(foreground)));
+
+        /// <summary>
+        /// Adds two colors together by using the "SRC over DST" blending algorithm by Porter and Duff
+        /// </summary>
+        /// <param name="background">The background color</param>
+        /// <param name="foreground">The foreground color</param>
+        /// <returns>The sum of two colors including combined alpha</returns>
+        public static System.Windows.Media.Color AddColors(System.Windows.Media.Color background, System.Windows.Media.Color foreground)
         {
-            if ((object)background == null)
+            //Do not calculate anything when at least one Alpha is 0 also prevents "new_alpha" to become 0 (can't divide through 0)
+            if (background.A <= 0 && foreground.A <= 0)
+                return System.Windows.Media.Color.FromArgb(0, 0, 0, 0);
+
+            if (background.A <= 0)
                 return foreground;
 
-            if ((object)foreground == null)
+            if (foreground.A <= 0)
                 return background;
 
-            return BlendColors(background, foreground, foreground.A / 255.0);
+            float new_alpha = (background.ScA + foreground.ScA) - (background.ScA * foreground.ScA);
+
+            System.Windows.Media.Color bg_a = CorrectWithAlpha(background);
+            System.Windows.Media.Color fg_a = CorrectWithAlpha(foreground);
+
+            System.Windows.Media.Color color_final_a = System.Windows.Media.Color.FromScRgb(1, 1, 1, 1);
+            color_final_a.ScR = fg_a.ScR + (bg_a.ScR * (1 - foreground.ScA));
+            color_final_a.ScG = fg_a.ScG + (bg_a.ScG * (1 - foreground.ScA));
+            color_final_a.ScB = fg_a.ScB + (bg_a.ScB * (1 - foreground.ScA));
+
+            System.Windows.Media.Color color_final = System.Windows.Media.Color.FromScRgb(0, 0, 0, 0);
+            color_final.ScR = color_final_a.ScR / new_alpha;
+            color_final.ScG = color_final_a.ScG / new_alpha;
+            color_final.ScB = color_final_a.ScB / new_alpha;
+            color_final.ScA = new_alpha;
+
+            return color_final;
+        }
+
+        /// <summary>
+        /// Multiplies all non-alpha values by alpha.
+        /// </summary>
+        /// <param name="color">Color to correct</param>
+        /// <returns>Corrected Color</returns>
+        public static System.Windows.Media.Color CorrectWithAlpha(System.Windows.Media.Color color)
+        {
+            return System.Windows.Media.Color.FromScRgb(1, (color.ScR * color.ScA), (color.ScG * color.ScA), (color.ScB * color.ScA));
         }
 
         /// <summary>

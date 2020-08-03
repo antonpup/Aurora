@@ -1,13 +1,14 @@
-﻿using Aurora.Profiles;
-using CSScriptLibrary;
+﻿using CSScriptLibrary;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
-using Microsoft.Win32;
 
 namespace Aurora.Devices
 {
@@ -96,28 +97,17 @@ namespace Aurora.Devices
 
         public DeviceManager()
         {
-            devices.Add(new DeviceContainer(new Devices.Logitech.LogitechDevice()));         // Logitech Device
-            devices.Add(new DeviceContainer(new Devices.Corsair.CorsairDevice()));           // Corsair Device
-            devices.Add(new DeviceContainer(new Devices.Razer.RazerDevice()));               // Razer Device
-            devices.Add(new DeviceContainer(new Devices.Roccat.RoccatDevice()));             // Roccat Device
-            devices.Add(new DeviceContainer(new Devices.Clevo.ClevoDevice()));               // Clevo Device
-            devices.Add(new DeviceContainer(new Devices.CoolerMaster.CoolerMasterDevice())); // CoolerMaster Device
-            devices.Add(new DeviceContainer(new Devices.AtmoOrbDevice.AtmoOrbDevice()));     // AtmoOrb Ambilight Device
-            devices.Add(new DeviceContainer(new Devices.SteelSeries.SteelSeriesDevice()));   // SteelSeries Device
-            devices.Add(new DeviceContainer(new Devices.UnifiedHID.UnifiedHIDDevice()));     // UnifiedHID Device
-            devices.Add(new DeviceContainer(new Devices.Wooting.WootingDevice()));           // Wooting Device
-            devices.Add(new DeviceContainer(new Devices.Creative.SoundBlasterXDevice()));    // SoundBlasterX Device
-            devices.Add(new DeviceContainer(new Devices.LightFX.LightFxDevice()));           //Alienware
-            devices.Add(new DeviceContainer(new Devices.Dualshock.DualshockDevice()));       //DualShock 4 Device
-            devices.Add(new DeviceContainer(new Devices.Drevo.DrevoDevice()));               // Drevo Device
-            devices.Add(new DeviceContainer(new Devices.YeeLight.YeeLightDevice()));         // YeeLight Device
-            devices.Add(new DeviceContainer(new Devices.Asus.AsusDevice()));               // Asus Device
-            devices.Add(new DeviceContainer(new Devices.NZXT.NZXTDevice()));                 //NZXT Device
-            devices.Add(new DeviceContainer(new Devices.Vulcan.VulcanDevice()));
-            devices.Add(new DeviceContainer(new Devices.Uniwill.UniwillDevice()));
-            devices.Add(new DeviceContainer(new Devices.Ducky.DuckyDevice()));              //Ducky Device
-            
- 
+            var deviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+                              where typeof(Device).IsAssignableFrom(type)
+                              && !type.IsAbstract
+                              && type != typeof(ScriptedDevice.ScriptedDevice)
+                              let inst = (Device)Activator.CreateInstance(type)
+                              orderby inst.GetDeviceName()
+                              select inst;
+
+            foreach (var inst in deviceTypes)
+                devices.Add(new DeviceContainer(inst));
+
             string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
 
             if (Directory.Exists(devices_scripts_path))
