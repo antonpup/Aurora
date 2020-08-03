@@ -1,0 +1,284 @@
+{
+    "group_tag": "mouse",
+    "origin_region": 4,
+    "grouped_keys": [
+        {
+            "tag": -1,
+            "margin_left": 15.0,
+            "margin_top": -250.0,
+            "width": 245.0,
+            "height": 250.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "image": "omen_outpost_plus_photon_outline.png",
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "tag": 215,
+            "visualName": "Mouse Pad Logo",
+            "margin_left": 123.0,
+            "margin_top": -230.0,
+            "width": 30.0,
+            "height": 30.0,
+            "width_bits": 6,
+            "image": "Omen_logo.png",
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "Mouse Logo",
+            "tag": 160,
+            "margin_left": 123.0,
+            "margin_top": -85.0,
+            "width": 30.0,
+            "height": 30.0,
+            "width_bits": 2,
+            "height_bits": 2,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "image": "Omen_logo.png",
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "Scroll Wheel",
+            "tag": 161,
+            "margin_left": 134.0,
+            "margin_top": -152.0,
+            "width": 8.0,
+            "height": 24.0,
+            "width_bits": 2,
+            "height_bits": 3,
+            "margin_left_bits": 7,
+            "margin_top_bits": -16,
+            "image": "omen_photon_scrollwheel.png",
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 201,
+            "margin_left": 23.0,
+            "margin_top": -182.0,
+            "width": 7.0,
+            "height": 35.6,
+            "width_bits": 2,
+            "height_bits": 2,
+
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 202,
+            "margin_left": 23.0,
+            "margin_top": -146.4,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 203,
+            "margin_left": 23.0,
+            "margin_top": -112.8,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 204,
+            "margin_left": 23.0,
+            "margin_top": -79.2,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+            "height_bits": 6,
+
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "visualName": "",
+            "tag": 205,
+            "margin_left": 23.0,
+            "margin_top": -45.6,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+            "height_bits": 6,
+
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+            "tag": 206,
+            "visualName": "",
+            "margin_left": 27.5,
+            "margin_top": -14,
+            "width": 55.25,
+            "height": 7.0,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 207,
+            "visualName": "",
+            "margin_left": 82.75,
+            "margin_top": -14,
+            "width": 55.25,
+            "height": 7.0,
+
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 208,
+            "visualName": "",
+            "margin_left": 138,
+            "margin_top": -14.0,
+
+            "width": 55.25,
+            "height": 7.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 209,
+            "visualName": "",
+            "margin_left": 193.25,
+            "margin_top": -14.0,
+            "width": 55.25,
+            "height": 7.0,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 210,
+            "visualName": "",
+            "margin_left": 245.5,
+            "margin_top": -45.6,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 211,
+            "visualName": "",
+            "margin_left": 245.5,
+            "margin_top": -79.2,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 212,
+            "visualName": "",
+            "margin_left": 245.5,
+            "margin_top": -112.8,
+            "width": 7.0,
+            "height": 33.6,
+            "width_bits": 6,
+
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 213,
+            "visualName": "",
+            "margin_left": 245.5,
+            "margin_top": -146.4,
+            "width": 7.0,
+
+            "height": 33.6,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        },
+        {
+
+            "tag": 214,
+            "visualName": "",
+            "margin_left": 245.0,
+            "margin_top": -182.0,
+            "width": 7.0,
+            "height": 35.6,
+            "width_bits": 6,
+            "height_bits": 6,
+            "margin_left_bits": 2,
+
+            "margin_top_bits": -6,
+            "enabled": true,
+            "absolute_location": true
+        }
+       
+
+    ]
+}

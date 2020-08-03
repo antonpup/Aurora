@@ -788,10 +788,14 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
             else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Sequencer)
+                layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
+                layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
             else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
                 layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
 
-                else
+            else
             {
                 LoadNone();
                 return;
@@ -898,6 +902,18 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Photon:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Outpost_Plus_Photon:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Vector:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Vector_Essentials:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
                         break;
                 }
 
@@ -1112,7 +1128,7 @@ namespace Aurora.Settings
                 }
 
                 _bitmapMapInvalid = false;
-                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
+                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width)
                 Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }
