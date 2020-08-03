@@ -34,32 +34,32 @@
 
   <ItemGroup>
     <Reference Include="CUE.NET, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\CUE.NET.dll</HintPath>
     </Reference>
     <Reference Include="DS4WindowsApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\DS4WindowsApi.dll</HintPath>
     </Reference>
     <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Interop.AuraServiceLib.dll</HintPath>
     </Reference>
     <Reference Include="LibreHardwareMonitorLib">
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="OmenFourZoneLighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OmenFourZoneLighting.dll</HintPath>
     </Reference>
     <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\RazerSdkWrapper.dll</HintPath>
     </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+	  <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Roccat-Talk.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="UniwillSDKDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
@@ -101,7 +101,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\NZXTSharp\NZXTSharp\NZXTSharp.csproj" />
-    <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
+	<ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
       <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj" />
@@ -117,25 +117,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="CUE.NET.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="DrevoRadi.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="DS4WindowsApi.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Interop.AuraServiceLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="LightFX_SDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="RazerSdkWrapper.dll" />
-    <Content Include="RGB.NET.Devices.Asus.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </Content>    
     <Content Include="SDKDLL.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -158,6 +145,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Logi\LGS\LogitechLed.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+	<Content Include="OmenLightingSDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -201,7 +191,7 @@
 
     <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
     <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
-    <Content Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
+    <Resource Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-LightFXWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
