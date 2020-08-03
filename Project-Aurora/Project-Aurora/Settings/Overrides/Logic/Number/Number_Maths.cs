@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using Aurora.Profiles;
@@ -216,5 +217,43 @@ namespace Aurora.Settings.Overrides.Logic {
         protected override double Execute(IGameState gameState) => Value;
 
         public override Evaluatable<double> Clone() => new NumberConstant { Value = Value };
+    }
+
+    [Evaluatable("Random Number", category: EvaluatableCategory.Maths)]
+    public class NumberRandom : Evaluatable<double>
+    {
+        private readonly Random _random = new Random();
+
+        private double _value = 0;
+
+        public Evaluatable<bool> Condition { get; set; } = new BooleanConstant(true);
+
+        public Evaluatable<double> Maximum { get; set; } = new NumberConstant(0);
+
+        public Evaluatable<double> Minimum { get; set; } = new NumberConstant(1);
+
+        public NumberRandom() { }
+
+        public override Visual GetControl() => new StackPanel { Orientation = Orientation.Vertical }
+            .WithChild(new TextBlock() { Text = "Randomize:" })
+            .WithChild(new Control_EvaluatablePresenter() { EvalType = typeof(bool) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(Condition)) { Source = this, Mode = BindingMode.TwoWay }))
+            .WithChild(new TextBlock() { Text = "Maximum:"})
+            .WithChild(new Control_EvaluatablePresenter() { EvalType = typeof(double)}
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(Minimum)) { Source = this , Mode = BindingMode.TwoWay }))
+            .WithChild(new TextBlock() { Text = "Minimum:" })
+            .WithChild(new Control_EvaluatablePresenter() { EvalType = typeof(double) }
+                .WithBinding(Control_EvaluatablePresenter.ExpressionProperty, new Binding(nameof(Maximum)) { Source = this, Mode = BindingMode.TwoWay }));
+
+        protected override double Execute(IGameState gameState) {
+            var min = Minimum.Evaluate(gameState);
+            var max = Maximum.Evaluate(gameState);
+            if (Condition.Evaluate(gameState))
+                _value = (_random.NextDouble() * (max - min) + min);
+
+            return _value;
+        }
+
+        public override Evaluatable<double> Clone() => new NumberRandom { Minimum = Minimum.Clone(), Maximum = Maximum.Clone(), Condition = Condition.Clone() };
     }
 }
