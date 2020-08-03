@@ -49,6 +49,10 @@
     <Reference Include="LibreHardwareMonitorLib">
       <HintPath>.\LibreHardwareMonitorLib.dll</HintPath>
     </Reference>
+    <Reference Include="OmenFourZoneLighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\OmenFourZoneLighting.dll</HintPath>
+    </Reference>
     <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\RazerSdkWrapper.dll</HintPath>
