@@ -10,7 +10,7 @@
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
 
     <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_VERSION)</FileVersion>
-    <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.0</FileVersion>
+    <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.1</FileVersion>
 
   </PropertyGroup>
 
