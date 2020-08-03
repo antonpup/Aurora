@@ -134,6 +134,7 @@ namespace Aurora.Utils
                         $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hw.Name} of type {hw.HardwareType}.");
                     return null;
                 }
+                result.ValuesTimeWindow = TimeSpan.Zero;
                 _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
                 return result;
             }
@@ -147,6 +148,7 @@ namespace Aurora.Utils
                         $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hw.Name} of type {hw.HardwareType}.");
                     return null;
                 }
+                result.ValuesTimeWindow = TimeSpan.Zero;
                 _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
                 return result;
             }
