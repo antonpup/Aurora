@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{A759300D-9550-47BA-8616-C24B6BC05A02} = {A759300D-9550-47BA-8616-C24B6BC05A02}
 		{40085232-ACED-4CBE-945B-90BA8153C151} = {40085232-ACED-4CBE-945B-90BA8153C151}
@@ -15,7 +15,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-LogiLEDWrapper", "Au
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-RazerLEDWrapper", "Aurora-RazerLEDWrapper\Aurora-RazerLEDWrapper.vcxproj", "{004D1E3E-F20E-4ECA-ABB1-467D1CE2C173}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aurora-Updater", "Aurora-Updater\Aurora-Updater.csproj", "{6F81D40A-6AA0-4C8B-A395-779EF3003CA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Aurora-Updater", "Aurora-Updater\Aurora-Updater.csproj", "{6F81D40A-6AA0-4C8B-A395-779EF3003CA4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{18D2D471-3F57-4ECE-9C62-836A801473D8} = {18D2D471-3F57-4ECE-9C62-836A801473D8}
 	EndProjectSection
@@ -24,9 +24,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-LeagueLogiLEDWrapper
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Aurora-LightFXWrapper", "Aurora-LightFXWrapper\Aurora-LightFXWrapper.vcxproj", "{A759300D-9550-47BA-8616-C24B6BC05A02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ColorBox", "ColorBox\ColorBox.csproj", "{40085232-ACED-4CBE-945B-90BA8153C151}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ColorBox", "ColorBox\ColorBox.csproj", "{40085232-ACED-4CBE-945B-90BA8153C151}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin-Example", "Plugin-Example\Plugin-Example.csproj", "{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin-Example", "Plugin-Example\Plugin-Example.csproj", "{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SBAuroraReactive", "..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj", "{053A704B-5C79-4CDE-B1FC-B952051ACAA0}"
 EndProject
@@ -62,14 +62,14 @@ Global
 		{A759300D-9550-47BA-8616-C24B6BC05A02}.Debug|x64.Build.0 = Release|x64
 		{A759300D-9550-47BA-8616-C24B6BC05A02}.Release|x64.ActiveCfg = Release|x64
 		{A759300D-9550-47BA-8616-C24B6BC05A02}.Release|x64.Build.0 = Release|x64
-		{40085232-ACED-4CBE-945B-90BA8153C151}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{40085232-ACED-4CBE-945B-90BA8153C151}.Debug|x64.Build.0 = Debug|Any CPU
-		{40085232-ACED-4CBE-945B-90BA8153C151}.Release|x64.ActiveCfg = Release|Any CPU
-		{40085232-ACED-4CBE-945B-90BA8153C151}.Release|x64.Build.0 = Release|Any CPU
-		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Debug|x64.Build.0 = Debug|Any CPU
-		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.ActiveCfg = Release|Any CPU
-		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.Build.0 = Release|Any CPU
+		{40085232-ACED-4CBE-945B-90BA8153C151}.Debug|x64.ActiveCfg = Debug|x64
+		{40085232-ACED-4CBE-945B-90BA8153C151}.Debug|x64.Build.0 = Debug|x64
+		{40085232-ACED-4CBE-945B-90BA8153C151}.Release|x64.ActiveCfg = Release|x64
+		{40085232-ACED-4CBE-945B-90BA8153C151}.Release|x64.Build.0 = Release|x64
+		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Debug|x64.ActiveCfg = Debug|x64
+		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Debug|x64.Build.0 = Debug|x64
+		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.ActiveCfg = Release|x64
+		{DAE33996-53E3-46A3-8F06-CBAF0AFE3708}.Release|x64.Build.0 = Release|x64
 		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|x64.ActiveCfg = Debug|x64
 		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Debug|x64.Build.0 = Debug|x64
 		{053A704B-5C79-4CDE-B1FC-B952051ACAA0}.Release|x64.ActiveCfg = Release|x64

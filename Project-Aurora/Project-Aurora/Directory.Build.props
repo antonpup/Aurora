@@ -1,0 +1,17 @@
+<Project>
+
+  <PropertyGroup>
+    <Title>Aurora</Title>
+    <Description>Unified Lighting Effects across different RGB devices</Description>
+    <Product>Aurora</Product>
+    <Copyright>Copyright ©  2017</Copyright>
+
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+
+    <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_VERSION)</FileVersion>
+    <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.1</FileVersion>
+
+  </PropertyGroup>
+
+</Project>
