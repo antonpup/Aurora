@@ -2,7 +2,7 @@
 using Aurora.Utils;
 using System;
 using System.IO;
-using Ionic.Zip;
+using System.IO.Compression;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -117,12 +117,12 @@ namespace Aurora.Profiles.Witcher3
             {
                 using (MemoryStream w3_mod = new MemoryStream(Properties.Resources.witcher3_mod))
                 {
-                    using (ZipFile zip = ZipFile.Read(w3_mod))
+                    using (ZipArchive zip = new ZipArchive(w3_mod))
                     {
-                        foreach (ZipEntry entry in zip)
+                        foreach (ZipArchiveEntry entry in zip.Entries)
                         {
-                            entry.Extract(root, ExtractExistingFileAction.OverwriteSilently);//the zip's directory structure assumes
-                                                                                             //it is extracted to the root folder of the game
+                            entry.ExtractToFile(root, true); //the zip's directory structure assumes
+                                                             //it is extracted to the root folder of the game
                         }
                         MessageBox.Show("Witcher 3 mod installed.");
                         return;

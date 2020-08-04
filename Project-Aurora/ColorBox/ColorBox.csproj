@@ -1,96 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{40085232-ACED-4CBE-945B-90BA8153C151}</ProjectGuid>
+    <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ColorBox</RootNamespace>
     <AssemblyName>ColorBox</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
+    <UseWPF>true</UseWPF>
+    <Title>ColorBox Library</Title>
+    <Description>This assembly implements a solid and gradient brush picker control for Windows Presentation Foundation. </Description>
+    <Company>NCore Softwares Pvt. Ltd.</Company>
+    <Product>ColorBox</Product>
+    <Copyright>Copyright © NCore Softwares Pvt. Ltd. 2013</Copyright>
+    <AssemblyVersion>1.1</AssemblyVersion>
+    <FileVersion>1.1</FileVersion>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>ColorBox.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Implementation\AlphaSelector.cs" />
-    <Compile Include="Implementation\BaseSelector.cs" />
-    <Compile Include="Implementation\BrushChangedEventArgs.cs" />
-    <Compile Include="Implementation\ColorBox.cs" />
-    <Compile Include="Implementation\ColorChangedEventArgs.cs" />
-    <Compile Include="Implementation\DoubleUpDown.cs" />
-    <Compile Include="Implementation\Enums.cs" />
-    <Compile Include="Implementation\GradientStopAdder.cs" />
-    <Compile Include="Implementation\GradientStopSlider.cs" />
-    <Compile Include="Implementation\HueSelector.cs" />
-    <Compile Include="Implementation\SaturationBrightnessSelector.cs" />
-    <Compile Include="Implementation\SpinEventArgs.cs" />
-    <Compile Include="Implementation\Spinner.cs" />
-    <Compile Include="Utils\TextBoxBehavior.cs" />
-    <Compile Include="Implementation\UpDownBase.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\ColorHelper.cs" />
-    <Compile Include="Utils\InputValidationErrorEventArgs.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Themes\Generic.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+
   <ItemGroup>
     <None Include="ColorBox.snk" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="LICENSE.txt" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
