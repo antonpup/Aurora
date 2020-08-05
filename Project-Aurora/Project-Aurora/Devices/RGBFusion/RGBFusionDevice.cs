@@ -548,7 +548,7 @@ namespace Aurora.Devices.RGBFusion
             {
                 try
                 {
-                    File.Copy("RGBFusionBridge\\" + fileName, _RGBFusionDirectory + fileName, true);
+                    File.Copy(AppDomain.CurrentDomain.BaseDirectory + "RGBFusionBridge\\" + fileName, _RGBFusionDirectory + fileName, true);
                     Global.logger.Info(String.Format("RGBFusion file {0} install  OK.", fileName));
                 }
                 catch (Exception ex)
