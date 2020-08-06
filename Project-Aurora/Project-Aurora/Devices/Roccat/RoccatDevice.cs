@@ -35,7 +35,7 @@ using System.ComponentModel;
 
 namespace Aurora.Devices.Roccat
 {
-    class RoccatDevice : Device
+    class RoccatDevice : IDevice
     {
         private String devicename = "Roccat";
         private bool isInitialized = false;

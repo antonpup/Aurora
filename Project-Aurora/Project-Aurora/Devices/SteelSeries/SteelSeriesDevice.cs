@@ -23,7 +23,7 @@ namespace Aurora.Devices.SteelSeries
         G5 = 0xED,
     };
 
-    class SteelSeriesDevice : Device
+    class SteelSeriesDevice : IDevice
     {
         private String devicename = "SteelSeries";
         private bool isInitialized = false;

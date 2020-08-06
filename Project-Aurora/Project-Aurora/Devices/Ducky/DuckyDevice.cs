@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Aurora.Devices.Ducky
 {
-    class DuckyDevice : Device
+    class DuckyDevice : IDevice
     {
         private static string deviceName = "Ducky";
         private bool isInitialized = false;

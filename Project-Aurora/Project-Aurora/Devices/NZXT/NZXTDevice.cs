@@ -44,7 +44,7 @@ namespace Aurora.Devices.NZXT
         }
     }
 
-    class NZXTDevice : Device
+    class NZXTDevice : IDevice
     {
         private String devicename = "NZXT (beta)";
         private bool isInitialized = false;

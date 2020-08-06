@@ -14,7 +14,7 @@ using LightFXAPI;
 
 namespace Aurora.Devices.LightFX
 {
-    class LightFxDevice : Device
+    class LightFxDevice : IDevice
     {
         private String devicename = "LightFX";
         private bool isInitialized = false;

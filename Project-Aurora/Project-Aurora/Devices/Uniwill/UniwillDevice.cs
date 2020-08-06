@@ -21,7 +21,7 @@ namespace Aurora.Devices.Uniwill
         CONTROLCENTER = 2
     }
 
-    public class UniwillDevice : Device
+    public class UniwillDevice : IDevice
     {
         // Generic Variables
         private string devicename = "Uniwill";

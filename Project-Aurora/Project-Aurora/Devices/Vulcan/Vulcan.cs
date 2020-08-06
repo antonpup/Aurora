@@ -11,7 +11,7 @@ using Vulcan.NET;
 
 namespace Aurora.Devices.Vulcan
 {
-    class VulcanDevice : Device
+    class VulcanDevice : IDevice
     {
         private string deviceName = "Vulcan";
         private long lastUpdateTime = 0;

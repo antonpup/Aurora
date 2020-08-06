@@ -6,7 +6,7 @@ using Microsoft.Win32;
 
 namespace Aurora.Devices.Asus
 {
-    public class AsusDevice : Device
+    public class AsusDevice : IDevice
     {
         public const string DeviceName = "Asus";
         private AsusHandler asusHandler = new AsusHandler();

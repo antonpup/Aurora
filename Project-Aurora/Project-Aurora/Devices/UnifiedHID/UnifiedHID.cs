@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace Aurora.Devices.UnifiedHID
 {
-    class UnifiedHIDDevice : Device
+    class UnifiedHIDDevice : IDevice
     {
         private string devicename = "UnifiedHID";
         private bool isInitialized = false;

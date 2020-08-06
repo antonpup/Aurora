@@ -12,7 +12,7 @@ using SBAuroraReactive;
 
 namespace Aurora.Devices.Creative
 {
-    class SoundBlasterXDevice : Device
+    class SoundBlasterXDevice : IDevice
     {
         private readonly object action_lock = new object();
 

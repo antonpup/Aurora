@@ -10,7 +10,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenDevices : Device
+    public class OmenDevices : IDevice
     {
         bool kbConnected = false;
         bool peripheralConnected = false;

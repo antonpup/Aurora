@@ -12,7 +12,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Drevo
 {
-    class DrevoDevice : Device
+    class DrevoDevice : IDevice
     {
         private String devicename = "Drevo";
         private bool isInitialized = false;

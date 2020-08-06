@@ -519,7 +519,7 @@ namespace Aurora.Devices.CoolerMaster
         };
     }
 
-    class CoolerMasterDevice : Device
+    class CoolerMasterDevice : IDevice
     {
         private String devicename = "Cooler Master";
         private List<CoolerMasterSDK.DEVICE_INDEX> InitializedDevices = new List<CoolerMasterSDK.DEVICE_INDEX>();

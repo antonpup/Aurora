@@ -9,7 +9,7 @@ using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Devices.ScriptedDevice
 {
-    public class ScriptedDevice : Device
+    public class ScriptedDevice : IDevice
     {
         private bool crashed = false;
         private readonly dynamic script = null;

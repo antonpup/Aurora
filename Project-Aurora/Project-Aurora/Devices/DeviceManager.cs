@@ -14,7 +14,7 @@ namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public Device Device { get; set; }
+        public IDevice Device { get; set; }
 
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
@@ -22,7 +22,7 @@ namespace Aurora.Devices
         private Tuple<DeviceColorComposition, bool> currentComp = null;
         private bool newFrame = false;
 
-        public DeviceContainer(Device device)
+        public DeviceContainer(IDevice device)
         {
             this.Device = device;
             Worker.DoWork += WorkerOnDoWork;
@@ -98,10 +98,10 @@ namespace Aurora.Devices
         public DeviceManager()
         {
             var deviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
-                              where typeof(Device).IsAssignableFrom(type)
+                              where typeof(IDevice).IsAssignableFrom(type)
                               && !type.IsAbstract
                               && type != typeof(ScriptedDevice.ScriptedDevice)
-                              let inst = (Device)Activator.CreateInstance(type)
+                              let inst = (IDevice)Activator.CreateInstance(type)
                               orderby inst.GetDeviceName()
                               select inst;
 
@@ -126,7 +126,7 @@ namespace Aurora.Devices
                                 {
                                     dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
 
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                    IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
                                     devices.Add(new DeviceContainer(scripted_device));
                                 }
@@ -140,7 +140,7 @@ namespace Aurora.Devices
                                 {
                                     dynamic script = Activator.CreateInstance(typ);
 
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                    IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
                                     devices.Add(new DeviceContainer(scripted_device));
                                 }
@@ -288,9 +288,9 @@ namespace Aurora.Devices
             return anyInitialized;
         }
 
-        public Device[] GetInitializedDevices()
+        public IDevice[] GetInitializedDevices()
         {
-            List<Device> ret = new List<Device>();
+            List<IDevice> ret = new List<IDevice>();
 
             foreach (DeviceContainer device in devices)
             {

@@ -13,7 +13,7 @@ using Wooting;
 
 namespace Aurora.Devices.Wooting
 {
-    class WootingDevice : Device
+    class WootingDevice : IDevice
     {
         private String devicename = "Wooting";
         private bool isInitialized = false;

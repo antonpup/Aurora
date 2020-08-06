@@ -11,7 +11,7 @@ using System.ComponentModel;
 
 namespace Aurora.Devices.Razer
 {
-    class RazerDevice : Device
+    class RazerDevice : IDevice
     {
 
 

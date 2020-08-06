@@ -148,7 +148,7 @@ namespace Aurora.Devices.Logitech
     };
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
-    class LogitechDevice : Device
+    class LogitechDevice : IDevice
     {
         private String devicename = "Logitech";
         private bool isInitialized = false;

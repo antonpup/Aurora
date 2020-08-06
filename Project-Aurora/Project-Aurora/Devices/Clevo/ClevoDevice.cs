@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace Aurora.Devices.Clevo
 {
-    class ClevoDevice : Device
+    class ClevoDevice : IDevice
     {
         // Generic Variables
         private string devicename = "Clevo Keyboard";

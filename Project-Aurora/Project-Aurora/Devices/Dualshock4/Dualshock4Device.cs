@@ -11,7 +11,7 @@ using DS4Windows;
 namespace Aurora.Devices.Dualshock
 {
 
-    class DualshockDevice : Device
+    class DualshockDevice : IDevice
     {
         public int Battery { get; private set; }
         public double Latency { get; private set; }
