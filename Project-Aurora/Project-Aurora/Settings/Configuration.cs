@@ -531,12 +531,16 @@ namespace Aurora.Settings
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
+        
 
         public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
         public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
 
         public Configuration()
         {
+            //server settings
+            ClientID = "";
+
             //First Time Installs
             redist_first_time = true;
             logitech_first_time = true;

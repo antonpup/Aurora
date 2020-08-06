@@ -431,6 +431,7 @@ namespace Aurora
                     System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 }
             }
+            ProfileSwitcher.Init();
         }
 
         private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)

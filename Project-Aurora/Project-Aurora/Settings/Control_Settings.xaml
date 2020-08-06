@@ -10,7 +10,7 @@
              xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
+             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" xmlns:Service="clr-namespace:Aurora.Service" x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" x:Name="ctrlSettings">
     <UserControl.Resources>
@@ -42,7 +42,7 @@
 
             <ObjectDataProvider x:Key="KbLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboardLocalization" />
+                    <x:Type TypeName="EnumPercentEffectType:PreferredKeyboardLocalization" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
@@ -52,7 +52,7 @@
 
             <ObjectDataProvider x:Key="KbBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboard" />
+                    <x:Type TypeName="EnumPercentEffectType:PreferredKeyboard" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
@@ -62,7 +62,7 @@
 
             <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredMouse" />
+                    <x:Type TypeName="EnumPercentEffectType:PreferredMouse" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
@@ -72,7 +72,7 @@
 
             <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:MouseOrientationType" />
+                    <x:Type TypeName="EnumPercentEffectType:MouseOrientationType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
@@ -82,7 +82,7 @@
 
             <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:KeycapType" />
+                    <x:Type TypeName="EnumPercentEffectType:KeycapType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
@@ -92,7 +92,7 @@
 
             <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:BitmapAccuracy" />
+                    <x:Type TypeName="EnumPercentEffectType:BitmapAccuracy" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
@@ -102,7 +102,7 @@
 
             <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AppExitMode" />
+                    <x:Type TypeName="EnumPercentEffectType:AppExitMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
@@ -112,7 +112,7 @@
 
             <ObjectDataProvider x:Key="AppDetectionMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:ApplicationDetectionMode" />
+                    <x:Type TypeName="EnumPercentEffectType:ApplicationDetectionMode" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <u:AppDetectionModeToStringVC x:Key="AppDetectionModeToStringVC"/>
@@ -343,6 +343,15 @@
                 <Grid>
                     <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Server">
+                <Grid Margin="0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                        <Service:ServiceSettingsUI x:Name="serviceSettingsUI" VerticalAlignment="Top"/>
+                    </ScrollViewer>
+
+                </Grid>
+
             </TabItem>
             <TabItem Header="Updates">
                 <Grid>

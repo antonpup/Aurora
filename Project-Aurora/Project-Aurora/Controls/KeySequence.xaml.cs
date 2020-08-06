@@ -195,6 +195,21 @@ namespace Aurora.Controls
             }
 
         }
+        private void btnAddAll_Click(object sender, RoutedEventArgs e)
+        {
+            
+            allowListRefresh = false;
+            this.keys_keysequence.Items.Clear();
+            var keys = (Aurora.Devices.DeviceKeys[])Enum.GetValues(typeof(Aurora.Devices.DeviceKeys));
+
+            foreach (var item in keys)
+            {
+                this.keys_keysequence.Items.Add(item);
+            }
+            List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
+            allowListRefresh = true;
+
+        }
 
         private void sequence_record_keys_Click(object sender, RoutedEventArgs e)
         {
@@ -362,6 +377,14 @@ namespace Aurora.Controls
                     sequence_removeFromLayerEditor();
             }
                 
+        }
+
+        private void btnRemoveAll_Click(object sender, RoutedEventArgs e)
+        {
+            allowListRefresh = false;
+            this.keys_keysequence.Items.Clear();
+            List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
+            allowListRefresh = true;
         }
     }
 }
