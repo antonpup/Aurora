@@ -29,15 +29,9 @@ namespace Aurora.Devices.YeeLight
 
         private VariableRegistry default_registry = null;
 
-        public string GetDeviceDetails()
-        {
-            return devicename + (isConnected ? ": Connected" : ": Not connected");
-        }
+        public string DeviceDetails => devicename + (isConnected ? ": Connected" : ": Not connected");
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public bool Initialize()
         {
@@ -64,10 +58,7 @@ namespace Aurora.Devices.YeeLight
             return isConnected;
         }
 
-        public bool IsInitialized()
-        {
-            return IsConnected();
-        }
+        public bool IsInitialized => IsConnected();
 
         public bool IsKeyboardConnected()
         {
@@ -206,10 +197,7 @@ namespace Aurora.Devices.YeeLight
             throw new NotImplementedException();
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (IsConnected() ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (IsConnected() ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

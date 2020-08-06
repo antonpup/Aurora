@@ -112,20 +112,20 @@ namespace Aurora.Devices.Uniwill
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": Initialized";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": Initialized";
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
@@ -161,7 +161,7 @@ namespace Aurora.Devices.Uniwill
 
         public void Shutdown()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 if (CheckGCPower())
                 {
@@ -176,7 +176,7 @@ namespace Aurora.Devices.Uniwill
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 if (CheckGCPower())
                 {
@@ -193,10 +193,7 @@ namespace Aurora.Devices.Uniwill
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -249,10 +246,7 @@ namespace Aurora.Devices.Uniwill
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

@@ -18,20 +18,11 @@ namespace Aurora.Devices.Vulcan
         private bool isInitialized => VulcanKeyboard.IsConnected;
         private readonly Stopwatch watch = new Stopwatch();
 
-        public string GetDeviceDetails()
-        {
-            return deviceName + ": " + (isInitialized ? "Connected" : "Not initialized");
-        }
+        public string DeviceDetails => deviceName + ": " + (isInitialized ? "Connected" : "Not initialized");
 
-        public string GetDeviceName()
-        {
-            return deviceName;
-        }
+        public string DeviceName => deviceName;
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {
@@ -54,10 +45,7 @@ namespace Aurora.Devices.Vulcan
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsKeyboardConnected()
         {

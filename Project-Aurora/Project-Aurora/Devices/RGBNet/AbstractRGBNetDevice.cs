@@ -17,7 +17,7 @@ namespace Aurora.Devices.RGBNet
         private readonly object _lock = new object();
 
         private readonly RGBSurface _surface;
-        protected abstract string DeviceName { get; }
+        protected abstract string deviceName { get; }
 
         private readonly IRGBDeviceProvider _deviceProvider;
         private readonly AuroraRGBNetBrush _brush;
@@ -39,19 +39,22 @@ namespace Aurora.Devices.RGBNet
 
         #region Methods
 
-        public bool IsInitialized() => _deviceProvider?.IsInitialized ?? false;
+        public bool IsInitialized => _deviceProvider?.IsInitialized ?? false;
 
-        public string GetDeviceName() => DeviceName;
+        public string DeviceName => deviceName;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (IsInitialized())
-                return DeviceName + ": " + string.Join(" ", _deviceProvider.Devices.Select(d => d.DeviceInfo.DeviceName));
+            get
+            {
+                if (IsInitialized)
+                    return DeviceName + ": " + string.Join(" ", _deviceProvider.Devices.Select(d => d.DeviceInfo.DeviceName));
 
-            return $"{DeviceName}: Not initialized";
+                return $"{DeviceName}: Not initialized";
+            }
         }
 
-        public string GetDeviceUpdatePerformance() => "-"; //DarthAffe 03.02.2019: There's currently no way to get that information from RGB.NET
+        public string DeviceUpdatePerformance => "-"; //DarthAffe 03.02.2019: There's currently no way to get that information from RGB.NET
 
         public bool IsKeyboardConnected() => _deviceProvider.Devices.Any(d => d.DeviceInfo.DeviceType == RGBDeviceType.Keyboard);
 
@@ -61,7 +64,7 @@ namespace Aurora.Devices.RGBNet
         {
             lock (_lock)
             {
-                if (IsInitialized()) return true; //DarthAffe 03.02.2019: I'm not sure if that's intended, but to me it seems aurora has a threading-issue in the initialization-part
+                if (IsInitialized) return true; //DarthAffe 03.02.2019: I'm not sure if that's intended, but to me it seems aurora has a threading-issue in the initialization-part
 
                 try
                 {
@@ -75,11 +78,11 @@ namespace Aurora.Devices.RGBNet
                     //RGB.NET.Core.Color c = new RGB.NET.Core.Color(27, 184, 235);
                     //ledGroup.Brush = new SolidColorBrush(c);
                     //_surface.Update();
-                    return IsInitialized();
+                    return IsInitialized;
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error(ex, $"RGB.NET device ({GetDeviceName()}), Exception! Message: " + ex.Message);
+                    Global.logger.Error(ex, $"RGB.NET device ({DeviceName}), Exception! Message: " + ex.Message);
                     return false;
                 }
             }

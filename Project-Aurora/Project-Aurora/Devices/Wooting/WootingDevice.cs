@@ -71,28 +71,28 @@ namespace Aurora.Devices.Wooting
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                string devString = devicename + ": ";
-                devString += "Connected";
-                return devString;
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    string devString = devicename + ": ";
+                    devString += "Connected";
+                    return devString;
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized() && keyboard_updated)
+            if (this.IsInitialized&& keyboard_updated)
             {
                 keyboard_updated = false;
             }
@@ -108,10 +108,7 @@ namespace Aurora.Devices.Wooting
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
+        public bool IsInitialized => this.isInitialized;
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -174,10 +171,7 @@ namespace Aurora.Devices.Wooting
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

@@ -8,7 +8,7 @@ namespace Aurora.Devices.Asus
 {
     public class AsusDevice : IDevice
     {
-        public const string DeviceName = "Asus";
+        public const string deviceName = "Asus";
         private AsusHandler asusHandler = new AsusHandler();
         private bool isActive = false;
 
@@ -25,10 +25,10 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        public string GetDeviceName() => DeviceName;
+        public string DeviceName => deviceName;
 
         /// <inheritdoc />
-        public string GetDeviceDetails() => $"{DeviceName}: {GetDeviceStatus()}";
+        public string DeviceDetails => $"{DeviceName}: {GetDeviceStatus()}";
 
         private string GetDeviceStatus()
         {
@@ -40,12 +40,9 @@ namespace Aurora.Devices.Asus
 
             return asusHandler?.GetDevicePerformance();
         }
-        
+
         /// <inheritdoc />
-        public string GetDeviceUpdatePerformance()
-        {
-            return "";
-        }
+        public string DeviceUpdatePerformance => "";
 
         /// <inheritdoc />
         public bool Initialize()
@@ -85,7 +82,7 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        public bool IsInitialized() => isActive;
+        public bool IsInitialized => isActive;
 
         /// <inheritdoc />
         public bool IsConnected() => isActive;

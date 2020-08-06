@@ -35,29 +35,26 @@ namespace Aurora.Devices.Drevo
         }
 
         /// Gets the device name.
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         /// Gets specific details about the device instance.
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": Connected";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": Connected";
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
         /// Gets the device update performance.
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         /// Attempts to initialize the device instance.
         public bool Initialize()
@@ -97,7 +94,7 @@ namespace Aurora.Devices.Drevo
             {
                 try
                 {
-                    if (IsInitialized())
+                    if (IsInitialized)
                     {
                         this.Reset();
                         isInitialized = false;
@@ -115,7 +112,7 @@ namespace Aurora.Devices.Drevo
         /// Resets the device instance.
         public void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (this.IsInitialized&& (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -129,10 +126,7 @@ namespace Aurora.Devices.Drevo
         }
 
         /// Gets the initialization status of this device instance.
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         /// Gets the connection status of this device instance. [NOT IMPLEMENTED]
         public bool IsConnected()
@@ -177,7 +171,7 @@ namespace Aurora.Devices.Drevo
                         bitmap[index + 2] = key.Value.B;
                     }
                 }
-                if (this.IsInitialized())
+                if (this.IsInitialized)
                 {
                     DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392);
                 }

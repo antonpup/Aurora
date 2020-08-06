@@ -111,26 +111,26 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": Connected";
-            }
-            else
-            {
-                return devicename + ": Not connected";
+                if (isInitialized)
+                {
+                    return devicename + ": Connected";
+                }
+                else
+                {
+                    return devicename + ": Not connected";
+                }
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized() && (peripheral_updated))
+            if (this.IsInitialized&& (peripheral_updated))
             {
                 peripheral_updated = false;
             }
@@ -147,10 +147,7 @@ namespace Aurora.Devices.UnifiedHID
             return this.isInitialized;
         }
 
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
+        public bool IsInitialized => this.isInitialized;
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -233,10 +230,7 @@ namespace Aurora.Devices.UnifiedHID
             //return false;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

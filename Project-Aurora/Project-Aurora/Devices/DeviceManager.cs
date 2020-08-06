@@ -102,7 +102,7 @@ namespace Aurora.Devices
                               && !type.IsAbstract
                               && type != typeof(ScriptedDevice.ScriptedDevice)
                               let inst = (IDevice)Activator.CreateInstance(type)
-                              orderby inst.GetDeviceName()
+                              orderby inst.DeviceName
                               select inst;
 
             foreach (var inst in deviceTypes)
@@ -208,7 +208,7 @@ namespace Aurora.Devices
             int devicesToRetryNo = 0;
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                if (device.Device.IsInitialized|| Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
                     continue;
 
                 if (device.Device.Initialize())
@@ -216,7 +216,7 @@ namespace Aurora.Devices
                 else
                     devicesToRetryNo++;
 
-                Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
+                Global.logger.Info("Device, " + device.Device.DeviceName + ", was" + (device.Device.IsInitialized? "" : " not") + " initialized");
             }
 
 
@@ -250,14 +250,14 @@ namespace Aurora.Devices
                 bool _anyInitialized = false;
                 foreach (DeviceContainer device in devices)
                 {
-                    if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
+                    if (device.Device.IsInitialized|| Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
                         continue;
 
                     devicesAttempted++;
                     if (device.Device.Initialize())
                         _anyInitialized = true;
 
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
+                    Global.logger.Info("Device, " + device.Device.DeviceName + ", was" + (device.Device.IsInitialized? "" : " not") + " initialized");
                 }
 
                 retryAttemptsLeft--;
@@ -294,7 +294,7 @@ namespace Aurora.Devices
 
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.IsInitialized)
                 {
                     ret.Add(device.Device);
                 }
@@ -307,10 +307,10 @@ namespace Aurora.Devices
         {
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.IsInitialized)
                 {
                     device.Device.Shutdown();
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was shutdown");
+                    Global.logger.Info("Device, " + device.Device.DeviceName + ", was shutdown");
                 }
             }
 
@@ -321,7 +321,7 @@ namespace Aurora.Devices
         {
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.IsInitialized)
                 {
                     device.Device.Reset();
                 }
@@ -332,7 +332,7 @@ namespace Aurora.Devices
         {
             foreach (DeviceContainer device in devices)
             {
-                if (device.Device.IsInitialized())
+                if (device.Device.IsInitialized)
                 {
                     if (Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
                     {
@@ -351,7 +351,7 @@ namespace Aurora.Devices
             string devices_info = "";
 
             foreach (DeviceContainer device in devices)
-                devices_info += device.Device.GetDeviceDetails() + "\r\n";
+                devices_info += device.Device.DeviceDetails + "\r\n";
 
             if (retryAttemptsLeft > 0)
                 devices_info += "Retries: " + retryAttemptsLeft + "\r\n";

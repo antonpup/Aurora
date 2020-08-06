@@ -66,7 +66,7 @@ namespace Aurora.Controls
         {
             if(sender is Button)
             {
-                if(Device.Device.IsInitialized())
+                if(Device.Device.IsInitialized)
                     Device.Device.Shutdown();
                 else
                     Device.Device.Initialize();
@@ -82,7 +82,7 @@ namespace Aurora.Controls
             else
             {
                 Global.Configuration.devices_disabled.Add(Device.Device.GetType());
-                if(Device.Device.IsInitialized())
+                if(Device.Device.IsInitialized)
                     Device.Device.Shutdown();
             }
 
@@ -96,13 +96,13 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.IsInitialized())
+            if (Device.Device.IsInitialized)
                 btnToggleOnOff.Content = "Stop";
             else
                 btnToggleOnOff.Content = "Start";
 
-            txtblk_DeviceStatus.Text = Device.Device.GetDeviceDetails().TrimEnd(' ');
-            txtblk_DevicePerformance.Text = Device.Device.GetDeviceUpdatePerformance();
+            txtblk_DeviceStatus.Text = Device.Device.DeviceDetails.TrimEnd(' ');
+            txtblk_DevicePerformance.Text = Device.Device.DeviceUpdatePerformance;
 
             if(Device is Devices.ScriptedDevice.ScriptedDevice)
                 btnToggleEnableDisable.IsEnabled = false;
@@ -127,7 +127,7 @@ namespace Aurora.Controls
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)
         {
             Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
-            options_window.Title = $"{Device.Device.GetDeviceName()} - Options";
+            options_window.Title = $"{Device.Device.DeviceName} - Options";
             options_window.SizeToContent = SizeToContent.WidthAndHeight;
             options_window.VarRegistryEditor.RegisteredVariables = Device.Device.GetRegisteredVariables();
             options_window.Closing += (_sender, _eventArgs) =>

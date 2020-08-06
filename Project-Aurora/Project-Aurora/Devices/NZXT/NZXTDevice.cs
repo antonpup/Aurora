@@ -59,20 +59,20 @@ namespace Aurora.Devices.NZXT
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": " + (DeviceLoader.HuePlus != null ? "HuePlus " : "") + (DeviceLoader.KrakenX != null ? "KrakenX " : "");
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": " + (DeviceLoader.HuePlus != null ? "HuePlus " : "") + (DeviceLoader.KrakenX != null ? "KrakenX " : "");
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
@@ -147,7 +147,7 @@ namespace Aurora.Devices.NZXT
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 Shutdown();
                 Initialize();
@@ -159,10 +159,7 @@ namespace Aurora.Devices.NZXT
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -247,10 +244,7 @@ namespace Aurora.Devices.NZXT
             return false;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

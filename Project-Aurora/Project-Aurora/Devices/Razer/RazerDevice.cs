@@ -38,20 +38,20 @@ namespace Aurora.Devices.Razer
 
         private System.Drawing.Color previous_peripheral_Color = System.Drawing.Color.Black;
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "") + (chromalink != null ? "ChromaLink Connected " : "");
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "") + (chromalink != null ? "ChromaLink Connected " : "");
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
@@ -59,7 +59,7 @@ namespace Aurora.Devices.Razer
         {
             lock (action_lock)
             {
-                if (!IsInitialized())
+                if (!IsInitialized)
                 {
                     try
                     {
@@ -127,7 +127,7 @@ namespace Aurora.Devices.Razer
             {
                 try
                 {
-                    if (IsInitialized())
+                    if (IsInitialized)
                     {
                         //Chroma.Instance.Uninitialize();
                         isInitialized = false;
@@ -143,7 +143,7 @@ namespace Aurora.Devices.Razer
 
         public void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (this.IsInitialized&& (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -155,10 +155,7 @@ namespace Aurora.Devices.Razer
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized && Chroma.Instance.Initialized;
-        }
+        public bool IsInitialized => isInitialized && Chroma.Instance.Initialized;
 
         public bool IsConnected()
         {
@@ -636,10 +633,7 @@ namespace Aurora.Devices.Razer
             return (mouse != null || headset != null || mousepad != null);
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

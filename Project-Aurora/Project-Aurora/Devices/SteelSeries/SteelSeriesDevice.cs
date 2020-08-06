@@ -102,26 +102,26 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": Connected";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": Connected";
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (this.IsInitialized&& (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -138,10 +138,7 @@ namespace Aurora.Devices.SteelSeries
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
+        public bool IsInitialized => this.isInitialized;
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -253,10 +250,7 @@ namespace Aurora.Devices.SteelSeries
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

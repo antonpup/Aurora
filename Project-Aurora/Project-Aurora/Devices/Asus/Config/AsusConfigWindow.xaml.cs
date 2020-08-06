@@ -40,7 +40,7 @@ namespace Aurora.Devices.Asus.Config
 
             asusDevice = Global.dev_manager.Devices.FirstOrDefault(device => device.Device is AsusDevice)?.Device as AsusDevice;
 
-            if (asusDevice != null && asusDevice.IsInitialized())
+            if (asusDevice != null && asusDevice.IsInitialized)
             {
                 wasEnabled = true;
                 asusDevice.Shutdown();

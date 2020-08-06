@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -22,28 +22,28 @@ namespace Aurora.Devices
     public interface IDevice
     {
         /// <summary>
-        /// Gets registered variables by this device.
-        /// </summary>
-        /// <returns>Registered Variables</returns>
-        Settings.VariableRegistry GetRegisteredVariables();
-
-        /// <summary>
         /// Gets the device name.
         /// </summary>
         /// <returns>Device name</returns>
-        string GetDeviceName();
+        string DeviceName { get; }
 
         /// <summary>
         /// Gets specific details about the device instance.
         /// </summary>
         /// <returns>Details about the device instance</returns>
-        string GetDeviceDetails();
+        string DeviceDetails { get; }
 
         /// <summary>
         /// Gets the device update performance.
         /// </summary>
         /// <returns>Details about device's update performance</returns>
-        string GetDeviceUpdatePerformance();
+        string DeviceUpdatePerformance { get; }
+
+        /// <summary>
+        /// Gets the initialization status of this device instance.
+        /// </summary>
+        /// <returns>A boolean value representing the initialization status of this device</returns>
+        bool IsInitialized { get; }
 
         /// <summary>
         /// Attempts to initialize the device instance.
@@ -62,36 +62,6 @@ namespace Aurora.Devices
         void Reset();
 
         /// <summary>
-        /// Attempts to reconnect the device. [NOT IMPLEMENTED]
-        /// </summary>
-        /// <returns>A boolean value representing the success of this call</returns>
-        bool Reconnect();
-
-        /// <summary>
-        /// Gets the initialization status of this device instance.
-        /// </summary>
-        /// <returns>A boolean value representing the initialization status of this device</returns>
-        bool IsInitialized();
-
-        /// <summary>
-        /// Gets the connection status of this device instance. [NOT IMPLEMENTED]
-        /// </summary>
-        /// <returns>A boolean value representing the connection status of this device</returns>
-        bool IsConnected();
-
-        /// <summary>
-        /// Gets the keyboard connection status for this device instance.
-        /// </summary>
-        /// <returns>A boolean value representing the keyboard connection status of this device</returns>
-        bool IsKeyboardConnected();
-
-        /// <summary>
-        /// Gets the peripheral connection status for this device instance.
-        /// </summary>
-        /// <returns>A boolean value representing the peripheral connection status of this device</returns>
-        bool IsPeripheralConnected();
-
-        /// <summary>
         /// Updates the device with a specified color arrangement.
         /// </summary>
         /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
@@ -106,5 +76,11 @@ namespace Aurora.Devices
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
         bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
+
+        /// <summary>
+        /// Gets registered variables by this device.
+        /// </summary>
+        /// <returns>Registered Variables</returns>
+        Settings.VariableRegistry GetRegisteredVariables();
     }
 }

@@ -101,50 +101,50 @@ namespace Aurora.Devices.Dualshock
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                string DS4ConnectionType;
-                switch (device.getConnectionType())
+                if (isInitialized)
                 {
-                    case ConnectionType.BT:
-                        DS4ConnectionType = " over Bluetooth";
-                        break;
-                    case ConnectionType.USB:
-                        DS4ConnectionType = " over USB";
-                        break;
-                    case ConnectionType.SONYWA:
-                        DS4ConnectionType = " over DS4 Wireless adapter";
-                        break;
-                    default:
-                        DS4ConnectionType = "";
-                        break;
+                    string DS4ConnectionType;
+                    switch (device.getConnectionType())
+                    {
+                        case ConnectionType.BT:
+                            DS4ConnectionType = " over Bluetooth";
+                            break;
+                        case ConnectionType.USB:
+                            DS4ConnectionType = " over USB";
+                            break;
+                        case ConnectionType.SONYWA:
+                            DS4ConnectionType = " over DS4 Wireless adapter";
+                            break;
+                        default:
+                            DS4ConnectionType = "";
+                            break;
+                    }
+
+                    string charging;
+                    if (device.isCharging())
+                        charging = " ⚡";
+                    else
+                        charging = " ";
+
+                    return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
+
                 }
-
-                string charging;
-                if (device.isCharging())
-                    charging = " ⚡";
                 else
-                    charging = " ";
-
-                return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
-
-            }
-            else
-            {
-                return devicename + ": Not connected";
+                {
+                    return devicename + ": Not connected";
+                }
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 Shutdown();
                 Initialize();
@@ -161,44 +161,47 @@ namespace Aurora.Devices.Dualshock
             return this.isInitialized;
         }
 
-        public bool IsInitialized()
+        public bool IsInitialized
         {
-            if (effectwatch.IsRunning && !isInitialized)
+            get
             {
-                effectwatch.Reset();
-                //Global.logger.Info("Stop Ewatch");
-            }
+                if (effectwatch.IsRunning && !isInitialized)
+                {
+                    effectwatch.Reset();
+                    //Global.logger.Info("Stop Ewatch");
+                }
 
-            bool isdisabled = Global.Configuration.devices_disabled.Contains(typeof(DualshockDevice));
-            int auto_connect_cooldown = 3000;
-            bool auto_connect_enabled = Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_auto_connect");
+                bool isdisabled = Global.Configuration.devices_disabled.Contains(typeof(DualshockDevice));
+                int auto_connect_cooldown = 3000;
+                bool auto_connect_enabled = Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_auto_connect");
 
-            //Global.logger.Info("cooldown is running: " + cooldown.IsRunning);
-            //Global.logger.Info("isDisabled: " + isdisabled);
+                //Global.logger.Info("cooldown is running: " + cooldown.IsRunning);
+                //Global.logger.Info("isDisabled: " + isdisabled);
 
-            if ((isdisabled || isInitialized) && cooldown.IsRunning)
-            {
-                cooldown.Stop();
-                //Global.logger.Info("Cooldown Stop");
-            }
+                if ((isdisabled || isInitialized) && cooldown.IsRunning)
+                {
+                    cooldown.Stop();
+                    //Global.logger.Info("Cooldown Stop");
+                }
 
-            if (!isdisabled && auto_connect_enabled && !isInitialized && !cooldown.IsRunning)
-            {
-                cooldown.Start();
-                //Global.logger.Info("Cooldown Start");
-            }
+                if (!isdisabled && auto_connect_enabled && !isInitialized && !cooldown.IsRunning)
+                {
+                    cooldown.Start();
+                    //Global.logger.Info("Cooldown Start");
+                }
 
-            if (!isInitialized && auto_connect_enabled && (cooldown.ElapsedMilliseconds > auto_connect_cooldown))
-            {
-                //Global.logger.Info("Initialize");
-                Initialize();
-                cooldown.Restart();
+                if (!isInitialized && auto_connect_enabled && (cooldown.ElapsedMilliseconds > auto_connect_cooldown))
+                {
+                    //Global.logger.Info("Initialize");
+                    Initialize();
+                    cooldown.Restart();
+                }
+                if (isInitialized && device.isDisconnectingStatus())
+                {
+                    Shutdown();
+                }
+                return this.isInitialized;
             }
-            if (isInitialized && device.isDisconnectingStatus())
-            {
-                Shutdown();
-            }
-            return this.isInitialized;
         }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -249,10 +252,7 @@ namespace Aurora.Devices.Dualshock
             return false;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

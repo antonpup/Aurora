@@ -7,7 +7,7 @@ namespace Aurora.Devices.Corsair
     {
         #region Properties & Fields
 
-        protected override string DeviceName => "Corsair";
+        protected override string deviceName => "Corsair";
 
         #endregion
 

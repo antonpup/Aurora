@@ -41,21 +41,21 @@ namespace Aurora.Devices.ScriptedDevice
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (crashed)
-                return devicename + ": Error!";
+            get
+            {
+                if (crashed)
+                    return devicename + ": Error!";
 
-            if (isInitialized)
-                return devicename + ": Connected";
-            else
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                    return devicename + ": Connected";
+                else
+                    return devicename + ": Not initialized";
+            }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public bool Initialize()
         {
@@ -83,10 +83,7 @@ namespace Aurora.Devices.ScriptedDevice
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized && !crashed;
-        }
+        public bool IsInitialized => isInitialized && !crashed;
 
         public bool IsKeyboardConnected()
         {
@@ -176,10 +173,7 @@ namespace Aurora.Devices.ScriptedDevice
             return update_result;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

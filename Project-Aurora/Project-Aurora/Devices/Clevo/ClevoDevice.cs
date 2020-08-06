@@ -42,20 +42,20 @@ namespace Aurora.Devices.Clevo
         // Session Switch Handler
         private SessionSwitchEventHandler sseh;
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": Initialized";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": Initialized";
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
@@ -99,7 +99,7 @@ namespace Aurora.Devices.Clevo
         // Handle Logon Event
         void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            if (this.IsInitialized() && e.Reason.Equals(SessionSwitchReason.SessionUnlock))
+            if (this.IsInitialized&& e.Reason.Equals(SessionSwitchReason.SessionUnlock))
             { // Only Update when Logged In
                 this.SendColorsToKeyboard(true);
             }
@@ -107,7 +107,7 @@ namespace Aurora.Devices.Clevo
 
         public void Shutdown()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 // Release Clevo Connection
                 clevo.ResetKBLEDColors();
@@ -124,7 +124,7 @@ namespace Aurora.Devices.Clevo
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
                 clevo.ResetKBLEDColors();
         }
 
@@ -133,10 +133,7 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -305,10 +302,7 @@ namespace Aurora.Devices.Clevo
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

@@ -630,33 +630,33 @@ namespace Aurora.Devices.CoolerMaster
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                string devString = devicename + ": ";
-                foreach (var device in InitializedDevices)
+                if (isInitialized)
                 {
-                    devString += device.GetDescription() + " ";
+                    string devString = devicename + ": ";
+                    foreach (var device in InitializedDevices)
+                    {
+                        devString += device.GetDescription() + " ";
+                    }
+
+                    devString += "Connected";
+                    return devString;
                 }
-
-                devString += "Connected";
-                return devString;
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (this.IsInitialized&& (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -713,10 +713,7 @@ namespace Aurora.Devices.CoolerMaster
             peripheral_updated = false;
         }
 
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
+        public bool IsInitialized => this.isInitialized;
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -787,10 +784,7 @@ namespace Aurora.Devices.CoolerMaster
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {

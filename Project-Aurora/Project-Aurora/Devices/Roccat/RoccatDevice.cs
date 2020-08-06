@@ -173,20 +173,20 @@ namespace Aurora.Devices.Roccat
 
         private byte layout = 0x01; //TALKFX_RYOS_LAYOUT_US
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": " + (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return devicename + ": " + (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
+                }
+                else
+                {
+                    return devicename + ": Not initialized";
+                }
             }
         }
 
@@ -253,7 +253,7 @@ namespace Aurora.Devices.Roccat
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 Restoregeneric();
             }
@@ -287,10 +287,7 @@ namespace Aurora.Devices.Roccat
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -411,7 +408,7 @@ namespace Aurora.Devices.Roccat
 
         public bool IsPeripheralConnected()
         {
-            return this.IsInitialized();
+            return this.IsInitialized;
         }
 
         private Roccat_Talk.TalkFX.Color ConvertToRoccatColor(System.Drawing.Color color)
@@ -419,10 +416,7 @@ namespace Aurora.Devices.Roccat
             return new Roccat_Talk.TalkFX.Color(color.R, color.G, color.B);
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry GetRegisteredVariables()
         {
