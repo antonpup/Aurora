@@ -26,16 +26,9 @@ namespace Aurora.Devices.AtmoOrbDevice
 
         private VariableRegistry default_registry = null;
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isConnected)
-                    return devicename + ": Connected";
-                else
-                    return devicename + ": Not connected";
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceName => devicename;
 

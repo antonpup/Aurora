@@ -43,18 +43,13 @@ namespace Aurora.Devices.RGBNet
 
         public string DeviceName => deviceName;
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (IsInitialized)
-                    return DeviceName + ": " + string.Join(" ", _deviceProvider.Devices.Select(d => d.DeviceInfo.DeviceName));
+        public string DeviceDetails => IsInitialized
+            ? ("Initialized: " + string.Join(" ", _deviceProvider.Devices.Select(d => d.DeviceInfo.DeviceName)))
+            : "Not Initialized";
 
-                return $"{DeviceName}: Not initialized";
-            }
-        }
-
-        public string DeviceUpdatePerformance => "-"; //DarthAffe 03.02.2019: There's currently no way to get that information from RGB.NET
+        public string DeviceUpdatePerformance => IsInitialized //DarthAffe 03.02.2019: There's currently no way to get that information from RGB.NET
+            ? "-"
+            : "";
 
         public bool IsKeyboardConnected() => _deviceProvider.Devices.Any(d => d.DeviceInfo.DeviceType == RGBDeviceType.Keyboard);
 

@@ -130,12 +130,11 @@ namespace Aurora.Devices.Dualshock
                     else
                         charging = " ";
 
-                    return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
-
+                    return "Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
                 }
                 else
                 {
-                    return devicename + ": Not connected";
+                    return devicename + ": Not Initialized";
                 }
             }
         }

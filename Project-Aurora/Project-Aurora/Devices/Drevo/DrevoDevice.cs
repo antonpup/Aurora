@@ -35,20 +35,9 @@ namespace Aurora.Devices.Drevo
         public string DeviceName => devicename;
 
         /// Gets specific details about the device instance.
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isInitialized)
-                {
-                    return devicename + ": Connected";
-                }
-                else
-                {
-                    return devicename + ": Not initialized";
-                }
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         /// Gets the device update performance.
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");

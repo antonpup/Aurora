@@ -181,11 +181,11 @@ namespace Aurora.Devices.Roccat
             {
                 if (isInitialized)
                 {
-                    return devicename + ": " + (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
+                    return (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
                 }
                 else
                 {
-                    return devicename + ": Not initialized";
+                    return "Not Initialized";
                 }
             }
         }

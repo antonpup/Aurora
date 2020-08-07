@@ -46,12 +46,12 @@ namespace Aurora.Devices.ScriptedDevice
             get
             {
                 if (crashed)
-                    return devicename + ": Error!";
+                    return "Error!";
 
                 if (isInitialized)
-                    return devicename + ": Connected";
+                    return "Connected";
                 else
-                    return devicename + ": Not initialized";
+                    return "Not initialized";
             }
         }
 

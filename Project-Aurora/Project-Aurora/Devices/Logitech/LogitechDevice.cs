@@ -253,20 +253,9 @@ namespace Aurora.Devices.Logitech
             }
         }
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isInitialized)
-                {
-                    return devicename + ": Connected";
-                }
-                else
-                {
-                    return devicename + ": Not initialized";
-                }
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceName => devicename;
 

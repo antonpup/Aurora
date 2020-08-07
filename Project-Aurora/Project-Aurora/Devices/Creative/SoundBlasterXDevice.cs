@@ -227,7 +227,7 @@ namespace Aurora.Devices.Creative
             {
                 if (sbKeyboard == null && sbMouse == null)
                 {
-                    return "SoundBlasterX: Not initialized";
+                    return "Not Initialized";
                 }
 
                 string outDetails = "";
@@ -240,7 +240,7 @@ namespace Aurora.Devices.Creative
 
                     outDetails += sbMouseInfo.friendlyName;
                 }
-                return outDetails + ":Connected";
+                return outDetails + ": Initialized";
             }
         }
 

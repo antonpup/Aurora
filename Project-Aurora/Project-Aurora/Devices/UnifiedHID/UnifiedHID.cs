@@ -111,20 +111,9 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isInitialized)
-                {
-                    return devicename + ": Connected";
-                }
-                else
-                {
-                    return devicename + ": Not connected";
-                }
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceName => devicename;
 

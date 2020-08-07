@@ -642,12 +642,12 @@ namespace Aurora.Devices.CoolerMaster
                         devString += device.GetDescription() + " ";
                     }
 
-                    devString += "Connected";
+                    devString += "Initialized";
                     return devString;
                 }
                 else
                 {
-                    return devicename + ": Not initialized";
+                    return "Not Initialized";
                 }
             }
         }

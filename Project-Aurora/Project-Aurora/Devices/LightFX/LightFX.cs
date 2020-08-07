@@ -31,20 +31,9 @@ namespace Aurora.Devices.LightFX
 
         public string DeviceName => devicename;
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isInitialized)
-                {
-                    return devicename + ": Initialized";
-                }
-                else
-                {
-                    return devicename + ": Not initialized";
-                }
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public int deviceStatus()
         {

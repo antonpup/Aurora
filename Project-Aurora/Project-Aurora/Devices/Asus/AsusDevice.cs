@@ -31,7 +31,7 @@ namespace Aurora.Devices.Asus
         public string DeviceName => deviceName;
 
         /// <inheritdoc />
-        public string DeviceDetails => $"{DeviceName}: {GetDeviceStatus()}";
+        public string DeviceDetails => GetDeviceStatus();
 
         private string GetDeviceStatus()
         {

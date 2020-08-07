@@ -40,20 +40,9 @@ namespace Aurora.Devices.Razer
 
         public string DeviceName => devicename;
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isInitialized)
-                {
-                    return devicename + ": " + (keyboard != null ? "Keyboard Connected " : "") + (mouse != null ? "Mouse Connected " : "") + (headset != null ? "Headset Connected " : "") + (mousepad != null ? "Mousepad Connected " : "") + (chromalink != null ? "ChromaLink Connected " : "");
-                }
-                else
-                {
-                    return devicename + ": Not initialized";
-                }
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public bool Initialize()
         {

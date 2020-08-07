@@ -29,7 +29,9 @@ namespace Aurora.Devices.YeeLight
 
         private VariableRegistry default_registry = null;
 
-        public string DeviceDetails => devicename + (isConnected ? ": Connected" : ": Not connected");
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceName => devicename;
 

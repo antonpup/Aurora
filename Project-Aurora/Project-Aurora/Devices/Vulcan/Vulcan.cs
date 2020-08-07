@@ -18,7 +18,9 @@ namespace Aurora.Devices.Vulcan
         private bool isInitialized => VulcanKeyboard.IsConnected;
         private readonly Stopwatch watch = new Stopwatch();
 
-        public string DeviceDetails => deviceName + ": " + (isInitialized ? "Connected" : "Not initialized");
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceName => deviceName;
 

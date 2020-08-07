@@ -71,22 +71,9 @@ namespace Aurora.Devices.Wooting
             }
         }
 
-        public string DeviceDetails
-        {
-            get
-            {
-                if (isInitialized)
-                {
-                    string devString = devicename + ": ";
-                    devString += "Connected";
-                    return devString;
-                }
-                else
-                {
-                    return devicename + ": Not initialized";
-                }
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceName => devicename;
 

@@ -31,7 +31,9 @@ namespace Aurora.Devices.Ducky
 
         public string DeviceName => deviceName;
 
-        public string DeviceDetails => deviceName + ": " + (isInitialized ? "Connected" : "Not initialized");
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 

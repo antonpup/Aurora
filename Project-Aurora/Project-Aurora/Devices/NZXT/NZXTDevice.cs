@@ -67,11 +67,11 @@ namespace Aurora.Devices.NZXT
             {
                 if (isInitialized)
                 {
-                    return devicename + ": " + (DeviceLoader.HuePlus != null ? "HuePlus " : "") + (DeviceLoader.KrakenX != null ? "KrakenX " : "");
+                    return "Initialized: " + (DeviceLoader.HuePlus != null ? "HuePlus " : "") + (DeviceLoader.KrakenX != null ? "KrakenX " : "");
                 }
                 else
                 {
-                    return devicename + ": Not initialized";
+                    return "Not Initialized";
                 }
             }
         }

@@ -31,7 +31,7 @@ namespace Aurora.Devices.Omen
             {
                 if (isInitialized)
                 {
-                    string result = devicename + ":";
+                    string result = "";
                     foreach (var dev in devices)
                     {
                         if (dev.GetDeviceName() != string.Empty)
@@ -44,7 +44,7 @@ namespace Aurora.Devices.Omen
                 }
                 else
                 {
-                    return devicename + ": Not initialized";
+                    return "Not Initialized";
                 }
             }
         }
