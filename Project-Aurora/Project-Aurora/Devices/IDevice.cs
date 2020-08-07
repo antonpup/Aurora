@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using Aurora.Settings;
 
 namespace Aurora.Devices
 {
@@ -22,9 +23,8 @@ namespace Aurora.Devices
     public interface IDevice
     {
         /// <summary>
-        /// Gets the device name.
+        /// Gets the name of the device.
         /// </summary>
-        /// <returns>Device name</returns>
         string DeviceName { get; }
 
         /// <summary>
@@ -44,6 +44,12 @@ namespace Aurora.Devices
         /// </summary>
         /// <returns>A boolean value representing the initialization status of this device</returns>
         bool IsInitialized { get; }
+
+        /// <summary>
+        /// Gets registered variables by this device.
+        /// </summary>
+        /// <returns>Registered Variables</returns>
+        VariableRegistry RegisteredVariables { get; }
 
         /// <summary>
         /// Attempts to initialize the device instance.
@@ -76,11 +82,5 @@ namespace Aurora.Devices
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
         bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
-
-        /// <summary>
-        /// Gets registered variables by this device.
-        /// </summary>
-        /// <returns>Registered Variables</returns>
-        Settings.VariableRegistry GetRegisteredVariables();
     }
 }

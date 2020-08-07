@@ -252,10 +252,7 @@ namespace Aurora.Devices.SteelSeries
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         private void SendColorToPeripheral(Color color, GameSensePayloadPeripheryColorEventJSON payload, bool forced = false)
         {

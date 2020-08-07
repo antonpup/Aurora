@@ -24,10 +24,7 @@ namespace Aurora.Devices.Vulcan
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         public bool Initialize()
         {

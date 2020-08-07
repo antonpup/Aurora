@@ -121,7 +121,7 @@ namespace Aurora.Controls
                 }
             }
 
-            if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
+            if(Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Count() == 0)
                 btnOptions.IsEnabled = false;
         }
 
@@ -130,7 +130,7 @@ namespace Aurora.Controls
             Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
             options_window.Title = $"{Device.Device.DeviceName} - Options";
             options_window.SizeToContent = SizeToContent.WidthAndHeight;
-            options_window.VarRegistryEditor.RegisteredVariables = Device.Device.GetRegisteredVariables();
+            options_window.VarRegistryEditor.RegisteredVariables = Device.Device.RegisteredVariables;
             options_window.Closing += (_sender, _eventArgs) =>
             {
                 ConfigManager.Save(Global.Configuration);

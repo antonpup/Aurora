@@ -246,10 +246,7 @@ namespace Aurora.Devices.NZXT
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         private int GetLedIndex(Dictionary<DeviceKeys, int> layout, DeviceKeys key)
         {

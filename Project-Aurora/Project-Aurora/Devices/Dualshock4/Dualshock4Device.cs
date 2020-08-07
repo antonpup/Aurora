@@ -254,19 +254,22 @@ namespace Aurora.Devices.Dualshock
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
-                default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
-                default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
-                default_registry.Register($"{devicename}_LowBattery_threshold", 20, "Low battery threshold", 100, 0, "In percent. To deactivate set to 0");
-                default_registry.Register($"{devicename}_LowBattery_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 0, 0)), "Low battery color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
-                default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral);
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
+                    default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
+                    default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
+                    default_registry.Register($"{devicename}_LowBattery_threshold", 20, "Low battery threshold", 100, 0, "In percent. To deactivate set to 0");
+                    default_registry.Register($"{devicename}_LowBattery_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 0, 0)), "Low battery color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+                    default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral);
+                }
+                return default_registry;
             }
-            return default_registry;
         }
 
         public void RestoreColor()

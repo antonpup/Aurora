@@ -175,12 +175,15 @@ namespace Aurora.Devices.ScriptedDevice
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (script.GetType().GetMethod("GetRegisteredVariables") != null)
-                return script.GetRegisteredVariables();
-            else
-                return new VariableRegistry();
+            get
+            {
+                if (script.GetType().GetMethod("GetRegisteredVariables") != null)
+                    return script.GetRegisteredVariables();
+                else
+                    return new VariableRegistry();
+            }
         }
     }
 }

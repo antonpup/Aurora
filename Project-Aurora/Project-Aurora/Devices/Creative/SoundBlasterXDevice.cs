@@ -511,10 +511,7 @@ namespace Aurora.Devices.Creative
 
         public string DeviceUpdatePerformance => (IsInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         static KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_All = {
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Esc, DeviceKeys.ESC),

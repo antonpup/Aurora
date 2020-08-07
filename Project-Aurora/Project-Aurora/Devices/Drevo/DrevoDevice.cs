@@ -29,10 +29,7 @@ namespace Aurora.Devices.Drevo
         /// Gets registered variables by this device.
         /// </summary>
         /// <returns>Registered Variables</returns>
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         /// Gets the device name.
         public string DeviceName => devicename;

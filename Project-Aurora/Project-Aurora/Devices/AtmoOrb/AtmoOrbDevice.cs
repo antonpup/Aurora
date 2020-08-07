@@ -263,17 +263,20 @@ namespace Aurora.Devices.AtmoOrbDevice
 
         public string DeviceUpdatePerformance => (IsConnected() ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_use_smoothing", true, "Use Smoothing");
-                default_registry.Register($"{devicename}_send_delay", 50, "Send delay (ms)");
-                default_registry.Register($"{devicename}_orb_ids", "1", "Orb IDs", null, null, "For multiple IDs separate with comma");
-            }
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_use_smoothing", true, "Use Smoothing");
+                    default_registry.Register($"{devicename}_send_delay", 50, "Send delay (ms)");
+                    default_registry.Register($"{devicename}_orb_ids", "1", "Orb IDs", null, null, "For multiple IDs separate with comma");
+                }
 
-            return default_registry;
+                return default_registry;
+            }
         }
     }
 }

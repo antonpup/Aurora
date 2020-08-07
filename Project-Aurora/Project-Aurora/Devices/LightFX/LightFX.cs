@@ -575,15 +575,19 @@ namespace Aurora.Devices.LightFX
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null) {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
-                default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
-                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
+            get
+            {
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
+                    default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
+                    default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
+                }
+                return default_registry;
             }
-            return default_registry;
         }
     }
 }

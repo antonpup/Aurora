@@ -14,14 +14,17 @@ namespace Aurora.Devices.Asus
 
         private VariableRegistry defaultRegistry = null;
         /// <inheritdoc />
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (defaultRegistry != null) return defaultRegistry;
-            
-            defaultRegistry = new VariableRegistry();
-            defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
-            defaultRegistry.Register($"{DeviceName}_force_initialize", false, "Force initialization");
-            return defaultRegistry;
+            get
+            {
+                if (defaultRegistry != null) return defaultRegistry;
+
+                defaultRegistry = new VariableRegistry();
+                defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
+                defaultRegistry.Register($"{DeviceName}_force_initialize", false, "Force initialization");
+                return defaultRegistry;
+            }
         }
 
         /// <inheritdoc />

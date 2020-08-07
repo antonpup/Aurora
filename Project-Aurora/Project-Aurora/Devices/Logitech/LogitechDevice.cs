@@ -1407,17 +1407,20 @@ namespace Aurora.Devices.Logitech
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_set_default", false, "Set Default Color");
-                default_registry.Register($"{devicename}_default_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), "Default Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
-                default_registry.Register($"{devicename}_override_dll", false, "Override DLL", null, null, "Requires restart to take effect");
-                default_registry.Register($"{devicename}_override_dll_option", LogitechGSDK.LGDLL.LGS, "Override DLL Selection", null, null, "Requires restart to take effect");
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_set_default", false, "Set Default Color");
+                    default_registry.Register($"{devicename}_default_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), "Default Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+                    default_registry.Register($"{devicename}_override_dll", false, "Override DLL", null, null, "Requires restart to take effect");
+                    default_registry.Register($"{devicename}_override_dll_option", LogitechGSDK.LGDLL.LGS, "Override DLL Selection", null, null, "Requires restart to take effect");
+                }
+                return default_registry;
             }
-            return default_registry;
         }
     }
 }

@@ -27,10 +27,7 @@ namespace Aurora.Devices.Ducky
         byte[] colourMessage = new byte[640], prevColourMessage = new byte[640];
         byte[] colourHeader = { 0x56, 0x83, 0x00 };
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         public string DeviceName => deviceName;
 

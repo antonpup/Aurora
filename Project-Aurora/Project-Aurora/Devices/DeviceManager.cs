@@ -201,7 +201,7 @@ namespace Aurora.Devices
         {
             foreach (var device in DeviceContainers)
             {
-                Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
+                Global.Configuration.VarRegistry.Combine(device.Device.RegisteredVariables);
             }
         }
 

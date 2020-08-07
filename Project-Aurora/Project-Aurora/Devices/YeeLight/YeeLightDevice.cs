@@ -199,20 +199,23 @@ namespace Aurora.Devices.YeeLight
 
         public string DeviceUpdatePerformance => (IsConnected() ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                var devKeysEnumAsEnumerable = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
+                if (default_registry == null)
+                {
+                    var devKeysEnumAsEnumerable = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
 
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
-                default_registry.Register($"{devicename}_send_delay", 35, "Send delay (ms)");
-                default_registry.Register($"{devicename}_IP", "0.0.0.0", "YeeLight IP", null, null, "If set to 0.0.0.0 and auto-discovery is enabled, it will try to discover a YeeLight and connect to it.");
-                default_registry.Register($"{devicename}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and set IP to 0.0.0.0 to auto-discover a light.");
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
+                    default_registry.Register($"{devicename}_send_delay", 35, "Send delay (ms)");
+                    default_registry.Register($"{devicename}_IP", "0.0.0.0", "YeeLight IP", null, null, "If set to 0.0.0.0 and auto-discovery is enabled, it will try to discover a YeeLight and connect to it.");
+                    default_registry.Register($"{devicename}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and set IP to 0.0.0.0 to auto-discover a light.");
+                }
+
+                return default_registry;
             }
-
-            return default_registry;
         }
     }
 }

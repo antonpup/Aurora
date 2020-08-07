@@ -418,18 +418,21 @@ namespace Aurora.Devices.Roccat
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
+                if (default_registry == null)
+                {
 
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
-                default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
-                default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
+                    default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
+                    default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+                }
+
+                return default_registry;
             }
-
-            return default_registry;
         }
     }
 }

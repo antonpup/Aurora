@@ -173,16 +173,19 @@ namespace Aurora.Devices.Wooting
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_scalar_r", 100, "Red Scalar", 100, 0);
-                default_registry.Register($"{devicename}_scalar_g", 100, "Green Scalar", 100, 0);
-                default_registry.Register($"{devicename}_scalar_b", 100, "Blue Scalar", 100, 0,"In percent");
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_scalar_r", 100, "Red Scalar", 100, 0);
+                    default_registry.Register($"{devicename}_scalar_g", 100, "Green Scalar", 100, 0);
+                    default_registry.Register($"{devicename}_scalar_b", 100, "Blue Scalar", 100, 0, "In percent");
+                }
+                return default_registry;
             }
-            return default_registry;
         }
 
         public static Dictionary<DeviceKeys, WootingKey.Keys> KeyMap = new Dictionary<DeviceKeys, WootingKey.Keys> {

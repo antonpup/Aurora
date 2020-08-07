@@ -232,19 +232,21 @@ namespace Aurora.Devices.UnifiedHID
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                foreach (ISSDevice device in AllDevices)
+                if (default_registry == null)
                 {
-                    default_registry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {devicename}");
+                    default_registry = new VariableRegistry();
+                    foreach (ISSDevice device in AllDevices)
+                    {
+                        default_registry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {devicename}");
+                    }
                 }
+                return default_registry;
             }
-            return default_registry;
         }
-
     }
 
     interface ISSDevice

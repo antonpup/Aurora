@@ -786,14 +786,17 @@ namespace Aurora.Devices.CoolerMaster
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_monochrome_mode", false, "Monochrome Mode");
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_monochrome_mode", false, "Monochrome Mode");
+                }
+                return default_registry;
             }
-            return default_registry;
         }
     }
 }
