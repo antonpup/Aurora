@@ -472,7 +472,7 @@ namespace Aurora.Settings
 
         private void devices_retry_Click(object sender, RoutedEventArgs e)
         {
-            Global.dev_manager.Initialize();
+            Global.dev_manager.InitializeDevices();
         }
 
         private void devices_view_first_time_logitech_Click(object sender, RoutedEventArgs e)
