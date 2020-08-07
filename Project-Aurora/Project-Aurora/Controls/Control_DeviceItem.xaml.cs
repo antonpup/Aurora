@@ -97,31 +97,32 @@ namespace Aurora.Controls
         private void UpdateControls()
         {
             if (Device.Device.IsInitialized)
-                btnToggleOnOff.Content = "Stop";
+                btnStart.Content = "Stop";
             else
-                btnToggleOnOff.Content = "Start";
+                btnStart.Content = "Start";
 
-            txtblk_DeviceStatus.Text = Device.Device.DeviceDetails.TrimEnd(' ');
-            txtblk_DevicePerformance.Text = Device.Device.DeviceUpdatePerformance;
+            deviceName.Text = Device.Device.DeviceName;
+            deviceDetails.Text = Device.Device.DeviceDetails;
+            devicePerformance.Text = Device.Device.DeviceUpdatePerformance;
 
             if(Device is Devices.ScriptedDevice.ScriptedDevice)
-                btnToggleEnableDisable.IsEnabled = false;
+                btnEnable.IsEnabled = false;
             else
             {
                 if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
                 {
-                    btnToggleEnableDisable.Content = "Enable";
-                    btnToggleOnOff.IsEnabled = false;
+                    btnEnable.Content = "Enable";
+                    btnStart.IsEnabled = false;
                 }
                 else
                 {
-                    btnToggleEnableDisable.Content = "Disable";
-                    btnToggleOnOff.IsEnabled = true;
+                    btnEnable.Content = "Disable";
+                    btnStart.IsEnabled = true;
                 }
             }
 
             if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
-                btnViewOptions.IsEnabled = false;
+                btnOptions.IsEnabled = false;
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)
