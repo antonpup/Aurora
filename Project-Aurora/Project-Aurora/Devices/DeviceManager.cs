@@ -87,6 +87,7 @@ namespace Aurora.Devices
         {
             AddDevicesFromAssembly();
             AddDevicesFromScripts();
+            AddDevicesFromDlls();
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
@@ -98,6 +99,8 @@ namespace Aurora.Devices
 
             if (!Directory.Exists(devices_scripts_path))
                 return;
+
+            Global.logger.Info("Loading devices from scripts...");
 
             foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
             {
@@ -147,6 +150,7 @@ namespace Aurora.Devices
 
         private void AddDevicesFromAssembly()
         {
+            Global.logger.Info("Loading devices from assembly...");
             var deviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
                               where typeof(IDevice).IsAssignableFrom(type)
                               && !type.IsAbstract
@@ -158,6 +162,38 @@ namespace Aurora.Devices
             foreach (var inst in deviceTypes)
             {
                 DeviceContainers.Add(new DeviceContainer(inst));
+            }
+        }
+
+        private void AddDevicesFromDlls()
+        {
+            string deviceDllFolder = Path.Combine(Global.AppDataDirectory, "Plugins", "Devices");
+
+            if (!Directory.Exists(deviceDllFolder))
+                return;
+
+            Global.logger.Info("Loading devices from plugins");
+
+            foreach (var deviceDll in Directory.EnumerateFiles(deviceDllFolder, "*.dll"))
+            {
+                try
+                {
+                    var deviceAssembly = Assembly.LoadFile(deviceDll);
+
+                    foreach (var type in deviceAssembly.GetExportedTypes())
+                    {
+                        if (typeof(IDevice).IsAssignableFrom(type) && !type.IsAbstract)
+                        {
+                            IDevice devDll = (IDevice)Activator.CreateInstance(type);
+
+                            DeviceContainers.Add(new DeviceContainer(devDll));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Global.logger.Error($"Error loading device dll: {deviceDll}. Exception: {e.Message}");
+                }
             }
         }
 
