@@ -36,7 +36,7 @@ namespace Aurora.Devices.Asus
         private string GetDeviceStatus()
         {
             if (!isActive)
-                return "Not initialized";
+                return "Not Initialized";
             
             if (asusHandler.DeviceCount == 0)
                 return "No devices connected";
