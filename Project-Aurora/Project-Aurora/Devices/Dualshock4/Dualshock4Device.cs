@@ -111,30 +111,24 @@ namespace Aurora.Devices.Dualshock
                     switch (device.getConnectionType())
                     {
                         case ConnectionType.BT:
-                            DS4ConnectionType = " over Bluetooth";
+                            DS4ConnectionType = "Bluetooth";
                             break;
                         case ConnectionType.USB:
-                            DS4ConnectionType = " over USB";
+                            DS4ConnectionType = "USB";
                             break;
                         case ConnectionType.SONYWA:
-                            DS4ConnectionType = " over DS4 Wireless adapter";
+                            DS4ConnectionType = "DS4 Wireless adapter";
                             break;
                         default:
                             DS4ConnectionType = "";
                             break;
                     }
 
-                    string charging;
-                    if (device.isCharging())
-                        charging = " ⚡";
-                    else
-                        charging = " ";
-
-                    return "Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
+                    return $"Connected over {DS4ConnectionType} {(device.isCharging() ? '⚡' : ' ')} 🔋{Battery}% Delay: {Latency:0.00}ms";
                 }
                 else
                 {
-                    return devicename + ": Not Initialized";
+                    return "Not Initialized";
                 }
             }
         }
