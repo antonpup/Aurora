@@ -54,7 +54,7 @@ namespace Aurora.Controls
         {
             try
             {
-                Dispatcher.Invoke(() => { if(IsVisible) UpdateControls(); });
+                Dispatcher.Invoke(() => { if (IsVisible) UpdateControls(); });
             }
             catch (Exception ex)
             {
@@ -64,12 +64,15 @@ namespace Aurora.Controls
 
         private void btnToggleOnOff_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is Button)
+            if (sender is Button)
             {
-                if(Device.Device.IsInitialized)
-                    Device.Device.Shutdown();
-                else
-                    Device.Device.Initialize();
+                lock (Device.actionLock)
+                {
+                    if (Device.Device.IsInitialized)
+                        Device.Device.Shutdown();
+                    else
+                        Device.Device.Initialize();
+                }
 
                 UpdateControls();
             }
@@ -82,8 +85,11 @@ namespace Aurora.Controls
             else
             {
                 Global.Configuration.devices_disabled.Add(Device.Device.GetType());
-                if(Device.Device.IsInitialized)
-                    Device.Device.Shutdown();
+                lock (Device.actionLock)
+                {
+                    if (Device.Device.IsInitialized)
+                        Device.Device.Shutdown();
+                }
             }
 
             UpdateControls();
@@ -105,7 +111,7 @@ namespace Aurora.Controls
             deviceDetails.Text = Device.Device.DeviceDetails;
             devicePerformance.Text = Device.Device.DeviceUpdatePerformance;
 
-            if(Device is Devices.ScriptedDevice.ScriptedDevice)
+            if (Device is Devices.ScriptedDevice.ScriptedDevice)
                 btnEnable.IsEnabled = false;
             else
             {
@@ -121,7 +127,7 @@ namespace Aurora.Controls
                 }
             }
 
-            if(Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Count() == 0)
+            if (Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Count() == 0)
                 btnOptions.IsEnabled = false;
         }
 

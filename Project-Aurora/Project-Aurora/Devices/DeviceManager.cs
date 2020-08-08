@@ -23,6 +23,8 @@ namespace Aurora.Devices
         private Tuple<DeviceColorComposition, bool> currentComp = null;
         private bool newFrame = false;
 
+        public readonly object actionLock = new object();
+
         public DeviceContainer(IDevice device)
         {
             this.Device = device;
@@ -41,8 +43,11 @@ namespace Aurora.Devices
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             newFrame = false;
-            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
+            lock(actionLock)
+            {
+                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
                 currentComp.Item2);
+            }
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
@@ -214,7 +219,8 @@ namespace Aurora.Devices
                     if (dc.Device.IsInitialized || Global.Configuration.devices_disabled.Contains(dc.Device.GetType()))
                         continue;
 
-                    dc.Device.Initialize();
+                    lock(dc.actionLock)
+                        dc.Device.Initialize();
                 }
                 RetryAttempts--;
                 Thread.Sleep(RETRY_INTERVAL);
@@ -241,8 +247,11 @@ namespace Aurora.Devices
                 if (dc.Device.IsInitialized || Global.Configuration.devices_disabled.Contains(dc.Device.GetType()))
                     continue;
 
-                if (!dc.Device.Initialize())
-                    devicesToRetry++;
+                lock (dc.actionLock)
+                {
+                    if (!dc.Device.Initialize())
+                        devicesToRetry++;
+                }
 
                 var s = $"[Device][{dc.Device.DeviceName}] ";
 
@@ -262,26 +271,29 @@ namespace Aurora.Devices
 
         public void ShutdownDevices()
         {
-            foreach (DeviceContainer device in InitializedDeviceContainers)
+            foreach (var dc in InitializedDeviceContainers)
             {
-                device.Device.Shutdown();
-                Global.logger.Info("Device, " + device.Device.DeviceName + ", was shutdown");
+                lock (dc.actionLock)
+                    dc.Device.Shutdown();
+                Global.logger.Info("Device, " + dc.Device.DeviceName + ", was shutdown");
             }
         }
 
         public void ResetDevices()
         {
-            foreach (DeviceContainer device in InitializedDeviceContainers)
+            foreach (var dc in InitializedDeviceContainers)
             {
-                device.Device.Reset();
+                lock (dc.actionLock)
+                    dc.Device.Reset();
             }
         }
 
         public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
         {
-            foreach (var deviceContainer in InitializedDeviceContainers)
+            foreach (var dc in InitializedDeviceContainers)
             {
-                deviceContainer.UpdateDevice(composition, forced);
+                lock (dc.actionLock)
+                    dc.UpdateDevice(composition, forced);
             }
         }
 
