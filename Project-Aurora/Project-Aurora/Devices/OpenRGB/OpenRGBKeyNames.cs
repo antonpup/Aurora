@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -145,5 +145,24 @@ namespace Aurora.Devices.OpenRGB
             { "Logo LED 1"           , DK.Peripheral_Logo        },
             { "Scroll Wheel LED 1"   , DK.Peripheral_ScrollWheel },
         };
+//         A Try for Later 
+//        public static readonly Dictionary<string, DK> Mousemat = new Dictionary<string, DK>()
+//        {
+//            { "Key: Mousepad Light 1"              , DK.MOUSEPADLIGHT1     },
+//            { "Key: Mousepad Light 2"              , DK.MOUSEPADLIGHT2     },
+//            { "Key: Mousepad Light 3"              , DK.MOUSEPADLIGHT3     },
+//            { "Key: Mousepad Light 4"              , DK.MOUSEPADLIGHT4     },
+//            { "Key: Mousepad Light 5"              , DK.MOUSEPADLIGHT5     },
+//            { "Key: Mousepad Light 6"              , DK.MOUSEPADLIGHT6     },
+//            { "Key: Mousepad Light 7"              , DK.MOUSEPADLIGHT7     },
+//            { "Key: Mousepad Light 8"              , DK.MOUSEPADLIGHT8     },
+//            { "Key: Mousepad Light 9"              , DK.MOUSEPADLIGHT9     },
+//            { "Key: Mousepad Light 10"             , DK.MOUSEPADLIGHT10    },
+//            { "Key: Mousepad Light 11"             , DK.MOUSEPADLIGHT11    },
+//            { "Key: Mousepad Light 12"             , DK.MOUSEPADLIGHT12    },
+//            { "Key: Mousepad Light 13"             , DK.MOUSEPADLIGHT13    },
+//            { "Key: Mousepad Light 14"             , DK.MOUSEPADLIGHT14    },
+//            { "Key: Mousepad Light 15"             , DK.MOUSEPADLIGHT15    },
+//        };
     }
 }

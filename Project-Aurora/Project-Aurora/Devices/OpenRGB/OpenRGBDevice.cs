@@ -1,4 +1,4 @@
-﻿using Aurora.Settings;
+using Aurora.Settings;
 using OpenRGB.NET;
 using OpenRGB.NET.Enums;
 using System;
@@ -30,6 +30,7 @@ namespace Aurora.Devices.OpenRGB
         private OpenRGBDevice[] _devices;
         private OpenRGBColor[][] _deviceColors;
         private List<DK>[] _keyMappings;
+//        private MList<DK>[] _keyMappings;          a Try for later
 
         public bool Initialize()
         {
@@ -45,6 +46,7 @@ namespace Aurora.Devices.OpenRGB
 
                 _deviceColors = new OpenRGBColor[_devices.Length][];
                 _keyMappings = new List<DK>[_devices.Length];
+//                _keyMappings = new MList<DK>[_devices.Length];               a try for later
 
                 for (var i = 0; i < _devices.Length; i++)
                 {
@@ -80,11 +82,40 @@ namespace Aurora.Devices.OpenRGB
                                 _keyMappings[i].Add(DK.NONE);
                             }
                         }
-                        else
-                        {
-                            _keyMappings[i].Add(DK.Peripheral_Logo);
-                        }
-                    }
+//*****************************************************************************************************************************
+//          Adding possibility to adress mousemats as Mousepadlight and not as LEDlights like now             (not working now)
+//*****************************************************************************************************************************                       
+//                        else if (dev.Type == OpenRGBDeviceType.Mousemat)
+//                        {
+//                            if (OpenRGBKeyNames.Mousemat.TryGetValue(dev.Leds[j].Name, out var dk))
+//                            {
+//                                _keyMappings[i].Add(dk);
+//                            }
+//                            else
+//                            {
+//                                _keyMappings[i].Add(DK.NONE);
+//                            }
+//                        }
+//                        else
+//                        {
+//                            _keyMappings[i].Add(DK.Peripheral_Logo);
+//                        }
+//                    }
+//    A Try for later if upper method does not work
+//                    for (int j = 0; j < dev.Leds.Length; j++)
+//                    {
+//                        if (dev.Leds[j].Type == OpenRGBZoneType.Linear)
+//                        {
+//                            for (int k = 0; k < dev.Leds[j].LedCount; k++)
+//                            {
+//                                if (k < 15)
+//                                {
+//                                    _keyMappings[i][(int)(LedOffset + k)] = MousepadLights[k];
+//                                }
+//                            }
+//                        }
+//                        LedOffset += dev.Leds[j].LedCount;
+//                    }
 
                     uint LedOffset = 0;
                     for (int j = 0; j < dev.Zones.Length; j++)
@@ -93,10 +124,10 @@ namespace Aurora.Devices.OpenRGB
                         {
                             for (int k = 0; k < dev.Zones[j].LedCount; k++)
                             {
-                                //TODO - scale zones with more than 32 LEDs
-                                if (k < 32)
+                                //TODO - scale zones with more than 100 LEDs XD
+                                if (k < 100)
                                 {
-                                    _keyMappings[i][(int)(LedOffset + k)] = AdditionalLights[k];
+                                    _keyMappings[i][(int)(LedOffset + k)] = LedLights[k];
                                 }
                             }
                         }
@@ -253,41 +284,128 @@ namespace Aurora.Devices.OpenRGB
             Shutdown();
             Initialize();
         }
+//   A Try for later if upper method not work
+//        private static readonly MList<DK> MousePadLights = new MList<DK>(new[]
+//        {
+//            DK.MOUSEPADLIGHT1,
+//            DK.MOUSEPADLIGHT2,
+//            DK.MOUSEPADLIGHT3,
+//            DK.MOUSEPADLIGHT4,
+//            DK.MOUSEPADLIGHT5,
+//            DK.MOUSEPADLIGHT6,
+//            DK.MOUSEPADLIGHT7,
+//            DK.MOUSEPADLIGHT8,
+//            DK.MOUSEPADLIGHT9,
+//            DK.MOUSEPADLIGHT10,
+//            DK.MOUSEPADLIGHT11,
+//            DK.MOUSEPADLIGHT12,
+//            DK.MOUSEPADLIGHT13,
+//            DK.MOUSEPADLIGHT14,
+//            DK.MOUSEPADLIGHT15,
+//        });
 
-        private static readonly List<DK> AdditionalLights = new List<DK>(new[]
+        private static readonly List<DK> LedLights = new List<DK>(new[]
         {
-            DK.ADDITIONALLIGHT1,
-            DK.ADDITIONALLIGHT2,
-            DK.ADDITIONALLIGHT3,
-            DK.ADDITIONALLIGHT4,
-            DK.ADDITIONALLIGHT5,
-            DK.ADDITIONALLIGHT6,
-            DK.ADDITIONALLIGHT7,
-            DK.ADDITIONALLIGHT8,
-            DK.ADDITIONALLIGHT9,
-            DK.ADDITIONALLIGHT10,
-            DK.ADDITIONALLIGHT11,
-            DK.ADDITIONALLIGHT12,
-            DK.ADDITIONALLIGHT13,
-            DK.ADDITIONALLIGHT14,
-            DK.ADDITIONALLIGHT15,
-            DK.ADDITIONALLIGHT16,
-            DK.ADDITIONALLIGHT17,
-            DK.ADDITIONALLIGHT18,
-            DK.ADDITIONALLIGHT19,
-            DK.ADDITIONALLIGHT20,
-            DK.ADDITIONALLIGHT21,
-            DK.ADDITIONALLIGHT22,
-            DK.ADDITIONALLIGHT23,
-            DK.ADDITIONALLIGHT24,
-            DK.ADDITIONALLIGHT25,
-            DK.ADDITIONALLIGHT26,
-            DK.ADDITIONALLIGHT27,
-            DK.ADDITIONALLIGHT28,
-            DK.ADDITIONALLIGHT29,
-            DK.ADDITIONALLIGHT30,
-            DK.ADDITIONALLIGHT31,
-            DK.ADDITIONALLIGHT32,
+            DK.LEDLIGHT1,
+            DK.LEDLIGHT2,
+            DK.LEDLIGHT3,
+            DK.LEDLIGHT4,
+            DK.LEDLIGHT5,
+            DK.LEDLIGHT6,
+            DK.LEDLIGHT7,
+            DK.LEDLIGHT8,
+            DK.LEDLIGHT9,
+            DK.LEDLIGHT10,
+            DK.LEDLIGHT11,
+            DK.LEDLIGHT12,
+            DK.LEDLIGHT13,
+            DK.LEDLIGHT14,
+            DK.LEDLIGHT15,
+            DK.LEDLIGHT16,
+            DK.LEDLIGHT17,
+            DK.LEDLIGHT18,
+            DK.LEDLIGHT19,
+            DK.LEDLIGHT20,
+            DK.LEDLIGHT21,
+            DK.LEDLIGHT22,
+            DK.LEDLIGHT23,
+            DK.LEDLIGHT24,
+            DK.LEDLIGHT25,
+            DK.LEDLIGHT26,
+            DK.LEDLIGHT27,
+            DK.LEDLIGHT28,
+            DK.LEDLIGHT29,
+            DK.LEDLIGHT30,
+            DK.LEDLIGHT31,
+            DK.LEDLIGHT32,
+            DK.LEDLIGHT33,
+            DK.LEDLIGHT34,
+            DK.LEDLIGHT35,
+            DK.LEDLIGHT36,
+            DK.LEDLIGHT37,
+            DK.LEDLIGHT38,
+            DK.LEDLIGHT39,
+            DK.LEDLIGHT40,
+            DK.LEDLIGHT41,
+            DK.LEDLIGHT42,
+            DK.LEDLIGHT43,
+            DK.LEDLIGHT44,
+            DK.LEDLIGHT45,
+            DK.LEDLIGHT46,
+            DK.LEDLIGHT47,
+            DK.LEDLIGHT48,
+            DK.LEDLIGHT49,
+            DK.LEDLIGHT50,
+            DK.LEDLIGHT51,
+            DK.LEDLIGHT52,
+            DK.LEDLIGHT53,
+            DK.LEDLIGHT54,
+            DK.LEDLIGHT55,
+            DK.LEDLIGHT56,
+            DK.LEDLIGHT57,
+            DK.LEDLIGHT58,
+            DK.LEDLIGHT59,
+            DK.LEDLIGHT60,
+            DK.LEDLIGHT61,
+            DK.LEDLIGHT62,
+            DK.LEDLIGHT63,
+            DK.LEDLIGHT64,
+            DK.LEDLIGHT65,
+            DK.LEDLIGHT66,
+            DK.LEDLIGHT67,
+            DK.LEDLIGHT68,
+            DK.LEDLIGHT69,
+            DK.LEDLIGHT70,
+            DK.LEDLIGHT71,
+            DK.LEDLIGHT72,
+            DK.LEDLIGHT73,
+            DK.LEDLIGHT74,
+            DK.LEDLIGHT75,
+            DK.LEDLIGHT76,
+            DK.LEDLIGHT77,
+            DK.LEDLIGHT78,
+            DK.LEDLIGHT79,
+            DK.LEDLIGHT80,
+            DK.LEDLIGHT81,
+            DK.LEDLIGHT82,
+            DK.LEDLIGHT83,
+            DK.LEDLIGHT84,
+            DK.LEDLIGHT85,
+            DK.LEDLIGHT86,
+            DK.LEDLIGHT87,
+            DK.LEDLIGHT88,
+            DK.LEDLIGHT89,
+            DK.LEDLIGHT90,
+            DK.LEDLIGHT91,
+            DK.LEDLIGHT92,
+            DK.LEDLIGHT93,
+            DK.LEDLIGHT94,
+            DK.LEDLIGHT95,
+            DK.LEDLIGHT96,
+            DK.LEDLIGHT97,
+            DK.LEDLIGHT98,
+            DK.LEDLIGHT99,
+            DK.LEDLIGHT100,
         });
     }
 }
