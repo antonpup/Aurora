@@ -15,30 +15,38 @@ namespace Aurora.Devices.Wooting
 {
     public class WootingDevice : DefaultDevice
     {
-        private readonly object action_lock = new object();
-
         public override string DeviceName => "Wooting";
-
+        protected override string DeviceInfo => _deviceInfo;
+        private string _deviceInfo = "";
+        private DisconnectedCallback cb;
         public override bool Initialize()
         {
             if (IsInitialized)
                 return IsInitialized;
 
-            lock (action_lock)
+            try
             {
-                try
+                if (RGBControl.IsConnected())
                 {
-                    IsInitialized = RGBControl.IsConnected();
+                    IsInitialized = true;
+                    _deviceInfo = ": " + RGBControl.GetDeviceInfo().Model;
+                    cb = new DisconnectedCallback(OnDisconnect);
+                    RGBControl.SetDisconnectedCallback(cb);
                 }
-                catch (Exception exc)
+                else
                 {
-                    Global.logger.Error("There was an error initializing Wooting SDK.\r\n" + exc.Message);
-
                     IsInitialized = false;
+                    _deviceInfo = "";
                 }
-
-                return IsInitialized;
             }
+            catch (Exception exc)
+            {
+                Global.logger.Error("There was an error initializing Wooting SDK.\r\n" + exc.Message);
+
+                IsInitialized = false;
+            }
+
+            return IsInitialized;
         }
 
         public override void Shutdown()
@@ -46,11 +54,9 @@ namespace Aurora.Devices.Wooting
             if (!IsInitialized)
                 return;
 
-            lock (action_lock)
-            {
-                RGBControl.Reset();
-                IsInitialized = false;   
-            }
+            RGBControl.Close();
+            _deviceInfo = "";
+            IsInitialized = false;
         }
 
         public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -58,23 +64,23 @@ namespace Aurora.Devices.Wooting
             if (!IsInitialized)
                 return false;
 
+            double rScalar = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_r") / 100.0;
+            double gScalar = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_g") / 100.0;
+            double bScalar = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_b") / 100.0;
+
             try
             {
-                //Do this to prevent setting lighting again after the keyboard has been shutdown and reset
-                lock (action_lock)
+                foreach (var key in keyColors)
                 {
-                    foreach (var key in keyColors)
+                    if (WootingKeyMap.KeyMap.TryGetValue(key.Key, out var wootKey))
                     {
-                        if(WootingKeyMap.KeyMap.TryGetValue(key.Key, out var wootKey))
-                        {
-                            var clr = ColorUtils.CorrectWithAlpha(key.Value);
-                            RGBControl.SetKey(wootKey, (byte)(clr.R * Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_r") / 100),
-                                                       (byte)(clr.G * Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_g") / 100),
-                                                       (byte)(clr.B * Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_b") / 100));
-                        }
+                        var clr = ColorUtils.CorrectWithAlpha(key.Value);
+                        RGBControl.SetKey(wootKey, (byte)(clr.R * rScalar),
+                                                   (byte)(clr.G * gScalar),
+                                                   (byte)(clr.B * bScalar));
                     }
-                    RGBControl.UpdateKeyboard();
                 }
+                RGBControl.UpdateKeyboard();
                 return true;
             }
             catch (Exception exc)
@@ -89,6 +95,11 @@ namespace Aurora.Devices.Wooting
             variableRegistry.Register($"{DeviceName}_scalar_r", 100, "Red Scalar", 100, 0);
             variableRegistry.Register($"{DeviceName}_scalar_g", 100, "Green Scalar", 100, 0);
             variableRegistry.Register($"{DeviceName}_scalar_b", 100, "Blue Scalar", 100, 0, "In percent");
+        }
+
+        private void OnDisconnect()
+        {
+            IsInitialized = false;
         }
     }
 }
