@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Aurora.Devices.RGBNet;
 using Aurora.Settings;
 using Microsoft.Win32;
 using UniwillSDKDLL;
