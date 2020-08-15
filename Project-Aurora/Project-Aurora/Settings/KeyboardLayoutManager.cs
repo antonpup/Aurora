@@ -480,11 +480,11 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.LED_preference, Global.Configuration.mouse_orientation);
             });
         }
 
-        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
+        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, PreferredLedStrip LED_preference = PreferredLedStrip.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
 #if !DEBUG
             try
@@ -951,6 +951,58 @@ namespace Aurora.Settings
 
                     virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
                 }
+                string led_feature_path = "";
+
+                    switch (LED_preference)
+                    {
+                        case PreferredLedStrip.LED_Strip_Linear_10_LED:
+                            led_feature_path = Path.Combine(layoutsPath, "Extra Features", "led_strip_linear_10_led.json");
+                            break;
+                        case PreferredLedStrip.LED_Strip_Linear_40_LED:
+                            led_feature_path = Path.Combine(layoutsPath, "Extra Features", "led_strip_linear_40_led.json");
+                            break;
+                        case PreferredLedStrip.LED_Matrix_10x10_LED:
+                            led_feature_path = Path.Combine(layoutsPath, "Extra Features", "led_matrix_10x10_led");
+                            break;
+                        case PreferredLedStrip.LED_Matrix_Custom_LED:
+                            led_feature_path = Path.Combine(layoutsPath, "Extra Features", "led_matrix_10x10_led");
+                            break;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(led_feature_path))
+                    {
+                        string feature_content = File.ReadAllText(led_feature_path, Encoding.UTF8);
+                        VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                        if (mouse_orientation == MouseOrientationType.LeftHanded)
+                        {
+                            if (featureConfig.origin_region == KeyboardRegion.TopRight)
+                                featureConfig.origin_region = KeyboardRegion.TopLeft;
+                            else if (featureConfig.origin_region == KeyboardRegion.BottomRight)
+                                featureConfig.origin_region = KeyboardRegion.BottomLeft;
+
+                            double outlineWidth = 0.0;
+                            int outlineWidthBits = 0;
+
+                            foreach (var key in featureConfig.grouped_keys)
+                            {
+                                if (outlineWidth == 0.0 && outlineWidthBits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
+                                {
+                                    if (key.tag == DeviceKeys.NONE)
+                                    {
+                                        outlineWidth = key.width.Value + 2 * key.margin_left.Value;
+                                        //outlineWidthBits = key.width_bits.Value + 2 * key.margin_left_bits.Value;
+                                    }
+                                }
+
+                                key.margin_left -= outlineWidth;
+                                //key.margin_left_bits -= outlineWidthBits;
+                            }
+
+                        }
+
+                        virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
+                    }
 
             }
 #if !DEBUG

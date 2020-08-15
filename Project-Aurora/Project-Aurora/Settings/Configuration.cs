@@ -409,6 +409,25 @@ namespace Aurora.Settings
         OMEN_Vector_Essentials = 1003,
     }
 
+    public enum PreferredLedStrip
+    {
+        [Description("None")]
+        None = 0,
+
+        //LedStrip range is 100-199
+        [Description("LED Strip Linear - 10 LED")]
+        LED_Strip_Linear_10_LED = 100,
+        [Description("Strip Linear - 40 LED")]
+        LED_Strip_Linear_40_LED = 101,
+
+        //LedMatrix range is 200-299
+        [Description("LED Matrix - Custom LED")]
+        LED_Matrix_Custom_LED = 200,
+        [Description("LED Matrix - 10x10 LED")]
+        LED_Matrix_10x10_LED = 201,
+
+    }
+
     public enum KeycapType
     {
         [Description("Default")]
@@ -484,6 +503,7 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
+        public PreferredLedStrip LED_preference;
         public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
@@ -565,6 +585,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            LED_preference = PreferredLedStrip.None;
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();

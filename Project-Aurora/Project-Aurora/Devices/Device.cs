@@ -1794,7 +1794,7 @@ namespace Aurora.Devices
         LEDLIGHT73 = 1073,
 
         /// <summary>
-        /// Led Light 24
+        /// Led Light 74
         /// </summary>
         [Description("Led Light 74")]
         LEDLIGHT74 = 1074,
@@ -1954,6 +1954,610 @@ namespace Aurora.Devices
         /// </summary>
         [Description("Led Light 100")]
         LEDLIGHT100 = 1100,
+
+        // Support More than 100 LED Lights ****************************************
+
+        /// <summary>
+        /// Led Light 101
+        /// </summary>
+        [Description("Led Light 101")]
+        LEDLIGHT101 = 1101,
+
+        /// <summary>
+        /// Led Light 102
+        /// </summary>
+        [Description("Led Light 102")]
+        LEDLIGHT102 = 1102,
+
+        /// <summary>
+        /// Led Light 103
+        /// </summary>
+        [Description("Led Light 103")]
+        LEDLIGHT103 = 1103,
+
+        /// <summary>
+        /// Led Light 104
+        /// </summary>
+        [Description("Led Light 104")]
+        LEDLIGHT104 = 1104,
+
+        /// <summary>
+        /// Led Light 105
+        /// </summary>
+        [Description("Led Light 105")]
+        LEDLIGHT105 = 1105,
+
+        /// <summary>
+        /// Led Light 106
+        /// </summary>
+        [Description("Led Light 106")]
+        LEDLIGHT106 = 1106,
+
+        /// <summary>
+        /// Led Light 107
+        /// </summary>
+        [Description("Led Light 107")]
+        LEDLIGHT107 = 1107,
+
+        /// <summary>
+        /// Led Light 108
+        /// </summary>
+        [Description("Led Light 108")]
+        LEDLIGHT108 = 1108,
+
+        /// <summary>
+        /// Led Light 109
+        /// </summary>
+        [Description("Led Light 109")]
+        LEDLIGHT109 = 1109,
+
+        /// <summary>
+        /// Led Light 110
+        /// </summary>
+        [Description("Led Light 110")]
+        LEDLIGHT110 = 1110,
+
+        /// <summary>
+        /// Led Light 111
+        /// </summary>
+        [Description("Led Light 111")]
+        LEDLIGHT111 = 1111,
+
+        /// <summary>
+        /// Led Light 112
+        /// </summary>
+        [Description("Led Light 112")]
+        LEDLIGHT112 = 1112,
+
+        /// <summary>
+        /// Led Light 113
+        /// </summary>
+        [Description("Led Light 113")]
+        LEDLIGHT113 = 1113,
+
+        /// <summary>
+        /// Led Light 114
+        /// </summary>
+        [Description("Led Light 114")]
+        LEDLIGHT114 = 1114,
+
+        /// <summary>
+        /// Led Light 115
+        /// </summary>
+        [Description("Led Light 115")]
+        LEDLIGHT115 = 1115,
+
+        /// <summary>
+        /// Led Light 116
+        /// </summary>
+        [Description("Led Light 116")]
+        LEDLIGHT116 = 1116,
+
+        /// <summary>
+        /// Led Light 117
+        /// </summary>
+        [Description("Led Light 117")]
+        LEDLIGHT117 = 1117,
+
+        /// <summary>
+        /// Led Light 118
+        /// </summary>
+        [Description("Led Light 118")]
+        LEDLIGHT118 = 1118,
+
+        /// <summary>
+        /// Led Light 119
+        /// </summary>
+        [Description("Led Light 119")]
+        LEDLIGHT119 = 1119,
+
+        /// <summary>
+        /// Led Light 120
+        /// </summary>
+        [Description("Led Light 120")]
+        LEDLIGHT120 = 1120,
+
+        /// <summary>
+        /// Led Light 121
+        /// </summary>
+        [Description("Led Light 121")]
+        LEDLIGHT121 = 1121,
+
+        /// <summary>
+        /// Led Light 122
+        /// </summary>
+        [Description("Led Light 122")]
+        LEDLIGHT122 = 1122,
+
+        /// <summary>
+        /// Led Light 123
+        /// </summary>
+        [Description("Led Light 123")]
+        LEDLIGHT123 = 1123,
+
+        /// <summary>
+        /// Led Light 124
+        /// </summary>
+        [Description("Led Light 124")]
+        LEDLIGHT124 = 1124,
+
+        /// <summary>
+        /// Led Light 125
+        /// </summary>
+        [Description("Led Light 125")]
+        LEDLIGHT125 = 1125,
+
+        /// <summary>
+        /// Led Light 126
+        /// </summary>
+        [Description("Led Light 126")]
+        LEDLIGHT126 = 1126,
+
+        /// <summary>
+        /// Led Light 127
+        /// </summary>
+        [Description("Led Light 127")]
+        LEDLIGHT127 = 1127,
+
+        /// <summary>
+        /// Led Light 128
+        /// </summary>
+        [Description("Led Light 128")]
+        LEDLIGHT128 = 1128,
+
+        /// <summary>
+        /// Led Light 129
+        /// </summary>
+        [Description("Led Light 129")]
+        LEDLIGHT129 = 1129,
+
+        /// <summary>
+        /// Led Light 130
+        /// </summary>
+        [Description("Led Light 130")]
+        LEDLIGHT130 = 1130,
+
+        /// <summary>
+        /// Led Light 131
+        /// </summary>
+        [Description("Led Light 131")]
+        LEDLIGHT131 = 1131,
+
+        /// <summary>
+        /// Led Light 132
+        /// </summary>
+        [Description("Led Light 132")]
+        LEDLIGHT132 = 1132,
+
+        /// <summary>
+        /// Led Light 133
+        /// </summary>
+        [Description("Led Light 133")]
+        LEDLIGHT133 = 1133,
+
+        /// <summary>
+        /// Led Light 134
+        /// </summary>
+        [Description("Led Light 134")]
+        LEDLIGHT134 = 1134,
+
+        /// <summary>
+        /// Led Light 135
+        /// </summary>
+        [Description("Led Light 135")]
+        LEDLIGHT135 = 1135,
+
+        /// <summary>
+        /// Led Light 136
+        /// </summary>
+        [Description("Led Light 136")]
+        LEDLIGHT136 = 1136,
+
+        /// <summary>
+        /// Led Light 137
+        /// </summary>
+        [Description("Led Light 137")]
+        LEDLIGHT137 = 1137,
+
+        /// <summary>
+        /// Led Light 138
+        /// </summary>
+        [Description("Led Light 138")]
+        LEDLIGHT138 = 1138,
+
+        /// <summary>
+        /// Led Light 139
+        /// </summary>
+        [Description("Led Light 139")]
+        LEDLIGHT139 = 1139,
+
+        /// <summary>
+        /// Led Light 140
+        /// </summary>
+        [Description("Led Light 140")]
+        LEDLIGHT140 = 1140,
+
+        /// <summary>
+        /// Led Light 141
+        /// </summary>
+        [Description("Led Light 141")]
+        LEDLIGHT141 = 1141,
+
+        /// <summary>
+        /// Led Light 142
+        /// </summary>
+        [Description("Led Light 142")]
+        LEDLIGHT142 = 1142,
+
+        /// <summary>
+        /// Led Light 143
+        /// </summary>
+        [Description("Led Light 143")]
+        LEDLIGHT143 = 1143,
+
+        /// <summary>
+        /// Led Light 144
+        /// </summary>
+        [Description("Led Light 144")]
+        LEDLIGHT144 = 1144,
+
+        /// <summary>
+        /// Led Light 145
+        /// </summary>
+        [Description("Led Light 145")]
+        LEDLIGHT145 = 1145,
+
+        /// <summary>
+        /// Led Light 146
+        /// </summary>
+        [Description("Led Light 146")]
+        LEDLIGHT146 = 1146,
+
+        /// <summary>
+        /// Led Light 147
+        /// </summary>
+        [Description("Led Light 147")]
+        LEDLIGHT147 = 1147,
+
+        /// <summary>
+        /// Led Light 148
+        /// </summary>
+        [Description("Led Light 148")]
+        LEDLIGHT148 = 1148,
+
+        /// <summary>
+        /// Led Light 149
+        /// </summary>
+        [Description("Led Light 149")]
+        LEDLIGHT149 = 1149,
+
+        /// <summary>
+        /// Led Light 150
+        /// </summary>
+        [Description("Led Light 150")]
+        LEDLIGHT150 = 1150,
+
+        /// <summary>
+        /// Led Light 151
+        /// </summary>
+        [Description("Led Light 151")]
+        LEDLIGHT151 = 1151,
+
+        /// <summary>
+        /// Led Light 152
+        /// </summary>
+        [Description("Led Light 152")]
+        LEDLIGHT152 = 1152,
+
+        /// <summary>
+        /// Led Light 153
+        /// </summary>
+        [Description("Led Light 153")]
+        LEDLIGHT153 = 1153,
+
+        /// <summary>
+        /// Led Light 154
+        /// </summary>
+        [Description("Led Light 154")]
+        LEDLIGHT154 = 1154,
+
+        /// <summary>
+        /// Led Light 155
+        /// </summary>
+        [Description("Led Light 155")]
+        LEDLIGHT155 = 1155,
+
+        /// <summary>
+        /// Led Light 156
+        /// </summary>
+        [Description("Led Light 156")]
+        LEDLIGHT156 = 1156,
+
+        /// <summary>
+        /// Led Light 157
+        /// </summary>
+        [Description("Led Light 157")]
+        LEDLIGHT157 = 1157,
+
+        /// <summary>
+        /// Led Light 158
+        /// </summary>
+        [Description("Led Light 158")]
+        LEDLIGHT158 = 1158,
+
+        /// <summary>
+        /// Led Light 159
+        /// </summary>
+        [Description("Led Light 159")]
+        LEDLIGHT159 = 1159,
+
+        /// <summary>
+        /// Led Light 160
+        /// </summary>
+        [Description("Led Light 160")]
+        LEDLIGHT160 = 1160,
+
+        /// <summary>
+        /// Led Light 161
+        /// </summary>
+        [Description("Led Light 161")]
+        LEDLIGHT161 = 1161,
+
+        /// <summary>
+        /// Led Light 162
+        /// </summary>
+        [Description("Led Light 162")]
+        LEDLIGHT162 = 1162,
+
+        /// <summary>
+        /// Led Light 163
+        /// </summary>
+        [Description("Led Light 163")]
+        LEDLIGHT163 = 1163,
+
+        /// <summary>
+        /// Led Light 164
+        /// </summary>
+        [Description("Led Light 164")]
+        LEDLIGHT164 = 1164,
+
+        /// <summary>
+        /// Led Light 165
+        /// </summary>
+        [Description("Led Light 165")]
+        LEDLIGHT165 = 1165,
+
+        /// <summary>
+        /// Led Light 166
+        /// </summary>
+        [Description("Led Light 166")]
+        LEDLIGHT166 = 1166,
+
+        /// <summary>
+        /// Led Light 167
+        /// </summary>
+        [Description("Led Light 167")]
+        LEDLIGHT167 = 1167,
+
+        /// <summary>
+        /// Led Light 168
+        /// </summary>
+        [Description("Led Light 168")]
+        LEDLIGHT168 = 1168,
+
+        /// <summary>
+        /// Led Light 169
+        /// </summary>
+        [Description("Led Light 169")]
+        LEDLIGHT169 = 1169,
+
+        /// <summary>
+        /// Led Light 170
+        /// </summary>
+        [Description("Led Light 170")]
+        LEDLIGHT170 = 1170,
+
+        /// <summary>
+        /// Led Light 171
+        /// </summary>
+        [Description("Led Light 171")]
+        LEDLIGHT171 = 1171,
+
+        /// <summary>
+        /// Led Light 172
+        /// </summary>
+        [Description("Led Light 172")]
+        LEDLIGHT172 = 1172,
+
+        /// <summary>
+        /// Led Light 173
+        /// </summary>
+        [Description("Led Light 173")]
+        LEDLIGHT173 = 1173,
+
+        /// <summary>
+        /// Led Light 174
+        /// </summary>
+        [Description("Led Light 174")]
+        LEDLIGHT174 = 1174,
+
+        /// <summary>
+        /// Led Light 175
+        /// </summary>
+        [Description("Led Light 175")]
+        LEDLIGHT175 = 1175,
+
+        /// <summary>
+        /// Led Light 176
+        /// </summary>
+        [Description("Led Light 176")]
+        LEDLIGHT176 = 1176,
+
+        /// <summary>
+        /// Led Light 177
+        /// </summary>
+        [Description("Led Light 177")]
+        LEDLIGHT177 = 1177,
+
+        /// <summary>
+        /// Led Light 178
+        /// </summary>
+        [Description("Led Light 178")]
+        LEDLIGHT178 = 1178,
+
+        /// <summary>
+        /// Led Light 179
+        /// </summary>
+        [Description("Led Light 179")]
+        LEDLIGHT179 = 1179,
+
+        /// <summary>
+        /// Led Light 180
+        /// </summary>
+        [Description("Led Light 180")]
+        LEDLIGHT180 = 1180,
+
+        /// <summary>
+        /// Led Light 181
+        /// </summary>
+        [Description("Led Light 181")]
+        LEDLIGHT181 = 1181,
+
+        /// <summary>
+        /// Led Light 182
+        /// </summary>
+        [Description("Led Light 182")]
+        LEDLIGHT182 = 1182,
+
+        /// <summary>
+        /// Led Light 183
+        /// </summary>
+        [Description("Led Light 183")]
+        LEDLIGHT183 = 1183,
+
+        /// <summary>
+        /// Led Light 184
+        /// </summary>
+        [Description("Led Light 184")]
+        LEDLIGHT184 = 1184,
+
+        /// <summary>
+        /// Led Light 185
+        /// </summary>
+        [Description("Led Light 185")]
+        LEDLIGHT185 = 1185,
+
+        /// <summary>
+        /// Led Light 186
+        /// </summary>
+        [Description("Led Light 186")]
+        LEDLIGHT186 = 1186,
+
+        /// <summary>
+        /// Led Light 187
+        /// </summary>
+        [Description("Led Light 187")]
+        LEDLIGHT187 = 1187,
+
+        /// <summary>
+        /// Led Light 188
+        /// </summary>
+        [Description("Led Light 188")]
+        LEDLIGHT188 = 1188,
+
+        /// <summary>
+        /// Led Light 189
+        /// </summary>
+        [Description("Led Light 189")]
+        LEDLIGHT189 = 1189,
+
+        /// <summary>
+        /// Led Light 190
+        /// </summary>
+        [Description("Led Light 190")]
+        LEDLIGHT190 = 1190,
+
+        /// <summary>
+        /// Led Light 191
+        /// </summary>
+        [Description("Led Light 191")]
+        LEDLIGHT191 = 1191,
+
+        /// <summary>
+        /// Led Light 192
+        /// </summary>
+        [Description("Led Light 192")]
+        LEDLIGHT192 = 1192,
+
+        /// <summary>
+        /// Led Light 193
+        /// </summary>
+        [Description("Led Light 193")]
+        LEDLIGHT193 = 1193,
+
+        /// <summary>
+        /// Led Light 194
+        /// </summary>
+        [Description("Led Light 194")]
+        LEDLIGHT194 = 1194,
+
+        /// <summary>
+        /// Led Light 195
+        /// </summary>
+        [Description("Led Light 195")]
+        LEDLIGHT195 = 1195,
+
+        /// <summary>
+        /// Led Light 196
+        /// </summary>
+        [Description("Led Light 196")]
+        LEDLIGHT196 = 1196,
+
+        /// <summary>
+        /// Led Light 197
+        /// </summary>
+        [Description("Led Light 197")]
+        LEDLIGHT197 = 1197,
+
+        /// <summary>
+        /// Led Light 198
+        /// </summary>
+        [Description("Led Light 198")]
+        LEDLIGHT198 = 1198,
+
+        /// <summary>
+        /// Led Light 199
+        /// </summary>
+        [Description("Led Light 199")]
+        LEDLIGHT199 = 1199,
+
+        /// <summary>
+        /// Led Light 200
+        /// </summary>
+        [Description("Led Light 200")]
+        LEDLIGHT200 = 1200,
+
+        // To Support up to 1000 LED Lights i need more time to Edit****************************************
     };
 
     /// <summary>

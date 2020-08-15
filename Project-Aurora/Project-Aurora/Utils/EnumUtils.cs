@@ -264,6 +264,11 @@ namespace Aurora.Utils
         public KbBrandToStringVC() : base(PreferredKeyboard.None) { }
     }
 
+    public class LedBrandToStringVC : EnumToStringVC
+    {
+        public LedBrandToStringVC() : base(PreferredLedStrip.None) { }
+    }
+
     public class MouseBrandToStringVC : EnumToStringVC
     {
         public MouseBrandToStringVC() : base(PreferredMouse.None) { }
