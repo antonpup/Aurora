@@ -16,6 +16,8 @@ namespace Aurora.Devices.Logitech
     {
         public override string DeviceName => "Logitech";
 
+        private readonly byte[] logitechBitmap = new byte[LogitechGSDK.LOGI_LED_BITMAP_SIZE];
+
         public override bool Initialize()
         {
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_override_dll"))
@@ -43,16 +45,30 @@ namespace Aurora.Devices.Logitech
 
         public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            if (!IsInitialized)
+                return false;
+
             foreach (var key in keyColors)
             {
+                if (LedMaps.BitmapMap.TryGetValue(key.Key, out var index))
+                {
+                    logitechBitmap[index] = key.Value.B;
+                    logitechBitmap[index + 1] = key.Value.G;
+                    logitechBitmap[index + 2] = key.Value.R;
+                    logitechBitmap[index + 3] = key.Value.A;
+                }
                 if (LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
-                    LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
-                else if (LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
-                    LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(hidId, key.Value);
-                else if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
-                    LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
+                if (LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
+                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(hidId, key.Value);
+                if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
+                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
             }
-            return true;
+
+            IsInitialized &= LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
+            IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
+
+            return IsInitialized;
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)

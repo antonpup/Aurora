@@ -1,4 +1,5 @@
 ﻿
+using Aurora.Utils;
 using LedCSharp;
 using System;
 using System.Drawing;
@@ -380,6 +381,7 @@ namespace LedCSharp
 
         private static (int R, int G, int B) GetColorValues(Color clr)
         {
+            clr = ColorUtils.CorrectWithAlpha(clr);
             return ((int)(clr.R / 255.0 * 100.0),
                     (int)(clr.G / 255.0 * 100.0),
                     (int)(clr.B / 255.0 * 100.0));
