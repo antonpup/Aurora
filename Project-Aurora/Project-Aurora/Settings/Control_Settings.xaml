@@ -336,7 +336,7 @@
             </TabItem>
             <TabItem Header="Device Manager">
                 <Grid>
-                    <Controls:Control_DeviceManager Margin="10"/>
+                    <Controls:Control_DeviceManager Margin="4"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Plugin Management">
