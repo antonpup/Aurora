@@ -20,15 +20,25 @@ namespace Aurora.Devices.Logitech
 
         public override bool Initialize()
         {
+            var ghubRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lghub.exe");
+            var lgsRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lcore.exe");
+
+            if (!ghubRunning && !lgsRunning)
+                return IsInitialized = false;
+
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_override_dll"))
                 LogitechGSDK.GHUB = Global.Configuration.VarRegistry.GetVariable<LGDLL>($"{DeviceName}_override_dll_option") == LGDLL.GHUB;
             else
-                LogitechGSDK.GHUB = Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "LGHUB"));
+                LogitechGSDK.GHUB = ghubRunning;
 
             Global.logger.Info("Trying to initialize Logitech using the dll for " + (LogitechGSDK.GHUB ? "GHUB" : "LGS"));
 
             if (LogitechGSDK.LogiLedInit() && LogitechGSDK.LogiLedSaveCurrentLighting())
             {
+                //logitech says to wait a bit of time between Init() and SetLighting()
+                //This didnt seem to be needed in the past but I feel like 100ms might 
+                //fix some weird issues without any noticeable disadvantages
+                Thread.Sleep(100);
                 LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
                 return IsInitialized = true;
             }
@@ -62,10 +72,12 @@ namespace Aurora.Devices.Logitech
                 if (LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(hidId, key.Value);
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
-                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                    LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                //TargetZone returns false if the targer device does not have the zone with the specified index
+                //so we'll not use it to check the connection is still active.
+                //The other methods only seem to return false if the connection to LGS / GHUB fails
             }
 
-            IsInitialized &= LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_PERKEY_RGB);
             IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
 
             return IsInitialized;
