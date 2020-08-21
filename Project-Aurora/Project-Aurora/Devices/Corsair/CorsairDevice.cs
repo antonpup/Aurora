@@ -37,15 +37,17 @@ namespace Aurora.Devices.Corsair
             {
                 Global.logger.Error("Error requesting cuesdk exclusive control:" + CUESDK.GetLastError());
             }
+            CUESDK.SetLayerPriority(255);
 
             return IsInitialized = true;
         }
 
         public override void Shutdown()
         {
-            IsInitialized = false;
+            CUESDK.SetLayerPriority(0);
             deviceInfos.Clear();
             CUESDK.ReleaseControl();
+            IsInitialized = false;
         }
 
         public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
