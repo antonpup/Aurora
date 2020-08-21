@@ -52,6 +52,9 @@ namespace Aurora.Devices.Corsair
 
         public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            if (deviceInfos.Count != CUESDK.GetDeviceCount())
+                this.Reset();
+
             for (int i = 0; i < deviceInfos.Count; i++)
             {
                 var deviceInfo = deviceInfos[i];
