@@ -175,11 +175,6 @@
     <Resource Include="Resources\*.png" />
     <Resource Include="Resources\aurora_icon.ico" />
 
-    <Content Include="Resources\CorsairInstall\*.png" />
-    <Content Include="Resources\LogitechInstall\*.png" />
-    <Content Include="Resources\RazerInstall\*.png" />
-    <Content Include="Resources\SteelSeriesInstall\*.png" />
-
     <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
     <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />

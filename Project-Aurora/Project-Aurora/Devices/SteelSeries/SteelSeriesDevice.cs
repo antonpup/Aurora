@@ -51,17 +51,6 @@ namespace Aurora.Devices.SteelSeries
                     try
                     {
                         gameSenseSDK.init("PROJECTAURORA", "Project Aurora", 7);
-
-                        if (Global.Configuration.steelseries_first_time)
-                        {
-                            App.Current.Dispatcher.Invoke(() =>
-                            {
-                                SteelSeriesInstallInstructions instructions = new SteelSeriesInstallInstructions();
-                                instructions.ShowDialog();
-                            });
-                            Global.Configuration.steelseries_first_time = false;
-                            Settings.ConfigManager.Save(Global.Configuration);
-                        }
                         isInitialized = true;
                         return true;
                     }

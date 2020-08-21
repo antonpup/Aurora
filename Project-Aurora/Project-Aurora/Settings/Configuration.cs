@@ -442,15 +442,6 @@ namespace Aurora.Settings
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        //First Time Installs
-        public bool redist_first_time;
-        public bool logitech_first_time;
-        public bool corsair_first_time;
-        public bool razer_first_time;
-        public bool steelseries_first_time;
-        public bool dualshock_first_time;
-        public bool roccat_first_time;
-
         //General Program Settings
         public bool allow_peripheral_devices;
         public bool allow_wrappers_in_background;
@@ -539,14 +530,6 @@ namespace Aurora.Settings
 
         public Configuration()
         {
-            //First Time Installs
-            redist_first_time = true;
-            logitech_first_time = true;
-            corsair_first_time = true;
-            razer_first_time = true;
-            steelseries_first_time = true;
-            dualshock_first_time = true;
-
             //General Program Settings
             allow_peripheral_devices = true;
             UseVolumeAsBrightness = false;

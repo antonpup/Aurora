@@ -61,16 +61,6 @@ namespace Aurora.Devices.Dualshock
                 if (device != null)
                 {
                     isInitialized = true;
-                    if (Global.Configuration.dualshock_first_time)
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            DualshockInstallInstructions instructions = new DualshockInstallInstructions();
-                            instructions.ShowDialog();
-                        });
-                        Global.Configuration.dualshock_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
-                    }
                 }
             }
 

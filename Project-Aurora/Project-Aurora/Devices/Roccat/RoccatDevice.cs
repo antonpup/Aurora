@@ -212,16 +212,6 @@ namespace Aurora.Devices.Roccat
                     {
                         throw new Exception("No devices connected");
                     }
-                    if (Global.Configuration.roccat_first_time)
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            RoccatInstallInstructions instructions = new RoccatInstallInstructions();
-                            instructions.ShowDialog();
-                        });
-                        Global.Configuration.roccat_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
-                    }
                     isInitialized = true;
                     return true;
                 }
