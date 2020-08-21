@@ -1298,6 +1298,126 @@ namespace Aurora.Devices
         CALC = 216,
 
         /// <summary>
+        /// Peripheral Light 1
+        /// </summary>
+        [Description("Peripheral Light 1")]
+        PERIPHERAL_LIGHT1 = 217,
+
+        /// <summary>
+        /// Peripheral Light 2
+        /// </summary>
+        [Description("Peripheral Light 2")]
+        PERIPHERAL_LIGHT2 = 218,
+
+        /// <summary>
+        /// Peripheral Light 3
+        /// </summary>
+        [Description("Peripheral Light 3")]
+        PERIPHERAL_LIGHT3 = 219,
+
+        /// <summary>
+        /// Peripheral Light 4
+        /// </summary>
+        [Description("Peripheral Light 4")]
+        PERIPHERAL_LIGHT4 = 220,
+
+        /// <summary>
+        /// Peripheral Light 5
+        /// </summary>
+        [Description("Peripheral Light 5")]
+        PERIPHERAL_LIGHT5 = 221,
+
+        /// <summary>
+        /// Peripheral Light 6
+        /// </summary>
+        [Description("Peripheral Light 6")]
+        PERIPHERAL_LIGHT6 = 222,
+
+        /// <summary>
+        /// Peripheral Light 7
+        /// </summary>
+        [Description("Peripheral Light 7")]
+        PERIPHERAL_LIGHT7 = 223,
+
+        /// <summary>
+        /// Peripheral Light 8
+        /// </summary>
+        [Description("Peripheral Light 8")]
+        PERIPHERAL_LIGHT8 = 224,
+
+        /// <summary>
+        /// Peripheral Light 9
+        /// </summary>
+        [Description("Peripheral Light 9")]
+        PERIPHERAL_LIGHT9 = 225,
+
+        /// <summary>
+        /// Peripheral Light 10
+        /// </summary>
+        [Description("Peripheral Light 10")]
+        PERIPHERAL_LIGHT10 = 226,
+
+        /// <summary>
+        /// Peripheral Light 11
+        /// </summary>
+        [Description("Peripheral Light 11")]
+        PERIPHERAL_LIGHT11 = 227,
+
+        /// <summary>
+        /// Peripheral Light 12
+        /// </summary>
+        [Description("Peripheral Light 12")]
+        PERIPHERAL_LIGHT12 = 228,
+
+        /// <summary>
+        /// Peripheral Light 13
+        /// </summary>
+        [Description("Peripheral Light 13")]
+        PERIPHERAL_LIGHT13 = 229,
+
+        /// <summary>
+        /// Peripheral Light 14
+        /// </summary>
+        [Description("Peripheral Light 14")]
+        PERIPHERAL_LIGHT14 = 230,
+
+        /// <summary>
+        /// Peripheral Light 15
+        /// </summary>
+        [Description("Peripheral Light 15")]
+        PERIPHERAL_LIGHT15 = 231,
+
+        /// <summary>
+        /// Peripheral Light 16
+        /// </summary>
+        [Description("Peripheral Light 16")]
+        PERIPHERAL_LIGHT16 = 232,
+
+        /// <summary>
+        /// Peripheral Light 17
+        /// </summary>
+        [Description("Peripheral Light 17")]
+        PERIPHERAL_LIGHT17 = 233,
+
+        /// <summary>
+        /// Peripheral Light 18
+        /// </summary>
+        [Description("Peripheral Light 18")]
+        PERIPHERAL_LIGHT18 = 234,
+
+        /// <summary>
+        /// Peripheral Light 19
+        /// </summary>
+        [Description("Peripheral Light 19")]
+        PERIPHERAL_LIGHT19 = 235,
+
+        /// <summary>
+        /// Peripheral Light 20
+        /// </summary>
+        [Description("Peripheral Light 20")]
+        PERIPHERAL_LIGHT20 = 236,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

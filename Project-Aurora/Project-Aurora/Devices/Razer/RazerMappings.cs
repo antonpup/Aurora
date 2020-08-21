@@ -155,31 +155,30 @@ namespace Aurora.Devices.Razer
             [DeviceKeys.MOUSEPADLIGHT14] = 1,
             [DeviceKeys.MOUSEPADLIGHT15] = 0,
         };
-        //TODO
         public static readonly Dictionary<DeviceKeys, GridLed> mouseDictionary = new Dictionary<DeviceKeys, GridLed>()
         {
-            [DeviceKeys.ADDITIONALLIGHT1] = GridLed.ScrollWheel,
-            [DeviceKeys.ADDITIONALLIGHT2] = GridLed.Logo,
-            [DeviceKeys.ADDITIONALLIGHT3] = GridLed.Backlight,
-            [DeviceKeys.ADDITIONALLIGHT4] = GridLed.LeftSide1,
-            [DeviceKeys.ADDITIONALLIGHT5] = GridLed.LeftSide2,
-            [DeviceKeys.ADDITIONALLIGHT6] = GridLed.LeftSide3,
-            [DeviceKeys.ADDITIONALLIGHT7] = GridLed.LeftSide4,
-            [DeviceKeys.ADDITIONALLIGHT8] = GridLed.LeftSide5,
-            [DeviceKeys.ADDITIONALLIGHT9] = GridLed.LeftSide6,
-            [DeviceKeys.ADDITIONALLIGHT10] = GridLed.LeftSide7,
-            [DeviceKeys.ADDITIONALLIGHT11] = GridLed.Bottom1,
-            [DeviceKeys.ADDITIONALLIGHT12] = GridLed.Bottom2,
-            [DeviceKeys.ADDITIONALLIGHT13] = GridLed.Bottom3,
-            [DeviceKeys.ADDITIONALLIGHT14] = GridLed.Bottom4,
-            [DeviceKeys.ADDITIONALLIGHT15] = GridLed.Bottom5,
-            [DeviceKeys.ADDITIONALLIGHT16] = GridLed.RightSide1,
-            [DeviceKeys.ADDITIONALLIGHT17] = GridLed.RightSide2,
-            [DeviceKeys.ADDITIONALLIGHT18] = GridLed.RightSide3,
-            [DeviceKeys.ADDITIONALLIGHT19] = GridLed.RightSide4,
-            [DeviceKeys.ADDITIONALLIGHT20] = GridLed.RightSide5,
-            [DeviceKeys.ADDITIONALLIGHT21] = GridLed.RightSide6,
-            [DeviceKeys.ADDITIONALLIGHT22] = GridLed.RightSide7,
+            [DeviceKeys.Peripheral_ScrollWheel] = GridLed.ScrollWheel,
+            [DeviceKeys.Peripheral_Logo] = GridLed.Logo,
+            [DeviceKeys.Peripheral] = GridLed.Backlight,//???
+            [DeviceKeys.PERIPHERAL_LIGHT1] = GridLed.LeftSide1,
+            [DeviceKeys.PERIPHERAL_LIGHT2] = GridLed.LeftSide2,
+            [DeviceKeys.PERIPHERAL_LIGHT3] = GridLed.LeftSide3,
+            [DeviceKeys.PERIPHERAL_LIGHT4] = GridLed.LeftSide4,
+            [DeviceKeys.PERIPHERAL_LIGHT5] = GridLed.LeftSide5,
+            [DeviceKeys.PERIPHERAL_LIGHT6] = GridLed.LeftSide6,
+            [DeviceKeys.PERIPHERAL_LIGHT7] = GridLed.LeftSide7,
+            [DeviceKeys.PERIPHERAL_LIGHT8] = GridLed.Bottom1,
+            [DeviceKeys.PERIPHERAL_LIGHT9] = GridLed.Bottom2,
+            [DeviceKeys.PERIPHERAL_LIGHT10] = GridLed.Bottom3,
+            [DeviceKeys.PERIPHERAL_LIGHT11] = GridLed.Bottom4,
+            [DeviceKeys.PERIPHERAL_LIGHT12] = GridLed.Bottom5,
+            [DeviceKeys.PERIPHERAL_LIGHT13] = GridLed.RightSide1,
+            [DeviceKeys.PERIPHERAL_LIGHT14] = GridLed.RightSide2,
+            [DeviceKeys.PERIPHERAL_LIGHT15] = GridLed.RightSide3,
+            [DeviceKeys.PERIPHERAL_LIGHT16] = GridLed.RightSide4,
+            [DeviceKeys.PERIPHERAL_LIGHT17] = GridLed.RightSide5,
+            [DeviceKeys.PERIPHERAL_LIGHT18] = GridLed.RightSide6,
+            [DeviceKeys.PERIPHERAL_LIGHT19] = GridLed.RightSide7
         };
     }
 }

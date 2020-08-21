@@ -912,6 +912,9 @@ namespace Aurora.Settings
                     case PreferredMouse.OMEN_Vector_Essentials:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
                         break;
+                    case PreferredMouse.Razer_Mamba_TE:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_mamba_te_features.json");
+                        break;
                 }
 
                 if (!string.IsNullOrWhiteSpace(mouse_feature_path))
