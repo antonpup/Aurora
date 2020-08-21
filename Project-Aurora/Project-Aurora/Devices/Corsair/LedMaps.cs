@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aurora.Utils;
 using CorsairRGB.NET.Enums;
+using CorsairRGB.NET.Structures;
 
 namespace Aurora.Devices.Corsair
 {
@@ -862,5 +864,27 @@ namespace Aurora.Devices.Corsair
             CorsairLedId.LC_C1_150,
             #endregion
         };
+
+        internal static readonly List<CorsairLedId> Channel1LedIds = EnumUtils.GetEnumValues<CorsairLedId>()
+            .Where(id => Enum.GetName(typeof(CorsairLedId), id).StartsWith("D_C1_"))
+            .ToList();
+
+        internal static readonly List<CorsairLedId> Channel2LedIds = EnumUtils.GetEnumValues<CorsairLedId>()
+            .Where(id => Enum.GetName(typeof(CorsairLedId), id).StartsWith("D_C2_"))
+            .ToList();
+
+        internal static readonly List<CorsairLedId> Channel3LedIds = EnumUtils.GetEnumValues<CorsairLedId>()
+            .Where(id => Enum.GetName(typeof(CorsairLedId), id).StartsWith("D_C3_"))
+            .ToList();
+
+        internal static readonly List<List<CorsairLedId>> ChannelLeds = new List<List<CorsairLedId>> 
+        {
+            Channel1LedIds,
+            Channel2LedIds,
+            Channel3LedIds
+        };
+
+        public static string ToString(this CorsairLedColor corsairLedColor) => $"{corsairLedColor.LedId}, ({corsairLedColor.R},{corsairLedColor.G},{corsairLedColor.B})";
+
     }
 }

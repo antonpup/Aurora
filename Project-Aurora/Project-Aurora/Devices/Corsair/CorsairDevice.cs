@@ -3,6 +3,8 @@ using Aurora.Utils;
 using CorsairRGB.NET;
 using CorsairRGB.NET.Enums;
 using CorsairRGB.NET.Structures;
+using Mono.CSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -19,7 +21,6 @@ namespace Aurora.Devices.Corsair
 
         private readonly List<CorsairDeviceInfo> deviceInfos = new List<CorsairDeviceInfo>();
 
-        private readonly List<CorsairLedId> AllCorsairLedIds = EnumUtils.GetEnumValues<CorsairLedId>().ToList();
         public override bool Initialize()
         {
             CUESDK.PerformProtocolHandshake();
@@ -80,16 +81,23 @@ namespace Aurora.Devices.Corsair
                 {
                     if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var clr))
                     {
-                        //may be a bit drastic: if we dont have a map, set literally everything to the periph logo color
-                        foreach(var led in AllCorsairLedIds)
+                        int totalLeds = 0;
+                        for (int j = 0; j < deviceInfo.Channels.ChannelsCount; j++)
                         {
-                            colors.Add(new CorsairLedColor()
+                            totalLeds += deviceInfo.Channels.Channels[j].TotalLedsCount;
+                            foreach (var ledid in LedMaps.ChannelLeds[j])
                             {
-                                LedId = led,
-                                R = clr.R,
-                                G = clr.G,
-                                B = clr.B
-                            });
+                                if (colors.Count == totalLeds)
+                                    continue;
+
+                                colors.Add(new CorsairLedColor()
+                                {
+                                    LedId = ledid,
+                                    R = clr.R,
+                                    G = clr.G,
+                                    B = clr.B
+                                });
+                            }
                         }
                     }
                 }
