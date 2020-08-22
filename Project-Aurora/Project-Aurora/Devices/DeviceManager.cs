@@ -275,7 +275,7 @@ namespace Aurora.Devices
             {
                 lock (dc.actionLock)
                     dc.Device.Shutdown();
-                Global.logger.Info("Device, " + dc.Device.DeviceName + ", was shutdown");
+                Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
         }
 
