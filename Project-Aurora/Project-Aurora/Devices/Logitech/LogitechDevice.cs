@@ -72,13 +72,21 @@ namespace Aurora.Devices.Logitech
                 if (LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(hidId, key.Value);
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
-                    LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                {
+                    if ((peripheral.type == DeviceType.Headset && !Global.Configuration.devices_disable_headset)
+                    || (peripheral.type == DeviceType.Mouse && !Global.Configuration.devices_disable_mouse))
+                    {
+                        LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                    }
+                }
+
                 //TargetZone returns false if the targer device does not have the zone with the specified index
                 //so we'll not use it to check the connection is still active.
                 //The other methods only seem to return false if the connection to LGS / GHUB fails
             }
 
-            IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
+            if (!Global.Configuration.devices_disable_keyboard)
+                IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
 
             return IsInitialized;
         }
