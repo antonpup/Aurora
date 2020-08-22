@@ -67,9 +67,9 @@ namespace Aurora.Devices.Logitech
                     logitechBitmap[index + 2] = key.Value.R;
                     logitechBitmap[index + 3] = key.Value.A;
                 }
-                if (LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
+                if (!Global.Configuration.devices_disable_keyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
-                if (LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
+                if (!Global.Configuration.devices_disable_keyboard && LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(hidId, key.Value);
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
                 {
