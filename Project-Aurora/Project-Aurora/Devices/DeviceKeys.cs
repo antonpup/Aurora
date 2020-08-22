@@ -1418,6 +1418,12 @@ namespace Aurora.Devices
         PERIPHERAL_LIGHT20 = 236,
 
         /// <summary>
+        /// Peripheral DPI
+        /// </summary>
+        [Description("PERIPHERAL_DPI")]
+        PERIPHERAL_DPI = 237,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
