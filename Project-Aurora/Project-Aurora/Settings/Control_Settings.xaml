@@ -70,6 +70,16 @@
                 <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
             </DataTemplate>
 
+            <ObjectDataProvider x:Key="MousepadBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type TypeName="local:PreferredMousepad" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <u:MousepadBrandToStringVC x:Key="MousepadBrandToStringVC"/>
+            <DataTemplate x:Key="MousepadBrandTemplate">
+                <TextBlock Text="{Binding Converter={StaticResource MousepadBrandToStringVC}}" />
+            </DataTemplate>
+
             <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type TypeName="local:MouseOrientationType" />
@@ -226,13 +236,14 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="170"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard Layout:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Mouse:" VerticalAlignment="Top"/>
+                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Mousepad:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
                                 <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
@@ -241,6 +252,7 @@
                                 <ComboBox x:Name="devices_kb_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbLayout}}" ItemTemplate="{Binding Source={StaticResource KbLayoutTemplate}}" SelectionChanged="devices_kb_layout_SelectionChanged"/>
                                 <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
                                 <ComboBox x:Name="devices_mouse_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseBrand}}" ItemTemplate="{Binding Source={StaticResource MouseBrandTemplate}}" SelectionChanged="devices_mouse_brand_SelectionChanged"/>
+                                <ComboBox x:Name="devices_mousepad_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MousepadBrand}}" ItemTemplate="{Binding Source={StaticResource MousepadBrandTemplate}}" SelectionChanged="devices_mousepad_brand_SelectionChanged"/>
                                 <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
                                 <ComboBox x:Name="devices_mouse_orientation" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseOrientation}}" ItemTemplate="{Binding Source={StaticResource MouseOrientationTemplate}}" SelectionChanged="devices_mouse_orientation_SelectionChanged"/>
                                 <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

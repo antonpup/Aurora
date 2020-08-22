@@ -269,6 +269,11 @@ namespace Aurora.Utils
         public MouseBrandToStringVC() : base(PreferredMouse.None) { }
     }
 
+    public class MousepadBrandToStringVC : EnumToStringVC
+    {
+        public MousepadBrandToStringVC() : base(PreferredMousepad.None) { }
+    }
+
     public class BitmapAccuracyToStringVC : EnumToStringVC
     {
         public BitmapAccuracyToStringVC() : base(BitmapAccuracy.Okay) { }

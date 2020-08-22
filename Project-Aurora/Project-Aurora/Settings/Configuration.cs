@@ -351,8 +351,6 @@ namespace Aurora.Settings
 
         [Description("Generic Peripheral")]
         Generic_Peripheral = 1,
-        [Description("Razer/Corsair Mousepad + Mouse")]
-        Generic_Mousepad = 2,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]
@@ -385,10 +383,7 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-        [Description("SteelSeries - QcK Prism Mousepad + Mouse")]
-        SteelSeries_QcK_Prism = 702,
-        [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
-        SteelSeries_QcK_2_Zone = 703,
+
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900,
@@ -403,6 +398,22 @@ namespace Aurora.Settings
         [Description("OMEN Vector Essentials")]
         OMEN_Vector_Essentials = 1003,
     }
+
+    public enum PreferredMousepad
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Razer/Corsair Mousepad")]
+        Generic_Mousepad = 1,
+
+        //Steelseries range is 100-299
+        [Description("SteelSeries - QcK Prism Mousepad")]
+        SteelSeries_QcK_Prism = 100,
+        [Description("SteelSeries - Two-zone QcK Mousepad")]
+        SteelSeries_QcK_2_Zone = 101,
+    }
+
 
     public enum KeycapType
     {
@@ -479,6 +490,7 @@ namespace Aurora.Settings
         public PreferredKeyboard keyboard_brand;
         public PreferredKeyboardLocalization keyboard_localization;
         public PreferredMouse mouse_preference;
+        public PreferredMousepad mousepad_preference;
         public KeycapType virtualkeyboard_keycap_type;
         public ApplicationDetectionMode detection_mode;
         public HashSet<String> excluded_programs;
@@ -560,6 +572,7 @@ namespace Aurora.Settings
             keyboard_brand = PreferredKeyboard.None;
             keyboard_localization = PreferredKeyboardLocalization.None;
             mouse_preference = PreferredMouse.None;
+            mousepad_preference = PreferredMousepad.None;
             virtualkeyboard_keycap_type = KeycapType.Default;
             detection_mode = ApplicationDetectionMode.WindowsEvents;
             excluded_programs = new HashSet<string>();
