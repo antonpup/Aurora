@@ -102,7 +102,7 @@ namespace Aurora.Devices.Razer
 
             foreach (var key in keyColors)
             {
-                if (RazerMappings.mousepadDictionary.TryGetValue(key.Key, out var kbIndex))
+                if (RazerMappings.keyboardDictionary.TryGetValue(key.Key, out var kbIndex))
                     keyboard[kbIndex] = ToColore(key.Value);
 
                 if (RazerMappings.mousepadDictionary.TryGetValue(key.Key, out var mousepadIndex))
