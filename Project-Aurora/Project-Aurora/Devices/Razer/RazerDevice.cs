@@ -16,7 +16,7 @@ using Corale.Colore.Razer.Mouse;
 
 namespace Aurora.Devices.Razer
 {
-    public class RazerDevice2 : DefaultDevice
+    public class RazerDevice : DefaultDevice
     {
         public override string DeviceName => "Razer";
 
@@ -62,7 +62,8 @@ namespace Aurora.Devices.Razer
                 return IsInitialized = false;
             }
 
-            DetectDevices();
+            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_query"))
+                DetectDevices();
 
             return IsInitialized = true;
         }
@@ -111,7 +112,7 @@ namespace Aurora.Devices.Razer
                     mouse[mouseIndex] = ToColore(key.Value);
             }
 
-            if(!Global.Configuration.devices_disable_keyboard)
+            if (!Global.Configuration.devices_disable_keyboard)
                 Chroma.Instance.Keyboard.SetCustom(keyboard);
             if (!Global.Configuration.devices_disable_mouse)
                 Chroma.Instance.Mousepad.SetCustom(mousepad);
@@ -124,6 +125,11 @@ namespace Aurora.Devices.Razer
             Chroma.Instance.ChromaLink.SetCustom(chromalink);
 
             return true;
+        }
+
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
+        {
+            variableRegistry.Register($"{DeviceName}_query", false, "Query Razer devices", remark: "This is slow so it is disabled by default. Can be useful for debugging");
         }
 
         private Color ToColore(System.Drawing.Color value) => new Color(value.R, value.G, value.B);
