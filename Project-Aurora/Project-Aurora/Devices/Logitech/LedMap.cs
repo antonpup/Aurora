@@ -9,50 +9,6 @@ namespace Aurora.Devices.Logitech
 {
     public static class LedMaps
     {
-        public static readonly Dictionary<DeviceKeys, keyboardNames> KeyMap = new Dictionary<DeviceKeys, keyboardNames>()
-        {
-            [DeviceKeys.G1] = keyboardNames.G_1,
-            [DeviceKeys.G2] = keyboardNames.G_2,
-            [DeviceKeys.G3] = keyboardNames.G_3,
-            [DeviceKeys.G4] = keyboardNames.G_4,
-            [DeviceKeys.G5] = keyboardNames.G_5,
-            [DeviceKeys.G6] = keyboardNames.G_6,
-            [DeviceKeys.G7] = keyboardNames.G_7,
-            [DeviceKeys.G8] = keyboardNames.G_8,
-            [DeviceKeys.G9] = keyboardNames.G_9,
-            [DeviceKeys.LOGO] = keyboardNames.G_LOGO,
-            [DeviceKeys.LOGO2] = keyboardNames.G_BADGE,
-        };
-
-        public static readonly Dictionary<DeviceKeys, (DeviceType type, int zone)> PeripheralMap = new Dictionary<DeviceKeys, (DeviceType, int)>()
-        {
-            //not sure how to handle this properly. the indexes do not match on different mice
-            //g900 => 0 is dpi
-            //g502 => 0 is dpi
-            //g303 => 0 is side
-            //g403 => 0 is scroll
-            //g703 => 0 is scroll
-            //gpro => 0 is everything
-            //other mice are not documented on the sdk
-            [DeviceKeys.PERIPHERAL_DPI] =  (DeviceType.Mouse, 0),
-            [DeviceKeys.Peripheral_Logo] = (DeviceType.Mouse, 1),
-            [DeviceKeys.Peripheral_ScrollWheel] = (DeviceType.Mouse, 2),
-            [DeviceKeys.MOUSEPADLIGHT1] = (DeviceType.Mousemat, 0),
-
-            [DeviceKeys.PERIPHERAL_LIGHT1] = (DeviceType.Speaker,0),
-            [DeviceKeys.PERIPHERAL_LIGHT2] = (DeviceType.Speaker, 1),
-            [DeviceKeys.PERIPHERAL_LIGHT3] = (DeviceType.Speaker, 2),
-            [DeviceKeys.PERIPHERAL_LIGHT4] = (DeviceType.Speaker, 3),
-            [DeviceKeys.PERIPHERAL_LIGHT5] = (DeviceType.Headset, 0),
-            [DeviceKeys.PERIPHERAL_LIGHT6] = (DeviceType.Headset, 1),
-        };
-
-        public static readonly Dictionary<DeviceKeys, int> HidCodeMap = new Dictionary<DeviceKeys, int>()
-        {
-            [DeviceKeys.BACKSLASH_UK] = 0x64,
-            [DeviceKeys.HASHTAG] = 0x32
-        };
-
         public static readonly Dictionary<DeviceKeys, int> BitmapMap = new Dictionary<DeviceKeys, int>()
         {
             [DeviceKeys.ESC] = 0,
@@ -70,7 +26,7 @@ namespace Aurora.Devices.Logitech
             [DeviceKeys.F12] = 48,
             [DeviceKeys.PRINT_SCREEN] = 52,
             [DeviceKeys.SCROLL_LOCK] = 56,
-            [DeviceKeys.PAUSE_BREAK]= 60,
+            [DeviceKeys.PAUSE_BREAK] = 60,
             //64
             //68
             //72
@@ -181,6 +137,44 @@ namespace Aurora.Devices.Logitech
             [DeviceKeys.NUM_ZERO] = 492,
             [DeviceKeys.NUM_PERIOD] = 496,
             //500
+        };
+
+        public static readonly Dictionary<DeviceKeys, keyboardNames> KeyMap = new Dictionary<DeviceKeys, keyboardNames>()
+        {
+            [DeviceKeys.G1] = keyboardNames.G_1,
+            [DeviceKeys.G2] = keyboardNames.G_2,
+            [DeviceKeys.G3] = keyboardNames.G_3,
+            [DeviceKeys.G4] = keyboardNames.G_4,
+            [DeviceKeys.G5] = keyboardNames.G_5,
+            [DeviceKeys.G6] = keyboardNames.G_6,
+            [DeviceKeys.G7] = keyboardNames.G_7,
+            [DeviceKeys.G8] = keyboardNames.G_8,
+            [DeviceKeys.G9] = keyboardNames.G_9,
+            [DeviceKeys.LOGO] = keyboardNames.G_LOGO,
+            [DeviceKeys.LOGO2] = keyboardNames.G_BADGE,
+        };
+
+        public static readonly Dictionary<DeviceKeys, (DeviceType type, int zone)> PeripheralMap = new Dictionary<DeviceKeys, (DeviceType, int)>()
+        {
+            //not sure how to handle this properly. the indexes do not match on different mice
+            //g900 => 0 is dpi
+            //g502 => 0 is dpi
+            //g303 => 0 is side
+            //g403 => 0 is scroll
+            //g703 => 0 is scroll
+            //gpro => 0 is everything
+            //other mice are not documented on the sdk
+            [DeviceKeys.PERIPHERAL_DPI] =  (DeviceType.Mouse, 0),
+            [DeviceKeys.Peripheral_Logo] = (DeviceType.Mouse, 1),
+            [DeviceKeys.Peripheral_ScrollWheel] = (DeviceType.Mouse, 2),
+            [DeviceKeys.MOUSEPADLIGHT1] = (DeviceType.Mousemat, 0),
+
+            [DeviceKeys.PERIPHERAL_LIGHT1] = (DeviceType.Speaker,0),
+            [DeviceKeys.PERIPHERAL_LIGHT2] = (DeviceType.Speaker, 1),
+            [DeviceKeys.PERIPHERAL_LIGHT3] = (DeviceType.Speaker, 2),
+            [DeviceKeys.PERIPHERAL_LIGHT4] = (DeviceType.Speaker, 3),
+            [DeviceKeys.PERIPHERAL_LIGHT5] = (DeviceType.Headset, 0),
+            [DeviceKeys.PERIPHERAL_LIGHT6] = (DeviceType.Headset, 1),
         };
     }
 }

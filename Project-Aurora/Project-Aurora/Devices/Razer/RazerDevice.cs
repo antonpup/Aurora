@@ -42,7 +42,7 @@ namespace Aurora.Devices.Razer
         {
             if (!Chroma.SdkAvailable)
             {
-                Global.logger.Error("SDK not available. Install Razer synapse");
+                LogError("SDK not available. Install Razer synapse");
                 return IsInitialized = false;
             }
 
@@ -52,13 +52,13 @@ namespace Aurora.Devices.Razer
             }
             catch (Corale.Colore.Razer.NativeCallException e)
             {
-                Global.logger.Error("Error initializing:" + e.Message);
+                LogError("Error initializing:" + e.Message);
                 return IsInitialized = false;
             }
 
             if (!Chroma.Instance.Initialized)
             {
-                Global.logger.Error("Failed to Initialize Razer Chroma sdk");
+                LogError("Failed to Initialize Razer Chroma sdk");
                 return IsInitialized = false;
             }
 
@@ -81,7 +81,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception e)
             {
-                Global.logger.Error(e.Message);
+                LogError(e.Message);
             }
         }
 
@@ -150,7 +150,7 @@ namespace Aurora.Devices.Razer
                 }
                 catch (Corale.Colore.Razer.NativeCallException e)
                 {
-                    Global.logger.Error("Error querying device: " + e.Message);
+                    LogError("Error querying device: " + e.Message);
                 }
             }
         }

@@ -31,7 +31,7 @@ namespace Aurora.Devices.Logitech
             else
                 LogitechGSDK.GHUB = ghubRunning;
 
-            Global.logger.Info("Trying to initialize Logitech using the dll for " + (LogitechGSDK.GHUB ? "GHUB" : "LGS"));
+            LogInfo($"Trying to initialize Logitech using the dll for {(LogitechGSDK.GHUB ? "GHUB" : "LGS")}");
 
             if (LogitechGSDK.LogiLedInit() && LogitechGSDK.LogiLedSaveCurrentLighting())
             {
@@ -69,8 +69,6 @@ namespace Aurora.Devices.Logitech
                 }
                 if (!Global.Configuration.devices_disable_keyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
-                if (!Global.Configuration.devices_disable_keyboard && LedMaps.HidCodeMap.TryGetValue(key.Key, out var hidId))
-                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithHidCode(hidId, key.Value);
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
                 {
                     if ((peripheral.type == DeviceType.Headset && !Global.Configuration.devices_disable_headset)

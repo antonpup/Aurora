@@ -1,6 +1,5 @@
 ﻿using Aurora.Settings;
 using Aurora.Utils;
-using CoolerMaster;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,7 +40,7 @@ namespace Aurora.Devices.Wooting
             }
             catch (Exception exc)
             {
-                Global.logger.Error("There was an error initializing Wooting SDK.\r\n" + exc.Message);
+                LogError("There was an error initializing Wooting SDK.\r\n" + exc.Message);
 
                 IsInitialized = false;
             }
@@ -85,7 +84,7 @@ namespace Aurora.Devices.Wooting
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Failed to Update Device" + exc.ToString());
+                LogError("Failed to Update Device" + exc.ToString());
                 return false;
             }
         }

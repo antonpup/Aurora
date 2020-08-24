@@ -27,7 +27,7 @@ namespace Aurora.Devices.Corsair
             var error = CUESDK.GetLastError();
             if (error != CorsairError.Success)
             {
-                Global.logger.Error("Corsair Error: " + error);
+                LogError("Error: " + error);
                 return IsInitialized = false;
             }
 
@@ -36,7 +36,7 @@ namespace Aurora.Devices.Corsair
 
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive") && !CUESDK.RequestControl())
             {
-                Global.logger.Error("Error requesting cuesdk exclusive control:" + CUESDK.GetLastError());
+                LogError("Error requesting cuesdk exclusive control:" + CUESDK.GetLastError());
             }
             CUESDK.SetLayerPriority(255);
 

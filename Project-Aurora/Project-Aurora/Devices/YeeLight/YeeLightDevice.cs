@@ -35,7 +35,7 @@ namespace Aurora.Devices.YeeLight
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"Device {DeviceName} encountered an error while connecting. Exception: {exc}");
+                    LogError($"Encountered an error while connecting. Exception: {exc}");
                     IsInitialized = false;
 
                     return false;
