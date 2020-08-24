@@ -111,7 +111,7 @@ namespace Aurora.Devices.OpenRGB
             { "Key: Left Fn"          , DK.LEFT_FN           },
             { "Key: Right Fn"         , DK.FN_Key            },
             { "Key: \\ (ISO)"         , DK.BACKSLASH_UK      },
-            { "Key: Context"          , DK.APPLICATION_SELECT},
+            { "Key: Menu"             , DK.APPLICATION_SELECT},
             { "Key: Left Control"     , DK.LEFT_CONTROL      },
             { "Key: Left Shift"       , DK.LEFT_SHIFT        },
             { "Key: Left Alt"         , DK.LEFT_ALT          },
