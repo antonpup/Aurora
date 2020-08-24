@@ -555,7 +555,6 @@ namespace Aurora.Settings
             devices_disabled = new HashSet<Type>();
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
-            devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
             OverlaysInPreview = true;
 
             //Blackout and Night theme
@@ -649,6 +648,10 @@ namespace Aurora.Settings
             if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
             {
                 dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
+                e.ErrorContext.Handled = true;
+            }
+            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.NZXT.NZXTDevice") && e.CurrentObject is HashSet<Type>)
+            {
                 e.ErrorContext.Handled = true;
             }
         }

@@ -94,7 +94,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NZXTSharp\NZXTSharp\NZXTSharp.csproj" />
     <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
       <Private>false</Private>
     </ProjectReference>
