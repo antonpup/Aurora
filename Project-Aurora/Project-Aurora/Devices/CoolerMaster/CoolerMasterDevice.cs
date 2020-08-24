@@ -13,11 +13,12 @@ using DK = Aurora.Devices.DeviceKeys;
 
 namespace Aurora.Devices.CoolerMaster
 {
-    public class CoolerMasterDevice2 : DefaultDevice
+    public class CoolerMasterDevice : DefaultDevice
     {
         public override string DeviceName => "CoolerMaster";
 
         private readonly List<(Native.DEVICE_INDEX Device, Native.COLOR_MATRIX Matrix)> InitializedDevices = new List<(Native.DEVICE_INDEX, Native.COLOR_MATRIX)>();
+
         protected override string DeviceInfo =>
             string.Join(" ", InitializedDevices.Select(d => Enum.GetName(typeof(Native.DEVICE_INDEX), d)));
 
