@@ -112,13 +112,13 @@ namespace Aurora.Devices.Razer
                     mouse[mouseIndex] = ToColore(key.Value);
             }
 
-            if (!Global.Configuration.devices_disable_keyboard)
+            if (!Global.Configuration.DevicesDisableKeyboard)
                 Chroma.Instance.Keyboard.SetCustom(keyboard);
-            if (!Global.Configuration.devices_disable_mouse)
+            if (!Global.Configuration.DevicesDisableMouse)
                 Chroma.Instance.Mousepad.SetCustom(mousepad);
-            if (!Global.Configuration.devices_disable_mouse)
+            if (!Global.Configuration.DevicesDisableMouse)
                 Chroma.Instance.Mouse.SetGrid(mouse);
-            if (!Global.Configuration.devices_disable_headset)
+            if (!Global.Configuration.DevicesDisableHeadset)
                 Chroma.Instance.Headset.SetAll(headset);
 
             Chroma.Instance.Keypad.SetCustom(keypad);

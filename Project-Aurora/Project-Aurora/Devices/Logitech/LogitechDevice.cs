@@ -67,12 +67,12 @@ namespace Aurora.Devices.Logitech
                     logitechBitmap[index + 2] = key.Value.R;
                     logitechBitmap[index + 3] = key.Value.A;
                 }
-                if (!Global.Configuration.devices_disable_keyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
+                if (!Global.Configuration.DevicesDisableKeyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
                 {
-                    if ((peripheral.type == DeviceType.Headset && !Global.Configuration.devices_disable_headset)
-                    || (peripheral.type == DeviceType.Mouse && !Global.Configuration.devices_disable_mouse))
+                    if ((peripheral.type == DeviceType.Headset && !Global.Configuration.DevicesDisableHeadset)
+                    || (peripheral.type == DeviceType.Mouse && !Global.Configuration.DevicesDisableMouse))
                     {
                         LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
                     }
@@ -83,7 +83,7 @@ namespace Aurora.Devices.Logitech
                 //The other methods only seem to return false if the connection to LGS / GHUB fails
             }
 
-            if (!Global.Configuration.devices_disable_keyboard)
+            if (!Global.Configuration.DevicesDisableKeyboard)
                 IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
 
             return IsInitialized;

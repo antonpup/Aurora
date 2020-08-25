@@ -241,6 +241,8 @@ namespace Aurora.Devices.Uniwill
 
         public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
+
         private static string UniwillEnumDescriptionResolver(Enum @enum) {
             try {
                 string descriptionString = @enum.GetCustomAttribute<DescriptionAttribute>()?.Description;
