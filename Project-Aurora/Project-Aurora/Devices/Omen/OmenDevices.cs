@@ -10,7 +10,7 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenDevices : Device
+    public class OmenDevices : IDevice
     {
         bool kbConnected = false;
         bool peripheralConnected = false;
@@ -23,41 +23,35 @@ namespace Aurora.Devices.Omen
         private readonly System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                string result = devicename + ":";
-                foreach (var dev in devices)
+                if (isInitialized)
                 {
-                    if (dev.GetDeviceName() != string.Empty)
+                    string result = "";
+                    foreach (var dev in devices)
                     {
-                        result += (" " + dev.GetDeviceName() + ";");
+                        if (dev.GetDeviceName() != string.Empty)
+                        {
+                            result += (" " + dev.GetDeviceName() + ";");
+                        }
                     }
+
+                    return result;
                 }
-
-                return result;
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                else
+                {
+                    return "Not Initialized";
+                }
             }
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         public bool Initialize()
         {
@@ -108,13 +102,10 @@ namespace Aurora.Devices.Omen
 
         public bool IsConnected()
         {
-            return IsInitialized() && (devices != null && devices.Count != 0);
+            return IsInitialized&& (devices != null && devices.Count != 0);
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsKeyboardConnected()
         {

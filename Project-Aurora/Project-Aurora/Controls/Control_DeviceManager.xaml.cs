@@ -24,7 +24,7 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            Global.dev_manager.NewDevicesInitialized += Dev_manager_NewDevicesInitialized;
+            Global.dev_manager.RetryAttemptsChanged += Dev_manager_NewDevicesInitialized;
         }
 
         private void Dev_manager_NewDevicesInitialized(object sender, EventArgs e)
@@ -38,9 +38,7 @@ namespace Aurora.Controls
                         if (attempts <= 0)
                             this.txtBlk_retries.Visibility = Visibility.Collapsed;
                         else
-                            this.txtBlk_retries.Text = $"Retries Remaining: {Global.dev_manager.RetryAttempts}";
-
-                        UpdateControls();
+                            this.txtBlk_retries.Text = $"Retries Remaining: {attempts}";
                     });
             }
             catch (Exception ex)
@@ -61,14 +59,14 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            this.lstDevices.ItemsSource = Global.dev_manager.Devices;
+            this.lstDevices.ItemsSource = Global.dev_manager.DeviceContainers;
             this.lstDevices.Items.Refresh();
         }
 
         private void btnRestartAll_Click(object sender, RoutedEventArgs e)
         {
-            Global.dev_manager.Shutdown();
-            Global.dev_manager.Initialize();
+            Global.dev_manager.ShutdownDevices();
+            Global.dev_manager.InitializeDevices();
             UpdateControls();
         }
     }
