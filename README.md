@@ -112,4 +112,3 @@ If you're a developer or just a software user you can help the project by:
 * [ColorBox](http://colorbox.codeplex.com/) - Used for gradient editor/picker. This repo contains a modified version of ColorBox, to suit Aurora's needs a bit more.
 * [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
 * [HidLibrary](https://github.com/mikeobrien/HidLibrary) - Used for communication with HID devices
-* [NZXTSharp](https://github.com/akmadian/NZXTSharp) - NZXT SDK, Used for NZXT support

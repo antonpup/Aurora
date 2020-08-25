@@ -11,7 +11,7 @@ using DS4Windows;
 namespace Aurora.Devices.Dualshock
 {
 
-    class DualshockDevice : Device
+    class DualshockDevice : IDevice
     {
         public int Battery { get; private set; }
         public double Latency { get; private set; }
@@ -61,16 +61,6 @@ namespace Aurora.Devices.Dualshock
                 if (device != null)
                 {
                     isInitialized = true;
-                    if (Global.Configuration.dualshock_first_time)
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            DualshockInstallInstructions instructions = new DualshockInstallInstructions();
-                            instructions.ShowDialog();
-                        });
-                        Global.Configuration.dualshock_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
-                    }
                 }
             }
 
@@ -101,50 +91,43 @@ namespace Aurora.Devices.Dualshock
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                string DS4ConnectionType;
-                switch (device.getConnectionType())
+                if (isInitialized)
                 {
-                    case ConnectionType.BT:
-                        DS4ConnectionType = " over Bluetooth";
-                        break;
-                    case ConnectionType.USB:
-                        DS4ConnectionType = " over USB";
-                        break;
-                    case ConnectionType.SONYWA:
-                        DS4ConnectionType = " over DS4 Wireless adapter";
-                        break;
-                    default:
-                        DS4ConnectionType = "";
-                        break;
+                    string DS4ConnectionType;
+                    switch (device.getConnectionType())
+                    {
+                        case ConnectionType.BT:
+                            DS4ConnectionType = "Bluetooth";
+                            break;
+                        case ConnectionType.USB:
+                            DS4ConnectionType = "USB";
+                            break;
+                        case ConnectionType.SONYWA:
+                            DS4ConnectionType = "DS4 Wireless adapter";
+                            break;
+                        default:
+                            DS4ConnectionType = "";
+                            break;
+                    }
+
+                    return $"Connected over {DS4ConnectionType} {(device.isCharging() ? '⚡' : ' ')} 🔋{Battery}% Delay: {Latency:0.00}ms";
                 }
-
-                string charging;
-                if (device.isCharging())
-                    charging = " ⚡";
                 else
-                    charging = " ";
-
-                return devicename + ": Connected" + DS4ConnectionType + charging + "🔋" + Battery + "%" + " Delay: " + Latency.ToString("0.00") + " ms";
-
-            }
-            else
-            {
-                return devicename + ": Not connected";
+                {
+                    return "Not Initialized";
+                }
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 Shutdown();
                 Initialize();
@@ -161,44 +144,47 @@ namespace Aurora.Devices.Dualshock
             return this.isInitialized;
         }
 
-        public bool IsInitialized()
+        public bool IsInitialized
         {
-            if (effectwatch.IsRunning && !isInitialized)
+            get
             {
-                effectwatch.Reset();
-                //Global.logger.Info("Stop Ewatch");
-            }
+                if (effectwatch.IsRunning && !isInitialized)
+                {
+                    effectwatch.Reset();
+                    //Global.logger.Info("Stop Ewatch");
+                }
 
-            bool isdisabled = Global.Configuration.devices_disabled.Contains(typeof(DualshockDevice));
-            int auto_connect_cooldown = 3000;
-            bool auto_connect_enabled = Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_auto_connect");
+                bool isdisabled = Global.Configuration.devices_disabled.Contains(typeof(DualshockDevice));
+                int auto_connect_cooldown = 3000;
+                bool auto_connect_enabled = Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_auto_connect");
 
-            //Global.logger.Info("cooldown is running: " + cooldown.IsRunning);
-            //Global.logger.Info("isDisabled: " + isdisabled);
+                //Global.logger.Info("cooldown is running: " + cooldown.IsRunning);
+                //Global.logger.Info("isDisabled: " + isdisabled);
 
-            if ((isdisabled || isInitialized) && cooldown.IsRunning)
-            {
-                cooldown.Stop();
-                //Global.logger.Info("Cooldown Stop");
-            }
+                if ((isdisabled || isInitialized) && cooldown.IsRunning)
+                {
+                    cooldown.Stop();
+                    //Global.logger.Info("Cooldown Stop");
+                }
 
-            if (!isdisabled && auto_connect_enabled && !isInitialized && !cooldown.IsRunning)
-            {
-                cooldown.Start();
-                //Global.logger.Info("Cooldown Start");
-            }
+                if (!isdisabled && auto_connect_enabled && !isInitialized && !cooldown.IsRunning)
+                {
+                    cooldown.Start();
+                    //Global.logger.Info("Cooldown Start");
+                }
 
-            if (!isInitialized && auto_connect_enabled && (cooldown.ElapsedMilliseconds > auto_connect_cooldown))
-            {
-                //Global.logger.Info("Initialize");
-                Initialize();
-                cooldown.Restart();
+                if (!isInitialized && auto_connect_enabled && (cooldown.ElapsedMilliseconds > auto_connect_cooldown))
+                {
+                    //Global.logger.Info("Initialize");
+                    Initialize();
+                    cooldown.Restart();
+                }
+                if (isInitialized && device.isDisconnectingStatus())
+                {
+                    Shutdown();
+                }
+                return this.isInitialized;
             }
-            if (isInitialized && device.isDisconnectingStatus())
-            {
-                Shutdown();
-            }
-            return this.isInitialized;
         }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -249,24 +235,24 @@ namespace Aurora.Devices.Dualshock
             return false;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
-                default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
-                default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
-                default_registry.Register($"{devicename}_LowBattery_threshold", 20, "Low battery threshold", 100, 0, "In percent. To deactivate set to 0");
-                default_registry.Register($"{devicename}_LowBattery_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 0, 0)), "Low battery color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
-                default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral);
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_restore_dualshock", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your DS4 Controller");
+                    default_registry.Register($"{devicename}_disconnect_when_stop", false, "Disconnect when Stopping");
+                    default_registry.Register($"{devicename}_auto_connect", true, "Auto connect");
+                    default_registry.Register($"{devicename}_LowBattery_threshold", 20, "Low battery threshold", 100, 0, "In percent. To deactivate set to 0");
+                    default_registry.Register($"{devicename}_LowBattery_color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 0, 0)), "Low battery color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)));
+                    default_registry.Register($"{devicename}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral);
+                }
+                return default_registry;
             }
-            return default_registry;
         }
 
         public void RestoreColor()

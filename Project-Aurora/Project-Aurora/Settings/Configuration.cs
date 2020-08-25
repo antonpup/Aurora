@@ -369,6 +369,8 @@ namespace Aurora.Settings
         Corsair_Katar = 202,
 
         //Razer range is 300-399
+        [Description("Razer - Mamba TE")]
+        Razer_Mamba_TE = 300,
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]
@@ -439,15 +441,6 @@ namespace Aurora.Settings
     public class Configuration : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        //First Time Installs
-        public bool redist_first_time;
-        public bool logitech_first_time;
-        public bool corsair_first_time;
-        public bool razer_first_time;
-        public bool steelseries_first_time;
-        public bool dualshock_first_time;
-        public bool roccat_first_time;
 
         //General Program Settings
         public bool allow_peripheral_devices;
@@ -537,14 +530,6 @@ namespace Aurora.Settings
 
         public Configuration()
         {
-            //First Time Installs
-            redist_first_time = true;
-            logitech_first_time = true;
-            corsair_first_time = true;
-            razer_first_time = true;
-            steelseries_first_time = true;
-            dualshock_first_time = true;
-
             //General Program Settings
             allow_peripheral_devices = true;
             UseVolumeAsBrightness = false;
@@ -570,7 +555,6 @@ namespace Aurora.Settings
             devices_disabled = new HashSet<Type>();
             devices_disabled.Add(typeof(Devices.Dualshock.DualshockDevice));
             devices_disabled.Add(typeof(Devices.AtmoOrbDevice.AtmoOrbDevice));
-            devices_disabled.Add(typeof(Devices.NZXT.NZXTDevice));
             OverlaysInPreview = true;
 
             //Blackout and Night theme
@@ -664,6 +648,10 @@ namespace Aurora.Settings
             if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
             {
                 dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
+                e.ErrorContext.Handled = true;
+            }
+            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.NZXT.NZXTDevice") && e.CurrentObject is HashSet<Type>)
+            {
                 e.ErrorContext.Handled = true;
             }
         }

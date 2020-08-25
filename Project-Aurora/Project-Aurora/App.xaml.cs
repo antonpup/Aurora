@@ -363,7 +363,7 @@ namespace Aurora
 
                 Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();
-                Global.dev_manager.Initialize();
+                Global.dev_manager.InitializeDevices();
 
                 /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
                 Global.geh = new GameEventHandler();
@@ -484,8 +484,7 @@ namespace Aurora
             Global.InputEvents?.Dispose();
             Global.LightingStateManager?.Dispose();
             Global.net_listener?.Stop();
-            Global.dev_manager?.Shutdown();
-            Global.dev_manager?.Dispose();
+            Global.dev_manager?.ShutdownDevices();
 
             try
             {
