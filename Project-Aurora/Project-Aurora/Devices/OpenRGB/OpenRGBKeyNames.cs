@@ -145,5 +145,41 @@ namespace Aurora.Devices.OpenRGB
             { "Logo LED 1"           , DK.Peripheral_Logo        },
             { "Scroll Wheel LED 1"   , DK.Peripheral_ScrollWheel },
         };
+
+        public static readonly List<DK> AdditionalLights = new List<DK>(new[]
+        {
+            DK.ADDITIONALLIGHT1,
+            DK.ADDITIONALLIGHT2,
+            DK.ADDITIONALLIGHT3,
+            DK.ADDITIONALLIGHT4,
+            DK.ADDITIONALLIGHT5,
+            DK.ADDITIONALLIGHT6,
+            DK.ADDITIONALLIGHT7,
+            DK.ADDITIONALLIGHT8,
+            DK.ADDITIONALLIGHT9,
+            DK.ADDITIONALLIGHT10,
+            DK.ADDITIONALLIGHT11,
+            DK.ADDITIONALLIGHT12,
+            DK.ADDITIONALLIGHT13,
+            DK.ADDITIONALLIGHT14,
+            DK.ADDITIONALLIGHT15,
+            DK.ADDITIONALLIGHT16,
+            DK.ADDITIONALLIGHT17,
+            DK.ADDITIONALLIGHT18,
+            DK.ADDITIONALLIGHT19,
+            DK.ADDITIONALLIGHT20,
+            DK.ADDITIONALLIGHT21,
+            DK.ADDITIONALLIGHT22,
+            DK.ADDITIONALLIGHT23,
+            DK.ADDITIONALLIGHT24,
+            DK.ADDITIONALLIGHT25,
+            DK.ADDITIONALLIGHT26,
+            DK.ADDITIONALLIGHT27,
+            DK.ADDITIONALLIGHT28,
+            DK.ADDITIONALLIGHT29,
+            DK.ADDITIONALLIGHT30,
+            DK.ADDITIONALLIGHT31,
+            DK.ADDITIONALLIGHT32,
+        });
     }
 }

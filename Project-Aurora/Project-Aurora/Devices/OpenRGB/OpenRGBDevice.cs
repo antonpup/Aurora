@@ -18,22 +18,19 @@ using OpenRGBZoneType = OpenRGB.NET.Enums.ZoneType;
 
 namespace Aurora.Devices.OpenRGB
 {
-    public class OpenRGBAuroraDevice : Device
+    public class OpenRGBAuroraDevice : DefaultDevice
     {
-        const string deviceName = "OpenRGB";
-        private VariableRegistry varReg;
-        private bool isInitialized = false;
-        private readonly Stopwatch watch = new Stopwatch();
-        private long lastUpdateTime = 0;
+        public override string DeviceName => "OpenRGB";
+        protected override string DeviceInfo => ": " + string.Join(", ", _devices.Select(d => d.Name));
 
         private OpenRGBClient _openRgb;
         private OpenRGBDevice[] _devices;
         private OpenRGBColor[][] _deviceColors;
         private List<DK>[] _keyMappings;
 
-        public bool Initialize()
+        public override bool Initialize()
         {
-            if (isInitialized)
+            if (IsInitialized)
                 return true;
 
             try
@@ -96,7 +93,7 @@ namespace Aurora.Devices.OpenRGB
                                 //TODO - scale zones with more than 32 LEDs
                                 if (k < 32)
                                 {
-                                    _keyMappings[i][(int)(LedOffset + k)] = AdditionalLights[k];
+                                    _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
                                 }
                             }
                         }
@@ -106,18 +103,18 @@ namespace Aurora.Devices.OpenRGB
             }
             catch (Exception e)
             {
-                Global.logger.Error("error in OpenRGB device: " + e);
-                isInitialized = false;
+                LogError("error in OpenRGB device: " + e);
+                IsInitialized = false;
                 return false;
             }
 
-            isInitialized = true;
-            return isInitialized;
+            IsInitialized = true;
+            return IsInitialized;
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
-            if (!isInitialized)
+            if (!IsInitialized)
                 return;
 
             for (var i = 0; i < _devices.Length; i++)
@@ -134,12 +131,12 @@ namespace Aurora.Devices.OpenRGB
 
             _openRgb?.Dispose();
             _openRgb = null;
-            isInitialized = false;
+            IsInitialized = false;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!isInitialized)
+            if (!IsInitialized)
                 return false;
 
             for (var i = 0; i < _devices.Length; i++)
@@ -163,131 +160,21 @@ namespace Aurora.Devices.OpenRGB
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
+                    LogError($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
                     Reset();
                 }
             }
 
-            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{deviceName}_sleep");
+            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_sleep");
             if (sleep > 0)
                 Thread.Sleep(sleep);
 
             return true;
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
+            variableRegistry.Register($"{DeviceName}_sleep", 25, "Sleep for", 1000, 0);
         }
-
-        public string GetDeviceDetails()
-        {
-            if (isInitialized)
-            {
-                string devString = deviceName + ": ";
-                devString += "Connected ";
-                var names = _devices.Select(c => c.Name);
-                devString += string.Join(", ", names);
-                return devString;
-            }
-            else
-            {
-                return deviceName + ": Not initialized";
-            }
-        }
-
-        public string GetDeviceName()
-        {
-            return deviceName;
-        }
-
-        public string GetDeviceUpdatePerformance()
-        {
-            return isInitialized ? lastUpdateTime + " ms" : "";
-        }
-
-        public VariableRegistry GetRegisteredVariables()
-        {
-            if (varReg == null)
-            {
-                varReg = new VariableRegistry();
-                varReg.Register($"{deviceName}_sleep", 25, "Sleep for", 1000, 0);
-            }
-            return varReg;
-        }
-
-        public bool IsConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
-
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
-            Shutdown();
-            Initialize();
-        }
-
-        private static readonly List<DK> AdditionalLights = new List<DK>(new[]
-        {
-            DK.ADDITIONALLIGHT1,
-            DK.ADDITIONALLIGHT2,
-            DK.ADDITIONALLIGHT3,
-            DK.ADDITIONALLIGHT4,
-            DK.ADDITIONALLIGHT5,
-            DK.ADDITIONALLIGHT6,
-            DK.ADDITIONALLIGHT7,
-            DK.ADDITIONALLIGHT8,
-            DK.ADDITIONALLIGHT9,
-            DK.ADDITIONALLIGHT10,
-            DK.ADDITIONALLIGHT11,
-            DK.ADDITIONALLIGHT12,
-            DK.ADDITIONALLIGHT13,
-            DK.ADDITIONALLIGHT14,
-            DK.ADDITIONALLIGHT15,
-            DK.ADDITIONALLIGHT16,
-            DK.ADDITIONALLIGHT17,
-            DK.ADDITIONALLIGHT18,
-            DK.ADDITIONALLIGHT19,
-            DK.ADDITIONALLIGHT20,
-            DK.ADDITIONALLIGHT21,
-            DK.ADDITIONALLIGHT22,
-            DK.ADDITIONALLIGHT23,
-            DK.ADDITIONALLIGHT24,
-            DK.ADDITIONALLIGHT25,
-            DK.ADDITIONALLIGHT26,
-            DK.ADDITIONALLIGHT27,
-            DK.ADDITIONALLIGHT28,
-            DK.ADDITIONALLIGHT29,
-            DK.ADDITIONALLIGHT30,
-            DK.ADDITIONALLIGHT31,
-            DK.ADDITIONALLIGHT32,
-        });
     }
 }
