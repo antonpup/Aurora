@@ -1,3 +1,4 @@
+
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -5,8 +6,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Aurora.Profiles.Generic_Application;
 using Aurora.Profiles;
+using Aurora.Profiles.Generic_Application;
 using Newtonsoft.Json.Serialization;
 using Aurora.Utils;
 using System.Collections.ObjectModel;
@@ -165,7 +166,7 @@ namespace Aurora.Settings
         Corsair = 2,
         [Description("Razer")]
         Razer = 3,
-        
+
         [Description("Clevo")]
         Clevo = 4,
         [Description("Cooler Master")]
@@ -292,6 +293,16 @@ namespace Aurora.Settings
         Ducky_Shine_7 = 1200,
         [Description("Ducky One 2 RGB TKL")]
         Ducky_One_2_RGB_TKL = 1201,
+
+        //OMEN range 1300-1399
+        [Description("OMEN Sequencer")]
+        OMEN_Sequencer = 1300,
+        [Description("OMEN Four Zone")]
+        OMEN_Four_Zone = 1301,
+
+        //HyperX range is 1400-1499
+        [Description("HyperX Alloy Elite RGB")]
+        HyperX_Alloy_Elite_RGB = 1400,
  
     }
 
@@ -364,6 +375,8 @@ namespace Aurora.Settings
         Corsair_Katar = 202,
 
         //Razer range is 300-399
+        [Description("Razer - Mamba TE")]
+        Razer_Mamba_TE = 300,
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]
@@ -386,7 +399,17 @@ namespace Aurora.Settings
         SteelSeries_QcK_2_Zone = 703,
         //Asus range is 900-999
         [Description("Asus - Pugio")]
-        Asus_Pugio = 900
+        Asus_Pugio = 900,
+
+        //OMEN range is 1000-1099
+        [Description("OMEN Photon")]
+        OMEN_Photon = 1000,
+        [Description("OMEN Outpost + Photon")]
+        OMEN_Outpost_Plus_Photon = 1001,
+        [Description("OMEN Vector")]
+        OMEN_Vector = 1002,
+        [Description("OMEN Vector Essentials")]
+        OMEN_Vector_Essentials = 1003,
     }
 
     public enum KeycapType
@@ -424,15 +447,6 @@ namespace Aurora.Settings
     public class Configuration : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
-        //First Time Installs
-        [JsonProperty("redist_first_time")] public bool RedistFirstTime { get; set; } = true;
-        [JsonProperty("logitech_first_time")] public bool LogitechFirstTime { get; set; } = true;
-        [JsonProperty("corsair_first_time")] public bool CorsairFirstTime { get; set; } = true;
-        [JsonProperty("razer_first_time")] public bool RazerFirstTime { get; set; } = true;
-        [JsonProperty("steelseries_first_time")] public bool SteelseriesFirstTime { get; set; } = true;
-        [JsonProperty("dualshock_first_time")] public bool DualshockFirstTime { get; set; } = true;
-        [JsonProperty("roccat_first_time")] public bool RoccatFirstTime { get; set; } = true;
 
         //General Program Settings
         [JsonProperty("allow_peripheral_devices")] public bool AllowPeripheralDevices { get; set; } = true;
@@ -577,6 +591,10 @@ namespace Aurora.Settings
             if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
             {
                 dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
+                e.ErrorContext.Handled = true;
+            }
+            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.NZXT.NZXTDevice") && e.CurrentObject is HashSet<Type>)
+            {
                 e.ErrorContext.Handled = true;
             }
         }

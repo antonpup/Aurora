@@ -1,9 +1,9 @@
 ﻿using Aurora.Controls;
 using Aurora.Profiles.Payday_2.GSI;
 using Aurora.Settings;
-using Ionic.Zip;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -64,11 +64,11 @@ namespace Aurora.Profiles.Payday_2
                     {
                         using (MemoryStream gsi_pd2_ms = new MemoryStream(Properties.Resources.PD2_GSI))
                         {
-                            using (ZipFile zip = ZipFile.Read(gsi_pd2_ms))
+                            using (ZipArchive zip = new ZipArchive(gsi_pd2_ms))
                             {
-                                foreach (ZipEntry entry in zip)
+                                foreach (ZipArchiveEntry entry in zip.Entries)
                                 {
-                                    entry.Extract(pd2path, ExtractExistingFileAction.OverwriteSilently);
+                                    entry.ExtractToFile(pd2path, true);
                                 }
                             }
 

@@ -170,7 +170,7 @@ namespace Aurora
 
             if (!settingsloaded)
             {
-                virtual_keyboard_timer = new Timer(100);
+                virtual_keyboard_timer = new Timer(33);
                 virtual_keyboard_timer.Elapsed += new ElapsedEventHandler(virtual_keyboard_timer_Tick);
                 virtual_keyboard_timer.Start();
 

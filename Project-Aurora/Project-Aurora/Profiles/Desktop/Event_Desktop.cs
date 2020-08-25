@@ -1,6 +1,5 @@
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
-using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -460,7 +460,7 @@ namespace Aurora.Profiles
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(raw_process_name))
             {
                 StopUnUpdatedEvents();
-                Global.dev_manager.Shutdown();
+                Global.dev_manager.ShutdownDevices();
                 Global.effengine.PushFrame(newFrame);
                 return;
             }

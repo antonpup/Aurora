@@ -23,7 +23,7 @@ namespace Aurora.Devices.SteelSeries
         G5 = 0xED,
     };
 
-    class SteelSeriesDevice : Device
+    class SteelSeriesDevice : IDevice
     {
         private String devicename = "SteelSeries";
         private bool isInitialized = false;
@@ -51,17 +51,6 @@ namespace Aurora.Devices.SteelSeries
                     try
                     {
                         gameSenseSDK.init("PROJECTAURORA", "Project Aurora", 7);
-
-                        if (Global.Configuration.SteelseriesFirstTime)
-                        {
-                            App.Current.Dispatcher.Invoke(() =>
-                            {
-                                SteelSeriesInstallInstructions instructions = new SteelSeriesInstallInstructions();
-                                instructions.ShowDialog();
-                            });
-                            Global.Configuration.SteelseriesFirstTime = false;
-                            Settings.ConfigManager.Save(Global.Configuration);
-                        }
                         isInitialized = true;
                         return true;
                     }
@@ -102,26 +91,15 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        public string GetDeviceDetails()
-        {
-            if (isInitialized)
-            {
-                return devicename + ": Connected";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (this.IsInitialized&& (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
@@ -138,10 +116,7 @@ namespace Aurora.Devices.SteelSeries
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
+        public bool IsInitialized => this.isInitialized;
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -253,15 +228,9 @@ namespace Aurora.Devices.SteelSeries
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         private void SendColorToPeripheral(Color color, GameSensePayloadPeripheryColorEventJSON payload, bool forced = false)
         {

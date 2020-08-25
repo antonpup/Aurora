@@ -1,4 +1,10 @@
-﻿using System;
+using Aurora.Devices;
+using Aurora.Profiles.Desktop;
+using Aurora.Profiles.GTA5;
+using Aurora.Profiles.Payday_2.GSI.Nodes;
+using Aurora.Settings;
+using Aurora.Settings.Layers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -92,6 +98,19 @@ namespace Aurora.Utils {
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Returns an IEnumerable of all the values in this enum
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> GetEnumValues<T>() where T : struct, IConvertible
+        {
+            if (!typeof(T).IsEnum)
+                throw new ArgumentException("T must be an enum");
+
+            return Enum.GetValues(typeof(T)).Cast<T>();
         }
     }
 

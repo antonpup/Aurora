@@ -1,0 +1,50 @@
+{
+  "group_tag": "mouse",
+  "origin_region": 4,
+  "grouped_keys": [
+    {
+      "tag": -1,
+      "margin_left": 20.0,
+      "margin_top": -232.0,
+      "width": 171.0,
+      "height": 232.0,
+      "margin_left_bits": 1,
+      "margin_top_bits": -19,
+      "width_bits": 13,
+      "height_bits": 19,
+      "image": "omen_photon_outline.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Logo",
+      "tag": 160,
+      "margin_left": 91.0,
+      "margin_top": -75.0,
+      "width": 40.0,
+      "height": 40.0,
+      "width_bits": 2,
+      "height_bits": 2,
+      "margin_left_bits": 6,
+      "margin_top_bits": -5,
+      "image": "Omen_logo.png",
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Scroll Wheel",
+      "tag": 161,
+      "margin_left": 102.0,
+      "margin_top": -211.0,
+      "width": 17.0,
+      "height": 43.0,
+      "width_bits": 2,
+      "height_bits": 3,
+      "margin_left_bits": 7,
+      "margin_top_bits": -16,
+      "image": "SteelSeries_Rival_300_scrollwheel.png",
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}
