@@ -298,6 +298,11 @@ namespace Aurora.Settings
         OMEN_Sequencer = 1300,
         [Description("OMEN Four Zone")]
         OMEN_Four_Zone = 1301,
+
+        //HyperX range is 1400-1499
+        [Description("HyperX Alloy Elite RGB")]
+        HyperX_Alloy_Elite_RGB = 1400,
+ 
     }
 
     public enum PreferredKeyboardLocalization

@@ -792,6 +792,9 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
             else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
+            else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
+                layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
+
             else
             {
                 LoadNone();
