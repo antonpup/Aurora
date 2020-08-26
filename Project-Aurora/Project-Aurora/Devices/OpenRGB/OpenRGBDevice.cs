@@ -21,7 +21,7 @@ namespace Aurora.Devices.OpenRGB
     public class OpenRGBAuroraDevice : DefaultDevice
     {
         public override string DeviceName => "OpenRGB";
-        protected override string DeviceInfo => ": " + string.Join(", ", _devices.Select(d => d.Name));
+        protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.Name));
 
         private OpenRGBClient _openRgb;
         private OpenRGBDevice[] _devices;

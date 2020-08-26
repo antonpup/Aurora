@@ -34,9 +34,7 @@ namespace Aurora.Devices.Razer
 
         private readonly List<string> deviceNames = new List<string>();
 
-        protected override string DeviceInfo => deviceNames.Any() ?
-            ": " + string.Join(",", deviceNames)
-            : "";
+        protected override string DeviceInfo => string.Join(", ", deviceNames);
 
         public override bool Initialize()
         {

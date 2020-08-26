@@ -20,7 +20,7 @@ namespace Aurora.Devices
         protected virtual string DeviceInfo => "";
 
         public string DeviceDetails => IsInitialized
-            ? "Initialized" + DeviceInfo
+            ? $"Initialized{(string.IsNullOrWhiteSpace(DeviceInfo) ? "" : ": " + DeviceInfo)}"
             : "Not Initialized";
 
         public string DeviceUpdatePerformance => IsInitialized

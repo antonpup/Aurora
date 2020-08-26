@@ -17,7 +17,8 @@ namespace Aurora.Devices.Corsair
     public class CorsairDevice : DefaultDevice
     {
         public override string DeviceName => "Corsair";
-        protected override string DeviceInfo => ": " + string.Join(", ", deviceInfos.Select(d => d.Model));
+
+        protected override string DeviceInfo => string.Join(", ", deviceInfos.Select(d => d.Model));
 
         private readonly List<CorsairDeviceInfo> deviceInfos = new List<CorsairDeviceInfo>();
 
