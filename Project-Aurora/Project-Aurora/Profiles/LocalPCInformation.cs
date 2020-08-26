@@ -91,7 +91,7 @@ namespace Aurora.Profiles {
 
         #region Device Properties
 
-        private readonly DualshockDevice ds4Device = Global.dev_manager.InitializedDeviceContainers.Select(d => d.Device).OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault();
+        private readonly DualshockDevice ds4Device = Global.dev_manager.DeviceContainers.Select(d => d.Device).OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault();
         /// <summary>
         /// Battery level of a dualshock controller
         /// </summary>
