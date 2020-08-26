@@ -3,59 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:u="clr-namespace:Aurora.Utils" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:c="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
+    
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="AmbilightEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AmbilightType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:AmbilightEffectsToStringVC x:Key="AmbilightEffectsToStringVC"/>
-            <DataTemplate x:Key="AmbilightEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AmbilightEffectsToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="AmbiLightFpsChoices" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AmbilightFpsChoice" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:AmbilightFpsToStringVC x:Key="AmbilightFpsToStringVC"/>
-            <DataTemplate x:Key="AmbilightFpsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AmbilightFpsToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="AmbilightCapture" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AmbilightCaptureType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:AmbilightCaptureToStringVC x:Key="AmbilightCaptureToStringVC"/>
-            <DataTemplate x:Key="AmbilightCaptureTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AmbilightCaptureToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="AmbilightQuality" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AmbilightQuality" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:AmbilightQualityToStringVC x:Key="AmbilightQualityToStringVC"/>
-            <DataTemplate x:Key="AmbilightQualityTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AmbilightQualityToStringVC}}" />
-            </DataTemplate>
-
-            <local:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
-
-            <local:AmbilightTypeValueConverter x:Key="AmbilightTypeValueConverter" />
-        </ResourceDictionary>
+        <local:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
+        <local:AmbilightTypeValueConverter x:Key="AmbilightTypeValueConverter" />
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal">
@@ -79,42 +35,42 @@
 
 
             <Label Content="Capture Type" Grid.Row="0" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedItem="{Binding Properties._AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightCapture}}" ItemTemplate="{Binding Source={StaticResource AmbilightCaptureTemplate}}" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties._AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightCaptureType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
 
             <Label Content="Effect Type" Grid.Row="1" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedItem="{Binding Properties._AmbilightType}" x:Name="EffectType" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightEffects}}" ItemTemplate="{Binding Source={StaticResource AmbilightEffectsTemplate}}" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties._AmbilightType}" x:Name="EffectType" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
 
             <Label Content="Image Quality" Grid.Row="2" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedItem="{Binding Properties._AmbilightQuality}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbilightQuality}}" ItemTemplate="{Binding Source={StaticResource AmbilightQualityTemplate}}" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties._AmbilightQuality}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightQuality}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
             <Image Grid.Row="2" Grid.Column="2" Margin="6" ToolTip="Higher qualities should only be needed when using the&#x0a;coordinates effect type and will increase RAM usage." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
             <Label Content="Updates rate" Grid.Row="3" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedItem="{Binding Properties._AmbiLightUpdatesPerSecond}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Source={StaticResource AmbiLightFpsChoices}}" ItemTemplate="{Binding Source={StaticResource AmbilightFpsTemplate}}" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties._AmbiLightUpdatesPerSecond}" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightFpsChoice}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
             <Image Grid.Row="3" Grid.Column="2" Margin="6" ToolTip="Higher update speeds will result in a&#x0a;smoother effect and increase CPU usage." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
-            <Label Content="Process Name" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" Height="26" Margin="0,1" />
-            <TextBox Text="{Binding Properties._SpecificProcess}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" TextChanged="TextBox_TextChanged" Height="18" Margin="0,5" />
+            <Label Content="Process Name" Grid.Row="4" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" Height="26" Margin="0,1" />
+            <TextBox Text="{Binding Properties._SpecificProcess}" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" TextChanged="TextBox_TextChanged" Height="18" Margin="0,5" />
 
-            <Label Content="Display" Grid.Row="5" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" Height="26" Margin="0,1" />
+            <Label Content="Display" Grid.Row="5" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" Height="26" Margin="0,1" />
             <ComboBox 
                 Grid.Row="5" 
                 Grid.Column="1" 
                 VerticalAlignment="Center" 
-                IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" 
+                IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" 
                 SelectedIndex="{Binding OutputId, Mode=TwoWay}"
                 ItemsSource="{Binding Displays, Mode=OneWay}" Height="22" Margin="0,3"
             />
             
-            <Label Content="Flip Image" Grid.Row="6" VerticalAlignment="Center" IsEnabled="{Binding ElementName=EffectType, Path=SelectedItem, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="26" Margin="0,1"/>
-            <CheckBox Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties._FlipVertically, Mode=TwoWay}" IsEnabled="{Binding ElementName=EffectType, Path=SelectedItem, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="16" Margin="0,6"/>
+            <Label Content="Flip Image" Grid.Row="6" VerticalAlignment="Center" IsEnabled="{Binding ElementName=EffectType, Path=SelectedValue, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="26" Margin="0,1"/>
+            <CheckBox Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties._FlipVertically, Mode=TwoWay}" IsEnabled="{Binding ElementName=EffectType, Path=SelectedValue, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="16" Margin="0,6"/>
             <Image Grid.Row="6" Grid.Column="2" Margin="6" ToolTip="This option will flip the image vertically to give the illusion of your keyboard reflecting your display." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
             <Label Content="HW Acceleration" Grid.Row="7" Grid.Column="0"></Label>
             <CheckBox Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding UseDX, Mode=TwoWay}" Height="16" Margin="0,6"></CheckBox>
             <Image Grid.Row="7" Grid.Column="2" Margin="6" ToolTip="This experimental mode offers better performance but can be unstable on some systems.&#x0a;It will be turned off automatically if incompatible. Consult the logs for more detail" Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
-            <Label Content="Coordinates" Grid.Row="8" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" Height="26" Margin="0,15" />
-            <Grid Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Grid.IsEnabled="{Binding ElementName=CaptureType, Path=SelectedItem, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
+            <Label Content="Coordinates" Grid.Row="8" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" Height="26" Margin="0,15" />
+            <Grid Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Grid.IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />

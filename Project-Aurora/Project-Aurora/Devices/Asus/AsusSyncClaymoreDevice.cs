@@ -15,7 +15,7 @@ namespace Aurora.Devices.Asus
 
         protected override void ApplyColors(Dictionary<DeviceKeys, Color> colors)
         {
-            if (Global.Configuration.devices_disable_keyboard)
+            if (Global.Configuration.DevicesDisableKeyboard)
                 return;
             
             for (int i = 0; i < Device.Lights.Count; i++)

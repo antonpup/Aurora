@@ -3,43 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
-             xmlns:local="clr-namespace:Aurora.Settings.Layers"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="InteractiveEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumInteractiveEffects:InteractiveEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:InteractiveEffectsToStringVC x:Key="InteractiveEffectsToStringVC"/>
-            <DataTemplate x:Key="InteractiveEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource InteractiveEffectsToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:e="clr-namespace:Aurora.Profiles.Desktop"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d">
     
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Interactive Effect Type: " VerticalAlignment="Top"/>
-        <ComboBox x:Name="interactive_effects_type" HorizontalAlignment="Left" Margin="127,-2,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource InteractiveEffects}}" ItemTemplate="{Binding Source={StaticResource InteractiveEffectsTemplate}}" SelectionChanged="interactive_effects_type_SelectionChanged"/>
-        <xctk:ColorPicker x:Name="interactive_effects_primary_color_colorpicker" Margin="80,25,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" SelectedColorChanged="interactive_effects_primary_color_colorpicker_SelectedColorChanged" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,28,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-        <CheckBox x:Name="interactive_effects_random_primary_color_enabled" Content="Use a random primary color" HorizontalAlignment="Left" Margin="0,54,0,0" VerticalAlignment="Top" Checked="interactive_effects_random_primary_color_enabled_Checked" Unchecked="interactive_effects_random_primary_color_enabled_Checked"/>
-        <xctk:ColorPicker x:Name="interactive_effects_secondary_color_colorpicker" Margin="95,74,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" SelectedColorChanged="interactive_effects_secondary_color_colorpicker_SelectedColorChanged" ColorMode="ColorCanvas" UsingAlphaChannel="True" />
-        <TextBlock HorizontalAlignment="Left" Margin="0,77,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-        <CheckBox x:Name="interactive_effects_random_secondary_color_enabled" Content="Use a random secondary color" HorizontalAlignment="Left" Margin="0,103,0,0" VerticalAlignment="Top" Checked="interactive_effects_random_secondary_color_enabled_Checked" Unchecked="interactive_effects_random_secondary_color_enabled_Checked"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,125,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
-        <Slider x:Name="interactive_effects_speed_slider" HorizontalAlignment="Left" Margin="80,125,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" ValueChanged="interactive_effects_speed_slider_ValueChanged" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="20"/>
-        <TextBlock x:Name="interactive_effects_speed_label" HorizontalAlignment="Left" Margin="225,125,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,146,0,0" TextWrapping="Wrap" Text="Effect Width: " VerticalAlignment="Top"/>
-        <Slider x:Name="interactive_effects_width_slider" HorizontalAlignment="Left" Margin="80,146,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="1" SelectionStart="6" IsSnapToTickEnabled="True" Maximum="24" ValueChanged="interactive_effects_width_slider_ValueChanged"/>
-        <TextBlock x:Name="interactive_effects_width_label" HorizontalAlignment="Left" Margin="225,146,0,0" TextWrapping="Wrap" Text="1 px" VerticalAlignment="Top"/>
-        <CheckBox x:Name="interactive_effects_start_on_key_up_enabled" Content="Start progress when key released" HorizontalAlignment="Left" Margin="0,167,0,0" VerticalAlignment="Top" Checked="interactive_effects_start_on_key_up_enabled_Checked" Unchecked="interactive_effects_start_on_key_up_enabled_Checked"/>
-        <Controls:KeySequence x:Name="KeySequence_keys" Margin="354,0,0,0" RecordingTag="Interactive Layer (Excluded Keys)" Title="Excluded Keys" SequenceUpdated="KeySequence_keys_SequenceUpdated" HorizontalAlignment="Left" Width="230"/>
-        <CheckBox x:Name="usePressBuffer" Content="Mitigate rapid key presses" HorizontalAlignment="Left" Margin="0,188,0,0" VerticalAlignment="Top" Checked="usePressBuffer_Checked" Unchecked="usePressBuffer_Checked"/>
+        <TextBlock Text="Interactive Effect Type:" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox SelectedValue="{Binding Properties._InteractiveEffect}" ItemsSource="{u:EnumToItemsSource {x:Type e:InteractiveEffects}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="127,-2,0,0" Width="170" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <TextBlock Text="Primary Color:" Margin="0,28,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:ColorPicker SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="80,25,0,0" Width="163" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Use a random primary color" IsChecked="{Binding Properties._RandomPrimaryColor}" Margin="0,54,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <TextBlock Text="Secondary Color:" Margin="0,77,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:ColorPicker SelectedColor="{Binding Properties._SecondaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="95,74,0,0" Width="148" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Use a random secondary color" IsChecked="{Binding Properties._RandomSecondaryColor}" Margin="0,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        
+        <TextBlock Text="Effect Speed:" Margin="0,125,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:SingleUpDown Value="{Binding Properties._EffectSpeed}" Minimum="1" Increment="0.5" Margin="80,125,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <TextBlock Text="Effect Width:" Margin="0,146,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:IntegerUpDown Value="{Binding Properties._EffectWidth}" Minimum="1" Margin="80,146,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <CheckBox Content="Start progress when key released" IsChecked="{Binding Properties._WaitOnKeyUp}" Margin="0,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Mitigate rapid key presses" IsChecked="{Binding Properties._UsePressBuffer}" Margin="0,188,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Controls:KeySequence Sequence="{Binding Properties._Sequence}" RecordingTag="Interactive Layer (Excluded Keys)" Title="Excluded Keys" Margin="354,0,0,0" Width="230" HorizontalAlignment="Left" />
     </Grid>
 </UserControl>

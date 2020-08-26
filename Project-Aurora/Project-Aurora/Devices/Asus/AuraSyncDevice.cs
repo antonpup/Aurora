@@ -39,7 +39,7 @@ namespace Aurora.Devices.Asus
 
         public void UpdateColors(Dictionary<DeviceKeys, Color> colors)
         {
-            if (DeviceType == AsusHandler.AsusDeviceType.Mouse && Global.Configuration.devices_disable_mouse)
+            if (DeviceType == AsusHandler.AsusDeviceType.Mouse && Global.Configuration.DevicesDisableMouse)
                 return;
 
             //empty queue

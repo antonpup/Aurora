@@ -11,12 +11,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using FastMember;
+using System.ComponentModel;
 
 namespace Aurora.Settings.Layers
 {
-    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable where TProperty : LayerHandlerProperties<TProperty>
+    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable, INotifyPropertyChanged where TProperty : LayerHandlerProperties<TProperty>
     {
         private static readonly Lazy<TypeAccessor> accessor = new Lazy<TypeAccessor>(() => TypeAccessor.Create(typeof(TProperty)));
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         [GameStateIgnore, JsonIgnore]
         public TProperty Logic { get; set; }

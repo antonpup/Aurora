@@ -3,54 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Profiles.Desktop"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
-             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
-             xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils" 
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Profiles.Desktop.Control_Desktop"
+             x:Class="Aurora.Profiles.Desktop.Control_Desktop"
              mc:Ignorable="d"
              d:DesignHeight="261.972" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
-            <DataTemplate x:Key="PercentEffectTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
-            </DataTemplate>
-
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="InteractiveEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumInteractiveEffects:InteractiveEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:InteractiveEffectsToStringVC x:Key="InteractiveEffectsToStringVC"/>
-            <DataTemplate x:Key="InteractiveEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource InteractiveEffectsToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="IdleEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPercentEffectType:IdleEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
-            <DataTemplate x:Key="IdleEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource IdleEffectsToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <TabControl>

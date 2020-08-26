@@ -12,7 +12,7 @@ using SBAuroraReactive;
 
 namespace Aurora.Devices.Creative
 {
-    class SoundBlasterXDevice : Device
+    class SoundBlasterXDevice : IDevice
     {
         private readonly object action_lock = new object();
 
@@ -221,34 +221,40 @@ namespace Aurora.Devices.Creative
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (sbKeyboard == null && sbMouse == null)
+            get
             {
-                return "SoundBlasterX: Not initialized";
-            }
+                if (sbKeyboard == null && sbMouse == null)
+                {
+                    return "Not Initialized";
+                }
 
-            string outDetails = "";
-            if (sbKeyboard != null)
-                outDetails += sbKeyboardInfo.friendlyName;
-            if (sbMouse != null)
-            {
-                if (outDetails.Length > 0)
-                    outDetails += " and ";
+                string outDetails = "";
+                if (sbKeyboard != null)
+                    outDetails += sbKeyboardInfo.friendlyName;
+                if (sbMouse != null)
+                {
+                    if (outDetails.Length > 0)
+                        outDetails += " and ";
 
-                outDetails += sbMouseInfo.friendlyName;
+                    outDetails += sbMouseInfo.friendlyName;
+                }
+                return outDetails + ": Initialized";
             }
-            return outDetails + ":Connected";
         }
 
-        public string GetDeviceName()
+        public string DeviceName
         {
-            if (sbKeyboard != null && sbMouse == null)
-                return sbKeyboardInfo.friendlyName;
-            else if (sbKeyboard == null && sbMouse != null)
-                return sbMouseInfo.friendlyName;
-            else
-                return "SoundBlasterX";
+            get
+            {
+                if (sbKeyboard != null && sbMouse == null)
+                    return sbKeyboardInfo.friendlyName;
+                else if (sbKeyboard == null && sbMouse != null)
+                    return sbMouseInfo.friendlyName;
+                else
+                    return "SoundBlasterX";
+            }
         }
 
         public void Reset()
@@ -309,10 +315,7 @@ namespace Aurora.Devices.Creative
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return (sbKeyboard != null || sbMouse != null);
-        }
+        public bool IsInitialized => (sbKeyboard != null || sbMouse != null);
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -506,15 +509,9 @@ namespace Aurora.Devices.Creative
             return (sbMouse != null);
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (IsInitialized() ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (IsInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         static KeyValuePair<Keyboard_LEDIndex, DeviceKeys>[] KeyboardMapping_All = {
             new KeyValuePair<Keyboard_LEDIndex, DeviceKeys>(Keyboard_LEDIndex.Esc, DeviceKeys.ESC),
