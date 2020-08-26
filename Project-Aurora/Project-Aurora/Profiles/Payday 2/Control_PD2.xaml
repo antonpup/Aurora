@@ -41,7 +41,7 @@
                     <Slider x:Name="preview_flashbang_slider" HorizontalAlignment="Left" Margin="126,222,0,0" VerticalAlignment="Top" Width="98" Maximum="100" SmallChange="1" ValueChanged="preview_flashbang_slider_ValueChanged"/>
                     <Label x:Name="preview_flashbang_amount" Content="0%" HorizontalAlignment="Left" Margin="229,218,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.692,3.115"/>
                     <Label Content="Game State:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="preview_gamestate" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{u:EnumToItemsSource {x:Type e:PlayerState}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="preview_gamestate_SelectionChanged"/>
+                    <ComboBox x:Name="preview_gamestate" HorizontalAlignment="Left" Margin="90,12,0,0" VerticalAlignment="Top" Width="200" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{u:EnumToItemsSource {x:Type e:GameStates}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="preview_gamestate_SelectionChanged"/>
                 </Grid>
             </TabItem>
         </TabControl>
