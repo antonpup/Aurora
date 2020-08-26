@@ -1,362 +1,245 @@
-﻿<UserControl
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:a="clr-namespace:Aurora"
              xmlns:local="clr-namespace:Aurora.Settings"
-             xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
-             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
-             xmlns:EnumInteractiveEffects="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" xmlns:params="http://schemas.codeplex.com/elysium/params" x:Class="Aurora.Settings.Control_Settings"
+             xmlns:Controls="clr-namespace:Aurora.Controls" 
+             x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="403.521" Height="Auto" Width="Auto" MinHeight="300" MinWidth="850" Loaded="UserControl_Loaded" x:Name="ctrlSettings">
+             d:DesignHeight="400" d:DesignWidth="403.521"
+             Height="Auto" Width="Auto"
+             MinHeight="300" MinWidth="850"
+             Loaded="UserControl_Loaded"
+             x:Name="ctrlSettings">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="PercentEffectType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPercentEffectType:PercentEffectType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:PercentEffectTypeToStringVC x:Key="PercentEffectTypeToStringVC"/>
-            <DataTemplate x:Key="PercentEffectTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource PercentEffectTypeToStringVC}}" />
-            </DataTemplate>
-
-            <u:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="IdleEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumPercentEffectType:IdleEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:IdleEffectsToStringVC x:Key="IdleEffectsToStringVC"/>
-            <DataTemplate x:Key="IdleEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource IdleEffectsToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KbLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboardLocalization" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:KbLayoutToStringVC x:Key="KbLayoutToStringVC"/>
-            <DataTemplate x:Key="KbLayoutTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbLayoutToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KbBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredKeyboard" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:KbBrandToStringVC x:Key="KbBrandToStringVC"/>
-            <DataTemplate x:Key="KbBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KbBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseBrand" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:PreferredMouse" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:MouseBrandToStringVC x:Key="MouseBrandToStringVC"/>
-            <DataTemplate x:Key="MouseBrandTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseBrandToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="MouseOrientation" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:MouseOrientationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:MouseOrientationToStringVC x:Key="MouseOrientationToStringVC"/>
-            <DataTemplate x:Key="MouseOrientationTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource MouseOrientationToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="KeycapType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:KeycapType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:KeycapTypeToStringVC x:Key="KeycapTypeToStringVC"/>
-            <DataTemplate x:Key="KeycapTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KeycapTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="BitmapAccuracy" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:BitmapAccuracy" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:BitmapAccuracyToStringVC x:Key="BitmapAccuracyToStringVC"/>
-            <DataTemplate x:Key="BitmapAccuracyTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource BitmapAccuracyToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="appexitmode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:AppExitMode" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:appexitmodeToStringVC x:Key="appexitmodeToStringVC"/>
-            <DataTemplate x:Key="appexitmodeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource appexitmodeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="AppDetectionMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:ApplicationDetectionMode" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:AppDetectionModeToStringVC x:Key="AppDetectionModeToStringVC"/>
-            <DataTemplate x:Key="AppDetectionModeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AppDetectionModeToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
+        <u:StringFormatConverter Format="{}{0:0}%" Multiplier="100" x:Key="PercentageFormatter" />
+        <u:StringFormatConverter Format="x {0:0.0}" x:Key="AwayEffectSpeedLabelFormatter" />
     </UserControl.Resources>
 
-    <Grid>
-        <TabControl Margin="0,7,0,0" x:Name="tabMain">
-            <TabItem Header="General Settings">
-                <Grid>
-                    <CheckBox x:Name="volume_as_brightness_enabled" Content="Use ALT + volume controls for global brightness (only when Aurora is out of focus)" HorizontalAlignment="Left" Margin="11,91,0,0" VerticalAlignment="Top" Checked="volume_as_brightness_enabled_Checked" Unchecked="volume_as_brightness_enabled_Checked"/>
-                    <CheckBox x:Name="timed_dimming_checkbox" Content="Enable timed blackout of the keyboard" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Checked="timed_dimming_checkbox_Checked" Unchecked="timed_dimming_checkbox_Checked"/>
-                    <CheckBox x:Name="chkOverlayPreview" Content="Show Overlays and Underlays in Application Preview" HorizontalAlignment="Left" Margin="12,62,0,0" VerticalAlignment="Top" Checked="chkOverlayPreview_Checked" Unchecked="chkOverlayPreview_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="11,230,0,0" TextWrapping="Wrap" Text="Blackout start time:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="11,254,0,0" TextWrapping="Wrap" Text="Blackout end time:" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="timed_dimming_with_games_checkbox" Content="Apply timed blackout to game events" HorizontalAlignment="Left" Margin="10,205,0,0" VerticalAlignment="Top" Checked="timed_dimming_with_games_checkbox_Checked" Unchecked="timed_dimming_with_games_checkbox_Checked"/>
-                    <ListBox x:Name="excluded_listbox" HorizontalAlignment="Left" Height="199" Margin="512,139,0,0" VerticalAlignment="Top" Width="160"/>
-                    <TextBlock Text="Excluded Processes" HorizontalAlignment="Left" Margin="512,117,0,0" VerticalAlignment="Top" Width="113"/>
-                    <Button x:Name="excluded_add" Content="Add Process" HorizontalAlignment="Left" Margin="677,139,0,0" VerticalAlignment="Top" Click="excluded_add_Click"/>
-                    <Button x:Name="excluded_remove" Content="Remove Process" HorizontalAlignment="Left" Margin="677,167,0,0" VerticalAlignment="Top" Click="excluded_remove_Click"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="12,132,0,0" TextWrapping="Wrap" Text="Keyboard brightness modifier: " VerticalAlignment="Top"/>
-                    <TextBlock x:Name="lblKeyboardBrightness" HorizontalAlignment="Left" Margin="335,132,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="180,132,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding KeyboardBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblKeyboardBrightness, Path=.}"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="12,153,0,0" TextWrapping="Wrap" Text="Peripheral brightness modifier: " VerticalAlignment="Top"/>
-                    <TextBlock x:Name="lblPeripheralBrightness" HorizontalAlignment="Left" Margin="335,153,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldPeripheralBrightness" HorizontalAlignment="Left" Margin="180,153,0,0" VerticalAlignment="Top" Width="148" ValueChanged="sliderPercentages_ValueChanged" Maximum="1" Value="{Binding PeripheralBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblPeripheralBrightness, Path=.}"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="116,225,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="178,225,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_start_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="170,225,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="116,249,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_end_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="timed_dimming_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="178,249,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="timed_dimming_end_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="170,255,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="run_at_win_startup" Content="Start with Windows" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" Checked="run_at_win_startup_Checked" Unchecked="run_at_win_startup_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="242,228,0,0" TextWrapping="Wrap" Text="Nighttime start:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="242,251,0,0" TextWrapping="Wrap" Text="Nighttime end:" VerticalAlignment="Top" Width="83"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_start_hour_updown" HorizontalAlignment="Left" Height="24" Margin="326,225,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_start_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_start_minute_updown" HorizontalAlignment="Left" Height="24" Margin="389,225,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_start_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="381,230,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_end_hour_updown" HorizontalAlignment="Left" Height="24" Margin="326,249,0,0" VerticalAlignment="Top" Width="50" Value="1" Maximum="23" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_hour_updown_ValueChanged"/>
-                    <xctk:IntegerUpDown x:Name="nighttime_end_minute_updown" HorizontalAlignment="Left" Height="24" Margin="389,249,0,0" VerticalAlignment="Top" Width="49" Value="1" Maximum="60" Minimum="0" MouseWheelActiveOnFocus="True" ValueChanged="nighttime_end_minute_updown_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="381,252,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top" Width="3"/>
-                    <CheckBox x:Name="nighttime_enabled_checkbox" Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" HorizontalAlignment="Left" Margin="242,184,0,0" VerticalAlignment="Top" Unchecked="nighttime_enabled_checkbox_Checked" Checked="nighttime_enabled_checkbox_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="178,38,0,0" TextWrapping="Wrap" Text="Closing mode:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="app_exit_mode" HorizontalAlignment="Left" Margin="261,35,0,0" VerticalAlignment="Top" Width="147" ItemsSource="{Binding Source={StaticResource appexitmode}}" ItemTemplate="{Binding Source={StaticResource appexitmodeTemplate}}" SelectionChanged="app_exit_mode_SelectionChanged"/>
-                    <CheckBox x:Name="start_silently_enabled" Content="Start Aurora minimized" HorizontalAlignment="Left" Margin="12,39,0,0" VerticalAlignment="Top" Unchecked="start_silently_enabled_Checked" Checked="start_silently_enabled_Checked"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="512,12,0,0" TextWrapping="Wrap" Text="Application Detection Method:" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="app_detection_mode" HorizontalAlignment="Left" Margin="677,10,0,0" VerticalAlignment="Top" Width="157" ItemsSource="{Binding Source={StaticResource AppDetectionMode}}" ItemTemplate="{Binding Source={StaticResource AppDetectionModeTemplate}}" SelectionChanged="app_detection_mode_SelectionChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="12,111,0,0" TextWrapping="Wrap" Text="Global brightness modifier: " VerticalAlignment="Top"/>
-                    <TextBlock x:Name="lblGlobalBrightness" HorizontalAlignment="Left" Margin="335,111,0,0" TextWrapping="Wrap" Text="0 %" VerticalAlignment="Top"/>
-                    <Slider x:Name="sldGlobalBrightness" HorizontalAlignment="Left" Margin="180,111,0,0" VerticalAlignment="Top" Width="150" Maximum="1" ValueChanged="sliderPercentages_ValueChanged" Value="{Binding GlobalBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=lblGlobalBrightness, Path=.}"/>
-                    <CheckBox x:Name="chkHigherPriority" Content="High priority" HorizontalAlignment="Left" Margin="158,10,0,0" VerticalAlignment="Top" IsChecked="{Binding HighPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="chkHigherPriority_IsCheckedChanged" Unchecked="chkHigherPriority_IsCheckedChanged"/>
-                    <TextBlock Text="Delay:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="278,10,0,0" />
-                    <xctk:IntegerUpDown x:Name="startDelayAmount" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="315,8,0,0" Width="69" Minimum="0" Increment="15" ValueChanged="startDelayAmount_ValueChanged" />
-                    <TextBlock Text="sec" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="389,10,0,0" />
+    <TabControl Margin="0,7,0,0" x:Name="tabMain" DataContext="{x:Static a:Global.Configuration}">
 
-                    <CheckBox Content="Enable Audio Capture for gamestates (restart required)" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." HorizontalAlignment="Left" Margin="512,39,0,0" VerticalAlignment="Top" IsChecked="{Binding EnableAudioCapture}" />
-                    <TextBlock Text="GSI Playback Device:" Margin="511,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <ComboBox SelectedValue="{Binding Path=GSIAudioRenderDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,59,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <TabItem Header="General Settings">
+            <Grid>
+                <CheckBox x:Name="RunAtWinStartup" Content="Start with Windows" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" Checked="RunAtWinStartup_Checked" Unchecked="RunAtWinStartup_Checked"/>
+                <CheckBox Content="Use ALT + volume controls for global brightness (only when Aurora is out of focus)" IsChecked="{Binding UseVolumeAsBrightness}" Margin="11,91,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Show Overlays and Underlays in Application Preview" IsChecked="{Binding OverlaysInPreview}" Margin="12,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Start Aurora minimized" IsChecked="{Binding StartSilently}" Margin="12,39,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="High priority" IsChecked="{Binding HighPriority}" Checked="HighPriorityCheckbox_Checked" Unchecked="HighPriorityCheckbox_Checked" Margin="158,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                    <TextBlock HorizontalAlignment="Left" Margin="12,278,0,0" TextWrapping="Wrap" Text="Hardware sensors update rate:" VerticalAlignment="Top" ToolTip="Used for CPU and GPU usage, etc"/>
-                    <xctk:IntegerUpDown HorizontalAlignment="Left" Height="24" Margin="178,278,0,0" VerticalAlignment="Top" Width="50" Value="{Binding HardwareMonitorUpdateRate}" Maximum="2000" Minimum="100" MouseWheelActiveOnFocus="True" />
-                    <CheckBox Content="Use average hardware sensor values instead of real-time ones " ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="10,302,0,0" VerticalAlignment="Top" IsChecked="{Binding HardwareMonitorUseAverageValues}" />
+                <!-- Time-based dimming -->
+                <CheckBox Content="Enable timed blackout of the keyboard" IsChecked="{Binding TimeBasedDimmingEnabled}" Margin="10,184,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Apply timed blackout to game events" IsChecked="{Binding TimeBasedDimmingAffectGames}" Margin="10,205,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding TimeBasedDimmingStartHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="116,225,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding TimeBasedDimmingStartMinute, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="59" Margin="178,225,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock HorizontalAlignment="Left" Margin="170,225,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
+                <xctk:IntegerUpDown Value="{Binding TimeBasedDimmingEndHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="116,249,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding TimeBasedDimmingEndMinute, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="59" Margin="178,249,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock HorizontalAlignment="Left" Margin="170,255,0,0" TextWrapping="Wrap" Text=":" VerticalAlignment="Top"/>
 
-                </Grid>
-            </TabItem>
-            <TabItem Header="Away Effects">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="587*"/>
-                        <ColumnDefinition Width="257*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,12,0,0" TextWrapping="Wrap" Text="Away Effect Type: " VerticalAlignment="Top"/>
-                    <ComboBox x:Name="idle_effects_type" HorizontalAlignment="Left" Margin="110,10,0,0" VerticalAlignment="Top" Width="170" ItemsSource="{Binding Source={StaticResource IdleEffects}}" ItemTemplate="{Binding Source={StaticResource IdleEffectsTemplate}}" SelectionChanged="idle_effects_type_SelectionChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,38,0,0" TextWrapping="Wrap" Text="Delay:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="105,38,0,0" TextWrapping="Wrap" Text="minutes" VerticalAlignment="Top"/>
+                <!-- Blackout -->
+                <TextBlock Text="Blackout start time:" Margin="11,230,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="Blackout end time:" Margin="11,254,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                
+                <!-- Nighttime -->
+                <CheckBox Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" IsChecked="{Binding NighttimeEnabled}" Margin="242,184,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding NighttimeStartHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="326,225,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding NighttimeStartMinute, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="59" Margin="389,225,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text=":" Margin="381,230,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <xctk:IntegerUpDown Value="{Binding NighttimeEndHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="326,249,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding NighttimeEndMinute, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="59" Margin="389,249,0,0" Width="49" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text=":" Margin="381,252,0,0" Width="3" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                    <xctk:ColorPicker x:Name="idle_effects_primary_color_colorpicker" Margin="90,62,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="163" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="idle_effects_primary_color_colorpicker_SelectedColorChanged" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,65,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
+                <!-- Excluded Programs List -->
+                <ListBox ItemsSource="{Binding ExcludedPrograms}" SelectedItem="{Binding SelectedExcludedProgram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:Control_Settings}}, Mode=OneWayToSource}"  Margin="512,139,0,0" Width="160" Height="199" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="Excluded Processes" Margin="512,117,0,0" Width="113" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <Button Content="Add Process" Click="ExcludedAdd_Click" Margin="677,139,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <Button Content="Remove Process" Click="ExcludedRemove_Click" Margin="677,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                
+                <!-- Global brightness -->
+                <TextBlock Text="Global brightness modifier:" Margin="12,111,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Slider Value="{Binding GlobalBrightness, UpdateSourceTrigger=PropertyChanged}" Maximum="1" Margin="180,111,0,0" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="{Binding GlobalBrightness, Converter={StaticResource PercentageFormatter}}" Margin="335,111,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                
+                <!-- Keyboard brightness -->
+                <TextBlock Text="Keyboard brightness modifier:" Margin="12,132,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Slider Value="{Binding KeyboardBrightness, UpdateSourceTrigger=PropertyChanged}" x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="180,132,0,0" VerticalAlignment="Top" Width="150" Maximum="1" />
+                <TextBlock Text="{Binding KeyboardBrightness, Converter={StaticResource PercentageFormatter}}" HorizontalAlignment="Left" Margin="335,132,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
 
+                <!-- Peripheral brightness -->
+                <TextBlock Text="Peripheral brightness modifier:" TextWrapping="Wrap" Margin="12,153,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Slider Value="{Binding PeripheralBrightness, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="1" Margin="180,153,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="148" />
+                <TextBlock Text="{Binding PeripheralBrightness, Converter={StaticResource PercentageFormatter}}" TextWrapping="Wrap" Margin="335,153,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
-                    <TextBlock HorizontalAlignment="Left" Margin="10,120,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
-                    <Slider x:Name="idle_effects_speed_slider" HorizontalAlignment="Left" Margin="90,120,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="5" ValueChanged="idle_effects_speed_slider_ValueChanged"/>
-                    <TextBlock x:Name="idle_effects_speed_label" HorizontalAlignment="Left" Margin="235,120,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
-                    <xctk:ColorPicker x:Name="idle_effects_secondary_color_colorpicker" Margin="105,91,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="148" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="idle_effects_secondary_color_colorpicker_SelectedColorChanged" />
-                    <TextBlock HorizontalAlignment="Left" Margin="10,94,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="idle_effects_delay" HorizontalAlignment="Left" Height="20" Margin="47,37,0,0" VerticalAlignment="Top" Width="50" Value="0" Minimum="0" Maximum="120" ValueChanged="idle_effects_delay_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,145,0,0" TextWrapping="Wrap" Text="Effect Amount:" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="idle_effects_amount" HorizontalAlignment="Left" Height="20" Margin="93,143,0,0" VerticalAlignment="Top" Width="50" Value="0" Minimum="0" Maximum="120" ValueChanged="idle_effects_amount_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,170,0,0" TextWrapping="Wrap" Text="Effect Frequency:" VerticalAlignment="Top"/>
-                    <xctk:IntegerUpDown x:Name="idle_effects_frequency" HorizontalAlignment="Left" Height="20" Margin="105,168,0,0" VerticalAlignment="Top" Width="50" Value="0" Minimum="0" Maximum="600" ValueChanged="idle_effects_frequency_ValueChanged"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="160,170,0,0" TextWrapping="Wrap" Text="seconds" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Devices &amp; Wrappers">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Margin="7,7,0,7">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="150"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
-                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard Layout:" VerticalAlignment="Top"/>
-                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
-                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Mouse:" VerticalAlignment="Top"/>
-                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
-                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
-                                <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
-                                <ComboBox x:Name="devices_kb_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbLayout}}" ItemTemplate="{Binding Source={StaticResource KbLayoutTemplate}}" SelectionChanged="devices_kb_layout_SelectionChanged"/>
-                                <ComboBox x:Name="devices_kb_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KbBrand}}" ItemTemplate="{Binding Source={StaticResource KbBrandTemplate}}" SelectionChanged="devices_kb_brand_SelectionChanged"/>
-                                <ComboBox x:Name="devices_mouse_brand" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseBrand}}" ItemTemplate="{Binding Source={StaticResource MouseBrandTemplate}}" SelectionChanged="devices_mouse_brand_SelectionChanged"/>
-                                <ComboBox x:Name="ComboBox_virtualkeyboard_keycap_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource KeycapType}}" ItemTemplate="{Binding Source={StaticResource KeycapTypeTemplate}}" SelectionChanged="ComboBox_virtualkeyboard_keycap_type_SelectionChanged"/>
-                                <ComboBox x:Name="devices_mouse_orientation" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource MouseOrientation}}" ItemTemplate="{Binding Source={StaticResource MouseOrientationTemplate}}" SelectionChanged="devices_mouse_orientation_SelectionChanged"/>
-                                <ComboBox x:Name="cmbBitmapAccuracy" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="192" ItemsSource="{Binding Source={StaticResource BitmapAccuracy}}" ItemTemplate="{Binding Source={StaticResource BitmapAccuracyTemplate}}" SelectedItem="{Binding BitmapAccuracy, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
-                                <CheckBox Grid.Row="1" x:Name="wrapper_allow_in_background_enabled" Content="Allow Aurora wrappers to take priority over desktop profile while active" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Unchecked="wrapper_allow_in_background_enabled_Checked" Checked="wrapper_allow_in_background_enabled_Checked"/>
-                                <CheckBox x:Name="devices_disable_keyboard_lighting" Content="Disable Keyboard Lighting" Margin="0,1,0,1" Checked="devices_disable_keyboard_lighting_Checked" Unchecked="devices_disable_keyboard_lighting_Checked" />
-                                <CheckBox x:Name="devices_disable_mouse_lighting" Content="Disable Mouse Lighting" Margin="0,1,0,1" Checked="devices_disable_mouse_lighting_Checked" Unchecked="devices_disable_mouse_lighting_Checked" />
-                                <CheckBox x:Name="devices_disable_headset_lighting" Content="Disable Headset Lighting" Margin="0,1,0,1" Checked="devices_disable_headset_lighting_Checked" Unchecked="devices_disable_headset_lighting_Checked" />
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
+                <TextBlock Text="Closing mode:" Margin="178,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox SelectedValue="{Binding CloseMode}" ItemsSource="{u:EnumToItemsSource {x:Type local:AppExitMode}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="261,35,0,0" Width="147" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                    <Grid Grid.Column="1" Margin="0,7,7,7">
-                        <TabControl>
-                            <TabItem Header="Logitech">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="devices_view_first_time_logitech" Content="View First-time instructions for Logitech" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_logitech_Click" HorizontalAlignment="Left"/>
-                                    <Button x:Name="wrapper_install_logitech" Content="Install Aurora Wrapper Patch for Logitech" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_install_logitech_Click"/>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="Corsair">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="devices_view_first_time_corsair" Content="View First-time instructions for Corsair" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_corsair_Click" HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="Razer">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="devices_view_first_time_razer" Content="View First-time instructions for Razer" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_razer_Click" HorizontalAlignment="Left"/>
-                                    <Button x:Name="wrapper_install_razer" Content="Install Aurora Wrapper Patch for Razer" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_install_razer_Click"/>
+                <TextBlock TextWrapping="Wrap" Text="Application Detection Method:" Margin="512,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox SelectedValue="{Binding DetectionMode}" ItemsSource="{u:EnumToItemsSource {x:Type local:ApplicationDetectionMode}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="677,10,0,0" Width="157" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                                    <GroupBox Margin="0,10,0,0" Header="Chroma">
-                                        <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="20"/>
-                                                <RowDefinition Height="20"/>
-                                            </Grid.RowDefinitions>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="120"/>
-                                                <ColumnDefinition Width="100"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
+                
+                <!-- Startup delay -->
+                <TextBlock Text="Delay:" Margin="278,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown x:Name="startDelayAmount" Minimum="0" Increment="15" ValueChanged="StartDelayAmount_ValueChanged" Margin="315,8,0,0" Width="69" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="sec" Margin="389,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                                            <Label Grid.Row="0" Grid.Column="0" Content="Supported Versions:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                            <Label x:Name="razer_wrapper_supported_versions_label" Grid.Row="0" Grid.Column="1" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
-                                            <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
-                                            <Button x:Name="razer_wrapper_uninstall_button" Grid.Row="0" Grid.Column="2" Content="Uninstall" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Click="razer_wrapper_uninstall_button_Click"/>
+                <!-- Audio capture -->
+                <CheckBox Content="Enable Audio Capture for gamestates (restart required)" IsChecked="{Binding EnableAudioCapture}" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." Margin="512,39,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="GSI Playback Device:" Margin="511,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <ComboBox SelectedValue="{Binding Path=GSIAudioRenderDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,59,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                                            <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                            <Label x:Name="razer_wrapper_installed_version_label" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                            <Label x:Name="razer_wrapper_enabled_label" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <!-- Hardware sensors -->
+                <TextBlock Text="Hardware sensors update rate:" ToolTip="Used for CPU and GPU usage, etc" Margin="12,278,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <xctk:IntegerUpDown Value="{Binding HardwareMonitorUpdateRate}" Minimum="100" Maximum="2000" Margin="178,278,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Use average hardware sensor values instead of real-time ones" IsChecked="{Binding HardwareMonitorUseAverageValues}" ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" Margin="10,302,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                                            <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                            <Label x:Name="razer_wrapper_connection_status_label" Grid.Row="2" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Away Effects">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="587*"/>
+                    <ColumnDefinition Width="257*"/>
+                </Grid.ColumnDefinitions>
 
-                                            <Label Grid.Row="3" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                            <Label x:Name="razer_wrapper_current_application_label" Grid.Row="3" Grid.Column="2" Width="300" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                        </Grid>
-                                    </GroupBox>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="SteelSeries">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="devices_view_first_time_steelseries" Content="View First-time instructions for SteelSeries" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_steelseries_Click" HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="DualShock">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="devices_view_first_time_dualshock" Content="View First-time instructions for DS4" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_dualshock_Click" HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="Roccat">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="devices_view_first_time_roccat" Content="View First-time instructions for Roccat" Margin="0,1,0,1" VerticalAlignment="Top" Click="devices_view_first_time_roccat_Click" HorizontalAlignment="Left"/>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="LightFX">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="wrapper_install_lightfx_32" Content="Install Aurora Wrapper Patch for LightFX (32 bit)" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_install_lightfx_32_Click"/>
-                                    <Button x:Name="wrapper_install_lightfx_64" Content="Install Aurora Wrapper Patch for LightFX (64 bit)" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_install_lightfx_64_Click"/>
-                                </StackPanel>
-                            </TabItem>
-                            <TabItem Header="Asus">
-                                <StackPanel Orientation="Vertical" Margin="5">
-                                    <Button x:Name="wrapper_asus_configure_devices" Content="Configure Peripheral Devices" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
-                                </StackPanel>
-                            </TabItem>
-                        </TabControl>
+                <TextBlock Text="Away Effect Type:" Margin="10,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox SelectedValue="{Binding IdleType}" ItemsSource="{u:EnumToItemsSource {x:Type local:IdleEffects}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="110,10,0,0" Width="170" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="Delay:" Margin="10,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBlock Text="minutes" Margin="105,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+                <xctk:ColorPicker SelectedColor="{Binding IdleEffectPrimaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="90,62,0,0" Width="163" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="Primary Color:" Margin="10,65,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+                <TextBlock Text="Effect Speed:" Margin="10,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Slider Value="{Binding IdleSpeed}" Minimum="1" Maximum="5" SmallChange="0.5" IsSnapToTickEnabled="True" TickFrequency="0.25" Margin="90,120,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="{Binding IdleSpeed, Converter={StaticResource AwayEffectSpeedLabelFormatter}}" Margin="235,120,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+                <xctk:ColorPicker SelectedColor="{Binding IdleEffectSecondaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="105,91,0,0" Width="148" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                <TextBlock Text="Secondary Color:" Margin="10,94,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <xctk:IntegerUpDown Value="{Binding IdleDelay}" Minimum="0" Maximum="120" Margin="47,37,0,0" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="Effect Amount:" Margin="10,145,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <xctk:IntegerUpDown Value="{Binding IdleAmount}" Minimum="0" Maximum="120" Margin="93,143,0,0"  Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="Effect Frequency:" Margin="10,170,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <xctk:IntegerUpDown Value="{Binding IdleFrequency}" Minimum="0" Maximum="600" Margin="105,168,0,0" Width="50" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="seconds" Margin="160,170,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Devices &amp; Wrappers">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Margin="7,7,0,7">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="150"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard Layout:" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Mouse:" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+                            <ComboBox SelectedValue="{Binding KeyboardLocalization}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredKeyboardLocalization}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ComboBox SelectedValue="{Binding KeyboardBrand}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredKeyboard}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ComboBox SelectedValue="{Binding MousePreference}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredMouse}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ComboBox SelectedValue="{Binding VirtualkeyboardKeycapType}" ItemsSource="{u:EnumToItemsSource {x:Type local:KeycapType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ComboBox SelectedValue="{Binding MouseOrientation}" ItemsSource="{u:EnumToItemsSource {x:Type local:MouseOrientationType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ComboBox SelectedValue="{Binding BitmapAccuracy}" ItemsSource="{u:EnumToItemsSource {x:Type local:BitmapAccuracy}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                            <CheckBox Content="Allow Aurora wrappers to take priority over desktop profile while active" IsChecked="{Binding AllowWrappersInBackground}" Grid.Row="1" Margin="0,1,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <CheckBox Content="Disable Keyboard Lighting" IsChecked="{Binding DevicesDisableKeyboard}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                            <CheckBox Content="Disable Mouse Lighting" IsChecked="{Binding DevicesDisableMouse}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                            <CheckBox Content="Disable Headset Lighting" IsChecked="{Binding DevicesDisableHeadset}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                            <Button Content="Configure Asus Peripheral Devices" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
+                        </StackPanel>
                     </Grid>
                 </Grid>
-            </TabItem>
-            <TabItem Header="Device Manager">
-                <Grid>
-                    <Controls:Control_DeviceManager Margin="10"/>
+
+                <Grid Grid.Column="1" Margin="0,7,7,7">
+                    <StackPanel Orientation="Vertical">
+                        <GroupBox Margin="0,10,0,0" Header="Chroma">
+                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Content="Supported Versions:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                <Label x:Name="razer_wrapper_supported_versions_label" Grid.Row="0" Grid.Column="1" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
+                                <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
+                                <Button x:Name="razer_wrapper_uninstall_button" Grid.Row="0" Grid.Column="2" Content="Uninstall" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Click="razer_wrapper_uninstall_button_Click"/>
+
+                                <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                <Label x:Name="razer_wrapper_installed_version_label" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                <Label x:Name="razer_wrapper_enabled_label" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                <Label x:Name="razer_wrapper_connection_status_label" Grid.Row="2" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
+                                <Label Grid.Row="3" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                <Label x:Name="razer_wrapper_current_application_label" Grid.Row="3" Grid.Column="2" Width="300" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="Wrappers">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock TextWrapping="Wrap" Margin="4" Text="Wrappers are not needed for Aurora to connect to your RGB devices. Only use these if you know what you're doing, otherwise you could cause issues in games or other applications! Read the wiki for more information."/>
+                                <Button Content="Patch for LightFX (32 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_32_Click"/>
+                                <Button Content="Patch for LightFX (64 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_64_Click"/>
+                                <Button Content="Patch for Logitech"         Margin="4" Width="200" Click="wrapper_install_logitech_Click"/>
+                                <Button Content="Patch for Razer (Legacy, deprecated)" Margin="4" Width="200" Click="wrapper_install_razer_Click"/>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
                 </Grid>
-            </TabItem>
-            <TabItem Header="Plugin Management">
-                <Grid>
-                    <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Updates">
-                <Grid>
-                    <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
-                    <Button x:Name="updates_check" Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
-                    <CheckBox x:Name="updates_autocheck_on_start" Content="Automatically check for updates on program start" HorizontalAlignment="Left" Margin="10,56,0,0" VerticalAlignment="Top" Checked="updates_autocheck_on_start_Checked" Unchecked="updates_autocheck_on_start_Checked"/>
-                    <CheckBox x:Name="chkGetPointerUpdates" Content="Automatically check for pointer updates on program start" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" IsChecked="{Binding GetPointerUpdates, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <CheckBox x:Name="chkGetPrereleases" Content="Get Pre-release updates" HorizontalAlignment="Left" Margin="10,96,0,0" VerticalAlignment="Top" IsChecked="{Binding GetDevReleases, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="About">
-                <Grid>
-                    <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
+            </Grid>
+        </TabItem>
+        <TabItem Header="Device Manager">
+            <Grid>
+                <Controls:Control_DeviceManager Margin="10"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Plugin Management">
+            <Grid>
+                <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Updates">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
+                <Button Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
+                <CheckBox Content="Automatically check for updates on program start" IsChecked="{Binding UpdatesCheckOnStartUp}" Margin="10,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Automatically check for pointer updates on program start" IsChecked="{Binding GetPointerUpdates}" Margin="10,76,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <CheckBox Content="Get Pre-release updates" IsChecked="{Binding GetDevReleases}" Margin="10,96,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="About">
+            <Grid>
+                <Label Content="Aurora" HorizontalAlignment="Left" Margin="143,10,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="14"/>
+                <TextBlock HorizontalAlignment="Left" Margin="148,44,0,0" TextWrapping="Wrap" VerticalAlignment="Top">
                         <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/>
                         <LineBreak/>
                         <LineBreak/>
@@ -376,85 +259,77 @@
                         <LineBreak/>
                         <LineBreak/>
                         <Run Text="Made by all the"/> <Hyperlink NavigateUri="https://github.com/antonpup/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
-                    </TextBlock>
-                    <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
-                    <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Debug">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                </TextBlock>
+                <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
+                <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Debug">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" >
-                        <Button 
-                            x:Name="btnShowBitmapWindow" 
+                <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Top" >
+                    <Button 
                             Content="Show Bitmap Window" 
                             Click="btnShowBitmapWindow_Click"
                             Margin="0,50,0,0"
                             Width="150"
                             Height="30"
                         />
-                        <CheckBox 
-                            x:Name="chkBitmapTopMost" 
+                    <CheckBox 
                             Content="Always on top" 
                             IsChecked="{Binding BitmapDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,10,0,0"
                         />
-                        <CheckBox 
+                    <CheckBox 
                             x:Name="chkBitmapStartUp" 
                             Content="Open at startup"  
                             IsChecked="{Binding BitmapWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,10,0,0"
                         />
-                    </StackPanel>
+                </StackPanel>
 
-                    <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <Button 
-                            x:Name="btnShowGSILog" 
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Button 
                             Content="Show GSI HTTP requests"
                             Click="btnShowGSILog_Click" 
                             Margin="0,50,0,0"
                             Width="150"
                             Height="30"
                         />
-                        <CheckBox 
-                            x:Name="chkHttpDebugTopMost" 
+                    <CheckBox 
                             Content="Always on top" 
                             IsChecked="{Binding HttpDebugTopMost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Margin="0,10,0,0"
                         />
-                        <CheckBox 
-                            x:Name="chkHttpStartUp" 
+                    <CheckBox 
                             Content="Open at startup" 
                             IsChecked="{Binding HttpWindowOnStartUp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                         Margin="0,10,0,0"
 
                         />
-                    </StackPanel>
+                </StackPanel>
 
-                    <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top">
-                        <Button 
-                            x:Name="btnShowLogsFolder" 
+                <StackPanel Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Button 
                             Content="Show Logs Folder" 
                             Click="btnShowLogsFolder_Click"
                             Margin="0,50,0,0"
                             Width="150"
                             Height="30"
                         />
-                        <Button
-                            x:Name="btnDumpSensors"
+                    <Button
                             Margin="0,10,0,0"
                             Width="150"
                             Height="30"
                             Content="Dump hardware sensors" Click="btnDumpSensors_Click"
                         />
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-        </TabControl>
-    </Grid>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </UserControl>

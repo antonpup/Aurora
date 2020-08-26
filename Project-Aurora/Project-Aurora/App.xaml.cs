@@ -290,7 +290,7 @@ namespace Aurora
 
                 Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
 
-                if (Global.Configuration.updates_check_on_start_up && !ignore_update)
+                if (Global.Configuration.UpdatesCheckOnStartUp && !ignore_update)
                 {
                     string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
@@ -363,7 +363,7 @@ namespace Aurora
 
                 Global.logger.Info("Loading Device Manager");
                 Global.dev_manager.RegisterVariables();
-                Global.dev_manager.Initialize();
+                Global.dev_manager.InitializeDevices();
 
                 /*Global.logger.LogLine("Starting GameEventHandler", Logging_Level.Info);
                 Global.geh = new GameEventHandler();
@@ -484,8 +484,7 @@ namespace Aurora
             Global.InputEvents?.Dispose();
             Global.LightingStateManager?.Dispose();
             Global.net_listener?.Stop();
-            Global.dev_manager?.Shutdown();
-            Global.dev_manager?.Dispose();
+            Global.dev_manager?.ShutdownDevices();
 
             try
             {

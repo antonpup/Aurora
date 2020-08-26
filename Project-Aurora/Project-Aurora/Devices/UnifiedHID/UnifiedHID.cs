@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace Aurora.Devices.UnifiedHID
 {
-    class UnifiedHIDDevice : Device
+    class UnifiedHIDDevice : IDevice
     {
         private string devicename = "UnifiedHID";
         private bool isInitialized = false;
@@ -111,26 +111,15 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public string GetDeviceDetails()
-        {
-            if (isInitialized)
-            {
-                return devicename + ": Connected";
-            }
-            else
-            {
-                return devicename + ": Not connected";
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public void Reset()
         {
-            if (this.IsInitialized() && (peripheral_updated))
+            if (this.IsInitialized&& (peripheral_updated))
             {
                 peripheral_updated = false;
             }
@@ -147,10 +136,7 @@ namespace Aurora.Devices.UnifiedHID
             return this.isInitialized;
         }
 
-        public bool IsInitialized()
-        {
-            return this.isInitialized;
-        }
+        public bool IsInitialized => this.isInitialized;
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -172,7 +158,7 @@ namespace Aurora.Devices.UnifiedHID
                             color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
                             if (e.Cancel) return false;
-                            else if (Global.Configuration.allow_peripheral_devices && !Global.Configuration.devices_disable_mouse)
+                            else if (Global.Configuration.AllowPeripheralDevices && !Global.Configuration.DevicesDisableMouse)
                             {
                                 if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
                                 {
@@ -188,7 +174,7 @@ namespace Aurora.Devices.UnifiedHID
                     }
                     else
                     {
-                        if (!Global.Configuration.devices_disable_keyboard)
+                        if (!Global.Configuration.DevicesDisableKeyboard)
                         {
                             device.SetMultipleLEDColour(keyColors);
                             peripheral_updated = true;
@@ -233,24 +219,23 @@ namespace Aurora.Devices.UnifiedHID
             //return false;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                foreach (ISSDevice device in AllDevices)
+                if (default_registry == null)
                 {
-                    default_registry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {devicename}");
+                    default_registry = new VariableRegistry();
+                    foreach (ISSDevice device in AllDevices)
+                    {
+                        default_registry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {devicename}");
+                    }
                 }
+                return default_registry;
             }
-            return default_registry;
         }
-
     }
 
     interface ISSDevice

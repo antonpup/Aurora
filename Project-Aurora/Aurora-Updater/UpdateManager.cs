@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.ComponentModel;
-using System.IO;
-using Ionic.Zip;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Diagnostics;
-using System.Text;
 using Octokit;
-using SemVer;
 using Version = SemVer.Version;
 
 namespace Aurora_Updater
@@ -113,10 +111,6 @@ namespace Aurora_Updater
 
         private bool FetchData(Version version)
         {
-
-            
-
-
             try
             {
                 if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
@@ -242,31 +236,33 @@ namespace Aurora_Updater
 
                 try
                 {
-                    ZipFile updateFile = new ZipFile(Path.Combine(Program.exePath, "update.zip"));
-                    log.Enqueue(new LogEntry(updateFile.Count + " files detected."));
+                    var updateFile = ZipFile.OpenRead(Path.Combine(Program.exePath, "update.zip"));
+                    var countOfEntries = updateFile.Entries.Count;
+                    log.Enqueue(new LogEntry($"{countOfEntries} files detected."));
 
-                    for (int i = 0; i < updateFile.Count; i++)
+                    for (int i = 0; i < countOfEntries; i++)
                     {
-                        float percentage = ((float)i / (float)updateFile.Count);
+                        float percentage = ((float)i / (float)countOfEntries);
 
-                        ZipEntry fileEntry = updateFile[i];
-                        log.Enqueue(new LogEntry("[" + Math.Truncate(percentage * 100) + "%] Updating: " + fileEntry.FileName));
+                        var fileEntry = updateFile.Entries[i];
+                        log.Enqueue(new LogEntry($"[{Math.Truncate(percentage * 100)}%] Updating: {fileEntry.FullName}"));
                         this.extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
 
-                        if (ignoreFiles.Contains(fileEntry.FileName))
+                        if (ignoreFiles.Contains(fileEntry.FullName))
                             continue;
 
                         try
                         {
-                            if (File.Exists(Path.Combine(Program.exePath, fileEntry.FileName)))
-                                File.Move(Path.Combine(Program.exePath, fileEntry.FileName), Path.Combine(Program.exePath, fileEntry.FileName + ".updateremove"));
-                            fileEntry.Extract(Program.exePath);
+                            var filePath = Path.Combine(Program.exePath, fileEntry.FullName);
+                            if (File.Exists(filePath))
+                                File.Move(filePath, $"{filePath}.updateremove");
+                            fileEntry.ExtractToFile(filePath);
                         }
                         catch (IOException e)
                         {
-                            log.Enqueue(new LogEntry(fileEntry.FileName + " is inaccessible.", Color.Red));
+                            log.Enqueue(new LogEntry($"{fileEntry.FullName} is inaccessible.", Color.Red));
 
-                            MessageBox.Show(fileEntry.FileName + " is inaccessible.\r\nPlease close Aurora.\r\n\r\n" + e.Message);
+                            MessageBox.Show($"{fileEntry.FullName} is inaccessible.\r\nPlease close Aurora.\r\n\r\n {e.Message}");
                             i--;
                             continue;
                         }

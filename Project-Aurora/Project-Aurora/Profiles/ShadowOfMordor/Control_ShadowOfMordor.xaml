@@ -3,22 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Profiles.ShadowOfMordor"
-             xmlns:EnumDeviceKeys="clr-namespace:Aurora.Devices"
-             xmlns:EnumPercentEffectType="clr-namespace:Aurora.Settings"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Profiles.ShadowOfMordor.Control_ShadowOfMordor"
+             x:Class="Aurora.Profiles.ShadowOfMordor.Control_ShadowOfMordor"
              mc:Ignorable="d" 
              d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <EnumValueConverters:DeviceKeysToStringVC x:Key="DeviceKeysToStringVC"/>
-            <DataTemplate x:Key="DeviceKeys">
-                <TextBlock Text="{Binding Converter={StaticResource DeviceKeysToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <Grid>
         <TabControl>

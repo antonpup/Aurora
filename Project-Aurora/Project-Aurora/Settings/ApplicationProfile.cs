@@ -17,16 +17,9 @@ namespace Aurora.Settings
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public KeySequence Keys { get; set; }
         [OnChangedMethod(nameof(OnEnabledChanged))] public bool Enabled { get; set; }
         [JsonIgnore] public bool ExceptionHit { get; set; }
         [JsonIgnore] public Exception Exception { get; set; }
-
-        public ScriptSettings(dynamic script)
-        {
-            if (script?.DefaultKeys != null && script?.DefaultKeys is KeySequence)
-                Keys = script.DefaultKeys;
-        }
 
         private void OnEnabledChanged() {
             if (Enabled) {
