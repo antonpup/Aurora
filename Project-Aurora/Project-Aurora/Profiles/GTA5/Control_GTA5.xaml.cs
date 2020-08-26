@@ -42,7 +42,7 @@ namespace Aurora.Profiles.GTA5
         {
             if (IsLoaded)
             {
-                (this.profile_manager.Config.Event._game_state as GameState_GTA5).CurrentState = (Profiles.GTA5.GSI.PlayerState)Enum.Parse(typeof(Profiles.GTA5.GSI.PlayerState), this.preview_team.SelectedIndex.ToString());
+                (this.profile_manager.Config.Event._game_state as GameState_GTA5).CurrentState = (PlayerState)preview_team.SelectedValue;
             }
         }
 

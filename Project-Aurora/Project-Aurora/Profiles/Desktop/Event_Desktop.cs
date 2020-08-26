@@ -1,6 +1,5 @@
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
-using Microsoft.VisualBasic.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,9 +28,9 @@ namespace Aurora.Profiles.Desktop
             //Scripts before interactive and shortcut assistant layers
             //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);
 
-            if (Global.Configuration.time_based_dimming_enabled)
+            if (Global.Configuration.TimeBasedDimmingEnabled)
             {
-                if (Utils.Time.IsCurrentTimeBetween(Global.Configuration.time_based_dimming_start_hour, Global.Configuration.time_based_dimming_end_hour)) {
+                if (Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingEndHour)) {
                     layers.Clear();
 
                     EffectLayer time_based_dim_layer = new EffectLayer("Time Based Dim");

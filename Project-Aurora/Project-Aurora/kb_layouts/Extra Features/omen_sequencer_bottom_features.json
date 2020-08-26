@@ -1,0 +1,22 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 1,
+    "grouped_keys": [
+        {
+            "visualName": "SPACE",
+            "tag": 97,
+            "line_break": false,
+            "margin_left": 7.0,
+            "margin_top": 0.0,
+            "width": 208.0,
+            "height": 60.0,
+            "font_size": 12.0,
+            "width_bits": 17,
+            "height_bits": 3,
+            "margin_left_bits": 0,
+            "margin_top_bits": 0,
+            "enabled": true
+        }
+
+    ]
+}
