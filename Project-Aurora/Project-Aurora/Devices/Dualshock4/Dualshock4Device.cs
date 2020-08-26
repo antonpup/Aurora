@@ -154,7 +154,7 @@ namespace Aurora.Devices.Dualshock
                     //Global.logger.Info("Stop Ewatch");
                 }
 
-                bool isdisabled = Global.Configuration.devices_disabled.Contains(typeof(DualshockDevice));
+                bool isdisabled = Global.Configuration.DevicesDisabled.Contains(typeof(DualshockDevice));
                 int auto_connect_cooldown = 3000;
                 bool auto_connect_enabled = Global.Configuration.VarRegistry.GetVariable<bool>($"{devicename}_auto_connect");
 

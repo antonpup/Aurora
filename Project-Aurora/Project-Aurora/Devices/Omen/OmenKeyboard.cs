@@ -21,7 +21,7 @@ namespace Aurora.Devices.Omen
 
         internal static IOmenDevice GetOmenKeyboard()
         {
-            switch (Global.Configuration.keyboard_brand)
+            switch (Global.Configuration.KeyboardBrand)
             {
                 case PreferredKeyboard.OMEN_Sequencer:
                     {
@@ -59,7 +59,7 @@ namespace Aurora.Devices.Omen
         {
             if (hKB != IntPtr.Zero && keyColors.Count > 0)
             {
-                if (Global.Configuration.devices_disable_keyboard)
+                if (Global.Configuration.DevicesDisableKeyboard)
                 {
                     return;
                 }

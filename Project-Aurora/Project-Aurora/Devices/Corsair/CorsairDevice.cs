@@ -59,15 +59,15 @@ namespace Aurora.Devices.Corsair
             for (int i = 0; i < deviceInfos.Count; i++)
             {
                 var deviceInfo = deviceInfos[i];
-                if (deviceInfo.Type == CorsairDeviceType.Keyboard && Global.Configuration.devices_disable_keyboard)
+                if (deviceInfo.Type == CorsairDeviceType.Keyboard && Global.Configuration.DevicesDisableKeyboard)
                     continue;
 
                 if ((deviceInfo.Type == CorsairDeviceType.Mouse || deviceInfo.Type == CorsairDeviceType.MouseMat)
-                    && Global.Configuration.devices_disable_mouse)
+                    && Global.Configuration.DevicesDisableMouse)
                     continue;
 
                 if ((deviceInfo.Type == CorsairDeviceType.Headset || deviceInfo.Type == CorsairDeviceType.HeadsetStand)
-                    && Global.Configuration.devices_disable_headset)
+                    && Global.Configuration.DevicesDisableHeadset)
                     continue;
 
                 List<CorsairLedColor> colors = new List<CorsairLedColor>();

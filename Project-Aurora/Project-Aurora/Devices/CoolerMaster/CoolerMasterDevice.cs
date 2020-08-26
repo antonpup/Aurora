@@ -59,9 +59,9 @@ namespace Aurora.Devices.CoolerMaster
         {
             foreach (var (dev, colors) in InitializedDevices)
             {
-                if (Native.Mice.Contains(dev) && Global.Configuration.devices_disable_mouse)
+                if (Native.Mice.Contains(dev) && Global.Configuration.DevicesDisableMouse)
                     continue;
-                if (Native.Keyboards.Contains(dev) && Global.Configuration.devices_disable_keyboard)
+                if (Native.Keyboards.Contains(dev) && Global.Configuration.DevicesDisableKeyboard)
                     continue;
 
                 if (!KeyMaps.LayoutMapping.TryGetValue(dev, out var dict))

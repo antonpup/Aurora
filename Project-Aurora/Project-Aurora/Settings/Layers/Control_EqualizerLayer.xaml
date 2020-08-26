@@ -1,38 +1,14 @@
-<UserControl x:Class="Aurora.Settings.Layers.Control_EqualizerLayer" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:u="clr-namespace:Aurora.Utils" xmlns:local="clr-namespace:Aurora.Settings.Layers" xmlns:c="clr-namespace:Aurora.Controls" mc:Ignorable="d" Loaded="UserControl_Loaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="EqualizerType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:EqualizerType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:EqualizerTypeToStringVC x:Key="EqualizerTypeToStringVC" />
-            <DataTemplate x:Key="EqualizerTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource EqualizerTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="EqualizerPresentationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:EqualizerPresentationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:EqualizerPresentationTypeToStringVC x:Key="EqualizerPresentationTypeToStringVC" />
-            <DataTemplate x:Key="EqualizerPresentationTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource EqualizerPresentationTypeToStringVC}}" />
-            </DataTemplate>
-
-            <ObjectDataProvider x:Key="EqualizerBackgroundMode" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="local:EqualizerBackgroundMode" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <u:EqualizerBackgroundModeToStringVC x:Key="EqualizerBackgroundModeToStringVC" />
-            <DataTemplate x:Key="EqualizerBackgroundModeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource EqualizerBackgroundModeToStringVC}}" />
-            </DataTemplate>
-
-        </ResourceDictionary>
-    </UserControl.Resources>
+<UserControl x:Class="Aurora.Settings.Layers.Control_EqualizerLayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox"
+             xmlns:u="clr-namespace:Aurora.Utils"
+             xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:c="clr-namespace:Aurora.Controls"
+             mc:Ignorable="d" Loaded="UserControl_Loaded">
 
     <Grid Width="700" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left">
         <Grid.ColumnDefinitions>
@@ -60,13 +36,13 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Margin="3" TextWrapping="Wrap" Text="Equalizer Effect Type: " />
-            <ComboBox Grid.Row="0" Grid.Column="1" Margin="3" x:Name="eq_type" ItemsSource="{Binding Source={StaticResource EqualizerType}}" ItemTemplate="{Binding Source={StaticResource EqualizerTypeTemplate}}" SelectionChanged="eq_type_SelectionChanged" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Margin="3" x:Name="eq_type" ItemsSource="{u:EnumToItemsSource {x:Type local:EqualizerType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="eq_type_SelectionChanged" />
 
             <TextBlock Grid.Row="1" Grid.Column="0" Margin="3" TextWrapping="Wrap" Text="View Type: " />
-            <ComboBox Grid.Row="1" Grid.Column="1" Margin="3" x:Name="eq_view_type" ItemsSource="{Binding Source={StaticResource EqualizerPresentationType}}" ItemTemplate="{Binding Source={StaticResource EqualizerPresentationTypeTemplate}}" SelectionChanged="eq_view_type_SelectionChanged" />
+            <ComboBox Grid.Row="1" Grid.Column="1" Margin="3" x:Name="eq_view_type" ItemsSource="{u:EnumToItemsSource {x:Type local:EqualizerPresentationType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="eq_view_type_SelectionChanged" />
 
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="3" Text="Background Mode:" />
-            <ComboBox Grid.Row="2" Grid.Column="1" Margin="3" x:Name="eq_background_mode" ItemsSource="{Binding Source={StaticResource EqualizerBackgroundMode}}" ItemTemplate="{Binding Source={StaticResource EqualizerBackgroundModeTemplate}}" SelectionChanged="eq_background_mode_SelectionChanged" />
+            <ComboBox Grid.Row="2" Grid.Column="1" Margin="3" x:Name="eq_background_mode" ItemsSource="{u:EnumToItemsSource {x:Type local:EqualizerBackgroundMode}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="eq_background_mode_SelectionChanged" />
 
             <TextBlock Grid.Row="3" Grid.Column="0" Margin="3" Text="Background Color:" />
             <xctk:ColorPicker Grid.Row="3" Grid.Column="1" Margin="3" x:Name="Clr_dim_color" ColorMode="ColorCanvas" SelectedColorChanged="Clr_dim_color_SelectedColorChanged" UsingAlphaChannel="True" />

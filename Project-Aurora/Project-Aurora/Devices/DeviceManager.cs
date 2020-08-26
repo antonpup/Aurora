@@ -216,7 +216,7 @@ namespace Aurora.Devices
             {
                 foreach (var dc in DeviceContainers)
                 {
-                    if (dc.Device.IsInitialized || Global.Configuration.devices_disabled.Contains(dc.Device.GetType()))
+                    if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                         continue;
 
                     lock(dc.actionLock)
@@ -244,7 +244,7 @@ namespace Aurora.Devices
 
             foreach (var dc in DeviceContainers)
             {
-                if (dc.Device.IsInitialized || Global.Configuration.devices_disabled.Contains(dc.Device.GetType()))
+                if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                     continue;
 
                 lock (dc.actionLock)

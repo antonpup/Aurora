@@ -290,7 +290,7 @@ namespace Aurora
 
                 Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
 
-                if (Global.Configuration.updates_check_on_start_up && !ignore_update)
+                if (Global.Configuration.UpdatesCheckOnStartUp && !ignore_update)
                 {
                     string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
