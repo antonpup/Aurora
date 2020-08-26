@@ -121,6 +121,7 @@ namespace Aurora.Settings
             this.devices_kb_brand.SelectedItem = Global.Configuration.keyboard_brand;
             this.devices_kb_layout.SelectedIndex = (int)Global.Configuration.keyboard_localization;
             this.devices_mouse_brand.SelectedItem = Global.Configuration.mouse_preference;
+            this.devices_mousepad_brand.SelectedItem = Global.Configuration.mousepad_preference;
             this.devices_mouse_orientation.SelectedItem = Global.Configuration.mouse_orientation;
             this.ComboBox_virtualkeyboard_keycap_type.SelectedItem = Global.Configuration.virtualkeyboard_keycap_type;
             this.wrapper_allow_in_background_enabled.IsChecked = Global.Configuration.allow_wrappers_in_background;
