@@ -63,6 +63,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="Bloody.NET" Version="1.0.4"/>
     <PackageReference Include="Colore" Version="5.2.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="3.30.0" />
