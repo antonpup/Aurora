@@ -1,9 +1,9 @@
 ﻿using Aurora.Controls;
 using Aurora.Profiles.Payday_2.GSI;
 using Aurora.Settings;
-using Ionic.Zip;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -64,11 +64,11 @@ namespace Aurora.Profiles.Payday_2
                     {
                         using (MemoryStream gsi_pd2_ms = new MemoryStream(Properties.Resources.PD2_GSI))
                         {
-                            using (ZipFile zip = ZipFile.Read(gsi_pd2_ms))
+                            using (ZipArchive zip = new ZipArchive(gsi_pd2_ms))
                             {
-                                foreach (ZipEntry entry in zip)
+                                foreach (ZipArchiveEntry entry in zip.Entries)
                                 {
-                                    entry.Extract(pd2path, ExtractExistingFileAction.OverwriteSilently);
+                                    entry.ExtractToFile(pd2path, true);
                                 }
                             }
 
@@ -89,6 +89,80 @@ namespace Aurora.Profiles.Payday_2
             else
             {
                 MessageBox.Show("Payday 2 is not installed through Steam.\r\nCould not install the GSI mod.");
+            }
+        }
+
+        private void preview_gamestate_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_PD2).Game.State = (GSI.Nodes.GameStates)preview_gamestate.SelectedValue;
+            }
+        }
+
+        private void preview_levelphase_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_PD2).Level.Phase = (GSI.Nodes.LevelPhase)preview_levelphase.SelectedValue;
+            }
+        }
+
+        private void preview_playerstate_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.State = (GSI.Nodes.PlayerState)preview_playerstate.SelectedValue;
+            }
+        }
+
+        private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int hp_val = (int)this.preview_health_slider.Value;
+            if (this.preview_health_amount is Label)
+            {
+                this.preview_health_amount.Content = hp_val + "%";
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Current = hp_val;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Health.Max = 100;
+            }
+        }
+
+        private void preview_ammo_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            int ammo_val = (int)this.preview_ammo_slider.Value;
+            if (this.preview_ammo_amount is Label)
+            {
+                this.preview_ammo_amount.Content = ammo_val + "%";
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Current_Clip = ammo_val;
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.Weapons.SelectedWeapon.Max_Clip = 100;
+            }
+        }
+
+        private void preview_suspicion_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            float susp_val = (float)this.preview_suspicion_slider.Value;
+            if (this.preview_suspicion_amount is Label)
+            {
+                this.preview_suspicion_amount.Content = (int)susp_val + "%";
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.SuspicionAmount = susp_val / 100.0f;
+            }
+        }
+
+        private void preview_flashbang_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            float flash_val = (float)this.preview_flashbang_slider.Value;
+            if (this.preview_flashbang_amount is Label)
+            {
+                this.preview_flashbang_amount.Content = (int)flash_val + "%";
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.FlashAmount = flash_val / 100.0f;
+            }
+        }
+
+        private void preview_swansong_Checked(object sender, RoutedEventArgs e)
+        {
+            if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+            {
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.IsSwanSong = (sender as CheckBox).IsChecked.Value;
             }
         }
 

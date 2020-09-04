@@ -1,7 +1,9 @@
-﻿using Aurora.Utils;
+﻿using Aurora.Devices.Dualshock;
+using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -88,14 +90,16 @@ namespace Aurora.Profiles {
         #endregion
 
         #region Device Properties
+
+        private readonly DualshockDevice ds4Device = Global.dev_manager.DeviceContainers.Select(d => d.Device).OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault();
         /// <summary>
         /// Battery level of a dualshock controller
         /// </summary>
-        public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
+        public int DS4Battery => ds4Device?.Battery ?? 0;
         /// <summary>
         /// Whether or not thr dualshock controller is charging
         /// </summary>
-        public bool DS4Charging => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Charging ?? false;
+        public bool DS4Charging => ds4Device?.Charging ?? false;
         #endregion
 
         #region CPU Properties
@@ -141,6 +145,11 @@ namespace Aurora.Profiles {
         #region Cursor Position
         private static CursorPositionNode _cursorPosition;
         public CursorPositionNode CursorPosition => _cursorPosition ?? (_cursorPosition = new CursorPositionNode());
+        #endregion
+
+        #region Battery Properties
+        private static BatteryNode _battery;
+        public BatteryNode Battery => _battery ?? (_battery = new BatteryNode());
         #endregion
 
         /// <summary>
@@ -220,5 +229,13 @@ namespace Aurora.Profiles {
     {
         public float X => System.Windows.Forms.Cursor.Position.X;
         public float Y => System.Windows.Forms.Cursor.Position.Y;
+    }
+
+    public class BatteryNode : Node
+    {
+        public BatteryChargeStatus ChargeStatus => SystemInformation.PowerStatus.BatteryChargeStatus;
+        public bool PluggedIn => SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Offline; //If it is unknown I assume it is plugedIn
+        public float LifePercent => SystemInformation.PowerStatus.BatteryLifePercent;
+        public int SecondsRemaining => SystemInformation.PowerStatus.BatteryLifeRemaining;
     }
 }

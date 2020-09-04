@@ -1114,14 +1114,6 @@
                                                  UsingAlphaChannel="{Binding UsingAlphaChannel, RelativeSource={RelativeSource TemplatedParent}}"
                                                  SelectedColor="{Binding SelectedColor, RelativeSource={RelativeSource TemplatedParent}}" Foreground="{DynamicResource Brush03}" />
                                     </Grid>
-
-                                    <Separator Grid.Row="1"
-                                      HorizontalAlignment="Stretch"
-                                      Margin="5,0,5,0"
-                                      Visibility="{TemplateBinding ShowAdvancedButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
-
-                                    <!-- More Colors Button -->
-                                    <Button x:Name="PART_ColorModeButton" Grid.Row="2" Margin="5" Visibility="{TemplateBinding ShowAdvancedButton, Converter={StaticResource BooleanToVisibilityConverter}}" />
                                 </Grid>
                             </Border>
                         </Popup>
@@ -1135,17 +1127,11 @@
                         <Trigger Property="ColorMode" Value="ColorPalette">
                             <Setter TargetName="_colorPaletteHost" Property="Visibility" Value="Visible" />
                             <Setter TargetName="_colorCanvasHost" Property="Visibility" Value="Collapsed" />
-                            <Setter TargetName="PART_ColorModeButton"
-                             Property="Content"
-                             Value="{Binding AdvancedButtonHeader, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Trigger>
 
                         <Trigger Property="ColorMode" Value="ColorCanvas">
                             <Setter TargetName="_colorPaletteHost" Property="Visibility" Value="Collapsed" />
                             <Setter TargetName="_colorCanvasHost" Property="Visibility" Value="Visible" />
-                            <Setter TargetName="PART_ColorModeButton"
-                             Property="Content"
-                             Value="{Binding StandardButtonHeader, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Trigger>
 
                         <Trigger Property="ShowDropDownButton" Value="False">
@@ -1173,7 +1159,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Control">
                     <xtk:ButtonSpinner x:Name="PART_Spinner" IsTabStop="False" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" ShowButtonSpinner="{Binding ShowButtonSpinner, RelativeSource={RelativeSource TemplatedParent}}">
-                        <xtk:WatermarkTextBox x:Name="PART_TextBox" BorderThickness="0" Background="{TemplateBinding Background}" ContextMenu="{TemplateBinding ContextMenu}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="{TemplateBinding IsTabStop}" MinWidth="20" AcceptsReturn="False" Padding="{TemplateBinding Padding}" SelectAllOnGotFocus="{Binding SelectAllOnGotFocus, RelativeSource={RelativeSource TemplatedParent}}" AutoSelectBehavior="{Binding AutoSelectBehavior, RelativeSource={RelativeSource TemplatedParent}}" AutoMoveFocus="{Binding AutoMoveFocus, RelativeSource={RelativeSource TemplatedParent}}" TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource TemplatedParent}}" TextWrapping="NoWrap" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" SelectionBrush="#FF3399FF" />
+                        <xtk:WatermarkTextBox x:Name="PART_TextBox" BorderThickness="0" Background="{TemplateBinding Background}" ContextMenu="{TemplateBinding ContextMenu}" FontFamily="{TemplateBinding FontFamily}" FontSize="{TemplateBinding FontSize}" FontStretch="{TemplateBinding FontStretch}" FontStyle="{TemplateBinding FontStyle}" FontWeight="{TemplateBinding FontWeight}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}" IsTabStop="{TemplateBinding IsTabStop}" MinWidth="20" AcceptsReturn="False" Padding="{TemplateBinding Padding}" AutoSelectBehavior="{Binding AutoSelectBehavior, RelativeSource={RelativeSource TemplatedParent}}" AutoMoveFocus="{Binding AutoMoveFocus, RelativeSource={RelativeSource TemplatedParent}}" TextAlignment="{Binding TextAlignment, RelativeSource={RelativeSource TemplatedParent}}" TextWrapping="NoWrap" TabIndex="{TemplateBinding TabIndex}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" SelectionBrush="#FF3399FF" />
                     </xtk:ButtonSpinner>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="False">

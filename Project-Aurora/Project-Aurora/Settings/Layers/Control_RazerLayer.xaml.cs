@@ -61,11 +61,11 @@ namespace Aurora.Settings.Layers
 
         private void OnAddKeyCloneButtonClick(object sender, RoutedEventArgs e)
         {
-            if (KeyCloneSourceButtonComboBox.SelectedItem == null || KeyCloneDestinationButtonComboBox.SelectedItem == null)
+            if (KeyCloneSourceButtonComboBox.SelectedValue == null || KeyCloneDestinationButtonComboBox.SelectedValue == null)
                 return;
 
-            var sourceKey = (DeviceKeys)KeyCloneSourceButtonComboBox.SelectedItem;
-            var destKey = (DeviceKeys)KeyCloneDestinationButtonComboBox.SelectedItem;
+            var sourceKey = (DeviceKeys)KeyCloneSourceButtonComboBox.SelectedValue;
+            var destKey = (DeviceKeys)KeyCloneDestinationButtonComboBox.SelectedValue;
 
             if (sourceKey == destKey)
                 return;
@@ -76,7 +76,7 @@ namespace Aurora.Settings.Layers
 
             cloneMap.Add(destKey, sourceKey);
 
-            KeyCloneDestinationButtonComboBox.SelectedItem = null;
+            KeyCloneDestinationButtonComboBox.SelectedValue = null;
             CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
         }
 
