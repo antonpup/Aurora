@@ -9,12 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public Device Device { get; set; }
+        public IDevice Device { get; set; }
 
         public BackgroundWorker Worker = new BackgroundWorker();
         public Thread UpdateThread { get; set; } = null;
@@ -22,7 +23,9 @@ namespace Aurora.Devices
         private Tuple<DeviceColorComposition, bool> currentComp = null;
         private bool newFrame = false;
 
-        public DeviceContainer(Device device)
+        public readonly object actionLock = new object();
+
+        public DeviceContainer(IDevice device)
         {
             this.Device = device;
             Worker.DoWork += WorkerOnDoWork;
@@ -40,8 +43,11 @@ namespace Aurora.Devices
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             newFrame = false;
-            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
+            lock(actionLock)
+            {
+                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
                 currentComp.Item2);
+            }
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
@@ -55,113 +61,243 @@ namespace Aurora.Devices
                 else
                     Worker.RunWorkerAsync();
             }
-            /*lock (Worker)
-            {
-                try
-                {
-                    if (!Worker.IsBusy)
-                        Worker.RunWorkerAsync();
-                }
-                catch(Exception e)
-                {
-                    Global.logger.LogLine(e.ToString(), Logging_Level.Error);
-                }
-            }*/
         }
     }
 
-    public class DeviceManager : IDisposable
+    public class DeviceManager
     {
-        private List<DeviceContainer> devices = new List<DeviceContainer>();
-
-        public DeviceContainer[] Devices { get { return devices.ToArray(); } }
-
-        private bool anyInitialized = false;
-        private bool retryActivated = false;
-        private const int retryInterval = 10000;
-        private const int retryAttemps = 5;
-        private int retryAttemptsLeft = retryAttemps;
-        private Thread retryThread;
-        private bool suspended = false;
-
-        private bool _InitializeOnceAllowed = false;
-
+        private const int RETRY_INTERVAL = 10000;
+        private const int RETRY_ATTEMPTS = 5;
+        private bool _InitializeOnceAllowed;
+        private bool suspended;
+        private bool resumed;
+        private int _retryAttempts = RETRY_ATTEMPTS;
         public int RetryAttempts
         {
-            get
+            get => _retryAttempts;
+            private set
             {
-                return retryAttemptsLeft;
+                _retryAttempts = value;
+                RetryAttemptsChanged?.Invoke(this, null);
             }
         }
-        public event EventHandler NewDevicesInitialized;
+
+        public List<DeviceContainer> DeviceContainers { get; } = new List<DeviceContainer>();
+
+        public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
+
+        public event EventHandler RetryAttemptsChanged;
 
         public DeviceManager()
         {
-            var deviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
-                              where typeof(Device).IsAssignableFrom(type)
-                              && !type.IsAbstract
-                              && type != typeof(ScriptedDevice.ScriptedDevice)
-                              let inst = (Device)Activator.CreateInstance(type)
-                              orderby inst.GetDeviceName()
-                              select inst;
-
-            foreach (var inst in deviceTypes)
-                devices.Add(new DeviceContainer(inst));
-
-            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
-
-            if (Directory.Exists(devices_scripts_path))
-            {
-                foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
-                {
-                    try
-                    {
-                        string ext = Path.GetExtension(device_script);
-                        switch (ext)
-                        {
-                            case ".py":
-                                var scope = Global.PythonEngine.ExecuteFile(device_script);
-                                dynamic main_type;
-                                if (scope.TryGetVariable("main", out main_type))
-                                {
-                                    dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
-
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
-
-                                    devices.Add(new DeviceContainer(scripted_device));
-                                }
-                                else
-                                    Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
-
-                                break;
-                            case ".cs":
-                                System.Reflection.Assembly script_assembly = CSScript.LoadFile(device_script);
-                                foreach (Type typ in script_assembly.ExportedTypes)
-                                {
-                                    dynamic script = Activator.CreateInstance(typ);
-
-                                    Device scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
-
-                                    devices.Add(new DeviceContainer(scripted_device));
-                                }
-
-                                break;
-                            default:
-                                Global.logger.Error("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext);
-                                break;
-                        }
-                    }
-                    catch (Exception exc)
-                    {
-                        Global.logger.Error("An error occured while trying to load script {0}. Exception: {1}", device_script, exc);
-                    }
-                }
-            }
+            AddDevicesFromAssembly();
+            AddDevicesFromScripts();
+            AddDevicesFromDlls();
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         }
-        bool resumed = false;
+
+        private void AddDevicesFromScripts()
+        {
+            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
+
+            if (!Directory.Exists(devices_scripts_path))
+                return;
+
+            Global.logger.Info("Loading devices from scripts...");
+
+            foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
+            {
+                try
+                {
+                    string ext = Path.GetExtension(device_script);
+                    switch (ext)
+                    {
+                        case ".py":
+                            var scope = Global.PythonEngine.ExecuteFile(device_script);
+                            dynamic main_type;
+                            if (scope.TryGetVariable("main", out main_type))
+                            {
+                                dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
+
+                                IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+                                DeviceContainers.Add(new DeviceContainer(scripted_device));
+                            }
+                            else
+                                Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
+
+                            break;
+                        case ".cs":
+                            System.Reflection.Assembly script_assembly = CSScript.LoadFile(device_script);
+                            foreach (Type typ in script_assembly.ExportedTypes)
+                            {
+                                dynamic script = Activator.CreateInstance(typ);
+
+                                IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+                                DeviceContainers.Add(new DeviceContainer(scripted_device));
+                            }
+
+                            break;
+                        default:
+                            Global.logger.Error("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext);
+                            break;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.Error("An error occured while trying to load script {0}. Exception: {1}", device_script, exc);
+                }
+            }
+        }
+
+        private void AddDevicesFromAssembly()
+        {
+            Global.logger.Info("Loading devices from assembly...");
+            var deviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+                              where typeof(IDevice).IsAssignableFrom(type)
+                              && !type.IsAbstract
+                              && type != typeof(ScriptedDevice.ScriptedDevice)
+                              let inst = (IDevice)Activator.CreateInstance(type)
+                              orderby inst.DeviceName
+                              select inst;
+
+            foreach (var inst in deviceTypes)
+            {
+                DeviceContainers.Add(new DeviceContainer(inst));
+            }
+        }
+
+        private void AddDevicesFromDlls()
+        {
+            string deviceDllFolder = Path.Combine(Global.AppDataDirectory, "Plugins", "Devices");
+
+            if (!Directory.Exists(deviceDllFolder))
+                return;
+
+            Global.logger.Info("Loading devices from plugins");
+
+            foreach (var deviceDll in Directory.EnumerateFiles(deviceDllFolder, "*.dll"))
+            {
+                try
+                {
+                    var deviceAssembly = Assembly.LoadFile(deviceDll);
+
+                    foreach (var type in deviceAssembly.GetExportedTypes())
+                    {
+                        if (typeof(IDevice).IsAssignableFrom(type) && !type.IsAbstract)
+                        {
+                            IDevice devDll = (IDevice)Activator.CreateInstance(type);
+
+                            DeviceContainers.Add(new DeviceContainer(devDll));
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Global.logger.Error($"Error loading device dll: {deviceDll}. Exception: {e.Message}");
+                }
+            }
+        }
+
+        public void RegisterVariables()
+        {
+            foreach (var device in DeviceContainers)
+            {
+                Global.Configuration.VarRegistry.Combine(device.Device.RegisteredVariables);
+            }
+        }
+
+        private void RetryAll()
+        {
+            while (RetryAttempts > 0)
+            {
+                foreach (var dc in DeviceContainers)
+                {
+                    if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
+                        continue;
+
+                    lock(dc.actionLock)
+                        dc.Device.Initialize();
+                }
+                RetryAttempts--;
+                Thread.Sleep(RETRY_INTERVAL);
+            }
+        }
+
+        public void InitializeOnce()
+        {
+            if (!InitializedDeviceContainers.Any() && _InitializeOnceAllowed)
+            {
+                InitializeDevices();
+            }
+        }
+
+        public void InitializeDevices()
+        {
+            if (suspended)
+                return;
+
+            int devicesToRetry = 0;
+
+            foreach (var dc in DeviceContainers)
+            {
+                if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
+                    continue;
+
+                lock (dc.actionLock)
+                {
+                    if (!dc.Device.Initialize())
+                        devicesToRetry++;
+                }
+
+                var s = $"[Device][{dc.Device.DeviceName}] ";
+
+                if (dc.Device.IsInitialized)
+                    s += "Initialized Successfully.";
+                else
+                    s += "Failed to initialize.";
+
+                Global.logger.Info(s);
+            }
+
+            if (devicesToRetry > 0)
+                Task.Run(RetryAll);
+
+            _InitializeOnceAllowed = InitializedDeviceContainers.Any();
+        }
+
+        public void ShutdownDevices()
+        {
+            foreach (var dc in InitializedDeviceContainers)
+            {
+                lock (dc.actionLock)
+                    dc.Device.Shutdown();
+                Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
+            }
+        }
+
+        public void ResetDevices()
+        {
+            foreach (var dc in InitializedDeviceContainers)
+            {
+                lock (dc.actionLock)
+                    dc.Device.Reset();
+            }
+        }
+
+        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
+        {
+            foreach (var dc in InitializedDeviceContainers)
+            {
+                lock (dc.actionLock)
+                    dc.UpdateDevice(composition, forced);
+            }
+        }
+
+        #region SystemEvents
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             Global.logger.Info($"SessionSwitch triggered with {e.Reason}");
@@ -170,7 +306,7 @@ namespace Aurora.Devices
                 Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
                 suspended = false;
                 resumed = false;
-                this.Initialize(true);
+                InitializeDevices();
             }
         }
 
@@ -181,222 +317,16 @@ namespace Aurora.Devices
                 case PowerModes.Suspend:
                     Global.logger.Info("Suspending Devices");
                     suspended = true;
-                    this.Shutdown();
+                    this.ShutdownDevices();
                     break;
                 case PowerModes.Resume:
                     Global.logger.Info("Resuming Devices -- PowerModes.Resume");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    this.Initialize();
+                    this.InitializeDevices();
                     break;
             }
-        }
-
-        public void RegisterVariables()
-        {
-            //Register any variables
-            foreach (var device in devices)
-                Global.Configuration.VarRegistry.Combine(device.Device.GetRegisteredVariables());
-        }
-
-        public void Initialize(bool forceRetry = false)
-        {
-            if (suspended)
-                return;
-
-            int devicesToRetryNo = 0;
-            foreach (DeviceContainer device in devices)
-            {
-                if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
-                    continue;
-
-                if (device.Device.Initialize())
-                    anyInitialized = true;
-                else
-                    devicesToRetryNo++;
-
-                Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
-            }
-
-
-            if (anyInitialized)
-            {
-                _InitializeOnceAllowed = true;
-                NewDevicesInitialized?.Invoke(this, new EventArgs());
-            }
-
-            if (devicesToRetryNo > 0 && (retryThread == null || forceRetry || retryThread?.ThreadState == System.Threading.ThreadState.Stopped))
-            {
-                retryActivated = true;
-                if (forceRetry)
-                    retryThread?.Abort();
-                retryThread = new Thread(RetryInitialize);
-                retryThread.Start();
-                return;
-            }
-        }
-
-        private void RetryInitialize()
-        {
-            if (suspended)
-                return;
-            for (int try_count = 0; try_count < retryAttemps; try_count++)
-            {
-                Global.logger.Info("Retrying Device Initialization");
-                if (suspended)
-                    continue;
-                int devicesAttempted = 0;
-                bool _anyInitialized = false;
-                foreach (DeviceContainer device in devices)
-                {
-                    if (device.Device.IsInitialized() || Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
-                        continue;
-
-                    devicesAttempted++;
-                    if (device.Device.Initialize())
-                        _anyInitialized = true;
-
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was" + (device.Device.IsInitialized() ? "" : " not") + " initialized");
-                }
-
-                retryAttemptsLeft--;
-
-                //We don't need to continue the loop if we aren't trying to initialize anything
-                if (devicesAttempted == 0)
-                    break;
-
-                //There is only a state change if something suddenly becomes initialized
-                if (_anyInitialized)
-                {
-                    NewDevicesInitialized?.Invoke(this, new EventArgs());
-                    anyInitialized = true;
-                }
-
-                Thread.Sleep(retryInterval);
-            }
-        }
-
-        public void InitializeOnce()
-        {
-            if (!anyInitialized && _InitializeOnceAllowed)
-                Initialize();
-        }
-
-        public bool AnyInitialized()
-        {
-            return anyInitialized;
-        }
-
-        public Device[] GetInitializedDevices()
-        {
-            List<Device> ret = new List<Device>();
-
-            foreach (DeviceContainer device in devices)
-            {
-                if (device.Device.IsInitialized())
-                {
-                    ret.Add(device.Device);
-                }
-            }
-
-            return ret.ToArray();
-        }
-
-        public void Shutdown()
-        {
-            foreach (DeviceContainer device in devices)
-            {
-                if (device.Device.IsInitialized())
-                {
-                    device.Device.Shutdown();
-                    Global.logger.Info("Device, " + device.Device.GetDeviceName() + ", was shutdown");
-                }
-            }
-
-            anyInitialized = false;
-        }
-
-        public void ResetDevices()
-        {
-            foreach (DeviceContainer device in devices)
-            {
-                if (device.Device.IsInitialized())
-                {
-                    device.Device.Reset();
-                }
-            }
-        }
-
-        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
-        {
-            foreach (DeviceContainer device in devices)
-            {
-                if (device.Device.IsInitialized())
-                {
-                    if (Global.Configuration.devices_disabled.Contains(device.Device.GetType()))
-                    {
-                        //Initialized when it's supposed to be disabled? SMACK IT!
-                        device.Device.Shutdown();
-                        continue;
-                    }
-
-                    device.UpdateDevice(composition, forced);
-                }
-            }
-        }
-
-        public string GetDevices()
-        {
-            string devices_info = "";
-
-            foreach (DeviceContainer device in devices)
-                devices_info += device.Device.GetDeviceDetails() + "\r\n";
-
-            if (retryAttemptsLeft > 0)
-                devices_info += "Retries: " + retryAttemptsLeft + "\r\n";
-
-            return devices_info;
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-
-                    if (retryThread != null)
-                    {
-                        retryThread.Abort();
-                        retryThread = null;
-                    }
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~DeviceManager() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
         }
         #endregion
     }

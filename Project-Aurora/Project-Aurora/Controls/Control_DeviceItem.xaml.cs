@@ -54,7 +54,7 @@ namespace Aurora.Controls
         {
             try
             {
-                Dispatcher.Invoke(() => { if(IsVisible) UpdateControls(); });
+                Dispatcher.Invoke(() => { if (IsVisible) UpdateControls(); });
             }
             catch (Exception ex)
             {
@@ -64,12 +64,15 @@ namespace Aurora.Controls
 
         private void btnToggleOnOff_Click(object sender, RoutedEventArgs e)
         {
-            if(sender is Button)
+            if (sender is Button)
             {
-                if(Device.Device.IsInitialized())
-                    Device.Device.Shutdown();
-                else
-                    Device.Device.Initialize();
+                lock (Device.actionLock)
+                {
+                    if (Device.Device.IsInitialized)
+                        Device.Device.Shutdown();
+                    else
+                        Device.Device.Initialize();
+                }
 
                 UpdateControls();
             }
@@ -77,13 +80,16 @@ namespace Aurora.Controls
 
         private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
         {
-            if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
-                Global.Configuration.devices_disabled.Remove(Device.Device.GetType());
+            if (Global.Configuration.DevicesDisabled.Contains(Device.Device.GetType()))
+                Global.Configuration.DevicesDisabled.Remove(Device.Device.GetType());
             else
             {
-                Global.Configuration.devices_disabled.Add(Device.Device.GetType());
-                if(Device.Device.IsInitialized())
-                    Device.Device.Shutdown();
+                Global.Configuration.DevicesDisabled.Add(Device.Device.GetType());
+                lock (Device.actionLock)
+                {
+                    if (Device.Device.IsInitialized)
+                        Device.Device.Shutdown();
+                }
             }
 
             UpdateControls();
@@ -96,40 +102,41 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.IsInitialized())
-                btnToggleOnOff.Content = "Stop";
+            if (Device.Device.IsInitialized)
+                btnStart.Content = "Stop";
             else
-                btnToggleOnOff.Content = "Start";
+                btnStart.Content = "Start";
 
-            txtblk_DeviceStatus.Text = Device.Device.GetDeviceDetails().TrimEnd(' ');
-            txtblk_DevicePerformance.Text = Device.Device.GetDeviceUpdatePerformance();
+            deviceName.Text = Device.Device.DeviceName;
+            deviceDetails.Text = Device.Device.DeviceDetails;
+            devicePerformance.Text = Device.Device.DeviceUpdatePerformance;
 
-            if(Device is Devices.ScriptedDevice.ScriptedDevice)
-                btnToggleEnableDisable.IsEnabled = false;
+            if (Device is Devices.ScriptedDevice.ScriptedDevice)
+                btnEnable.IsEnabled = false;
             else
             {
-                if (Global.Configuration.devices_disabled.Contains(Device.Device.GetType()))
+                if (Global.Configuration.DevicesDisabled.Contains(Device.Device.GetType()))
                 {
-                    btnToggleEnableDisable.Content = "Enable";
-                    btnToggleOnOff.IsEnabled = false;
+                    btnEnable.Content = "Enable";
+                    btnStart.IsEnabled = false;
                 }
                 else
                 {
-                    btnToggleEnableDisable.Content = "Disable";
-                    btnToggleOnOff.IsEnabled = true;
+                    btnEnable.Content = "Disable";
+                    btnStart.IsEnabled = true;
                 }
             }
 
-            if(Device.Device.GetRegisteredVariables().GetRegisteredVariableKeys().Count() == 0)
-                btnViewOptions.IsEnabled = false;
+            if (Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Count() == 0)
+                btnOptions.IsEnabled = false;
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)
         {
             Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
-            options_window.Title = $"{Device.Device.GetDeviceName()} - Options";
+            options_window.Title = $"{Device.Device.DeviceName} - Options";
             options_window.SizeToContent = SizeToContent.WidthAndHeight;
-            options_window.VarRegistryEditor.RegisteredVariables = Device.Device.GetRegisteredVariables();
+            options_window.VarRegistryEditor.RegisteredVariables = Device.Device.RegisteredVariables;
             options_window.Closing += (_sender, _eventArgs) =>
             {
                 ConfigManager.Save(Global.Configuration);

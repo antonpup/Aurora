@@ -551,7 +551,7 @@ namespace Aurora.Profiles
             foreach (string id in this.EffectScripts.Keys)
             {
                 if (!profile_settings.ScriptSettings.ContainsKey(id))
-                    profile_settings.ScriptSettings.Add(id, new ScriptSettings(this.EffectScripts[id]));
+                    profile_settings.ScriptSettings.Add(id, new ScriptSettings());
             }
 
 

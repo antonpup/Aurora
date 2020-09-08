@@ -99,7 +99,7 @@ namespace Aurora.Settings {
         /// <summary>
         /// This returns the currently selected layer collection.
         /// </summary>
-        public ObservableCollection<Layer> ActiveLayerCollection => Global.Configuration.nighttime_enabled && showSecondaryCollection.IsChecked == true ? SecondaryLayerCollection : LayerCollection;
+        public ObservableCollection<Layer> ActiveLayerCollection => Global.Configuration.NighttimeEnabled && showSecondaryCollection.IsChecked == true ? SecondaryLayerCollection : LayerCollection;
         #endregion
 
         #region SelectedLayer Property
@@ -137,7 +137,7 @@ namespace Aurora.Settings {
         /// Property that returns a <see cref="Visibility"/> indicating whether or not the day/night (collection/secondary collection) checkboxes should be shown
         /// based on whether night time feature is enabled and whether a secondary collection has been provided or not.
         /// </summary>
-        public Visibility DayNightCheckboxesVisiblity => Global.Configuration.nighttime_enabled && SecondaryLayerCollection != null ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility DayNightCheckboxesVisiblity => Global.Configuration.NighttimeEnabled && SecondaryLayerCollection != null ? Visibility.Visible : Visibility.Collapsed;
         #endregion
 
         #region Methods
