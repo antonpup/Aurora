@@ -39,7 +39,8 @@ namespace Aurora.Devices.Logitech
                 //This didnt seem to be needed in the past but I feel like 100ms might 
                 //fix some weird issues without any noticeable disadvantages
                 Thread.Sleep(100);
-                LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
+                if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_set_default"))
+                    LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
                 return IsInitialized = true;
             }
 
