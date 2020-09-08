@@ -444,17 +444,6 @@ namespace Aurora.Settings
             }
         }
 
-        private void devices_mousepad_brand_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded)
-            {
-                Global.Configuration.mousepad_preference = (PreferredMousepad)Enum.Parse(typeof(PreferredMousepad), this.devices_mousepad_brand.SelectedItem.ToString());
-                ConfigManager.Save(Global.Configuration);
-
-                Global.kbLayout.LoadBrandDefault();
-            }
-        }
-
         private void btnDumpSensors_Click(object sender, RoutedEventArgs e)
         {
             if (HardwareMonitor.TryDump())

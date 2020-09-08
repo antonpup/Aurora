@@ -482,7 +482,7 @@ namespace Aurora.Settings
         [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
         [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.None;
-        [JsonProperty("mousepad_preference")] public PreferredMouse MousepadPreference { get; set; } = PreferredMousepad.None;
+        [JsonProperty("mousepad_preference")] public PreferredMousepad MousepadPreference { get; set; } = PreferredMousepad.None;
         [JsonProperty("virtualkeyboard_keycap_type")] public KeycapType VirtualkeyboardKeycapType { get; set; } = KeycapType.Default;
         [JsonProperty("detection_mode")] public ApplicationDetectionMode DetectionMode { get; set; } = ApplicationDetectionMode.WindowsEvents;
         [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; } = false;
