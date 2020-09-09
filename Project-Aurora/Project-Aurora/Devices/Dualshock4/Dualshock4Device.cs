@@ -94,6 +94,7 @@ namespace Aurora.Devices.Dualshock
 
         private readonly List<DS4Container> devices = new List<DS4Container>();
         private DeviceKeys key;
+        private bool isDisconnecting;
 
         public DualshockDevice()
         {
@@ -102,6 +103,9 @@ namespace Aurora.Devices.Dualshock
 
         private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
         {
+            if (isDisconnecting)
+                return;
+            LogInfo("Detected device list changed, rescanning for controllers...");
             DS4Devices.findControllers();
             if (DS4Devices.getDS4Controllers().Count() != devices.Count)
                 Reset();
@@ -126,12 +130,14 @@ namespace Aurora.Devices.Dualshock
             if (!IsInitialized)
                 return;
 
+            isDisconnecting = true;
             foreach (var dev in devices)
                 dev.Disconnect(Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_disconnect_when_stop"));
 
             DS4Devices.stopControllers();
             devices.Clear();
             IsInitialized = false;
+            isDisconnecting = false;
         }
 
         public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
