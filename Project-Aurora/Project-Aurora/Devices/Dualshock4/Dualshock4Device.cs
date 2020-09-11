@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -49,10 +50,10 @@ namespace Aurora.Devices.Dualshock
 
         public void Disconnect(bool stop)
         {
+            sendColor = RestoreColor;
+            Thread.Sleep(10);//HACK: this is terrible, but it works reliably so i'll leave it like this :(
+            //this is needed so that OnDeviceReport has time to send the color once the device sends a report.
             device.Report -= OnDeviceReport;
-            state.LightBarExplicitlyOff = RestoreColor.R == 0 && RestoreColor.G == 0 && RestoreColor.B == 0;
-            state.LightBarColor = new DS4Color(RestoreColor);
-            device.pushHapticState(state);
             if (stop)
             {
                 device.DisconnectBT();
