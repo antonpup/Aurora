@@ -1,6 +1,3 @@
 [submodule "SBAuroraR.NET"]
 	path = SBAuroraR.NET
 	url = https://github.com/rajkosto/SBAuroraR.NET.git
-[submodule "NZXTSharp"]
-	path = NZXTSharp
-	url = https://github.com/akmadian/NZXTSharp.git

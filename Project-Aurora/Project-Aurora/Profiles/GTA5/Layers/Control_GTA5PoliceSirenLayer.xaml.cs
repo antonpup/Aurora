@@ -41,7 +41,7 @@ namespace Aurora.Profiles.GTA5.Layers
             {
                 this.ColorPicker_LeftSiren.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5PoliceSirenLayerHandler).Properties._LeftSirenColor ?? System.Drawing.Color.Empty);
                 this.ColorPicker_RightSiren.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5PoliceSirenLayerHandler).Properties._RightSirenColor ?? System.Drawing.Color.Empty);
-                this.ComboBox_SirenEffectType.SelectedItem = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._SirenType;
+                this.ComboBox_SirenEffectType.SelectedValue = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._SirenType;
                 this.Checkbox_DisplayOnPeripherals.IsChecked = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._PeripheralUse;
                 this.KeySequence_LeftSiren.Sequence = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._LeftSirenSequence;
                 this.KeySequence_RightSiren.Sequence = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._RightSirenSequence;
@@ -99,7 +99,7 @@ namespace Aurora.Profiles.GTA5.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is ComboBox)
             {
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._SirenType = (GTA5_PoliceEffects)Enum.Parse(typeof(GTA5_PoliceEffects), (sender as ComboBox).SelectedIndex.ToString());
+                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._SirenType = (GTA5_PoliceEffects)((sender as ComboBox).SelectedValue);
             }
         }
     }

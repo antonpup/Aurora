@@ -37,6 +37,12 @@
             <DataTemplate x:Key="DefaultEvaluatableDT">
                 <ScrollViewer>
                     <ItemsControl ItemsSource="{Binding .}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{Binding Path=ResultType, Converter={StaticResource EvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableSpawnerItem_StartDrag">
@@ -53,24 +59,33 @@
 
             <!-- Data template for the template evaluatables. -->
             <DataTemplate x:Key="TemplateEvaluatableDT">
-                <StackPanel>
-                    <TextBlock Text="Drag evaluatables from the canvas onto the toolbox to save them for future use." Margin="4" />
-                    <ItemsControl ItemsSource="{Binding TemplateSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" u:AttachedApplication.Application="{x:Null}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableTemplateItem_StartDrag" Padding="4">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Source="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableIconConverter}}" Width="18" Height="18" Margin="4,0" />
-                                        <TextBlock Text="{Binding Path=Key}" Margin="0,0,12,0" />
-                                        <!-- Note these buttons use MouseDown because otherwise if the user uses enter on the rename prompt window, it re-triggers a click on this button. -->
-                                        <Button Content="R" ToolTip="Rename this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="RenameTemplateButton_Click" />
-                                        <Button Content="X" ToolTip="Remove this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="DeleteTemplateButton_Click" />
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
+                <ScrollViewer>
+                    <StackPanel>
+                        <TextBlock Text="Drag evaluatables from the canvas onto the toolbox to save them for future use." Margin="4" />
+                        <ItemsControl ItemsSource="{Binding TemplateSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" u:AttachedApplication.Application="{x:Null}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableBackgroundSelector}}" CornerRadius="4" BorderBrush="#2000" BorderThickness="1" Cursor="SizeAll" HorizontalAlignment="Left" u:DragBehaviour.StartDrag="EvaluatableTemplateItem_StartDrag" Padding="4">
+                                        <DockPanel>
+                                            <Image DockPanel.Dock="Left" Source="{Binding Path=Value, Converter={StaticResource TemplateEvaluatableIconConverter}}" Width="18" Height="18" Margin="4,0" />
+                                            <!-- Note these buttons use MouseDown because otherwise if the user uses enter on the rename prompt window, it re-triggers a click on this button. -->
+                                            <Button DockPanel.Dock="Right" Content="X" ToolTip="Remove this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="DeleteTemplateButton_Click" />
+                                            <Button DockPanel.Dock="Right" Content="R" ToolTip="Rename this template" VerticalAlignment="Center" Padding="6,2" Cursor="Hand" PreviewMouseDown="RenameTemplateButton_Click" />
+                                            <!-- Last control will fill the remaining space-->
+                                            <TextBlock DockPanel.Dock="Left" Text="{Binding Path=Key}" Margin="0,0,12,0" />
+                                        </DockPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
             </DataTemplate>
         </TabControl.Resources>
     </TabControl>

@@ -38,9 +38,9 @@ namespace Aurora.Devices.Asus.Config
             Loaded += OnLoaded;
             Closed += OnClosed;
 
-            asusDevice = Global.dev_manager.Devices.FirstOrDefault(device => device.Device is AsusDevice)?.Device as AsusDevice;
+            asusDevice = Global.dev_manager.DeviceContainers.FirstOrDefault(device => device.Device is AsusDevice)?.Device as AsusDevice;
 
-            if (asusDevice != null && asusDevice.IsInitialized())
+            if (asusDevice != null && asusDevice.IsInitialized)
             {
                 wasEnabled = true;
                 asusDevice.Shutdown();
