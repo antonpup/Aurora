@@ -24,12 +24,13 @@ namespace Aurora.Devices.Dualshock
         public Color sendColor;
         public DS4HapticState state;
 
-        public DS4Container(DS4Device _device)
+        public DS4Container(DS4Device _device, Color restoreColor)
         {
             device = _device;
             connectionType = device.getConnectionType();
             device.Report += OnDeviceReport;
             device.StartUpdate();
+            RestoreColor = restoreColor;
         }
 
         private void OnDeviceReport(object sender, EventArgs e)
@@ -70,7 +71,7 @@ namespace Aurora.Devices.Dualshock
                 _ => "",
             };
 
-            return $"over {connectionString} {(Charging ? "⚡" : "")} 🔋{Battery}% Latency: {Latency:0.00}ms";
+            return $"over {connectionString} {(Charging ? "⚡" : "")}🔋{Battery}% Latency: {Latency:0.00}ms";
         }
 
         private bool ColorsEqual(Color clr, DS4Color ds4clr)
@@ -103,8 +104,12 @@ namespace Aurora.Devices.Dualshock
 
         private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
         {
+            if (Global.Configuration.DevicesDisabled.Contains(typeof(DualshockDevice)))
+                return;
+
             if (isDisconnecting)
                 return;
+
             LogInfo("Detected device list changed, rescanning for controllers...");
             DS4Devices.findControllers();
             if (DS4Devices.getDS4Controllers().Count() != devices.Count)
@@ -119,8 +124,10 @@ namespace Aurora.Devices.Dualshock
             key = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             DS4Devices.findControllers();
 
+            var restore = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_restore_dualshock").GetDrawingColor();
+
             foreach (var controller in DS4Devices.getDS4Controllers())
-                devices.Add(new DS4Container(controller));
+                devices.Add(new DS4Container(controller, restore));
 
             return IsInitialized = devices.Count > 0;
         }
@@ -162,6 +169,7 @@ namespace Aurora.Devices.Dualshock
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
+            variableRegistry.Register($"{DeviceName}_restore_dualshock", new RealColor(Color.FromArgb(0, 0, 255)), "Restore Color");
             variableRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral_Logo);
             variableRegistry.Register($"{DeviceName}_disconnect_when_stop", false, "Disconnect when Stopping");
         }
