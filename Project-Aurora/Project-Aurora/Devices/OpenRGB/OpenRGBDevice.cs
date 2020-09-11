@@ -90,10 +90,20 @@ namespace Aurora.Devices.OpenRGB
                         {
                             for (int k = 0; k < dev.Zones[j].LedCount; k++)
                             {
-                                //TODO - scale zones with more than 32 LEDs
-                                if (k < 32)
+                                if (dev.Type == OpenRGBDeviceType.Mousemat)
                                 {
-                                    _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
+                                    if (k < 15)
+                                    {
+                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.MousepadLights[k];
+                                    }
+                                }
+                                else
+                                {
+                                    //TODO - scale zones with more than 32 LEDs
+                                    if (k < 32)
+                                    {
+                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
+                                    }
                                 }
                             }
                         }
