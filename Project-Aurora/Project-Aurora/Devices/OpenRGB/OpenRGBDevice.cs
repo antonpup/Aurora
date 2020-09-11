@@ -18,13 +18,10 @@ using OpenRGBZoneType = OpenRGB.NET.Enums.ZoneType;
 
 namespace Aurora.Devices.OpenRGB
 {
-    public class OpenRGBAuroraDevice : Device
+    public class OpenRGBAuroraDevice : DefaultDevice
     {
-        const string deviceName = "OpenRGB";
-        private VariableRegistry varReg;
-        private bool isInitialized = false;
-        private readonly Stopwatch watch = new Stopwatch();
-        private long lastUpdateTime = 0;
+        public override string DeviceName => "OpenRGB";
+        protected override string DeviceInfo => ": " + string.Join(", ", _devices.Select(d => d.Name));
 
         private OpenRGBClient _openRgb;
         private OpenRGBDevice[] _devices;
@@ -32,9 +29,9 @@ namespace Aurora.Devices.OpenRGB
         private List<DK>[] _keyMappings;
 //        private MList<DK>[] _keyMappings;          a Try for later
 
-        public bool Initialize()
+        public override bool Initialize()
         {
-            if (isInitialized)
+            if (IsInitialized)
                 return true;
 
             try
@@ -79,7 +76,7 @@ namespace Aurora.Devices.OpenRGB
                             }
                             else
                             {
-                                _keyMappings[i].Add(DK.NONE);
+                                _keyMappings[i].Add(DK.Peripheral_Logo);
                             }
                         }
                         else
@@ -88,47 +85,6 @@ namespace Aurora.Devices.OpenRGB
                         }
                     }
 
-                    //*****************************************************************************************************************************
-                    //          Following Code is a Try Adding possibility to adress mousemats as Mousepadlight and not as LEDlights like now
-                    //          But i need someone to make it working as i am not understand codelogic (i am not a coder, just edit i can)  
-                    //           The Dictionary Entrys below marked out aswell                         (not working now)
-                    //*****************************************************************************************************************************                       
-                    //                        else if (dev.Type == OpenRGBDeviceType.Mousemat)
-                    //                        {
-                    //                            if (OpenRGBKeyNames.Mousemat.TryGetValue(dev.Leds[j].Name, out var dk))
-                    //                            {
-                    //                                _keyMappings[i].Add(dk);
-                    //                            }
-                    //                            else
-                    //                            {
-                    //                                _keyMappings[i].Add(DK.NONE);
-                    //                            }
-                    //                        }
-                    //                        else
-                    //                        {
-                    //                            _keyMappings[i].Add(DK.Peripheral_Logo);
-                    //                        }
-                    //                    }
-                    //*****************************************************************************************************************************
-                    //          Following Code is another Method Try Adding possibility to adress mousemats as Mousepadlight and not as LEDlights like now
-                    //          But i need someone to make it working as i am not understand codelogic (i am not a coder, just edit i can)  
-                    //                                                                                                   (not working now)
-                    //*****************************************************************************************************************************       
-                    //                    for (int j = 0; j < dev.Leds.Length; j++)
-                    //                    {
-                    //                        if (dev.Leds[j].Type == OpenRGBZoneType.Linear)
-                    //                        {
-                    //                            for (int k = 0; k < dev.Leds[j].LedCount; k++)
-                    //                            {
-                    //                                if (k < 15)
-                    //                                {
-                    //                                    _keyMappings[i][(int)(LedOffset + k)] = MousepadLights[k];
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        LedOffset += dev.Leds[j].LedCount;
-                    //                    }
-
                     uint LedOffset = 0;
                     for (int j = 0; j < dev.Zones.Length; j++)
                     {
@@ -136,10 +92,30 @@ namespace Aurora.Devices.OpenRGB
                         {
                             for (int k = 0; k < dev.Zones[j].LedCount; k++)
                             {
-                                //TODO - scale zones with more than 100 LEDs XD
-                                if (k < 100)
+                                if (dev.Type == OpenRGBDeviceType.Mousemat)
                                 {
-                                    _keyMappings[i][(int)(LedOffset + k)] = LedLights[k];
+                                    if (k < 15)
+                                    {
+                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.MousepadLights[k];
+                                    }
+                                }
+                                else
+
+                                //TODO - scale zones with more than 200 LED Lights XD
+                                if (dev.Type == OpenRGBDeviceType.Ledstrip)
+                                {
+                                    if (k < 200)
+                                    {
+                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.LedLights[k];
+                                    }
+                                }
+                                else
+                                {
+                                    //TODO - scale zones with more than 32 Additional Lights XD
+                                    if (k < 32)
+                                    {
+                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
+                                    }
                                 }
                             }
                         }
@@ -149,18 +125,18 @@ namespace Aurora.Devices.OpenRGB
             }
             catch (Exception e)
             {
-                Global.logger.Error("error in OpenRGB device: " + e);
-                isInitialized = false;
+                LogError("error in OpenRGB device: " + e);
+                IsInitialized = false;
                 return false;
             }
 
-            isInitialized = true;
-            return isInitialized;
+            IsInitialized = true;
+            return IsInitialized;
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
-            if (!isInitialized)
+            if (!IsInitialized)
                 return;
 
             for (var i = 0; i < _devices.Length; i++)
@@ -177,12 +153,12 @@ namespace Aurora.Devices.OpenRGB
 
             _openRgb?.Dispose();
             _openRgb = null;
-            isInitialized = false;
+            IsInitialized = false;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!isInitialized)
+            if (!IsInitialized)
                 return false;
 
             for (var i = 0; i < _devices.Length; i++)
@@ -206,28 +182,21 @@ namespace Aurora.Devices.OpenRGB
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
+                    LogError($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
                     Reset();
                 }
             }
 
-            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{deviceName}_sleep");
+            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_sleep");
             if (sleep > 0)
                 Thread.Sleep(sleep);
 
             return true;
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
+            variableRegistry.Register($"{DeviceName}_sleep", 25, "Sleep for", 1000, 0);
         }
 
         public string GetDeviceDetails()
@@ -296,6 +265,9 @@ namespace Aurora.Devices.OpenRGB
             Shutdown();
             Initialize();
         }
+//    });
+    }
+}
 //   A Try for later if upper method not work                 Dictionairy 
 //        private static readonly MList<DK> MousePadLights = new MList<DK>(new[]
 //        {
@@ -315,212 +287,212 @@ namespace Aurora.Devices.OpenRGB
 //            DK.MOUSEPADLIGHT14,
 //            DK.MOUSEPADLIGHT15,
 //        });
-
-        private static readonly List<DK> LedLights = new List<DK>(new[]
-        {
-            DK.LEDLIGHT1,
-            DK.LEDLIGHT2,
-            DK.LEDLIGHT3,
-            DK.LEDLIGHT4,
-            DK.LEDLIGHT5,
-            DK.LEDLIGHT6,
-            DK.LEDLIGHT7,
-            DK.LEDLIGHT8,
-            DK.LEDLIGHT9,
-            DK.LEDLIGHT10,
-            DK.LEDLIGHT11,
-            DK.LEDLIGHT12,
-            DK.LEDLIGHT13,
-            DK.LEDLIGHT14,
-            DK.LEDLIGHT15,
-            DK.LEDLIGHT16,
-            DK.LEDLIGHT17,
-            DK.LEDLIGHT18,
-            DK.LEDLIGHT19,
-            DK.LEDLIGHT20,
-            DK.LEDLIGHT21,
-            DK.LEDLIGHT22,
-            DK.LEDLIGHT23,
-            DK.LEDLIGHT24,
-            DK.LEDLIGHT25,
-            DK.LEDLIGHT26,
-            DK.LEDLIGHT27,
-            DK.LEDLIGHT28,
-            DK.LEDLIGHT29,
-            DK.LEDLIGHT30,
-            DK.LEDLIGHT31,
-            DK.LEDLIGHT32,
-            DK.LEDLIGHT33,
-            DK.LEDLIGHT34,
-            DK.LEDLIGHT35,
-            DK.LEDLIGHT36,
-            DK.LEDLIGHT37,
-            DK.LEDLIGHT38,
-            DK.LEDLIGHT39,
-            DK.LEDLIGHT40,
-            DK.LEDLIGHT41,
-            DK.LEDLIGHT42,
-            DK.LEDLIGHT43,
-            DK.LEDLIGHT44,
-            DK.LEDLIGHT45,
-            DK.LEDLIGHT46,
-            DK.LEDLIGHT47,
-            DK.LEDLIGHT48,
-            DK.LEDLIGHT49,
-            DK.LEDLIGHT50,
-            DK.LEDLIGHT51,
-            DK.LEDLIGHT52,
-            DK.LEDLIGHT53,
-            DK.LEDLIGHT54,
-            DK.LEDLIGHT55,
-            DK.LEDLIGHT56,
-            DK.LEDLIGHT57,
-            DK.LEDLIGHT58,
-            DK.LEDLIGHT59,
-            DK.LEDLIGHT60,
-            DK.LEDLIGHT61,
-            DK.LEDLIGHT62,
-            DK.LEDLIGHT63,
-            DK.LEDLIGHT64,
-            DK.LEDLIGHT65,
-            DK.LEDLIGHT66,
-            DK.LEDLIGHT67,
-            DK.LEDLIGHT68,
-            DK.LEDLIGHT69,
-            DK.LEDLIGHT70,
-            DK.LEDLIGHT71,
-            DK.LEDLIGHT72,
-            DK.LEDLIGHT73,
-            DK.LEDLIGHT74,
-            DK.LEDLIGHT75,
-            DK.LEDLIGHT76,
-            DK.LEDLIGHT77,
-            DK.LEDLIGHT78,
-            DK.LEDLIGHT79,
-            DK.LEDLIGHT80,
-            DK.LEDLIGHT81,
-            DK.LEDLIGHT82,
-            DK.LEDLIGHT83,
-            DK.LEDLIGHT84,
-            DK.LEDLIGHT85,
-            DK.LEDLIGHT86,
-            DK.LEDLIGHT87,
-            DK.LEDLIGHT88,
-            DK.LEDLIGHT89,
-            DK.LEDLIGHT90,
-            DK.LEDLIGHT91,
-            DK.LEDLIGHT92,
-            DK.LEDLIGHT93,
-            DK.LEDLIGHT94,
-            DK.LEDLIGHT95,
-            DK.LEDLIGHT96,
-            DK.LEDLIGHT97,
-            DK.LEDLIGHT98,
-            DK.LEDLIGHT99,
-            DK.LEDLIGHT100,
-            // More than 100 Leds
-            DK.LEDLIGHT101,
-            DK.LEDLIGHT102,
-            DK.LEDLIGHT103,
-            DK.LEDLIGHT104,
-            DK.LEDLIGHT105,
-            DK.LEDLIGHT106,
-            DK.LEDLIGHT107,
-            DK.LEDLIGHT108,
-            DK.LEDLIGHT109,
-            DK.LEDLIGHT110,
-            DK.LEDLIGHT111,
-            DK.LEDLIGHT112,
-            DK.LEDLIGHT113,
-            DK.LEDLIGHT114,
-            DK.LEDLIGHT115,
-            DK.LEDLIGHT116,
-            DK.LEDLIGHT117,
-            DK.LEDLIGHT118,
-            DK.LEDLIGHT119,
-            DK.LEDLIGHT120,
-            DK.LEDLIGHT121,
-            DK.LEDLIGHT122,
-            DK.LEDLIGHT123,
-            DK.LEDLIGHT124,
-            DK.LEDLIGHT125,
-            DK.LEDLIGHT126,
-            DK.LEDLIGHT127,
-            DK.LEDLIGHT128,
-            DK.LEDLIGHT129,
-            DK.LEDLIGHT130,
-            DK.LEDLIGHT131,
-            DK.LEDLIGHT132,
-            DK.LEDLIGHT133,
-            DK.LEDLIGHT134,
-            DK.LEDLIGHT135,
-            DK.LEDLIGHT136,
-            DK.LEDLIGHT137,
-            DK.LEDLIGHT138,
-            DK.LEDLIGHT139,
-            DK.LEDLIGHT140,
-            DK.LEDLIGHT141,
-            DK.LEDLIGHT142,
-            DK.LEDLIGHT143,
-            DK.LEDLIGHT144,
-            DK.LEDLIGHT145,
-            DK.LEDLIGHT146,
-            DK.LEDLIGHT147,
-            DK.LEDLIGHT148,
-            DK.LEDLIGHT149,
-            DK.LEDLIGHT150,
-            DK.LEDLIGHT151,
-            DK.LEDLIGHT152,
-            DK.LEDLIGHT153,
-            DK.LEDLIGHT154,
-            DK.LEDLIGHT155,
-            DK.LEDLIGHT156,
-            DK.LEDLIGHT157,
-            DK.LEDLIGHT158,
-            DK.LEDLIGHT159,
-            DK.LEDLIGHT160,
-            DK.LEDLIGHT161,
-            DK.LEDLIGHT162,
-            DK.LEDLIGHT163,
-            DK.LEDLIGHT164,
-            DK.LEDLIGHT165,
-            DK.LEDLIGHT166,
-            DK.LEDLIGHT167,
-            DK.LEDLIGHT168,
-            DK.LEDLIGHT169,
-            DK.LEDLIGHT170,
-            DK.LEDLIGHT171,
-            DK.LEDLIGHT172,
-            DK.LEDLIGHT173,
-            DK.LEDLIGHT174,
-            DK.LEDLIGHT175,
-            DK.LEDLIGHT176,
-            DK.LEDLIGHT177,
-            DK.LEDLIGHT178,
-            DK.LEDLIGHT179,
-            DK.LEDLIGHT180,
-            DK.LEDLIGHT181,
-            DK.LEDLIGHT182,
-            DK.LEDLIGHT183,
-            DK.LEDLIGHT184,
-            DK.LEDLIGHT185,
-            DK.LEDLIGHT186,
-            DK.LEDLIGHT187,
-            DK.LEDLIGHT188,
-            DK.LEDLIGHT189,
-            DK.LEDLIGHT190,
-            DK.LEDLIGHT191,
-            DK.LEDLIGHT192,
-            DK.LEDLIGHT193,
-            DK.LEDLIGHT194,
-            DK.LEDLIGHT195,
-            DK.LEDLIGHT196,
-            DK.LEDLIGHT197,
-            DK.LEDLIGHT198,
-            DK.LEDLIGHT199,
-            DK.LEDLIGHT200,
-            // More than 200 Leds
-    //  I need to define them first in Device.cs
+//
+//        private static readonly List<DK> LedLights = new List<DK>(new[]
+//        {
+//            DK.LEDLIGHT1,
+//            DK.LEDLIGHT2,
+//            DK.LEDLIGHT3,
+//            DK.LEDLIGHT4,
+//            DK.LEDLIGHT5,
+//            DK.LEDLIGHT6,
+//            DK.LEDLIGHT7,
+//            DK.LEDLIGHT8,
+//            DK.LEDLIGHT9,
+//            DK.LEDLIGHT10,
+//            DK.LEDLIGHT11,
+//            DK.LEDLIGHT12,
+//            DK.LEDLIGHT13,
+//            DK.LEDLIGHT14,
+//            DK.LEDLIGHT15,
+//            DK.LEDLIGHT16,
+//            DK.LEDLIGHT17,
+//            DK.LEDLIGHT18,
+//            DK.LEDLIGHT19,
+//            DK.LEDLIGHT20,
+//            DK.LEDLIGHT21,
+//            DK.LEDLIGHT22,
+//            DK.LEDLIGHT23,
+//            DK.LEDLIGHT24,
+//            DK.LEDLIGHT25,
+//            DK.LEDLIGHT26,
+//            DK.LEDLIGHT27,
+//            DK.LEDLIGHT28,
+//            DK.LEDLIGHT29,
+//            DK.LEDLIGHT30,
+//            DK.LEDLIGHT31,
+//            DK.LEDLIGHT32,
+//            DK.LEDLIGHT33,
+//            DK.LEDLIGHT34,
+//            DK.LEDLIGHT35,
+//            DK.LEDLIGHT36,
+//            DK.LEDLIGHT37,
+//            DK.LEDLIGHT38,
+//            DK.LEDLIGHT39,
+//            DK.LEDLIGHT40,
+//            DK.LEDLIGHT41,
+//            DK.LEDLIGHT42,
+//            DK.LEDLIGHT43,
+//            DK.LEDLIGHT44,
+//            DK.LEDLIGHT45,
+//            DK.LEDLIGHT46,
+//            DK.LEDLIGHT47,
+//            DK.LEDLIGHT48,
+//            DK.LEDLIGHT49,
+//            DK.LEDLIGHT50,
+//            DK.LEDLIGHT51,
+//            DK.LEDLIGHT52,
+//            DK.LEDLIGHT53,
+//            DK.LEDLIGHT54,
+//            DK.LEDLIGHT55,
+//            DK.LEDLIGHT56,
+//            DK.LEDLIGHT57,
+//            DK.LEDLIGHT58,
+//            DK.LEDLIGHT59,
+//            DK.LEDLIGHT60,
+//            DK.LEDLIGHT61,
+//            DK.LEDLIGHT62,
+//            DK.LEDLIGHT63,
+//            DK.LEDLIGHT64,
+//            DK.LEDLIGHT65,
+//            DK.LEDLIGHT66,
+//            DK.LEDLIGHT67,
+//            DK.LEDLIGHT68,
+//            DK.LEDLIGHT69,
+//            DK.LEDLIGHT70,
+//            DK.LEDLIGHT71,
+//            DK.LEDLIGHT72,
+//            DK.LEDLIGHT73,
+//            DK.LEDLIGHT74,
+//            DK.LEDLIGHT75,
+//            DK.LEDLIGHT76,
+//            DK.LEDLIGHT77,
+//            DK.LEDLIGHT78,
+//            DK.LEDLIGHT79,
+//            DK.LEDLIGHT80,
+//            DK.LEDLIGHT81,
+//            DK.LEDLIGHT82,
+//            DK.LEDLIGHT83,
+//            DK.LEDLIGHT84,
+//            DK.LEDLIGHT85,
+//            DK.LEDLIGHT86,
+//            DK.LEDLIGHT87,
+//            DK.LEDLIGHT88,
+//            DK.LEDLIGHT89,
+//            DK.LEDLIGHT90,
+//            DK.LEDLIGHT91,
+//            DK.LEDLIGHT92,
+//            DK.LEDLIGHT93,
+//            DK.LEDLIGHT94,
+//            DK.LEDLIGHT95,
+//            DK.LEDLIGHT96,
+//            DK.LEDLIGHT97,
+//            DK.LEDLIGHT98,
+//            DK.LEDLIGHT99,
+//            DK.LEDLIGHT100,
+//            // More than 100 Leds
+//            DK.LEDLIGHT101,
+//            DK.LEDLIGHT102,
+//            DK.LEDLIGHT103,
+//            DK.LEDLIGHT104,
+//            DK.LEDLIGHT105,
+//            DK.LEDLIGHT106,
+//            DK.LEDLIGHT107,
+//            DK.LEDLIGHT108,
+//            DK.LEDLIGHT109,
+//            DK.LEDLIGHT110,
+//            DK.LEDLIGHT111,
+//            DK.LEDLIGHT112,
+//            DK.LEDLIGHT113,
+//            DK.LEDLIGHT114,
+//            DK.LEDLIGHT115,
+//            DK.LEDLIGHT116,
+//            DK.LEDLIGHT117,
+//            DK.LEDLIGHT118,
+//            DK.LEDLIGHT119,
+//            DK.LEDLIGHT120,
+//            DK.LEDLIGHT121,
+//            DK.LEDLIGHT122,
+//            DK.LEDLIGHT123,
+//            DK.LEDLIGHT124,
+//            DK.LEDLIGHT125,
+//            DK.LEDLIGHT126,
+//            DK.LEDLIGHT127,
+//            DK.LEDLIGHT128,
+//            DK.LEDLIGHT129,
+//            DK.LEDLIGHT130,
+//            DK.LEDLIGHT131,
+//            DK.LEDLIGHT132,
+//            DK.LEDLIGHT133,
+//            DK.LEDLIGHT134,
+//            DK.LEDLIGHT135,
+//            DK.LEDLIGHT136,
+//            DK.LEDLIGHT137,
+//            DK.LEDLIGHT138,
+//            DK.LEDLIGHT139,
+//            DK.LEDLIGHT140,
+//            DK.LEDLIGHT141,
+//            DK.LEDLIGHT142,
+//            DK.LEDLIGHT143,
+//            DK.LEDLIGHT144,
+//            DK.LEDLIGHT145,
+//            DK.LEDLIGHT146,
+//            DK.LEDLIGHT147,
+//            DK.LEDLIGHT148,
+//            DK.LEDLIGHT149,
+//            DK.LEDLIGHT150,
+//            DK.LEDLIGHT151,
+//            DK.LEDLIGHT152,
+//            DK.LEDLIGHT153,
+//            DK.LEDLIGHT154,
+//            DK.LEDLIGHT155,
+//            DK.LEDLIGHT156,
+//            DK.LEDLIGHT157,
+//            DK.LEDLIGHT158,
+//            DK.LEDLIGHT159,
+//            DK.LEDLIGHT160,
+//            DK.LEDLIGHT161,
+//            DK.LEDLIGHT162,
+//            DK.LEDLIGHT163,
+//            DK.LEDLIGHT164,
+//            DK.LEDLIGHT165,
+//            DK.LEDLIGHT166,
+//            DK.LEDLIGHT167,
+//            DK.LEDLIGHT168,
+//            DK.LEDLIGHT169,
+//            DK.LEDLIGHT170,
+//            DK.LEDLIGHT171,
+//            DK.LEDLIGHT172,
+//            DK.LEDLIGHT173,
+//            DK.LEDLIGHT174,
+//            DK.LEDLIGHT175,
+//            DK.LEDLIGHT176,
+//            DK.LEDLIGHT177,
+//            DK.LEDLIGHT178,
+//            DK.LEDLIGHT179,
+//            DK.LEDLIGHT180,
+//            DK.LEDLIGHT181,
+//            DK.LEDLIGHT182,
+//            DK.LEDLIGHT183,
+//            DK.LEDLIGHT184,
+//            DK.LEDLIGHT185,
+//            DK.LEDLIGHT186,
+//            DK.LEDLIGHT187,
+//            DK.LEDLIGHT188,
+//            DK.LEDLIGHT189,
+//            DK.LEDLIGHT190,
+//            DK.LEDLIGHT191,
+//            DK.LEDLIGHT192,
+//            DK.LEDLIGHT193,
+//            DK.LEDLIGHT194,
+//            DK.LEDLIGHT195,
+//            DK.LEDLIGHT196,
+//            DK.LEDLIGHT197,
+//            DK.LEDLIGHT198,
+//            DK.LEDLIGHT199,
+//            DK.LEDLIGHT200,
+//            // More than 200 Leds
+//    //  I need to define them first in Device.cs
 //            DK.LEDLIGHT201,
 //            DK.LEDLIGHT202,
 //            DK.LEDLIGHT203,
@@ -1328,7 +1300,7 @@ namespace Aurora.Devices.OpenRGB
 //            DK.LEDLIGHT998,
 //            DK.LEDLIGHT999,
 //            DK.LEDLIGHT1000,
-            // Finally 1000 Leds
-        });
-    }
-}
+/////////////////////////////////////// Finally 1000 Leds
+//        });
+//    }
+//}

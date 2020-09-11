@@ -5,32 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Controls"
              xmlns:System="clr-namespace:System;assembly=mscorlib"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox" x:Class="Aurora.Controls.EffectSettingsWindow"
-             xmlns:eff_config="clr-namespace:Aurora.Settings"
+             xmlns:s="clr-namespace:Aurora.Settings"
              mc:Ignorable="d" ShowInTaskbar="False" ResizeMode="NoResize" Title="Effect Settings" Height="260" Width="440" Topmost="True" WindowStartupLocation="CenterOwner" Activated="Window_Activated" Deactivated="Window_Deactivated" Background="Transparent">
-    <Window.Resources>
-        <ResourceDictionary>
-
-            <ObjectDataProvider x:Key="AnimationType" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="eff_config:AnimationType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:AnimationTypeToStringVC x:Key="AnimationTypeToStringVC"/>
-            <DataTemplate x:Key="AnimationTypeTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource AnimationTypeToStringVC}}" />
-            </DataTemplate>
-
-        </ResourceDictionary>
-    </Window.Resources>
 
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="10,13,0,0" TextWrapping="Wrap" Text="Primary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="primary_color" HorizontalAlignment="Left" Height="24" Margin="90,10,0,0" VerticalAlignment="Top" Width="169" SelectedColorChanged="primary_color_SelectedColorChanged" UsingAlphaChannel="True" ShowAdvancedButton="True" ColorMode="ColorCanvas"/>
+        <xctk:ColorPicker x:Name="primary_color" HorizontalAlignment="Left" Height="24" Margin="90,10,0,0" VerticalAlignment="Top" Width="169" SelectedColorChanged="primary_color_SelectedColorChanged" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,42,0,0" TextWrapping="Wrap" Text="Secondary Color:" VerticalAlignment="Top"/>
-        <xctk:ColorPicker x:Name="secondary_color" HorizontalAlignment="Left" Height="24" Margin="105,39,0,0" VerticalAlignment="Top" Width="154" SelectedColorChanged="secondary_color_SelectedColorChanged" ShowAdvancedButton="True" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
+        <xctk:ColorPicker x:Name="secondary_color" HorizontalAlignment="Left" Height="24" Margin="105,39,0,0" VerticalAlignment="Top" Width="154" SelectedColorChanged="secondary_color_SelectedColorChanged" UsingAlphaChannel="True" ColorMode="ColorCanvas"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,68,0,0" TextWrapping="Wrap" Text="Effect Speed: " VerticalAlignment="Top"/>
         <Slider x:Name="effect_speed_slider" HorizontalAlignment="Left" Margin="90,68,0,0" VerticalAlignment="Top" Width="140" Minimum="1" SmallChange="0.5" SelectionStart="6" IsSnapToTickEnabled="True" TickFrequency="0.25" Maximum="5" ValueChanged="effect_speed_slider_ValueChanged"/>
         <TextBlock x:Name="effect_speed_label" HorizontalAlignment="Left" Margin="235,68,0,0" TextWrapping="Wrap" Text="x 1.0" VerticalAlignment="Top"/>
@@ -41,7 +26,7 @@
         <ncore:ColorBox x:Name="gradient_editor" HorizontalAlignment="Left" Height="150" Margin="264,37,0,0" VerticalAlignment="Top" Width="150"/>
         <TextBlock HorizontalAlignment="Left" Margin="264,16,0,0" TextWrapping="Wrap" Text="Effect Gradient: " VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="10,120,0,0" TextWrapping="Wrap" Text="Animation Type: " VerticalAlignment="Top"/>
-        <ComboBox x:Name="effect_animation_type" HorizontalAlignment="Left" Margin="104,117,0,0" VerticalAlignment="Top" Width="155" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource AnimationType}}" ItemTemplate="{Binding Source={StaticResource AnimationTypeTemplate}}" SelectionChanged="effect_animation_type_SelectionChanged"/>
+        <ComboBox x:Name="effect_animation_type" HorizontalAlignment="Left" Margin="104,117,0,0" VerticalAlignment="Top" Width="155" IsSynchronizedWithCurrentItem="True" SelectedIndex="0" ItemsSource="{u:EnumToItemsSource {x:Type s:AnimationType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="effect_animation_type_SelectionChanged"/>
         <CheckBox x:Name="effect_animation_reversed" Content="Reverse animation direction" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Checked="effect_animation_reversed_Checked" Unchecked="effect_animation_reversed_Checked"/>
     </Grid>
 </Window>

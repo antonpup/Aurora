@@ -36,7 +36,7 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         public void SetSettings() {
             if (this.DataContext is ETS2BeaconLayerHandler && !settingsset) {
-                this.lightMode.SelectedItem = context.Properties._BeaconStyle;
+                this.lightMode.SelectedValue = context.Properties._BeaconStyle;
                 this.speedSlider.Value = (double)context.Properties._Speed;
                 this.speedSlider.IsEnabled = context.Properties._BeaconStyle == ETS2_BeaconStyle.Simple_Flash;
                 this.beaconColorPicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(context.Properties._PrimaryColor ?? System.Drawing.Color.Empty);
@@ -56,7 +56,7 @@ namespace Aurora.Profiles.ETS2.Layers {
 
         private void lightMode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             if (isReady && sender is ComboBox) {
-                context.Properties._BeaconStyle = (ETS2_BeaconStyle)(sender as ComboBox).SelectedItem;
+                context.Properties._BeaconStyle = (ETS2_BeaconStyle)(sender as ComboBox).SelectedValue;
                 speedSlider.IsEnabled = context.Properties._BeaconStyle == ETS2_BeaconStyle.Simple_Flash;
             }
         }

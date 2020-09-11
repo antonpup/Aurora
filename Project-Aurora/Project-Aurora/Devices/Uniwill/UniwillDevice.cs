@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Aurora.Devices.RGBNet;
 using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Win32;
 using UniwillSDKDLL;
 
@@ -21,7 +21,7 @@ namespace Aurora.Devices.Uniwill
         CONTROLCENTER = 2
     }
 
-    public class UniwillDevice : Device
+    public class UniwillDevice : IDevice
     {
         // Generic Variables
         private string devicename = "Uniwill";
@@ -41,6 +41,10 @@ namespace Aurora.Devices.Uniwill
         GAMECENTERTYPE GamingCenterType = 0;
 
         float brightness = 1f;
+
+        static UniwillDevice() {
+            // Setup custom enum description resolver (for changing how some UNIWILL enums appear to the user)
+            EnumUtils.RegisterCustomDescriptionResolver<PreferredKeyboard>(UniwillEnumDescriptionResolver);        }
 
         public UniwillDevice()
         {
@@ -112,22 +116,11 @@ namespace Aurora.Devices.Uniwill
             }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
-        {
-            if (isInitialized)
-            {
-                return devicename + ": Initialized";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public bool Initialize()
         {
@@ -161,7 +154,7 @@ namespace Aurora.Devices.Uniwill
 
         public void Shutdown()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 if (CheckGCPower())
                 {
@@ -176,7 +169,7 @@ namespace Aurora.Devices.Uniwill
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 if (CheckGCPower())
                 {
@@ -193,10 +186,7 @@ namespace Aurora.Devices.Uniwill
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -249,14 +239,34 @@ namespace Aurora.Devices.Uniwill
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
+
+        private static string UniwillEnumDescriptionResolver(Enum @enum) {
+            try {
+                string descriptionString = @enum.GetCustomAttribute<DescriptionAttribute>()?.Description;
+                string oemstring = UniwillSDKDLL.KeyboardFactory.GetOEMName();
+                if (oemstring.Equals("XMG")) {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " FUSION");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " NEO");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " NEO 15");
+                } else {
+                    if (descriptionString.Contains("UNIWILL2P1"))
+                        return descriptionString.Replace("UNIWILL2P1", oemstring + " 550");
+                    else if (descriptionString.Contains("UNIWILL2ND"))
+                        return descriptionString.Replace("UNIWILL2ND", oemstring + " 35X");
+                    else if (descriptionString.Contains("UNIWILL2P2"))
+                        return descriptionString.Replace("UNIWILL2P2", oemstring + " 650");
+                }
+            } catch {
+                return null;
+            }
+
+            return null;
         }
     }
 }
