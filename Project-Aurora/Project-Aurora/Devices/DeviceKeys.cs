@@ -1495,6 +1495,103 @@ namespace Aurora.Devices
         [Description("RAM Light 5")]
         RAMLIGHT5 = 854,
 
+
+//////////////////////////////////////////////   MOBOLIGHTS begin here 
+//////////////////////////////////////////////   Added up to 5 Mainboard Lights + MOBOLogo
+        ///
+        /// <summary>
+        /// Cooler Logo
+        /// </summary>
+        [Description("Mobo Logo")]
+        Mobo_Logo = 855,
+
+        /// <summary>
+        /// MOBO Light 1
+        /// </summary>
+        [Description("Mainboard Light 1")]
+        MOBOLIGHT1 = 856,
+
+        /// <summary>
+        /// MOBO Light 2
+        /// </summary>
+        [Description("Mainboard Light 2")]
+        MOBOLIGHT2 = 857,
+
+        /// <summary>
+        /// MOBO Light 3
+        /// </summary>
+        [Description("Mainboard Light 3")]
+        MOBOLIGHT3 = 858,
+
+        /// <summary>
+        /// MOBO Light 4
+        /// </summary>
+        [Description("Mainboard Light 4")]
+        MOBOLIGHT4 = 859,
+
+        /// <summary>
+        /// MOBO Light 5
+        /// </summary>
+        [Description("Mainboard Light 5")]
+        MOBOLIGHT5 = 860,
+
+//////////////////////////////////////////////   COOLERLIGHTS begin here 
+//////////////////////////////////////////////   Added up to 8 Cooler Lights + 1 Cooler Logo
+
+        /// <summary>
+        /// Cooler Logo
+        /// </summary>
+        [Description("Cooler Logo")]
+        Cooler_Logo = 900,
+
+        /// <summary>
+        /// COOLER Light 1
+        /// </summary>
+        [Description("Cooler Light 1")]
+        COOLERLIGHT1 = 901,
+
+        /// <summary>
+        /// COOLER Light 2
+        /// </summary>
+        [Description("Cooler Light 2")]
+        COOLERLIGHT2 = 902,
+
+        /// <summary>
+        /// COOLER Light 3
+        /// </summary>
+        [Description("Cooler Light 3")]
+        COOLERLIGHT3 = 903,
+
+        /// <summary>
+        /// COOLER Light 4
+        /// </summary>
+        [Description("Cooler Light 4")]
+        COOLERLIGHT4 = 904,
+
+        /// <summary>
+        /// COOLER Light 5
+        /// </summary>
+        [Description("Cooler Light 5")]
+        COOLERLIGHT5 = 905,
+
+        /// <summary>
+        /// COOLER Light 6
+        /// </summary>
+        [Description("Cooler Light 6")]
+        COOLERLIGHT6 = 906,
+
+        /// <summary>
+        /// COOLER Light 7
+        /// </summary>
+        [Description("Cooler Light 7")]
+        COOLERLIGHT7 = 907,
+
+        /// <summary>
+        /// COOLER Light 8
+        /// </summary>
+        [Description("Cooler Light 8")]
+        COOLERLIGHT8 = 908,
+
 //////////////////////////////////////////////   ADDITIONALLIGHTS begin here 
 //////////////////////////////////////////////   Added up to No 40 Additional Lights
 

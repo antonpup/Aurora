@@ -151,21 +151,21 @@ namespace Aurora.Devices.OpenRGB
 
         public static readonly List<DK> MousepadLights = new List<DK>(new[]
         {
-            DK.MOUSEPADLIGHT1,
-            DK.MOUSEPADLIGHT2,
-            DK.MOUSEPADLIGHT3,
-            DK.MOUSEPADLIGHT4,
-            DK.MOUSEPADLIGHT5,
-            DK.MOUSEPADLIGHT6,
-            DK.MOUSEPADLIGHT7,
-            DK.MOUSEPADLIGHT8,
-            DK.MOUSEPADLIGHT9,
-            DK.MOUSEPADLIGHT10,
-            DK.MOUSEPADLIGHT11,
-            DK.MOUSEPADLIGHT12,
-            DK.MOUSEPADLIGHT13,
-            DK.MOUSEPADLIGHT14,
             DK.MOUSEPADLIGHT15,
+            DK.MOUSEPADLIGHT14,
+            DK.MOUSEPADLIGHT13,
+            DK.MOUSEPADLIGHT12,
+            DK.MOUSEPADLIGHT11,
+            DK.MOUSEPADLIGHT10,
+            DK.MOUSEPADLIGHT9,
+            DK.MOUSEPADLIGHT8,
+            DK.MOUSEPADLIGHT7,
+            DK.MOUSEPADLIGHT6,
+            DK.MOUSEPADLIGHT5,
+            DK.MOUSEPADLIGHT4,
+            DK.MOUSEPADLIGHT3,
+            DK.MOUSEPADLIGHT2,
+            DK.MOUSEPADLIGHT1,
 //////////////////////////////////////////////   Added 5 more Mousepad Lights
             DK.MOUSEPADLIGHT16,
             DK.MOUSEPADLIGHT17,
@@ -219,7 +219,7 @@ namespace Aurora.Devices.OpenRGB
             DK.ADDITIONALLIGHT40,
         });
 
-        public static readonly List<DK> Peripheral_Lights = new List<DK>(new[]
+        public static readonly List<DK> PeripheralLights = new List<DK>(new[]
          {
             DK.PERIPHERAL_LIGHT1,
             DK.PERIPHERAL_LIGHT2,
@@ -250,6 +250,38 @@ namespace Aurora.Devices.OpenRGB
             DK.RAMLIGHT3,
             DK.RAMLIGHT4,
             DK.RAMLIGHT5,
+            });
+
+        public static readonly Dictionary<string, DK> MoboLogo = new Dictionary<string, DK>()
+        {
+            { "Logo"                  , DK.Mobo_Logo        },
+            };
+
+        public static readonly List<DK> MainboardLights = new List<DK>(new[]
+         {
+            DK.MOBOLIGHT1,
+            DK.MOBOLIGHT2,
+            DK.MOBOLIGHT3,
+            DK.MOBOLIGHT4,
+            DK.MOBOLIGHT5,
+            });
+
+
+        public static readonly Dictionary<string, DK> CoolerLogo = new Dictionary<string, DK>()
+        {
+            { "Logo"                  , DK.Cooler_Logo        },
+            };
+
+        public static readonly List<DK> CoolerLights = new List<DK>(new[]
+         {
+            DK.COOLERLIGHT1,
+            DK.COOLERLIGHT2,
+            DK.COOLERLIGHT3,
+            DK.COOLERLIGHT4,
+            DK.COOLERLIGHT5,
+            DK.COOLERLIGHT6,
+            DK.COOLERLIGHT7,
+            DK.COOLERLIGHT8,
             });
 
         public static readonly List<DK> LedLights = new List<DK>(new[]

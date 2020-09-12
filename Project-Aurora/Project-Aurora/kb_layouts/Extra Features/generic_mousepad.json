@@ -11,7 +11,7 @@
       "enabled": true,
       "absolute_location": true
     },
-    //////////////////////////////////////////////   G502 MERGE START HERE
+//////////////////////////////////////////////   G502 MERGE START HERE
     {
       "tag": -1,
       "margin_left": 80.0,
@@ -66,8 +66,8 @@
       "enabled": true,
       "absolute_location": true
     },
-    //////////////////////////////////////////////   MOUSEPAD START HERE
-    //////////////////////////////////////////////   left Mousepad
+//////////////////////////////////////////////   MOUSEPAD START HERE
+//////////////////////////////////////////////   left Mousepad
     {
       "visualName": "Mouse Logo",
       "tag": 160,
@@ -78,7 +78,7 @@
       "enabled": true,
       "absolute_location": true
     },
-    //////////////////////////////////////////////   MOUSEPADLIGHTS START HERE
+//////////////////////////////////////////////   MOUSEPADLIGHTS START HERE
     {
       "visualName": "M 01",
       "tag": 201,
@@ -229,7 +229,7 @@
       "enabled": true,
       "absolute_location": true
     },
-    //////////////////////////////////////////////   MOUSEPADLIGHTS 16-20 START HERE
+//////////////////////////////////////////////   MOUSEPADLIGHTS 16-20 START HERE
     {
       "tag": 800,
       "visualName": "M 16",
@@ -280,12 +280,12 @@
       "enabled": true,
       "absolute_location": true
     },
-    //////////////////////////////////////////////   RAMLIGHTS START HERE
+//////////////////////////////////////////////   RAMLIGHTS START HERE
     {
       "tag": 850,
       "visualName": "RAM 01",
-      "margin_left": 555.0,
-      "margin_top": -50.5,
+      "margin_left": 550.0,
+      "margin_top": -185.0,
       "width": 30.0,
       "height": 33.6,
       "enabled": true,
@@ -294,8 +294,8 @@
     {
       "tag": 851,
       "visualName": "RAM 02",
-      "margin_left": 555.0,
-      "margin_top": -84.2,
+      "margin_left": 550.0,
+      "margin_top": -151.4,
       "width": 30.0,
       "height": 33.6,
       "enabled": true,
@@ -304,7 +304,7 @@
     {
       "tag": 852,
       "visualName": "RAM 03",
-      "margin_left": 555.0,
+      "margin_left": 550.0,
       "margin_top": -117.8,
       "width": 30.0,
       "height": 33.6,
@@ -314,8 +314,8 @@
     {
       "tag": 853,
       "visualName": "RAM 04",
-      "margin_left": 555.0,
-      "margin_top": -151.4,
+      "margin_left": 550.0,
+      "margin_top": -84.2,
       "width": 30.0,
       "height": 33.6,
       "enabled": true,
@@ -324,15 +324,66 @@
     {
       "tag": 854,
       "visualName": "RAM 05",
-      "margin_left": 555.0,
+      "margin_left": 550.0,
+      "margin_top": -50.5,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+//////////////////////////////////////////////   MAINBOARDLIGHTS START HERE
+    {
+      "tag": 855,
+      "visualName": "MB 01",
+      "margin_left": 510.0,
       "margin_top": -185.0,
       "width": 30.0,
       "height": 33.6,
       "enabled": true,
       "absolute_location": true
     },
-    //////////////////////////////////////////////   PHERIPHERALLIGHTS START HERE
-    //////////////////////////////////////////////   Headset Stand Right of Mousepad
+    {
+      "tag": 856,
+      "visualName": "MB 02",
+      "margin_left": 510.0,
+      "margin_top": -151.4,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 857,
+      "visualName": "MB 03",
+      "margin_left": 510.0,
+      "margin_top": -117.8,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 858,
+      "visualName": "MB 04",
+      "margin_left": 510.0,
+      "margin_top": -84.2,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 859,
+      "visualName": "MB 05",
+      "margin_left": 510.0,
+      "margin_top": -50.5,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+//////////////////////////////////////////////   PHERIPHERALLIGHTS START HERE
+//////////////////////////////////////////////   Headset Stand Right of Mousepad
     {
       "tag": -1,
       "margin_left": 275.0,
@@ -344,7 +395,7 @@
     },
     {
       "visualName": "P 01",
-      "tag": 216,
+      "tag": 217,
       "margin_left": 255.0,
       "margin_top": -185.0,
       "width": 20.0,
@@ -354,7 +405,7 @@
     },
     {
       "visualName": "P 02",
-      "tag": 217,
+      "tag": 218,
       "margin_left": 255.0,
       "margin_top": -151.4,
       "width": 20.0,
@@ -364,7 +415,7 @@
     },
     {
       "visualName": "P 03",
-      "tag": 218,
+      "tag": 219,
       "margin_left": 255.0,
       "margin_top": -117.8,
       "width": 20.0,
@@ -374,7 +425,7 @@
     },
     {
       "visualName": "P 04",
-      "tag": 219,
+      "tag": 220,
       "margin_left": 255.0,
       "margin_top": -84.2,
       "width": 20.0,
@@ -384,7 +435,7 @@
     },
     {
       "visualName": "P 05",
-      "tag": 220,
+      "tag": 221,
       "margin_left": 255.0,
       "margin_top": -50.6,
       "width": 20.0,
@@ -393,7 +444,7 @@
       "absolute_location": true
     },
     {
-      "tag": 221,
+      "tag": 222,
       "visualName": "P 06",
       "margin_left": 270.0,
       "margin_top": -17.0,
@@ -403,7 +454,7 @@
       "absolute_location": true
     },
     {
-      "tag": 222,
+      "tag": 223,
       "visualName": "P 07",
       "margin_left": 310.0,
       "margin_top": -17.0,
@@ -413,7 +464,7 @@
       "absolute_location": true
     },
     {
-      "tag": 223,
+      "tag": 224,
       "visualName": "P 08",
       "margin_left": 350.0,
       "margin_top": -17.0,
@@ -423,7 +474,7 @@
       "absolute_location": true
     },
     {
-      "tag": 224,
+      "tag": 225,
       "visualName": "P 09",
       "margin_left": 390.0,
       "margin_top": -17.0,
@@ -433,7 +484,7 @@
       "absolute_location": true
     },
     {
-      "tag": 225,
+      "tag": 226,
       "visualName": "P 10",
       "margin_left": 430.0,
       "margin_top": -17.0,
@@ -443,7 +494,7 @@
       "absolute_location": true
     },
     {
-      "tag": 226,
+      "tag": 227,
       "visualName": "P 11",
       "margin_left": 470.0,
       "margin_top": -50.5,
@@ -453,7 +504,7 @@
       "absolute_location": true
     },
     {
-      "tag": 227,
+      "tag": 228,
       "visualName": "P 12",
       "margin_left": 470.0,
       "margin_top": -84.2,
@@ -542,15 +593,106 @@
       "enabled": true,
       "absolute_location": true
     },
-
-    //////////////////////////////////////////////   TEST START HERE
+//////////////////////////////////////////////   COOLERLIGHTS START HERE
     {
-      "tag": 900,
-      "visualName": "TEST",
-      "margin_left": 500.0,
-      "margin_top": -185.0,
+      "tag": 901,
+      "visualName": "C 01",
+      "margin_left": 380.0,
+      "margin_top": -180.0,
       "width": 30.0,
       "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 902,
+      "visualName": "C 02",
+      "margin_left": 420.0,
+      "margin_top": -140.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 903,
+      "visualName": "C 03",
+      "margin_left": 420.0,
+      "margin_top": -100.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 904,
+      "visualName": "C 04",
+      "margin_left": 380.0,
+      "margin_top": -60.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 905,
+      "visualName": "C 05",
+      "margin_left": 340.0,
+      "margin_top": -60.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 906,
+      "visualName": "C 06",
+      "margin_left": 300.0,
+      "margin_top": -100.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 907,
+      "visualName": "C 07",
+      "margin_left": 300.0,
+      "margin_top": -140.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "tag": 908,
+      "visualName": "C 08",
+      "margin_left": 340.0,
+      "margin_top": -180.0,
+      "width": 30.0,
+      "height": 33.6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Cooler Logo",
+      "tag": 900,
+      "margin_left": 350.0,
+      "margin_top": -130.0,
+      "width": 50.0,
+      "height": 50.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+//////////////////////////////////////////////   TEST START HERE
+    {
+      "tag": 128,
+      "visualName": "TEST",
+      "margin_left": 525.0,
+      "margin_top": -250.0,
+      "width": 30.0,
+      "height": 33.6,
+      "z": null,
       "enabled": true,
       "absolute_location": true
     }
