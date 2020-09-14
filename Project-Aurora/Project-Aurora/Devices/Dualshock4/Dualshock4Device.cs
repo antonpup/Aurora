@@ -100,12 +100,15 @@ namespace Aurora.Devices.Dualshock
 
         public DualshockDevice()
         {
+            //dummy call, we just need hidsharp to scan for devices once
+            HidSharp.DeviceList.Local.GetAllDevices();
             HidSharp.DeviceList.Local.Changed += DeviceListChanged;
         }
 
         private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
         {
-            if (Global.Configuration.DevicesDisabled.Contains(typeof(DualshockDevice)))
+            if (Global.Configuration.DevicesDisabled.Contains(typeof(DualshockDevice)) || 
+               !Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_init"))
                 return;
 
             if (isDisconnecting)
@@ -173,6 +176,7 @@ namespace Aurora.Devices.Dualshock
             variableRegistry.Register($"{DeviceName}_restore_dualshock", new RealColor(Color.FromArgb(0, 0, 255)), "Restore Color");
             variableRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral_Logo);
             variableRegistry.Register($"{DeviceName}_disconnect_when_stop", false, "Disconnect when Stopping");
+            variableRegistry.Register($"{DeviceName}_auto_init", false, "Initialize automatically when plugged in");
         }
     }
 }
