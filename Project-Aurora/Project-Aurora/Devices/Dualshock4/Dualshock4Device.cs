@@ -107,9 +107,12 @@ namespace Aurora.Devices.Dualshock
 
         private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
         {
-            if (Global.Configuration.DevicesDisabled.Contains(typeof(DualshockDevice)) || 
-               !Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_init"))
+            if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) || 
+               (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
+            {
                 return;
+            }
+                
 
             if (isDisconnecting)
                 return;
