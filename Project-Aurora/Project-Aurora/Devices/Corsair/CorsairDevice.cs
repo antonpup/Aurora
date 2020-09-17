@@ -17,7 +17,8 @@ namespace Aurora.Devices.Corsair
     public class CorsairDevice : DefaultDevice
     {
         public override string DeviceName => "Corsair";
-        protected override string DeviceInfo => ": " + string.Join(", ", deviceInfos.Select(d => d.Model));
+
+        protected override string DeviceInfo => string.Join(", ", deviceInfos.Select(d => d.Model));
 
         private readonly List<CorsairDeviceInfo> deviceInfos = new List<CorsairDeviceInfo>();
 
@@ -92,18 +93,39 @@ namespace Aurora.Devices.Corsair
                 {
                     if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var clr))
                     {
-                        int totalLeds = 0;
-                        for (int j = 0; j < deviceInfo.Channels.ChannelsCount; j++)
+                        if(deviceInfo.Type == CorsairDeviceType.LightingNodePro || deviceInfo.Type == CorsairDeviceType.CommanderPro)
                         {
-                            totalLeds += deviceInfo.Channels.Channels[j].TotalLedsCount;
-                            foreach (var ledid in LedMaps.ChannelLeds[j])
+                            int totalLeds = 0;
+                            for (int j = 0; j < deviceInfo.Channels.ChannelsCount; j++)
                             {
-                                if (colors.Count == totalLeds)
-                                    continue;
+                                totalLeds += deviceInfo.Channels.Channels[j].TotalLedsCount;
+                                foreach (var ledid in LedMaps.ChannelLeds[j])
+                                {
+                                    if (colors.Count == totalLeds)
+                                        continue;
 
+                                    colors.Add(new CorsairLedColor()
+                                    {
+                                        LedId = ledid,
+                                        R = clr.R,
+                                        G = clr.G,
+                                        B = clr.B
+                                    });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            CorsairLedId initial = GetInitialLedIdForDeviceType(deviceInfo.Type);
+
+                            if (initial == CorsairLedId.I_Invalid)
+                                continue;
+
+                            for(int j = 0; j <  deviceInfo.LedsCount; j++)
+                            {
                                 colors.Add(new CorsairLedColor()
                                 {
-                                    LedId = ledid,
+                                    LedId = initial++,
                                     R = clr.R,
                                     G = clr.G,
                                     B = clr.B
@@ -120,6 +142,19 @@ namespace Aurora.Devices.Corsair
             }
 
             return CUESDK.Update();
+        }
+
+        private CorsairLedId GetInitialLedIdForDeviceType(CorsairDeviceType type)
+        {
+            return type switch
+            {
+                CorsairDeviceType.Headset => CorsairLedId.H_LeftLogo,
+                CorsairDeviceType.MemoryModule => CorsairLedId.DRAM_1,
+                CorsairDeviceType.Cooler => CorsairLedId.LC_C1_1,
+                CorsairDeviceType.Motherboard => CorsairLedId.MB_Zone1,
+                CorsairDeviceType.GraphicsCard => CorsairLedId.GPU_Zone1,
+                _ => CorsairLedId.I_Invalid
+            };
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)

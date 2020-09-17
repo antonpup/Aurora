@@ -91,15 +91,19 @@ namespace Aurora.Profiles {
 
         #region Device Properties
 
-        private readonly DualshockDevice ds4Device = Global.dev_manager.DeviceContainers.Select(d => d.Device).OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault();
+        private readonly DualshockDevice ds4Device = Global.dev_manager.DeviceContainers.Select(d => d.Device).OfType<DualshockDevice>().FirstOrDefault();
         /// <summary>
         /// Battery level of a dualshock controller
         /// </summary>
-        public int DS4Battery => ds4Device?.Battery ?? 0;
+        public int DS4Battery => ds4Device?.Battery ?? -1;
         /// <summary>
         /// Whether or not thr dualshock controller is charging
         /// </summary>
         public bool DS4Charging => ds4Device?.Charging ?? false;
+        /// <summary>
+        /// Latency of the controller in ms
+        /// </summary>
+        public double DS4Latency => ds4Device?.Latency ?? -1;
         #endregion
 
         #region CPU Properties

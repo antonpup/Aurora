@@ -28,7 +28,7 @@ namespace Aurora.Devices.Wooting
                 if (RGBControl.IsConnected())
                 {
                     IsInitialized = true;
-                    _deviceInfo = ": " + RGBControl.GetDeviceInfo().Model;
+                    _deviceInfo = RGBControl.GetDeviceInfo().Model;
                     cb = new DisconnectedCallback(OnDisconnect);
                     RGBControl.SetDisconnectedCallback(cb);
                 }
