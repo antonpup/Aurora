@@ -142,9 +142,31 @@ namespace Aurora.Devices.OpenRGB
 
         public static readonly Dictionary<string, DK> Mouse = new Dictionary<string, DK>()
         {
-            { "Logo LED 1"           , DK.Peripheral_Logo        },
-            { "Scroll Wheel LED 1"   , DK.Peripheral_ScrollWheel },
+            { "Logo"                  , DK.Peripheral_Logo        },
+            { "Mouse"                 , DK.Peripheral_Logo        },
+            { "Scroll Wheel"          , DK.Peripheral_ScrollWheel },
+            { "DPI"                   , DK.Peripheral_ScrollWheel },
+            { "Front"                 , DK.Peripheral_FrontLight  },
         };
+
+        public static readonly List<DK> MousepadLights = new List<DK>(new[]
+        {
+            DK.MOUSEPADLIGHT1,
+            DK.MOUSEPADLIGHT2,
+            DK.MOUSEPADLIGHT3,
+            DK.MOUSEPADLIGHT4,
+            DK.MOUSEPADLIGHT5,
+            DK.MOUSEPADLIGHT6,
+            DK.MOUSEPADLIGHT7,
+            DK.MOUSEPADLIGHT8,
+            DK.MOUSEPADLIGHT9,
+            DK.MOUSEPADLIGHT10,
+            DK.MOUSEPADLIGHT11,
+            DK.MOUSEPADLIGHT12,
+            DK.MOUSEPADLIGHT13,
+            DK.MOUSEPADLIGHT14,
+            DK.MOUSEPADLIGHT15,
+        });
 
         public static readonly List<DK> AdditionalLights = new List<DK>(new[]
         {
