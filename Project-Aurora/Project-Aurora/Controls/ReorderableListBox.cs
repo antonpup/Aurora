@@ -1,3 +1,4 @@
+using Aurora.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Aurora.ExtensionMethods;
 
 namespace Aurora.Controls {
 
@@ -30,7 +30,7 @@ namespace Aurora.Controls {
         private double itemHeight = 0;
 
         private ScrollViewer _scrollViewer;
-        public ScrollViewer ScrollViewer => _scrollViewer ?? (_scrollViewer = this.GetChildOfType<ScrollViewer>());
+        public ScrollViewer ScrollViewer => _scrollViewer ??= this.FindChildOfType<ScrollViewer>();
 
         private Point ApplyScrollOffset(Point p) => new Point(p.X + ScrollViewer.HorizontalOffset, p.Y + ScrollViewer.VerticalOffset);
 
