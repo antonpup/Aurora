@@ -12,7 +12,7 @@ namespace Aurora.Utils {
     /// Will handle the creation of devices if required. If another AudioDevice is using that device, they will share the same reference.
     /// Can be hot-swapped to a different device, moving all events to the newly selected device.
     /// </summary>
-    public sealed class AudioDeviceProxy : IDisposable {
+    public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfaces.IMMNotificationClient {
 
         public const string DEFAULT_DEVICE_ID = ""; // special ID to indicate the default device
 
@@ -24,6 +24,7 @@ namespace Aurora.Utils {
 
         // ID of currently selected device.
         private string deviceId;
+        private bool defaultDeviceChanged = false;
 
         static AudioDeviceProxy() {
             // Tried using a static class to update the device lists when they changed, but it caused an AccessViolation. Will try look into this again in future
@@ -38,6 +39,7 @@ namespace Aurora.Utils {
         public AudioDeviceProxy(string deviceId, DataFlow flow) {
             Flow = flow;
             DeviceId = deviceId ?? DEFAULT_DEVICE_ID;
+            deviceEnumerator.RegisterEndpointNotificationCallback(this);
         }
 
         /// <summary>Indicates recorded data is available on the selected device.</summary>
@@ -64,7 +66,8 @@ namespace Aurora.Utils {
             get => deviceId;
             set {
                 value ??= DEFAULT_DEVICE_ID; // Ensure not-null (if null, assume default device)
-                if (deviceId == value) return;
+                if (deviceId == value && !(defaultDeviceChanged && deviceId == DEFAULT_DEVICE_ID)) return;
+                defaultDeviceChanged = false;
                 deviceId = value;
                 UpdateDevice();
             }
@@ -120,6 +123,22 @@ namespace Aurora.Utils {
         }
         #endregion
 
+        #region IMMNotificationClient Implementation
+
+        /// <summary>
+        /// Update the device when changed by the system.
+        /// </summary>
+        public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+            => defaultDeviceChanged = true;
+
+        // Methods from interface not used
+        public void OnDeviceAdded(string pwstrDeviceId) { }
+        public void OnDeviceRemoved(string deviceId) { }
+        public void OnDeviceStateChanged(string deviceId, DeviceState newState) { }
+        public void OnPropertyValueChanged(string pwstrDeviceId, PropertyKey key) { }
+
+        #endregion
+
         #region IDisposable Implementation
         private bool disposedValue = false;
         public void Dispose() => Dispose(true);
@@ -127,6 +146,7 @@ namespace Aurora.Utils {
             if (!disposedValue) {
                 if (disposing)
                     DisposeCurrentDevice();
+                deviceEnumerator.UnregisterEndpointNotificationCallback(this);
                 disposedValue = true;
             }
         }
