@@ -1,4 +1,5 @@
-﻿using Aurora.Utils;
+﻿using Aurora.Devices.Dualshock;
+using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -89,14 +90,20 @@ namespace Aurora.Profiles {
         #endregion
 
         #region Device Properties
+
+        private readonly DualshockDevice ds4Device = Global.dev_manager.DeviceContainers.Select(d => d.Device).OfType<DualshockDevice>().FirstOrDefault();
         /// <summary>
         /// Battery level of a dualshock controller
         /// </summary>
-        public int DS4Battery => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Battery ?? 0;
+        public int DS4Battery => ds4Device?.Battery ?? -1;
         /// <summary>
         /// Whether or not thr dualshock controller is charging
         /// </summary>
-        public bool DS4Charging => Global.dev_manager.GetInitializedDevices().OfType<Devices.Dualshock.DualshockDevice>().FirstOrDefault()?.Charging ?? false;
+        public bool DS4Charging => ds4Device?.Charging ?? false;
+        /// <summary>
+        /// Latency of the controller in ms
+        /// </summary>
+        public double DS4Latency => ds4Device?.Latency ?? -1;
         #endregion
 
         #region CPU Properties

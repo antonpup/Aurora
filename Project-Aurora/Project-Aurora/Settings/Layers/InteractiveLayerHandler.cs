@@ -106,6 +106,7 @@ namespace Aurora.Settings.Layers
             this._EffectSpeed = 1.0f;
             this._InteractiveEffect = InteractiveEffects.None;
             this._EffectWidth = 2;
+            this._UsePressBuffer = true;
         }
     }
 

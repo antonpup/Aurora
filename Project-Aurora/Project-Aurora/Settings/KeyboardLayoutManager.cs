@@ -480,7 +480,7 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                LoadBrand(Global.Configuration.KeyboardBrand, Global.Configuration.MousePreference, Global.Configuration.MouseOrientation);
             });
         }
 
@@ -497,7 +497,7 @@ namespace Aurora.Settings
             //Load keyboard layout
             if (Directory.Exists(layoutsPath))
             {
-                PreferredKeyboardLocalization layout = Global.Configuration.keyboard_localization;
+                PreferredKeyboardLocalization layout = Global.Configuration.KeyboardLocalization;
 
                 if (layout == PreferredKeyboardLocalization.iso)
                 {
@@ -792,6 +792,9 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
             else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
+            else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
+                layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
+
             else
             {
                 LoadNone();
@@ -911,6 +914,9 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.OMEN_Vector_Essentials:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
+                        break;
+                    case PreferredMouse.Razer_Mamba_TE:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_mamba_te_features.json");
                         break;
                 }
 
@@ -1214,7 +1220,7 @@ namespace Aurora.Settings
                     keycap = new Control_GhostKeycap(key, image_path);
                 else
                 {
-                    switch (Global.Configuration.virtualkeyboard_keycap_type)
+                    switch (Global.Configuration.VirtualkeyboardKeycapType)
                     {
                         case KeycapType.Default_backglow:
                             keycap = new Control_DefaultKeycapBackglow(key, image_path);

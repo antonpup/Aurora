@@ -39,7 +39,7 @@ namespace Aurora.Settings.Layers
         {
             if (this.DataContext is PercentGradientLayerHandler && !settingsset)
             {
-                this.ComboBox_effect_type.SelectedIndex = (int)(this.DataContext as PercentGradientLayerHandler).Properties._PercentType;
+                this.ComboBox_effect_type.SelectedValue = (this.DataContext as PercentGradientLayerHandler).Properties._PercentType;
                 this.updown_blink_value.Value = (int)((this.DataContext as PercentGradientLayerHandler).Properties._BlinkThreshold * 100);
                 this.CheckBox_threshold_reverse.IsChecked = (this.DataContext as PercentGradientLayerHandler).Properties._BlinkDirection;
                 this.KeySequence_keys.Sequence = (this.DataContext as PercentGradientLayerHandler).Properties._Sequence;
@@ -104,7 +104,7 @@ namespace Aurora.Settings.Layers
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ComboBox)
             {
-                (this.DataContext as PercentGradientLayerHandler).Properties._PercentType = (PercentEffectType)Enum.Parse(typeof(PercentEffectType), (sender as ComboBox).SelectedIndex.ToString());
+                (this.DataContext as PercentGradientLayerHandler).Properties._PercentType = (PercentEffectType)(sender as ComboBox).SelectedValue;
             }
         }
 

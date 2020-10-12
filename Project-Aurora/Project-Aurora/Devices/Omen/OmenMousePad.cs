@@ -25,7 +25,7 @@ namespace Aurora.Devices.Omen
         public static OmenMousePad GetOmenMousePad()
         {
             IntPtr ptr = IntPtr.Zero;
-            switch (Global.Configuration.mouse_preference)
+            switch (Global.Configuration.MousePreference)
             {
                 case PreferredMouse.OMEN_Outpost_Plus_Photon:
                     ptr = OmenLighting_MousePad_OpenByName("Outpost");

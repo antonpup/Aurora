@@ -1,4 +1,5 @@
-﻿using System;
+using Aurora.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,6 +29,11 @@ namespace Aurora.Controls {
         /// Used for drop index detection. Will not work properly if items are different heights.</summary>
         private double itemHeight = 0;
 
+        private ScrollViewer _scrollViewer;
+        public ScrollViewer ScrollViewer => _scrollViewer ??= this.FindChildOfType<ScrollViewer>();
+
+        private Point ApplyScrollOffset(Point p) => new Point(p.X + ScrollViewer.HorizontalOffset, p.Y + ScrollViewer.VerticalOffset);
+
         /// <summary>Get the ListBox style and create a new ReorderableListBox style based on it.</summary>
         /// <remarks>For whatever reason the style isn't inherited from the ListBox, even though we are extending it.</remarks>
         private static Style listBoxStyle = new Style(typeof(ReorderableListBox), Application.Current.TryFindResource(typeof(ListBox)) as Style);
@@ -35,7 +41,6 @@ namespace Aurora.Controls {
         /// <summary>Get the style that is used on ListBoxItems so that when we create a new style for this ReorderableListBox, we can use
         /// this as a base for the items here.</summary>
         private static Style listboxItemStyle = Application.Current.TryFindResource(typeof(ListBoxItem)) as Style;
-
 
         public ReorderableListBox() : base() {
             // We want to use the custom ReorderableListBoxPanel with out ReorderableListBoxes
@@ -82,7 +87,7 @@ namespace Aurora.Controls {
             // Also check that if the developer has specified a "DragElementTag", the original source of the event (the actual clicked element, even if it is
             // inside the element with the attached listener, so in this case a particular object in the item template) has a tag that matches the provided one.
             if (sender is ListBoxItem item && (DragElementTag == null || DragElementTag.Equals((e.OriginalSource as FrameworkElement)?.Tag))) {
-                startDragPoint = e.GetPosition(this);
+                startDragPoint = ApplyScrollOffset(e.GetPosition(this));
                 draggedItem = item;
             }
         }
@@ -94,7 +99,7 @@ namespace Aurora.Controls {
         /// </summary>
         private void ReorderableListBox_MouseMove(object sender, MouseEventArgs e) {
             if (draggedItem != null) {
-                var delta = e.GetPosition(this) - startDragPoint; // Calculate distacne between current mouse point and original mouse down point
+                var delta = ApplyScrollOffset(e.GetPosition(this)) - startDragPoint; // Calculate distacne between current mouse point and original mouse down point
                 if (Math.Abs(delta.X) >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(delta.Y) >= SystemParameters.MinimumVerticalDragDistance) // Check it's moved a certain distance
                     BeginDragDrop();
             }
@@ -125,7 +130,7 @@ namespace Aurora.Controls {
             // Guard to ensure that the drag originated from this list box (if from elsewhere, draggedItem will be null)
             if (draggedItem == null) return;
 
-            var y = e.GetPosition(this).Y; // Y position of the mouse relative to `this` listbox
+            var y = ApplyScrollOffset(e.GetPosition(this)).Y; // Y position of the mouse relative to `this` listbox
             panel.DropIndex = CalculateDropIndex(y); // Calculate the index that the item would be inserted if the user dropped here (and pass to panel for rendering)
             panel.DraggedY = y; // Also pass the relative Y coordinate to the panel, also for rendering
         }
@@ -139,7 +144,7 @@ namespace Aurora.Controls {
 
             var itemData = draggedItem.DataContext; // The actual data for the item that the user dragged is contained within the DataContext of draggedItem
             var oldIndex = Items.IndexOf(draggedItem.DataContext); // Get the old index of the item, based on the current index of the dragged item
-            var newIndex = CalculateDropIndex(e.GetPosition(this).Y); // Get the new index of item, based on the user's mouse's Y location
+            var newIndex = CalculateDropIndex(ApplyScrollOffset(e.GetPosition(this)).Y); // Get the new index of item, based on the user's mouse's Y location
 
             // If the new index is after the old index, we must subtract one from it since it will change when we remove the item from the old index location.
             if (oldIndex < newIndex) newIndex--;

@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace Aurora.Devices.Ducky
 {
-    class DuckyDevice : Device
+    class DuckyDevice : IDevice
     {
         private static string deviceName = "Ducky";
         private bool isInitialized = false;
@@ -27,25 +27,15 @@ namespace Aurora.Devices.Ducky
         byte[] colourMessage = new byte[640], prevColourMessage = new byte[640];
         byte[] colourHeader = { 0x56, 0x83, 0x00 };
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
-        public string GetDeviceName()
-        {
-            return deviceName;
-        }
+        public string DeviceName => deviceName;
 
-        public string GetDeviceDetails()
-        {
-            return deviceName + ": " + (isInitialized ? "Connected" : "Not initialized");
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
         public bool Initialize()
         {
@@ -126,10 +116,7 @@ namespace Aurora.Devices.Ducky
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -174,7 +161,7 @@ namespace Aurora.Devices.Ducky
                 }
             }
 
-            if (!prevColourMessage.SequenceEqual(colourMessage) && IsInitialized())
+            if (!prevColourMessage.SequenceEqual(colourMessage) && IsInitialized)
             {
                 //Everything previous to setting the colours actually just write the colour data to the ColourMessage byte array.
                 /*

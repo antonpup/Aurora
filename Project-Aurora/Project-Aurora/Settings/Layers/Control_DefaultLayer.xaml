@@ -7,6 +7,5 @@
              mc:Ignorable="d">
     <Grid>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Please select a valid layer from above" VerticalAlignment="Top"/>
-
     </Grid>
 </UserControl>

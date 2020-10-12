@@ -9,7 +9,7 @@ using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Devices.ScriptedDevice
 {
-    public class ScriptedDevice : Device
+    public class ScriptedDevice : IDevice
     {
         private bool crashed = false;
         private readonly dynamic script = null;
@@ -41,21 +41,21 @@ namespace Aurora.Devices.ScriptedDevice
             }
         }
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (crashed)
-                return devicename + ": Error!";
+            get
+            {
+                if (crashed)
+                    return "Error!";
 
-            if (isInitialized)
-                return devicename + ": Connected";
-            else
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                    return "Connected";
+                else
+                    return "Not initialized";
+            }
         }
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public bool Initialize()
         {
@@ -83,10 +83,7 @@ namespace Aurora.Devices.ScriptedDevice
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized && !crashed;
-        }
+        public bool IsInitialized => isInitialized && !crashed;
 
         public bool IsKeyboardConnected()
         {
@@ -176,17 +173,17 @@ namespace Aurora.Devices.ScriptedDevice
             return update_result;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (script.GetType().GetMethod("GetRegisteredVariables") != null)
-                return script.GetRegisteredVariables();
-            else
-                return new VariableRegistry();
+            get
+            {
+                if (script.GetType().GetMethod("GetRegisteredVariables") != null)
+                    return script.GetRegisteredVariables();
+                else
+                    return new VariableRegistry();
+            }
         }
     }
 }
