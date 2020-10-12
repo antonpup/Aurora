@@ -21,7 +21,7 @@ using IronPython.Runtime;
 
 namespace Aurora.Devices.RGBFusion
 {
-    public class RGBFusionDevice : Device
+    public class RGBFusionDevice : IDevice
     {
         private string _devicename = "RGB Fusion";
         private bool _isConnected = false;
@@ -241,27 +241,30 @@ namespace Aurora.Devices.RGBFusion
 
         bool _deviceChanged = true;
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (_rgbFusionLedIndexes == null)
+            get
             {
-                _rgbFusionLedIndexes = GetLedIndexes();
-            }
-
-            if (_variableRegistry == null)
-            {
-                var devKeysEnumAsEnumerable = System.Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
-                _variableRegistry = new VariableRegistry();
-                _variableRegistry.Register($"{_devicename}_ignore_leds", "", "Area index to be ignored by RGBFusion Bridge", null, null, "Comma separated. Require Aurora restart.");
-                _variableRegistry.Register($"{_devicename}_custom_args", "", "Custom command line arguments", null, null, "Just for advanced users.");
-                foreach (byte ledIndex in _rgbFusionLedIndexes)
+                if (_rgbFusionLedIndexes == null)
                 {
-                    _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min(), "Require Aurora restart.");
+                    _rgbFusionLedIndexes = GetLedIndexes();
                 }
+
+                if (_variableRegistry == null)
+                {
+                    var devKeysEnumAsEnumerable = System.Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
+                    _variableRegistry = new VariableRegistry();
+                    _variableRegistry.Register($"{_devicename}_ignore_leds", "", "Area index to be ignored by RGBFusion Bridge", null, null, "Comma separated. Require Aurora restart.");
+                    _variableRegistry.Register($"{_devicename}_custom_args", "", "Custom command line arguments", null, null, "Just for advanced users.");
+                    foreach (byte ledIndex in _rgbFusionLedIndexes)
+                    {
+                        _variableRegistry.Register($"{_devicename}_area_" + ledIndex.ToString(), DeviceKeys.ESC, "Key to Use for area index " + ledIndex.ToString(), devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min(), "Require Aurora restart.");
+                    }
+                }
+                _ignoreLedsParam = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_ignore_leds");
+                _customArgs = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_custom_args");
+                return _variableRegistry;
             }
-            _ignoreLedsParam = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_ignore_leds");
-            _customArgs = Global.Configuration.VarRegistry.GetVariable<string>($"{_devicename}_custom_args");
-            return _variableRegistry;
         }
 
         private bool ValidateIgnoreLedParam()
@@ -282,20 +285,11 @@ namespace Aurora.Devices.RGBFusion
             return true;
         }
 
-        public string GetDeviceName()
-        {
-            return _devicename;
-        }
+        public string DeviceName => _devicename;
 
-        public string GetDeviceDetails()
-        {
-            return _devicename + (_isConnected ? ": Connected" : ": Not connected");
-        }
+        public string DeviceDetails => _devicename + (_isConnected ? ": Connected" : ": Not connected");
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (IsConnected() ? _lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (IsConnected() ? _lastUpdateTime + " ms" : "");
 
         public bool Reconnect()
         {
@@ -303,10 +297,7 @@ namespace Aurora.Devices.RGBFusion
             return Initialize();
         }
 
-        public bool IsInitialized()
-        {
-            return IsConnected();
-        }
+        public bool IsInitialized => IsConnected();
 
         public bool IsConnected()
         {
