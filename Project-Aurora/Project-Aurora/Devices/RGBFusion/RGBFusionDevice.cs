@@ -28,7 +28,6 @@ namespace Aurora.Devices.RGBFusion
         private long _lastUpdateTime = 0;
         private Stopwatch _ellapsedTimeWatch = new Stopwatch();
         private VariableRegistry _variableRegistry = null;
-        private DeviceKeys _commitKey;
         private string _RGBFusionDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\GIGABYTE\\RGBFusion\\";
         private List<DeviceMapState> _deviceMap;
         private Color _initialColor = Color.Black;
@@ -41,13 +40,15 @@ namespace Aurora.Devices.RGBFusion
             {"RGBFusionBridge.dll"}
         };
         private const string _RGBFusionExeName = "RGBFusion.exe";
+        private const string _RGBFusionExeName2 = "Check_Kill.exe";
+        private const string _RGBFusionExeName3 = "Check_Live.exe";
         private const string _RGBFusionBridgeExeName = "RGBFusionAuroraListener.exe";
         private const string _defaultProfileFileName = "pro1.xml";
         private const string _defaultExtProfileFileName = "ExtPro1.xml";
         private int _connectRetryCountLeft = _maxConnectRetryCountLeft;
         private bool _starting = false;
         private const int _maxConnectRetryCountLeft = 10;
-        private const int _ConnectRetryTimeOut = 100;
+        private const int _ConnectRetryTimeOut = 220;
 
         private HashSet<byte> _rgbFusionLedIndexes;
 
@@ -67,7 +68,10 @@ namespace Aurora.Devices.RGBFusion
                 }
                 if (IsRGBFusionRunning())
                 {
-                    Global.logger.Error("RGBFusion should be closed before run RGBFusion Bridge.");
+                    Global.logger.Error("RGBFusion is running. Killing it.");
+                    KillProcessByName(_RGBFusionExeName);
+                    KillProcessByName(_RGBFusionExeName2);
+                    KillProcessByName(_RGBFusionExeName3);
                     return false;
                 }
                 if (!IsRGBFusinMainProfileCreated())
@@ -130,11 +134,9 @@ namespace Aurora.Devices.RGBFusion
             try
             {
                 _starting = true;
-                //GetRegisteredVariables();
                 string pStart = _RGBFusionDirectory + _RGBFusionBridgeExeName;
                 string pArgs = _customArgs + " " + (ValidateIgnoreLedParam() ? "--ignoreled:" + _ignoreLedsParam : "");
                 Process.Start(pStart, pArgs);
-                bool state;
                 if (!TestRGBFusionBridgeListener(60))
                 {
                     Global.logger.Error("RGBFusion bridge listener didn't start on " + _RGBFusionDirectory + _RGBFusionBridgeExeName);
@@ -176,7 +178,7 @@ namespace Aurora.Devices.RGBFusion
                 using (var pipe = new NamedPipeClientStream(".", "RGBFusionAuroraListener", PipeDirection.Out))
                 using (var stream = new BinaryWriter(pipe))
                 {
-                    pipe.Connect(100);
+                    pipe.Connect(200);
                     stream.Write(args);
                     return true;
                 }
@@ -235,11 +237,9 @@ namespace Aurora.Devices.RGBFusion
             {
                 _deviceMap.Add(new DeviceMapState(ledIndex, _initialColor, Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{_devicename}_area_" + ledIndex.ToString()))); // Led 255 is equal to set all areas at the same time.
             }
-
-            _commitKey = _deviceMap.Max(k => k.deviceKey);
         }
 
-        bool _deviceChanged = true;
+
 
         public VariableRegistry RegisteredVariables
         {
@@ -326,6 +326,7 @@ namespace Aurora.Devices.RGBFusion
                 return false;
             }
             byte commandIndex = 0;
+            bool deviceChanged = false;
 
             try
             {
@@ -347,29 +348,22 @@ namespace Aurora.Devices.RGBFusion
                             {
                                 // set deviceChanged flag if at least one led changed.
                                 _deviceMap[d] = new DeviceMapState(_deviceMap[d].led, key.Value, _deviceMap[d].deviceKey);
-                                _deviceChanged = true;
+                                deviceChanged = true;
                             }
                         }
                     }
-
-                    if (key.Key == _commitKey)
-                    {
-                        // Send changes to device only if device actually changed.
-                        if (_deviceChanged)
-                        {
-                            commandIndex++;
-                            _setColorCommandDataPacket[(commandIndex - 1) * 6 + 1] = 2;
-                            _setColorCommandDataPacket[(commandIndex - 1) * 6 + 2] = 0;
-                            _setColorCommandDataPacket[(commandIndex - 1) * 6 + 3] = 0;
-                            _setColorCommandDataPacket[(commandIndex - 1) * 6 + 4] = 0;
-                            _setColorCommandDataPacket[(commandIndex - 1) * 6 + 5] = 0;
-                            _setColorCommandDataPacket[(commandIndex - 1) * 6 + 6] = 0;
-                            _setColorCommandDataPacket[0] = commandIndex;
-                            SendCommandToRGBFusion(_setColorCommandDataPacket);
-                        }
-                        commandIndex = 0;
-                        _deviceChanged = false;
-                    }
+                }
+                if (deviceChanged)
+                {
+                    commandIndex++;
+                    _setColorCommandDataPacket[(commandIndex - 1) * 6 + 1] = 2;
+                    _setColorCommandDataPacket[(commandIndex - 1) * 6 + 2] = 0;
+                    _setColorCommandDataPacket[(commandIndex - 1) * 6 + 3] = 0;
+                    _setColorCommandDataPacket[(commandIndex - 1) * 6 + 4] = 0;
+                    _setColorCommandDataPacket[(commandIndex - 1) * 6 + 5] = 0;
+                    _setColorCommandDataPacket[(commandIndex - 1) * 6 + 6] = 0;
+                    _setColorCommandDataPacket[0] = commandIndex;
+                    SendCommandToRGBFusion(_setColorCommandDataPacket);
                 }
                 if (e.Cancel)
                 {
@@ -398,7 +392,6 @@ namespace Aurora.Devices.RGBFusion
             if (_lastUpdateTime > _ConnectRetryTimeOut)
             {
                 _connectRetryCountLeft--;
-                Global.logger.Warn(string.Format("{0} device reseted automatically.", _devicename));
             }
             else if (_lastUpdateTime < _ConnectRetryTimeOut)
             {
