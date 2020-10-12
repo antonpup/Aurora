@@ -48,7 +48,7 @@ namespace Aurora.Devices.RGBFusion
         private int _connectRetryCountLeft = _maxConnectRetryCountLeft;
         private bool _starting = false;
         private const int _maxConnectRetryCountLeft = 10;
-        private const int _ConnectRetryTimeOut = 220;
+        private const int _ConnectRetryTimeOut = 180;
 
         private HashSet<byte> _rgbFusionLedIndexes;
 
