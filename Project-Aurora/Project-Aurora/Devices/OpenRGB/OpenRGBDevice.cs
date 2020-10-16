@@ -35,7 +35,7 @@ namespace Aurora.Devices.OpenRGB
 
             try
             {
-                _openRgb = new OpenRGBClient(ip: "217.224.91.198", name: "Aurora");
+                _openRgb = new OpenRGBClient(ip: "192.168.2.29", name: "Aurora");
                 _openRgb.Connect();
 
                 _devices = _openRgb.GetAllControllerData();
