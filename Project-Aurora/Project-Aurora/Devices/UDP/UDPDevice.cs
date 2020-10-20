@@ -10,15 +10,12 @@ using System.Net.Sockets;
 
 namespace Aurora.Devices.UDP
 {
-    public class UdpDevice : IDevice
+    public class UdpDevice : DefaultDevice
     {
-        public string DeviceName => "UDP";
-        public bool IsInitialized { get; private set; } = false;
-
-        private VariableRegistry defaultRegistry = null;
+        public override string DeviceName => "UDP";
+        public override bool IsInitialized { get; protected set; } = false;
 
         private Stopwatch redrawWatch = new Stopwatch();
-        private Stopwatch updateStopwatch = new Stopwatch();
         private UdpClient udpClient;
 
         private List<IPEndPoint> endpoints;
@@ -26,33 +23,20 @@ namespace Aurora.Devices.UDP
         private int ledCount;
 
         private Color lastColor;
-        private long lastUpdateTime = long.MaxValue;
 
-        public string DeviceDetails => IsInitialized ? "Initialized" : "Not initialized";
-        public string DeviceUpdatePerformance => (IsInitialized ? lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
-            get
-            {
-                if (defaultRegistry == null)
-                {
-                    var devKeysEnumAsEnumerable = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
+            var devKeysEnumAsEnumerable = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
 
-                    defaultRegistry = new VariableRegistry();
-                    defaultRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral, "Key Color to Use",
-                        devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
-                    defaultRegistry.Register($"{DeviceName}_led_count", 300, "LED Count");
-                    defaultRegistry.Register($"{DeviceName}_ip", "", "IP Adresses (Comma separated)");
-                    defaultRegistry.Register($"{DeviceName}_port", 19446, "UDP Port");
-                }
-
-                return defaultRegistry;
-            }
+            variableRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral, "Key Color to Use",
+                    devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
+            variableRegistry.Register($"{DeviceName}_led_count", 300, "LED Count");
+            variableRegistry.Register($"{DeviceName}_ip", "", "IP Adresses (Comma separated)");
+            variableRegistry.Register($"{DeviceName}_port", 19446, "UDP Port");
         }
 
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (IsInitialized) return true;
 
@@ -82,14 +66,7 @@ namespace Aurora.Devices.UDP
             return true;
         }
 
-
-        public void Reset()
-        {
-            Shutdown();
-            Initialize();
-        }
-
-        public void Shutdown()
+        public override void Shutdown()
         {
             endpoints = null;
             udpClient.Dispose(); // udpClient is IDisposable
@@ -99,19 +76,12 @@ namespace Aurora.Devices.UDP
             IsInitialized = false;
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            return UpdateDevice(colorComposition.keyColors, e, forced);
-        }
-
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized) return false;
 
             if (keyColors.ContainsKey(deviceKey))
             {
-                updateStopwatch.Restart();
-
                 var c = keyColors[deviceKey];
                 if (redrawWatch.ElapsedMilliseconds < 1000
                 ) // Only send the color when it changes or a full second has passed
@@ -139,9 +109,6 @@ namespace Aurora.Devices.UDP
                 {
                     udpClient.Send(payload, payload.Length, endpoint);
                 }
-
-                updateStopwatch.Stop();
-                lastUpdateTime = updateStopwatch.ElapsedMilliseconds;
             }
 
             return true;
