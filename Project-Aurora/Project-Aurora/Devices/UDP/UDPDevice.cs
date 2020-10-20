@@ -28,7 +28,7 @@ namespace Aurora.Devices.UDP
         private Color lastColor;
         private long lastUpdateTime = long.MaxValue;
 
-        public string DeviceDetails => DeviceName + (IsInitialized ? ": Initialized" : ": Not initialized");
+        public string DeviceDetails => IsInitialized ? "Initialized" : "Not initialized";
         public string DeviceUpdatePerformance => (IsInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry RegisteredVariables
