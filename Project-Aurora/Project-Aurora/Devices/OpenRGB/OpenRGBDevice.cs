@@ -63,7 +63,7 @@ namespace Aurora.Devices.OpenRGB
                             }
                             else
                             {
-                                _keyMappings[i].Add(DK.NONE);
+                                _keyMappings[i].Add(DK.Peripheral_Logo);
                             }
                         }
                         else if (dev.Type == OpenRGBDeviceType.Mouse)
