@@ -1,11 +1,13 @@
-﻿using System;
+﻿using LibreHardwareMonitor.Hardware;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using LibreHardwareMonitor.Hardware;
 using Computer = LibreHardwareMonitor.Hardware.Computer;
 
 namespace Aurora.Utils
@@ -75,8 +77,16 @@ namespace Aurora.Utils
             }
         }
 
-        public abstract class HardwareUpdater
+        public sealed class Sensor
         {
+            public string Name { get; set; }
+            public int Index { get; set; }
+        }
+
+        public abstract class HardwareUpdater: INotifyPropertyChanged
+        {
+            public event PropertyChangedEventHandler PropertyChanged;
+
             private const int MAX_QUEUE = 8;
             protected IHardware hw;
             protected bool inUse;
@@ -100,7 +110,12 @@ namespace Aurora.Utils
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
+                    {
                         hw?.Update();
+                        // To update Aurora GUI In Hardware Monitor tab
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CPUTemp"));
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CPULoad"));
+                    }
                     if (_updateTimer.Interval != Global.Configuration.HardwareMonitorUpdateRate)
                         _updateTimer.Interval = Global.Configuration.HardwareMonitorUpdateRate;
                 };
@@ -152,6 +167,30 @@ namespace Aurora.Utils
                 _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
                 return result;
             }
+
+            protected List<ISensor> FindSensors(SensorType type)
+            {
+                var result = new List<ISensor>();
+
+                foreach (var sensor in hw.Sensors.OrderBy(s => s.Identifier))
+                {
+                    if (sensor.SensorType == type)
+                    {
+                        sensor.ValuesTimeWindow = TimeSpan.Zero;
+                        _queues.Add(sensor.Identifier, new Queue<float>(MAX_QUEUE));
+                        result.Add(sensor);
+                    }
+                }
+
+                if (result.Count == 0)
+                {
+                    Global.logger.Error(
+                        $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hw.Name} of type {hw.HardwareType}.");
+                    return null;
+                }
+
+                return result;
+            }
         }
 
         public sealed class GPUUpdater : HardwareUpdater
@@ -189,11 +228,13 @@ namespace Aurora.Utils
         public sealed class CPUUpdater : HardwareUpdater
         {
             #region Sensors
-            private readonly ISensor _CPUTemp;
-            public float CPUTemp => GetValue(_CPUTemp);
+            private readonly List<ISensor> _CPUTemp;
+            public List<Sensor> GetSensorsTemp() => _CPUTemp.ConvertAll(x => new Sensor() { Name = x.Name, Index = x.Index });
+            public float CPUTemp => GetValue(_CPUTemp.FirstOrDefault(x => x.Index == Global.Configuration.HardwareMonitorCPUTemperature));
 
-            private readonly ISensor _CPULoad;
-            public float CPULoad => GetValue(_CPULoad);
+            private readonly List<ISensor> _CPULoad;
+            public List<Sensor> GetSensorsLoad() => _CPULoad.ConvertAll(x => new Sensor() { Name = x.Name, Index = x.Index });
+            public float CPULoad => GetValue(_CPULoad.FirstOrDefault(x => x.Index == Global.Configuration.HardwareMonitorCPULoad));
 
             private readonly ISensor _CPUPower;
             public float CPUPower => GetValue(_CPUPower);
@@ -207,8 +248,8 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type CPU");
                     return;
                 }
-                _CPUTemp = FindSensor(SensorType.Temperature);
-                _CPULoad = FindSensor(SensorType.Load);
+                _CPUTemp = FindSensors(SensorType.Temperature);
+                _CPULoad = FindSensors(SensorType.Load);
                 _CPUPower = FindSensor(SensorType.Power);
             }
         }
