@@ -1,4 +1,4 @@
-﻿using HidLibrary;
+using HidLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +51,6 @@ namespace Aurora.Devices.UnifiedHID
 
         public bool SetLogo(byte r, byte g, byte b)
         {
-            SetBottomLed(r, g, b);
             HidReport report = device.CreateReport();
             report.ReportId = 0x00;
             for (int i = 0; i < 64; i++)
