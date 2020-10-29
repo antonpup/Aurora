@@ -13,17 +13,41 @@ namespace Aurora.Devices.UnifiedHID
 {
     class UnifiedHIDDevice : IDevice
     {
-        private string devicename = "UnifiedHID";
+        private string deviceName = "UnifiedHID";
         private bool isInitialized = false;
-        private bool peripheral_updated = false;
-        private readonly object action_lock = new object();
+
+        private readonly object actionLock = new object();
+
+        private VariableRegistry variableRegistry = null;
+
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
-        private VariableRegistry default_registry = null;
 
-        List<ISSDevice> AllDevices = new List<ISSDevice>();
+        List<ISSDevice> allDevices = new List<ISSDevice>();
+        List<ISSDevice> foundDevices = new List<ISSDevice>();
 
+        public string DeviceName => deviceName;
+        public bool IsInitialized => isInitialized;
+        public string DeviceDetails => IsInitialized ? "Initialized" : "Not Initialized";
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
+        public VariableRegistry RegisteredVariables
+        {
+            get
+            {
+                if (variableRegistry == null)
+                {
+                    variableRegistry = new VariableRegistry();
+
+                    variableRegistry.Register($"{DeviceName}_update_interval", 0, "Update interval", null, 0);
+
+                    foreach (ISSDevice device in allDevices)
+                        variableRegistry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {deviceName}");
+                }
+
+                return variableRegistry;
+            }
+        }
 
         public UnifiedHIDDevice()
         {
@@ -46,7 +70,7 @@ namespace Aurora.Devices.UnifiedHID
                 AppDomain.CurrentDomain.GetAssemblies()
                                        .SelectMany(assembly => GetLoadableTypes(assembly))
                                        .Where(type => type.IsSubclassOf(typeof(UnifiedBase))).ToList()
-                                       .ForEach(class_ => AllDevices.Add((ISSDevice)Activator.CreateInstance(class_)));
+                                       .ForEach(class_ => allDevices.Add((ISSDevice)Activator.CreateInstance(class_)));
             }
             catch (Exception exc)
             {
@@ -54,29 +78,29 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        List<ISSDevice> FoundDevices = new List<ISSDevice>();
-
         public bool Initialize()
         {
-            lock (action_lock)
+            lock (actionLock)
             {
                 if (!isInitialized)
                 {
-                    this.FoundDevices.Clear();
+                    this.foundDevices.Clear();
                     try
                     {
-                        foreach (ISSDevice dev in AllDevices)
+                        foreach (ISSDevice dev in allDevices)
                         {
                             if (dev.Connect())
-                                FoundDevices.Add(dev);
+                            {
+                                foundDevices.Add(dev);
+                            }
                         }
                     }
                     catch (Exception e)
                     {
                         Global.logger.Error("UnifiedHID could not be initialized: " + e);
-                        isInitialized = false;
                     }
-                    if (FoundDevices.Count > 0)
+
+                    if (foundDevices.Count > 0)
                         isInitialized = true;
                 }
 
@@ -86,106 +110,55 @@ namespace Aurora.Devices.UnifiedHID
 
         public void Shutdown()
         {
-            lock (action_lock)
+            lock (actionLock)
             {
                 try
                 {
                     if (isInitialized)
                     {
-                        foreach (ISSDevice dev in FoundDevices)
+                        foreach (ISSDevice dev in foundDevices)
                         {
                             dev.Disconnect();
                         }
-                        this.FoundDevices.Clear();
-                        this.Reset();
 
-                        isInitialized = false;
+                        foundDevices.Clear();
                     }
                 }
                 catch (Exception ex)
                 {
                     Global.logger.Error("There was an error shutting down UnifiedHID: " + ex);
-                    isInitialized = false;
                 }
 
+                isInitialized = false;
             }
         }
-
-        public string DeviceDetails => IsInitialized
-            ? "Initialized"
-            : "Not Initialized";
-
-        public string DeviceName => devicename;
 
         public void Reset()
-        {
-            if (this.IsInitialized&& (peripheral_updated))
-            {
-                peripheral_updated = false;
-            }
-        }
-
-        public bool Reconnect()
-        {
-            Shutdown();
-            return Initialize();
-        }
-
-        public bool IsConnected()
-        {
-            return this.isInitialized;
-        }
-
-        public bool IsInitialized => this.isInitialized;
+        { }
 
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (e.Cancel) return false;
             try
             {
-                List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
-
-                foreach (ISSDevice device in FoundDevices)
+                foreach (ISSDevice device in foundDevices)
                 {
-                    if (e.Cancel) return false;
-
-                    if (!device.IsKeyboard)
+                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                     {
-                        foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
-                        {
-                            Color color = (Color)key.Value;
-                            //Apply and strip Alpha
-                            color = Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
+                        if (e.Cancel) return false;
 
-                            if (e.Cancel) return false;
-                            else if (Global.Configuration.AllowPeripheralDevices && !Global.Configuration.DevicesDisableMouse)
-                            {
-                                if (key.Key == DeviceKeys.Peripheral_Logo || key.Key == DeviceKeys.Peripheral_ScrollWheel || key.Key == DeviceKeys.Peripheral_FrontLight)
-                                {
-                                    device.SetLEDColour(key.Key, color.R, color.G, color.B);
-                                }
-                                peripheral_updated = true;
-                            }
-                            else
-                            {
-                                peripheral_updated = false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!Global.Configuration.DevicesDisableKeyboard)
+                        if (Global.Configuration.AllowPeripheralDevices && !Global.Configuration.DevicesDisableMouse)
                         {
-                            device.SetMultipleLEDColour(keyColors);
-                            peripheral_updated = true;
-                        }
-                        else
-                        {
-                            peripheral_updated = false;
+                            if (device.DeviceColorMap.TryGetValue(key.Key, out Color currentColor) && currentColor != key.Value)
+                            {
+                                // Update current colour
+                                device.DeviceColorMap[key.Key] = key.Value;
+
+                                // Set LED colour
+                                device.SetLEDColour(key.Key, key.Value.R, key.Value.G, key.Value.B);
+                            }
                         }
                     }
                 }
-
 
                 return true;
             }
@@ -198,64 +171,44 @@ namespace Aurora.Devices.UnifiedHID
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_update_interval");
 
             watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
+            var lastUpdateTime = watch.ElapsedMilliseconds;
 
-            return update_result;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-            //return false;
-        }
-
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables
-        {
-            get
+            if (lastUpdateTime > sleep)
             {
-                if (default_registry == null)
-                {
-                    default_registry = new VariableRegistry();
-                    foreach (ISSDevice device in AllDevices)
-                    {
-                        default_registry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {devicename}");
-                    }
-                }
-                return default_registry;
+                watch.Restart();
+                this.lastUpdateTime = lastUpdateTime;
+                return UpdateDevice(colorComposition.keyColors, e, forced);
+            }
+            else
+            {
+                watch.Start();
+                return !e.Cancel;
             }
         }
     }
 
     interface ISSDevice
     {
+        Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> DeviceFuncMap { get; }
+        Dictionary<DeviceKeys, Color> DeviceColorMap { get; }
         bool IsConnected { get; }
-        bool IsKeyboard { get; }
         string PrettyName { get; }
         bool Connect();
         bool Disconnect();
         bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue);
-        bool SetMultipleLEDColour(Dictionary<DeviceKeys, Color> keyColors);
     }
 
     abstract class UnifiedBase : ISSDevice
     {
         protected HidDevice device;
-        protected Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> deviceKeyMap;
+
+        public Dictionary<DeviceKeys, Func<byte, byte, byte, bool>> DeviceFuncMap { get; protected set; } = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>();
+        public Dictionary<DeviceKeys, Color> DeviceColorMap { get; protected set; } = new Dictionary<DeviceKeys, Color>();
         public bool IsConnected { get; protected set; } = false;
-        public bool IsKeyboard { get; protected set; } = false;
-        public string PrettyName { get; protected set; }
+        public string PrettyName { get; protected set; } = "";
 
         protected bool Connect(int vendorID, int[] productIDs, short usagePage)
         {
@@ -267,14 +220,25 @@ namespace Aurora.Devices.UnifiedHID
                 {
                     device = devices.First(dev => dev.Capabilities.UsagePage == usagePage);
                     device.OpenDevice();
-                    return (IsConnected = true);
+
+                    DeviceColorMap.Clear();
+
+                    foreach (var key in DeviceFuncMap)
+                    {
+                        // Set black as default color
+                        DeviceColorMap.Add(key.Key, Color.Black);
+                    }
+
+                    IsConnected = true;
                 }
                 catch (Exception exc)
                 {
                     Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
+                    IsConnected = false;
                 }
             }
-            return false;
+
+            return IsConnected;
         }
 
         public abstract bool Connect();
@@ -284,27 +248,22 @@ namespace Aurora.Devices.UnifiedHID
             try
             {
                 device.CloseDevice();
-                return true;
+                IsConnected = false;
             }
             catch
             {
-                return false;
+                IsConnected = true;
             }
+
+            return !IsConnected;
         }
 
         public virtual bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
         {
-            if (this.deviceKeyMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
+            if (IsConnected && DeviceFuncMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
                 return func.Invoke(red, green, blue);
 
             return false;
         }
-
-        public virtual bool SetMultipleLEDColour(Dictionary<DeviceKeys, Color> keyColors)
-        {
-            return false;
-        }
-
     }
-
 }

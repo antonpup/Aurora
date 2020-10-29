@@ -1,4 +1,4 @@
-using HidLibrary;
+﻿using HidLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Aurora.Devices.UnifiedHID
         public AsusPugio()
         {
             PrettyName = "Asus Pugio";
-            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
                 { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel },
@@ -27,7 +27,7 @@ namespace Aurora.Devices.UnifiedHID
                 return false;
             }
 
-            return this.Connect(0x0b05, new[] { 0x1846, 0x1847 }, unchecked((short)0xFFFFFF01));
+            return Connect(0x0b05, new[] { 0x1846, 0x1847 }, unchecked((short)0xFFFFFF01));
         }
 
         public bool SetScrollWheel(byte r, byte g, byte b)
@@ -87,5 +87,4 @@ namespace Aurora.Devices.UnifiedHID
             return device.WriteReport(report);
         }
     }
-
 }
