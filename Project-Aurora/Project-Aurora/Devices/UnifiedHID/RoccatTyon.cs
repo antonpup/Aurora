@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.UnifiedHID
 {
-
     internal class RoccatTyon : UnifiedBase
     {
         private static HidDevice ctrl_device_leds;
@@ -18,6 +17,11 @@ namespace Aurora.Devices.UnifiedHID
         public RoccatTyon()
         {
             PrettyName = "Roccat Tyon";
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            {
+                { DeviceKeys.Peripheral_ScrollWheel, SetColour },
+                { DeviceKeys.Peripheral_FrontLight, SetColour }
+            };
         }
 
         private bool InitMouseColor()
@@ -37,6 +41,7 @@ namespace Aurora.Devices.UnifiedHID
                 else
                     return false;
             }
+
             return false;
         }
 
@@ -46,23 +51,32 @@ namespace Aurora.Devices.UnifiedHID
             {
                 return false;
             }
+
             IEnumerable<HidDevice> devices = HidDevices.Enumerate(0x1E7D, new int[] { 0x2E4A });
+
             try
             {
                 if (devices.Count() > 0)
                 {
-                    ctrl_device_leds = devices.First(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0002);
                     ctrl_device = devices.First(dev => dev.Capabilities.FeatureReportByteLength > 50);
+                    ctrl_device_leds = devices.First(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0002);
+
                     ctrl_device.OpenDevice();
                     ctrl_device_leds.OpenDevice();
+
                     bool success = InitMouseColor() && WaitCtrlDevice();
+
                     if (!success)
                     {
                         Global.logger.LogLine($"Roccat Tyon Could not connect\n", Logging_Level.Error);
                         ctrl_device.CloseDevice();
                         ctrl_device_leds.CloseDevice();
                     }
-                    Global.logger.LogLine($"Roccat Tyon Connected\n", Logging_Level.Info);
+                    else
+                    {
+                        Global.logger.LogLine($"Roccat Tyon connected\n", Logging_Level.Info);
+                    }
+
                     return (IsConnected = success);
                 }
             }
@@ -70,6 +84,7 @@ namespace Aurora.Devices.UnifiedHID
             {
                 Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
             }
+
             return false;
         }
 
@@ -80,38 +95,42 @@ namespace Aurora.Devices.UnifiedHID
             {
                 ctrl_device.CloseDevice();
                 ctrl_device_leds.CloseDevice();
+
                 return true;
             }
             catch (Exception exc)
             {
                 Global.logger.LogLine($"Error when attempting to close UnifiedHID device:\n{exc}", Logging_Level.Error);
             }
+
             return false;
         }
 
-        public override bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
+        // TODO: Set diffent colour for wheel and bottom led ?
+        public bool SetColour(byte r, byte g, byte b)
         {
             try
             {
-                if (!this.IsConnected)
+                if (!IsConnected)
                     return false;
 
                 byte[] hwmap =
                 {
-                    red,
-                    green,
-                    blue,
+                    r,
+                    g,
+                    b,
                     0x00,
                     0x00,
-                    red,
-                    green,
-                    blue,
+                    r,
+                    g,
+                    b,
                     0x00,
                     0x80,
                     0x80
                 };
 
                 byte[] workbuf = new byte[30];
+
                 Array.Copy(controlPacket, 0, workbuf, 0, controlPacket.Length);
                 Array.Copy(hwmap, 0, workbuf, controlPacket.Length, hwmap.Length);
 
