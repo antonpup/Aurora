@@ -265,11 +265,14 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,7,0" Text="Hardware sensors update rate:" ToolTip="Used for CPU and GPU usage, etc" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <xctk:IntegerUpDown Grid.Column="1" Grid.Row="0" Value="{Binding HardwareMonitorUpdateRate}" Minimum="100" Maximum="2000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <CheckBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" FlowDirection="RightToLeft" IsChecked="{Binding HardwareMonitorUseAverageValues}" Content="Use average hardware sensor values instead of real-time ones" ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,7,0" Text="Maximum queue size for average values:" ToolTip="Used for CPU temp and load" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <xctk:IntegerUpDown Grid.Column="1" Grid.Row="1" Value="{Binding HardwareMonitorMaxQueue}" Minimum="8" Maximum="2000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <CheckBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" FlowDirection="RightToLeft" IsChecked="{Binding HardwareMonitorUseAverageValues}" Content="Use average hardware sensor values instead of real-time ones" ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
                 </Grid>
             </Grid>
         </TabItem>

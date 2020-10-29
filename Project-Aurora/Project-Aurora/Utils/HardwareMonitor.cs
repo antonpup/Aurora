@@ -1,4 +1,4 @@
-﻿using LibreHardwareMonitor.Hardware;
+using LibreHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -83,11 +83,11 @@ namespace Aurora.Utils
             public int Index { get; set; }
         }
 
-        public abstract class HardwareUpdater: INotifyPropertyChanged
+        public abstract class HardwareUpdater : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler PropertyChanged;
 
-            private const int MAX_QUEUE = 8;
+            private int maxQueue = 0;
             protected IHardware hw;
             protected bool inUse;
 
@@ -97,6 +97,8 @@ namespace Aurora.Utils
 
             protected HardwareUpdater()
             {
+                maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
+
                 _queues = new Dictionary<Identifier, Queue<float>>();
                 _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
@@ -125,18 +127,27 @@ namespace Aurora.Utils
             protected float GetValue(ISensor sensor)
             {
                 inUse = true;
+
                 _useTimer.Stop();
                 _useTimer.Start();
 
                 if (!_queues.TryGetValue(sensor.Identifier, out var values))
                     return 0;
 
-                if (values.Count == MAX_QUEUE)
+                // Update queue capacity
+                if (maxQueue != Global.Configuration.HardwareMonitorMaxQueue)
+                {
+                    maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
+                    _queues[sensor.Identifier] = new Queue<float>(maxQueue);
+                }
+
+                if (values.Count == maxQueue)
                     values.Dequeue();
+
                 values.Enqueue(sensor?.Value ?? 0);
 
                 return Global.Configuration.HardwareMonitorUseAverageValues ?
-                    values.Average() : 
+                    values.Average() :
                     sensor?.Value ?? 0;
             }
 
@@ -150,7 +161,7 @@ namespace Aurora.Utils
                     return null;
                 }
                 result.ValuesTimeWindow = TimeSpan.Zero;
-                _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
+                _queues.Add(result.Identifier, new Queue<float>(maxQueue));
                 return result;
             }
 
@@ -164,7 +175,7 @@ namespace Aurora.Utils
                     return null;
                 }
                 result.ValuesTimeWindow = TimeSpan.Zero;
-                _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
+                _queues.Add(result.Identifier, new Queue<float>(maxQueue));
                 return result;
             }
 
@@ -177,7 +188,7 @@ namespace Aurora.Utils
                     if (sensor.SensorType == type)
                     {
                         sensor.ValuesTimeWindow = TimeSpan.Zero;
-                        _queues.Add(sensor.Identifier, new Queue<float>(MAX_QUEUE));
+                        _queues.Add(sensor.Identifier, new Queue<float>(maxQueue));
                         result.Add(sensor);
                     }
                 }

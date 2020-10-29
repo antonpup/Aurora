@@ -512,6 +512,7 @@ namespace Aurora.Settings
 
         //Hardware Monitor
         public int HardwareMonitorUpdateRate { get; set; } = 500;
+        public int HardwareMonitorMaxQueue { get; set; } = 8;
         public bool HardwareMonitorUseAverageValues { get; set; } = true;
         public int HardwareMonitorCPUTemperature { get; set; } = 0;
         public int HardwareMonitorCPULoad { get; set; } = 0;
