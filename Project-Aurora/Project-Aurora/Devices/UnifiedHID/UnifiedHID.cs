@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using HidLibrary;
 using System.ComponentModel;
 using System.Reflection;
+using Aurora.Utils;
 
 namespace Aurora.Devices.UnifiedHID
 {
@@ -40,6 +41,8 @@ namespace Aurora.Devices.UnifiedHID
                     variableRegistry = new VariableRegistry();
 
                     variableRegistry.Register($"{DeviceName}_update_interval", 0, "Update interval", null, 0);
+                    variableRegistry.Register($"{DeviceName}_enable_shutdown_color", false, "Enable shutdown color");
+                    variableRegistry.Register($"{DeviceName}_shutdown_color", new Utils.RealColor(Color.FromArgb(255, 255, 255, 255)), "Shutdown color");
 
                     foreach (ISSDevice device in allDevices)
                         variableRegistry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {deviceName}");
@@ -116,8 +119,17 @@ namespace Aurora.Devices.UnifiedHID
                 {
                     if (isInitialized)
                     {
+                        var enableShutdownColor = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_shutdown_color");
+                        var shutdownColor = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_shutdown_color").GetDrawingColor();
+
                         foreach (ISSDevice dev in foundDevices)
                         {
+                            foreach (var map in dev.DeviceFuncMap)
+                            {
+                                if (enableShutdownColor)
+                                    map.Value.Invoke(shutdownColor.R, shutdownColor.G, shutdownColor.B);
+                            }
+
                             dev.Disconnect();
                         }
 
