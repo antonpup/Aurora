@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using Computer = LibreHardwareMonitor.Hardware.Computer;
 
 namespace Aurora.Utils
 {
@@ -87,19 +86,20 @@ namespace Aurora.Utils
         {
             public event PropertyChangedEventHandler PropertyChanged;
 
-            private int maxQueue = 0;
+            protected int maxQueue = 0;
             protected IHardware hw;
             protected bool inUse;
 
-            private readonly Timer _useTimer;
-            private readonly Timer _updateTimer;
-            private readonly Dictionary<Identifier, Queue<float>> _queues;
+            protected readonly Timer _useTimer; // Check if hw is used
+            protected readonly Timer _updateTimer; // Update sensor value
+            protected readonly Dictionary<Identifier, Queue<float>> _queues;
 
             protected HardwareUpdater()
             {
                 maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
 
                 _queues = new Dictionary<Identifier, Queue<float>>();
+
                 _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
                 {
@@ -112,17 +112,15 @@ namespace Aurora.Utils
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     if (inUse)
-                    {
                         hw?.Update();
-                        // To update Aurora GUI In Hardware Monitor tab
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CPUTemp"));
-                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CPULoad"));
-                    }
+
                     if (_updateTimer.Interval != Global.Configuration.HardwareMonitorUpdateRate)
                         _updateTimer.Interval = Global.Configuration.HardwareMonitorUpdateRate;
                 };
                 _updateTimer.Start();
             }
+
+            protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
             protected float GetValue(ISensor sensor)
             {
@@ -131,24 +129,32 @@ namespace Aurora.Utils
                 _useTimer.Stop();
                 _useTimer.Start();
 
+                float value = sensor?.Value ?? 0;
+
                 if (!_queues.TryGetValue(sensor.Identifier, out var values))
-                    return 0;
+                    return value;
 
-                // Update queue capacity
-                if (maxQueue != Global.Configuration.HardwareMonitorMaxQueue)
+                // Prevent collection from being modified while enumerating
+                lock (values)
                 {
-                    maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
-                    _queues[sensor.Identifier] = new Queue<float>(maxQueue);
+                    // Try to fix invalid reading
+                    if (value == 0)
+                        value = values.LastOrDefault();
+
+                    // Update queue capacity
+                    if (maxQueue != Global.Configuration.HardwareMonitorMaxQueue)
+                    {
+                        maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
+                        _queues[sensor.Identifier] = new Queue<float>(maxQueue);
+                    }
+
+                    if (values.Count == maxQueue)
+                        values.Dequeue();
+
+                    values.Enqueue(value);
+
+                    return Global.Configuration.HardwareMonitorUseAverageValues ? values.Average() : value;
                 }
-
-                if (values.Count == maxQueue)
-                    values.Dequeue();
-
-                values.Enqueue(sensor?.Value ?? 0);
-
-                return Global.Configuration.HardwareMonitorUseAverageValues ?
-                    values.Average() :
-                    sensor?.Value ?? 0;
             }
 
             protected ISensor FindSensor(string identifier)
@@ -259,9 +265,17 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type CPU");
                     return;
                 }
+
                 _CPUTemp = FindSensors(SensorType.Temperature);
                 _CPULoad = FindSensors(SensorType.Load);
                 _CPUPower = FindSensor(SensorType.Power);
+
+                _updateTimer.Elapsed += (a, b) =>
+                {
+                    // To update Aurora GUI In Hardware Monitor tab
+                    NotifyPropertyChanged("CPUTemp");
+                    NotifyPropertyChanged("CPULoad");
+                };
             }
         }
 
@@ -301,9 +315,9 @@ namespace Aurora.Utils
             public float DownloadSpeedBytes => GetValue(_DownloadSpeed);
             #endregion
 
-            public NETUpdater(IEnumerable<IHardware> hws)
+            public NETUpdater(IEnumerable<IHardware> hardware)
             {
-                hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Network);
+                hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Network);
                 if (hw is null)
                 {
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type Network");
