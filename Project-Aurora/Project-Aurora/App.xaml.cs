@@ -149,6 +149,8 @@ namespace Aurora
         private static int delayTime = 5000;
         private static bool ignore_update = false;
 
+        private static bool isClosing = false;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -433,6 +435,55 @@ namespace Aurora
             }
         }
 
+        protected override void OnSessionEnding(SessionEndingCancelEventArgs e)
+        {
+            base.OnSessionEnding(e);
+            CloseAurora();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            CloseAurora();
+        }
+
+        private void CloseAurora()
+        {
+            if (!isClosing)
+            {
+                isClosing = true;
+
+                Global.LightingStateManager?.SaveAll();
+                Global.PluginManager?.SaveSettings();
+
+                if (Global.Configuration != null)
+                    ConfigManager.Save(Global.Configuration);
+
+                Global.key_recorder?.Dispose();
+                Global.InputEvents?.Dispose();
+                Global.LightingStateManager?.Dispose();
+                Global.net_listener?.Stop();
+                Global.dev_manager?.ShutdownDevices();
+
+                try
+                {
+                    Global.razerSdkManager?.Dispose();
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.Fatal("RzSdkManager failed to dispose!");
+                    Global.logger.Fatal(exc.ToString());
+                }
+
+                InputInterceptor?.Dispose();
+
+                LogManager.Shutdown();
+
+                // Close Aurora
+                Environment.Exit(0);
+            }
+        }
+
         private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)
         {
             if (eventArgs.PropertyName == nameof(Global.Configuration.UseVolumeAsBrightness))
@@ -470,48 +521,6 @@ namespace Aurora
                 }
                 );
             }
-        }
-        protected override void OnExit(ExitEventArgs e)
-        {
-            base.OnExit(e);
-            Global.LightingStateManager.SaveAll();
-            Global.PluginManager.SaveSettings();
-
-            if (Global.Configuration != null)
-                ConfigManager.Save(Global.Configuration);
-
-            Global.key_recorder?.Dispose();
-            Global.InputEvents?.Dispose();
-            Global.LightingStateManager?.Dispose();
-            Global.net_listener?.Stop();
-            Global.dev_manager?.ShutdownDevices();
-
-            try
-            {
-                Global.razerSdkManager?.Dispose();
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Fatal("RazerManager failed to dispose!");
-                Global.logger.Fatal(exc.ToString());
-            }
-
-            InputInterceptor?.Dispose();
-
-            try
-            {
-                foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
-                {
-                    proc.Kill();
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
-            }
-
-            LogManager.Shutdown();
-            Environment.Exit(0);
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
