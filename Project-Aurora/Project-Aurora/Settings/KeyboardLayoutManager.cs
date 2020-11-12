@@ -736,6 +736,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
+            else if (keyboard_preference == PreferredKeyboard.Cooler_Master_SK650)
+                layoutConfigPath = Path.Combine(layoutsPath, "cooler_master_sk650.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -1023,6 +1025,32 @@ namespace Aurora.Settings
             keytext.Remove(DeviceKeys.ADDITIONALLIGHT30);
             keytext.Remove(DeviceKeys.ADDITIONALLIGHT31);
             keytext.Remove(DeviceKeys.ADDITIONALLIGHT32);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT32);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT33);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT34);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT35);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT36);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT37);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT38);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT39);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT40);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT41);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT42);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT43);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT44);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT45);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT46);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT47);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT48);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT49);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT50);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT51);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT52);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT53);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT54);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT55);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT56);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT57);
             keytext.Remove(DeviceKeys.LEFT_CONTROL);
             keytext.Remove(DeviceKeys.LEFT_WINDOWS);
             keytext.Remove(DeviceKeys.LEFT_ALT);
