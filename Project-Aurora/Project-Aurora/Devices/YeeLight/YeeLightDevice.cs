@@ -23,7 +23,7 @@ namespace Aurora.Devices.YeeLight
 
         private const int lightListenPort = 55443;
         private readonly Stopwatch updateDelayStopWatch = new Stopwatch();
-        private YeeLightAPI.YeeLightDevice light = new YeeLightAPI.YeeLightDevice();
+        private List<YeeLightAPI.YeeLightDevice> lights = new List<YeeLightAPI.YeeLightDevice>();
 
         public override bool Initialize()
         {
@@ -31,11 +31,49 @@ namespace Aurora.Devices.YeeLight
             {
                 try
                 {
-                    Connect(IPAddress.Parse(Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP")));
+                    lights.Clear();
+
+                    var IPListString = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP");
+                    var lightIPList = new List<IPAddress>();
+
+                    //Auto discover a device if the IP is empty and auto-discovery is enabled
+                    if (string.IsNullOrWhiteSpace(IPListString) && Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_discovery"))
+                    {
+                        var devices = DeviceLocator.DiscoverDevices(10000, 2);
+                        if (!devices.Any())
+                        {
+                            throw new Exception("Auto-discovery is enabled but no devices have been located.");
+                        }
+
+                        lightIPList.AddRange(devices.Select(v => v.GetLightIPAddressAndPort().ipAddress));
+                    }
+                    else
+                    {
+                        lightIPList = IPListString.Split(new[] { ',' }).Select(x => IPAddress.Parse(x.Replace(" ", ""))).ToList();
+                        if (lightIPList.Count == 0)
+                        {
+                            throw new Exception("Device IP list is empty.");
+                        }
+                    }
+
+                    for (int i = 0; i < lightIPList.Count; i++)
+                    {
+                        IPAddress ipaddr = lightIPList[i];
+                        try
+                        {
+                            ConnectNewDevice(ipaddr);
+                        }
+                        catch (Exception exc)
+                        {
+                            LogError($"Encountered an error while connecting to the {i}. light. Exception: {exc}");
+                        }
+                    }
+
+                    IsInitialized = lights.All(x => x.IsConnected());
                 }
                 catch (Exception exc)
                 {
-                    LogError($"Encountered an error while connecting. Exception: {exc}");
+                    LogError($"Encountered an error while initializing. Exception: {exc}");
                     IsInitialized = false;
 
                     return false;
@@ -47,10 +85,12 @@ namespace Aurora.Devices.YeeLight
 
         public override void Shutdown()
         {
-            if (light.IsConnected())
+            foreach (var light in lights.Where(x => x.IsConnected()))
             {
                 light.CloseConnection();
             }
+
+            lights.Clear();
 
             IsInitialized = false;
 
@@ -77,7 +117,7 @@ namespace Aurora.Devices.YeeLight
 
             if ((targetColor.R + targetColor.G + targetColor.B) > 0)
             {
-                light.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                lights.ForEach(x => x.SetColor(targetColor.R, targetColor.G, targetColor.B));
                 updateDelayStopWatch.Restart();
             }
 
@@ -90,53 +130,39 @@ namespace Aurora.Devices.YeeLight
 
             variableRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
             variableRegistry.Register($"{DeviceName}_send_delay", 35, "Send delay (ms)");
-            variableRegistry.Register($"{DeviceName}_IP", "0.0.0.0", "YeeLight IP", null, null, "If set to 0.0.0.0 and auto-discovery is enabled, it will try to discover a YeeLight and connect to it.");
-            variableRegistry.Register($"{DeviceName}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and set IP to 0.0.0.0 to auto-discover a light.");
+            variableRegistry.Register($"{DeviceName}_IP", "", "YeeLight IP(s)", null, null, "Comma separated IPv4 or IPv6 addresses.");
+            variableRegistry.Register($"{DeviceName}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and empty out the IP field to auto-discover lights.");
         }
 
-        private void Connect(IPAddress lightIP)
+        private void ConnectNewDevice(IPAddress lightIP)
         {
-            if (light.IsConnected())
+            if (lights.Any(x => x.IsConnected() && x.GetLightIPAddressAndPort().ipAddress == lightIP))
             {
                 return;
             }
 
-            //Can't reconnect using same device class instance
-            light = new YeeLightAPI.YeeLightDevice();
+            var light = new YeeLightAPI.YeeLightDevice();
+            light.SetLightIPAddressAndPort(lightIP, YeeLightAPI.YeeLightConstants.Constants.DefaultCommandPort);
 
-            //Auto discover a device if the IP is 0.0.0.0 and auto-discovery is enabled
-            if (lightIP.Equals(IPAddress.Parse("0.0.0.0")) && Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_discovery"))
-            {
-                var devices = DeviceLocator.DiscoverDevices(10000, 2);
-                if (devices.Any())
-                {
-                    light = devices.First();
-                    lightIP = light.GetLightIPAddressAndPort().ipAddress;
-                    Global.Configuration.VarRegistry.SetVariable($"{DeviceName}_IP", lightIP.ToString());
-                }
-                else
-                {
-                    throw new Exception("IP address is set to 0.0.0.0 and auto-discovery is enabled but no devices have been located.");
-                }
-            }
-            //If it isn't then set the IP to the provided IP address
-            else
-            {
-                light.SetLightIPAddressAndPort(lightIP, YeeLightAPI.YeeLightConstants.Constants.DefaultCommandPort);
-            }
+            LightConnectAndEnableMusicMode(light);
 
-            IPAddress localIP;
+            lights.Add(light);
+        }
+
+        private void LightConnectAndEnableMusicMode(YeeLightAPI.YeeLightDevice light)
+        {
             int localMusicModeListenPort = GetFreeTCPPort(); // This can be any free port
 
+            IPAddress localIP;
             using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
             {
+                var lightIP = light.GetLightIPAddressAndPort().ipAddress;
                 socket.Connect(lightIP, lightListenPort);
                 localIP = ((IPEndPoint)socket.LocalEndPoint).Address;
             }
 
             light.Connect();
             light.SetMusicMode(localIP, (ushort)localMusicModeListenPort, true);
-            IsInitialized = light.IsConnected();
         }
 
         private int GetFreeTCPPort()
