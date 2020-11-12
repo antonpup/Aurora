@@ -17,6 +17,10 @@ namespace Aurora.Devices.Logitech
         public override string DeviceName => "Logitech";
 
         private readonly byte[] logitechBitmap = new byte[LogitechGSDK.LOGI_LED_BITMAP_SIZE];
+        private Color speakers;
+        private Color mousepad;
+        private readonly Color[] mouse = new Color[2];
+        private readonly Color[] headset = new Color[2];
 
         public override bool Initialize()
         {
@@ -59,8 +63,21 @@ namespace Aurora.Devices.Logitech
             if (!IsInitialized)
                 return false;
 
+            //reset keys to peripheral_logo here so if we dont find any better color for them,
+            //at least the leds wont turn off :)
+            if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var periph))
+            {
+                speakers = periph;
+                mousepad = periph;
+                mouse[0] = periph;
+                mouse[1] = periph;
+                headset[0] = periph;
+                headset[1] = periph;
+            }
+
             foreach (var key in keyColors)
             {
+                #region keyboard
                 if (LedMaps.BitmapMap.TryGetValue(key.Key, out var index))
                 {
                     logitechBitmap[index] = key.Value.B;
@@ -68,24 +85,59 @@ namespace Aurora.Devices.Logitech
                     logitechBitmap[index + 2] = key.Value.R;
                     logitechBitmap[index + 3] = key.Value.A;
                 }
+
                 if (!Global.Configuration.DevicesDisableKeyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
                     IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
+                #endregion
+
+                #region peripherals
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
                 {
-                    if ((peripheral.type == DeviceType.Headset && !Global.Configuration.DevicesDisableHeadset)
-                    || (peripheral.type == DeviceType.Mouse && !Global.Configuration.DevicesDisableMouse))
+                    switch (peripheral.type)
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                        case DeviceType.Mouse:
+                            mouse[peripheral.zone] = key.Value;
+                            break;
+                        case DeviceType.Mousemat:
+                            mousepad = key.Value;
+                            break;
+                        case DeviceType.Headset:
+                            headset[peripheral.zone] = key.Value;
+                            break;
+                        case DeviceType.Speaker:
+                            speakers = key.Value;
+                            break;
                     }
                 }
+                #endregion
+            }
 
-                //TargetZone returns false if the targer device does not have the zone with the specified index
-                //so we'll not use it to check the connection is still active.
-                //The other methods only seem to return false if the connection to LGS / GHUB fails
+            if (!Global.Configuration.DevicesDisableMouse)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Mouse, i, mouse[i]);
+                }
+
+                LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Mousemat, 0, mousepad);
+            }
+            if (!Global.Configuration.DevicesDisableHeadset)
+            {
+                for (int i = 0; i < headset.Length; i++)
+                {
+                    LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Headset, i, headset[i]);
+                }
+
+                for (int i = 0; i < 4; i++)//speakers have 4 leds
+                {
+                    LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Speaker, i, speakers);
+                }
             }
 
             if (!Global.Configuration.DevicesDisableKeyboard)
+            {
                 IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
+            }
 
             return IsInitialized;
         }
