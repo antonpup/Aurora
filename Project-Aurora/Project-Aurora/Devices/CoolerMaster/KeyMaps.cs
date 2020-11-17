@@ -610,7 +610,7 @@ namespace Aurora.Devices.CoolerMaster
             [DK.SPACE] = (5, 6),
             [DK.RIGHT_ALT] = (5, 10),
             [DK.RIGHT_WINDOWS] = (5, 11),
-            [DK.FN_Key] = (5, 12),
+            [DK.APPLICATION_SELECT] = (5, 12),
             [DK.RIGHT_CONTROL] = (5, 14),
             [DK.ARROW_LEFT] = (5, 15),
             [DK.ARROW_DOWN] = (5, 16),
