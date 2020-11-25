@@ -516,8 +516,8 @@ namespace Aurora.Settings
         public bool HardwareMonitorUseAverageValues { get; set; } = true;
         public int HardwareMonitorCPUTemperature { get; set; } = 0;
         public int HardwareMonitorCPULoad { get; set; } = 0;
-        public List<Sensor> HardwareMonitorCPUTemperatureList => CPU.GetSensorsTemp();
-        public List<Sensor> HardwareMonitorCPULoadList => CPU.GetSensorsLoad();
+        [JsonIgnore] public List<Sensor> HardwareMonitorCPUTemperatureList => CPU.GetSensorsTemp();
+        [JsonIgnore] public List<Sensor> HardwareMonitorCPULoadList => CPU.GetSensorsLoad();
 
         public VariableRegistry VarRegistry { get; set; } = new VariableRegistry();
 

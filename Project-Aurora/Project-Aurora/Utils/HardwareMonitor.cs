@@ -84,8 +84,6 @@ namespace Aurora.Utils
 
         public abstract class HardwareUpdater : INotifyPropertyChanged
         {
-            public event PropertyChangedEventHandler PropertyChanged;
-
             protected int maxQueue = 0;
             protected IHardware hw;
             protected bool inUse;
@@ -120,10 +118,11 @@ namespace Aurora.Utils
                 _updateTimer.Start();
             }
 
-            protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
             protected float GetValue(ISensor sensor)
             {
+                if (sensor is null)
+                    return 0;
+
                 inUse = true;
 
                 _useTimer.Stop();
@@ -153,7 +152,9 @@ namespace Aurora.Utils
 
                     values.Enqueue(value);
 
-                    return Global.Configuration.HardwareMonitorUseAverageValues ? values.Average() : value;
+                    return Global.Configuration.HardwareMonitorUseAverageValues
+                                ? values.Average()
+                                : value;
                 }
             }
 
@@ -189,14 +190,11 @@ namespace Aurora.Utils
             {
                 var result = new List<ISensor>();
 
-                foreach (var sensor in hw.Sensors.OrderBy(s => s.Identifier))
+                foreach (var sensor in hw.Sensors.Where(s => s.SensorType == type).OrderBy(s => s.Identifier))
                 {
-                    if (sensor.SensorType == type)
-                    {
-                        sensor.ValuesTimeWindow = TimeSpan.Zero;
-                        _queues.Add(sensor.Identifier, new Queue<float>(maxQueue));
-                        result.Add(sensor);
-                    }
+                    sensor.ValuesTimeWindow = TimeSpan.Zero;
+                    _queues.Add(sensor.Identifier, new Queue<float>(maxQueue));
+                    result.Add(sensor);
                 }
 
                 if (result.Count == 0)
@@ -208,6 +206,11 @@ namespace Aurora.Utils
 
                 return result;
             }
+
+            #region PropertyChanged
+            public event PropertyChangedEventHandler PropertyChanged;
+            protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            #endregion
         }
 
         public sealed class GPUUpdater : HardwareUpdater
@@ -273,8 +276,8 @@ namespace Aurora.Utils
                 _updateTimer.Elapsed += (a, b) =>
                 {
                     // To update Aurora GUI In Hardware Monitor tab
-                    NotifyPropertyChanged("CPUTemp");
-                    NotifyPropertyChanged("CPULoad");
+                    NotifyPropertyChanged(nameof(CPUTemp));
+                    NotifyPropertyChanged(nameof(CPULoad));
                 };
             }
         }
