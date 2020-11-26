@@ -102,6 +102,12 @@
     <None Update="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="RGBFusionBridge\RGBFusionAuroraListener.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="RGBFusionBridge\RGBFusionBridge.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
