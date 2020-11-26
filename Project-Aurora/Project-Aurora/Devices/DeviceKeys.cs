@@ -1424,6 +1424,157 @@ namespace Aurora.Devices
         PERIPHERAL_DPI = 237,
 
         /// <summary>
+        /// Additional Light 33
+        /// </summary>
+        [Description("Additional Light 33")]
+        ADDITIONALLIGHT33 = 250,
+
+
+        /// <summary>
+        /// Additional Light 34
+        /// </summary>
+        [Description("Additional Light 34")]
+        ADDITIONALLIGHT34 = 251,
+
+        /// <summary>
+        /// Additional Light 35
+        /// </summary>
+        [Description("Additional Light 35")]
+        ADDITIONALLIGHT35 = 252,
+
+        /// <summary>
+        /// Additional Light 36
+        /// </summary>
+        [Description("Additional Light 36")]
+        ADDITIONALLIGHT36 = 253,
+
+        /// <summary>
+        /// Additional Light 37
+        /// </summary>
+        [Description("Additional Light 37")]
+        ADDITIONALLIGHT37 = 254,
+
+        /// <summary>
+        /// Additional Light 38
+        /// </summary>
+        [Description("Additional Light 38")]
+        ADDITIONALLIGHT38 = 255,
+
+        /// <summary>
+        /// Additional Light 39
+        /// </summary>
+        [Description("Additional Light 39")]
+        ADDITIONALLIGHT39 = 256,
+
+        /// <summary>
+        /// Additional Light 40
+        /// </summary>
+        [Description("Additional Light 40")]
+        ADDITIONALLIGHT40 = 257,
+
+        /// <summary>
+        /// Additional Light 41
+        /// </summary>
+        [Description("Additional Light 41")]
+        ADDITIONALLIGHT41 = 258,
+
+        /// <summary>
+        /// Additional Light 42
+        /// </summary>
+        [Description("Additional Light 42")]
+        ADDITIONALLIGHT42 = 259,
+
+        /// <summary>
+        /// Additional Light 43
+        /// </summary>
+        [Description("Additional Light 43")]
+        ADDITIONALLIGHT43 = 260,
+
+        /// <summary>
+        /// Additional Light 44
+        /// </summary>
+        [Description("Additional Light 44")]
+        ADDITIONALLIGHT44 = 261,
+
+        /// <summary>
+        /// Additional Light 45
+        /// </summary>
+        [Description("Additional Light 45")]
+        ADDITIONALLIGHT45 = 262,
+
+        /// <summary>
+        /// Additional Light 46
+        /// </summary>
+        [Description("Additional Light 46")]
+        ADDITIONALLIGHT46 = 263,
+
+        /// <summary>
+        /// Additional Light 47
+        /// </summary>
+        [Description("Additional Light 47")]
+        ADDITIONALLIGHT47 = 264,
+
+        /// <summary>
+        /// Additional Light 48
+        /// </summary>
+        [Description("Additional Light 48")]
+        ADDITIONALLIGHT48 = 265,
+
+        /// <summary>
+        /// Additional Light 49
+        /// </summary>
+        [Description("Additional Light 49")]
+        ADDITIONALLIGHT49 = 266,
+
+        /// <summary>
+        /// Additional Light 50
+        /// </summary>
+        [Description("Additional Light 50")]
+        ADDITIONALLIGHT50 = 267,
+
+        /// <summary>
+        /// Additional Light 51
+        /// </summary>
+        [Description("Additional Light 51")]
+        ADDITIONALLIGHT51 = 268,
+
+        /// <summary>
+        /// Additional Light 52
+        /// </summary>
+        [Description("Additional Light 52")]
+        ADDITIONALLIGHT52 = 269,
+
+        /// <summary>
+        /// Additional Light 53
+        /// </summary>
+        [Description("Additional Light 53")]
+        ADDITIONALLIGHT53 = 270,
+
+        /// <summary>
+        /// Additional Light 54
+        /// </summary>
+        [Description("Additional Light 54")]
+        ADDITIONALLIGHT54 = 271,
+
+        /// <summary>
+        /// Additional Light 55
+        /// </summary>
+        [Description("Additional Light 55")]
+        ADDITIONALLIGHT55 = 272,
+
+        /// <summary>
+        /// Additional Light 56
+        /// </summary>
+        [Description("Additional Light 56")]
+        ADDITIONALLIGHT56 = 273,
+
+        /// <summary>
+        /// Additional Light 57
+        /// </summary>
+        [Description("Additional Light 57")]
+        ADDITIONALLIGHT57 = 274,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
