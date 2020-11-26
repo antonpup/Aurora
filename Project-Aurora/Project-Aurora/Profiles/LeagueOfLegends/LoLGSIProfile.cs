@@ -142,6 +142,8 @@ namespace Aurora.Profiles.LeagueOfLegends
                         .AddEntry(Color.FromArgb(95, 0, 163), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.Teleport))
                         .AddEntry(Color.FromArgb(240, 184, 72), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.Barrier))
                         .AddEntry(Color.FromArgb(148, 97, 9), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.Smite))
+                        .AddEntry(Color.FromArgb(191, 23, 4), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.ChallengingSmite))
+                        .AddEntry(Color.FromArgb(0, 113, 173), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.ChillingSmite))
                         .AddEntry(Color.FromArgb(207, 214, 9), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.Exhaust))
                         .AddEntry(Color.FromArgb(49, 247, 231), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.Ghost))
                         .AddEntry(Color.FromArgb(11, 227, 166), new BooleanGSIEnum("Player/Spell" + spell, SummonerSpell.Cleanse))

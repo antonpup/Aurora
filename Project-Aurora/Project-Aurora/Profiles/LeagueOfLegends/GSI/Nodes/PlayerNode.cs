@@ -185,14 +185,14 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Ghost,
         Heal,
         Smite,
-        ChillingSmite,
-        ChallengingSmite,
         Teleport,
         Clarity,
         Ignite,
         Barrier,
         Mark,
-        Dash
+        Dash,
+        ChillingSmite,
+        ChallengingSmite
     }
 
     public enum Position
