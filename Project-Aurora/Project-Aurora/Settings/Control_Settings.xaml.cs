@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -78,7 +78,7 @@ namespace Aurora.Settings
                     }
                 }
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 Global.logger.Error("Error caught when updating startup task. Error: " + exc.ToString());
             }
@@ -142,13 +142,15 @@ namespace Aurora.Settings
             e.Handled = true;
         }
 
-        private void ExcludedAdd_Click(object sender, RoutedEventArgs e) {
+        private void ExcludedAdd_Click(object sender, RoutedEventArgs e)
+        {
             Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
             if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName) && !Global.Configuration.ExcludedPrograms.Contains(dialog.ChosenExecutableName))
                 Global.Configuration.ExcludedPrograms.Add(dialog.ChosenExecutableName);
         }
 
-        private void ExcludedRemove_Click(object sender, RoutedEventArgs e) {
+        private void ExcludedRemove_Click(object sender, RoutedEventArgs e)
+        {
             if (!string.IsNullOrEmpty(SelectedExcludedProgram))
                 Global.Configuration.ExcludedPrograms.Remove(SelectedExcludedProgram);
         }
@@ -166,7 +168,7 @@ namespace Aurora.Settings
                         task.Enabled = (sender as CheckBox).IsChecked.Value;
                     }
                 }
-                catch(Exception exc)
+                catch (Exception exc)
                 {
                     Global.logger.Error("RunAtWinStartup_Checked Exception: " + exc);
                 }
@@ -179,7 +181,6 @@ namespace Aurora.Settings
             Global.dev_manager.InitializeDevices();
         }
 
-        
         private void updates_check_Click(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
@@ -201,7 +202,6 @@ namespace Aurora.Settings
 
         private void LoadBrandDefault(object sender, SelectionChangedEventArgs e) => Global.kbLayout.LoadBrandDefault();
         private void ResetDevices(object sender, RoutedEventArgs e) => Global.dev_manager.ResetDevices();
-
 
         private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
         {
@@ -295,7 +295,7 @@ namespace Aurora.Settings
 
             void SetButtonContent(string s)
                 => Application.Current.Dispatcher.Invoke(() => razer_wrapper_uninstall_button.Content = s);
-            
+
             void ShowMessageBox(string message, string title, MessageBoxImage image = MessageBoxImage.Exclamation)
                 => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, image));
 
@@ -419,7 +419,7 @@ namespace Aurora.Settings
             var window = new AsusConfigWindow();
             window.Show();
         }
-        
+
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
@@ -435,10 +435,12 @@ namespace Aurora.Settings
 
         private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => Window_GSIHttpDebug.Open();
 
-        private void StartDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        private void StartDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
             using TaskService service = new TaskService();
             var task = service.FindTask(StartupTaskID);
-            if (task != null && task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger) {
+            if (task != null && task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger)
+            {
                 trigger.Delay = new TimeSpan(0, 0, ((IntegerUpDown)sender).Value ?? 0);
                 task.RegisterChanges();
             }
