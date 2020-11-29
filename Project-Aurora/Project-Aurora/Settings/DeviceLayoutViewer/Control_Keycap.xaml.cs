@@ -87,7 +87,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 return new Control_GhostKeycap(conf, image_path);
             else*/
             {
-                switch (Global.Configuration.virtualkeyboard_keycap_type)
+                switch (Global.Configuration.VirtualkeyboardKeycapType)
                 {
                     case KeycapType.Default_backglow:
                         return new Control_DefaultKeycapBackglow(conf);

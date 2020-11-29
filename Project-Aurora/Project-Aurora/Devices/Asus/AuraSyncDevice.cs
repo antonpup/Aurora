@@ -39,6 +39,9 @@ namespace Aurora.Devices.Asus
 
         public void UpdateColors(Dictionary<int, Color> colors)
         {
+            if (DeviceType == AsusHandler.AsusDeviceType.Mouse && Global.Configuration.DevicesDisableMouse)
+                return;
+
             //empty queue
             while (!colorQueue.IsEmpty)
                 colorQueue.TryDequeue(out _);
@@ -66,10 +69,11 @@ namespace Aurora.Devices.Asus
             Active = true;
         }
 
-        public void Stop()
+        public void Stop(bool cancel = true)
         {
-            tokenSource.Cancel();
             Active = false;
+            if (cancel)
+                tokenSource.Cancel();
         }
 
         private async void Thread(CancellationToken token)

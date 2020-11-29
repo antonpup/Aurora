@@ -6,52 +6,55 @@ using Microsoft.Win32;
 
 namespace Aurora.Devices.Asus
 {
-    public class AsusDevice : Device
+    public class AsusDevice : IDevice
     {
-        public const string DeviceName = "Asus";
+        public const string deviceName = "Asus";
         private AsusHandler asusHandler = new AsusHandler();
         private bool isActive = false;
 
         private VariableRegistry defaultRegistry = null;
         /// <inheritdoc />
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (defaultRegistry != null) return defaultRegistry;
-            
-            defaultRegistry = new VariableRegistry();
-            defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
-            return defaultRegistry;
+            get
+            {
+                if (defaultRegistry != null) return defaultRegistry;
+
+                defaultRegistry = new VariableRegistry();
+                defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
+                defaultRegistry.Register($"{DeviceName}_force_initialize", false, "Force initialization");
+                return defaultRegistry;
+            }
         }
 
         /// <inheritdoc />
-        public string GetDeviceName() => DeviceName;
+        public string DeviceName => deviceName;
 
         /// <inheritdoc />
-        public string GetDeviceDetails() => $"{DeviceName}: {GetDeviceStatus()}";
+        public string DeviceDetails => GetDeviceStatus();
 
         private string GetDeviceStatus()
         {
             if (!isActive)
-                return "Not initialized";
+                return "Not Initialized";
             
             if (asusHandler.DeviceCount == 0)
-                return "No devices connected";
+                return "Initialized: No devices connected";
 
-            return asusHandler?.GetDevicePerformance();
+            return "Initialized: " + asusHandler?.GetDevicePerformance();
         }
-        
+
         /// <inheritdoc />
-        public string GetDeviceUpdatePerformance()
-        {
-            return "";
-        }
+        public string DeviceUpdatePerformance => "";
 
         /// <inheritdoc />
         public bool Initialize()
         {
             asusHandler?.Stop();
             
-            asusHandler = new AsusHandler(Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"));
+            asusHandler = new AsusHandler(
+                Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
+                Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
             isActive = asusHandler.Start();
 
             return isActive;
@@ -60,11 +63,10 @@ namespace Aurora.Devices.Asus
         /// <inheritdoc />
         public void Shutdown()
         {
-            if (isActive)
-            {
-                asusHandler.Stop();
-                isActive = false;
-            }
+            if (!isActive) return;
+            
+            asusHandler.Stop();
+            isActive = false;
         }
 
         /// <inheritdoc />
@@ -79,11 +81,12 @@ namespace Aurora.Devices.Asus
         {
             Shutdown();
             Initialize();
+            
             return isActive;
         }
 
         /// <inheritdoc />
-        public bool IsInitialized() => isActive;
+        public bool IsInitialized => isActive;
 
         /// <inheritdoc />
         public bool IsConnected() => isActive;

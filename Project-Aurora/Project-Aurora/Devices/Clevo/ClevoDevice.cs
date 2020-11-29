@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace Aurora.Devices.Clevo
 {
-    class ClevoDevice : Device
+    class ClevoDevice : IDevice
     {
         // Generic Variables
         private string devicename = "Clevo Keyboard";
@@ -42,22 +42,11 @@ namespace Aurora.Devices.Clevo
         // Session Switch Handler
         private SessionSwitchEventHandler sseh;
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
-        {
-            if (isInitialized)
-            {
-                return devicename + ": Initialized";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
-            }
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public bool Initialize()
         {
@@ -99,7 +88,7 @@ namespace Aurora.Devices.Clevo
         // Handle Logon Event
         void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            if (this.IsInitialized() && e.Reason.Equals(SessionSwitchReason.SessionUnlock))
+            if (this.IsInitialized&& e.Reason.Equals(SessionSwitchReason.SessionUnlock))
             { // Only Update when Logged In
                 this.SendColorsToKeyboard(true);
             }
@@ -107,7 +96,7 @@ namespace Aurora.Devices.Clevo
 
         public void Shutdown()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 // Release Clevo Connection
                 clevo.ResetKBLEDColors();
@@ -124,7 +113,7 @@ namespace Aurora.Devices.Clevo
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
                 clevo.ResetKBLEDColors();
         }
 
@@ -133,10 +122,7 @@ namespace Aurora.Devices.Clevo
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -269,23 +255,23 @@ namespace Aurora.Devices.Clevo
         {
             if (forced || ColorUpdated)
             {
-                if ((forced || !LastColorKBLeft.Equals(ColorKBLeft)) && !Global.Configuration.devices_disable_keyboard)
+                if ((forced || !LastColorKBLeft.Equals(ColorKBLeft)) && !Global.Configuration.DevicesDisableKeyboard)
                 {
                     // MYSTERY: // Why is it B,R,G instead of R,G,B? SetKBLED uses R,G,B but only B,R,G returns the correct colors. Is bitshifting different in C# than in C++?
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBLeft, ColorKBLeft.B, ColorKBLeft.R, ColorKBLeft.G, (double)(ColorKBLeft.A / 0xff));
                     LastColorKBLeft = ColorKBLeft;
                 }
-                if ((forced || !LastColorKBCenter.Equals(ColorKBCenter)) && !Global.Configuration.devices_disable_keyboard)
+                if ((forced || !LastColorKBCenter.Equals(ColorKBCenter)) && !Global.Configuration.DevicesDisableKeyboard)
                 {
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBCenter, ColorKBCenter.B, ColorKBCenter.R, ColorKBCenter.G, (double)(ColorKBCenter.A / 0xff));
                     LastColorKBCenter = ColorKBCenter;
                 }
-                if ((forced || !LastColorKBRight.Equals(ColorKBRight)) && !Global.Configuration.devices_disable_keyboard)
+                if ((forced || !LastColorKBRight.Equals(ColorKBRight)) && !Global.Configuration.DevicesDisableKeyboard)
                 {
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorKBRight, ColorKBRight.B, ColorKBRight.R, ColorKBRight.G, (double)(ColorKBRight.A / 0xff));
                     LastColorKBRight = ColorKBRight;
                 }
-                if ((forced || (useTouchpad && !LastColorTouchpad.Equals(ColorTouchpad))) && !Global.Configuration.devices_disable_mouse)
+                if ((forced || (useTouchpad && !LastColorTouchpad.Equals(ColorTouchpad))) && !Global.Configuration.DevicesDisableMouse)
                 {
                     clevo.SetKBLED(ClevoSetKBLED.KBLEDAREA.ColorTouchpad, ColorTouchpad.B, ColorTouchpad.R, ColorTouchpad.G, (double)(ColorTouchpad.A / 0xff));
                     LastColorTouchpad = ColorTouchpad;
@@ -305,14 +291,8 @@ namespace Aurora.Devices.Clevo
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
-        {
-            return new VariableRegistry();
-        }
+        public VariableRegistry RegisteredVariables => new VariableRegistry();
     }
 }

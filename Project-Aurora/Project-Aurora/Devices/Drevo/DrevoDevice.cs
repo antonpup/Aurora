@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using DrevoRadi;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,155 +8,59 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Aurora.Settings;
 
 namespace Aurora.Devices.Drevo
 {
-    class DrevoDevice : Device
+    public class DrevoDevice : DefaultDevice
     {
-        private String devicename = "Drevo";
-        private bool isInitialized = false;
+        public override string DeviceName => "Drevo";
 
-        private bool keyboard_updated = false;
-        private bool peripheral_updated = false;
-
-        private readonly object action_lock = new object();
-        private Stopwatch watch = new Stopwatch();
-        private Stopwatch keepaliveTimer = new Stopwatch();
-        private long lastUpdateTime = 0;
-
-        /// <summary>
-        /// Gets registered variables by this device.
-        /// </summary>
-        /// <returns>Registered Variables</returns>
-        public VariableRegistry GetRegisteredVariables()
+        public override bool Initialize()
         {
-            return new VariableRegistry();
-        }
+            if (IsInitialized)
+                return IsInitialized;
 
-        /// Gets the device name.
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
-
-        /// Gets specific details about the device instance.
-        public string GetDeviceDetails()
-        {
-            if (isInitialized)
+            try
             {
-                return devicename + ": Connected";
-            }
-            else
-            {
-                return devicename + ": Not initialized";
-            }
-        }
-
-        /// Gets the device update performance.
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
-
-        /// Attempts to initialize the device instance.
-        public bool Initialize()
-        {
-            lock (action_lock)
-            {
-                if (!isInitialized)
+                if (!DrevoRadiSDK.DrevoRadiInit())
                 {
-                    try
-                    {
-                        if (!DrevoRadiSDK.DrevoRadiInit())
-                        {
-                            Global.logger.Error("Drevo Radi SDK could not be initialized.");
-
-                            isInitialized = false;
-                            return false;
-                        }
-
-                        isInitialized = true;
-                        return true;
-                    }
-                    catch (Exception exc)
-                    {
-                        Global.logger.Error("There was an error initializing Drevo Radi SDK.\r\n" + exc.Message);
-
-                        return false;
-                    }
+                    LogError("Drevo Radi SDK could not be initialized.");
+                    return IsInitialized = false;
                 }
-                return isInitialized;
-            }
-        }
 
-        /// Shuts down the device instance.
-        public void Shutdown()
-        {
-            lock (action_lock)
+                return IsInitialized = true;
+            }
+            catch (Exception exc)
             {
-                try
-                {
-                    if (IsInitialized())
-                    {
-                        this.Reset();
-                        isInitialized = false;
-                        DrevoRadiSDK.DrevoRadiShutdown();
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Drevo device, Exception during Shutdown. Message: " + exc);
-                    isInitialized = false;
-                }
+                LogError($"There was an error initializing Drevo Radi SDK: {exc.Message}");
+                return IsInitialized = false;
             }
         }
 
-        /// Resets the device instance.
-        public void Reset()
+        public override void Shutdown()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated))
+            if (!IsInitialized)
+                return;
+
+            try
             {
-                keyboard_updated = false;
-                peripheral_updated = false;
+                DrevoRadiSDK.DrevoRadiShutdown();
+                IsInitialized = false;
             }
-        }
-
-        /// Attempts to reconnect the device. [NOT IMPLEMENTED]
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// Gets the initialization status of this device instance.
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
-
-        /// Gets the connection status of this device instance. [NOT IMPLEMENTED]
-        public bool IsConnected()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// Gets the keyboard connection status for this device instance.
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-        }
-
-        /// Gets the peripheral connection status for this device instance.
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
+            catch (Exception exc)
+            {
+                LogError("Exception during Shutdown: " + exc);
+                IsInitialized = false;
+            }
         }
 
         /// Updates the device with a specified color arrangement.
-        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
+            if (!IsInitialized) return false;
+
             try
             {
                 byte[] bitmap = new byte[392];
@@ -164,46 +69,26 @@ namespace Aurora.Devices.Drevo
                 bitmap[2] = 0x00;
                 bitmap[3] = 0x7F;
                 int index = 0;
-                foreach (KeyValuePair<int, System.Drawing.Color> key in keyColors)
-                {
-                    if (e.Cancel) return false;
 
-                    index = DrevoRadiSDK.ToDrevoBitmap(key.Key);
+                foreach (var (dk, clr) in keyColors)
+                {
+                    index = DrevoRadiSDK.ToDrevoBitmap(dk);
                     if (index != -1)
                     {
                         index = index * 3 + 4;
-                        bitmap[index] = key.Value.R;
-                        bitmap[index + 1] = key.Value.G;
-                        bitmap[index + 2] = key.Value.B;
+                        bitmap[index] = clr.R;
+                        bitmap[index + 1] = clr.G;
+                        bitmap[index + 2] = clr.B;
                     }
                 }
-                if (this.IsInitialized())
-                {
-                    DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392);
-                }
-                if (e.Cancel) return false;
-                return true;
+
+                return DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392);
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Drevo device, error when updating device. Error: " + exc);
-                Console.WriteLine(exc);
+                LogError($"Error when updating device: {exc}");
                 return false;
             }
-            return true;
-        }
-
-        /// Updates the device with a specified color composition.
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
         }
     }
 }

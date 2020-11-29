@@ -16,14 +16,12 @@ namespace Aurora.Settings.Layers {
     /// <summary>
     /// The base properties for the base particle layer.
     /// </summary>
-    public class ParticleLayerPropertiesBase<TSelf> : LayerHandlerProperties<TSelf>, INotifyPropertyChanged where TSelf : ParticleLayerPropertiesBase<TSelf> {
+    public class ParticleLayerPropertiesBase<TSelf> : LayerHandlerProperties<TSelf> where TSelf : ParticleLayerPropertiesBase<TSelf> {
         
         // Whether or not the particles will spawn. This allows the particle system to be turned off without disabling it (thereby not hiding already spawned particles).
         // This can only be done by the overrides system.
         [LogicOverridable("Enable Particle Spawning")] public bool? _SpawningEnabled { get; set; }
         [JsonIgnore] public bool SpawningEnabled => Logic._SpawningEnabled ?? true;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public ParticleLayerPropertiesBase() : base() { }
         public ParticleLayerPropertiesBase(bool empty = false) : base(empty) { }

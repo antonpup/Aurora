@@ -29,7 +29,7 @@ namespace Aurora.Settings.Overrides.Logic {
     public abstract class Evaluatable<T> : IEvaluatable, System.ComponentModel.INotifyPropertyChanged {
 
         /// <summary>The most recent value that was output from the evaluatable.</summary>
-        public T LastValue { get; private set; } = default;
+        [Newtonsoft.Json.JsonIgnore] public T LastValue { get; private set; } = default;
         object IEvaluatable.LastValue => LastValue;
 
         public event PropertyChangedEventHandler PropertyChanged;

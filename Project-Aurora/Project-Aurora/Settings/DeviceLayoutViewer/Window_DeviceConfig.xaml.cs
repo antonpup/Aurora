@@ -147,7 +147,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if (IsLoaded && Config is KeyboardConfig keyboardConfig)
             {
-                keyboardConfig.SelectedKeyboardLayout = (KeyboardPhysicalLayout)Enum.Parse(typeof(KeyboardPhysicalLayout), this.keyboard_layout.SelectedItem.ToString());
+                keyboardConfig.SelectedKeyboardLayout = (KeyboardPhysicalLayout)keyboard_layout.SelectedValue;
                 deviceLayout.ConfigChanged();
             }
         }

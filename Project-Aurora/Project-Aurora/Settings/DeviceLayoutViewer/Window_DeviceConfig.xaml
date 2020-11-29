@@ -4,7 +4,7 @@
     xmlns:System="clr-namespace:System;assembly=mscorlib" 
     xmlns:local="clr-namespace:Aurora.Settings.DeviceLayoutViewer"
     xmlns:enum="clr-namespace:Aurora.Settings"
-    xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+    xmlns:u="clr-namespace:Aurora.Utils"
     Title="Device Config"
     MinHeight="54" MinWidth="400"
     Height="Auto" Width="Auto"
@@ -14,15 +14,6 @@
     ShowInTaskbar="True"
     WindowStartupLocation="CenterOwner">
     <Window.Resources>
-        <ObjectDataProvider x:Key="KeyboardPhysicalLayout" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="enum:KeyboardPhysicalLayout" />
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
-        <EnumValueConverters:KeyboardPhysicalLayoutToStringVC x:Key="KeyboardPhysicalLayoutToStringVC"/>
-        <DataTemplate x:Key="KeyboardPhysicalLayoutTemplate">
-            <TextBlock Text="{Binding Converter={StaticResource KeyboardPhysicalLayoutToStringVC}}" />
-        </DataTemplate>
         <BooleanToVisibilityConverter x:Key="b2v" />
     </Window.Resources>
         
@@ -46,7 +37,7 @@
                     <StackPanel Orientation="Vertical">
                         <ComboBox x:Name="device_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_type_SelectionChanged"/>
                         <ComboBox x:Name="device_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_layout_SelectionChanged"/>
-                        <ComboBox x:Name="keyboard_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="keyboard_layout_SelectionChanged" ItemsSource="{Binding Source={StaticResource KeyboardPhysicalLayout}}" ItemTemplate="{Binding Source={StaticResource KeyboardPhysicalLayoutTemplate}}"/>
+                        <ComboBox x:Name="keyboard_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="keyboard_layout_SelectionChanged" ItemsSource="{u:EnumToItemsSource {x:Type enum:KeyboardPhysicalLayout}}"  DisplayMemberPath="Text" SelectedValuePath="Value"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">

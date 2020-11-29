@@ -89,6 +89,7 @@ namespace Aurora.Profiles.Desktop
                             new Keybind( new Keys[] { Keys.LControlKey, Keys.Down }),
                             new Keybind( new Keys[] { Keys.LControlKey, Keys.Up }),
                             new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.Tab }),
+                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.Delete }),
                             new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Up }),
                             new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Down }),
                             new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Left }),

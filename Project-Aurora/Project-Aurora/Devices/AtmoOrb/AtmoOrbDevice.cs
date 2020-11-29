@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.AtmoOrbDevice
 {
-    public class AtmoOrbDevice : Device
+    public class AtmoOrbDevice : IDevice
     {
         private string devicename = "AtmoOrb";
         private Socket socket;
@@ -26,18 +26,11 @@ namespace Aurora.Devices.AtmoOrbDevice
 
         private VariableRegistry default_registry = null;
 
-        public string GetDeviceDetails()
-        {
-            if (isConnected)
-                return devicename + ": Connected";
-            else
-                return devicename + ": Not connected";
-        }
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
         public bool Initialize()
         {
@@ -64,10 +57,7 @@ namespace Aurora.Devices.AtmoOrbDevice
             return isConnected;
         }
 
-        public bool IsInitialized()
-        {
-            return IsConnected();
-        }
+        public bool IsInitialized => IsConnected();
 
         public bool IsKeyboardConnected()
         {
@@ -264,22 +254,22 @@ namespace Aurora.Devices.AtmoOrbDevice
             }
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (IsConnected() ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (IsConnected() ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_use_smoothing", true, "Use Smoothing");
-                default_registry.Register($"{devicename}_send_delay", 50, "Send delay (ms)");
-                default_registry.Register($"{devicename}_orb_ids", "1", "Orb IDs", null, null, "For multiple IDs separate with comma");
-            }
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_use_smoothing", true, "Use Smoothing");
+                    default_registry.Register($"{devicename}_send_delay", 50, "Send delay (ms)");
+                    default_registry.Register($"{devicename}_orb_ids", "1", "Orb IDs", null, null, "For multiple IDs separate with comma");
+                }
 
-            return default_registry;
+                return default_registry;
+            }
         }
     }
 }

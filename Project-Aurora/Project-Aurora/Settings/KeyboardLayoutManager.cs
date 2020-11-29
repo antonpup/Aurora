@@ -344,10 +344,10 @@ namespace Aurora.Settings
 
         public void LoadBrandDefault()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            /*Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, MouseOrientationType.LeftHanded);
-            });
+                LoadBrand(Global.Configuration.KeyboardBrand, Global.Configuration.MousePreference, MouseOrientationType.LeftHanded);
+            });*/
         }
         private PreferredKeyboardLocalization GetSystemKeyboardCulture()
         {
@@ -425,7 +425,7 @@ namespace Aurora.Settings
         }
         private string GetKeyboardCulture()
         {
-            PreferredKeyboardLocalization layout = Global.Configuration.keyboard_localization;
+            PreferredKeyboardLocalization layout = Global.Configuration.KeyboardLocalization;
 
             if (layout == PreferredKeyboardLocalization.None)
             {
@@ -632,7 +632,7 @@ namespace Aurora.Settings
                 }
 
                 _bitmapMapInvalid = false;
-                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
+                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width)
                 Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
                 //Global.effengine.SetBitmapping(this.bitmap_map);
             }
@@ -721,7 +721,8 @@ namespace Aurora.Settings
                     keycap = new Control_GhostKeycap(key, image_path);
                 else*/
                 {
-                    /*switch (Global.Configuration.virtualkeyboard_keycap_type)
+
+                    /*switch (Global.Configuration.VirtualkeyboardKeycapType)
                     {
                         case KeycapType.Default_backglow:
                             keycap = new Control_DefaultKeycapBackglow(key, image_path);

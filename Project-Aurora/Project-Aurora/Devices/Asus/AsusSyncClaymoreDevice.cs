@@ -15,6 +15,9 @@ namespace Aurora.Devices.Asus
 
         protected override void ApplyColors(Dictionary<int, Color> colors)
         {
+            if (Global.Configuration.DevicesDisableKeyboard)
+                return;
+            
             for (int i = 0; i < Device.Lights.Count; i++)
             {
                 var light = DeviceKeyToClaymore(i);

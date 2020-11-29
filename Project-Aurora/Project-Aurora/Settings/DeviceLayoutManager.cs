@@ -22,10 +22,13 @@ namespace Aurora.Settings
 {
     public enum KeyboardPhysicalLayout
     {
-        //[Description("ANSI")]
+        [Description("ANSI")]
         ANSI,
+        [Description("ISO")]
         ISO,
+        [Description("ABNT")]
         ABNT,
+        [Description("JIS")]
         JIS
     }
     public class VirtualKeyboardConfiguration
