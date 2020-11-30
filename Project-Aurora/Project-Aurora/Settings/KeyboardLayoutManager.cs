@@ -9,13 +9,29 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Input;
 using Aurora.Devices;
-using System.Drawing;
 using System.Windows.Media.Imaging;
 using Aurora.Settings.Keycaps;
 using System.Windows.Threading;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Globalization;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using Aurora.Settings.DeviceLayoutViewer;
 
 namespace Aurora.Settings
 {
+    public enum KeyboardPhysicalLayout
+    {
+        [Description("ANSI")]
+        ANSI,
+        [Description("ISO")]
+        ISO,
+        [Description("ABNT")]
+        ABNT,
+        [Description("JIS")]
+        JIS
+    }
     public class KeyboardKey
     {
         public string visualName = null;
@@ -67,6 +83,32 @@ namespace Aurora.Settings
         }
     }
 
+    public class VirtualKeyboardConfiguration
+    {
+        public bool IsNewFormat = false;
+
+        public int[] keys_to_remove = new int[] { };
+
+        public Dictionary<int, KeyboardKey> key_modifications = new Dictionary<int, KeyboardKey>();
+
+        [JsonProperty("key_conversion")]
+        public Dictionary<int, int> KeyConversion = null;
+
+        /// <summary>
+        /// A list of paths for each included group json
+        /// </summary>
+        public string[] included_features = new string[] { };
+
+    }
+    public class KeyboardLayout
+    {
+        [JsonProperty("key_conversion")]
+        public Dictionary<Devices.DeviceKeys, Devices.DeviceKeys> KeyConversion = null;
+
+        [JsonProperty("keys")]
+        public KeyboardKey[] Keys = null;
+    }
+
     public enum KeyboardRegion
     {
         TopLeft = 1,
@@ -99,15 +141,15 @@ namespace Aurora.Settings
     {
         public string group_tag;
 
-        public KeyboardRegion origin_region;
+        public KeyboardRegion? origin_region;
 
         public List<KeyboardKey> grouped_keys = new List<KeyboardKey>();
 
         public Dictionary<DeviceKeys, string> KeyText = new Dictionary<DeviceKeys, string>();
 
-        private RectangleF _region = new RectangleF(0, 0, 0, 0);
+        private System.Drawing.RectangleF _region = new System.Drawing.RectangleF(0, 0, 0, 0);
 
-        public RectangleF Region { get { return _region; } }
+        public System.Drawing.RectangleF Region { get { return _region; } }
 
         [JsonProperty("key_conversion")]
         public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
@@ -325,7 +367,7 @@ namespace Aurora.Settings
 
         public void Clear()
         {
-            _region = new RectangleF(0, 0, 0, 0);
+            _region = new System.Drawing.RectangleF(0, 0, 0, 0);
             //_region_bitmap = new Rectangle(0, 0, 0, 0);
             grouped_keys.Clear();
         }
@@ -415,64 +457,605 @@ namespace Aurora.Settings
 
         }
     }
+    public class DeviceLayout
+    {
 
+        public Dictionary<int, DeviceKeyConfiguration> Keys = new Dictionary<int, DeviceKeyConfiguration>();
+
+        protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
+
+        private System.Drawing.Rectangle Region = new System.Drawing.Rectangle(0, 0, 0, 0);
+
+        public int Width => Region.Width;
+
+        public int Height => Region.Height;
+
+        private DeviceConfig Config;
+
+        public DeviceLayout(DeviceConfig config)
+        {
+            Config = config;
+
+        }
+        private string GetFolder()
+        {
+            switch (Config.Type)
+            {
+                case 0:
+                    return "Keyboard";
+                default:
+                    return "Mouse";
+            }
+        }
+        protected class NewKeyboardLayout
+        {
+            /*[JsonProperty("layout_width")]
+            public int Width = 0;
+
+            [JsonProperty("layout_height")]
+            public int Height = 0;*/
+
+            [JsonProperty("keys")]
+            public DeviceKeyConfiguration[] Keys = null;
+        }
+        public List<DeviceKeyConfiguration> LoadLayout()
+        {
+            var layoutConfigPath = "";
+            string keyboard_preference = Config.SelectedLayout;
+            if (keyboard_preference != "" && keyboard_preference != "None")
+            {
+                layoutConfigPath = Path.Combine(layoutsPath, GetFolder(), keyboard_preference + ".json");
+            }
+
+            if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
+            {
+                //Load keyboard layout
+                //LoadCulture();
+
+                //TODO
+                //if (!File.Exists(layoutPath))
+                //    LoadDefault();
+
+
+
+                /* var layoutType = "abnt2";
+                 var fileName = "Plain Keyboard\\layout." + layoutType + ".json";
+                 var layoutPath = Path.Combine(layoutsPath, "Keyboard", fileName);
+                 string keyboardContent = File.ReadAllText(layoutPath, Encoding.UTF8);
+                 KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(keyboardContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                 LoadFromKeys(keyboard.Keys);
+
+                 NewKeyboardLayout saved = new NewKeyboardLayout();
+                 saved.Keys = Keys.Values.ToArray();
+                 keyboardContent = JsonConvert.SerializeObject(saved, Formatting.Indented);
+
+                     fileName = "Plain Keyboard\\" + layoutType + "_layout.json";
+                     File.WriteAllText(Path.Combine(layoutsPath, "Keyboard", fileName), keyboardContent, Encoding.UTF8);*/
+
+                if (Config.Type == 0)
+                {
+                    var keyboardConfig = new KeyboardConfig(Config);
+                    string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
+                    VirtualKeyboardConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualKeyboardConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                    if (layoutConfig.IsNewFormat == true)
+                    {
+                        var keys = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
+
+                        var keyboardLayout = LoadDeviceLayout(keyboardConfig.LayoutPath);
+                        keyboardLayout.ApplyConfig(keys);
+
+                        if (keyboardConfig.SelectedKeyboardLayout == KeyboardPhysicalLayout.JIS)
+                        {
+                            foreach (var key in keyboardLayout.jis_key_modifications)
+                            {
+                                if (keys.ContainsKey(key.Key))
+                                {
+                                    keys[key.Key].ApplyModifier(key.Value);
+                                }
+                            }
+                        }
+
+                        NormalizeKeys(keys);
+                        Keys = keys;
+                    }
+                    else
+                    {
+
+                        Keys = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
+
+                        //AdjustKeys
+                        var adjustKeys = layoutConfig.key_modifications;
+                        Keys.Values.ToList().FindAll(key => adjustKeys.ContainsKey((int)key.Tag)).ForEach(k => k.UpdateFromOtherKey(adjustKeys[k.Tag]));
+                        foreach (var keyTag in layoutConfig.keys_to_remove)
+                        {
+                            Keys.Remove(keyTag);
+                        }
+
+
+                        NormalizeKeys(Keys);
+
+                        foreach (string feature in layoutConfig.included_features)
+                        {
+                            string feature_path = Path.Combine(layoutsPath, GetFolder(), "Extra Features", feature);
+
+                            if (File.Exists(feature_path))
+                            {
+                                string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
+                                VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                                AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
+
+                            }
+                        }
+
+                        NormalizeKeys(Keys);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
+                    {
+                        string mouseConfigContent = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
+                        VirtualGroup mouseConfig = JsonConvert.DeserializeObject<VirtualGroup>(mouseConfigContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                        if (mouseConfig.origin_region == null)
+                        {
+                            Dictionary<int, DeviceKeyConfiguration> keys = new Dictionary<int, DeviceKeyConfiguration>();
+                            var deviceConfig = LoadDeviceLayout(Config.LayoutPath);
+                            deviceConfig.ApplyConfig(keys);
+                            Keys = keys;
+                        }
+                        AddFeature(mouseConfig.grouped_keys.ToArray(), mouseConfig.origin_region);
+                        NormalizeKeys(Keys);
+                    }
+                }
+
+
+            }
+
+            return Keys.Values.ToList();
+        }
+
+        private Dictionary<int, DeviceKeyConfiguration> LoadKeyboardPhysicalLayout(string physicalLayoutPath)
+        {
+            Dictionary<int, DeviceKeyConfiguration> keys = new Dictionary<int, DeviceKeyConfiguration>();
+            if (File.Exists(physicalLayoutPath))
+            {
+                string c = File.ReadAllText(physicalLayoutPath, Encoding.UTF8);
+                NewKeyboardLayout keyboard = JsonConvert.DeserializeObject<NewKeyboardLayout>(c, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                keys = keyboard.Keys.ToDictionary(k => k.Tag, k => k);
+            }
+            return keys;
+        }
+        private KeycapGroupConfiguration LoadDeviceLayout(string layoutConfigPath)
+        {
+            if (File.Exists(layoutConfigPath))
+            {
+                string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
+                var layoutConfig = JsonConvert.DeserializeObject<KeycapGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                if (layoutConfig.IsNewFormat == true)
+                    return layoutConfig;
+            }
+            return new KeycapGroupConfiguration();
+        }
+
+        private KeycapGroupConfiguration CalcKeyboardKeyConfiguration(List<DeviceKeyConfiguration> saveKeys)
+        {
+
+            KeycapGroupConfiguration config = LoadDeviceLayout(Config.LayoutPath);
+            var keyboardConfig = Config as KeyboardConfig;
+            var defaultLayout = LoadKeyboardPhysicalLayout(keyboardConfig.PhysicalLayoutPath);
+
+            if (keyboardConfig.SelectedKeyboardLayout != KeyboardPhysicalLayout.JIS)
+            {
+                config.UpdateConfig(saveKeys, defaultLayout);
+            }
+            else
+            {
+                config.ApplyConfig(defaultLayout);
+                config.jis_key_modifications.Clear();
+                foreach (var key in saveKeys)
+                {
+                    if (defaultLayout[key.Tag] != key)
+                    {
+                        config.jis_key_modifications[key.Tag] = new DeviceKeyModifier(defaultLayout[key.Tag], key);
+                    }
+                }
+
+            }
+
+            return config;
+        }
+        /*public void SaveLayout(List<Control_Keycap> layoutKey, Point offset)
+        {
+            List<DeviceKeyConfiguration> saveKeys = new List<DeviceKeyConfiguration>();
+            foreach (var key in layoutKey)
+            {
+                var conf = key.Config;
+                conf.Key.DeviceId = null;
+                conf.X += (int)offset.X;
+                conf.Y += (int)offset.Y;
+                saveKeys.Add(conf);
+            }
+            KeycapGroupConfiguration config = new KeycapGroupConfiguration();
+            if (Config.Type == 0)
+            {
+                config = CalcKeyboardKeyConfiguration(saveKeys);
+            }
+            else
+            {
+                config.key_to_add = saveKeys.ToDictionary(k => k.Tag, k => k);
+            }
+
+            var content = JsonConvert.SerializeObject(config, Formatting.Indented);
+
+            File.WriteAllText(Path.Combine(layoutsPath, GetFolder(), Config.SelectedLayout + ".json"), content, Encoding.UTF8);
+        }*/
+        public void AddFeature(KeyboardKey[] keys, KeyboardRegion? insertion_region = KeyboardRegion.TopLeft)
+        {
+            double location_x = 0.0D;
+            double location_y = 0.0D;
+
+            if (insertion_region == KeyboardRegion.TopRight)
+            {
+                location_x = Region.Width;
+            }
+            else if (insertion_region == KeyboardRegion.BottomLeft)
+            {
+                location_y = Region.Height + 7;
+            }
+            else if (insertion_region == KeyboardRegion.BottomRight)
+            {
+                location_x = Region.Width;
+                location_y = Region.Height + 7;
+
+            }
+
+            int added_width = 0;
+            int added_height = 0;
+
+            foreach (var key in keys)
+            {
+                key.margin_left += location_x;
+                key.margin_top += location_y;
+
+                Keys[(int)key.tag] = new DeviceKeyConfiguration(key, Config.Id);
+
+                if (key.width + key.margin_left > Region.Width)
+                    Region.Width = (int)(key.width + key.margin_left);
+                else if (key.margin_left + added_width < 0)
+                {
+                    added_width = -(int)(key.margin_left);
+                }
+
+                if (key.height + key.margin_top > Region.Height)
+                    Region.Height = (int)(key.height + key.margin_top);
+                else if (key.margin_top + added_height < 0)
+                {
+                    added_height = -(int)(key.margin_top);
+                }
+
+            }
+            Region.Width += added_width;
+            Region.Height += added_height;
+            //NormalizeKeys();
+        }
+        protected void NormalizeKeys(Dictionary<int, DeviceKeyConfiguration> keys)
+        {
+            int x_correction = 0;
+            int y_correction = 0;
+            int layout_height = 0;
+            int layout_width = 0;
+
+            foreach (var key in keys.Values)
+            {
+                if (key.X < x_correction)
+                    x_correction = key.X;
+
+                if (key.Y < y_correction)
+                    y_correction = key.Y;
+            }
+            foreach (var key in keys.Values)
+            {
+                key.Y -= y_correction;
+                key.X -= x_correction;
+
+                if (key.Width + key.X > layout_width)
+                    layout_width = key.Width + key.X;
+
+                if (key.Height + key.Y > layout_height)
+                    layout_height = key.Height + key.Y;
+            }
+            Region.Width = layout_width;
+            Region.Height = layout_height;
+        }
+        private void LoadFromKeys(KeyboardKey[] JsonKeys)
+        {
+            double layout_height = 0;
+            double layout_width = 0;
+            double current_height = 0;
+            double current_width = 0;
+
+            foreach (var key in JsonKeys)
+            {
+
+                if (key.width + key.margin_left > 0)
+                    current_width += key.width.Value + key.margin_left.Value;
+
+                if (key.margin_top > 0)
+                    current_height += key.margin_top.Value;
+
+                key.margin_left = current_width - key.width.Value;
+                key.margin_top = current_height + key.margin_top.Value;
+
+                if (layout_width < current_width)
+                    layout_width = current_width;
+
+                if (key.line_break ?? false)
+                {
+                    current_height += 37;
+                    current_width = 0;
+                }
+
+                if (layout_height < current_height)
+                    layout_height = current_height;
+
+                Keys.Add((int)key.tag, new DeviceKeyConfiguration(key, null));
+            }
+
+            Region.Width = (int)layout_width;
+            Region.Height = (int)layout_height;
+        }
+    }
+    public class KeycapGroupConfiguration
+    {
+        public bool IsNewFormat = true;
+        public int[] keys_to_remove = new int[] { };
+
+        [JsonProperty("key_modifications")]
+        public Dictionary<int, DeviceKeyModifier> key_modifications = new Dictionary<int, DeviceKeyModifier>();
+
+        [JsonProperty("key_to_add")]
+        public Dictionary<int, DeviceKeyConfiguration> key_to_add = new Dictionary<int, DeviceKeyConfiguration>();
+
+        [JsonProperty("jis_key_modifications")]
+        public Dictionary<int, DeviceKeyModifier> jis_key_modifications = new Dictionary<int, DeviceKeyModifier>();
+
+        public KeycapGroupConfiguration()
+        {
+
+        }
+        public void UpdateConfig(List<DeviceKeyConfiguration> saveKeys, Dictionary<int, DeviceKeyConfiguration> baseKeys)
+        {
+            key_modifications.Clear();
+            key_to_add.Clear();
+            foreach (var key in saveKeys)
+            {
+                if (baseKeys.ContainsKey(key.Tag))
+                {
+                    if (baseKeys[key.Tag] != key)
+                    {
+                        key_modifications[key.Tag] = new DeviceKeyModifier(baseKeys[key.Tag], key);
+                    }
+                    baseKeys.Remove(key.Tag);
+                }
+                else
+                {
+                    key_to_add[key.Tag] = key;
+                }
+            }
+            keys_to_remove = baseKeys.Keys.ToArray();
+        }
+        public void ApplyConfig(Dictionary<int, DeviceKeyConfiguration> keys)
+        {
+            //AdjustKeys
+            foreach (var keyTag in keys_to_remove)
+            {
+                keys.Remove(keyTag);
+            }
+            foreach (var key in key_modifications)
+            {
+                if (keys.ContainsKey(key.Key))
+                {
+                    keys[key.Key].ApplyModifier(key.Value);
+                }
+            }
+            foreach (var key in key_to_add)
+            {
+                keys[key.Key] = key.Value;
+            }
+        }
+    }
+
+    public class DeviceConfig
+    {
+        public int Id;
+        public string SelectedLayout = "";
+        public int Type;
+        public Point Offset = new Point(0, 0);
+        public bool LightingEnabled = true;
+
+        [JsonIgnore]
+        protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
+
+        public DeviceConfig(DeviceConfig config)
+        {
+            Id = config.Id;
+            SelectedLayout = config.SelectedLayout;
+            Type = config.Type;
+            ConfigurationChanged = config.ConfigurationChanged;
+            LightingEnabled = config.LightingEnabled;
+        }
+
+        public DeviceConfig()
+        {
+        }
+
+        public delegate void ConfigChangedEventHandler();
+
+        public event ConfigChangedEventHandler ConfigurationChanged;
+
+        /*public void UpdateConfig(DeviceConfig config)
+        {
+            Id = config.Id;
+            SelectedLayout = config.SelectedLayout;
+            Type = config.Type;
+            SaveConfiguration?.Invoke(this);
+            ConfigurationChanged?.Invoke();
+        }*/
+        public void RefreshConfig()
+        {
+            ConfigurationChanged?.Invoke();
+        }
+
+        public virtual string LayoutPath => Path.Combine(layoutsPath, "Mouse", SelectedLayout + ".json");
+
+    }
+
+    public class KeyboardConfig : DeviceConfig
+    {
+        public KeyboardPhysicalLayout SelectedKeyboardLayout = KeyboardPhysicalLayout.ANSI;
+
+        public KeyboardConfig(DeviceConfig config) : base(config)
+        {
+            if (config is KeyboardConfig keyboardConfig)
+                SelectedKeyboardLayout = keyboardConfig.SelectedKeyboardLayout;
+            else
+                SelectedKeyboardLayout = GetSystemKeyboardCulture();
+            Type = 0;
+        }
+
+        public KeyboardConfig()
+        {
+            Type = 0;
+            SelectedKeyboardLayout = GetSystemKeyboardCulture();
+        }
+        private string ConvertEnumToFileName()
+        {
+            switch (SelectedKeyboardLayout)
+            {
+                case KeyboardPhysicalLayout.ANSI:
+                    return "ansi_layout";
+                case KeyboardPhysicalLayout.ISO:
+                    return "iso_layout";
+                case KeyboardPhysicalLayout.ABNT:
+                    return "abnt2_layout";
+                case KeyboardPhysicalLayout.JIS:
+                    return "jpn_layout";
+                default:
+                    return "";
+            }
+        }
+        public string PhysicalLayoutPath => Path.Combine(layoutsPath, "Keyboard\\Plain Keyboard\\" + ConvertEnumToFileName() + ".json");
+        public override string LayoutPath => Path.Combine(layoutsPath, "Keyboard", SelectedLayout + ".json");
+
+        [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
+        [DllImport("user32.dll")] static extern IntPtr GetKeyboardLayout(uint thread);
+        private CultureInfo GetCurrentKeyboardLayout()
+        {
+            try
+            {
+                IntPtr foregroundWindow = GetForegroundWindow();
+                uint foregroundProcess = GetWindowThreadProcessId(foregroundWindow, IntPtr.Zero);
+                int keyboardLayout = GetKeyboardLayout(foregroundProcess).ToInt32() & 0xFFFF;
+                return new CultureInfo(keyboardLayout);
+            }
+            catch (Exception _)
+            {
+                return new CultureInfo(1033); // Assume English if something went wrong.
+            }
+        }
+        private KeyboardPhysicalLayout GetSystemKeyboardCulture()
+        {
+            string culture = GetCurrentKeyboardLayout().Name;
+            switch (culture)
+            {
+                case ("tr-TR"):
+                    return KeyboardPhysicalLayout.ISO;
+                case ("ja-JP"):
+                    return KeyboardPhysicalLayout.JIS;
+                case ("de-DE"):
+                case ("hsb-DE"):
+                case ("dsb-DE"):
+                case ("fr-CH"):
+                case ("de-CH"):
+                case ("fr-FR"):
+                case ("br-FR"):
+                case ("oc-FR"):
+                case ("co-FR"):
+                case ("gsw-FR"):
+                case ("cy-GB"):
+                case ("gd-GB"):
+                case ("en-GB"):
+                case ("da-DK"):
+                case ("se-SE"):
+                case ("nb-NO"):
+                case ("nn-NO"):
+                case ("nordic"):
+                    return KeyboardPhysicalLayout.ISO;
+                case ("ru-RU"):
+                case ("tt-RU"):
+                case ("ba-RU"):
+                case ("sah-RU"):
+                case ("en-US"):
+                case ("pt-BR"):
+                case ("dvorak"):
+                    return KeyboardPhysicalLayout.ANSI;
+                case ("dvorak_int"):
+                case ("hu-HU"):
+                case ("it-IT"):
+                case ("es-AR"):
+                case ("es-BO"):
+                case ("es-CL"):
+                case ("es-CO"):
+                case ("es-CR"):
+                case ("es-EC"):
+                case ("es-MX"):
+                case ("es-PA"):
+                case ("es-PY"):
+                case ("es-PE"):
+                case ("es-UY"):
+                case ("es-VE"):
+                case ("es-419"):
+                case ("es-ES"):
+                case ("iso"):
+                    return KeyboardPhysicalLayout.ISO;
+                case ("ansi"):
+                    return KeyboardPhysicalLayout.ANSI;
+                default:
+                    return KeyboardPhysicalLayout.ISO;
+
+            }
+        }
+
+    }
     public class KeyboardLayoutManager
     {
         public Dictionary<DeviceKeys, DeviceKeys> LayoutKeyConversion = new Dictionary<DeviceKeys, DeviceKeys>();
 
-        private VirtualGroup virtualKeyboardGroup;
-
         private Dictionary<Devices.DeviceKeys, IKeycap> _virtualKeyboardMap = new Dictionary<DeviceKeys, IKeycap>();
 
-        private bool _virtualKBInvalid = true;
+        public KeyboardConfig keyboardConfig = new KeyboardConfig();
+        public DeviceConfig mouseConfig = new DeviceConfig();
 
-        private Grid _virtualKeyboard = new Grid();
+        public Grid VirtualDevicesLayout { get; private set; } = new Grid();
 
-        public Dictionary<DeviceKeys, string> KeyText { get { return virtualKeyboardGroup.KeyText; } }
+        public Grid AbstractVirtualKeyboard => CreateUserControl(true);
 
-        public Grid Virtual_keyboard
-        {
-            get
-            {
-                return _virtualKeyboard;
-            }
-        }
-
-        public Grid AbstractVirtualKeyboard
-        {
-            get
-            {
-                return CreateUserControl(true);
-            }
-        }
-
-        private FrameworkElement last_selected_element;
-
-        private Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
-
-        private bool _bitmapMapInvalid = true;
+        private int layoutWidth = 850;
+        private int layoutHeight = 200;
 
         public delegate void LayoutUpdatedEventHandler(object sender);
 
         public event LayoutUpdatedEventHandler KeyboardLayoutUpdated;
 
-        private String cultures_folder = "kb_layouts";
+        private List<Control_Keycap> KeycapLayouts = new List<Control_Keycap>();
 
-        private PreferredKeyboardLocalization _loaded_localization = PreferredKeyboardLocalization.None;
-
-        public PreferredKeyboardLocalization Loaded_Localization
-        {
-            get
-            {
-                return _loaded_localization;
-            }
-        }
-
-        private String layoutsPath = "";
+        public KeyboardPhysicalLayout Loaded_Localization => keyboardConfig.SelectedKeyboardLayout;
 
         public KeyboardLayoutManager()
         {
-            layoutsPath = Path.Combine(Global.ExecutingDirectory, cultures_folder);
             Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
         }
 
@@ -486,602 +1069,67 @@ namespace Aurora.Settings
 
         public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
-#if !DEBUG
-            try
-            {
-#endif
-            //System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
-
-            //Global.logger.LogLine("Loading brand: " + brand.ToString() + " for: " + System.Threading.Thread.CurrentThread.CurrentCulture.Name);
-
             //Load keyboard layout
-            if (Directory.Exists(layoutsPath))
+            keyboardConfig.SelectedLayout = GetKeyboardJsonName(keyboard_preference);
+            keyboardConfig.SelectedKeyboardLayout = Global.Configuration.KeyboardLocalization;
+
+            var Keys = new List<DeviceKeyConfiguration>();
+            if (!String.IsNullOrWhiteSpace(keyboardConfig.SelectedLayout))
             {
-                PreferredKeyboardLocalization layout = Global.Configuration.KeyboardLocalization;
+                DeviceLayout keyboardLayout = new DeviceLayout(keyboardConfig);
+                var keyboardKeys = keyboardLayout.LoadLayout();
 
-                if (layout == PreferredKeyboardLocalization.iso)
+                mouseConfig.SelectedLayout = GetMouseJsonName(mouse_preference);
+                mouseConfig.Type = 1;
+                DeviceLayout mouseLayout = new DeviceLayout(mouseConfig);
+                var mouseKeys = mouseLayout.LoadLayout();
+
+                layoutWidth = keyboardLayout.Width + mouseLayout.Width + 20;
+                layoutHeight = (keyboardLayout.Height > mouseLayout.Height) ? keyboardLayout.Height : mouseLayout.Height;
+
+                
+                
+                foreach (var key in keyboardKeys)
                 {
-                    LoadCulture("iso");
-                    _loaded_localization = layout;
-                }
-                else if (layout == PreferredKeyboardLocalization.ansi)
-                {
-                    LoadCulture("ansi");
-                    _loaded_localization = layout;
-                }
-                else
-                {
-
-                    string culture = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
-
-                    switch (layout)
-                    {
-                        case PreferredKeyboardLocalization.None:
-                            break;
-                        case PreferredKeyboardLocalization.intl:
-                            culture = "intl";
-                            break;
-                        case PreferredKeyboardLocalization.us:
-                            culture = "en-US";
-                            break;
-                        case PreferredKeyboardLocalization.uk:
-                            culture = "en-GB";
-                            break;
-                        case PreferredKeyboardLocalization.ru:
-                            culture = "ru-RU";
-                            break;
-                        case PreferredKeyboardLocalization.fr:
-                            culture = "fr-FR";
-                            break;
-                        case PreferredKeyboardLocalization.de:
-                            culture = "de-DE";
-                            break;
-                        case PreferredKeyboardLocalization.jpn:
-                            culture = "ja-JP";
-                            break;
-                        case PreferredKeyboardLocalization.nordic:
-                            culture = "nordic";
-                            break;
-                        case PreferredKeyboardLocalization.tr:
-                            culture = "tr-TR";
-                            break;
-                        case PreferredKeyboardLocalization.swiss:
-                            culture = "de-CH";
-                            break;
-                        case PreferredKeyboardLocalization.abnt2:
-                            culture = "pt-BR";
-                            break;
-                        case PreferredKeyboardLocalization.dvorak:
-                            culture = "dvorak";
-                            break;
-                        case PreferredKeyboardLocalization.dvorak_int:
-                            culture = "dvorak_int";
-                            break;
-                        case PreferredKeyboardLocalization.hu:
-                            culture = "hu-HU";
-                            break;
-                        case PreferredKeyboardLocalization.it:
-                            culture = "it-IT";
-                            break;
-                        case PreferredKeyboardLocalization.la:
-                            culture = "es-AR";
-                            break;
-                        case PreferredKeyboardLocalization.es:
-                            culture = "es-ES";
-                            break;
-                        case PreferredKeyboardLocalization.iso:
-                            culture = "iso";
-                            break;
-                        case PreferredKeyboardLocalization.ansi:
-                            culture = "ansi";
-                            break;
-                    }
-
-                    switch (culture)
-                    {
-                        case ("tr-TR"):
-                            LoadCulture("tr");
-                            break;
-                        case ("ja-JP"):
-                            LoadCulture("jpn");
-                            break;
-                        case ("de-DE"):
-                        case ("hsb-DE"):
-                        case ("dsb-DE"):
-                            _loaded_localization = PreferredKeyboardLocalization.de;
-                            LoadCulture("de");
-                            break;
-                        case ("fr-CH"):
-                        case ("de-CH"):
-                            _loaded_localization = PreferredKeyboardLocalization.swiss;
-                            LoadCulture("swiss");
-                            break;
-                        case ("fr-FR"):
-                        case ("br-FR"):
-                        case ("oc-FR"):
-                        case ("co-FR"):
-                        case ("gsw-FR"):
-                            _loaded_localization = PreferredKeyboardLocalization.fr;
-                            LoadCulture("fr");
-                            break;
-                        case ("cy-GB"):
-                        case ("gd-GB"):
-                        case ("en-GB"):
-                            _loaded_localization = PreferredKeyboardLocalization.uk;
-                            LoadCulture("uk");
-                            break;
-                        case ("ru-RU"):
-                        case ("tt-RU"):
-                        case ("ba-RU"):
-                        case ("sah-RU"):
-                            _loaded_localization = PreferredKeyboardLocalization.ru;
-                            LoadCulture("ru");
-                            break;
-                        case ("en-US"):
-                            _loaded_localization = PreferredKeyboardLocalization.us;
-                            LoadCulture("us");
-                            break;
-                        case ("da-DK"):
-                        case ("se-SE"):
-                        case ("nb-NO"):
-                        case ("nn-NO"):
-                        case ("nordic"):
-                            _loaded_localization = PreferredKeyboardLocalization.nordic;
-                            LoadCulture("nordic");
-                            break;
-                        case ("pt-BR"):
-                            _loaded_localization = PreferredKeyboardLocalization.abnt2;
-                            LoadCulture("abnt2");
-                            break;
-                        case ("dvorak"):
-                            _loaded_localization = PreferredKeyboardLocalization.dvorak;
-                            LoadCulture("dvorak");
-                            break;
-                        case ("dvorak_int"):
-                            _loaded_localization = PreferredKeyboardLocalization.dvorak_int;
-                            LoadCulture("dvorak_int");
-                            break;
-                        case ("hu-HU"):
-                            _loaded_localization = PreferredKeyboardLocalization.hu;
-                            LoadCulture("hu");
-                            break;
-                        case ("it-IT"):
-                            _loaded_localization = PreferredKeyboardLocalization.it;
-                            LoadCulture("it");
-                            break;
-                        case ("es-AR"):
-                        case ("es-BO"):
-                        case ("es-CL"):
-                        case ("es-CO"):
-                        case ("es-CR"):
-                        case ("es-EC"):
-                        case ("es-MX"):
-                        case ("es-PA"):
-                        case ("es-PY"):
-                        case ("es-PE"):
-                        case ("es-UY"):
-                        case ("es-VE"):
-                        case ("es-419"):
-                            _loaded_localization = PreferredKeyboardLocalization.la;
-                            LoadCulture("la");
-                            break;
-                        case ("es-ES"):
-                            _loaded_localization = PreferredKeyboardLocalization.es;
-                            LoadCulture("es");
-                            break;
-                        case ("iso"):
-                            _loaded_localization = PreferredKeyboardLocalization.iso;
-                            LoadCulture("iso");
-                            break;
-                        case ("ansi"):
-                            _loaded_localization = PreferredKeyboardLocalization.ansi;
-                            LoadCulture("ansi");
-                            break;
-                        default:
-                            _loaded_localization = PreferredKeyboardLocalization.intl;
-                            LoadCulture("intl");
-                            break;
-
-                    }
-                }
-            }
-
-            var layoutConfigPath = "";
-
-            if (keyboard_preference == PreferredKeyboard.Logitech_G910)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g910.json");
-            else if (keyboard_preference == PreferredKeyboard.Logitech_G810)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g810.json");
-            else if (keyboard_preference == PreferredKeyboard.Logitech_GPRO)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_gpro.json");
-            else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g410.json");
-			else if (keyboard_preference == PreferredKeyboard.Logitech_G815)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g815.json");
-            else if (keyboard_preference == PreferredKeyboard.Logitech_G513)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g513.json");
-            else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
-                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95_platinum.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_K70)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_K70MK2)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k70_mk2.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_K65)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k65.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE_MK2)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe_mk2.json");
-            else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
-                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
-            else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
-                layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
-            else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_X)
-                layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_x.json");
-            else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_TE)
-                layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
-            else if (keyboard_preference == PreferredKeyboard.Razer_Blade)
-                layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
-            else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
-                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
-            else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
-                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_s.json");
-            else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
-                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_m.json");
-            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
-                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
-            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
-                layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
-            else if (keyboard_preference == PreferredKeyboard.Cooler_Master_SK650)
-                layoutConfigPath = Path.Combine(layoutsPath, "cooler_master_sk650.json");
-            else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
-                layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
-            else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
-                layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m800.json");
-            else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750)
-                layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750.json");
-            else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750_TKL)
-                layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m750_tkl.json");
-            else if (keyboard_preference == PreferredKeyboard.Wooting_One)
-                layoutConfigPath = Path.Combine(layoutsPath, "wooting_one.json");
-            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
-                layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_flare.json");
-            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Scope)
-                layoutConfigPath = Path.Combine(layoutsPath, "asus_strix_scope.json");
-            else if (keyboard_preference == PreferredKeyboard.SoundBlasterX_Vanguard_K08)
-                layoutConfigPath = Path.Combine(layoutsPath, "soundblasterx_vanguardk08.json");
-            else if (keyboard_preference == PreferredKeyboard.GenericLaptop)
-                layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
-            else if (keyboard_preference == PreferredKeyboard.GenericLaptopNumpad)
-                layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
-            else if (keyboard_preference == PreferredKeyboard.Drevo_BladeMaster)
-                layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
-            else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
-                layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
- 
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_1)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_1.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_2)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_2.json");
-            //keyboare 2.1
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_US)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_US.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_UK)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_UK.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_BR)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_BR.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_JP)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P1_550_JP.json");
-            //keyboare 2.2
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_US)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_US.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_UK)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_UK.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_BR)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_BR.json");
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_JP)
-                layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2P2_650_JP.json");
- 
-            else if (keyboard_preference == PreferredKeyboard.Ducky_Shine_7)
-                layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
-            else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
-                layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
-            else if (keyboard_preference == PreferredKeyboard.OMEN_Sequencer)
-                layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
-            else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
-                layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
-            else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
-                layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
-
-            else
-            {
-                LoadNone();
-                return;
-            }
-
-            if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
-            {
-                string content = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
-                VirtualGroupConfiguration layoutConfig = JsonConvert.DeserializeObject<VirtualGroupConfiguration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-
-                virtualKeyboardGroup.AdjustKeys(layoutConfig.key_modifications);
-                virtualKeyboardGroup.RemoveKeys(layoutConfig.keys_to_remove);
-
-                if (layoutConfig.KeyConversion != null)
-                {
-                    foreach (var key in layoutConfig.KeyConversion)
-                    {
-                        if (!this.LayoutKeyConversion.ContainsKey(key.Key))
-                            this.LayoutKeyConversion.Add(key.Key, key.Value);
-                    }
-                }
-
-                foreach (string feature in layoutConfig.included_features)
-                {
-                    string feature_path = Path.Combine(layoutsPath, "Extra Features", feature);
-
-                    if (File.Exists(feature_path))
-                    {
-                        string feature_content = File.ReadAllText(feature_path, Encoding.UTF8);
-                        VirtualGroup feature_config = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-
-                        virtualKeyboardGroup.AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
-                        if (feature_config.KeyConversion != null)
-                        {
-                            foreach (var key in feature_config.KeyConversion)
-                            {
-                                if (!this.LayoutKeyConversion.ContainsKey(key.Key))
-                                    this.LayoutKeyConversion.Add(key.Key, key.Value);
-                            }
-                        }
-                    }
-                }
-
-                //Extra fix for Master keys Pro M White foreign layouts
-                if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
-                {
-                    switch (_loaded_localization)
-                    {
-                        case PreferredKeyboardLocalization.intl:
-                        case PreferredKeyboardLocalization.de:
-                        case PreferredKeyboardLocalization.fr:
-                        case PreferredKeyboardLocalization.jpn:
-                        case PreferredKeyboardLocalization.ru:
-                        case PreferredKeyboardLocalization.uk:
-                            virtualKeyboardGroup.AdjustKeys(new Dictionary<DeviceKeys, KeyboardKey>() { { DeviceKeys.NUM_SEVEN, new KeyboardKey(null, DeviceKeys.NUM_SEVEN, null, null, null, 60, null, null, null, null, null, 5, null) } });
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                string mouse_feature_path = "";
-
-                switch (mouse_preference)
-                {
-                    case PreferredMouse.Generic_Peripheral:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
-                        break;
-                    case PreferredMouse.Generic_Mousepad:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
-                        break;
-                    case PreferredMouse.Logitech_G900:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
-                        break;
-                    case PreferredMouse.Logitech_G502:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json");
-                        break;
-                    case PreferredMouse.Corsair_Sabre:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json");
-                        break;
-                    case PreferredMouse.Corsair_M65:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_m65_features.json");
-                        break;
-                    case PreferredMouse.Corsair_Katar:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json");
-                        break;
-                    case PreferredMouse.Clevo_Touchpad:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
-                        break;
-                    case PreferredMouse.Roccat_Kone_Pure:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "roccat_kone_pure_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_Rival_300:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_QcK_Prism:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_QcK_2_Zone:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
-                        break;
-                    case PreferredMouse.Asus_Pugio:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Photon:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Outpost_Plus_Photon:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Vector:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Vector_Essentials:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
-                        break;
-                    case PreferredMouse.Razer_Mamba_TE:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_mamba_te_features.json");
-                        break;
-                }
-
-                if (!string.IsNullOrWhiteSpace(mouse_feature_path))
-                {
-                    string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
-                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-
+                    if (layoutHeight > keyboardLayout.Height)
+                        key.Y += (layoutHeight - keyboardLayout.Height) / 2;
                     if (mouse_orientation == MouseOrientationType.LeftHanded)
-                    {
-                        if (featureConfig.origin_region == KeyboardRegion.TopRight)
-                            featureConfig.origin_region = KeyboardRegion.TopLeft;
-                        else if (featureConfig.origin_region == KeyboardRegion.BottomRight)
-                            featureConfig.origin_region = KeyboardRegion.BottomLeft;
-
-                        double outlineWidth = 0.0;
-                        int outlineWidthBits = 0;
-
-                        foreach (var key in featureConfig.grouped_keys)
-                        {
-                            if (outlineWidth == 0.0 && outlineWidthBits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
-                            {
-                                if (key.tag == DeviceKeys.NONE)
-                                {
-                                    outlineWidth = key.width.Value + 2 * key.margin_left.Value;
-                                    //outlineWidthBits = key.width_bits.Value + 2 * key.margin_left_bits.Value;
-                                }
-                            }
-
-                            key.margin_left -= outlineWidth;
-                            //key.margin_left_bits -= outlineWidthBits;
-                        }
-
-                    }
-
-                    virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
+                        key.X += mouseLayout.Width + 15;
+                    Keys.Add(key);
+                }
+                foreach (var key in mouseKeys)
+                {
+                    if (layoutHeight > mouseLayout.Height)
+                        key.Y += (layoutHeight - mouseLayout.Height) / 2;
+                    if (mouse_orientation == MouseOrientationType.RightHanded)
+                        key.X += keyboardLayout.Width + 15;
+                    Keys.Add(key);
                 }
 
-            }
-#if !DEBUG
-            }
-            catch (Exception e)
-            {
-                Global.logger.Error(e.ToString());
-            }
-#endif
+                KeycapLayouts.Clear();
+                Keys.ForEach(k => KeycapLayouts.Add(new Control_Keycap(k)));
 
-            //Perform end of load functions
-            _bitmapMapInvalid = true;
-            _virtualKBInvalid = true;
-            CalculateBitmap();
-
+            }
 
             CreateUserControl();
 
-            //Better description for these keys by using the DeviceKeys description instead
-            Dictionary<DeviceKeys, string> keytext = KeyText;
-            keytext.Remove(DeviceKeys.NUM_ASTERISK);
-            keytext.Remove(DeviceKeys.NUM_EIGHT);
-            keytext.Remove(DeviceKeys.NUM_ENTER);
-            keytext.Remove(DeviceKeys.NUM_FIVE);
-            keytext.Remove(DeviceKeys.NUM_FOUR);
-            keytext.Remove(DeviceKeys.NUM_MINUS);
-            keytext.Remove(DeviceKeys.NUM_NINE);
-            keytext.Remove(DeviceKeys.NUM_ONE);
-            keytext.Remove(DeviceKeys.NUM_PERIOD);
-            keytext.Remove(DeviceKeys.NUM_PLUS);
-            keytext.Remove(DeviceKeys.NUM_SEVEN);
-            keytext.Remove(DeviceKeys.NUM_SIX);
-            keytext.Remove(DeviceKeys.NUM_SLASH);
-            keytext.Remove(DeviceKeys.NUM_THREE);
-            keytext.Remove(DeviceKeys.NUM_TWO);
-            keytext.Remove(DeviceKeys.NUM_ZERO);
-            keytext.Remove(DeviceKeys.NUM_ZEROZERO);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT1);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT2);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT3);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT4);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT5);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT6);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT7);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT8);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT9);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT10);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT11);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT12);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT13);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT14);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT15);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT16);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT17);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT18);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT19);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT20);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT21);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT22);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT23);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT24);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT25);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT26);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT27);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT28);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT29);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT30);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT31);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT32);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT32);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT33);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT34);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT35);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT36);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT37);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT38);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT39);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT40);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT41);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT42);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT43);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT44);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT45);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT46);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT47);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT48);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT49);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT50);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT51);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT52);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT53);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT54);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT55);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT56);
-            keytext.Remove(DeviceKeys.ADDITIONALLIGHT57);
-            keytext.Remove(DeviceKeys.LEFT_CONTROL);
-            keytext.Remove(DeviceKeys.LEFT_WINDOWS);
-            keytext.Remove(DeviceKeys.LEFT_ALT);
-            keytext.Remove(DeviceKeys.LEFT_SHIFT);
-            keytext.Remove(DeviceKeys.RIGHT_ALT);
-            keytext.Remove(DeviceKeys.FN_Key);
-            keytext.Remove(DeviceKeys.RIGHT_WINDOWS);
-            keytext.Remove(DeviceKeys.RIGHT_CONTROL);
-            keytext.Remove(DeviceKeys.RIGHT_SHIFT);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT1);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT2);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT3);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT4);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT5);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT6);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT7);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT8);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT9);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT10);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT11);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT12);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT13);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT14);
-            keytext.Remove(DeviceKeys.MOUSEPADLIGHT15);
+            //Calculate Bitmap
+            var bitmap = new Dictionary<DeviceKeys, BitmapRectangle>();
+            foreach (var key in Keys)
+            {
+
+                double width = key.Width;
+                double height = key.Height;
+                double x_offset = key.X;
+                double y_offset = key.Y;
+
+                bitmap[(DeviceKeys)key.Key.Tag] = new BitmapRectangle(PixelToByte(x_offset), PixelToByte(y_offset), PixelToByte(width), PixelToByte(height));
+
+            }
+            Global.effengine.SetCanvasSize(PixelToByte(layoutWidth) + 1, PixelToByte(layoutHeight) + 1);
+            Global.effengine.SetBitmapping(bitmap);
 
             KeyboardLayoutUpdated?.Invoke(this);
-        }
-
-        public static int PixelToByte(int pixel)
-        {
-            return PixelToByte((double)pixel);
         }
 
         public static int PixelToByte(double pixel)
@@ -1103,212 +1151,27 @@ namespace Aurora.Settings
             Global.LightingStateManager.PostUpdate -= this.LightingStateManager_PostUpdate;
         }
 
-        public void CalculateBitmap()
-        {
-            if (_bitmapMapInvalid)
-            {
-                double cur_width = 0;
-                double cur_height = 0;
-                double width_max = 1;
-                double height_max = 1;
-                bitmap_map.Clear();
-
-                foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
-                {
-                    if (key.tag.Equals(DeviceKeys.NONE))
-                        continue;
-
-                    double width = key.width.Value;
-                    int width_bit = PixelToByte(width);
-                    double height = key.height.Value;
-                    int height_bit = PixelToByte(height);
-                    double x_offset = key.margin_left.Value;
-                    double y_offset = key.margin_top.Value;
-                    double br_x, br_y;
-
-                    if (key.absolute_location.Value)
-                    {
-                        this.bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(x_offset), PixelToByte(y_offset), width_bit, height_bit);
-                        br_x = (x_offset + width);
-                        br_y = (y_offset + height);
-                    }
-                    else
-                    {
-                        double x = x_offset + cur_width;
-                        double y = y_offset + cur_height;
-
-                        this.bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(x), PixelToByte(y), width_bit, height_bit);
-
-                        br_x = (x + width);
-                        br_y = (y + height);
-
-                        if (key.line_break.Value)
-                        {
-                            cur_height += 37;
-                            cur_width = 0;
-                        }
-                        else
-                        {
-                            cur_width = br_x;
-                            if (y > cur_height)
-                                cur_height = y;
-                        }
-                    }
-                    if (br_x > width_max) width_max = br_x;
-                    if (br_y > height_max) height_max = br_y;
-                }
-
-                _bitmapMapInvalid = false;
-                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width)
-                Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
-                Global.effengine.SetBitmapping(this.bitmap_map);
-            }
-
-        }
-
-        private void virtualkeyboard_key_selected(FrameworkElement key)
-        {
-            if (key.Tag is Devices.DeviceKeys && (Devices.DeviceKeys)key.Tag != DeviceKeys.NONE)
-            {
-                //Multi key
-                if (Global.key_recorder.IsSingleKey())
-                {
-                    Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
-                    Global.key_recorder.StopRecording();
-                }
-                else
-                {
-                    if (Global.key_recorder.HasRecorded((Devices.DeviceKeys)(key.Tag)))
-                        Global.key_recorder.RemoveKey((Devices.DeviceKeys)(key.Tag));
-                    else
-                        Global.key_recorder.AddKey((Devices.DeviceKeys)(key.Tag));
-                    last_selected_element = key;
-                }
-            }
-        }
-
-        private void keyboard_grid_pressed(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock)
-            {
-                virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
-            }
-            else if (sender is Border && (sender as Border).Tag != null)
-            {
-                virtualkeyboard_key_selected(sender as Border);
-            }
-        }
-
-        private void keyboard_grid_moved(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_element != ((sender as Border).Child as TextBlock))
-                {
-                    virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
-                }
-                else if (sender is Border && (sender as Border).Tag != null && last_selected_element != (sender as Border))
-                {
-                    virtualkeyboard_key_selected(sender as Border);
-                }
-            }
-        }
 
         private Grid CreateUserControl(bool abstractKeycaps = false)
         {
-            if (_virtualKBInvalid && !abstractKeycaps)
+            if (!abstractKeycaps)
                 _virtualKeyboardMap.Clear();
 
             Grid new_virtual_keyboard = new Grid();
-
-            double layout_height = 0;
-            double layout_width = 0;
-
-            double baseline_x = 0.0;
-            double baseline_y = 0.0;
-            double current_height = 0;
-            double current_width = 0;
-
-            string images_path = Path.Combine(layoutsPath, "Extra Features", "images");
-
-            foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
+            if(KeycapLayouts.Any())
             {
-                double keyMargin_Left = key.margin_left.Value;
-                double keyMargin_Top = key.margin_top.Value;
-
-                string image_path = "";
-
-                if (!String.IsNullOrWhiteSpace(key.image))
-                    image_path = Path.Combine(images_path, key.image);
-
-                UserControl keycap;
-
-                //Ghost keycap is used for abstract representation of keys
-                if (abstractKeycaps)
-                    keycap = new Control_GhostKeycap(key, image_path);
-                else
+                _virtualKeyboardMap.Clear();
+                foreach (var keyCap in KeycapLayouts)
                 {
-                    switch (Global.Configuration.VirtualkeyboardKeycapType)
-                    {
-                        case KeycapType.Default_backglow:
-                            keycap = new Control_DefaultKeycapBackglow(key, image_path);
-                            break;
-                        case KeycapType.Default_backglow_only:
-                            keycap = new Control_DefaultKeycapBackglowOnly(key, image_path);
-                            break;
-                        case KeycapType.Colorized:
-                            keycap = new Control_ColorizedKeycap(key, image_path);
-                            break;
-                        case KeycapType.Colorized_blank:
-                            keycap = new Control_ColorizedKeycapBlank(key, image_path);
-                            break;
-                        default:
-                            keycap = new Control_DefaultKeycap(key, image_path);
-                            break;
-                    }
+                    new_virtual_keyboard.Children.Add(keyCap);
+                    if (keyCap.Keycap.GetKey() != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(keyCap.Keycap.GetKey()) && keyCap is IKeycap)
+                        _virtualKeyboardMap.Add(keyCap.Keycap.GetKey(), keyCap as IKeycap);
                 }
-
-                new_virtual_keyboard.Children.Add(keycap);
-
-                if (key.tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)
-                    _virtualKeyboardMap.Add(key.tag, keycap as IKeycap);
-
-                if (key.absolute_location.Value)
-                    keycap.Margin = new Thickness(key.margin_left.Value, key.margin_top.Value, 0, 0);
-                else
-                    keycap.Margin = new Thickness(current_width + key.margin_left.Value, current_height + key.margin_top.Value, 0, 0);
-
-                if (key.tag == DeviceKeys.ESC)
-                {
-                    baseline_x = keycap.Margin.Left;
-                    baseline_y = keycap.Margin.Top;
-                }
-
-                if (!key.absolute_location.Value)
-                {
-                    if (key.width + keyMargin_Left > 0)
-                        current_width += key.width.Value + keyMargin_Left;
-
-                    if (keyMargin_Top > 0)
-                        current_height += keyMargin_Top;
-
-
-                    if (layout_width < current_width)
-                        layout_width = current_width;
-
-                    if (key.line_break.Value)
-                    {
-                        current_height += 37;
-                        current_width = 0;
-                        //isFirstInRow = true;
-                    }
-
-                    if (layout_height < current_height)
-                        layout_height = current_height;
-                }
+                //Update size
+                new_virtual_keyboard.Width = layoutWidth;
+                new_virtual_keyboard.Height = layoutHeight;
             }
-
-            if (virtualKeyboardGroup.grouped_keys.Count == 0)
+            else
             {
                 //No items, display error
                 Label error_message = new Label();
@@ -1365,208 +1228,20 @@ namespace Aurora.Settings
                 new_virtual_keyboard.Width = 850;
                 new_virtual_keyboard.Height = 200;
             }
-            else
-            {
-                //Update size
-                new_virtual_keyboard.Width = virtualKeyboardGroup.Region.Width;
-                new_virtual_keyboard.Height = virtualKeyboardGroup.Region.Height;
-            }
 
-            if (_virtualKBInvalid && !abstractKeycaps)
+            if (!abstractKeycaps)
             {
-                _virtualKeyboard.Children.Clear();
-                _virtualKeyboard = new_virtual_keyboard;
+                VirtualDevicesLayout.Children.Clear();
+                VirtualDevicesLayout = new_virtual_keyboard;
 
-                Effects.grid_baseline_x = (float)baseline_x;
-                Effects.grid_baseline_y = (float)baseline_y;
+                Effects.grid_baseline_x = 0.0f;
+                Effects.grid_baseline_y = 0.0f;
                 Effects.grid_height = (float)new_virtual_keyboard.Height;
                 Effects.grid_width = (float)new_virtual_keyboard.Width;
-
-                _virtualKBInvalid = false;
             }
-
             return new_virtual_keyboard;
         }
 
-        private class KeyboardLayout
-        {
-            [JsonProperty("key_conversion")]
-            public Dictionary<DeviceKeys, DeviceKeys> KeyConversion = null;
-
-            [JsonProperty("keys")]
-            public KeyboardKey[] Keys = null;
-        }
-
-        private void LoadCulture(String culture)
-        {
-            var fileName = "Plain Keyboard\\layout." + culture + ".json";
-            var layoutPath = Path.Combine(layoutsPath, fileName);
-
-            if (!File.Exists(layoutPath))
-                LoadDefault();
-
-            string content = File.ReadAllText(layoutPath, Encoding.UTF8);
-            KeyboardLayout keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
-
-            virtualKeyboardGroup = new VirtualGroup(keyboard.Keys);
-
-            LayoutKeyConversion = keyboard.KeyConversion ?? new Dictionary<DeviceKeys, DeviceKeys>();
-            /*
-            if (keyboard.Count > 0)
-                keyboard.Last().line_break = false;
-
-            keyboard.Add(new KeyboardKey("Mouse/\r\nHeadset", Devices.DeviceKeys.Peripheral, true, true, 12, 45, -60, 90, 90, 6, 6, 4, -3));
-
-            if (keyboard.Count > 0)
-                keyboard.Last().line_break = true;
-            */
-        }
-
-        public void LoadNone()
-        {
-            virtualKeyboardGroup.Clear();
-
-            _bitmapMapInvalid = true;
-            _virtualKBInvalid = true;
-            CalculateBitmap();
-            CreateUserControl();
-
-            KeyboardLayoutUpdated?.Invoke(this);
-        }
-
-        public void LoadDefault()
-        {
-            List<KeyboardKey> keyboard = new List<KeyboardKey>();
-
-            keyboard.Add(new KeyboardKey("ESC", Devices.DeviceKeys.ESC));
-
-            keyboard.Add(new KeyboardKey("F1", Devices.DeviceKeys.F1, true, false, 12, 32));
-            keyboard.Add(new KeyboardKey("F2", Devices.DeviceKeys.F2));
-            keyboard.Add(new KeyboardKey("F3", Devices.DeviceKeys.F3));
-            keyboard.Add(new KeyboardKey("F4", Devices.DeviceKeys.F4));
-
-            keyboard.Add(new KeyboardKey("F5", Devices.DeviceKeys.F5, true, false, 12, 34));
-            keyboard.Add(new KeyboardKey("F6", Devices.DeviceKeys.F6));
-            keyboard.Add(new KeyboardKey("F7", Devices.DeviceKeys.F7));
-            keyboard.Add(new KeyboardKey("F8", Devices.DeviceKeys.F8));
-
-            keyboard.Add(new KeyboardKey("F9", Devices.DeviceKeys.F9, true, false, 12, 29));
-            keyboard.Add(new KeyboardKey("F10", Devices.DeviceKeys.F10));
-            keyboard.Add(new KeyboardKey("F11", Devices.DeviceKeys.F11));
-            keyboard.Add(new KeyboardKey("F12", Devices.DeviceKeys.F12));
-
-            keyboard.Add(new KeyboardKey("PRINT", Devices.DeviceKeys.PRINT_SCREEN, true, false, 9, 14));
-            keyboard.Add(new KeyboardKey("SCRL\r\nLOCK", Devices.DeviceKeys.SCROLL_LOCK, true, false, 9));
-            keyboard.Add(new KeyboardKey("PAUSE", Devices.DeviceKeys.PAUSE_BREAK, true, true, 9));
-
-            keyboard.Add(new KeyboardKey("~", Devices.DeviceKeys.TILDE));
-            keyboard.Add(new KeyboardKey("1", Devices.DeviceKeys.ONE));
-            keyboard.Add(new KeyboardKey("2", Devices.DeviceKeys.TWO));
-            keyboard.Add(new KeyboardKey("3", Devices.DeviceKeys.THREE));
-            keyboard.Add(new KeyboardKey("4", Devices.DeviceKeys.FOUR));
-            keyboard.Add(new KeyboardKey("5", Devices.DeviceKeys.FIVE));
-            keyboard.Add(new KeyboardKey("6", Devices.DeviceKeys.SIX));
-            keyboard.Add(new KeyboardKey("7", Devices.DeviceKeys.SEVEN));
-            keyboard.Add(new KeyboardKey("8", Devices.DeviceKeys.EIGHT));
-            keyboard.Add(new KeyboardKey("9", Devices.DeviceKeys.NINE));
-            keyboard.Add(new KeyboardKey("0", Devices.DeviceKeys.ZERO));
-            keyboard.Add(new KeyboardKey("-", Devices.DeviceKeys.MINUS));
-            keyboard.Add(new KeyboardKey("=", Devices.DeviceKeys.EQUALS));
-            keyboard.Add(new KeyboardKey("BACKSPACE", Devices.DeviceKeys.BACKSPACE, true, false, 12, 7, 0, 67));
-
-            keyboard.Add(new KeyboardKey("INSERT", Devices.DeviceKeys.INSERT, true, false, 9, 14));
-            keyboard.Add(new KeyboardKey("HOME", Devices.DeviceKeys.HOME, true, false, 9));
-            keyboard.Add(new KeyboardKey("PAGE\r\nUP", Devices.DeviceKeys.HOME, true, false, 9));
-
-            keyboard.Add(new KeyboardKey("NUM\r\nLOCK", Devices.DeviceKeys.NUM_LOCK, true, false, 9, 14));
-            keyboard.Add(new KeyboardKey("/", Devices.DeviceKeys.NUM_SLASH));
-            keyboard.Add(new KeyboardKey("*", Devices.DeviceKeys.NUM_ASTERISK));
-            keyboard.Add(new KeyboardKey("-", Devices.DeviceKeys.NUM_MINUS, true, true));
-
-            keyboard.Add(new KeyboardKey("TAB", Devices.DeviceKeys.TAB, true, false, 12, 7, 0, 50));
-            keyboard.Add(new KeyboardKey("Q", Devices.DeviceKeys.Q));
-            keyboard.Add(new KeyboardKey("W", Devices.DeviceKeys.W));
-            keyboard.Add(new KeyboardKey("E", Devices.DeviceKeys.E));
-            keyboard.Add(new KeyboardKey("R", Devices.DeviceKeys.R));
-            keyboard.Add(new KeyboardKey("T", Devices.DeviceKeys.T));
-            keyboard.Add(new KeyboardKey("Y", Devices.DeviceKeys.Y));
-            keyboard.Add(new KeyboardKey("U", Devices.DeviceKeys.U));
-            keyboard.Add(new KeyboardKey("I", Devices.DeviceKeys.I));
-            keyboard.Add(new KeyboardKey("O", Devices.DeviceKeys.O));
-            keyboard.Add(new KeyboardKey("P", Devices.DeviceKeys.P));
-            keyboard.Add(new KeyboardKey("{", Devices.DeviceKeys.OPEN_BRACKET));
-            keyboard.Add(new KeyboardKey("}", Devices.DeviceKeys.CLOSE_BRACKET));
-            keyboard.Add(new KeyboardKey("\\", Devices.DeviceKeys.BACKSLASH, true, false, 12, 7, 0, 49));
-
-            keyboard.Add(new KeyboardKey("DEL", Devices.DeviceKeys.DELETE, true, false, 9, 12));
-            keyboard.Add(new KeyboardKey("END", Devices.DeviceKeys.END, true, false, 9));
-            keyboard.Add(new KeyboardKey("PAGE\r\nDOWN", Devices.DeviceKeys.PAGE_DOWN, true, false, 9));
-
-            keyboard.Add(new KeyboardKey("7", Devices.DeviceKeys.NUM_SEVEN, true, false, 12, 14));
-            keyboard.Add(new KeyboardKey("8", Devices.DeviceKeys.NUM_EIGHT));
-            keyboard.Add(new KeyboardKey("9", Devices.DeviceKeys.NUM_NINE));
-            keyboard.Add(new KeyboardKey("+", Devices.DeviceKeys.NUM_PLUS, true, true, 12, 7, 0, 30, 69));
-
-            keyboard.Add(new KeyboardKey("CAPS\r\nLOCK", Devices.DeviceKeys.CAPS_LOCK, true, false, 9, 7, 0, 60));
-            keyboard.Add(new KeyboardKey("A", Devices.DeviceKeys.A));
-            keyboard.Add(new KeyboardKey("S", Devices.DeviceKeys.S));
-            keyboard.Add(new KeyboardKey("D", Devices.DeviceKeys.D));
-            keyboard.Add(new KeyboardKey("F", Devices.DeviceKeys.F));
-            keyboard.Add(new KeyboardKey("G", Devices.DeviceKeys.G));
-            keyboard.Add(new KeyboardKey("H", Devices.DeviceKeys.H));
-            keyboard.Add(new KeyboardKey("J", Devices.DeviceKeys.J));
-            keyboard.Add(new KeyboardKey("K", Devices.DeviceKeys.K));
-            keyboard.Add(new KeyboardKey("L", Devices.DeviceKeys.L));
-            keyboard.Add(new KeyboardKey(":", Devices.DeviceKeys.SEMICOLON));
-            keyboard.Add(new KeyboardKey("\"", Devices.DeviceKeys.APOSTROPHE));
-            keyboard.Add(new KeyboardKey("ENTER", Devices.DeviceKeys.ENTER, true, false, 12, 7, 0, 76));
-
-            keyboard.Add(new KeyboardKey("4", Devices.DeviceKeys.NUM_FOUR, true, false, 12, 130));
-            keyboard.Add(new KeyboardKey("5", Devices.DeviceKeys.NUM_FIVE));
-            keyboard.Add(new KeyboardKey("6", Devices.DeviceKeys.NUM_SIX, true, true));
-            //Space taken up by +
-
-            keyboard.Add(new KeyboardKey("SHIFT", Devices.DeviceKeys.LEFT_SHIFT, true, false, 12, 7, 0, 78));
-            keyboard.Add(new KeyboardKey("Z", Devices.DeviceKeys.Z));
-            keyboard.Add(new KeyboardKey("X", Devices.DeviceKeys.X));
-            keyboard.Add(new KeyboardKey("C", Devices.DeviceKeys.C));
-            keyboard.Add(new KeyboardKey("V", Devices.DeviceKeys.V));
-            keyboard.Add(new KeyboardKey("B", Devices.DeviceKeys.B));
-            keyboard.Add(new KeyboardKey("N", Devices.DeviceKeys.N));
-            keyboard.Add(new KeyboardKey("M", Devices.DeviceKeys.M));
-            keyboard.Add(new KeyboardKey("<", Devices.DeviceKeys.COMMA));
-            keyboard.Add(new KeyboardKey(">", Devices.DeviceKeys.PERIOD));
-            keyboard.Add(new KeyboardKey("?", Devices.DeviceKeys.FORWARD_SLASH));
-            keyboard.Add(new KeyboardKey("SHIFT", Devices.DeviceKeys.RIGHT_SHIFT, true, false, 12, 7, 0, 95));
-
-            keyboard.Add(new KeyboardKey("UP", Devices.DeviceKeys.ARROW_UP, true, false, 9, 49));
-
-            keyboard.Add(new KeyboardKey("1", Devices.DeviceKeys.NUM_ONE, true, false, 12, 51));
-            keyboard.Add(new KeyboardKey("2", Devices.DeviceKeys.NUM_TWO));
-            keyboard.Add(new KeyboardKey("3", Devices.DeviceKeys.NUM_THREE));
-            keyboard.Add(new KeyboardKey("ENTER", Devices.DeviceKeys.NUM_ENTER, true, true, 9, 7, 0, 30, 67));
-
-            keyboard.Add(new KeyboardKey("CTRL", Devices.DeviceKeys.RIGHT_CONTROL, true, false, 12, 7, 0, 51));
-            keyboard.Add(new KeyboardKey("WIN", Devices.DeviceKeys.RIGHT_WINDOWS, true, false, 12, 5, 0, 39));
-            keyboard.Add(new KeyboardKey("ALT", Devices.DeviceKeys.RIGHT_ALT, true, false, 12, 5, 0, 42));
-
-            keyboard.Add(new KeyboardKey("SPACE", Devices.DeviceKeys.SPACE, true, false, 12, 7, 0, 208));
-            keyboard.Add(new KeyboardKey("ALT", Devices.DeviceKeys.LEFT_ALT, true, false, 12, 5, 0, 41));
-            keyboard.Add(new KeyboardKey("WIN", Devices.DeviceKeys.LEFT_WINDOWS, true, false, 12, 5, 0, 41));
-            keyboard.Add(new KeyboardKey("APP", Devices.DeviceKeys.APPLICATION_SELECT, true, false, 12, 5, 0, 41));
-            keyboard.Add(new KeyboardKey("CTRL", Devices.DeviceKeys.LEFT_CONTROL, true, false, 12, 5, 0, 50));
-
-            keyboard.Add(new KeyboardKey("LEFT", Devices.DeviceKeys.ARROW_LEFT, true, false, 9, 12));
-            keyboard.Add(new KeyboardKey("DOWN", Devices.DeviceKeys.ARROW_DOWN, true, false, 9));
-            keyboard.Add(new KeyboardKey("RIGHT", Devices.DeviceKeys.ARROW_DOWN, true, false, 9));
-
-            keyboard.Add(new KeyboardKey("0", Devices.DeviceKeys.NUM_ZERO, true, false, 12, 14, 0, 67));
-            keyboard.Add(new KeyboardKey(".", Devices.DeviceKeys.NUM_PERIOD, true, true));
-
-            virtualKeyboardGroup = new VirtualGroup(keyboard.ToArray());
-
-            _loaded_localization = PreferredKeyboardLocalization.None;
-        }
 
         public void SetKeyboardColors(Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights)
         {
@@ -1577,6 +1252,167 @@ namespace Aurora.Settings
                     System.Drawing.Color key_color = keylights[kvp.Key];
                     kvp.Value.SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
                 }
+            }
+        }
+        public string GetKeyboardJsonName(PreferredKeyboard keyboard_preference)
+        {
+            if (keyboard_preference == PreferredKeyboard.Logitech_G910)
+                return "logitech_g910";
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G810)
+                return "logitech_g810";
+            else if (keyboard_preference == PreferredKeyboard.Logitech_GPRO)
+                return "logitech_gpro";
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G410)
+                return "logitech_g410";
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G815)
+                return "logitech_g815";
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G513)
+                return "logitech_g513";
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
+                return "logitech_g213";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
+                return "corsair_k95";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
+                return "corsair_k95_platinum";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K70)
+                return "corsair_k70";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K70MK2)
+                return "corsair_k70_mk2";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K65)
+                return "corsair_k65";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE)
+                return "corsair_strafe";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_STRAFE_MK2)
+                return "corsair_strafe_mk2";
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
+                return "corsair_k68";
+            else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
+                return "razer_blackwidow";
+            else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_X)
+                return "razer_blackwidow_x";
+            else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_TE)
+                return "razer_blackwidow_te";
+            else if (keyboard_preference == PreferredKeyboard.Razer_Blade)
+                return "razer_blade";
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
+                return "masterkeys_pro_l";
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
+                return "masterkeys_pro_s";
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_M)
+                return "masterkeys_pro_m";
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK750)
+                return "masterkeys_mk750";
+            else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
+                return "masterkeys_mk730";
+            else if (keyboard_preference == PreferredKeyboard.Cooler_Master_SK650)
+                return "cooler_master_sk650";
+            else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
+                return "roccat_ryos";
+            else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
+                return "steelseries_apex_m800";
+            else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750)
+                return "steelseries_apex_m750";
+            else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750_TKL)
+                return "steelseries_apex_m750_tkl";
+            else if (keyboard_preference == PreferredKeyboard.Wooting_One)
+                return "wooting_one";
+            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Flare)
+                return "asus_strix_flare";
+            else if (keyboard_preference == PreferredKeyboard.Asus_Strix_Scope)
+                return "asus_strix_scope";
+            else if (keyboard_preference == PreferredKeyboard.SoundBlasterX_Vanguard_K08)
+                return "soundblasterx_vanguardk08";
+            else if (keyboard_preference == PreferredKeyboard.GenericLaptop)
+                return "generic_laptop";
+            else if (keyboard_preference == PreferredKeyboard.GenericLaptopNumpad)
+                return "generic_laptop_numpad";
+            else if (keyboard_preference == PreferredKeyboard.Drevo_BladeMaster)
+                return "drevo_blademaster";
+            else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
+                return "wooting_two";
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X)
+                return "Uniwill2ND_35X";
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550)
+                return "Uniwill2P1_550";
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650)
+                return "Uniwill2P2_650";
+            else if (keyboard_preference == PreferredKeyboard.Ducky_Shine_7)
+                return "ducky_shine_7";
+            else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
+                return "ducky_one_2_rgb_tkl";
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Sequencer)
+                return "omen_sequencer";
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
+                return "omen_four_zone";
+            else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
+                return "hyperx_alloy_elite_rgb";
+            else
+                return "";
+
+        }
+        string GetMouseJsonName(PreferredMouse mouse_preference)
+        {
+            switch (mouse_preference)
+            {
+                case PreferredMouse.Generic_Peripheral:
+                    return "Generic Peripheral";
+                    break;
+                case PreferredMouse.Generic_Mousepad:
+                    return "Generic Mousepad";
+                    break;
+                case PreferredMouse.Logitech_G900:
+                    return "Logitech - G900";
+                    break;
+                case PreferredMouse.Logitech_G502:
+                    return "Logitech - G502";
+                    break;
+                case PreferredMouse.Corsair_Sabre:
+                    return "Corsair - Sabre";
+                    break;
+                case PreferredMouse.Corsair_M65:
+                    return "Corsair - M65";
+                    break;
+                case PreferredMouse.Corsair_Katar:
+                    return "Corsair - Katar";
+                    break;
+                case PreferredMouse.Clevo_Touchpad:
+                    return "Clevo - Touchpad";
+                    break;
+                case PreferredMouse.Roccat_Kone_Pure:
+                    return "Roccat - Kone Pure";
+                    break;
+                case PreferredMouse.SteelSeries_Rival_300:
+                    return "SteelSeries - Rival 300";
+                    break;
+                case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
+                    return "SteelSeries - Rival 300 HP OMEN Edition";
+                    break;
+                case PreferredMouse.SteelSeries_QcK_Prism:
+                    return "SteelSeries - QcK Prism Mousepad + Mouse";
+                    break;
+                case PreferredMouse.SteelSeries_QcK_2_Zone:
+                    return "SteelSeries - Two-zone QcK Mousepad + Mouse";
+                    break;
+                case PreferredMouse.Asus_Pugio:
+                    return "Asus - Pugio";
+                    break;
+                case PreferredMouse.OMEN_Photon:
+                    return "Omen - Photon";
+                    break;
+                case PreferredMouse.OMEN_Outpost_Plus_Photon:
+                    return "Omen - Outpost + Photon";
+                    break;
+                case PreferredMouse.OMEN_Vector:
+                    return "Omen - Vector";
+                    break;
+                case PreferredMouse.OMEN_Vector_Essentials:
+                    return "Omen - Vector Essentials";
+                    break;
+                case PreferredMouse.Razer_Mamba_TE:
+                    return "Razer - Mamba TE";
+                    break;
+                default:
+                    return "";
             }
         }
     }

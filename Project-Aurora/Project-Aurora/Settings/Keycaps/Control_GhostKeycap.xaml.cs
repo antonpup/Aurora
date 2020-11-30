@@ -14,12 +14,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Aurora.Settings.Keycaps
+namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
 {
     /// <summary>
     /// Interaction logic for Control_GhostKeycap.xaml
     /// </summary>
-    public partial class Control_GhostKeycap : UserControl, IKeycap
+    public partial class Control_GhostKeycap : KeycapViewer
     {
         private Color current_color = Color.FromArgb(0, 0, 0, 0);
         private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
@@ -84,12 +84,7 @@ namespace Aurora.Settings.Keycaps
             }
         }
 
-        public DeviceKeys GetKey()
-        {
-            return associatedKey;
-        }
-
-        public void SetColor(Color key_color)
+        public override void SetColor(Color key_color)
         {
             key_color = Color.FromArgb(255, 255, 255, 255); //No colors allowed!
 
@@ -103,7 +98,7 @@ namespace Aurora.Settings.Keycaps
                 current_color = key_color;
             }
 
-            if (Global.key_recorder.HasRecorded(associatedKey))
+            if (IsSelected)
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
             else
             {
@@ -120,37 +115,6 @@ namespace Aurora.Settings.Keycaps
                     keyBorder.BorderThickness = new Thickness(0);
                 }
             }
-        }
-
-        private void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
-        }
-
-        private void keyBorder_MouseMove(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void virtualkeyboard_key_selected(Devices.DeviceKeys key)
-        {
-            if (key != DeviceKeys.NONE)
-            {
-                if (Global.key_recorder.HasRecorded(key))
-                    Global.key_recorder.RemoveKey(key);
-                else
-                    Global.key_recorder.AddKey(key);
-            }
-        }
-
-        private void keyBorder_MouseLeave(object sender, MouseEventArgs e)
-        {
-        }
-
-        private void keyBorder_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
         }
     }
 }

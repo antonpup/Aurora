@@ -267,29 +267,13 @@ namespace Aurora.Settings
 
  
 
-        [Description("UNIWILL2ND (ANSI)")]
-        Uniwill2ND_35X_1 = 2101,
-        [Description("UNIWILL2ND (ISO)")]
-        Uniwill2ND_35X_2 = 2102,
+        [Description("Uniwill 35X")]
+        Uniwill2ND_35X = 2101,
+        [Description("Uniwill 550")]
+        Uniwill2P1_550 = 2102,
 
-        [Description("UNIWILL2P1 (ISO)")]
-        Uniwill2P1_550_UK = 2103,
-        [Description("UNIWILL2P1 (ANSI)")]
-        Uniwill2P1_550_US = 2104,
-        [Description("UNIWILL2P1 (ABNT)")]
-        Uniwill2P1_550_BR = 2105,
-        [Description("UNIWILL2P1 (JIS)")]
-        Uniwill2P1_550_JP = 2106,
-
-
-        [Description("UNIWILL2P2 (ISO)")]
-        Uniwill2P2_650_UK = 2107,
-        [Description("UNIWILL2P2 (ANSI)")]
-        Uniwill2P2_650_US = 2108,
-        [Description("UNIWILL2P2 (ABNT)")]
-        Uniwill2P2_650_BR = 2109,
-        [Description("UNIWILL2P2 (JIS)")]
-        Uniwill2P2_650_JP = 2110,
+        [Description("Uniwill 650")]
+        Uniwill2P2_650 = 2103,
 
  
         //Ducky range is 1200-1299
@@ -308,50 +292,6 @@ namespace Aurora.Settings
         [Description("HyperX Alloy Elite RGB")]
         HyperX_Alloy_Elite_RGB = 1400,
  
-    }
-
-    public enum PreferredKeyboardLocalization
-    {
-        [Description("Automatic Detection")]
-        None = 0,
-        [Description("International")]
-        intl = 1,
-        [Description("United States")]
-        us = 2,
-        [Description("United Kingdom")]
-        uk = 3,
-        [Description("Russian")]
-        ru = 4,
-        [Description("French")]
-        fr = 5,
-        [Description("Deutsch")]
-        de = 6,
-        [Description("Japanese")]
-        jpn = 7,
-        [Description("Turkish")]
-        tr = 8,
-        [Description("Nordic")]
-        nordic = 9,
-        [Description("Swiss")]
-        swiss = 10,
-        [Description("Portuguese (Brazilian ABNT2)")]
-        abnt2 = 11,
-        [Description("DVORAK (US)")]
-        dvorak = 12,
-        [Description("DVORAK (INT)")]
-        dvorak_int = 13,
-        [Description("Hungarian")]
-        hu = 14,
-        [Description("Italian")]
-        it = 15,
-        [Description("Latin America")]
-        la = 16,
-        [Description("Spanish")]
-        es = 17,
-        [Description("ISO - Automatic (Experimental)")]
-        iso = 18,
-        [Description("ANSI - Automatic (Experimental)")]
-        ansi = 19,
     }
 
     public enum PreferredMouse
@@ -473,7 +413,7 @@ namespace Aurora.Settings
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
         [JsonProperty("mouse_orientation")] public MouseOrientationType MouseOrientation { get; set; } = MouseOrientationType.RightHanded;
         [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
-        [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
+        [JsonProperty("keyboard_localization")] public KeyboardPhysicalLayout KeyboardLocalization { get; set; } = KeyboardPhysicalLayout.ANSI;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.None;
         [JsonProperty("virtualkeyboard_keycap_type")] public KeycapType VirtualkeyboardKeycapType { get; set; } = KeycapType.Default;
         [JsonProperty("detection_mode")] public ApplicationDetectionMode DetectionMode { get; set; } = ApplicationDetectionMode.WindowsEvents;
@@ -558,14 +498,14 @@ namespace Aurora.Settings
 
     public static class ExtensionHelpers
     {
-        public static bool IsAutomaticGeneration(this PreferredKeyboardLocalization self)
+        public static bool IsAutomaticGeneration(this KeyboardPhysicalLayout self)
         {
-            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.iso;
+            return self == KeyboardPhysicalLayout.ANSI || self == KeyboardPhysicalLayout.ISO;
         }
 
-        public static bool IsANSI(this PreferredKeyboardLocalization self)
+        public static bool IsANSI(this KeyboardPhysicalLayout self)
         {
-            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.dvorak || self == PreferredKeyboardLocalization.us;
+            return self == KeyboardPhysicalLayout.ANSI;
         }
     }
 

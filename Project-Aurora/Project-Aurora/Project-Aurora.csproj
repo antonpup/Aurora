@@ -139,16 +139,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-
   <ItemGroup>
-    <None Update="kb_layouts\**\*.json">
+    <None Update="DeviceLayouts\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="kb_layouts\Extra Features\images\*.png">
+    <Content Include="DeviceLayouts\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="kb_layouts\Extra Features\images\*.psd" />
-    <None Remove="kb_layouts\Extra Features\images\*.pdn" />
+    <None Remove="DeviceLayouts\Images\*.psd" />
+    <None Remove="DeviceLayouts\Images\*.pdn" />
   </ItemGroup>
 
   <ItemGroup>

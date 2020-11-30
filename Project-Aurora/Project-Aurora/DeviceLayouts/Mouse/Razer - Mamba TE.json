@@ -1,0 +1,229 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 130,
+      "Height": 232,
+      "Image": "Razer_Mamba_TE_outline.png"
+    },
+    "161": {
+      "Key": {
+        "tag": 161,
+        "visual_name": "Scroll Wheel"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 54,
+      "Y": 28,
+      "Width": 16,
+      "Height": 38,
+      "Image": "Razer_Mamba_TE_Scroll_Wheel.png"
+    },
+    "160": {
+      "Key": {
+        "tag": 160,
+        "visual_name": "Peripheral Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 41,
+      "Y": 162,
+      "Width": 38,
+      "Height": 39,
+      "Image": "Razer_Mamba_TE_Logo.png"
+    },
+    "217": {
+      "Key": {
+        "tag": 217,
+        "visual_name": "Left Side 1"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 3,
+      "Y": 46,
+      "Width": 6,
+      "Height": 22,
+      "Image": "Razer_Mamba_TE_L1.png"
+    },
+    "229": {
+      "Key": {
+        "tag": 229,
+        "visual_name": "Right Side 1"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 117,
+      "Y": 48,
+      "Width": 6,
+      "Height": 20,
+      "Image": "Razer_Mamba_TE_R1.png"
+    },
+    "218": {
+      "Key": {
+        "tag": 218,
+        "visual_name": "Left Side 2"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 4,
+      "Y": 67,
+      "Width": 10,
+      "Height": 24,
+      "Image": "Razer_Mamba_TE_L2.png"
+    },
+    "230": {
+      "Key": {
+        "tag": 230,
+        "visual_name": "Right Side 2"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 113,
+      "Y": 67,
+      "Width": 7,
+      "Height": 24,
+      "Image": "Razer_Mamba_TE_R2.png"
+    },
+    "219": {
+      "Key": {
+        "tag": 219,
+        "visual_name": "Left Side 3"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 10,
+      "Y": 90,
+      "Width": 8,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_L3.png"
+    },
+    "231": {
+      "Key": {
+        "tag": 231,
+        "visual_name": "Right Side 3"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 112,
+      "Y": 90,
+      "Width": 6,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_R3.png"
+    },
+    "220": {
+      "Key": {
+        "tag": 220,
+        "visual_name": "Left Side 4"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 13,
+      "Y": 113,
+      "Width": 6,
+      "Height": 24,
+      "Image": "Razer_Mamba_TE_L4.png"
+    },
+    "232": {
+      "Key": {
+        "tag": 232,
+        "visual_name": "Right Side 4"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 112,
+      "Y": 113,
+      "Width": 6,
+      "Height": 24,
+      "Image": "Razer_Mamba_TE_R4.png"
+    },
+    "221": {
+      "Key": {
+        "tag": 221,
+        "visual_name": "Left Side 5"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 10,
+      "Y": 137,
+      "Width": 8,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_L5.png"
+    },
+    "233": {
+      "Key": {
+        "tag": 233,
+        "visual_name": "Right Side 5"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 113,
+      "Y": 137,
+      "Width": 7,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_R5.png"
+    },
+    "222": {
+      "Key": {
+        "tag": 222,
+        "visual_name": "Left Side 6"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 7,
+      "Y": 159,
+      "Width": 7,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_L6.png"
+    },
+    "234": {
+      "Key": {
+        "tag": 234,
+        "visual_name": "Right Side 6"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 114,
+      "Y": 159,
+      "Width": 6,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_R6.png"
+    },
+    "223": {
+      "Key": {
+        "tag": 223,
+        "visual_name": "Left Side 7"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 7,
+      "Y": 181,
+      "Width": 9,
+      "Height": 24,
+      "Image": "Razer_Mamba_TE_L7.png"
+    },
+    "235": {
+      "Key": {
+        "tag": 235,
+        "visual_name": "Right Side 7"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 108,
+      "Y": 180,
+      "Width": 10,
+      "Height": 23,
+      "Image": "Razer_Mamba_TE_R7.png"
+    }
+  },
+  "jis_key_modifications": {}
+}

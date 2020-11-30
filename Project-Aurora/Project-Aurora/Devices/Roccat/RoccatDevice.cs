@@ -296,11 +296,9 @@ namespace Aurora.Devices.Roccat
             try
             {
                 DeviceLayout layout = DeviceLayout.ISO;
-                if (Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.dvorak
-                    || Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.us
-                    || Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.ru)
+                if (Global.Configuration.KeyboardLocalization == KeyboardPhysicalLayout.ANSI)
                     layout = DeviceLayout.ANSI;
-                else if (Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.jpn)
+                else if (Global.Configuration.KeyboardLocalization == KeyboardPhysicalLayout.JIS)
                     layout = DeviceLayout.JP;
 
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)

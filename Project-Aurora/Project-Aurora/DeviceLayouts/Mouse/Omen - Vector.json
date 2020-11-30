@@ -1,0 +1,47 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 137,
+      "Height": 232,
+      "Image": "omen_vector_outline.png"
+    },
+    "160": {
+      "Key": {
+        "tag": 160,
+        "visual_name": "Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 58,
+      "Y": 178,
+      "Width": 28,
+      "Height": 23,
+      "Image": "omen_vector_logo.png"
+    },
+    "161": {
+      "Key": {
+        "tag": 161,
+        "visual_name": "Scroll Wheel"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 65,
+      "Y": 39,
+      "Width": 14,
+      "Height": 32,
+      "Image": "SteelSeries_Rival_300_scrollwheel.png"
+    }
+  },
+  "jis_key_modifications": {}
+}

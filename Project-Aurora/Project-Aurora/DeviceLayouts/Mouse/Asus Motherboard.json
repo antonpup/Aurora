@@ -1,0 +1,80 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "100": {
+      "Key": {
+        "tag": 100,
+        "visual_name": "-"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "101": {
+      "Key": {
+        "tag": 101,
+        "visual_name": "-"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 37,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "102": {
+      "Key": {
+        "tag": 102,
+        "visual_name": "-"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 74,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "103": {
+      "Key": {
+        "tag": 103,
+        "visual_name": "-"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 111,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "104": {
+      "Key": {
+        "tag": 104,
+        "visual_name": "-"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 148,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "105": {
+      "Key": {
+        "tag": 105,
+        "visual_name": "-"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 185,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    }
+  },
+  "jis_key_modifications": {}
+}

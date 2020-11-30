@@ -1,0 +1,228 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 245,
+      "Height": 250,
+      "Image": "omen_outpost_plus_photon_outline.png"
+    },
+    "215": {
+      "Key": {
+        "tag": 215,
+        "visual_name": "Mouse Pad Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 108,
+      "Y": 20,
+      "Width": 30,
+      "Height": 30,
+      "Image": "Omen_logo.png"
+    },
+    "160": {
+      "Key": {
+        "tag": 160,
+        "visual_name": "Mouse Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 108,
+      "Y": 165,
+      "Width": 30,
+      "Height": 30,
+      "Image": "Omen_logo.png"
+    },
+    "161": {
+      "Key": {
+        "tag": 161,
+        "visual_name": "Scroll Wheel"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 119,
+      "Y": 98,
+      "Width": 8,
+      "Height": 24,
+      "Image": "omen_photon_scrollwheel.png"
+    },
+    "201": {
+      "Key": {
+        "tag": 201,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 8,
+      "Y": 68,
+      "Width": 7,
+      "Height": 35
+    },
+    "202": {
+      "Key": {
+        "tag": 202,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 8,
+      "Y": 104,
+      "Width": 7,
+      "Height": 33
+    },
+    "203": {
+      "Key": {
+        "tag": 203,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 8,
+      "Y": 138,
+      "Width": 7,
+      "Height": 33
+    },
+    "204": {
+      "Key": {
+        "tag": 204,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 8,
+      "Y": 171,
+      "Width": 7,
+      "Height": 33
+    },
+    "205": {
+      "Key": {
+        "tag": 205,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 8,
+      "Y": 205,
+      "Width": 7,
+      "Height": 33
+    },
+    "206": {
+      "Key": {
+        "tag": 206,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 12,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
+    },
+    "207": {
+      "Key": {
+        "tag": 207,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 67,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
+    },
+    "208": {
+      "Key": {
+        "tag": 208,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 123,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
+    },
+    "209": {
+      "Key": {
+        "tag": 209,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 178,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
+    },
+    "210": {
+      "Key": {
+        "tag": 210,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 205,
+      "Width": 7,
+      "Height": 33
+    },
+    "211": {
+      "Key": {
+        "tag": 211,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 171,
+      "Width": 7,
+      "Height": 33
+    },
+    "212": {
+      "Key": {
+        "tag": 212,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 138,
+      "Width": 7,
+      "Height": 33
+    },
+    "213": {
+      "Key": {
+        "tag": 213,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 104,
+      "Width": 7,
+      "Height": 33
+    },
+    "214": {
+      "Key": {
+        "tag": 214,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 68,
+      "Width": 7,
+      "Height": 35
+    }
+  },
+  "jis_key_modifications": {}
+}
