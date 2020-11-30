@@ -1,0 +1,162 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [
+    100
+  ],
+  "key_modifications": {
+    "99": {
+      "VisualName": null,
+      "X": 454,
+      "Width": -1
+    }
+  },
+  "key_to_add": {
+    "107": {
+      "Key": {
+        "tag": 107,
+        "visual_name": "FN"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 408,
+      "Y": 185,
+      "Width": 41,
+      "Height": 30,
+      "Image": ""
+    },
+    "-27": {
+      "Key": {
+        "tag": -27,
+        "visual_name": "-27"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 20,
+      "Y": 200,
+      "Width": 0,
+      "Height": 0
+    },
+    "108": {
+      "Key": {
+        "tag": 108,
+        "visual_name": "P1"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -45,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    "109": {
+      "Key": {
+        "tag": 109,
+        "visual_name": "P2"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -45,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    "110": {
+      "Key": {
+        "tag": 110,
+        "visual_name": "P3"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -45,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    "111": {
+      "Key": {
+        "tag": 111,
+        "visual_name": "P4"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -45,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    "112": {
+      "Key": {
+        "tag": 112,
+        "visual_name": "P5"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": -45,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30
+    },
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "LOGO"
+      },
+      "FontSize": 9.0,
+      "Enabled": false,
+      "X": 485,
+      "Y": -30,
+      "Width": 136,
+      "Height": 25,
+      "Image": "omen_sequencer_logo.png"
+    },
+    "133": {
+      "Key": {
+        "tag": 133,
+        "visual_name": "PLAY"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "136": {
+      "Key": {
+        "tag": 136,
+        "visual_name": "STOP"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "137": {
+      "Key": {
+        "tag": 137,
+        "visual_name": "PREV"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    "138": {
+      "Key": {
+        "tag": 138,
+        "visual_name": "NEXT"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 791,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    }
+  },
+  "jis_key_modifications": {}
+}

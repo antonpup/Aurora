@@ -1,0 +1,207 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [
+    14,
+    15,
+    16,
+    31,
+    32,
+    33,
+    52,
+    53,
+    54,
+    89,
+    102,
+    103,
+    104
+  ],
+  "key_modifications": {
+    "34": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "35": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "36": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "37": {
+      "VisualName": null,
+      "X": 674,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "55": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "56": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "57": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "58": {
+      "VisualName": null,
+      "X": 674,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "73": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "74": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "75": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "90": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "91": {
+      "VisualName": null,
+      "X": 600,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "92": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "93": {
+      "VisualName": null,
+      "X": 674,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "105": {
+      "VisualName": null,
+      "X": 563,
+      "Y": null,
+      "Width": 30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "106": {
+      "VisualName": null,
+      "X": 637,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    }
+  },
+  "key_to_add": {
+    "169": {
+      "Key": {
+        "visual_name": "00",
+        "tag": 169,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 600,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    }
+  }
+}

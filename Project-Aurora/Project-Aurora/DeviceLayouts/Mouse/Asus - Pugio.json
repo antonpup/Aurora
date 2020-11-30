@@ -1,0 +1,67 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
+        "tag": -1,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 128,
+      "Height": 232,
+      "Image": "Asus_Pugio_body.png",
+      "IsImage": true
+    },
+    "161": {
+      "Key": {
+        "visual_name": "Scroll Wheel",
+        "tag": 161,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 56,
+      "Y": 22,
+      "Width": 14,
+      "Height": 41,
+      "Image": "Asus_Pugio_wheel.png",
+      "IsImage": true
+    },
+    "162": {
+      "Key": {
+        "visual_name": "Bottom Light",
+        "tag": 162,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": -1,
+      "Y": 130,
+      "Width": 128,
+      "Height": 103,
+      "Image": "Asus_Pugio_backlights.png",
+      "IsImage": true
+    },
+    "160": {
+      "Key": {
+        "visual_name": "Logo",
+        "tag": 160,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 41,
+      "Y": 187,
+      "Width": 46,
+      "Height": 24,
+      "Image": "Asus_Pugio_logo.png",
+      "IsImage": true
+    }
+  }
+}

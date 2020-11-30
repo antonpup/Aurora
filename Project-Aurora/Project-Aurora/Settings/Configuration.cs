@@ -310,50 +310,6 @@ namespace Aurora.Settings
  
     }
 
-    public enum PreferredKeyboardLocalization
-    {
-        [Description("Automatic Detection")]
-        None = 0,
-        [Description("International")]
-        intl = 1,
-        [Description("United States")]
-        us = 2,
-        [Description("United Kingdom")]
-        uk = 3,
-        [Description("Russian")]
-        ru = 4,
-        [Description("French")]
-        fr = 5,
-        [Description("Deutsch")]
-        de = 6,
-        [Description("Japanese")]
-        jpn = 7,
-        [Description("Turkish")]
-        tr = 8,
-        [Description("Nordic")]
-        nordic = 9,
-        [Description("Swiss")]
-        swiss = 10,
-        [Description("Portuguese (Brazilian ABNT2)")]
-        abnt2 = 11,
-        [Description("DVORAK (US)")]
-        dvorak = 12,
-        [Description("DVORAK (INT)")]
-        dvorak_int = 13,
-        [Description("Hungarian")]
-        hu = 14,
-        [Description("Italian")]
-        it = 15,
-        [Description("Latin America")]
-        la = 16,
-        [Description("Spanish")]
-        es = 17,
-        [Description("ISO - Automatic (Experimental)")]
-        iso = 18,
-        [Description("ANSI - Automatic (Experimental)")]
-        ansi = 19,
-    }
-
     public enum PreferredMouse
     {
         [Description("None")]
@@ -473,7 +429,7 @@ namespace Aurora.Settings
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
         [JsonProperty("mouse_orientation")] public MouseOrientationType MouseOrientation { get; set; } = MouseOrientationType.RightHanded;
         [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
-        [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
+        [JsonProperty("keyboard_localization")] public KeyboardPhysicalLayout KeyboardLocalization { get; set; } = KeyboardPhysicalLayout.ANSI;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.None;
         [JsonProperty("virtualkeyboard_keycap_type")] public KeycapType VirtualkeyboardKeycapType { get; set; } = KeycapType.Default;
         [JsonProperty("detection_mode")] public ApplicationDetectionMode DetectionMode { get; set; } = ApplicationDetectionMode.WindowsEvents;
@@ -558,14 +514,14 @@ namespace Aurora.Settings
 
     public static class ExtensionHelpers
     {
-        public static bool IsAutomaticGeneration(this PreferredKeyboardLocalization self)
+        public static bool IsAutomaticGeneration(this KeyboardPhysicalLayout self)
         {
-            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.iso;
+            return self == KeyboardPhysicalLayout.ANSI || self == KeyboardPhysicalLayout.ISO;
         }
 
-        public static bool IsANSI(this PreferredKeyboardLocalization self)
+        public static bool IsANSI(this KeyboardPhysicalLayout self)
         {
-            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.dvorak || self == PreferredKeyboardLocalization.us;
+            return self == KeyboardPhysicalLayout.ANSI;
         }
     }
 

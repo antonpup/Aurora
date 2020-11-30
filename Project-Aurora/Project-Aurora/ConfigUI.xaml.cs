@@ -143,7 +143,7 @@ namespace Aurora
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
         {
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
+            virtial_kb = Global.kbLayout.VirtualDevicesLayout;
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
@@ -182,7 +182,7 @@ namespace Aurora
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
+            virtial_kb = Global.kbLayout.VirtualDevicesLayout;
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
