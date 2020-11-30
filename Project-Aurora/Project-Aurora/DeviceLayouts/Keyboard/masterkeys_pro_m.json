@@ -17,182 +17,63 @@
   ],
   "key_modifications": {
     "34": {
-      "VisualName": null,
-      "X": 563,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 563
     },
     "35": {
-      "VisualName": null,
-      "X": 600,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 600
     },
     "36": {
-      "VisualName": null,
-      "X": 637,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 637
     },
     "37": {
-      "VisualName": null,
-      "X": 674,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 674
     },
     "55": {
-      "VisualName": null,
-      "X": 563,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 563
     },
     "56": {
-      "VisualName": null,
-      "X": 600,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 600
     },
     "57": {
-      "VisualName": null,
-      "X": 637,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 637
     },
     "58": {
-      "VisualName": null,
-      "X": 674,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 674
     },
     "73": {
-      "VisualName": null,
-      "X": 563,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 563
     },
     "74": {
-      "VisualName": null,
-      "X": 600,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 600
     },
     "75": {
-      "VisualName": null,
-      "X": 637,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 637
     },
     "90": {
-      "VisualName": null,
-      "X": 563,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 563
     },
     "91": {
-      "VisualName": null,
-      "X": 600,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 600
     },
     "92": {
-      "VisualName": null,
-      "X": 637,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 637
     },
     "93": {
-      "VisualName": null,
-      "X": 674,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 674
     },
     "105": {
-      "VisualName": null,
       "X": 563,
-      "Y": null,
-      "Width": 30,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": 30
     },
     "106": {
-      "VisualName": null,
-      "X": 637,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 637
     }
   },
   "key_to_add": {
     "169": {
       "Key": {
-        "visual_name": "00",
         "tag": 169,
-        "device_id": null
+        "visual_name": "00"
       },
       "FontSize": 12.0,
       "Enabled": true,
@@ -200,8 +81,8 @@
       "Y": 185,
       "Width": 30,
       "Height": 30,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     }
-  }
+  },
+  "jis_key_modifications": {}
 }

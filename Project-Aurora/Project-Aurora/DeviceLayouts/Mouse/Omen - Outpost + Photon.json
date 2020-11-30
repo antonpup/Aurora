@@ -12,9 +12,22 @@
       "Enabled": true,
       "X": 0,
       "Y": 0,
-      "Width": 200,
-      "Height": 168,
-      "Image": ""
+      "Width": 245,
+      "Height": 250,
+      "Image": "omen_outpost_plus_photon_outline.png"
+    },
+    "215": {
+      "Key": {
+        "tag": 215,
+        "visual_name": "Mouse Pad Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 108,
+      "Y": 20,
+      "Width": 30,
+      "Height": 30,
+      "Image": "Omen_logo.png"
     },
     "160": {
       "Key": {
@@ -23,11 +36,11 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 75,
-      "Y": 89,
-      "Width": 50,
-      "Height": 50,
-      "Image": ""
+      "X": 108,
+      "Y": 165,
+      "Width": 30,
+      "Height": 30,
+      "Image": "Omen_logo.png"
     },
     "161": {
       "Key": {
@@ -36,11 +49,11 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 75,
-      "Y": 29,
-      "Width": 50,
-      "Height": 50,
-      "Image": ""
+      "X": 119,
+      "Y": 98,
+      "Width": 8,
+      "Height": 24,
+      "Image": "omen_photon_scrollwheel.png"
     },
     "201": {
       "Key": {
@@ -49,11 +62,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 0,
-      "Y": 56,
-      "Width": 16,
-      "Height": 56,
-      "Image": ""
+      "X": 8,
+      "Y": 68,
+      "Width": 7,
+      "Height": 35
     },
     "202": {
       "Key": {
@@ -62,11 +74,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 0,
-      "Y": 112,
-      "Width": 16,
-      "Height": 56,
-      "Image": ""
+      "X": 8,
+      "Y": 104,
+      "Width": 7,
+      "Height": 33
     },
     "203": {
       "Key": {
@@ -75,11 +86,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 16,
-      "Y": 152,
-      "Width": 56,
-      "Height": 16,
-      "Image": ""
+      "X": 8,
+      "Y": 138,
+      "Width": 7,
+      "Height": 33
     },
     "204": {
       "Key": {
@@ -88,11 +98,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 72,
-      "Y": 152,
-      "Width": 56,
-      "Height": 16,
-      "Image": ""
+      "X": 8,
+      "Y": 171,
+      "Width": 7,
+      "Height": 33
     },
     "205": {
       "Key": {
@@ -101,11 +110,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 127,
-      "Y": 152,
-      "Width": 56,
-      "Height": 16,
-      "Image": ""
+      "X": 8,
+      "Y": 205,
+      "Width": 7,
+      "Height": 33
     },
     "206": {
       "Key": {
@@ -114,11 +122,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 185,
-      "Y": 112,
-      "Width": 16,
-      "Height": 56,
-      "Image": ""
+      "X": 12,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
     },
     "207": {
       "Key": {
@@ -127,11 +134,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 185,
-      "Y": 56,
-      "Width": 16,
-      "Height": 56,
-      "Image": ""
+      "X": 67,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
     },
     "208": {
       "Key": {
@@ -140,11 +146,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 185,
-      "Y": 0,
-      "Width": 16,
-      "Height": 56,
-      "Image": ""
+      "X": 123,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
     },
     "209": {
       "Key": {
@@ -153,11 +158,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 127,
-      "Y": 0,
-      "Width": 56,
-      "Height": 16,
-      "Image": ""
+      "X": 178,
+      "Y": 236,
+      "Width": 55,
+      "Height": 7
     },
     "210": {
       "Key": {
@@ -166,11 +170,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 72,
-      "Y": 0,
-      "Width": 56,
-      "Height": 16,
-      "Image": ""
+      "X": 230,
+      "Y": 205,
+      "Width": 7,
+      "Height": 33
     },
     "211": {
       "Key": {
@@ -179,11 +182,10 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 16,
-      "Y": 0,
-      "Width": 56,
-      "Height": 16,
-      "Image": ""
+      "X": 230,
+      "Y": 171,
+      "Width": 7,
+      "Height": 33
     },
     "212": {
       "Key": {
@@ -192,11 +194,34 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 0,
-      "Y": 0,
-      "Width": 16,
-      "Height": 56,
-      "Image": ""
+      "X": 230,
+      "Y": 138,
+      "Width": 7,
+      "Height": 33
+    },
+    "213": {
+      "Key": {
+        "tag": 213,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 104,
+      "Width": 7,
+      "Height": 33
+    },
+    "214": {
+      "Key": {
+        "tag": 214,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 230,
+      "Y": 68,
+      "Width": 7,
+      "Height": 35
     }
   },
   "jis_key_modifications": {}

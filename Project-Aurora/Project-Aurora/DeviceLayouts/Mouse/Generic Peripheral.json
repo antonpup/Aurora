@@ -5,9 +5,8 @@
   "key_to_add": {
     "-1": {
       "Key": {
-        "visual_name": "NONE",
         "tag": -1,
-        "device_id": null
+        "visual_name": "NONE"
       },
       "FontSize": null,
       "Enabled": true,
@@ -15,14 +14,12 @@
       "Y": 0,
       "Width": 90,
       "Height": 90,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     },
     "0": {
       "Key": {
-        "visual_name": "Mouse/\r\nHeadset",
         "tag": 0,
-        "device_id": null
+        "visual_name": "Mouse/\r\nHeadset"
       },
       "FontSize": 12.0,
       "Enabled": true,
@@ -30,8 +27,8 @@
       "Y": 0,
       "Width": 90,
       "Height": 90,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     }
-  }
+  },
+  "jis_key_modifications": {}
 }

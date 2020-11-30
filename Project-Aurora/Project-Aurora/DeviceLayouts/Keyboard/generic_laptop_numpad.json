@@ -13,432 +13,148 @@
   ],
   "key_modifications": {
     "2": {
-      "VisualName": null,
-      "X": 37,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 37
     },
     "3": {
-      "VisualName": null,
-      "X": 74,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 74
     },
     "4": {
-      "VisualName": null,
-      "X": 111,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 111
     },
     "5": {
-      "VisualName": null,
-      "X": 148,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 148
     },
     "6": {
-      "VisualName": null,
-      "X": 185,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 185
     },
     "7": {
-      "VisualName": null,
-      "X": 222,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 222
     },
     "8": {
-      "VisualName": null,
-      "X": 259,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 259
     },
     "9": {
-      "VisualName": null,
-      "X": 296,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 296
     },
     "10": {
-      "VisualName": null,
-      "X": 333,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 333
     },
     "11": {
-      "VisualName": null,
-      "X": 370,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 370
     },
     "12": {
-      "VisualName": null,
-      "X": 407,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 407
     },
     "13": {
-      "VisualName": null,
-      "X": 444,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 444
     },
     "14": {
-      "VisualName": null,
-      "X": 481,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 481
     },
     "15": {
-      "VisualName": null,
-      "X": 518,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 518
     },
     "34": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 555
     },
     "35": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 592
     },
     "36": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 629
     },
     "37": {
-      "VisualName": null,
-      "X": 666,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 666
     },
     "51": {
-      "VisualName": null,
-      "X": null,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": 9.0,
-      "Enabled": null
+      "FontSize": 9.0
     },
     "55": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 555
     },
     "56": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 592
     },
     "57": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 629
     },
     "58": {
-      "VisualName": null,
-      "X": 666,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 666
     },
     "73": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 555
     },
     "74": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 592
     },
     "75": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 629
     },
     "89": {
-      "VisualName": null,
       "X": 486,
       "Y": 185,
-      "Width": null,
-      "Height": -17,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Height": -17
     },
     "90": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 555
     },
     "91": {
-      "VisualName": null,
-      "X": 592,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 592
     },
     "92": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 629
     },
     "93": {
-      "VisualName": null,
-      "X": 666,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 666
     },
     "94": {
-      "VisualName": null,
-      "X": null,
-      "Y": null,
-      "Width": -10,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -10
     },
     "95": {
-      "VisualName": null,
       "X": 85,
-      "Y": null,
-      "Width": -9,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -9
     },
     "96": {
-      "VisualName": null,
       "X": 122,
-      "Y": null,
-      "Width": -12,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -12
     },
     "97": {
-      "VisualName": null,
       "X": 159,
-      "Y": null,
-      "Width": -30,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -30
     },
     "98": {
-      "VisualName": null,
       "X": 344,
-      "Y": null,
-      "Width": -11,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -11
     },
     "101": {
-      "VisualName": null,
       "X": 418,
-      "Y": null,
-      "Width": -18,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -18
     },
     "102": {
-      "VisualName": null,
       "X": 455,
-      "Y": null,
-      "Width": -6,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -6
     },
     "103": {
-      "VisualName": null,
       "X": 486,
       "Y": 202,
-      "Width": null,
-      "Height": -17,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Height": -17
     },
     "104": {
-      "VisualName": null,
       "X": 523,
-      "Y": null,
-      "Width": -6,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "Width": -6
     },
     "105": {
-      "VisualName": null,
-      "X": 555,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 555
     },
     "106": {
-      "VisualName": null,
-      "X": 629,
-      "Y": null,
-      "Width": null,
-      "Height": null,
-      "Image": null,
-      "FontSize": null,
-      "Enabled": null
+      "X": 629
     }
   },
   "key_to_add": {
     "171": {
       "Key": {
-        "visual_name": "FN",
         "tag": 171,
-        "device_id": null
+        "visual_name": "FN"
       },
       "FontSize": 9.0,
       "Enabled": true,
@@ -446,14 +162,12 @@
       "Y": 185,
       "Width": 30,
       "Height": 30,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     },
     "107": {
       "Key": {
-        "visual_name": "FN",
         "tag": 107,
-        "device_id": null
+        "visual_name": "FN"
       },
       "FontSize": 12.0,
       "Enabled": true,
@@ -461,8 +175,23 @@
       "Y": 185,
       "Width": 30,
       "Height": 30,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
+    }
+  },
+  "jis_key_modifications": {
+    "153": {
+      "X": 159,
+      "Width": -12
+    },
+    "97": {
+      "X": 196
+    },
+    "98": {
+      "X": 307,
+      "Width": 11
+    },
+    "155": {
+      "X": 344
     }
   }
 }

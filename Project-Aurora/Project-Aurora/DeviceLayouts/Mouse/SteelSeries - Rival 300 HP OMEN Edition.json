@@ -5,9 +5,8 @@
   "key_to_add": {
     "-1": {
       "Key": {
-        "visual_name": "NONE",
         "tag": -1,
-        "device_id": null
+        "visual_name": "NONE"
       },
       "FontSize": null,
       "Enabled": true,
@@ -15,14 +14,12 @@
       "Y": 0,
       "Width": 128,
       "Height": 232,
-      "Image": "SteelSeries_Rival_300_outline.png",
-      "IsImage": true
+      "Image": "SteelSeries_Rival_300_outline.png"
     },
     "160": {
       "Key": {
-        "visual_name": "Logo",
         "tag": 160,
-        "device_id": null
+        "visual_name": "Logo"
       },
       "FontSize": null,
       "Enabled": true,
@@ -30,14 +27,12 @@
       "Y": 177,
       "Width": 40,
       "Height": 40,
-      "Image": "Omen_logo.png",
-      "IsImage": true
+      "Image": "Omen_logo.png"
     },
     "161": {
       "Key": {
-        "visual_name": "Scroll Wheel",
         "tag": 161,
-        "device_id": null
+        "visual_name": "Scroll Wheel"
       },
       "FontSize": null,
       "Enabled": true,
@@ -45,8 +40,8 @@
       "Y": 43,
       "Width": 16,
       "Height": 31,
-      "Image": "SteelSeries_Rival_300_scrollwheel.png",
-      "IsImage": true
+      "Image": "SteelSeries_Rival_300_scrollwheel.png"
     }
-  }
+  },
+  "jis_key_modifications": {}
 }

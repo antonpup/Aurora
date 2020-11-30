@@ -1330,30 +1330,12 @@ namespace Aurora.Settings
                 return "drevo_blademaster";
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 return "wooting_two";
-
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_1)
-                return "Uniwill2ND_35X_1";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_2)
-                return "Uniwill2ND_35X_2";
-            //keyboare 2.1
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_US)
-                return "Uniwill2P1_550_US";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_UK)
-                return "Uniwill2P1_550_UK";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_BR)
-                return "Uniwill2P1_550_BR";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550_JP)
-                return "Uniwill2P1_550_JP";
-            //keyboare 2.2
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_US)
-                return "Uniwill2P2_650_US";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_UK)
-                return "Uniwill2P2_650_UK";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_BR)
-                return "Uniwill2P2_650_BR";
-            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650_JP)
-                return "Uniwill2P2_650_JP";
-
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X)
+                return "Uniwill2ND_35X";
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P1_550)
+                return "Uniwill2P1_550";
+            else if (keyboard_preference == PreferredKeyboard.Uniwill2P2_650)
+                return "Uniwill2P2_650";
             else if (keyboard_preference == PreferredKeyboard.Ducky_Shine_7)
                 return "ducky_shine_7";
             else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
@@ -1415,16 +1397,16 @@ namespace Aurora.Settings
                     return "Asus - Pugio";
                     break;
                 case PreferredMouse.OMEN_Photon:
-                    return "omen_photon_features";
+                    return "Omen - Photon";
                     break;
                 case PreferredMouse.OMEN_Outpost_Plus_Photon:
-                    return "omen_outpost_plus_photon_features";
+                    return "Omen - Outpost + Photon";
                     break;
                 case PreferredMouse.OMEN_Vector:
-                    return "omen_vector_features";
+                    return "Omen - Vector";
                     break;
                 case PreferredMouse.OMEN_Vector_Essentials:
-                    return "omen_vector_essentials_features";
+                    return "Omen - Vector Essentials";
                     break;
                 case PreferredMouse.Razer_Mamba_TE:
                     return "Razer - Mamba TE";

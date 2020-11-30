@@ -149,16 +149,6 @@
     <None Remove="DeviceLayouts\Images\*.psd" />
     <None Remove="DeviceLayouts\Images\*.pdn" />
   </ItemGroup>
-  <ItemGroup>
-    <None Update="kb_layouts\**\*.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Content Include="kb_layouts\Extra Features\images\*.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Remove="kb_layouts\Extra Features\images\*.psd" />
-    <None Remove="kb_layouts\Extra Features\images\*.pdn" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Update="Pointers\*.json">

@@ -5,9 +5,8 @@
   "key_to_add": {
     "-1": {
       "Key": {
-        "visual_name": "NONE",
         "tag": -1,
-        "device_id": null
+        "visual_name": "NONE"
       },
       "FontSize": null,
       "Enabled": true,
@@ -15,14 +14,12 @@
       "Y": 0,
       "Width": 153,
       "Height": 232,
-      "Image": "Corsair_Katar_outline.png",
-      "IsImage": true
+      "Image": "Corsair_Katar_outline.png"
     },
     "160": {
       "Key": {
-        "visual_name": "Logo",
         "tag": 160,
-        "device_id": null
+        "visual_name": "Logo"
       },
       "FontSize": null,
       "Enabled": true,
@@ -30,8 +27,8 @@
       "Y": 187,
       "Width": 35,
       "Height": 22,
-      "Image": "Corsair_Katar_logo.png",
-      "IsImage": true
+      "Image": "Corsair_Katar_logo.png"
     }
-  }
+  },
+  "jis_key_modifications": {}
 }

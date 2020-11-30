@@ -96,6 +96,7 @@ namespace Aurora.Settings
     }
     public class DeviceKeyModifier
     {
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string VisualName;
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]

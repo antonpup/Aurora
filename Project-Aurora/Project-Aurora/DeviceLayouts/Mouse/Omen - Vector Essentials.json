@@ -12,9 +12,9 @@
       "Enabled": true,
       "X": 0,
       "Y": 0,
-      "Width": 158,
+      "Width": 137,
       "Height": 232,
-      "Image": "Corsair_M65_outline.png"
+      "Image": "omen_vector_essentials_outline.png"
     },
     "160": {
       "Key": {
@@ -23,24 +23,11 @@
       },
       "FontSize": null,
       "Enabled": true,
-      "X": 70,
-      "Y": 156,
-      "Width": 27,
-      "Height": 27,
-      "Image": "Corsair_M65_logo.png"
-    },
-    "161": {
-      "Key": {
-        "tag": 161,
-        "visual_name": "Scroll Wheel"
-      },
-      "FontSize": null,
-      "Enabled": true,
-      "X": 74,
-      "Y": 10,
-      "Width": 21,
-      "Height": 60,
-      "Image": "Corsair_M65_scrollwheel.png"
+      "X": 58,
+      "Y": 178,
+      "Width": 28,
+      "Height": 23,
+      "Image": "omen_vector_logo.png"
     }
   },
   "jis_key_modifications": {}

@@ -5,9 +5,8 @@
   "key_to_add": {
     "-1": {
       "Key": {
-        "visual_name": "NONE",
         "tag": -1,
-        "device_id": null
+        "visual_name": "NONE"
       },
       "FontSize": null,
       "Enabled": true,
@@ -15,14 +14,12 @@
       "Y": 0,
       "Width": 200,
       "Height": 168,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     },
     "160": {
       "Key": {
-        "visual_name": "Mouse Logo",
         "tag": 160,
-        "device_id": null
+        "visual_name": "Mouse Logo"
       },
       "FontSize": null,
       "Enabled": true,
@@ -30,14 +27,12 @@
       "Y": 89,
       "Width": 50,
       "Height": 50,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     },
     "161": {
       "Key": {
-        "visual_name": "Scroll Wheel",
         "tag": 161,
-        "device_id": null
+        "visual_name": "Scroll Wheel"
       },
       "FontSize": null,
       "Enabled": true,
@@ -45,14 +40,12 @@
       "Y": 29,
       "Width": 50,
       "Height": 50,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     },
     "201": {
       "Key": {
-        "visual_name": "",
         "tag": 201,
-        "device_id": null
+        "visual_name": ""
       },
       "FontSize": null,
       "Enabled": true,
@@ -60,14 +53,12 @@
       "Y": 0,
       "Width": 16,
       "Height": 168,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     },
     "202": {
       "Key": {
-        "visual_name": "",
         "tag": 202,
-        "device_id": null
+        "visual_name": ""
       },
       "FontSize": null,
       "Enabled": true,
@@ -75,8 +66,8 @@
       "Y": 0,
       "Width": 16,
       "Height": 168,
-      "Image": "",
-      "IsImage": false
+      "Image": ""
     }
-  }
+  },
+  "jis_key_modifications": {}
 }
