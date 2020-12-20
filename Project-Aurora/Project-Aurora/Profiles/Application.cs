@@ -615,6 +615,11 @@ namespace Aurora.Profiles
         {
             if (Disposed)
                 return;
+            //Save general information into the profile
+            profile.SavedWithVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
+            profile.ProcessNames = this.Config.ProcessNames;
+            profile.ProcessTitles = this.Config.ProcessTitles;
+
             try
             {
                 path = path ?? Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
