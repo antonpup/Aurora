@@ -1,0 +1,66 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 1,
+  "grouped_keys": [
+    {
+      "visualName": "<<",
+      "tag": 137,
+      "margin_left": 682.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -9,
+      "margin_top_bits": 3,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "||",
+      "tag": 133,
+      "margin_left": 718.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -9,
+      "margin_top_bits": 6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": ">>",
+      "tag": 138,
+      "margin_left": 756.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -9,
+      "margin_top_bits": 9,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "Mute",
+      "tag": 139,
+      "margin_left": 792.0,
+      "margin_top": 0.0,
+      "width": 30.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 3,
+      "height_bits": 3,
+      "margin_left_bits": -9,
+      "margin_top_bits": 12,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}
