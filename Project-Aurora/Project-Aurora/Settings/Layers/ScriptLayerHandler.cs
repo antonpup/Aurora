@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Aurora.Settings.Overrides;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Layers
 {
@@ -19,6 +20,7 @@ namespace Aurora.Settings.Layers
 
         [JsonIgnore]
         public string Script { get { return Logic._Script ?? _Script ?? String.Empty; } }
+
 
         /*public ScriptSettings _ScriptSettings { get; set; } = null;
 
@@ -47,6 +49,8 @@ namespace Aurora.Settings.Layers
     {
         internal Application profileManager;
 
+        public IEffectScript ScriptInstance { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [JsonIgnore]
@@ -60,8 +64,7 @@ namespace Aurora.Settings.Layers
             {
                 try
                 {
-                    IEffectScript script = this.profileManager.EffectScripts[this.Properties.Script];
-                    object script_layers = script.UpdateLights(Properties.ScriptProperties, gamestate);
+                    object script_layers = ScriptInstance.UpdateLights(Properties.ScriptProperties, gamestate);
                     if (script_layers is EffectLayer)
                         layer = (EffectLayer)script_layers;
                     else if (script_layers is EffectLayer[])
@@ -87,19 +90,22 @@ namespace Aurora.Settings.Layers
 
         public VariableRegistry GetScriptPropertyRegistry()
         {
-            if (IsScriptValid)
-            {
-                return (VariableRegistry)profileManager.EffectScripts[this.Properties._Script].Properties.Clone();
+            if (IsScriptValid) {
+                var tempScriptInstance = profileManager.EffectScripts[this.Properties._Script].Invoke();
+                return (VariableRegistry) tempScriptInstance.Properties.Clone();
             }
 
             return null;
         }
 
-        public void OnScriptChanged()
-        {
+        public void OnScriptChanged() {
             VariableRegistry varRegistry = GetScriptPropertyRegistry();
-            if (varRegistry != null)
+            if (varRegistry != null) {
                 Properties.ScriptProperties.Combine(varRegistry, true);
+                
+                // Create a new instance of the script and save it
+                ScriptInstance ??= profileManager.EffectScripts[this.Properties._Script].Invoke();
+            }
         }
 
         [JsonIgnore]
