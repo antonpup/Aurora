@@ -192,7 +192,6 @@ namespace Aurora.Devices.Ducky
                         Reset();
                         return false;
                     }
-                    Thread.Sleep(2);
                 }
                 colourMessage.CopyTo(prevColourMessage, 0);
                 return true;
