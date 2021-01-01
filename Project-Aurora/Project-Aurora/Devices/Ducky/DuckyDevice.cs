@@ -185,7 +185,7 @@ namespace Aurora.Devices.Ducky
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error(ex);
+                    Global.logger.Error(ex, "[DUCKY] Error updating device");
                     Reset();
                     return false;
                 }
