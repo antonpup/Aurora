@@ -65,6 +65,7 @@ namespace Aurora.Devices.Ducky
                         {
                             packetStream.Write(controlPacket);
                         }
+                        packetStream.Flush();
                     }
                     catch
                     {
@@ -88,17 +89,15 @@ namespace Aurora.Devices.Ducky
 
             //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
             //You can tell both the takeover and release work because the keyboard will flash the same as switching to profile 1. (The same lights when you push FN + 1)
-            foreach (byte[] controlPacket in DuckyRGBMappings.DuckyRelease)
+            try
             {
-                try
+                foreach (byte[] controlPacket in DuckyRGBMappings.DuckyRelease)
                 {
                     packetStream.Write(controlPacket);
                 }
-                catch
-                {
-                    break;
-                }
+                packetStream.Flush();
             }
+            catch {; }
             
             packetStream?.Dispose();
             packetStream?.Close();
@@ -173,28 +172,24 @@ namespace Aurora.Devices.Ducky
                  These packets are 64 bytes each (technically 65 but the first byte is just padding, which is why there's the .Take(65) there)
                  Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the DuckyColourOffsetMap
                  The colour packets also have a header. (You might be able to send these packets out of order, and the headers will tell the keyboard where it should be, but IDK)*/
-                for (int i = 0; i < 10; i++)
+                try
                 {
-                    try
+                    for (int i = 0; i < 9; i++)
                     {
-                        if (i < 9)
-                        {
-                            packetStream.Write(colourMessage, Packet(i), 65);
-                        }
-                        else
-                        {
-                            //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
-                            packetStream.Write(colourMessage, Packet(i), 64);
-                        }
+                        packetStream.Write(colourMessage, Packet(i), 65);
                     }
-                    catch
-                    {
-                        Reset();
-                        return false;
-                    }
+                    //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
+                    packetStream.Write(colourMessage, Packet(9), 64);
+                    packetStream.Flush();
+                    Thread.Sleep(10);
+                }
+                catch (Exception ex)
+                {
+                    Global.logger.Error(ex);
+                    Reset();
+                    return false;
                 }
                 colourMessage.CopyTo(prevColourMessage, 0);
-                Thread.Sleep(10);
             }
             return true;
         }
