@@ -31,11 +31,9 @@ namespace Aurora.Devices.Ducky
 
         public string DeviceName => deviceName;
 
-        public string DeviceDetails => IsInitialized
-            ? "Initialized"
-            : "Not Initialized";
+        public string DeviceDetails => IsInitialized ? "Initialized" : "Not Initialized";
 
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
+        public string DeviceUpdatePerformance => isInitialized ? $"{lastUpdateTime} ms" : string.Empty;
 
         public bool Initialize()
         {
@@ -78,7 +76,6 @@ namespace Aurora.Devices.Ducky
                     isInitialized = false;
                 }
             }
-
             return isInitialized;
         }
 
@@ -98,7 +95,6 @@ namespace Aurora.Devices.Ducky
                 packetStream.Flush();
             }
             catch {; }
-            
             packetStream?.Dispose();
             packetStream?.Close();
             isInitialized = false;
@@ -141,10 +137,10 @@ namespace Aurora.Devices.Ducky
 
                 //This if statement grabs the packet offset from the key that Aurora wants to set, using DuckyColourOffsetMap.
                 //It also checks whether the key exists in the Dictionary, and if not, doesn't try and set the key colour.
-                if(!DuckyRGBMappings.DuckyColourOffsetMap.TryGetValue(kc.Key, out currentKeyOffset)){
+                if (!DuckyRGBMappings.DuckyColourOffsetMap.TryGetValue(kc.Key, out currentKeyOffset))
+                {
                     continue;
                 }
-
                 //The colours are encoded using RGB bytes consecutively throughout the 10 packets, which are offset with DuckyColourOffsetMap.
                 colourMessage[Packet(currentKeyOffset.PacketNum) + currentKeyOffset.OffsetNum + 1] = processedColor.R;
                 //To account for the headers in the next packet, the offset is pushed a further four bytes (only required if the R byte starts on the last byte of a packet).
@@ -159,7 +155,6 @@ namespace Aurora.Devices.Ducky
                     colourMessage[Packet(currentKeyOffset.PacketNum) + currentKeyOffset.OffsetNum + 3] = processedColor.B;
                 }
             }
-
             if (!prevColourMessage.SequenceEqual(colourMessage) && IsInitialized)
             {
                 //Everything previous to setting the colours actually just write the colour data to the ColourMessage byte array.
@@ -181,11 +176,13 @@ namespace Aurora.Devices.Ducky
                     //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
                     packetStream.Write(colourMessage, Packet(9), 64);
                     packetStream.Flush();
+                    var inputReport = new byte[duckyKeyboard.GetMaxInputReportLength()];
+                    packetStream.Read(inputReport);
                     Thread.Sleep(10);
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error(ex, "[DUCKY] Error updating device");
+                    Global.logger.Error("[DUCKY] Error updating device: " + ex.ToString());
                     Reset();
                     return false;
                 }
