@@ -157,11 +157,14 @@ namespace Aurora.Devices.UnifiedHID
                         {
                             if (device.DeviceColorMap.TryGetValue(key.Key, out Color currentColor) && currentColor != key.Value)
                             {
+                                // Apply and strip Alpha
+                                var color = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
+
                                 // Update current colour
-                                device.DeviceColorMap[key.Key] = key.Value;
+                                device.DeviceColorMap[key.Key] = color;
 
                                 // Set color
-                                device.SetColor(key.Key, key.Value.R, key.Value.G, key.Value.B);
+                                device.SetColor(key.Key, color.R, color.G, color.B);
                             }
                         }
                     }
