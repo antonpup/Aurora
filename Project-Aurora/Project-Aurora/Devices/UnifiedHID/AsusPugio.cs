@@ -9,9 +9,10 @@ namespace Aurora.Devices.UnifiedHID
 {
     internal class AsusPugio : UnifiedBase
     {
+        public override string PrettyName => "Asus Pugio";
+
         public AsusPugio()
         {
-            PrettyName = "Asus Pugio";
             DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
