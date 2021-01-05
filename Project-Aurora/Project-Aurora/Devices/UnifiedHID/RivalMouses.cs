@@ -9,9 +9,10 @@ namespace Aurora.Devices.UnifiedHID
 {
     internal class Rival100 : UnifiedBase
     {
+        public override string PrettyName => "Rival 100";
+
         public Rival100()
         {
-            PrettyName = "Rival 100";
             DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo }
@@ -43,9 +44,10 @@ namespace Aurora.Devices.UnifiedHID
 
     internal class Rival110 : UnifiedBase
     {
+        public override string PrettyName => "Rival 110";
+
         public Rival110()
         {
-            PrettyName = "Rival 110";
             DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo }
@@ -81,9 +83,10 @@ namespace Aurora.Devices.UnifiedHID
 
     internal class Rival300 : UnifiedBase
     {
+        public override string PrettyName => "Rival 300";
+
         public Rival300()
         {
-            PrettyName = "Rival 300";
             DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
@@ -128,9 +131,10 @@ namespace Aurora.Devices.UnifiedHID
 
     internal class Rival500 : UnifiedBase
     {
+        public override string PrettyName => "Rival 500";
+
         public Rival500()
         {
-            PrettyName = "Rival 500";
             DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
