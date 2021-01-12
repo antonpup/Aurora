@@ -25,9 +25,17 @@ namespace Aurora.Devices.UnifiedHID
         List<UnifiedBase> connectedDevices = new List<UnifiedBase>();
 
         public string DeviceName => "UnifiedHID";
+        protected string DeviceInfo => string.Join(", ", connectedDevices.Select(hd => hd.PrettyName));
+
+        public string DeviceDetails => IsInitialized
+            ? $"Initialized{(string.IsNullOrWhiteSpace(DeviceInfo) ? "" : ": " + DeviceInfo)}"
+            : "Not Initialized";
+
+        public string DeviceUpdatePerformance => IsInitialized
+            ? lastUpdateTime + " ms"
+            : "";
+
         public bool IsInitialized => connectedDevices.Count != 0;
-        public string DeviceDetails => IsInitialized ? "Initialized" : "Not Initialized";
-        public string DeviceUpdatePerformance => (IsInitialized ? lastUpdateTime + " ms" : "");
 
         public VariableRegistry RegisteredVariables
         {
