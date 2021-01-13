@@ -127,6 +127,9 @@ namespace Aurora.Devices.OpenRGB
             { "Key: Media Play"       , DK.MEDIA_PLAY        },
             { "Key: Media Play/Pause" , DK.MEDIA_PLAY_PAUSE  },
             { "Key: Media Mute"       , DK.VOLUME_MUTE       },
+            { "Key: Media Volume Down", DK.VOLUME_DOWN       },
+            { "Key: Media Volume Up"  , DK.VOLUME_UP         },
+            { "Key: Calculator"       , DK.CALC              },
             { "Logo"                  , DK.LOGO              },
             { "Key: Brightness"       , DK.BRIGHTNESS_SWITCH },
             { "Key: M1"               , DK.G1                },
@@ -145,7 +148,7 @@ namespace Aurora.Devices.OpenRGB
             { "Logo"                  , DK.Peripheral_Logo        },
             { "Mouse"                 , DK.Peripheral_Logo        },
             { "Scroll Wheel"          , DK.Peripheral_ScrollWheel },
-            { "DPI"                   , DK.Peripheral_ScrollWheel },
+            { "DPI"                   , DK.PERIPHERAL_DPI         },
             { "Front"                 , DK.Peripheral_FrontLight  },
         };
 
