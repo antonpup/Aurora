@@ -153,7 +153,7 @@ namespace Aurora.Devices.OpenRGB
             {
                 //should probably store these bools somewhere when initing
                 //might also add this as a property in the library
-                if (!_devices[i].Modes.Any(m => m.Name == "Direct" || m.Name == "Static"))
+                if (!_devices[i].Modes.Any(m => m.Name == "Direct"))
                     continue;
 
                 for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
