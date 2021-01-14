@@ -1,8 +1,4 @@
-﻿
-using Aurora.Utils;
-using LedCSharp;
 using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -272,14 +268,9 @@ namespace LedCSharp
         Speaker = 0xe
     }
 
-    public enum LGDLL
+    public class LogitechGSDK
     {
-        LGS,
-        GHUB
-    }
-
-    public static class LogitechGSDK
-    {
+        //LED SDK
         private const int LOGI_DEVICETYPE_MONOCHROME_ORD = 0;
         private const int LOGI_DEVICETYPE_RGB_ORD = 1;
         private const int LOGI_DEVICETYPE_PERKEY_RGB_ORD = 2;
@@ -296,265 +287,88 @@ namespace LedCSharp
         public const int LOGI_LED_BITMAP_SIZE = LOGI_LED_BITMAP_WIDTH * LOGI_LED_BITMAP_HEIGHT * LOGI_LED_BITMAP_BYTES_PER_KEY;
         public const int LOGI_LED_DURATION_INFINITE = 0;
 
-        public static bool GHUB = true;
-
-        public static bool LogiLedInit()
-        {
-            return GHUB ? GHUBImports.LogiLedInit() : LGSImports.LogiLedInit();
-        }
-
-        public static bool LogiLedSetTargetDevice(int targetDevice)
-        {
-            return GHUB ? GHUBImports.LogiLedSetTargetDevice(targetDevice) : LGSImports.LogiLedSetTargetDevice(targetDevice);
-        }
-
-        public static bool LogiLedSetLighting(Color color)
-        {
-            var (R, G, B) = GetColorValues(color);
-            return GHUB ? GHUBImports.LogiLedSetLighting(R, G, B) : LGSImports.LogiLedSetLighting(R, G, B);
-        }
-
-        public static bool LogiLedExcludeKeysFromBitmap(keyboardNames[] keyList, int listCount)
-        {
-            return GHUB ? GHUBImports.LogiLedExcludeKeysFromBitmap(keyList, listCount) :
-                     LGSImports.LogiLedExcludeKeysFromBitmap(keyList, listCount);
-        }
-
-        public static bool LogiLedSetLightingFromBitmap(byte[] bitmap)
-        {
-            return GHUB ? GHUBImports.LogiLedSetLightingFromBitmap(bitmap) :
-                     LGSImports.LogiLedSetLightingFromBitmap(bitmap);
-        }
-
-        public static bool LogiLedSetLightingForKeyWithScanCode(int keyCode, Color color)
-        {
-            var (R, G, B) = GetColorValues(color);
-            return GHUB ? GHUBImports.LogiLedSetLightingForKeyWithScanCode(keyCode, R, G, B) :
-                LGSImports.LogiLedSetLightingForKeyWithScanCode(keyCode, R, G, B);
-        }
-
-        public static bool LogiLedSetLightingForKeyWithHidCode(int keyCode, Color color)
-        {
-            var (R, G, B) = GetColorValues(color);
-            return GHUB ? GHUBImports.LogiLedSetLightingForKeyWithHidCode(keyCode, R, G, B) :
-                LGSImports.LogiLedSetLightingForKeyWithHidCode(keyCode, R, G, B);
-        }
-
-        public static bool LogiLedSetLightingForKeyWithQuartzCode(int keyCode, Color color)
-        {
-            var (R, G, B) = GetColorValues(color);
-            return GHUB ? GHUBImports.LogiLedSetLightingForKeyWithQuartzCode(keyCode, R, G, B) :
-                LGSImports.LogiLedSetLightingForKeyWithQuartzCode(keyCode, R, G, B);
-        }
-
-        public static bool LogiLedSetLightingForKeyWithKeyName(keyboardNames keyCode, Color color)
-        {
-            var (R, G, B) = GetColorValues(color);
-            return GHUB ? GHUBImports.LogiLedSetLightingForKeyWithKeyName(keyCode, R, G, B) :
-                LGSImports.LogiLedSetLightingForKeyWithKeyName(keyCode, R, G, B);
-        }
-
-        public static bool LogiLedSetLightingForTargetZone(DeviceType deviceType, int zone, Color color)
-        {
-            var (R, G, B) = GetColorValues(color);
-            return GHUB ? GHUBImports.LogiLedSetLightingForTargetZone((byte)deviceType, zone, R, G, B) :
-                LGSImports.LogiLedSetLightingForTargetZone((byte)deviceType, zone, R, G, B);
-        }
-
-        public static void LogiLedShutdown()
-        {
-            if (GHUB)
-                GHUBImports.LogiLedShutdown();
-            else
-                LGSImports.LogiLedShutdown();
-        }
-
-        public static bool LogiLedSaveCurrentLighting()
-        {
-            return GHUB ? GHUBImports.LogiLedSaveCurrentLighting() : LGSImports.LogiLedSaveCurrentLighting();
-        }
-
-        public static bool LogiLedRestoreLighting()
-        {
-            return GHUB ? GHUBImports.LogiLedRestoreLighting() : LGSImports.LogiLedRestoreLighting();
-        }
-
-        private static (int R, int G, int B) GetColorValues(Color clr)
-        {
-            clr = ColorUtils.CorrectWithAlpha(clr);
-            return ((int)(clr.R / 255.0 * 100.0),
-                    (int)(clr.G / 255.0 * 100.0),
-                    (int)(clr.B / 255.0 * 100.0));
-        }
-    }
-
-    internal static class LGSImports
-    {
-        private const string dllpath = "Logi\\LGS\\LogitechLed.dll";
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedInit();
 
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool LogiLedInitWithName(String name);
+
         //Config option functions
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedGetConfigOptionNumber([MarshalAs(UnmanagedType.LPWStr)] String configPath, ref double defaultNumber);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedGetConfigOptionBool([MarshalAs(UnmanagedType.LPWStr)] String configPath, ref bool defaultRed);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedGetConfigOptionColor([MarshalAs(UnmanagedType.LPWStr)] String configPath, ref int defaultRed, ref int defaultGreen, ref int defaultBlue);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedGetConfigOptionKeyInput([MarshalAs(UnmanagedType.LPWStr)] String configPath, StringBuilder buffer, int bufsize);
         /////////////////////
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetTargetDevice(int targetDevice);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedGetSdkVersion(ref int majorNum, ref int minorNum, ref int buildNum);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSaveCurrentLighting();
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedRestoreLighting();
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedStopEffects();
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedExcludeKeysFromBitmap(keyboardNames[] keyList, int listCount);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLightingFromBitmap(byte[] bitmap);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSetLightingForKeyWithKeyName(keyboardNames keyCode, int redPercentage, int greenPercentage, int bluePercentage);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingForTargetZone(byte deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedSaveLightingForKey(keyboardNames keyName);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedRestoreLightingForKey(keyboardNames keyName);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedFlashSingleKey(keyboardNames keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedPulseSingleKey(keyboardNames keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern bool LogiLedStopEffectsOnKey(keyboardNames keyName);
 
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool LogiLedSetLightingForTargetZone(DeviceType deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage);
+
+        [DllImport("LogitechLedEnginesWrapper.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void LogiLedShutdown();
     }
 
-    internal static class GHUBImports
-    {
-        private const string dllpath = "Logi\\GHUB\\LogitechLed.dll";
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedInit();
-
-        //Config option functions
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedGetConfigOptionNumber([MarshalAs(UnmanagedType.LPWStr)] String configPath, ref double defaultNumber);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedGetConfigOptionBool([MarshalAs(UnmanagedType.LPWStr)] String configPath, ref bool defaultRed);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedGetConfigOptionColor([MarshalAs(UnmanagedType.LPWStr)] String configPath, ref int defaultRed, ref int defaultGreen, ref int defaultBlue);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedGetConfigOptionKeyInput([MarshalAs(UnmanagedType.LPWStr)] String configPath, StringBuilder buffer, int bufsize);
-        /////////////////////
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetTargetDevice(int targetDevice);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedGetSdkVersion(ref int majorNum, ref int minorNum, ref int buildNum);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSaveCurrentLighting();
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLighting(int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedRestoreLighting();
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedFlashLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedPulseLighting(int redPercentage, int greenPercentage, int bluePercentage, int milliSecondsDuration, int milliSecondsInterval);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedStopEffects();
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedExcludeKeysFromBitmap(LedCSharp.keyboardNames[] keyList, int listCount);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingFromBitmap(byte[] bitmap);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingForKeyWithScanCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingForKeyWithHidCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingForKeyWithQuartzCode(int keyCode, int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingForKeyWithKeyName(keyboardNames keyCode, int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSetLightingForTargetZone(byte deviceType, int zone, int redPercentage, int greenPercentage, int bluePercentage);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedSaveLightingForKey(keyboardNames keyName);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedRestoreLightingForKey(keyboardNames keyName);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedFlashSingleKey(keyboardNames keyName, int redPercentage, int greenPercentage, int bluePercentage, int msDuration, int msInterval);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedPulseSingleKey(keyboardNames keyName, int startRedPercentage, int startGreenPercentage, int startBluePercentage, int finishRedPercentage, int finishGreenPercentage, int finishBluePercentage, int msDuration, bool isInfinite);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool LogiLedStopEffectsOnKey(keyboardNames keyName);
-
-        [DllImport(dllpath, CallingConvention = CallingConvention.Cdecl)]
-        public static extern void LogiLedShutdown();
-    }
 }

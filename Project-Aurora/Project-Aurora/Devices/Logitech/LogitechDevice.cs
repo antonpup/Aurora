@@ -26,21 +26,16 @@ namespace Aurora.Devices.Logitech
             if (!ghubRunning && !lgsRunning)
                 return IsInitialized = false;
 
-            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_override_dll"))
-                LogitechGSDK.GHUB = Global.Configuration.VarRegistry.GetVariable<LGDLL>($"{DeviceName}_override_dll_option") == LGDLL.GHUB;
-            else
-                LogitechGSDK.GHUB = ghubRunning;
-
-            LogInfo($"Trying to initialize Logitech using the dll for {(LogitechGSDK.GHUB ? "GHUB" : "LGS")}");
+            LogInfo($"Trying to initialize Logitech SDK");
 
             if (LogitechGSDK.LogiLedInit() && LogitechGSDK.LogiLedSaveCurrentLighting())
             {
-                //logitech says to wait a bit of time between Init() and SetLighting()
-                //This didnt seem to be needed in the past but I feel like 100ms might 
-                //fix some weird issues without any noticeable disadvantages
-                Thread.Sleep(100);
                 if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_set_default"))
-                    LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
+                {
+                    var color = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor();
+                    LogitechGSDK.LogiLedSetLighting(color.R, color.G, color.B);
+                }
+
                 return IsInitialized = true;
             }
 
@@ -69,13 +64,13 @@ namespace Aurora.Devices.Logitech
                     logitechBitmap[index + 3] = key.Value.A;
                 }
                 if (!Global.Configuration.DevicesDisableKeyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
-                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
+                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value.R, key.Value.G, key.Value.B);
                 if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
                 {
                     if ((peripheral.type == DeviceType.Headset && !Global.Configuration.DevicesDisableHeadset)
                     || (peripheral.type == DeviceType.Mouse && !Global.Configuration.DevicesDisableMouse))
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                        LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value.R, key.Value.G, key.Value.B);
                     }
                 }
 
@@ -94,8 +89,6 @@ namespace Aurora.Devices.Logitech
         {
             variableRegistry.Register($"{DeviceName}_set_default", false, "Set Default Color");
             variableRegistry.Register($"{DeviceName}_default_color", new Utils.RealColor(Color.FromArgb(255, 255, 255, 255)), "Default Color");
-            variableRegistry.Register($"{DeviceName}_override_dll", false, "Override DLL", null, null, "Requires restart to take effect");
-            variableRegistry.Register($"{DeviceName}_override_dll_option", LGDLL.GHUB, "Override DLL Selection", null, null, "Requires restart to take effect");
         }
     }
 }
