@@ -20,8 +20,8 @@ namespace Aurora.Devices.UnifiedHID
         {
             DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
-                { DeviceKeys.Peripheral_ScrollWheel, SetColour },
-                { DeviceKeys.Peripheral_FrontLight, SetColour }
+                { DeviceKeys.Peripheral_ScrollWheel, SetColor },
+                { DeviceKeys.Peripheral_FrontLight, SetColor }
             };
         }
 
@@ -70,19 +70,29 @@ namespace Aurora.Devices.UnifiedHID
 
                     if (!success)
                     {
-                        Global.logger.LogLine($"Roccat Tyon Could not connect\n", Logging_Level.Error);
+                        Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}");
+
+                        // Force close devices
                         device.CloseDevice();
                         deviceLeds.CloseDevice();
                     }
                     else
                     {
-                        Global.logger.LogLine($"Roccat Tyon connected\n", Logging_Level.Info);
+                        Global.logger.Info($"[UnifiedHID] connected to device {PrettyNameFull}");
+
+                        DeviceColorMap.Clear();
+
+                        foreach (var key in DeviceFuncMap)
+                        {
+                            // Set black as default color
+                            DeviceColorMap.Add(key.Key, Color.Black);
+                        }
                     }
                 }
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:\n{exc}");
             }
 
             return false;
@@ -95,34 +105,39 @@ namespace Aurora.Devices.UnifiedHID
 
             try
             {
-                deviceLeds.CloseDevice();
+                if (deviceLeds != null)
+                {
+                    deviceLeds.CloseDevice();
+
+                    Global.logger.Info($"[UnifiedHID] disconnected from device {PrettyNameFull})");
+                }
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to close UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:\n{exc}");
             }
 
             return !IsConnected;
         }
 
-        // TODO: Set diffent colour for wheel and bottom led ?
-        public bool SetColour(byte r, byte g, byte b)
+        // TODO: Set diffent color for wheel and bottom led ?
+        public bool SetColor(byte r, byte g, byte b)
         {
-            try
-            {
-                if (!IsConnected)
-                    return false;
+            if (!IsConnected)
+                return false;
 
-                byte[] hwmap =
-                {
+            byte[] hwmap =
+            {
                     r, g, b,
                     0x00, 0x00,
                     r, g, b,
                     0x00, 0x80, 0x80
                 };
 
-                byte[] workbuf = new byte[30];
+            byte[] workbuf = new byte[30];
 
+            try
+            {
                 Array.Copy(controlPacket, 0, workbuf, 0, controlPacket.Length);
                 Array.Copy(hwmap, 0, workbuf, controlPacket.Length, hwmap.Length);
 
@@ -130,7 +145,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to close UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when writing to device {PrettyName}:\n{exc}");
                 return false;
             }
         }
