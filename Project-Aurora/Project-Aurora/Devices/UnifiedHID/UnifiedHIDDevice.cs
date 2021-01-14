@@ -15,11 +15,11 @@ namespace Aurora.Devices.UnifiedHID
 {
     public class UnifiedHIDDevice : IDevice
     {
-        private readonly object actionLock = new object();
-
         private VariableRegistry variableRegistry = null;
         private Stopwatch watch = new Stopwatch();
+        private Stopwatch sleepWatch = new Stopwatch();
         private long lastUpdateTime = 0;
+        private long lastSleepUpdateTime = 0;
 
         List<UnifiedBase> allDevices = new List<UnifiedBase>();
         List<UnifiedBase> connectedDevices = new List<UnifiedBase>();
@@ -59,10 +59,12 @@ namespace Aurora.Devices.UnifiedHID
 
         public UnifiedHIDDevice()
         {
-            //Copied GetLoadableTypes from https://haacked.com/archive/2012/07/23/get-all-types-in-an-assembly.aspx/
+            // Copied GetLoadableTypes from https://haacked.com/archive/2012/07/23/get-all-types-in-an-assembly.aspx/
             IEnumerable<Type> GetLoadableTypes(Assembly assembly)
             {
-                if (assembly == null) throw new ArgumentNullException(nameof(assembly));
+                if (assembly == null)
+                    throw new ArgumentNullException(nameof(assembly));
+
                 try
                 {
                     return assembly.GetTypes();
@@ -82,31 +84,31 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.Error("UnifiedHID class could not be constructed: " + exc);
+                Global.logger.Error("[UnifiedHID] class could not be constructed: " + exc);
             }
         }
 
         public bool Initialize()
         {
-            lock (actionLock)
+            if (!IsInitialized)
             {
-                if (!IsInitialized)
+                // Clear list from old data
+                connectedDevices.Clear();
+
+                try
                 {
-                    connectedDevices.Clear();
-                    try
+                    foreach (UnifiedBase device in allDevices)
                     {
-                        foreach (UnifiedBase dev in allDevices)
+                        // Force disconnection and try a new connection
+                        if (device.Disconnect() && device.Connect())
                         {
-                            if (dev.Connect())
-                            {
-                                connectedDevices.Add(dev);
-                            }
+                            connectedDevices.Add(device);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        Global.logger.Error("UnifiedHID could not be initialized: " + e);
-                    }
+                }
+                catch (Exception e)
+                {
+                    Global.logger.Error($"[UnifiedHID] device could not be initialized: " + e);
                 }
             }
 
@@ -115,33 +117,30 @@ namespace Aurora.Devices.UnifiedHID
 
         public void Shutdown()
         {
-            lock (actionLock)
+            try
             {
-                try
+                if (IsInitialized)
                 {
-                    if (IsInitialized)
+                    var enableShutdownColor = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_shutdown_color");
+                    var shutdownColor = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_shutdown_color").GetDrawingColor();
+
+                    foreach (UnifiedBase dev in connectedDevices)
                     {
-                        var enableShutdownColor = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_shutdown_color");
-                        var shutdownColor = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_shutdown_color").GetDrawingColor();
-
-                        foreach (UnifiedBase dev in connectedDevices)
+                        foreach (var map in dev.DeviceFuncMap)
                         {
-                            foreach (var map in dev.DeviceFuncMap)
-                            {
-                                if (enableShutdownColor)
-                                    map.Value.Invoke(shutdownColor.R, shutdownColor.G, shutdownColor.B);
-                            }
-
-                            dev.Disconnect();
+                            if (enableShutdownColor)
+                                map.Value.Invoke(shutdownColor.R, shutdownColor.G, shutdownColor.B);
                         }
 
-                        connectedDevices.Clear();
+                        dev.Disconnect();
                     }
+
+                    connectedDevices.Clear();
                 }
-                catch (Exception ex)
-                {
-                    Global.logger.Error("There was an error shutting down UnifiedHID: " + ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                Global.logger.Error("[UnifiedHID] there was an error shutting down devices" + ex);
             }
         }
 
@@ -155,25 +154,39 @@ namespace Aurora.Devices.UnifiedHID
         {
             try
             {
-                foreach (UnifiedBase device in connectedDevices)
+                Dictionary<UnifiedBase, bool> results = new Dictionary<UnifiedBase, bool>(connectedDevices.Count);
+
+                foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                    foreach (UnifiedBase device in connectedDevices)
                     {
-                        if (e.Cancel) return false;
-
-                        if (Global.Configuration.AllowPeripheralDevices && !Global.Configuration.DevicesDisableMouse)
+                        if (device.DeviceColorMap.TryGetValue(key.Key, out Color currentColor) && currentColor != key.Value)
                         {
-                            if (device.DeviceColorMap.TryGetValue(key.Key, out Color currentColor) && currentColor != key.Value)
-                            {
-                                // Apply and strip Alpha
-                                var color = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
+                            // Apply and strip Alpha
+                            var color = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(key.Value, key.Value.A / 255.0D));
 
-                                // Update current colour
-                                device.DeviceColorMap[key.Key] = color;
+                            // Update current color
+                            device.DeviceColorMap[key.Key] = color;
 
-                                // Set color
-                                device.SetColor(key.Key, color.R, color.G, color.B);
-                            }
+                            // Set color
+                            results[device] = device.SetColor(key.Key, color.R, color.G, color.B);
+                        }
+                    }
+                }
+
+                // Check results of connected devices
+                foreach (var result in results)
+                {
+                    if (!result.Value)
+                    {
+                        Global.logger.Error($"[UnifiedHID] error when updating device {result.Key.PrettyName}. Restarting...");
+
+                        // Try to restart device
+                        if (result.Key.Disconnect() && !result.Key.Connect())
+                        {
+                            Global.logger.Error($"[UnifiedHID] unable to restart device {result.Key.PrettyName}. Removed from connected device!");
+                            // Remove device from connected list
+                            connectedDevices.Remove(result.Key);
                         }
                     }
                 }
@@ -182,7 +195,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception ex)
             {
-                Global.logger.Error("UnifiedHID, error when updating device: " + ex);
+                Global.logger.Error("[UnifiedHID] error when updating device: " + ex);
                 return false;
             }
         }
@@ -190,21 +203,29 @@ namespace Aurora.Devices.UnifiedHID
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_update_interval");
+            bool result = false;
 
-            watch.Stop();
-            var lastUpdateTime = watch.ElapsedMilliseconds;
+            sleepWatch.Stop();
+            lastSleepUpdateTime = sleepWatch.ElapsedMilliseconds;
 
-            if (lastUpdateTime > sleep)
+            if (lastSleepUpdateTime > sleep)
             {
                 watch.Restart();
-                this.lastUpdateTime = lastUpdateTime;
-                return UpdateDevice(colorComposition.keyColors, e, forced);
+                sleepWatch.Restart();
+
+                result = UpdateDevice(colorComposition.keyColors, e, forced);
+
+                watch.Stop();
+                lastUpdateTime = watch.ElapsedMilliseconds + sleep;
             }
             else
             {
-                watch.Start();
-                return !e.Cancel;
+                // Resume stopWatch
+                sleepWatch.Start();
             }
+
+
+            return result;
         }
     }
 }

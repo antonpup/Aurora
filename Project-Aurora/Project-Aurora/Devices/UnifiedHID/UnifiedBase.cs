@@ -21,6 +21,7 @@ namespace Aurora.Devices.UnifiedHID
 
         public virtual bool IsConnected => device?.IsOpen ?? false;
         public virtual string PrettyName => "DeviceBase";
+        public virtual string PrettyNameFull => PrettyName + $" (VendorID={device.Attributes.VendorHexId}, ProductID={device.Attributes.ProductHexId})";
 
         public abstract bool Connect();
 
@@ -35,17 +36,26 @@ namespace Aurora.Devices.UnifiedHID
                     device = devices.First(dev => dev.Capabilities.UsagePage == usagePage);
                     device.OpenDevice();
 
-                    DeviceColorMap.Clear();
-
-                    foreach (var key in DeviceFuncMap)
+                    if (IsConnected)
                     {
-                        // Set black as default color
-                        DeviceColorMap.Add(key.Key, Color.Black);
+                        Global.logger.Info($"[UnifiedHID] connected to device {PrettyNameFull}");
+
+                        DeviceColorMap.Clear();
+
+                        foreach (var key in DeviceFuncMap)
+                        {
+                            // Set black as default color
+                            DeviceColorMap.Add(key.Key, Color.Black);
+                        }
+                    }
+                    else
+                    { 
+                        Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}");
                     }
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
+                    Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:\n{exc}");
                 }
             }
 
@@ -56,11 +66,16 @@ namespace Aurora.Devices.UnifiedHID
         {
             try
             {
-                device.CloseDevice();
+                if (device != null)
+                {
+                    device.CloseDevice();
+
+                    Global.logger.Info($"[UnifiedHID] disconnected from device {PrettyNameFull})");
+                }
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to close UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:\n{exc}");
             }
 
             return !IsConnected;
@@ -68,7 +83,7 @@ namespace Aurora.Devices.UnifiedHID
 
         public virtual bool SetColor(DeviceKeys key, byte red, byte green, byte blue)
         {
-            if (IsConnected && DeviceFuncMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
+            if (DeviceFuncMap.TryGetValue(key, out Func<byte, byte, byte, bool> func))
                 return func.Invoke(red, green, blue);
 
             return false;
