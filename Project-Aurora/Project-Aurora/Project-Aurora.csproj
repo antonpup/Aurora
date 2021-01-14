@@ -65,7 +65,7 @@
     <PackageReference Include="CS-Script" Version="3.30.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.1.1" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
-    <PackageReference Include="hidlibrary" Version="3.2.46" />
+    <PackageReference Include="hidlibrary" Version="3.3.40" />
     <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
     <PackageReference Include="IronPython" Version="2.7.8.1" />
     <PackageReference Include="JsonSubTypes" Version="1.7.0" />

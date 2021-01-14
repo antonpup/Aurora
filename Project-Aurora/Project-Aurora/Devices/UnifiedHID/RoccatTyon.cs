@@ -9,27 +9,33 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.UnifiedHID
 {
-
     internal class RoccatTyon : UnifiedBase
     {
-        private static HidDevice ctrl_device_leds;
-        private static HidDevice ctrl_device;
+        private HidDevice deviceLeds;
+
+        public override bool IsConnected => (device?.IsOpen ?? false) || (deviceLeds?.IsOpen ?? false);
+        public override string PrettyName => "Roccat Tyon";
 
         public RoccatTyon()
         {
-            PrettyName = "Roccat Tyon";
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            {
+                { DeviceKeys.Peripheral_ScrollWheel, SetColor },
+                { DeviceKeys.Peripheral_FrontLight, SetColor }
+            };
         }
 
         private bool InitMouseColor()
         {
-            return ctrl_device.WriteFeatureData(initPacket);
+            return device.WriteFeatureData(initPacket);
         }
 
-        static bool WaitCtrlDevice()
+        private bool WaitCtrlDevice()
         {
-            for (int i = 1; i < 3; i++) // 3 Tries because the first one always fails.
+            // 3 Tries because the first one always fails.
+            for (int i = 1; i < 3; i++)
             {
-                if (ctrl_device.ReadFeatureData(out byte[] buffer, 0x04) && buffer.Length > 2)
+                if (device.ReadFeatureData(out byte[] buffer, 0x04) && buffer.Length > 2)
                 {
                     if (buffer[1] == 0x01)
                         return true;
@@ -37,6 +43,7 @@ namespace Aurora.Devices.UnifiedHID
                 else
                     return false;
             }
+
             return false;
         }
 
@@ -46,85 +53,104 @@ namespace Aurora.Devices.UnifiedHID
             {
                 return false;
             }
+
             IEnumerable<HidDevice> devices = HidDevices.Enumerate(0x1E7D, new int[] { 0x2E4A });
+
             try
             {
                 if (devices.Count() > 0)
                 {
-                    ctrl_device_leds = devices.First(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0002);
-                    ctrl_device = devices.First(dev => dev.Capabilities.FeatureReportByteLength > 50);
-                    ctrl_device.OpenDevice();
-                    ctrl_device_leds.OpenDevice();
+                    device = devices.First(dev => dev.Capabilities.FeatureReportByteLength > 50);
+                    deviceLeds = devices.First(dev => dev.Capabilities.UsagePage == 0x0001 && dev.Capabilities.Usage == 0x0002);
+
+                    device.OpenDevice();
+                    deviceLeds.OpenDevice();
+
                     bool success = InitMouseColor() && WaitCtrlDevice();
+
                     if (!success)
                     {
-                        Global.logger.LogLine($"Roccat Tyon Could not connect\n", Logging_Level.Error);
-                        ctrl_device.CloseDevice();
-                        ctrl_device_leds.CloseDevice();
+                        Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}");
+
+                        // Force close devices
+                        device.CloseDevice();
+                        deviceLeds.CloseDevice();
                     }
-                    Global.logger.LogLine($"Roccat Tyon Connected\n", Logging_Level.Info);
-                    return (IsConnected = success);
+                    else
+                    {
+                        Global.logger.Info($"[UnifiedHID] connected to device {PrettyNameFull}");
+
+                        DeviceColorMap.Clear();
+
+                        foreach (var key in DeviceFuncMap)
+                        {
+                            // Set black as default color
+                            DeviceColorMap.Add(key.Key, Color.Black);
+                        }
+                    }
                 }
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to open UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:\n{exc}");
             }
+
             return false;
         }
 
-        // We need to override Disconnect() too cause we have two HID devices open for this mouse.
+        // We need to override Disconnect() because we have two HID devices open for this mouse.
         public override bool Disconnect()
         {
+            base.Disconnect();
+
             try
             {
-                ctrl_device.CloseDevice();
-                ctrl_device_leds.CloseDevice();
-                return true;
+                if (deviceLeds != null)
+                {
+                    deviceLeds.CloseDevice();
+
+                    Global.logger.Info($"[UnifiedHID] disconnected from device {PrettyNameFull})");
+                }
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to close UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:\n{exc}");
             }
-            return false;
+
+            return !IsConnected;
         }
 
-        public override bool SetLEDColour(DeviceKeys key, byte red, byte green, byte blue)
+        // TODO: Set diffent color for wheel and bottom led ?
+        public bool SetColor(byte r, byte g, byte b)
         {
-            try
-            {
-                if (!this.IsConnected)
-                    return false;
+            if (!IsConnected)
+                return false;
 
-                byte[] hwmap =
-                {
-                    red,
-                    green,
-                    blue,
-                    0x00,
-                    0x00,
-                    red,
-                    green,
-                    blue,
-                    0x00,
-                    0x80,
-                    0x80
+            byte[] hwmap =
+            {
+                    r, g, b,
+                    0x00, 0x00,
+                    r, g, b,
+                    0x00, 0x80, 0x80
                 };
 
-                byte[] workbuf = new byte[30];
+            byte[] workbuf = new byte[30];
+
+            try
+            {
                 Array.Copy(controlPacket, 0, workbuf, 0, controlPacket.Length);
                 Array.Copy(hwmap, 0, workbuf, controlPacket.Length, hwmap.Length);
 
-                return ctrl_device.WriteFeatureData(workbuf);
+                return device.WriteFeatureData(workbuf);
             }
             catch (Exception exc)
             {
-                Global.logger.LogLine($"Error when attempting to close UnifiedHID device:\n{exc}", Logging_Level.Error);
+                Global.logger.Error($"[UnifiedHID] error when writing to device {PrettyName}:\n{exc}");
                 return false;
             }
         }
 
-        // Packet with values set to white for mouse initialisation.
+        // Packet with values set to white for mouse initialization.
         static readonly byte[] initPacket = new byte[] {
             0x06,0x1e,0x00,0x00,
             0x06,0x06,0x06,0x10,0x20,0x40,0x80,0xa4,0x02,0x03,0x33,0x00,0x01,0x01,0x03,
