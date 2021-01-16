@@ -1,0 +1,50 @@
+{
+  "group_tag": "keyboard",
+  "origin_region": 2,
+  "grouped_keys": [
+    {
+      "visualName": "",
+      "tag": 186,
+      "margin_left": 10.0,
+      "margin_top": 4.0,
+      "width": 10.0,
+      "height": 50,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 187,
+      "margin_left": 10.0,
+      "margin_top": 56.5,
+      "width": 10.0,
+      "height": 50,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 188,
+      "margin_left": 10.0,
+      "margin_top": 109,
+      "width": 10.0,
+      "height": 50,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 189,
+      "margin_left": 10.0,
+      "margin_top": 161.5,
+      "width": 10.0,
+      "height": 50,
+      "font_size": 12.0,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}
