@@ -179,6 +179,8 @@ namespace Aurora.Devices
 
             Global.logger.Info("Loading devices from plugins");
 
+            deviceAssemblies = new List<Assembly>();
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             foreach (var deviceDll in Directory.EnumerateFiles(deviceDllFolder, "*.dll"))
             {
                 try
@@ -189,6 +191,7 @@ namespace Aurora.Devices
                     {
                         if (typeof(IDevice).IsAssignableFrom(type) && !type.IsAbstract)
                         {
+                            deviceAssemblies.Add(deviceAssembly);
                             IDevice devDll = (IDevice)Activator.CreateInstance(type);
 
                             DeviceContainers.Add(new DeviceContainer(devDll));
@@ -200,6 +203,25 @@ namespace Aurora.Devices
                     Global.logger.Error($"Error loading device dll: {deviceDll}. Exception: {e.Message}");
                 }
             }
+        }
+
+        private List<Assembly> deviceAssemblies;
+
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            if (args.RequestingAssembly != null && deviceAssemblies.Contains(args.RequestingAssembly))
+            {
+                var searchDir = Path.GetDirectoryName(args.RequestingAssembly.Location);
+                foreach (var file in Directory.GetFiles(searchDir, "*.dll"))
+                {
+                    var assemblyName = AssemblyName.GetAssemblyName(file);
+                    if (assemblyName.FullName == args.Name)
+                    {
+                        return AppDomain.CurrentDomain.Load(assemblyName);
+                    }
+                }
+            }
+            return null;
         }
 
         public void RegisterVariables()
