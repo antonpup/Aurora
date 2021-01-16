@@ -234,6 +234,8 @@ namespace Aurora.Settings
         Masterkeys_MK730 = 504,
         [Description("Cooler Master - SK650")]
         Cooler_Master_SK650 = 505,
+        [Description("Cooler Master - SK630")]
+        Cooler_Master_SK630 = 506,
 
         //Roccat range is 600-699
         [Description("Roccat Ryos")]
