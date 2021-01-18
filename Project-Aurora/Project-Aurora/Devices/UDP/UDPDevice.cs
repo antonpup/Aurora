@@ -21,21 +21,21 @@ namespace Aurora.Devices.UDP
         private List<IPEndPoint> endpoints;
         private DeviceKeys deviceKey;
         private int ledCount;
-        private int udpPort;
 
         private Color lastColor;
 
-        protected override string DeviceInfo => string.Join(", ", ips);
+        private const int defaultPort = 19446;
+
+        protected override string DeviceInfo => string.Join(", ", endpoints.Select(endpoint => endpoint.ToString()));
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
             var devKeysEnumAsEnumerable = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
 
             variableRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral, "Key Color to Use",
-                    devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
+                devKeysEnumAsEnumerable.Max(), devKeysEnumAsEnumerable.Min());
             variableRegistry.Register($"{DeviceName}_led_count", 300, "LED Count");
-            variableRegistry.Register($"{DeviceName}_ip", "", "IP Adresses (Comma separated)");
-            variableRegistry.Register($"{DeviceName}_port", 19446, "UDP Port");
+            variableRegistry.Register($"{DeviceName}_ip", "", "Addresses (IP:port - Comma separated)");
         }
 
 
@@ -45,8 +45,6 @@ namespace Aurora.Devices.UDP
 
             deviceKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             ledCount = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_led_count");
-
-            udpPort = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
             ips = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip").Split(',');
 
             if (ips.Length < 2 && ips[0] == "")
@@ -64,7 +62,16 @@ namespace Aurora.Devices.UDP
             {
                 try
                 {
-                    endpoints.Add(new IPEndPoint(IPAddress.Parse(ip), udpPort));
+                    int udpPort = defaultPort;
+                    var parts = ip.Split(':');
+                    if (parts.Length > 1)
+                    {
+                        if (!int.TryParse(parts[1], out udpPort))
+                        {
+                            udpPort = defaultPort;
+                        }
+                    }
+                    endpoints.Add(new IPEndPoint(IPAddress.Parse(parts[0]), udpPort));
                 }
                 catch (FormatException)
                 {
@@ -88,7 +95,8 @@ namespace Aurora.Devices.UDP
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e,
+            bool forced = false)
         {
             if (!IsInitialized) return false;
 
