@@ -1,12 +1,13 @@
-﻿using System;
+using LibreHardwareMonitor.Hardware;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using LibreHardwareMonitor.Hardware;
-using Computer = LibreHardwareMonitor.Hardware.Computer;
 
 namespace Aurora.Utils
 {
@@ -75,19 +76,28 @@ namespace Aurora.Utils
             }
         }
 
-        public abstract class HardwareUpdater
+        public sealed class Sensor
         {
-            private const int MAX_QUEUE = 8;
+            public string Name { get; set; }
+            public int Index { get; set; }
+        }
+
+        public abstract class HardwareUpdater : INotifyPropertyChanged
+        {
+            protected int maxQueue = 0;
             protected IHardware hw;
             protected bool inUse;
 
-            private readonly Timer _useTimer;
-            private readonly Timer _updateTimer;
-            private readonly Dictionary<Identifier, Queue<float>> _queues;
+            protected readonly Timer _useTimer; // Check if hw is used
+            protected readonly Timer _updateTimer; // Update sensor value
+            protected readonly Dictionary<Identifier, Queue<float>> _queues;
 
             protected HardwareUpdater()
             {
+                maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
+
                 _queues = new Dictionary<Identifier, Queue<float>>();
+
                 _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
                 {
@@ -101,6 +111,7 @@ namespace Aurora.Utils
                 {
                     if (inUse)
                         hw?.Update();
+
                     if (_updateTimer.Interval != Global.Configuration.HardwareMonitorUpdateRate)
                         _updateTimer.Interval = Global.Configuration.HardwareMonitorUpdateRate;
                 };
@@ -109,20 +120,42 @@ namespace Aurora.Utils
 
             protected float GetValue(ISensor sensor)
             {
+                if (sensor is null)
+                    return 0;
+
                 inUse = true;
+
                 _useTimer.Stop();
                 _useTimer.Start();
 
+                float value = sensor?.Value ?? 0;
+
                 if (!_queues.TryGetValue(sensor.Identifier, out var values))
-                    return 0;
+                    return value;
 
-                if (values.Count == MAX_QUEUE)
-                    values.Dequeue();
-                values.Enqueue(sensor?.Value ?? 0);
+                // Prevent collection from being modified while enumerating
+                lock (values)
+                {
+                    // Try to fix invalid reading
+                    if (value == 0)
+                        value = values.LastOrDefault();
 
-                return Global.Configuration.HardwareMonitorUseAverageValues ?
-                    values.Average() : 
-                    sensor?.Value ?? 0;
+                    // Update queue capacity
+                    if (maxQueue != Global.Configuration.HardwareMonitorMaxQueue)
+                    {
+                        maxQueue = Global.Configuration.HardwareMonitorMaxQueue;
+                        _queues[sensor.Identifier] = new Queue<float>(maxQueue);
+                    }
+
+                    if (values.Count == maxQueue)
+                        values.Dequeue();
+
+                    values.Enqueue(value);
+
+                    return Global.Configuration.HardwareMonitorUseAverageValues
+                                ? values.Average()
+                                : value;
+                }
             }
 
             protected ISensor FindSensor(string identifier)
@@ -135,7 +168,7 @@ namespace Aurora.Utils
                     return null;
                 }
                 result.ValuesTimeWindow = TimeSpan.Zero;
-                _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
+                _queues.Add(result.Identifier, new Queue<float>(maxQueue));
                 return result;
             }
 
@@ -149,9 +182,35 @@ namespace Aurora.Utils
                     return null;
                 }
                 result.ValuesTimeWindow = TimeSpan.Zero;
-                _queues.Add(result.Identifier, new Queue<float>(MAX_QUEUE));
+                _queues.Add(result.Identifier, new Queue<float>(maxQueue));
                 return result;
             }
+
+            protected List<ISensor> FindSensors(SensorType type)
+            {
+                var result = new List<ISensor>();
+
+                foreach (var sensor in hw.Sensors.Where(s => s.SensorType == type).OrderBy(s => s.Identifier))
+                {
+                    sensor.ValuesTimeWindow = TimeSpan.Zero;
+                    _queues.Add(sensor.Identifier, new Queue<float>(maxQueue));
+                    result.Add(sensor);
+                }
+
+                if (result.Count == 0)
+                {
+                    Global.logger.Error(
+                        $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hw.Name} of type {hw.HardwareType}.");
+                    return null;
+                }
+
+                return result;
+            }
+
+            #region PropertyChanged
+            public event PropertyChangedEventHandler PropertyChanged;
+            protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            #endregion
         }
 
         public sealed class GPUUpdater : HardwareUpdater
@@ -189,11 +248,13 @@ namespace Aurora.Utils
         public sealed class CPUUpdater : HardwareUpdater
         {
             #region Sensors
-            private readonly ISensor _CPUTemp;
-            public float CPUTemp => GetValue(_CPUTemp);
+            private readonly List<ISensor> _CPUTemp;
+            public List<Sensor> GetSensorsTemp() => _CPUTemp.ConvertAll(x => new Sensor() { Name = x.Name, Index = x.Index });
+            public float CPUTemp => GetValue(_CPUTemp.FirstOrDefault(x => x.Index == Global.Configuration.HardwareMonitorCPUTemperature));
 
-            private readonly ISensor _CPULoad;
-            public float CPULoad => GetValue(_CPULoad);
+            private readonly List<ISensor> _CPULoad;
+            public List<Sensor> GetSensorsLoad() => _CPULoad.ConvertAll(x => new Sensor() { Name = x.Name, Index = x.Index });
+            public float CPULoad => GetValue(_CPULoad.FirstOrDefault(x => x.Index == Global.Configuration.HardwareMonitorCPULoad));
 
             private readonly ISensor _CPUPower;
             public float CPUPower => GetValue(_CPUPower);
@@ -207,9 +268,17 @@ namespace Aurora.Utils
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type CPU");
                     return;
                 }
-                _CPUTemp = FindSensor(SensorType.Temperature);
-                _CPULoad = FindSensor(SensorType.Load);
+
+                _CPUTemp = FindSensors(SensorType.Temperature);
+                _CPULoad = FindSensors(SensorType.Load);
                 _CPUPower = FindSensor(SensorType.Power);
+
+                _updateTimer.Elapsed += (a, b) =>
+                {
+                    // To update Aurora GUI In Hardware Monitor tab
+                    NotifyPropertyChanged(nameof(CPUTemp));
+                    NotifyPropertyChanged(nameof(CPULoad));
+                };
             }
         }
 
@@ -249,9 +318,9 @@ namespace Aurora.Utils
             public float DownloadSpeedBytes => GetValue(_DownloadSpeed);
             #endregion
 
-            public NETUpdater(IEnumerable<IHardware> hws)
+            public NETUpdater(IEnumerable<IHardware> hardware)
             {
-                hw = hws.FirstOrDefault(h => h.HardwareType == HardwareType.Network);
+                hw = hardware.FirstOrDefault(hw => hw.HardwareType == HardwareType.Network);
                 if (hw is null)
                 {
                     Global.logger.Error("[HardwareMonitor] Could not find hardware of type Network");

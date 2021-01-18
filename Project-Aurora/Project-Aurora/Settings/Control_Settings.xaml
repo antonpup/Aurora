@@ -1,4 +1,4 @@
-﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -42,7 +42,7 @@
                 <!-- Blackout -->
                 <TextBlock Text="Blackout start time:" Margin="11,230,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <TextBlock Text="Blackout end time:" Margin="11,254,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                
+
                 <!-- Nighttime -->
                 <CheckBox Content="Enable nighttime color zones for&#x0a;General Application lighting profiles" IsChecked="{Binding NighttimeEnabled}" Margin="242,184,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <xctk:IntegerUpDown Value="{Binding NighttimeStartHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="326,225,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -57,12 +57,12 @@
                 <TextBlock Text="Excluded Processes" Margin="512,117,0,0" Width="113" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <Button Content="Add Process" Click="ExcludedAdd_Click" Margin="677,139,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <Button Content="Remove Process" Click="ExcludedRemove_Click" Margin="677,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                
+
                 <!-- Global brightness -->
                 <TextBlock Text="Global brightness modifier:" Margin="12,111,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <Slider Value="{Binding GlobalBrightness, UpdateSourceTrigger=PropertyChanged}" Maximum="1" Margin="180,111,0,0" Width="150" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text="{Binding GlobalBrightness, Converter={StaticResource PercentageFormatter}}" Margin="335,111,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                
+
                 <!-- Keyboard brightness -->
                 <TextBlock Text="Keyboard brightness modifier:" Margin="12,132,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <Slider Value="{Binding KeyboardBrightness, UpdateSourceTrigger=PropertyChanged}" x:Name="sldKeyboardBrightness" HorizontalAlignment="Left" Margin="180,132,0,0" VerticalAlignment="Top" Width="150" Maximum="1" />
@@ -79,7 +79,7 @@
                 <TextBlock TextWrapping="Wrap" Text="Application Detection Method:" Margin="512,12,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 <ComboBox SelectedValue="{Binding DetectionMode}" ItemsSource="{u:EnumToItemsSource {x:Type local:ApplicationDetectionMode}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="677,10,0,0" Width="157" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-                
+
                 <!-- Startup delay -->
                 <TextBlock Text="Delay:" Margin="278,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <xctk:IntegerUpDown x:Name="startDelayAmount" Minimum="0" Increment="15" ValueChanged="StartDelayAmount_ValueChanged" Margin="315,8,0,0" Width="69" Height="22" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -93,12 +93,6 @@
                 <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
-                <!-- Hardware sensors -->
-                <TextBlock Text="Hardware sensors update rate:" ToolTip="Used for CPU and GPU usage, etc" Margin="12,278,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <xctk:IntegerUpDown Value="{Binding HardwareMonitorUpdateRate}" Minimum="100" Maximum="2000" Margin="178,278,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <CheckBox Content="Use average hardware sensor values instead of real-time ones" IsChecked="{Binding HardwareMonitorUseAverageValues}" ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" Margin="10,302,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
             </Grid>
         </TabItem>
         <TabItem Header="Away Effects">
@@ -225,6 +219,61 @@
         <TabItem Header="Plugin Management">
             <Grid>
                 <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Hardware Monitor">
+            <Grid Margin="7,7,7,7">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="CPU Temperature:" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="CPU Load:" VerticalAlignment="Top"/>
+                </StackPanel>
+
+                <Grid Grid.Column="1" Grid.Row="0" Margin="7,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <ComboBox Grid.Column="0" Grid.Row="0" SelectedValue="{Binding HardwareMonitorCPUTemperature}" ItemsSource="{Binding HardwareMonitorCPUTemperatureList}" DisplayMemberPath="Name" SelectedValuePath="Index" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox Grid.Column="0" Grid.Row="1" SelectedValue="{Binding HardwareMonitorCPULoad}" ItemsSource="{Binding HardwareMonitorCPULoadList}" DisplayMemberPath="Name" SelectedValuePath="Index" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+                    <TextBlock Grid.Column="1" Grid.Row="0" x:Name="currentCpuTemp" DataContext="{x:Static u:HardwareMonitor.CPU}" Text="{Binding CPUTemp, Mode=OneWay}" ToolTip="Current CPU Temperature" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" x:Name="currentCpuLoad" DataContext="{x:Static u:HardwareMonitor.CPU}" Text="{Binding CPULoad, Mode=OneWay}" ToolTip="Current CPU Load" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" />
+                </Grid>
+
+                <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,7,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,7,0" Text="Hardware sensors update interval (ms):" ToolTip="Used for CPU and GPU usage, etc" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <xctk:IntegerUpDown Grid.Column="1" Grid.Row="0" Value="{Binding HardwareMonitorUpdateRate}" Minimum="100" Maximum="2000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,7,0" Text="Maximum queue size for average values:" ToolTip="Used for CPU temp and load" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <xctk:IntegerUpDown Grid.Column="1" Grid.Row="1" Value="{Binding HardwareMonitorMaxQueue}" Minimum="2" Maximum="1000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <CheckBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" FlowDirection="RightToLeft" IsChecked="{Binding HardwareMonitorUseAverageValues}" Content="Use average hardware sensor values instead of real-time ones" ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                </Grid>
             </Grid>
         </TabItem>
         <TabItem Header="Updates">

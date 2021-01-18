@@ -1,0 +1,11 @@
+{
+  "keys_to_remove": [],
+  "key_modifications": {
+  },
+  "included_features": [
+    "cooler_master_sk650_right_features.json",
+    "cooler_master_sk650_bottom_features.json",
+    "cooler_master_sk650_left_features.json",
+    "cooler_master_sk650_top_features.json"
+  ]
+} 
