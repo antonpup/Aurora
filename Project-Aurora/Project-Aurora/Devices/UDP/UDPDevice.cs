@@ -13,16 +13,19 @@ namespace Aurora.Devices.UDP
     public class UdpDevice : DefaultDevice
     {
         public override string DeviceName => "UDP";
-        public override bool IsInitialized { get; protected set; } = false;
 
         private Stopwatch redrawWatch = new Stopwatch();
         private UdpClient udpClient;
 
+        private string[] ips = new string[0];
         private List<IPEndPoint> endpoints;
         private DeviceKeys deviceKey;
         private int ledCount;
+        private int udpPort;
 
         private Color lastColor;
+
+        protected override string DeviceInfo => string.Join(", ", ips);
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
@@ -38,13 +41,23 @@ namespace Aurora.Devices.UDP
 
         public override bool Initialize()
         {
-            if (IsInitialized) return true;
+            if (IsInitialized) return IsInitialized = true;
 
             deviceKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             ledCount = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_led_count");
 
-            var udpPort = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
-            var ips = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip").Split(',');
+            udpPort = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
+            ips = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip").Split(',');
+
+            if (ips.Length < 2 && ips[0] == "")
+            {
+                LogError("UDP has no IP");
+                return IsInitialized = false;
+            }
+            else
+            {
+                LogInfo($"{ips.Length} |{string.Join("|", ips)}|");
+            }
 
             endpoints = new List<IPEndPoint>();
             foreach (var ip in ips)
@@ -62,8 +75,7 @@ namespace Aurora.Devices.UDP
             lastColor = Color.Black;
             redrawWatch.Start();
 
-            IsInitialized = true;
-            return true;
+            return IsInitialized = true;
         }
 
         public override void Shutdown()
