@@ -21,6 +21,9 @@ namespace Aurora.Devices.Ducky
         private readonly Stopwatch watch = new Stopwatch();
         private Color processedColor;
         private (int PacketNum, int OffsetNum) currentKeyOffset;
+        private Stopwatch packetDelay = new Stopwatch(); //Stopwatch used for timer resolution, System.Timer.Timer resolution is ~15ms, Stopwatch in HiRes mode is 10,000,000 per ms.
+        private int progress; //A helper number for the progress of sending the packet using the Stopwatch.
+        private bool updateSuccess, updating, delayReset;
 
         HidDevice duckyKeyboard;
         HidStream packetStream;
@@ -60,11 +63,9 @@ namespace Aurora.Devices.Ducky
                     try
                     {
                         isInitialized = duckyKeyboard.TryOpen(out packetStream);
-                        //This uses a monstrous 501 packets to initialize the keyboard in to letting the LEDs be controlled over USB HID.
-                        foreach (byte[] controlPacket in DuckyRGBMappings.DuckyTakeover)
-                        {
-                            packetStream.Write(controlPacket);
-                        }
+                        //This line initializes the keyboard in to letting the LEDs be controlled over USB HID.
+                        packetStream.Write(DuckyRGBMappings.DuckyTakeover);
+                        progress = -1;
                     }
                     catch
                     {
@@ -88,20 +89,15 @@ namespace Aurora.Devices.Ducky
 
             //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
             //You can tell both the takeover and release work because the keyboard will flash the same as switching to profile 1. (The same lights when you push FN + 1)
-            foreach (byte[] controlPacket in DuckyRGBMappings.DuckyRelease)
+            try
             {
-                try
-                {
-                    packetStream.Write(controlPacket);
-                }
-                catch
-                {
-                    break;
-                }
+                packetStream.Write(DuckyRGBMappings.DuckyRelease);
             }
+            catch { }
             
             packetStream?.Dispose();
             packetStream?.Close();
+            progress = 99;
             isInitialized = false;
         }
 
@@ -161,7 +157,7 @@ namespace Aurora.Devices.Ducky
                 }
             }
 
-            if (!prevColourMessage.SequenceEqual(colourMessage) && IsInitialized)
+            if (!prevColourMessage.SequenceEqual(colourMessage) && IsInitialized && progress == -1)
             {
                 //Everything previous to setting the colours actually just write the colour data to the ColourMessage byte array.
                 /*
@@ -173,29 +169,50 @@ namespace Aurora.Devices.Ducky
                  These packets are 64 bytes each (technically 65 but the first byte is just padding, which is why there's the .Take(65) there)
                  Each key has its own three bytes for r,g,b somewhere in the 8 colour packets. These positions are defined in the DuckyColourOffsetMap
                  The colour packets also have a header. (You might be able to send these packets out of order, and the headers will tell the keyboard where it should be, but IDK)*/
-                for (int i = 0; i < 10; i++)
-                {
-                    try
-                    {
-                        if (i < 9)
-                        {
-                            packetStream.Write(colourMessage, Packet(i), 65);
-                        }
-                        else
-                        {
-                            //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
-                            packetStream.Write(colourMessage, Packet(i), 64);
-                        }
-                    }
-                    catch
-                    {
-                        Reset();
-                        return false;
-                    }
-                    Thread.Sleep(2);
-                }
+                progress = 0;
+                packetDelay.Restart();
                 colourMessage.CopyTo(prevColourMessage, 0);
-                return true;
+                while (progress >= 0)
+                {
+                    if (packetDelay.ElapsedMilliseconds % 2 == 1)
+                    {
+                        delayReset = true;
+                    }
+                    if (packetDelay.ElapsedMilliseconds % 2 == 0 && delayReset)
+                    {
+                        updating = false;
+                        delayReset = false;
+                    }
+
+                    if (!updating)
+                    {
+                        updating = true;
+                        try
+                        {
+                            if (progress < 9)
+                            {
+                                packetStream.Write(colourMessage, Packet(progress), 65);
+                                progress++;
+                            }
+                            else
+                            {
+                                packetDelay.Stop();
+                                //This is to account for the last byte in the last packet to not overflow. The byte is 0x00 anyway so it won't matter if I leave the last byte out.
+                                packetStream.Write(colourMessage, Packet(progress), 64);
+                                updateSuccess = true;
+                                progress = -1; //I'm using the progress int as a flag to tell UpdateDevice() when it can activate again
+                            }
+                        }
+                        catch
+                        {
+                            packetDelay.Stop();
+                            updateSuccess = false;
+                            progress = -1;
+                        }
+                    }
+                }
+                
+                return updateSuccess;
             }
             return true;
         }
