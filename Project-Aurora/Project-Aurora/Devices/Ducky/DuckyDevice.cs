@@ -97,7 +97,7 @@ namespace Aurora.Devices.Ducky
             
             packetStream?.Dispose();
             packetStream?.Close();
-            progress = 99;
+            progress = -2;
             isInitialized = false;
         }
 
