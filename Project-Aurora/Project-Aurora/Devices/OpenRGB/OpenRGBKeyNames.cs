@@ -128,6 +128,7 @@ namespace Aurora.Devices.OpenRGB
             { "Key: Media Play/Pause" , DK.MEDIA_PLAY_PAUSE  },
             { "Key: Media Mute"       , DK.VOLUME_MUTE       },
             { "Logo"                  , DK.LOGO              },
+            { "Lighting"              , DK.BRIGHTNESS_SWITCH },
             { "Key: Brightness"       , DK.BRIGHTNESS_SWITCH },
             { "Key: M1"               , DK.G1                },
             { "Key: M2"               , DK.G2                },
@@ -138,6 +139,8 @@ namespace Aurora.Devices.OpenRGB
             { "Key: G1"               , DK.G1                },
             { "Key: G2"               , DK.G2                },
             { "Key: G3"               , DK.G3                },
+            { "Key: G4"               , DK.G4                },
+            { "Key: G5"               , DK.G5                },
         };
 
         public static readonly Dictionary<string, DK> Mouse = new Dictionary<string, DK>()
