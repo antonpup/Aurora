@@ -2,6 +2,8 @@
   "keys_to_remove": [],
   "key_modifications": {},
   "included_features": [
-  "logitech_g815_features.json"
+  "logitech_g815_left_features.json",
+  "logitech_g815_top_features.json",
+  "logitech_g815_right_features.json",
   ]
 }
