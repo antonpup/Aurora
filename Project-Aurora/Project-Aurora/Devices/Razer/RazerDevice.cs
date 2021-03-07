@@ -38,12 +38,6 @@ namespace Aurora.Devices.Razer
 
         public override bool Initialize()
         {
-            if (!Chroma.SdkAvailable)
-            {
-                LogError("SDK not available. Install Razer synapse");
-                return IsInitialized = false;
-            }
-
             try
             {
                 Chroma.Instance.Initialize();
