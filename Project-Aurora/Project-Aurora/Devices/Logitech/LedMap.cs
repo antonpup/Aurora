@@ -167,7 +167,6 @@ namespace Aurora.Devices.Logitech
             [DeviceKeys.PERIPHERAL_DPI] =  (DeviceType.Mouse, 0),
             [DeviceKeys.Peripheral_Logo] = (DeviceType.Mouse, 1),
             [DeviceKeys.Peripheral_ScrollWheel] = (DeviceType.Mouse, 2),
-            [DeviceKeys.MOUSEPADLIGHT1] = (DeviceType.Mousemat, 0),
         };
     }
 }

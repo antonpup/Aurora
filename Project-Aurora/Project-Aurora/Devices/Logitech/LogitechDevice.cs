@@ -21,9 +21,11 @@ namespace Aurora.Devices.Logitech
         private Color mousepad;
         private readonly Color[] mouse = new Color[2];
         private readonly Color[] headset = new Color[2];
+        private DeviceKeys genericKey;
 
         public override bool Initialize()
         {
+            genericKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             var ghubRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lghub.exe");
             var lgsRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lcore.exe");
 
@@ -65,7 +67,7 @@ namespace Aurora.Devices.Logitech
 
             //reset keys to peripheral_logo here so if we dont find any better color for them,
             //at least the leds wont turn off :)
-            if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var periph))
+            if (keyColors.TryGetValue(genericKey, out var periph))
             {
                 speakers = periph;
                 mousepad = periph;
@@ -148,6 +150,7 @@ namespace Aurora.Devices.Logitech
             variableRegistry.Register($"{DeviceName}_default_color", new Utils.RealColor(Color.FromArgb(255, 255, 255, 255)), "Default Color");
             variableRegistry.Register($"{DeviceName}_override_dll", false, "Override DLL", null, null, "Requires restart to take effect");
             variableRegistry.Register($"{DeviceName}_override_dll_option", LGDLL.GHUB, "Override DLL Selection", null, null, "Requires restart to take effect");
+            variableRegistry.Register($"{DeviceName}_devicekey", DeviceKeys.Peripheral_Logo, "Key to Use", DeviceKeys.MOUSEPADLIGHT15, DeviceKeys.Peripheral);
         }
     }
 }
