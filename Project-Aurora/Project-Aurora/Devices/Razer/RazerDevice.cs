@@ -42,7 +42,7 @@ namespace Aurora.Devices.Razer
             {
                 Chroma.Instance.Initialize();
             }
-            catch (Corale.Colore.Razer.NativeCallException e)
+            catch (Exception e)
             {
                 LogError("Error initializing:" + e.Message);
                 return IsInitialized = false;
