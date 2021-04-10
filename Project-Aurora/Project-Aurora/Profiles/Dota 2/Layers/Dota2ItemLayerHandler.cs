@@ -350,9 +350,9 @@ namespace Aurora.Profiles.Dota_2.Layers
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
 
-                if (Properties.ItemKeys.Count >= 6)
+                if (Properties.ItemKeys.Count >= 12)
                 {
-                    for (int index = 0; index < dota2state.Items.InventoryCount; index++)
+                    for (int index = 0; index < 6; index++)
                     {
                         Item item = dota2state.Items.GetInventoryAt(index);
                         Devices.DeviceKeys key = Properties.ItemKeys[index];
@@ -383,7 +383,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                         }
                     }
 
-                    for (int index = 0; index < dota2state.Items.StashCount; index++)
+                    for (int index = 0; index < 6; index++)
                     {
                         Item item = dota2state.Items.GetStashAt(index);
                         Devices.DeviceKeys key = Properties.ItemKeys[6 + index];
