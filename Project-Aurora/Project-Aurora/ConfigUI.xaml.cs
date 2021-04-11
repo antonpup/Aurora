@@ -133,6 +133,12 @@ namespace Aurora
                 SelectedControl = profile_control;
         }
 
+        internal void GoToSteelSeriesPage()
+        {
+            DesktopControl_MouseLeftButtonDown(null, null);
+            settingsControl.tabMain.SelectedIndex = settingsControl.tabMain.Items.IndexOf(settingsControl.devicesAndWrappersPage);
+        }
+
         private void Layer_manager_NewLayer(Layer layer)
         {
             layerPresenter.Layer = layer;
