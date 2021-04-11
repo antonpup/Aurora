@@ -21,6 +21,7 @@ using System.Windows.Threading;
 using Aurora.Devices.Asus.Config;
 using Aurora.Utils;
 using System.Globalization;
+using SteelSeriesServer;
 
 namespace Aurora.Settings
 {
@@ -31,6 +32,7 @@ namespace Aurora.Settings
     {
         private RegistryKey runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         private const string StartupTaskID = "AuroraStartup";
+        private SteelSeriesServer.SteelSeriesServer steelSeriesServer;
 
         public Control_Settings()
         {
@@ -93,6 +95,8 @@ namespace Aurora.Settings
             this.razer_wrapper_installed_version_label.Content = rzVersion.ToString();
             this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(RzHelper.IsSdkVersionSupported(rzVersion) ? Colors.LightGreen : Colors.PaleVioletRed);
             this.razer_wrapper_supported_versions_label.Content = $"[{RzHelper.SupportedFromVersion}-{RzHelper.SupportedToVersion}]";
+            if (auto_start_steelseries_server.IsChecked == true)
+                StartSteelSeriesServer();
 
             if (rzVersion == new RzSdkVersion())
                 this.razer_wrapper_uninstall_button.Visibility = Visibility.Hidden;
@@ -452,6 +456,30 @@ namespace Aurora.Settings
                 System.Windows.MessageBox.Show("Successfully wrote sensor info to logs folder");
             else
                 System.Windows.MessageBox.Show("Error dumping file. Consult log for details.");
+        }
+
+        private void StartSteelSeriesServer()
+        {
+            if (steelSeriesServer == null)
+            {
+                AuroraSender auroraSender = new AuroraSender();
+                steelSeriesServer = new SteelSeriesServer.SteelSeriesServer(auroraSender);
+                steelSeriesServer.Start();
+            }
+        }
+
+        private void wrapper_install_steelseries_Click(object sender, RoutedEventArgs e)
+        {
+            StartSteelSeriesServer();
+        }
+
+        private void wrapper_uninstall_steelseries_Click(object sender, RoutedEventArgs e)
+        {
+            if (steelSeriesServer != null)
+            {
+                steelSeriesServer.Stop();
+                steelSeriesServer = null;
+            }
         }
     }
 }

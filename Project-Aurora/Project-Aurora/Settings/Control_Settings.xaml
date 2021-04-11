@@ -124,7 +124,7 @@
                 <TextBlock Text="seconds" Margin="160,170,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
             </Grid>
         </TabItem>
-        <TabItem Header="Devices &amp; Wrappers">
+        <TabItem x:Name="devicesAndWrappersPage" Header="Devices &amp; Wrappers">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -201,10 +201,16 @@
                         <GroupBox Header="Wrappers">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock TextWrapping="Wrap" Margin="4" Text="Wrappers are not needed for Aurora to connect to your RGB devices. Only use these if you know what you're doing, otherwise you could cause issues in games or other applications! Read the wiki for more information."/>
-                                <Button Content="Patch for LightFX (32 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_32_Click"/>
-                                <Button Content="Patch for LightFX (64 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_64_Click"/>
-                                <Button Content="Patch for Logitech"         Margin="4" Width="200" Click="wrapper_install_logitech_Click"/>
-                                <Button Content="Patch for Razer (Legacy, deprecated)" Margin="4" Width="200" Click="wrapper_install_razer_Click"/>
+                                <Button Content="Patch for LightFX (32 bit)" Margin="2" Width="200" Click="wrapper_install_lightfx_32_Click"/>
+                                <Button Content="Patch for LightFX (64 bit)" Margin="2" Width="200" Click="wrapper_install_lightfx_64_Click"/>
+                                <Button Content="Patch for Logitech"         Margin="2" Width="200" Click="wrapper_install_logitech_Click"/>
+                                <Button Content="Patch for Razer (Legacy, deprecated)" Margin="2" Width="200" Click="wrapper_install_razer_Click"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="SteelSeries Server:" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <Button Content="Start" Margin="2" Width="50" Click="wrapper_install_steelseries_Click"/>
+                                    <Button Content="Stop" Margin="2" Width="50" Click="wrapper_uninstall_steelseries_Click"/>
+                                    <CheckBox x:Name="auto_start_steelseries_server" Content="Auto start" IsChecked="{Binding AutoStartSteelSeriesServer}" Checked="ResetDevices" Unchecked="ResetDevices" VerticalAlignment="Center" />
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>
