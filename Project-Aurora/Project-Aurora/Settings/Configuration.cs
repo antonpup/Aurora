@@ -456,6 +456,7 @@ namespace Aurora.Settings
         [JsonProperty("allow_peripheral_devices")] public bool AllowPeripheralDevices { get; set; } = true;
         [JsonProperty("allow_wrappers_in_background")] public bool AllowWrappersInBackground { get; set; } = true;
         [JsonProperty("allow_all_logitech_bitmaps")] public bool AllowAllLogitechBitmaps { get; set; } = true;
+        [JsonProperty("auto_start_steelseries_server")] public bool AutoStartSteelSeriesServer { get; set; } = false;
 
         [JsonProperty("use_volume_as_brightness")] public bool UseVolumeAsBrightness { get; set; } = false;
         [JsonProperty("global_brightness")] public float GlobalBrightness { get; set; } = 1.0f;

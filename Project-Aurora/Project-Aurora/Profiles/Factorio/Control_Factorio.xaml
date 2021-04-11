@@ -13,12 +13,15 @@
                 <Grid>
                     <StackPanel>
                         <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Factorio" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="In order for Factorio support to work, you have to apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Factorio&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch "/><Run Text="Factorio "/><Run Text="Manually&quot; button and navigate to the "/><Run Text="Factorio "/><Run Text="install directory. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it."/></TextBlock>
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="There are two ways to enable Factorio support:"/></TextBlock>
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="1. Apply the Aurora Wrapper Patch for Razer in order for Aurora to receive lighting information. Press the &quot;Patch Factorio&quot; button to install automatically to the detected game directory. To choose manually press the &quot;Patch "/><Run Text="Factorio "/><Run Text="Manually&quot; button and navigate to the "/><Run Text="Factorio "/><Run Text="install directory. This should not trigger any anti-cheat, but it should be used at your own risk. P.S. You can actually apply this patch to any Razer Chroma supported game, and Aurora will work with it."/></TextBlock>
                         <StackPanel Orientation="Horizontal" Margin="10,10,0,0">
                             <Button x:Name="patch_button" Content="Patch Factorio" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="patch_button_Click"/>
                             <Button x:Name="patch_button_manually" Content="Patch Factorio Manually" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Click="patch_button_manually_Click"/>
                         </StackPanel>
                         <Button x:Name="unpatch_button" Content="Unpatch Factorio" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="unpatch_button_Click"/>
+                        <TextBlock Margin="10,10,64,0" VerticalAlignment="Top" TextWrapping="Wrap"><Run Text="2. Start the SteelSeries Server which will allow receiving lighting information from all games that support SteelSeries GameSense, including Factorio."/></TextBlock>
+                        <Button x:Name="go_to_steelseries" Content="Go to SteelSeries Configuration" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Click="go_to_steelseries_Click"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
