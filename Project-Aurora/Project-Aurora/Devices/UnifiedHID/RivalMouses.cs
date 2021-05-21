@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.UnifiedHID
 {
-
     internal class Rival100 : UnifiedBase
     {
+        public override string PrettyName => "Rival 100";
+
         public Rival100()
         {
-            PrettyName = "Rival 100";
-            deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo }
             };
@@ -26,7 +26,7 @@ namespace Aurora.Devices.UnifiedHID
                 return false;
             }
 
-            return this.Connect(0x1038, new[] { 0x1702 }, unchecked((short)0xFFFFFFC0));
+            return Connect(0x1038, new[] { 0x1702 }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetLogo(byte r, byte g, byte b)
@@ -44,10 +44,11 @@ namespace Aurora.Devices.UnifiedHID
 
     internal class Rival110 : UnifiedBase
     {
+        public override string PrettyName => "Rival 110";
+
         public Rival110()
         {
-            PrettyName = "Rival 110";
-            deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo }
             };
@@ -60,7 +61,7 @@ namespace Aurora.Devices.UnifiedHID
                 return false;
             }
 
-            return this.Connect(0x1038, new[] { 0x1729 }, unchecked((short)0xFFFFFFC0));
+            return Connect(0x1038, new[] { 0x1729 }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetLogo(byte r, byte g, byte b)
@@ -76,17 +77,17 @@ namespace Aurora.Devices.UnifiedHID
             report.Data[6] = 0x00;
             report.Data[7] = 0x00;
             report.Data[8] = 0x00;
-
             return device.WriteReport(report);
         }
     }
 
     internal class Rival300 : UnifiedBase
     {
+        public override string PrettyName => "Rival 300";
+
         public Rival300()
         {
-            PrettyName = "Rival 300";
-            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
                 { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
@@ -100,7 +101,7 @@ namespace Aurora.Devices.UnifiedHID
                 return false;
             }
 
-            return this.Connect(0x1038, new[] { 0x1710, 0x171A, 0x1394, 0x1384, 0x1718, 0x1712 }, unchecked((short)0xFFFFFFC0));
+            return Connect(0x1038, new[] { 0x1710, 0x171A, 0x1394, 0x1384, 0x1718, 0x1712 }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetScrollWheel(byte r, byte g, byte b)
@@ -130,10 +131,11 @@ namespace Aurora.Devices.UnifiedHID
 
     internal class Rival500 : UnifiedBase
     {
+        public override string PrettyName => "Rival 500";
+
         public Rival500()
         {
-            PrettyName = "Rival 500";
-            this.deviceKeyMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
+            DeviceFuncMap = new Dictionary<DeviceKeys, Func<byte, byte, byte, bool>>
             {
                 { DeviceKeys.Peripheral_Logo, SetLogo },
                 { DeviceKeys.Peripheral_ScrollWheel, SetScrollWheel }
@@ -147,7 +149,7 @@ namespace Aurora.Devices.UnifiedHID
                 return false;
             }
 
-            return this.Connect(0x1038, new[] { 0x170e }, unchecked((short)0xFFFFFFC0));
+            return Connect(0x1038, new[] { 0x170e }, unchecked((short)0xFFFFFFC0));
         }
 
         public bool SetScrollWheel(byte r, byte g, byte b)
@@ -187,10 +189,7 @@ namespace Aurora.Devices.UnifiedHID
             report.Data[10] = 0x00;
             report.Data[11] = 0x00;
             report.Data[12] = 0x01;
-
             return device.WriteReport(report);
         }
-
     }
-
 }
