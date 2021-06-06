@@ -100,7 +100,7 @@ namespace Aurora.Devices.OpenRGB
                                 else
                                 {
                                     //TODO - scale zones with more than 32 LEDs
-                                    if (k < 32)
+                                    if (k < 57)
                                     {
                                         _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
                                     }
