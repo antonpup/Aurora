@@ -234,5 +234,6 @@ namespace Aurora.Devices.OpenRGB
             DK.ADDITIONALLIGHT62,
             DK.ADDITIONALLIGHT63,
             DK.ADDITIONALLIGHT64,
+        });
     }
 }
