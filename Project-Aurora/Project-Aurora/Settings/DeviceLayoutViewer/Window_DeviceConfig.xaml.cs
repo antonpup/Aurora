@@ -42,6 +42,22 @@ namespace Aurora.Settings.DeviceLayoutViewer
             
 
             LoadDeviceType(Config.Type);
+            var deviceIdList = Global.dev_manager.IndividualDevices.Select(d => d.id).ToList();
+            deviceIdList.Insert(0, new Devices.UniqueDeviceId());
+            int selectedIndex = int.MaxValue;
+            for (int i = 0; i < deviceIdList.Count; i++)
+            {
+                if (deviceIdList[i] == Config.Id)
+                    selectedIndex = i;
+            }
+            if (selectedIndex == int.MaxValue)
+            {
+                deviceIdList.Insert(0, Config.Id);
+                selectedIndex = 0;
+            }
+                
+            this.device_view.ItemsSource = deviceIdList;
+            this.device_view.SelectedIndex = selectedIndex;
 
             this.device_type.ItemsSource = new string[2]{"Keyboard", "Other Devices"};
             this.device_layout.SelectedItem = Config.SelectedLayout;
@@ -122,6 +138,17 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     this.keyboard_layout_tb.Visibility = Visibility.Collapsed;
                     deviceLayout.DeviceConfig = new DeviceConfig(Config);
                     break;
+            }
+        }
+        
+        private void device_view_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (IsLoaded)
+            {
+                var selectedDeviceId = (Devices.UniqueDeviceId)this.device_view.SelectedItem;
+                Global.dev_manager.RegisterViewPort(ref selectedDeviceId, (int)Config.Id.ViewPort);
+                Config.Id = selectedDeviceId;
+                deviceLayout.ConfigChanged();
             }
         }
         private void device_type_SelectionChanged(object sender, SelectionChangedEventArgs e)

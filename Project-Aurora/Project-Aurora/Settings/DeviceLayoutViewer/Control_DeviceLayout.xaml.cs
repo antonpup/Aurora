@@ -140,7 +140,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     Keys = layout.LoadLayout();
                     foreach (var key in Keys)
                     {
-                        key.Key.DeviceId = DeviceConfig.Id;
+                        key.Key.DeviceId = DeviceConfig.Id.ViewPort;
                     }
                 });
             });

@@ -30,11 +30,13 @@
 
                 <StackPanel Margin="5" Orientation="Horizontal">
                     <StackPanel Orientation="Vertical" Width="150">
+                        <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device View:"/>
                         <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Type:"/>
                         <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Layout:" VerticalAlignment="Top"/>
                         <TextBlock x:Name="keyboard_layout_tb" HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keyboard Layout:" VerticalAlignment="Top"/>
                     </StackPanel>
                     <StackPanel Orientation="Vertical">
+                        <ComboBox x:Name="device_view" DisplayMemberPath="DeviceName" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_view_SelectionChanged"/>
                         <ComboBox x:Name="device_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_type_SelectionChanged"/>
                         <ComboBox x:Name="device_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="device_layout_SelectionChanged"/>
                         <ComboBox x:Name="keyboard_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="150" SelectionChanged="keyboard_layout_SelectionChanged" ItemsSource="{u:EnumToItemsSource {x:Type enum:KeyboardPhysicalLayout}}"  DisplayMemberPath="Text" SelectedValuePath="Value"/>

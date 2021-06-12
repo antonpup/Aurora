@@ -63,7 +63,6 @@ namespace Aurora.Devices
             }
         }
     }
-
     public class DeviceManager
     {
         private const int RETRY_INTERVAL = 10000;
@@ -83,7 +82,8 @@ namespace Aurora.Devices
         }
 
         public List<DeviceContainer> DeviceContainers { get; } = new List<DeviceContainer>();
-
+        public List<AuroraDeviceConnector> DeviceConnectors { get; } = new List<AuroraDeviceConnector>();
+        public IEnumerable<AuroraDevice> IndividualDevices => DeviceConnectors.SelectMany(d => d.Devices);
         public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
 
         public event EventHandler RetryAttemptsChanged;
@@ -168,6 +168,8 @@ namespace Aurora.Devices
             {
                 DeviceContainers.Add(new DeviceContainer(inst));
             }
+
+            DeviceConnectors.Add(new OpenRGB.OpenRGBDeviceConnector());
         }
 
         private void AddDevicesFromDlls()
@@ -262,6 +264,7 @@ namespace Aurora.Devices
 
                 Global.logger.Info(s);
             }
+            DeviceConnectors.ForEach(dc => dc.Initialize());
 
             if (devicesToRetry > 0)
                 Task.Run(RetryAll);
@@ -277,6 +280,7 @@ namespace Aurora.Devices
                     dc.Device.Shutdown();
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
+            DeviceConnectors.ForEach(dc => dc.Shutdown());
         }
 
         public void ResetDevices()
@@ -286,20 +290,42 @@ namespace Aurora.Devices
                 lock (dc.actionLock)
                     dc.Device.Reset();
             }
+            DeviceConnectors.ForEach(dc => dc.Reset());
         }
 
+        public void RegisterViewPort(ref UniqueDeviceId devicId, int viewPort)
+        {
+            foreach (var dc in IndividualDevices)
+            {
+                if (dc.id?.ViewPort == viewPort)
+                    dc.id.ViewPort = null;
+            }
+            devicId.ViewPort = viewPort;
+            foreach (var dc in IndividualDevices)
+            {
+                if (dc.id == devicId)
+                    dc.id = devicId;
+            }
+        }
         public void UpdateDevices(Dictionary<int, DeviceColorComposition> compositionList, bool forced = false)
         {
             foreach (var dc in InitializedDeviceContainers)
             {
                 lock (dc.actionLock)
                 {
-                    foreach (var composition in compositionList.Values)
-                    {
 
-                        dc.UpdateDevice(composition, forced);
+                    foreach (var composition in compositionList)
+                    {
+                        if (!IndividualDevices.Where(dc => dc.id?.ViewPort == composition.Key).Any())
+                            dc.UpdateDevice(composition.Value, forced);
                     }
+
                 }
+            }
+            foreach (var dc in IndividualDevices.Where(d => d.IsConnected()))
+            {
+                if (dc.id?.ViewPort != null)
+                    dc.UpdateDevice(compositionList[(int)dc.id.ViewPort]);
             }
         }
 

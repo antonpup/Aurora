@@ -315,7 +315,7 @@ namespace Aurora.Settings
                 key.margin_left += location_x;
                 key.margin_top += location_y;
 
-                Keys[(int)key.tag] = new DeviceKeyConfiguration(key, Config.Id);
+                Keys[(int)key.tag] = new DeviceKeyConfiguration(key, Config.Id.ViewPort);
 
                 if (key.width + key.margin_left > Region.Width)
                     Region.Width = (int)(key.width + key.margin_left);
@@ -465,7 +465,7 @@ namespace Aurora.Settings
 
     public class DeviceConfig
     {
-        public int Id;
+        public Devices.UniqueDeviceId Id;
         public string SelectedLayout = "";
         public int Type;
         public Point Offset = new Point(0, 0);
@@ -653,8 +653,9 @@ namespace Aurora.Settings
             {
                 foreach (Control_DeviceLayout item in e.NewItems)
                 {
-                    item.DeviceConfig.Id = DevicesConfig.Count;
-                    DevicesConfig[item.DeviceConfig.Id] = item.DeviceConfig;
+                    item.DeviceConfig.Id = new Devices.UniqueDeviceId();
+                    item.DeviceConfig.Id.ViewPort = DevicesConfig.Count;
+                    DevicesConfig[DevicesConfig.Count] = item.DeviceConfig;
                 }
                 Save();
             }
@@ -662,7 +663,7 @@ namespace Aurora.Settings
             {
                 foreach (Control_DeviceLayout item in e.OldItems)
                 {
-                    DevicesConfig.Remove(item.DeviceConfig.Id);
+                    DevicesConfig.Remove((int)item.DeviceConfig.Id.ViewPort);
                 }
                 Save();
             }
@@ -704,8 +705,8 @@ namespace Aurora.Settings
         {
 
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
-            DevicesConfig[config.Id] = config;
-            DeviceLayouts.Where(dl => dl.DeviceConfig.Id == config.Id).FirstOrDefault().DeviceConfig = config;
+            DevicesConfig[(int)config.Id.ViewPort] = config;
+            DeviceLayouts.Where(dl => dl.DeviceConfig.Id.ViewPort == config.Id.ViewPort).FirstOrDefault().DeviceConfig = config;
             double baseline_x = double.MaxValue;
             double baseline_y = double.MaxValue;
             foreach (DeviceConfig dc in DevicesConfig.Values)
