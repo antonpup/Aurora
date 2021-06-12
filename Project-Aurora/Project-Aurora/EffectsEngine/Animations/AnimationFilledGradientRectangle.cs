@@ -20,11 +20,6 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush = brush;
         }
 
-        public AnimationFilledGradientRectangle(PointF center, float rect_width, float rect_height, EffectBrush brush, float duration = 0.0f) : base(center, rect_width, rect_height, Color.Transparent, duration)
-        {
-            _gradientBrush = brush;
-        }
-
         public AnimationFilledGradientRectangle(float x, float y, float rect_width, float rect_height, EffectBrush brush, float duration = 0.0f) : base(x, y, rect_width, rect_height, Color.Transparent, duration)
         {
             _gradientBrush = brush;
@@ -37,17 +32,13 @@ namespace Aurora.EffectsEngine.Animations
 
             PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
 
-            EffectBrush _newbrush = new EffectBrush(_gradientBrush);
-            _newbrush.start = new PointF(_newbrush.start.X * scale, _newbrush.start.Y * scale);
-            _newbrush.end = new PointF(_newbrush.end.X * scale, _newbrush.end.Y * scale);
-
             Matrix rotationMatrix = new Matrix();
             rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
             rotationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
 
             Matrix originalMatrix = g.Transform;
             g.Transform = rotationMatrix;
-            g.FillRectangle(_newbrush.GetDrawingBrush(), _scaledDimension);
+            g.FillRectangle(_gradientBrush.GetDrawingBrush(), _scaledDimension);
             g.Transform = originalMatrix;
         }
 

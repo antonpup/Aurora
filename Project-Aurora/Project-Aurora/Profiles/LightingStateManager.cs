@@ -325,7 +325,7 @@ namespace Aurora.Profiles
 
         private Timer updateTimer;
 
-        private const int defaultTimerInterval = 33;
+        private const int defaultTimerInterval = 12;
         private int timerInterval = defaultTimerInterval;
 
         private long nextProcessNameUpdate;
@@ -337,30 +337,34 @@ namespace Aurora.Profiles
 
         public string PreviewProfileKey { get { return previewModeProfileKey; } set { previewModeProfileKey = value ?? string.Empty; } }
 
+        Stopwatch watch = new Stopwatch();
+
+
         private void InitUpdate()
         {
-            updateTimer = new System.Threading.Timer(g => {
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-                if (Global.isDebug)
-                    Update();
-                else
+            if (updateTimer == null)
+                updateTimer = new System.Threading.Timer(g =>
                 {
-                    try
-                    {
+                    watch.Start();
+                    if (Global.isDebug)
                         Update();
-                    }
-                    catch (Exception exc)
+                    else
                     {
-                        Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
+                        try
+                        {
+                            Update();
+                        }
+                        catch (Exception exc)
+                        {
+                            Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
+                        }
                     }
-                }
-
-                watch.Stop();
-                currentTick += timerInterval + watch.ElapsedMilliseconds;
-                updateTimer?.Change(Math.Max(timerInterval, 0), Timeout.Infinite);
-            }, null, 0, System.Threading.Timeout.Infinite);
-            GC.KeepAlive(updateTimer);
+                    watch.Stop();
+                    currentTick += watch.ElapsedMilliseconds;
+                    updateTimer?.Change(Math.Max(timerInterval - watch.ElapsedMilliseconds, 5), Timeout.Infinite);
+                    watch.Reset();
+                }, null, 0, System.Threading.Timeout.Infinite);
+            //GC.KeepAlive(updateTimer);
         }
 
         private void UpdateProcess()
@@ -453,8 +457,6 @@ namespace Aurora.Profiles
             //this.UpdateIdleEffects(newFrame);
             
             ILightEvent profile = GetCurrentProfile(out bool preview);
-
-            timerInterval = profile?.Config?.UpdateInterval ?? defaultTimerInterval;
 
             // If the current foreground process is excluded from Aurora, disable the lighting manager
             if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(raw_process_name))

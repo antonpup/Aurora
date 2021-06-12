@@ -10,10 +10,12 @@ namespace Aurora
 {
     public class BitmapRectangle
     {
-        private bool _isvalid = false;
+        public static BitmapRectangle emptyRectangle = new BitmapRectangle();
+
+        private readonly bool _isvalid = false;
         public bool IsValid { get { return _isvalid; } }
 
-        private Rectangle _rectangle;
+        private readonly Rectangle _rectangle;
         public Rectangle Rectangle { get { return _rectangle; } }
 
         public bool IsEmpty
@@ -35,43 +37,16 @@ namespace Aurora
         public int Width { get { return _rectangle.Width; } }
         public int Area { get { return _rectangle.Width * _rectangle.Height; } }
 
-        public PointF TopLeft
-        {
-            get
-            {
-                return new PointF(Top, Left);
-            }
-        }
-        public PointF TopRight
-        {
-            get
-            {
-                return new PointF(Top, Right);
-            }
-        }
-        public PointF BottomLeft
-        {
-            get
-            {
-                return new PointF(Bottom, Left);
-            }
-        }
-        public PointF BottomRight
-        {
-            get
-            {
-                return new PointF(Bottom, Right);
-            }
-        }
+        private PointF _center;
         public PointF Center
         {
             get
             {
-                return new PointF(_rectangle.Left + _rectangle.Width / 2.0f, _rectangle.Top + _rectangle.Height / 2.0f);
+                return _center;
             }
         }
 
-        public BitmapRectangle()
+        private BitmapRectangle()
         {
 
         }
@@ -79,12 +54,14 @@ namespace Aurora
         public BitmapRectangle(int X, int Y, int Width, int Height)
         {
             _rectangle = new Rectangle(X, Y, Width, Height);
+            _center = new PointF(_rectangle.Left + _rectangle.Width / 2.0f, _rectangle.Top + _rectangle.Height / 2.0f);
             _isvalid = true;
         }
 
         public BitmapRectangle(Rectangle region)
         {
             _rectangle = new Rectangle(region.Location, region.Size);
+            _center = new PointF(_rectangle.Left + _rectangle.Width / 2.0f, _rectangle.Top + _rectangle.Height / 2.0f);
             _isvalid = true;
         }
 
@@ -274,7 +251,7 @@ namespace Aurora
             if (bitmap_map.ContainsKey(key))
                 return bitmap_map[key];
             else
-                return new BitmapRectangle();
+                return BitmapRectangle.emptyRectangle;
         }
 
         public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)
@@ -284,8 +261,6 @@ namespace Aurora
 
         public void PushFrame(EffectFrame frame)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
             lock (bitmap_lock)
             {
                 EffectLayer background = new EffectLayer("Global Background", Color.FromArgb(0, 0, 0));
@@ -367,9 +342,6 @@ namespace Aurora
 
                 frame.Dispose();
             }
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
         }
 
         public Dictionary<DeviceKeys, Color> GetKeyboardLights()

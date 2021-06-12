@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Win32;
 
 namespace Aurora.Devices.Asus
@@ -23,6 +24,7 @@ namespace Aurora.Devices.Asus
                 defaultRegistry = new VariableRegistry();
                 defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
                 defaultRegistry.Register($"{DeviceName}_force_initialize", false, "Force initialization");
+                defaultRegistry.Register($"{DeviceName}_color_cal", new RealColor(Color.FromArgb(255, 255, 255)), "Restore Color");
                 return defaultRegistry;
             }
         }

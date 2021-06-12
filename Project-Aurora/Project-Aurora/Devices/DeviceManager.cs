@@ -29,15 +29,6 @@ namespace Aurora.Devices
         {
             this.Device = device;
             Worker.DoWork += WorkerOnDoWork;
-            Worker.RunWorkerCompleted += (sender, args) =>
-            {
-                lock (Worker)
-                {
-                    if (newFrame && !Worker.IsBusy)
-                        Worker.RunWorkerAsync();
-                }
-            };
-            //Worker.WorkerSupportsCancellation = true;
         }
 
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
@@ -219,7 +210,7 @@ namespace Aurora.Devices
                     if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                         continue;
 
-                    lock(dc.actionLock)
+                    lock (dc.actionLock)
                         dc.Device.Initialize();
                 }
                 RetryAttempts--;

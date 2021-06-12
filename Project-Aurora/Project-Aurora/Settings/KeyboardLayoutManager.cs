@@ -1084,15 +1084,30 @@ namespace Aurora.Settings
             return PixelToByte((double)pixel);
         }
 
+        private static Func<double, int> _pixelToByte = delegate (double pixel) { return defaultPixelToByte(pixel); };
+
+        private static int defaultPixelToByte(double pixel)
+        { return (int)Math.Round(pixel / (double)(Global.Configuration.BitmapAccuracy)); }
+
+        private static int bestPixelToByte(double pixel)
+        { return (int)Math.Round(pixel); }
+
         public static int PixelToByte(double pixel)
         {
-            return (int)Math.Round(pixel / (double)(Global.Configuration.BitmapAccuracy));
+            return _pixelToByte(pixel);
         }
 
         private void Configuration_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(Configuration.BitmapAccuracy)))
             {
+                if(Global.Configuration.BitmapAccuracy == BitmapAccuracy.Best)
+                {
+                    _pixelToByte = delegate (double pixel) { return bestPixelToByte(pixel); };
+                }else
+                {
+                    _pixelToByte = delegate (double pixel) { return defaultPixelToByte(pixel); };
+                }
                 Global.LightingStateManager.PostUpdate += this.LightingStateManager_PostUpdate;
             }
         }

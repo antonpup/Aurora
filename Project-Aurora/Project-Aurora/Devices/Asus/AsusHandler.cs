@@ -188,6 +188,7 @@ namespace Aurora.Devices.Asus
                 {
                     var device = devices[i];
                     device.Stop(false);
+                    device.Dispose();
                 }
 
                 devices.Clear();
