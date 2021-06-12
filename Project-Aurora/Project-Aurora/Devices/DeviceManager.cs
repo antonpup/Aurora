@@ -324,10 +324,13 @@ namespace Aurora.Devices
 
                 }
             }
-            foreach (var dc in IndividualDevices.Where(d => d.IsConnected()))
+            foreach (var item in compositionList)
             {
-                if (dc.id?.ViewPort != null && compositionList.ContainsKey((int)dc.id.ViewPort))
-                    dc.UpdateDevice(compositionList[(int)dc.id.ViewPort]);
+                var dc = IndividualDevices.Where(d => d.IsConnected() && d.id.ViewPort == item.Key);
+                if (dc.Any())
+                {
+                    dc.First().UpdateDevice(item.Value);
+                }
             }
         }
 

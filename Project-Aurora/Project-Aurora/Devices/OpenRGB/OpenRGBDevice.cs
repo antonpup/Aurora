@@ -66,7 +66,7 @@ namespace Aurora.Devices.OpenRGB
         private OpenRGBColor[] DeviceColors;
         private List<DK> KeyMapping;
         private int DeviceIndex;
-
+        static object update_lock = new object();
         private OpenRGBDeviceConnector Connector;
 
         protected Dictionary<DeviceKeys, object> LedMap = new Dictionary<DeviceKeys, object>();
@@ -141,7 +141,10 @@ namespace Aurora.Devices.OpenRGB
 
             try
             {
-                Connector.UpdateLeds(DeviceIndex, DeviceColors);
+                lock (update_lock)
+                {
+                    Connector.UpdateLeds(DeviceIndex, DeviceColors);
+                }
             }
             catch (Exception exc)
             {

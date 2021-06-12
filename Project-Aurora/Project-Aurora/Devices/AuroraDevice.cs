@@ -8,6 +8,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Aurora.Settings;
+using Newtonsoft.Json;
 
 namespace Aurora.Devices
 {
@@ -21,8 +22,9 @@ namespace Aurora.Devices
     public class UniqueDeviceId
     {
         public string ConnectorName = "";
-        public string DeviceName { get; set; } = "Non OpenRGB Device";
+        public string DeviceName { get; set; } = "Generic SDK device";
         public int Index = 0;
+        [JsonIgnore]
         public int? ViewPort = null;
         public UniqueDeviceId()
         {

@@ -678,9 +678,10 @@ namespace Aurora.Settings
 
                 DevicesConfig = manager?.DevicesConfig ?? new Dictionary<int, DeviceConfig>();
 
-                foreach ( var conf in DevicesConfig.Values)
+                foreach ( var conf in DevicesConfig)
                 {
-                    DevicesConfigChanged.Invoke(conf);
+                    conf.Value.Id.ViewPort = conf.Key;
+                    DevicesConfigChanged.Invoke(conf.Value);
                 }
                 
             }

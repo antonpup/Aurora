@@ -42,7 +42,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             
 
             LoadDeviceType(Config.Type);
-            var deviceIdList = Global.dev_manager.IndividualDevices.Select(d => d.id).ToList();
+            var deviceIdList = Global.dev_manager.IndividualDevices.Where(d => d.id.ViewPort == null).Select(d => d.id).ToList();
             deviceIdList.Insert(0, new Devices.UniqueDeviceId());
             int selectedIndex = int.MaxValue;
             for (int i = 0; i < deviceIdList.Count; i++)
