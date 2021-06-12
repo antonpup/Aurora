@@ -2,6 +2,8 @@
 using SharpDX.Direct3D11;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -9,6 +11,50 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices
 {
+    public class OldAuroraDeviceWrapper : IDevice
+    {
+        AuroraDeviceConnector Connector;
+        public string DeviceName => Connector.GetConnectorName();
+
+        public string DeviceDetails => string.Join(", ", Connector.Devices.Select(d => d.GetDeviceName()));
+
+        public string DeviceUpdatePerformance => string.Join(", ", Connector.Devices.Select(d => d.GetDeviceUpdatePerformance()));
+
+        public bool IsInitialized => Connector.IsInitialized();
+
+        public VariableRegistry RegisteredVariables => Connector.GetRegisteredVariables();
+
+        public OldAuroraDeviceWrapper(AuroraDeviceConnector connector)
+        {
+            Connector = connector;
+        }
+
+        public bool Initialize()
+        {
+            Connector.Initialize();
+            return true;
+        }
+
+        public void Reset()
+        {
+            Connector.Reset();
+        }
+
+        public void Shutdown()
+        {
+            Connector.Shutdown();
+        }
+
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        {
+            return true;
+        }
+
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        {
+            return true;
+        }
+    }
     public abstract class AuroraDeviceConnector
     {
         //private Dictionary<string, AuroraDevice> Devices = new Dictionary<string, AuroraDevice>();
@@ -34,7 +80,16 @@ namespace Aurora.Devices
             {
                 id.Index++;
             }
-            dev.id = id;
+            var usedIdConfig = Global.devicesLayout.DevicesConfig.Values.Where(c => c.Id == id);
+            if(!usedIdConfig.Any())
+            {
+                dev.id = id;
+            }
+            else
+            {
+                dev.id = usedIdConfig.First().Id;
+            }
+            
         }
 
         /// <summary>
@@ -162,6 +217,10 @@ namespace Aurora.Devices
             {
                 variableRegistry = new VariableRegistry();
                 RegisterVariables(variableRegistry);
+                foreach (var dev in Devices)
+                {
+                    variableRegistry.Combine(dev.GetRegisteredVariables());
+                }
             }
             return variableRegistry;
         }

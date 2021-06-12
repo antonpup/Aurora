@@ -160,6 +160,7 @@ namespace Aurora.Devices
                               where typeof(IDevice).IsAssignableFrom(type)
                               && !type.IsAbstract
                               && type != typeof(ScriptedDevice.ScriptedDevice)
+                              && type != typeof(OldAuroraDeviceWrapper)
                               let inst = (IDevice)Activator.CreateInstance(type)
                               orderby inst.DeviceName
                               select inst;
@@ -168,8 +169,9 @@ namespace Aurora.Devices
             {
                 DeviceContainers.Add(new DeviceContainer(inst));
             }
-
-            DeviceConnectors.Add(new OpenRGB.OpenRGBDeviceConnector());
+            var OpenRGBConnector = new OpenRGB.OpenRGBDeviceConnector();
+            DeviceContainers.Add(new DeviceContainer(new OldAuroraDeviceWrapper(OpenRGBConnector)));
+            DeviceConnectors.Add(OpenRGBConnector);
         }
 
         private void AddDevicesFromDlls()
@@ -324,7 +326,7 @@ namespace Aurora.Devices
             }
             foreach (var dc in IndividualDevices.Where(d => d.IsConnected()))
             {
-                if (dc.id?.ViewPort != null)
+                if (dc.id?.ViewPort != null && compositionList.ContainsKey((int)dc.id.ViewPort))
                     dc.UpdateDevice(compositionList[(int)dc.id.ViewPort]);
             }
         }

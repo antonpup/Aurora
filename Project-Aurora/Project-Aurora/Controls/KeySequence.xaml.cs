@@ -183,9 +183,11 @@ namespace Aurora.Controls
             int totalCount = SelectedDeviceKeyList.Count;
             for (int i = totalCount - 1; i > 0; i--)
             {
+                allowListRefresh = false;
                 DeviceKey key = SelectedDeviceKeyList[totalCount - 1];
                 SelectedDeviceKeyList.RemoveAt(totalCount - 1);
                 SelectedDeviceKeyList.Insert((totalCount - 1) - i, key);
+                allowListRefresh = true;
             }
         }
 

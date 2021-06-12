@@ -60,6 +60,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
             this.device_view.SelectedIndex = selectedIndex;
 
             this.device_type.ItemsSource = new string[2]{"Keyboard", "Other Devices"};
+            this.device_type.IsEnabled = Config.TypeChangeEnabled;
+
             this.device_layout.SelectedItem = Config.SelectedLayout;
 
             layoutName.Text = Config.SelectedLayout;
@@ -205,7 +207,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if (MessageBox.Show("Are you sure that remove the device layout?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                Global.devicesLayout.DeviceLayouts.Remove(originalDeviceLayout);
+                Global.devicesLayout.RemoveDeviceLayout(originalDeviceLayout.DeviceConfig);
                 tokenSource.Cancel();
                 Close();
             }

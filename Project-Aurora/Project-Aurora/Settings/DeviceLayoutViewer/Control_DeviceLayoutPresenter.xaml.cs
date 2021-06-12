@@ -36,7 +36,11 @@ namespace Aurora.Settings.DeviceLayoutViewer
                                                                                                 typeof(bool),
                                                                                                 typeof(Control_DeviceLayoutPresenter), new PropertyMetadata(false));
 
-        public ObservableCollection<Control_DeviceLayout> DeviceLayouts => Global.devicesLayout.DeviceLayouts;
+        public ObservableCollection<Control_DeviceLayout> DeviceLayouts
+        {
+            get;
+            private set;
+        } = new ObservableCollection<Control_DeviceLayout>();
         public bool IsLayoutMoveEnabled
         {
             get { return (bool)GetValue(IsLayoutMoveEnabledProperty); }
@@ -50,7 +54,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
             Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
             this.keyboard_record_message.Visibility = Visibility.Hidden;
-            DeviceLayouts.CollectionChanged += HandleChange;
+            Global.devicesLayout.DevicesConfigChanged += DevicesConfigChanged;
+
             editor_canvas.Children.Add(new LayerEditor(editor_canvas));
             //DeviceLayoutNumberChanged(this);
         }
@@ -59,29 +64,30 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             Global.devicesLayout.Load();
         }
-        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
+        private void DevicesConfigChanged(DeviceConfig changedConf)
         {
-            if (e.Action == NotifyCollectionChangedAction.Replace)
-            {
-                throw new Exception("The device layouts shouldn't been replaced");
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (Control_DeviceLayout layout in e.NewItems)
+            var layoutQuery = DeviceLayouts.Where(l => l.DeviceConfig == changedConf);
+            if (Global.devicesLayout.DevicesConfig.Values.Contains(changedConf)){
+                if (layoutQuery.Any())
                 {
+                    Layout_DeviceLayoutUpdated(layoutQuery.First());
+                }
+                else
+                {
+                    Control_DeviceLayout layout = new Control_DeviceLayout(changedConf);
                     layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
                     ///layout.DeviceConfig.ConfigurationChanged += Layout_DeviceConfigUpdated;
                     layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
                     layout.MouseDown += DeviceLayout_MouseDown;
                     layout.MouseMove += DeviceLayout_MouseMove;
                     layout.MouseUp += DeviceLayout_MouseUp;
+                    DeviceLayouts.Add(layout);
                 }
             }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            else
             {
-                Layout_DeviceLayoutUpdated(this);
+                DeviceLayouts.Remove(layoutQuery.First());
             }
-
         }
 
 
@@ -107,7 +113,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void AddNewDeviceLayout(object sender, RoutedEventArgs e)
         {
-            Global.devicesLayout.DeviceLayouts.Add(new Control_DeviceLayout(new DeviceConfig()));
+            Global.devicesLayout.AddNewDeviceLayout();
         }
         
         private void OpenEnableMenu(object sender, RoutedEventArgs e)
@@ -147,7 +153,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             }
             foreach (Control_DeviceLayout layout in DeviceLayouts)
             {
-                layout.DeviceConfig.Offset = new Point((int)(layout.DeviceConfig.Offset.X - baseline_x), (int)(layout.DeviceConfig.Offset.Y - baseline_y));
+                //layout.DeviceConfig.Offset = new Point((int)(layout.DeviceConfig.Offset.X - baseline_x), (int)(layout.DeviceConfig.Offset.Y - baseline_y));
                 layout.RenderTransform = new TranslateTransform(layout.DeviceConfig.Offset.X, layout.DeviceConfig.Offset.Y);
             }
 

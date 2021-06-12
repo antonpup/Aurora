@@ -34,9 +34,9 @@ namespace Aurora.Devices
         }
         public static bool operator ==(UniqueDeviceId obj1, UniqueDeviceId obj2)
         {
-            return (obj1 is null && obj2 is null
-                        && obj1.ConnectorName == obj2.ConnectorName
-                        && obj1.DeviceName == obj2.DeviceName
+            return (!(obj1 is null) && !(obj2 is null)
+                        && string.Equals(obj1.ConnectorName, obj2.ConnectorName)
+                        && string.Equals(obj1.DeviceName, obj2.DeviceName)
                         && obj1.Index == obj2.Index);
         }
 

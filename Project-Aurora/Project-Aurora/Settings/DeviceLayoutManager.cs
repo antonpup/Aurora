@@ -470,6 +470,7 @@ namespace Aurora.Settings
         public int Type;
         public Point Offset = new Point(0, 0);
         public bool LightingEnabled = true;
+        public bool TypeChangeEnabled = true;
 
         [JsonIgnore]
         protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
@@ -481,10 +482,17 @@ namespace Aurora.Settings
             Type = config.Type;
             ConfigurationChanged = config.ConfigurationChanged;
             LightingEnabled = config.LightingEnabled;
+            TypeChangeEnabled = config.TypeChangeEnabled;
         }
 
-        public DeviceConfig()
+        public DeviceConfig(int viewPort)
         {
+            Id = new Devices.UniqueDeviceId();
+            Id.ViewPort = viewPort;
+        }
+        private DeviceConfig()
+        {
+            // Private parameterless constructor. Leave private so that it forces everyone to use the Mandate parameter but allows serialization to work. 
         }
 
         public delegate void ConfigChangedEventHandler();
@@ -521,7 +529,7 @@ namespace Aurora.Settings
             Type = 0;
         }
 
-        public KeyboardConfig()
+        public KeyboardConfig(int viewPort) : base(viewPort)
         {
             Type = 0;
             SelectedKeyboardLayout = GetSystemKeyboardCulture();
@@ -637,38 +645,28 @@ namespace Aurora.Settings
 
         public double Width = 0;
 
-        [JsonIgnore]
-        public ObservableCollection<Control_DeviceLayout> DeviceLayouts { get; } = new ObservableCollection<Control_DeviceLayout>();
-        public DeviceLayoutManager()
-        {
-            DeviceLayouts.CollectionChanged += HandleChange;
-        }
-        private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Replace)
-            {
-                throw new Exception("The device layouts shouldn't been replaced");
-            }
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                foreach (Control_DeviceLayout item in e.NewItems)
-                {
-                    item.DeviceConfig.Id = new Devices.UniqueDeviceId();
-                    item.DeviceConfig.Id.ViewPort = DevicesConfig.Count;
-                    DevicesConfig[DevicesConfig.Count] = item.DeviceConfig;
-                }
-                Save();
-            }
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                foreach (Control_DeviceLayout item in e.OldItems)
-                {
-                    DevicesConfig.Remove((int)item.DeviceConfig.Id.ViewPort);
-                }
-                Save();
-            }
+        public delegate void ConfigChangedEventHandler(DeviceConfig changedConf);
 
+        public event ConfigChangedEventHandler DevicesConfigChanged;
+        public void AddNewDeviceLayout()
+        {
+            var devConf = new DeviceConfig(DevicesConfig.Count);
+            if (devConf.Id.ViewPort == 0)
+            {
+                devConf.Type = 0;
+                devConf.TypeChangeEnabled = false;
+            }
+            DevicesConfig[DevicesConfig.Count] = devConf;
+            DevicesConfigChanged.Invoke(devConf);
+            Save();
         }
+        public void RemoveDeviceLayout(DeviceConfig conf)
+        {
+            DevicesConfig.Remove((int)conf.Id.ViewPort);
+            DevicesConfigChanged.Invoke(conf);
+            Save();
+        }
+       
         public void Load()
         {
             var fileName = "DevicesConfig.json";
@@ -678,20 +676,13 @@ namespace Aurora.Settings
                 string devicesConfigContent = File.ReadAllText(layoutConfigPath, Encoding.UTF8);
                 DeviceLayoutManager manager = JsonConvert.DeserializeObject<DeviceLayoutManager>(devicesConfigContent, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
-                var devicesConfig = manager?.DevicesConfig ?? new Dictionary<int, DeviceConfig>();
+                DevicesConfig = manager?.DevicesConfig ?? new Dictionary<int, DeviceConfig>();
 
-                DeviceLayouts.Clear();
-
-                foreach (var config in devicesConfig.Values)
+                foreach ( var conf in DevicesConfig.Values)
                 {
-                    if (config.Offset.X < 0 || config.Offset.Y < 0)
-                        config.Offset = new Point(0, 0);
-
-                    var layout = new Control_DeviceLayout(config);
-
-                    DeviceLayouts.Add(layout);
-
+                    DevicesConfigChanged.Invoke(conf);
                 }
+                
             }
         }
         private void Save()
@@ -706,7 +697,8 @@ namespace Aurora.Settings
 
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
             DevicesConfig[(int)config.Id.ViewPort] = config;
-            DeviceLayouts.Where(dl => dl.DeviceConfig.Id.ViewPort == config.Id.ViewPort).FirstOrDefault().DeviceConfig = config;
+            //DeviceLayouts.Where(dl => dl.DeviceConfig.Id.ViewPort == config.Id.ViewPort).FirstOrDefault().DeviceConfig = config;
+            
             double baseline_x = double.MaxValue;
             double baseline_y = double.MaxValue;
             foreach (DeviceConfig dc in DevicesConfig.Values)
@@ -722,10 +714,8 @@ namespace Aurora.Settings
                 dc.Offset = new Point((int)(dc.Offset.X - baseline_x), (int)(dc.Offset.Y - baseline_y));
             }
 
-            var fileName = "DevicesConfig.json";
-            var layoutConfigPath = Path.Combine(Global.AppDataDirectory, fileName);
-            var content = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
+            DevicesConfigChanged.Invoke(config);
+            Save();
         }
     }
 }

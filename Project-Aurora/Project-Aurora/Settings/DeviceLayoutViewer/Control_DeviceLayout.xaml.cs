@@ -109,7 +109,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         public Control_DeviceLayout()
         {
             InitializeComponent();
-            DeviceConfig = new DeviceConfig();
+            //DeviceConfig = new DeviceConfig();
             KeycapLayouts.CollectionChanged += HandleChange;
             DataContext = KeycapLayouts;
             //DataContext = KeycapLayouts;
@@ -119,6 +119,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             InitializeComponent();
             //device_grid = FindName("device_grid") as Canvas;
+            if (config.Offset.X < 0 || config.Offset.Y < 0)
+                config.Offset = new Point(0, 0);
             DeviceConfig = config;
             KeycapLayouts.CollectionChanged += HandleChange;
             //DataContext = KeycapLayouts;
