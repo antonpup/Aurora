@@ -18,166 +18,143 @@ using OpenRGBZoneType = OpenRGB.NET.Enums.ZoneType;
 
 namespace Aurora.Devices.OpenRGB
 {
-    public class OpenRGBAuroraDevice : DefaultDevice
+    public class OpenRGBDeviceConnector : AuroraDeviceConnector
     {
-        public override string DeviceName => "OpenRGB";
-        protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.Name));
+
+        protected override string ConnectorName => "OpenRGB";
 
         private OpenRGBClient _openRgb;
-        private OpenRGBDevice[] _devices;
-        private OpenRGBColor[][] _deviceColors;
-        private List<DK>[] _keyMappings;
 
-        public override bool Initialize()
+        protected override bool InitializeImpl()
         {
-            if (IsInitialized)
-                return true;
-
             try
             {
                 _openRgb = new OpenRGBClient(name: "Aurora");
                 _openRgb.Connect();
 
-                _devices = _openRgb.GetAllControllerData();
+                OpenRGBDevice[] _devices = _openRgb.GetAllControllerData();
 
-                _deviceColors = new OpenRGBColor[_devices.Length][];
-                _keyMappings = new List<DK>[_devices.Length];
 
                 for (var i = 0; i < _devices.Length; i++)
                 {
-                    var dev = _devices[i];
-
-                    _deviceColors[i] = new OpenRGBColor[dev.Leds.Length];
-                    for (var ledIdx = 0; ledIdx < dev.Leds.Length; ledIdx++)
-                        _deviceColors[i][ledIdx] = new OpenRGBColor();
-
-                    _keyMappings[i] = new List<DK>();
-
-                    for (int j = 0; j < dev.Leds.Length; j++)
-                    {
-                        if (dev.Type == OpenRGBDeviceType.Keyboard)
-                        {
-                            if (OpenRGBKeyNames.Keyboard.TryGetValue(dev.Leds[j].Name, out var dk))
-                            {
-                                _keyMappings[i].Add(dk);
-                            }
-                            else
-                            {
-                                _keyMappings[i].Add(DK.NONE);
-                            }
-                        }
-                        else if (dev.Type == OpenRGBDeviceType.Mouse)
-                        {
-                            if (OpenRGBKeyNames.Mouse.TryGetValue(dev.Leds[j].Name, out var dk))
-                            {
-                                _keyMappings[i].Add(dk);
-                            }
-                            else
-                            {
-                                _keyMappings[i].Add(DK.Peripheral_Logo);
-                            }
-                        }
-                        else
-                        {
-                            _keyMappings[i].Add(DK.Peripheral_Logo);
-                        }
-                    }
-
-                    uint LedOffset = 0;
-                    for (int j = 0; j < dev.Zones.Length; j++)
-                    {
-                        if (dev.Zones[j].Type == OpenRGBZoneType.Linear)
-                        {
-                            for (int k = 0; k < dev.Zones[j].LedCount; k++)
-                            {
-                                if (dev.Type == OpenRGBDeviceType.Mousemat)
-                                {
-                                    if (k < 15)
-                                    {
-                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.MousepadLights[k];
-                                    }
-                                }
-                                else
-                                {
-                                    //TODO - scale zones with more than 32 LEDs
-                                    if (k < 32)
-                                    {
-                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
-                                    }
-                                }
-                            }
-                        }
-                        LedOffset += dev.Zones[j].LedCount;
-                    }
+                    OpenRGBAuroraDevice device = new OpenRGBAuroraDevice(_devices[i], this, i);
+                    devices.Add(device);
                 }
             }
             catch (Exception e)
             {
-                LogError("error in OpenRGB device: " + e);
-                IsInitialized = false;
+                LogError("There was an error in OpenRGB device: " + e);
                 return false;
             }
 
-            IsInitialized = true;
-            return IsInitialized;
+            return true;
         }
 
-        public override void Shutdown()
+        protected override void ShutdownImpl()
         {
-            if (!IsInitialized)
-                return;
-
-            for (var i = 0; i < _devices.Length; i++)
-            {
-                try
-                {
-                    _openRgb.UpdateLeds(i, _devices[i].Colors);
-                }
-                catch
-                {
-                    //we tried.
-                }
-            }
-
             _openRgb?.Dispose();
             _openRgb = null;
-            IsInitialized = false;
         }
-
-        public override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public void UpdateLeds(int deviceIndex, OpenRGBColor[] colors)
         {
-            if (!IsInitialized)
-                return false;
+            _openRgb.UpdateLeds(deviceIndex, colors);
+        }
+    }
+    public class OpenRGBAuroraDevice : AuroraDevice
+    {
+        private OpenRGBDevice Device;
+        private OpenRGBColor[] DeviceColors;
+        private List<DK> KeyMapping;
+        private int DeviceIndex;
+        static object update_lock = new object();
+        private OpenRGBDeviceConnector Connector;
 
-            for (var i = 0; i < _devices.Length; i++)
+        protected Dictionary<DeviceKeys, object> LedMap = new Dictionary<DeviceKeys, object>();
+
+        protected override string DeviceName => Device.Name;
+
+        protected override AuroraDeviceType AuroraDeviceType => AuroraDeviceTypeConverter(Device.Type);
+
+        public int Id { get; set; }
+
+        public OpenRGBAuroraDevice(OpenRGBDevice device, OpenRGBDeviceConnector connector, int deviceIndex)
+        {
+            Device = device;
+            Connector = connector;
+            DeviceIndex = deviceIndex;
+            DeviceColors = new OpenRGBColor[Device.Leds.Length];
+            for (var ledIdx = 0; ledIdx < Device.Leds.Length; ledIdx++)
+                DeviceColors[ledIdx] = new OpenRGBColor();
+
+            if (Device.Type == OpenRGBDeviceType.Keyboard)
             {
-                //should probably store these bools somewhere when initing
-                //might also add this as a property in the library
-                if (!_devices[i].Modes.Any(m => m.Name == "Direct"))
-                    continue;
-
-                for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
+                KeyMapping = new List<DK>();
+                for (int j = 0; j < Device.Leds.Length; j++)
                 {
-                    if (keyColors.TryGetValue(_keyMappings[i][ledIdx], out var keyColor))
+                    if (OpenRGBKeyNames.Keyboard.TryGetValue(Device.Leds[j].Name, out var dk))
                     {
-                        _deviceColors[i][ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                        KeyMapping.Add(dk);
+                    }
+                    else
+                    {
+                        KeyMapping.Add(DK.NONE);
                     }
                 }
+            }
+        }
+        protected override void DisconnectImpl()
+        {
+            try
+            {
+                Connector.UpdateLeds(DeviceIndex, DeviceColors);
+            }
+            catch
+            {
+                //we tried.
+            }
+        }
+        protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
+        {
 
-                try
+            //should probably store these bools somewhere when initing
+            //might also add this as a property in the library
+            if (!Device.Modes.Any(m => m.Name == "Direct"))
+                return true;
+
+            for (int ledIdx = 0; ledIdx < Device.Leds.Length; ledIdx++)
+            {
+                if (Device.Type == OpenRGBDeviceType.Keyboard)
                 {
-                    _openRgb.UpdateLeds(i, _deviceColors[i]);
+                    if (composition.keyColors.TryGetValue((int)KeyMapping[ledIdx], out var keyColor))
+                    {
+                        DeviceColors[ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                    }
                 }
-                catch (Exception exc)
+                else
                 {
-                    LogError($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
-                    Reset();
+                    if (composition.keyColors.TryGetValue(ledIdx, out var keyColor))
+                    {
+                        DeviceColors[ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                    }
                 }
             }
 
-            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_sleep");
+            try
+            {
+                lock (update_lock)
+                {
+                    Connector.UpdateLeds(DeviceIndex, DeviceColors);
+                }
+            }
+            catch (Exception exc)
+            {
+                LogError($"Failed to update OpenRGB device {DeviceName}: " + exc);
+                return false;
+            }
+
+            /*var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_sleep");
             if (sleep > 0)
-                Thread.Sleep(sleep);
+                Thread.Sleep(sleep);*/
 
             return true;
         }
@@ -185,6 +162,37 @@ namespace Aurora.Devices.OpenRGB
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
             variableRegistry.Register($"{DeviceName}_sleep", 25, "Sleep for", 1000, 0);
+        }
+        private AuroraDeviceType AuroraDeviceTypeConverter(OpenRGBDeviceType type)
+        {
+            switch (type)
+            {
+                case OpenRGBDeviceType.Motherboard:
+                    break;
+                case OpenRGBDeviceType.Dram:
+                    break;
+                case OpenRGBDeviceType.Gpu:
+                    break;
+                case OpenRGBDeviceType.Cooler:
+                    break;
+                case OpenRGBDeviceType.Ledstrip:
+                    break;
+                case OpenRGBDeviceType.Keyboard:
+                    return AuroraDeviceType.Keyboard;
+                case OpenRGBDeviceType.Mouse:
+                    return AuroraDeviceType.Mouse;
+                case OpenRGBDeviceType.Mousemat:
+                    break;
+                case OpenRGBDeviceType.Headset:
+                    return AuroraDeviceType.Headset;
+                case OpenRGBDeviceType.HeadsetStand:
+                    break;
+                case OpenRGBDeviceType.Unknown:
+                    return AuroraDeviceType.Unkown;
+                default:
+                    return AuroraDeviceType.Unkown;
+            }
+            return AuroraDeviceType.Unkown;
         }
     }
 }

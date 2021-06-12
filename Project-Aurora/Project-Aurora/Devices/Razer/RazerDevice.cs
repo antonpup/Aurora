@@ -1,4 +1,5 @@
-﻿using Corale.Colore.Core;
+﻿using Aurora.Utils;
+using Corale.Colore.Core;
 using Corale.Colore.Razer.Keyboard;
 using System;
 using System.Collections.Generic;
@@ -83,31 +84,31 @@ namespace Aurora.Devices.Razer
             }
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
-            if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var clr))
+            if (keyColors.TryGetValue((int)DeviceKeys.Peripheral_Logo, out var color))
             {
-                keyboard.Set(ToColore(clr));
-                mousepad.Set(ToColore(clr));
-                mouse.Set(ToColore(clr));
-                headset = ToColore(clr);
-                chromalink.Set(ToColore(clr));
-                keypad.Set(ToColore(clr));
+                keyboard.Set(ToColore(color));
+                mousepad.Set(ToColore(color));
+                mouse.Set(ToColore(color));
+                headset = ToColore(color);
+                chromalink.Set(ToColore(color));
+                keypad.Set(ToColore(color));
             }
 
-            foreach (var key in keyColors)
+            foreach (var (key, clr) in keyColors)
             {
-                if (RazerMappings.keyboardDictionary.TryGetValue(key.Key, out var kbIndex))
-                    keyboard[kbIndex] = ToColore(key.Value);
+                if (RazerMappings.keyboardDictionary.TryGetValue((DeviceKeys)key, out var kbIndex))
+                    keyboard[kbIndex] = ToColore(clr);
 
-                if (RazerMappings.mousepadDictionary.TryGetValue(key.Key, out var mousepadIndex))
-                    mousepad[mousepadIndex] = ToColore(key.Value);
+                if (RazerMappings.mousepadDictionary.TryGetValue((DeviceKeys)key, out var mousepadIndex))
+                    mousepad[mousepadIndex] = ToColore(clr);
 
-                if (RazerMappings.mouseDictionary.TryGetValue(key.Key, out var mouseIndex))
-                    mouse[mouseIndex] = ToColore(key.Value);
+                if (RazerMappings.mouseDictionary.TryGetValue((DeviceKeys)key, out var mouseIndex))
+                    mouse[mouseIndex] = ToColore(clr);
             }
 
             if (!Global.Configuration.DevicesDisableKeyboard)

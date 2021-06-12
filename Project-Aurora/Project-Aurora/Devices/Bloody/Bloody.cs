@@ -31,15 +31,15 @@ namespace Aurora.Devices.Bloody
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
-            foreach (var key in keyColors)
+            foreach (var (key, clr) in keyColors)
             {
-                if (BloodyKeyMap.KeyMap.TryGetValue(key.Key, out var bloodyKey))
-                    keyboard.SetKeyColor(bloodyKey, ColorUtils.CorrectWithAlpha(key.Value));
+                if (BloodyKeyMap.KeyMap.TryGetValue((DeviceKeys)key, out var bloodyKey))
+                    keyboard.SetKeyColor(bloodyKey, ColorUtils.CorrectWithAlpha(clr));
             }
 
             return keyboard.Update();

@@ -54,28 +54,28 @@ namespace Aurora.Devices.Logitech
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
-            foreach (var key in keyColors)
+            foreach (var (key, clr) in keyColors)
             {
-                if (LedMaps.BitmapMap.TryGetValue(key.Key, out var index))
+                if (LedMaps.BitmapMap.TryGetValue((DeviceKeys)key, out var index))
                 {
-                    logitechBitmap[index] = key.Value.B;
-                    logitechBitmap[index + 1] = key.Value.G;
-                    logitechBitmap[index + 2] = key.Value.R;
-                    logitechBitmap[index + 3] = key.Value.A;
+                    logitechBitmap[index] = clr.B;
+                    logitechBitmap[index + 1] = clr.G;
+                    logitechBitmap[index + 2] = clr.R;
+                    logitechBitmap[index + 3] = clr.A;
                 }
-                if (!Global.Configuration.DevicesDisableKeyboard && LedMaps.KeyMap.TryGetValue(key.Key, out var logiKey))
-                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, key.Value);
-                if (LedMaps.PeripheralMap.TryGetValue(key.Key, out var peripheral))
+                if (!Global.Configuration.DevicesDisableKeyboard && LedMaps.KeyMap.TryGetValue((DeviceKeys)key, out var logiKey))
+                    IsInitialized &= LogitechGSDK.LogiLedSetLightingForKeyWithKeyName(logiKey, clr);
+                if (LedMaps.PeripheralMap.TryGetValue((DeviceKeys)key, out var peripheral))
                 {
                     if ((peripheral.type == DeviceType.Headset && !Global.Configuration.DevicesDisableHeadset)
                     || (peripheral.type == DeviceType.Mouse && !Global.Configuration.DevicesDisableMouse))
                     {
-                        LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, key.Value);
+                        LogitechGSDK.LogiLedSetLightingForTargetZone(peripheral.type, peripheral.zone, clr);
                     }
                 }
 

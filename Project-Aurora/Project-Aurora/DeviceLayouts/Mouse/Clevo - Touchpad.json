@@ -1,0 +1,22 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "0": {
+      "Key": {
+        "visual_name": "TOUCHPAD",
+        "tag": 0,
+        "device_id": null
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 208,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    }
+  }
+}

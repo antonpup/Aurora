@@ -270,9 +270,10 @@ namespace Aurora.Utils
                 case (DeviceKeys.JPN_HALFFULLWIDTH):
                     return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    //TODO Fix this
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.UNKNOWN;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.TILDE;
                 case (DeviceKeys.TILDE):
                     return Logitech_keyboardBitmapKeys.TILDE;
@@ -395,9 +396,10 @@ namespace Aurora.Utils
                 case (DeviceKeys.LEFT_SHIFT):
                     return Logitech_keyboardBitmapKeys.LEFT_SHIFT;
                 case (DeviceKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    //TODO Fix this
+                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
                         return Logitech_keyboardBitmapKeys.OEM102;
-                    else
+                    else*/
                         return Logitech_keyboardBitmapKeys.BACKSLASH_UK;
                 case (DeviceKeys.Z):
                     return Logitech_keyboardBitmapKeys.Z;

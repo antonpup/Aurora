@@ -56,6 +56,7 @@ namespace Aurora.Devices.Asus
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
             isActive = asusHandler.Start();
+
             return isActive;
         }
 
@@ -103,7 +104,7 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             asusHandler.UpdateColors(keyColors);
             return true;

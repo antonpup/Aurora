@@ -52,7 +52,7 @@ namespace Aurora.Devices.Corsair
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (deviceInfos.Count != CUESDK.GetDeviceCount())
                 this.Reset();
@@ -75,23 +75,23 @@ namespace Aurora.Devices.Corsair
 
                 if (LedMaps.MapsMap.TryGetValue(deviceInfo.Type, out var dict) && dict.Count != 0)
                 {
-                    foreach (var led in keyColors)
+                    foreach (var (key, clr) in keyColors)
                     {
-                        if (dict.TryGetValue(led.Key, out var ledid))
+                        if (dict.TryGetValue((DeviceKeys)key, out var ledid))
                         {
                             colors.Add(new CorsairLedColor()
                             {
                                 LedId = ledid,
-                                R = led.Value.R,
-                                G = led.Value.G,
-                                B = led.Value.B
+                                R = clr.R,
+                                G = clr.G,
+                                B = clr.B
                             });
                         }
                     }
                 }
                 else
                 {
-                    if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var clr))
+                    if (keyColors.TryGetValue((int)DeviceKeys.Peripheral_Logo, out var clr))
                     {
                         if(deviceInfo.Type == CorsairDeviceType.LightingNodePro || deviceInfo.Type == CorsairDeviceType.CommanderPro)
                         {

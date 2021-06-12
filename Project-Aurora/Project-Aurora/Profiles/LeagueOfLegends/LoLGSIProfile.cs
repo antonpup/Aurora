@@ -48,7 +48,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.FromArgb(79, 234, 255),
-                        _Sequence = new KeySequence(new DK[] { DK.B })
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.B })
                     }
                 }, EnabledWhen(new BooleanGSIBoolean("Match/InGame"))),
                 new Layer("Health", new PercentLayerHandler()
@@ -57,7 +57,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                     {
                         _PrimaryColor = Color.Green,
                         _SecondaryColor = Color.Black,
-                        _Sequence = new KeySequence(new DK[] { DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12 }),
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12 }),
                         _VariablePath = "Player/ChampionStats/HealthCurrent",
                         _MaxVariablePath = "Player/ChampionStats/HealthMax"
                     }
@@ -68,7 +68,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                     {
                         _PrimaryColor = Color.DarkBlue,
                         _SecondaryColor = Color.Black,
-                        _Sequence = new KeySequence(new DK[] { DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH }),
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.Z, DK.X, DK.C, DK.V, DK.B, DK.N, DK.M, DK.COMMA, DK.PERIOD, DK.FORWARD_SLASH }),
                         _VariablePath = "Player/ChampionStats/ResourceCurrent",
                         _MaxVariablePath = "Player/ChampionStats/ResourceMax"
                     }
@@ -101,7 +101,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 Properties = new LayerHandlerProperties()
                 {
                     _PrimaryColor = Color.Transparent,
-                    _Sequence = new KeySequence(new DK[] { key })
+                    _Sequence = new KeySequence(new DeviceKey[] { key })
                 }
             },
             new OverrideLogicBuilder()
@@ -120,7 +120,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 Properties = new LayerHandlerProperties()
                 {
                     _PrimaryColor = Color.Orange,
-                    _Sequence = new KeySequence(new DK[] { key })
+                    _Sequence = new KeySequence(new DeviceKey[] { key })
                 }
             }, EnabledWhen(new BooleanGSIBoolean("Player/Abilities/" + ability + "/Learned")));
         }
@@ -132,7 +132,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 Properties = new LayerHandlerProperties()
                 {
                     _PrimaryColor = Color.Transparent,
-                    _Sequence = new KeySequence(new DK[] { key })
+                    _Sequence = new KeySequence(new DeviceKey[] { key })
                 }
             }, new OverrideLogicBuilder()
                 .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()

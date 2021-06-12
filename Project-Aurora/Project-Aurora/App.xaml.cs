@@ -116,7 +116,7 @@ namespace Aurora
         public static NetworkListener net_listener;
         public static Configuration Configuration;
         public static DeviceManager dev_manager;
-        public static KeyboardLayoutManager kbLayout;
+        public static DeviceLayoutManager devicesLayout;
         public static Effects effengine;
         public static KeyRecorder key_recorder;
         public static RzSdkManager razerSdkManager;
@@ -313,9 +313,9 @@ namespace Aurora
                 Global.logger.Info("Loading Plugins");
                 (Global.PluginManager = new PluginManager()).Initialize();
 
-                Global.logger.Info("Loading KB Layouts");
-                Global.kbLayout = new KeyboardLayoutManager();
-                Global.kbLayout.LoadBrandDefault();
+
+                Global.devicesLayout = new DeviceLayoutManager();
+
 
                 Global.logger.Info("Loading Input Hooking");
                 Global.InputEvents = new InputEvents();
@@ -406,6 +406,8 @@ namespace Aurora
 
                 MainWindow = new ConfigUI();
                 ((ConfigUI)MainWindow).Display();
+
+                Global.logger.Info("Loading Device Layouts");
 
                 //Debug Windows on Startup
                 if (Global.Configuration.BitmapWindowOnStartUp)

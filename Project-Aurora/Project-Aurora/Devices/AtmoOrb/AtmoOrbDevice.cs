@@ -185,7 +185,7 @@ namespace Aurora.Devices.AtmoOrbDevice
             return true;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             throw new NotImplementedException();
         }

@@ -59,7 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Bloody.NET" Version="1.0.4" />
+    <PackageReference Include="Bloody.NET" Version="1.0.4" />
     <PackageReference Include="Colore" Version="5.2.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="3.30.0" />
@@ -141,14 +141,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="kb_layouts\**\*.json">
+    <None Update="DeviceLayouts\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="kb_layouts\Extra Features\images\*.png">
+    <Content Include="DeviceLayouts\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Remove="kb_layouts\Extra Features\images\*.psd" />
-    <None Remove="kb_layouts\Extra Features\images\*.pdn" />
+    <None Remove="DeviceLayouts\Images\*.psd" />
+    <None Remove="DeviceLayouts\Images\*.pdn" />
   </ItemGroup>
 
   <ItemGroup>
@@ -171,7 +171,6 @@
   <ItemGroup>
     <Resource Include="Resources\*.png" />
     <Resource Include="Resources\aurora_icon.ico" />
-
     <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
     <Resource Include="Resources\Win32\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\Win32\Aurora-RazerLEDWrapper.dll" />

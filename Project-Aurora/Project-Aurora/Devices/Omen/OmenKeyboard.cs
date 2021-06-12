@@ -43,10 +43,10 @@ namespace Aurora.Devices.Omen
             public LightingColor lightingColor;
             public int key;
 
-            public StaticKeyEffect(KeyValuePair<DeviceKeys, Color> key)
+            public StaticKeyEffect(KeyValuePair<int, Color> key)
             {
                 lightingColor = LightingColor.FromColor(key.Value);
-                this.key = OmenKeys.GetKey(key.Key);
+                this.key = OmenKeys.GetKey((DeviceKeys)key.Key);
             }
         }
 
@@ -55,7 +55,7 @@ namespace Aurora.Devices.Omen
             return (hKB != IntPtr.Zero ? "Keyboard Connected" : string.Empty);
         }
 
-        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        public void SetLights(Dictionary<int, Color> keyColors)
         {
             if (hKB != IntPtr.Zero && keyColors.Count > 0)
             {
@@ -71,7 +71,7 @@ namespace Aurora.Devices.Omen
                         try
                         {
                             List<StaticKeyEffect> list = new List<StaticKeyEffect>();
-                            foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
+                            foreach (KeyValuePair<int, Color> key in keyColors)
                             {
                                 list.Add(new StaticKeyEffect(key));
                             }

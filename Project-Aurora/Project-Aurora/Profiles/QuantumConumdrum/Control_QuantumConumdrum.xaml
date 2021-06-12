@@ -6,7 +6,7 @@
              x:Class="Aurora.Profiles.QuantumConumdrum.Control_QuantumConumdrum"
              mc:Ignorable="d" 
              d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
-
+    
     <Grid>
         <TabControl>
             <TabItem Header="Overview for Quantum Conumdrum">

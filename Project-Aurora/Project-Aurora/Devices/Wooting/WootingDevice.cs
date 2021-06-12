@@ -58,7 +58,7 @@ namespace Aurora.Devices.Wooting
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
@@ -69,14 +69,14 @@ namespace Aurora.Devices.Wooting
 
             try
             {
-                foreach (var key in keyColors)
+                foreach (var (key, clr) in keyColors)
                 {
-                    if (WootingKeyMap.KeyMap.TryGetValue(key.Key, out var wootKey))
+                    if (WootingKeyMap.KeyMap.TryGetValue((DeviceKeys)key, out var wootKey))
                     {
-                        var clr = ColorUtils.CorrectWithAlpha(key.Value);
-                        RGBControl.SetKey(wootKey, (byte)(clr.R * rScalar),
-                                                   (byte)(clr.G * gScalar),
-                                                   (byte)(clr.B * bScalar));
+                        var color = ColorUtils.CorrectWithAlpha(clr);
+                        RGBControl.SetKey(wootKey, (byte)(color.R * rScalar),
+                                                   (byte)(color.G * gScalar),
+                                                   (byte)(color.B * bScalar));
                     }
                 }
                 RGBControl.UpdateKeyboard();

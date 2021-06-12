@@ -15,7 +15,7 @@ namespace Aurora.Devices.Omen
 {
     class OmenFourZoneLighting : IOmenDevice
     {
-        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        public void SetLights(Dictionary<int, Color> keyColors)
         {
             Task.Run(() => {
                 if (Monitor.TryEnter(this))
@@ -23,16 +23,16 @@ namespace Aurora.Devices.Omen
                     try
                     {
                         if(FourZoneLighting.IsTurnOn() 
-                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT1)
-                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT2)
-                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT3)
-                            && keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT4))
+                            && keyColors.ContainsKey((int)DeviceKeys.ADDITIONALLIGHT1)
+                            && keyColors.ContainsKey((int)DeviceKeys.ADDITIONALLIGHT2)
+                            && keyColors.ContainsKey((int)DeviceKeys.ADDITIONALLIGHT3)
+                            && keyColors.ContainsKey((int)DeviceKeys.ADDITIONALLIGHT4))
                         {
                             FourZoneLighting.SetZoneColors(
-                                new Color[] { keyColors[DeviceKeys.ADDITIONALLIGHT1], 
-                                    keyColors[DeviceKeys.ADDITIONALLIGHT2], 
-                                    keyColors[DeviceKeys.ADDITIONALLIGHT3], 
-                                    keyColors[DeviceKeys.ADDITIONALLIGHT4] });
+                                new Color[] { keyColors[(int)DeviceKeys.ADDITIONALLIGHT1], 
+                                    keyColors[(int)DeviceKeys.ADDITIONALLIGHT2], 
+                                    keyColors[(int)DeviceKeys.ADDITIONALLIGHT3], 
+                                    keyColors[(int)DeviceKeys.ADDITIONALLIGHT4] });
                         }
                     }
                     finally

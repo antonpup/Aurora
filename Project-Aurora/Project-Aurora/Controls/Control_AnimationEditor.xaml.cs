@@ -1,5 +1,6 @@
 ﻿using Aurora.Devices;
 using Aurora.EffectsEngine.Animations;
+using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,55 +58,25 @@ namespace Aurora.Controls
         {
             InitializeComponent();
 
-            UpdateVirtualKeyboard();
-
-            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
-        }
-
-        private void KbLayout_KeyboardLayoutUpdated(object sender)
-        {
-            UpdateVirtualKeyboard();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-        }
-
-        private void UpdateVirtualKeyboard()
-        {
-            Grid virtial_kb = Global.kbLayout.AbstractVirtualKeyboard;
-
-            keyboard_grid.Children.Clear();
-            keyboard_grid.Children.Add(virtial_kb);
-            keyboard_grid.Children.Add(new LayerEditor());
-
-            keyboard_grid.Width = virtial_kb.Width;
-            keyboard_grid.Height = virtial_kb.Height;
-
-            keyboard_grid.UpdateLayout();
-
-            viewbxAnimationView.MaxWidth = virtial_kb.Width + 50;
-            viewbxAnimationView.MaxHeight = virtial_kb.Height + 50;
-            viewbxAnimationView.UpdateLayout();
-
-            this.UpdateLayout();
-
-            //Generate a new mapping
-            foreach (FrameworkElement Child in virtial_kb.Children)
+            foreach (Settings.DeviceLayoutViewer.Control_Keycap key in deviceLayerPresenter.Keycaps)
             {
-                if (Child is Settings.Keycaps.IKeycap && (Child as Settings.Keycaps.IKeycap).GetKey() != DeviceKeys.NONE)
+                if (key.GetKey() != DeviceKeys.NONE)
                 {
-                    Child.PreviewMouseLeftButtonDown += KeyboardKey_PreviewMouseLeftButtonDown;
-                    Child.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
+                    key.PreviewMouseLeftButtonDown += KeyboardKey_PreviewMouseLeftButtonDown;
+                    key.PreviewMouseRightButtonDown += KeyboardKey_PreviewMouseRightButtonDown;
                 }
             }
         }
 
         private void KeyboardKey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.DeviceLayoutViewer.Keycaps.KeycapViewer keycapViewer)
             {
-                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _PrimaryManualColor);
+                SetKeyColor(keycapViewer.GetKey(), _PrimaryManualColor);
 
                 this.animMixer.UpdatePlaybackTime();
             }
@@ -113,15 +84,15 @@ namespace Aurora.Controls
 
         private void KeyboardKey_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
+            if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.DeviceLayoutViewer.Keycaps.KeycapViewer keycapViewer)
             {
-                SetKeyColor((sender as Settings.Keycaps.IKeycap).GetKey(), _SecondaryManualColor);
+                SetKeyColor(keycapViewer.GetKey(), _SecondaryManualColor);
 
                 this.animMixer.UpdatePlaybackTime();
             }
         }
 
-        private void SetKeyColor(DeviceKeys key, System.Drawing.Color color)
+        private void SetKeyColor(DeviceKey key, System.Drawing.Color color)
         {
             if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame)
             {
@@ -443,7 +414,7 @@ namespace Aurora.Controls
                 {
                     AnimationManualColorFrame frame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationManualColorFrame);
 
-                    frame.SetBitmapColors(new Dictionary<DeviceKeys, System.Drawing.Color>());
+                    frame.SetBitmapColors(new Dictionary<DeviceKey, System.Drawing.Color>());
 
                     this.animMixer.UpdatePlaybackTime();
                 }

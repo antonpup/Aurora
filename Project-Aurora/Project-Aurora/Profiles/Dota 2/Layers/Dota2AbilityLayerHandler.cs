@@ -26,10 +26,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         [JsonIgnore]
         public Color CanNotCastAbilityColor { get { return Logic._CanNotCastAbilityColor ?? _CanNotCastAbilityColor ?? Color.Empty; } }
 
-        public List<Devices.DeviceKeys> _AbilityKeys { get; set; }
+        public List<DeviceKey> _AbilityKeys { get; set; }
 
         [JsonIgnore]
-        public List<Devices.DeviceKeys> AbilityKeys { get { return Logic._AbilityKeys ?? _AbilityKeys ?? new List<Devices.DeviceKeys>(); } }
+        public List<DeviceKey> AbilityKeys { get { return Logic._AbilityKeys ?? _AbilityKeys ?? new List<DeviceKey>(); } }
 
         public Dota2AbilityLayerHandlerProperties() : base() { }
 
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             this._CanCastAbilityColor = Color.FromArgb(0, 255, 0);
             this._CanNotCastAbilityColor = Color.FromArgb(255, 0, 0);
-            this._AbilityKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.R };
+            this._AbilityKeys = new List<DeviceKey>() { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.R };
         }
 
     }
@@ -67,9 +67,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                     {
                         Ability ability = dota2state.Abilities[index];
                         if (ability.Name.Contains("seasonal") || ability.Name.Contains("high_five"))
-                            continue;  
-                        
-                        Devices.DeviceKeys key = Properties.AbilityKeys[index];
+                            continue;
+
+                        DeviceKey key = Properties.AbilityKeys[index];
 
                         if (ability.IsUltimate)
                             key = Properties.AbilityKeys[5];

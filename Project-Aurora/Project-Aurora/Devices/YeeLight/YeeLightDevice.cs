@@ -100,7 +100,7 @@ namespace Aurora.Devices.YeeLight
             }
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             // Reduce sending based on user config
             if (!updateDelayStopWatch.IsRunning)
@@ -112,7 +112,7 @@ namespace Aurora.Devices.YeeLight
                 return false;
 
             var targetKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
-            if (!keyColors.TryGetValue(targetKey, out var targetColor))
+            if (!keyColors.TryGetValue((int)targetKey, out var targetColor))
                 return false;
 
             if ((targetColor.R + targetColor.G + targetColor.B) > 0)

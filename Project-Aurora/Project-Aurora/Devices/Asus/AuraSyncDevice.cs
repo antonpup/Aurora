@@ -19,10 +19,10 @@ namespace Aurora.Devices.Asus
         private readonly IAuraSyncDevice device;
         public IAuraSyncDevice Device => device;
         private readonly AsusHandler asusHandler;
-        private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
+        private readonly ConcurrentQueue<Dictionary<int, Color>> colorQueue = new ConcurrentQueue<Dictionary<int, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
         private readonly int frameRateMillis;
-        private readonly DeviceKeys[] defaultKeys = { DeviceKeys.Peripheral, DeviceKeys.Peripheral_Logo, DeviceKeys.SPACE };
+        private readonly int[] defaultKeys = { (int)DeviceKeys.Peripheral, (int)DeviceKeys.Peripheral_Logo, (int)DeviceKeys.SPACE };
 
         private readonly Stopwatch stopwatch = new Stopwatch();
 
@@ -37,7 +37,7 @@ namespace Aurora.Devices.Asus
             frameRateMillis = (int)((1f / frameRate) * 1000f);
         }
 
-        public void UpdateColors(Dictionary<DeviceKeys, Color> colors)
+        public void UpdateColors(Dictionary<int, Color> colors)
         {
             if (DeviceType == AsusHandler.AsusDeviceType.Mouse && Global.Configuration.DevicesDisableMouse)
                 return;
@@ -47,7 +47,7 @@ namespace Aurora.Devices.Asus
                 colorQueue.TryDequeue(out _);
 
             // queue a clone of the colors
-            colorQueue.Enqueue(new Dictionary<DeviceKeys, Color>(colors));
+            colorQueue.Enqueue(new Dictionary<int, Color>(colors));
         }
 
         public void Start()
@@ -114,7 +114,7 @@ namespace Aurora.Devices.Asus
                 }
                 catch (TaskCanceledException)
                 {
-                    asusHandler.DisconnectDevice(this);
+                    //asusHandler.DisconnectDevice(this);
                     return;
                 }
                 catch (Exception exception)
@@ -132,7 +132,7 @@ namespace Aurora.Devices.Asus
         /// Try to apply the aurora color collection to this device
         /// </summary>
         /// <param name="colors">The colors to apply</param>
-        protected virtual void ApplyColors(Dictionary<DeviceKeys, Color> colors)
+        protected virtual void ApplyColors(Dictionary<int, Color> colors)
         {
             // simple implementation is to assign all colors to DefaultKey
             foreach (var defaultKey in defaultKeys)
@@ -163,9 +163,9 @@ namespace Aurora.Devices.Asus
             SetRgbLight(device.Lights[index], color);
         }
 
-        private Dictionary<DeviceKeys, Color> GetLatestColors()
+        private Dictionary<int, Color> GetLatestColors()
         {
-            Dictionary<DeviceKeys, Color> colors = null;
+            Dictionary<int, Color> colors = null;
             while (colorQueue.Count > 0)
                 colorQueue.TryDequeue(out colors);
 

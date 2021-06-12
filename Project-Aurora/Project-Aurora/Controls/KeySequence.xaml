@@ -5,17 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" MinWidth="230" MinHeight="111" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded" IsEnabledChanged="UserControl_IsEnabledChanged" IsVisibleChanged="UserControl_IsVisibleChanged">
-    <UserControl.Resources>
-        <EnumValueConverters:EnumToDescriptionConverter x:Key="EnumToDescriptionConverter" />
-    </UserControl.Resources>
-    
     <Grid>
         <DockPanel VerticalAlignment="Stretch">
             <Grid DockPanel.Dock="Bottom">
-                <ListBox x:Name="keys_keysequence" Margin="0,0,80,25" MinWidth="150" SelectionMode="Extended" SelectionChanged="keys_keysequence_SelectionChanged" VerticalAlignment="Stretch">
+                <ListBox x:Name="keys_keysequence" ItemsSource="{Binding SelectedDeviceKeyList, Mode=OneWay}"  Margin="0,0,80,25" MinWidth="150" SelectionMode="Extended" SelectionChanged="keys_keysequence_SelectionChanged" VerticalAlignment="Stretch">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource EnumToDescriptionConverter}}" />
+                            <TextBlock Text="{Binding VisualName}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

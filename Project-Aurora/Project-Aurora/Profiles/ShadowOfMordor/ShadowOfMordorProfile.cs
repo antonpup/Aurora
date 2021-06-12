@@ -32,7 +32,7 @@ namespace Aurora.Profiles.ShadowOfMordor
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Blue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.SPACE })
                     }
                 }
                 ),
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.ShadowOfMordor
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.LightBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.V, Devices.DeviceKeys.I, Devices.DeviceKeys.K, Devices.DeviceKeys.M })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.V, Devices.DeviceKeys.I, Devices.DeviceKeys.K, Devices.DeviceKeys.M })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

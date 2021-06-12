@@ -42,7 +42,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Ignition Key", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = hazardColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.E })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.E })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanNot(new BooleanGSIBoolean("Truck/engineOn")))
@@ -67,7 +67,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1, Color.FromArgb(0, 255, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.W }),
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.W }),
                         _VariablePath = "Truck/gameThrottle",
                         _MaxVariablePath = "1",
                         _PercentType = PercentEffectType.AllAtOnce
@@ -83,7 +83,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1, Color.FromArgb(255, 0, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.S }),
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.S }),
                         _VariablePath = "Truck/gameBrake",
                         _MaxVariablePath = "1",
                         _PercentType = PercentEffectType.AllAtOnce
@@ -93,7 +93,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Bright Keys", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = brightColor,
-                        _Sequence = new KeySequence(new DeviceKeys[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DeviceKeys.A, DeviceKeys.D, // Steering
                             DeviceKeys.LEFT_SHIFT, DeviceKeys.LEFT_CONTROL, // Gear up/down
                             DeviceKeys.F, // Hazard light
@@ -114,7 +114,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1, Color.FromArgb(255, 0, 0) },
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE,
                             DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO
                         }),
@@ -126,7 +126,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Parking Brake Key", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = brightColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.SPACE })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.SPACE })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -137,7 +137,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Headlights (High Beam)", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.K })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.K })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -148,7 +148,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Headlights", new SolidColorLayerHandler() {
                     Properties = new LayerHandlerProperties() {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.L })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.L })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -160,7 +160,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Left Blinkers", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = hazardColor,
-                        _Sequence = new KeySequence(new[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4 })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4 })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Truck/blinkerLeftOn"))
@@ -169,7 +169,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Right Blinkers", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = hazardColor,
-                        _Sequence = new KeySequence(new[] { DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Truck/blinkerRightOn"))
@@ -178,7 +178,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Left Blinker Button", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.OPEN_BRACKET })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.OPEN_BRACKET })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -189,7 +189,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Left Blinker Button", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.CLOSE_BRACKET })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.CLOSE_BRACKET })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -201,14 +201,14 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new ETS2BeaconLayerProperties {
                         _BeaconStyle = ETS2_BeaconStyle.Fancy_Flash,
                         _PrimaryColor = hazardColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
                     }
                 }),
 
                 new Layer("Beacon Button", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.O })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.O })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -219,7 +219,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Trailer Button", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = Color.FromArgb(128, 0, 0, 255),
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.T })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.T })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -230,7 +230,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Cruise Control Button", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.C })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.C })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()
@@ -250,7 +250,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1f, Color.FromArgb(0, 255, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DeviceKeys.NUM_ONE, DeviceKeys.NUM_FOUR, DeviceKeys.NUM_SEVEN, DeviceKeys.NUM_LOCK
                         }),
                         _VariablePath = "Truck/fuel",
@@ -270,7 +270,7 @@ namespace Aurora.Profiles.ETS2 {
                                 { 1f, Color.FromArgb(0, 255, 0) }
                             }
                         },
-                        _Sequence = new KeySequence(new DeviceKeys[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DeviceKeys.NUM_THREE, DeviceKeys.NUM_SIX, DeviceKeys.NUM_NINE, DeviceKeys.NUM_ASTERISK
                         }),
                         _VariablePath = "Truck/airPressure",
@@ -281,7 +281,7 @@ namespace Aurora.Profiles.ETS2 {
                 new Layer("Wipers Button", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = dimColor,
-                        _Sequence = new KeySequence(new DeviceKeys[]{ DeviceKeys.P })
+                        _Sequence = new KeySequence(new DeviceKey[]{ DeviceKeys.P })
                     }
                 }, new OverrideLogicBuilder()
                     .SetLookupTable("_PrimaryColor", new OverrideLookupTableBuilder<Color>()

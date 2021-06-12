@@ -133,16 +133,16 @@ namespace Aurora.Devices.Ducky
             return isInitialized;
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            foreach (KeyValuePair<DeviceKeys, Color> kc in keyColors)
+            foreach (KeyValuePair<int, Color> kc in keyColors)
             {
                 //This keyboard doesn't take alpha (transparency) values, so we do this:
                 processedColor = ColorUtils.CorrectWithAlpha(kc.Value);
 
                 //This if statement grabs the packet offset from the key that Aurora wants to set, using DuckyColourOffsetMap.
                 //It also checks whether the key exists in the Dictionary, and if not, doesn't try and set the key colour.
-                if(!DuckyRGBMappings.DuckyColourOffsetMap.TryGetValue(kc.Key, out currentKeyOffset)){
+                if(!DuckyRGBMappings.DuckyColourOffsetMap.TryGetValue((DeviceKeys)kc.Key, out currentKeyOffset)){
                     continue;
                 }
 

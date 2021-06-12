@@ -31,7 +31,7 @@ namespace Aurora.Profiles.BF3
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.White,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
                     }
                 }),
                 new Layer("Other Actions", new SolidColorLayerHandler()
@@ -39,7 +39,7 @@ namespace Aurora.Profiles.BF3
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.G, Devices.DeviceKeys.E, Devices.DeviceKeys.F, Devices.DeviceKeys.TAB })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.G, Devices.DeviceKeys.E, Devices.DeviceKeys.F, Devices.DeviceKeys.TAB })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

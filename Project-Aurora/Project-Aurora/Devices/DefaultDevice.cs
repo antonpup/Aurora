@@ -38,7 +38,7 @@ namespace Aurora.Devices
             Initialize();
         }
 
-        public abstract bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
+        public abstract bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false);
 
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {

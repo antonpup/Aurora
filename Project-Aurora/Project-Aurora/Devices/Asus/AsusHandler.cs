@@ -98,7 +98,7 @@ namespace Aurora.Devices.Asus
         {
             if (AuraSdk == null)
                 return false;
-
+            //return false;
             lock (deviceLock)
             {
                 try
@@ -195,7 +195,7 @@ namespace Aurora.Devices.Asus
             }
         }
         
-        public void UpdateColors(Dictionary<DeviceKeys, Color> colors)
+        public void UpdateColors(Dictionary<int, Color> colors)
         {
             lock (deviceLock)
             {

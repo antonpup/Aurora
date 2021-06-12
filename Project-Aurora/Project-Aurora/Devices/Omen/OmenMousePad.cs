@@ -58,15 +58,15 @@ namespace Aurora.Devices.Omen
             return (key == DeviceKeys.MOUSEPADLIGHT15 ? (int)MousePadZone.MOUSE_PAD_ZONE_LOGO : (int)MousePadZone.MOUSE_PAD_ZONE_0 + ((int)key - (int)DeviceKeys.MOUSEPADLIGHT1));
         }
 
-        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        public void SetLights(Dictionary<int, Color> keyColors)
         {
             if (hMousePad != IntPtr.Zero)
             {
-                foreach (KeyValuePair<DeviceKeys, Color> keyColor in keyColors)
+                foreach (var keyColor in keyColors)
                 {
-                    if (keyColor.Key >= DeviceKeys.MOUSEPADLIGHT1 && keyColor.Key <= DeviceKeys.MOUSEPADLIGHT15)
+                    if (keyColor.Key >= (int)DeviceKeys.MOUSEPADLIGHT1 && keyColor.Key <= (int)DeviceKeys.MOUSEPADLIGHT15)
                     {
-                        SetLight(keyColor.Key, keyColor.Value);
+                        SetLight((DeviceKeys)keyColor.Key, keyColor.Value);
                     }
                 }
             }

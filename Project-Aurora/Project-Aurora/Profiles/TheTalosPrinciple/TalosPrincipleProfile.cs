@@ -31,7 +31,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.LightBlue,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
                     }
                 }
                 ),
@@ -40,7 +40,7 @@ namespace Aurora.Profiles.TheTalosPrinciple
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Purple,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.H, Devices.DeviceKeys.X, Devices.DeviceKeys.TAB })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.H, Devices.DeviceKeys.X, Devices.DeviceKeys.TAB })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

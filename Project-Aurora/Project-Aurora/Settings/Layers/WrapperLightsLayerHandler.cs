@@ -38,8 +38,8 @@ namespace Aurora.Settings.Layers
 
         // Key cloning
         [JsonIgnore]
-        public Dictionary<DeviceKeys, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceKeys, KeySequence>();
-        public Dictionary<DeviceKeys, KeySequence> _CloningMap { get; set; }
+        public Dictionary<DeviceKey, KeySequence> CloningMap => Logic._CloningMap ?? _CloningMap ?? new Dictionary<DeviceKey, KeySequence>();
+        public Dictionary<DeviceKey, KeySequence> _CloningMap { get; set; }
 
         public WrapperLightsLayerHandlerProperties() : base() { }
 
@@ -55,7 +55,7 @@ namespace Aurora.Settings.Layers
             _ColorEnhanceColorFactor = 90;
             _ColorEnhanceColorHSVSine = 0.1f;
             _ColorEnhanceColorHSVGamma = 2.5f;
-            _CloningMap = new Dictionary<DeviceKeys, KeySequence>();
+            _CloningMap = new Dictionary<DeviceKey, KeySequence>();
         }
     }
     

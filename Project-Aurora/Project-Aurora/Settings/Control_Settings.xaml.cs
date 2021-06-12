@@ -143,6 +143,7 @@ namespace Aurora.Settings
         }
 
         private void ExcludedAdd_Click(object sender, RoutedEventArgs e)
+
         {
             Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
             if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName) && !Global.Configuration.ExcludedPrograms.Contains(dialog.ChosenExecutableName))
@@ -199,8 +200,6 @@ namespace Aurora.Settings
                 }
             }
         }
-
-        private void LoadBrandDefault(object sender, SelectionChangedEventArgs e) => Global.kbLayout.LoadBrandDefault();
         private void ResetDevices(object sender, RoutedEventArgs e) => Global.dev_manager.ResetDevices();
 
         private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)

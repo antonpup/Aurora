@@ -21,15 +21,15 @@ namespace Aurora.Devices.Vulcan
 
         public override void Shutdown() => VulcanKeyboard.Disconnect();
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
-            foreach (var key in keyColors)
+            foreach (var (key, clr) in keyColors)
             {
-                if (VulcanKeyMap.KeyMap.TryGetValue(key.Key, out var vulcanKey))
-                    VulcanKeyboard.SetKeyColor(vulcanKey, ColorUtils.CorrectWithAlpha(key.Value));
+                if (VulcanKeyMap.KeyMap.TryGetValue((DeviceKeys)key, out var vulcanKey))
+                    VulcanKeyboard.SetKeyColor(vulcanKey, ColorUtils.CorrectWithAlpha(clr));
             }
 
             return VulcanKeyboard.Update();

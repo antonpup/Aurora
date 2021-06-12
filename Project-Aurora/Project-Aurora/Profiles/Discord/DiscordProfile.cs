@@ -25,7 +25,7 @@ namespace Aurora.Profiles.Discord {
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4 })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4 })
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/SelfMute"))),
 
@@ -34,7 +34,7 @@ namespace Aurora.Profiles.Discord {
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.LimeGreen,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8 })
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/SelfDeafen"))),
 
@@ -43,7 +43,7 @@ namespace Aurora.Profiles.Discord {
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 })
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/Mentions"))),
 
@@ -52,7 +52,7 @@ namespace Aurora.Profiles.Discord {
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.LightBlue,
-                        _Sequence = new KeySequence(new DeviceKeys[] { DeviceKeys.PRINT_SCREEN, DeviceKeys.SCROLL_LOCK, DeviceKeys.PAUSE_BREAK })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.PRINT_SCREEN, DeviceKeys.SCROLL_LOCK, DeviceKeys.PAUSE_BREAK })
                     }
                 }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("User/UnreadMessages"))),
             };

@@ -1,0 +1,1276 @@
+﻿{
+  "keys": [
+    {
+      "Key": {
+        "tag": 1,
+        "visual_name": "ESC"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 2,
+        "visual_name": "F1"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 62,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 3,
+        "visual_name": "F2"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 99,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 4,
+        "visual_name": "F3"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 136,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 5,
+        "visual_name": "F4"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 173,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 6,
+        "visual_name": "F5"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 237,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 7,
+        "visual_name": "F6"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 274,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 8,
+        "visual_name": "F7"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 311,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 9,
+        "visual_name": "F8"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 348,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 10,
+        "visual_name": "F9"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 407,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 11,
+        "visual_name": "F10"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 444,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 12,
+        "visual_name": "F11"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 481,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 13,
+        "visual_name": "F12"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 518,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 14,
+        "visual_name": "PRINT"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 562,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 15,
+        "visual_name": "SCRL\r\nLOCK"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 599,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 16,
+        "visual_name": "PAUSE"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 636,
+      "Y": 0,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 17,
+        "visual_name": "~"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 18,
+        "visual_name": "1"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 37,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 19,
+        "visual_name": "2"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 74,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 20,
+        "visual_name": "3"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 111,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 21,
+        "visual_name": "4"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 148,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 22,
+        "visual_name": "5"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 185,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 23,
+        "visual_name": "6"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 222,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 24,
+        "visual_name": "7"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 259,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 25,
+        "visual_name": "8"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 296,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 26,
+        "visual_name": "9"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 333,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 27,
+        "visual_name": "0"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 370,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 28,
+        "visual_name": "-"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 407,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 29,
+        "visual_name": "="
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 444,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 30,
+        "visual_name": "BACKSPACE"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 481,
+      "Y": 37,
+      "Width": 67,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 31,
+        "visual_name": "INSERT"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 562,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 32,
+        "visual_name": "HOME"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 599,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 33,
+        "visual_name": "PAGE\r\nUP"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 636,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 34,
+        "visual_name": "NUM\r\nLOCK"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 35,
+        "visual_name": "/"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 36,
+        "visual_name": "*"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 37,
+        "visual_name": "-"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 791,
+      "Y": 37,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 38,
+        "visual_name": "TAB"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 74,
+      "Width": 50,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 39,
+        "visual_name": "Q"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 57,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 40,
+        "visual_name": "W"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 94,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 41,
+        "visual_name": "E"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 131,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 42,
+        "visual_name": "R"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 168,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 43,
+        "visual_name": "T"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 205,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 44,
+        "visual_name": "Y"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 242,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 45,
+        "visual_name": "U"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 279,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 46,
+        "visual_name": "I"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 316,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 47,
+        "visual_name": "O"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 353,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 48,
+        "visual_name": "P"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 390,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 49,
+        "visual_name": "´"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 427,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 50,
+        "visual_name": "["
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 464,
+      "Y": 74,
+      "Width": 40,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 52,
+        "visual_name": "DEL"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 562,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 53,
+        "visual_name": "END"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 599,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 54,
+        "visual_name": "PAGE\r\nDOWN"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 636,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 55,
+        "visual_name": "7"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 56,
+        "visual_name": "8"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 57,
+        "visual_name": "9"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 74,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 58,
+        "visual_name": "+"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 791,
+      "Y": 74,
+      "Width": 30,
+      "Height": 67
+    },
+    {
+      "Key": {
+        "tag": 59,
+        "visual_name": "CAPS\r\nLOCK"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 111,
+      "Width": 60,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 60,
+        "visual_name": "A"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 67,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 61,
+        "visual_name": "S"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 104,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 62,
+        "visual_name": "D"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 141,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 63,
+        "visual_name": "F"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 178,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 64,
+        "visual_name": "G"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 215,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 65,
+        "visual_name": "H"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 252,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 66,
+        "visual_name": "J"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 289,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 67,
+        "visual_name": "K"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 326,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 68,
+        "visual_name": "L"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 363,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 69,
+        "visual_name": "Ç"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 400,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 70,
+        "visual_name": "~"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 437,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 71,
+        "visual_name": "]"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 474,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 72,
+        "visual_name": "ENTER"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 511,
+      "Y": 74,
+      "Width": 38,
+      "Height": 67
+    },
+    {
+      "Key": {
+        "tag": 73,
+        "visual_name": "4"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 74,
+        "visual_name": "5"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 75,
+        "visual_name": "6"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 111,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 76,
+        "visual_name": "SHIFT"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 148,
+      "Width": 48,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 77,
+        "visual_name": "\\"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 55,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 78,
+        "visual_name": "Z"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 92,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 79,
+        "visual_name": "X"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 129,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 80,
+        "visual_name": "C"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 166,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 81,
+        "visual_name": "V"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 203,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 82,
+        "visual_name": "B"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 240,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 83,
+        "visual_name": "N"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 277,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 84,
+        "visual_name": "M"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 314,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 85,
+        "visual_name": "<"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 351,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 86,
+        "visual_name": ">"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 388,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 87,
+        "visual_name": ";"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 425,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 159,
+        "visual_name": "/"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 462,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 88,
+        "visual_name": "SHIFT"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 499,
+      "Y": 148,
+      "Width": 50,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 89,
+        "visual_name": "↑"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 598,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 90,
+        "visual_name": "1"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 91,
+        "visual_name": "2"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 717,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 92,
+        "visual_name": "3"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 148,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 93,
+        "visual_name": "ENTER"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 791,
+      "Y": 148,
+      "Width": 30,
+      "Height": 67
+    },
+    {
+      "Key": {
+        "tag": 94,
+        "visual_name": "CTRL"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 185,
+      "Width": 51,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 95,
+        "visual_name": "WIN"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 56,
+      "Y": 185,
+      "Width": 39,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 96,
+        "visual_name": "ALT"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 100,
+      "Y": 185,
+      "Width": 42,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 97,
+        "visual_name": "SPACE"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 149,
+      "Y": 185,
+      "Width": 208,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 98,
+        "visual_name": "ALT Gr"
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 362,
+      "Y": 185,
+      "Width": 41,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 99,
+        "visual_name": "WIN"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 408,
+      "Y": 185,
+      "Width": 41,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 100,
+        "visual_name": "APP"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 454,
+      "Y": 185,
+      "Width": 40,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 101,
+        "visual_name": "CTRL"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 499,
+      "Y": 185,
+      "Width": 50,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 102,
+        "visual_name": "←"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 561,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 103,
+        "visual_name": "↓"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 598,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 104,
+        "visual_name": "→"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 635,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 105,
+        "visual_name": "0"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 680,
+      "Y": 185,
+      "Width": 67,
+      "Height": 30
+    },
+    {
+      "Key": {
+        "tag": 106,
+        "visual_name": "."
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 754,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30
+    }
+  ]
+}

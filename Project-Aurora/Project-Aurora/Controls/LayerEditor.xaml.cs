@@ -16,16 +16,16 @@ namespace Aurora.Controls
     {
         //static FreeFormObject activeLayer = new FreeFormObject();
 
-        private static Canvas static_canvas = new Canvas();
+        private static Canvas static_canvas;
         private static Style style = new Style();
 
         //public static event EventHandler SequenceUpdated;
 
-        public LayerEditor()
+        public LayerEditor(Canvas editorCanvas)
         {
             InitializeComponent();
 
-            static_canvas = editor_canvas;
+            static_canvas = editorCanvas;
             style = this.FindResource("DesignerItemStyle") as Style;
         }
 

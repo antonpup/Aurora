@@ -13,7 +13,7 @@ namespace Aurora.Devices.Asus
         public AsusSyncClaymoreDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 30) : base(
             asusHandler, device, frameRate) { }
 
-        protected override void ApplyColors(Dictionary<DeviceKeys, Color> colors)
+        protected override void ApplyColors(Dictionary<int, Color> colors)
         {
             if (Global.Configuration.DevicesDisableKeyboard)
                 return;
@@ -22,8 +22,8 @@ namespace Aurora.Devices.Asus
             {
                 var light = DeviceKeyToClaymore(i);
                 
-                if (colors.ContainsKey(light))
-                    SetRgbLight(Device.Lights[i], colors[light]);
+                if (colors.ContainsKey((int)light))
+                    SetRgbLight(Device.Lights[i], colors[(int)light]);
             }
         }
 

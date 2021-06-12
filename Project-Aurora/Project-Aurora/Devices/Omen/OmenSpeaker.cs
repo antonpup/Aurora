@@ -44,13 +44,13 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        public void SetLights(Dictionary<int, Color> keyColors)
         {
             if (hSpeaker != IntPtr.Zero)
             {
-                if (keyColors.ContainsKey(DeviceKeys.Peripheral_Logo))
+                if (keyColors.ContainsKey((int)DeviceKeys.Peripheral_Logo))
                 {
-                    SetLight(DeviceKeys.Peripheral_Logo, keyColors[DeviceKeys.Peripheral_Logo]);
+                    SetLight(DeviceKeys.Peripheral_Logo, keyColors[(int)DeviceKeys.Peripheral_Logo]);
                     return;
                 }
             }

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Controls"
+             xmlns:DeviceLayout="clr-namespace:Aurora.Settings.DeviceLayoutViewer"
              mc:Ignorable="d" 
              d:DesignHeight="414" d:DesignWidth="535" Loaded="UserControl_Loaded" PreviewKeyDown="UserControl_PreviewKeyDown">
     <Grid>
@@ -11,20 +12,14 @@
             <Grid DockPanel.Dock="Top">
                 <DockPanel>
                     <GroupBox x:Name="grpbxProperties" Header="Properties" BorderThickness="1" Margin="0,0,2,0" Width="200" MinWidth="200" DockPanel.Dock="Right"/>
-                    <Viewbox x:Name="viewbxAnimationView" StretchDirection="Both" Margin="0,0,7,0" >
-                        <Border Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Background="#A51E1E1E" CornerRadius="8" MinWidth="650" MinHeight="216">
-                            <Grid>
-                                <Rectangle Margin="0" Width="15" Height="15" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="White"/>
-                                <local:Control_Ruler x:Name="rulerHorizontalPixels" Height="15" Margin="15,0,0,0" Background="White" VerticalAlignment="Top" Foreground="Black" />
-                                <local:Control_Ruler x:Name="rulerVerticalPixels" Width="15" Margin="0,15,0,0" Background="White" IsVertical="True" HorizontalAlignment="Left" Foreground="Black" />
-                                <Image x:Name="keyboard_overlayPreview" RenderOptions.BitmapScalingMode="HighQuality" SizeChanged="keyboard_overlayPreview_SizeChanged" Margin="15,15,0,0" Stretch="Fill" />
-                                <Grid x:Name="keyboard_grid" Margin="15,15,0,0" Opacity="0.8">
-                                    <Grid.CacheMode>
-                                        <BitmapCache EnableClearType="True"/>
-                                    </Grid.CacheMode>
-                                </Grid>
-                            </Grid>
-                        </Border>
+                    <Viewbox x:Name="viewbxAnimationView" MaxHeight="500" MaxWidth="1200" StretchDirection="Both" Margin="0,0,7,0" >
+                        <Grid>                            
+                            <Image x:Name="keyboard_overlayPreview" RenderOptions.BitmapScalingMode="HighQuality" SizeChanged="keyboard_overlayPreview_SizeChanged" Margin="15,15,0,0" Stretch="Fill" />
+                            <DeviceLayout:Control_DeviceLayoutPresenter x:Name="deviceLayerPresenter" IsLayoutMoveEnabled="False" Margin="0,0,7,0" Opacity="0.8"/>
+                            <Rectangle Margin="0" Width="15" Height="15" HorizontalAlignment="Left" VerticalAlignment="Top" Fill="White"/>
+                            <local:Control_Ruler x:Name="rulerHorizontalPixels" Height="15" Margin="15,0,0,0" Background="White" VerticalAlignment="Top" Foreground="Black" />
+                            <local:Control_Ruler x:Name="rulerVerticalPixels" Width="15" Margin="0,15,0,0" Background="White" IsVertical="True" HorizontalAlignment="Left" Foreground="Black" />
+                        </Grid>
                     </Viewbox>
                 </DockPanel>
             </Grid>

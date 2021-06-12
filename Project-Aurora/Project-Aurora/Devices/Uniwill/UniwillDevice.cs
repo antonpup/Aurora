@@ -195,7 +195,7 @@ namespace Aurora.Devices.Uniwill
 
         bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -221,9 +221,9 @@ namespace Aurora.Devices.Uniwill
             return update_result;
         }
 
-        private KeyValuePair<DeviceKeys, Color> AdjustBrightness(KeyValuePair<DeviceKeys, Color> kc)
+        private KeyValuePair<int, Color> AdjustBrightness(KeyValuePair<int, Color> kc)
         {
-            var newEntry = new KeyValuePair<DeviceKeys, Color>(kc.Key, Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(kc.Value, (kc.Value.A / 255.0D) * brightness)));
+            var newEntry = new KeyValuePair<int, Color>(kc.Key, Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(kc.Value, (kc.Value.A / 255.0D) * brightness)));
             kc = newEntry;
             return kc;
         }
