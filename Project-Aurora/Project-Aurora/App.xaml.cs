@@ -376,7 +376,7 @@ namespace Aurora
                 Global.logger.Info("Starting GameStateListener");
                 try
                 {
-                    Global.net_listener = new NetworkListener(9088);
+                    Global.net_listener = new NetworkListener(Global.Configuration.GameStateListenerPort);
                     Global.net_listener.NewGameState += new NewGameStateHandler(Global.LightingStateManager.GameStateUpdate);
                     Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.LightingStateManager.ResetGameState);
                 }

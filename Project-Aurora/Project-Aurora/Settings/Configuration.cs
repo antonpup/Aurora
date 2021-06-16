@@ -461,6 +461,7 @@ namespace Aurora.Settings
         [JsonProperty("global_brightness")] public float GlobalBrightness { get; set; } = 1.0f;
         [JsonProperty("keyboard_brightness_modifier")] public float KeyboardBrightness { get; set; } = 1.0f;
         [JsonProperty("peripheral_brightness_modifier")] public float PeripheralBrightness { get; set; } = 1.0f;
+        [JsonProperty("gamestatelistener_port")] public ushort GameStateListenerPort { get; set; } = 9088;
 
         public bool GetDevReleases { get; set; } = false;
         public bool GetPointerUpdates { get; set; } = true;
