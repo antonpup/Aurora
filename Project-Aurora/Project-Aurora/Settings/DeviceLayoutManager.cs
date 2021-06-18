@@ -471,6 +471,7 @@ namespace Aurora.Settings
         public Point Offset = new Point(0, 0);
         public bool LightingEnabled = true;
         public bool TypeChangeEnabled = true;
+        public bool InvisibleBackgroundEnabled = false;
 
         [JsonIgnore]
         protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
@@ -490,7 +491,7 @@ namespace Aurora.Settings
             Id = new Devices.UniqueDeviceId();
             Id.ViewPort = viewPort;
         }
-        private DeviceConfig()
+        protected DeviceConfig()
         {
             // Private parameterless constructor. Leave private so that it forces everyone to use the Mandate parameter but allows serialization to work. 
         }
@@ -512,6 +513,7 @@ namespace Aurora.Settings
             ConfigurationChanged?.Invoke();
         }
 
+        [JsonIgnore]
         public virtual string LayoutPath => Path.Combine(layoutsPath, "Mouse", SelectedLayout + ".json");
 
     }
@@ -533,6 +535,10 @@ namespace Aurora.Settings
         {
             Type = 0;
             SelectedKeyboardLayout = GetSystemKeyboardCulture();
+        }
+        private KeyboardConfig()
+        {
+
         }
         private string ConvertEnumToFileName()
         {
@@ -693,10 +699,34 @@ namespace Aurora.Settings
             var content = JsonConvert.SerializeObject(this, Formatting.Indented);
             File.WriteAllText(layoutConfigPath, content, Encoding.UTF8);
         }
+        public void LayoutPositionChanged(DeviceConfig config)
+        {
+            double baseline_x = double.MaxValue;
+            double baseline_y = double.MaxValue;
+            foreach (DeviceConfig dc in DevicesConfig.Values)
+            {
+                if (dc.Offset.X < baseline_x)
+                    baseline_x = dc.Offset.X;
+
+                if (dc.Offset.Y < baseline_y)
+                    baseline_y = dc.Offset.Y;
+            }
+            foreach (DeviceConfig dc in DevicesConfig.Values)
+            {
+                dc.Offset = new Point((int)(dc.Offset.X - baseline_x), (int)(dc.Offset.Y - baseline_y));
+            }
+
+            DevicesConfigChanged.Invoke(config);
+            Save();
+        }
+
         public void SaveConfiguration(DeviceConfig config)
         {
 
             //if (DevicesConfig.SelectMany(dc => dc.Id ))
+            if (config.Id == null)
+                
+                return;
             DevicesConfig[(int)config.Id.ViewPort] = config;
             //DeviceLayouts.Where(dl => dl.DeviceConfig.Id.ViewPort == config.Id.ViewPort).FirstOrDefault().DeviceConfig = config;
             

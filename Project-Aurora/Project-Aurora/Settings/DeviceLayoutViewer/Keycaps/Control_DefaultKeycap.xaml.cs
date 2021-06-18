@@ -23,6 +23,7 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
     public partial class Control_DefaultKeycap : KeycapViewer
     {
         private Color current_color = Color.FromArgb(0, 0, 0, 0);
+        private bool state_was_selected = false;
 
         public Control_DefaultKeycap()
         {
@@ -63,7 +64,8 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
 
             if (IsSelected)
                 keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
-            else
+
+            if (!current_color.Equals(key_color) || IsSelected != state_was_selected)
             {
                 if (keyBorder.IsEnabled)
                 {
@@ -77,7 +79,11 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
                     keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
                     keyBorder.BorderThickness = new Thickness(0);
                 }
+                state_was_selected = !IsSelected;
             }
+        }
+        public override void UpdateText()
+        {
             UpdateText(keyCap);
         }
 

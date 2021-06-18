@@ -83,5 +83,6 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
             }
                 
         }
+        public override void UpdateText() {}
     }
 }

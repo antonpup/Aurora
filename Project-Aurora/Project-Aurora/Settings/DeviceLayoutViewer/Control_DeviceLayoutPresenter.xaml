@@ -7,7 +7,7 @@
              xmlns:Controls="clr-namespace:Aurora.Controls"
              mc:Ignorable="d" 
              VerticalAlignment="Top" HorizontalAlignment="Left"
-             Loaded="UserControl_Loaded" MouseRightButtonDown="OpenEnableMenu"
+             MouseRightButtonDown="OpenEnableMenu"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Viewbox x:Name="layouts_viewbox"  StretchDirection="Both">

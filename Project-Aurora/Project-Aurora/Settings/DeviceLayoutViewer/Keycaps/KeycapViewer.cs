@@ -44,8 +44,8 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
         {
             IsSelected = isSelected;
         }
-
-        public void UpdateText(TextBlock keycapName)
+        public abstract void UpdateText();
+        protected void UpdateText(TextBlock keycapName)
         {
             if (Config.VisualNameUpdateEnabled)
             {

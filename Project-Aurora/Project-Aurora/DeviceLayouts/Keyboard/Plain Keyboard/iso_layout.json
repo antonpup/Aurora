@@ -1040,7 +1040,7 @@
       {
          "Key":{
             "visual_name":"#",
-            "tag":70,
+            "tag":71,
             "device_id":null
          },
          "FontSize":12.0,
@@ -1130,7 +1130,7 @@
       {
          "Key":{
             "visual_name":"\\",
-            "tag":51,
+            "tag":77,
             "device_id":null
          },
          "FontSize":12.0,

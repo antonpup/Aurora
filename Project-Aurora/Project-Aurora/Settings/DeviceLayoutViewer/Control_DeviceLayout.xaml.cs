@@ -20,22 +20,34 @@ using System.Windows.Navigation;
 
 namespace Aurora.Settings.DeviceLayoutViewer
 {
+
     /// <summary>
     /// Interaction logic for Control_DeviceLayout.xaml
     /// </summary>
     public partial class Control_DeviceLayout : ItemsControl
     {
+        /*public class Wrap<T> where T : struct
+        {
+            public T Value;
+
+            public static implicit operator Wrap<T>(T v) { return new Wrap<T> { Value = v }; }
+            public static implicit operator T(Wrap<T> w) { return w.Value; }
+
+            public override string ToString() { return Value.ToString(); }
+            public override int GetHashCode() { return Value.GetHashCode(); }
+            // TODO other delegating operators/overloads
+        }*/
+        public bool IsUpdateEnabled { get; set; }
+
         public delegate void LayoutUpdatedEventHandler(object sender);
 
-        //private FrameworkElement device_layout = new FrameworkElement();
-        public event LayoutUpdatedEventHandler DeviceLayoutUpdated;
-        public Dictionary<DeviceKey, Control_Keycap> KeyboardMap => KeycapLayouts.ToDictionary(k => k.GetKey(), k => k, new DeviceKey.EqualityComparer());
+        public Dictionary<DeviceKey, int> KeyboardMap = new Dictionary<DeviceKey, int>();
 
         public static readonly DependencyProperty DeviceHeightProperty = DependencyProperty.Register("DeviceHeight", typeof(int), typeof(Control_DeviceLayout), new PropertyMetadata(0));
         public int DeviceHeight
         {
             get { return (int)GetValue(DeviceHeightProperty); }
-            set{ SetValue(DeviceHeightProperty, value); }
+            set { SetValue(DeviceHeightProperty, value); }
         }
         public static readonly DependencyProperty DeviceWidthProperty = DependencyProperty.Register("DeviceWidth", typeof(int), typeof(Control_DeviceLayout), new PropertyMetadata(0));
         public int DeviceWidth
@@ -54,7 +66,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     item.Config.PropertyChanged += KeycapPositionChanged;
                 }
             }
-            
             RenderTransform = new TranslateTransform(DeviceConfig.Offset.X, DeviceConfig.Offset.Y);
             ResizeLayout();
         }
@@ -65,8 +76,17 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 ResizeLayout();
             }
         }
+        public static readonly DependencyProperty BackgroundVisibilityProperty = DependencyProperty.Register("BackgroundVisibility", typeof(bool), typeof(Control_DeviceLayout), new PropertyMetadata(false));
+        public bool BackgroundVisibility
+        {
+            get { return (bool)GetValue(BackgroundVisibilityProperty); }
+            set { SetValue(BackgroundVisibilityProperty, value); }
+        }
+
         public void ResizeLayout()
         {
+            int i = 0;
+            KeyboardMap = KeycapLayouts.ToDictionary(k => k.GetKey(), k => i++, new DeviceKey.EqualityComparer());
             int layout_height = 10;
             int layout_width = 10;
             foreach (Control_Keycap key in KeycapLayouts)
@@ -91,7 +111,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 this.Height = 200;
             }
             UpdateLayout();
-            DeviceLayoutUpdated?.Invoke(this);
         }
 
         public static readonly DependencyProperty DeviceConfigProperty = DependencyProperty.Register("DeviceConfig", typeof(DeviceConfig), typeof(Control_DeviceLayout));
@@ -102,17 +121,15 @@ namespace Aurora.Settings.DeviceLayoutViewer
             set
             {
                 SetValue(DeviceConfigProperty, value);
-                DeviceConfig.ConfigurationChanged += ConfigChanged;
+                //DeviceConfig.ConfigurationChanged += ConfigChanged;
                 ConfigChanged();
+
             }
         }
         public Control_DeviceLayout()
         {
             InitializeComponent();
-            //DeviceConfig = new DeviceConfig();
-            KeycapLayouts.CollectionChanged += HandleChange;
-            DataContext = KeycapLayouts;
-            //DataContext = KeycapLayouts;
+            DataContext = this;
 
         }
         public Control_DeviceLayout(DeviceConfig config)
@@ -122,41 +139,38 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (config.Offset.X < 0 || config.Offset.Y < 0)
                 config.Offset = new Point(0, 0);
             DeviceConfig = config;
-            KeycapLayouts.CollectionChanged += HandleChange;
-            //DataContext = KeycapLayouts;
-            DataContext = KeycapLayouts;
+
+            DataContext = this;
 
             //device_layout = contentPresenter.ContentTemplate;
-            ConfigChanged();
 
 
         }
 
         public void ConfigChanged()
         {
+            BackgroundVisibility = DeviceConfig.InvisibleBackgroundEnabled;
             Task.Run(() =>
             {
                 Dispatcher.Invoke(() =>
                 {
+                    KeycapLayouts.CollectionChanged -= HandleChange;
                     DeviceLayout layout = new DeviceLayout(DeviceConfig);
                     Keys = layout.LoadLayout();
                     foreach (var key in Keys)
                     {
                         key.Key.DeviceId = DeviceConfig.Id.ViewPort;
                     }
+                    ResizeLayout();
+                    KeycapLayouts.CollectionChanged += HandleChange;
                 });
             });
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            DeviceLayoutUpdated?.Invoke(this);
-        }
-
         private List<DeviceKeyConfiguration> _Keys = new List<DeviceKeyConfiguration>();
-        public List<DeviceKeyConfiguration> Keys 
+        public List<DeviceKeyConfiguration> Keys
         {
-            get { return _Keys;} 
+            get { return _Keys; }
             set
             {
                 _Keys = value;
@@ -166,7 +180,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
                 //DeviceLayoutUpdated?.Invoke(this);
 
-            } 
+            }
         }
         public static int PixelToByte(int pixel)
         {
@@ -204,7 +218,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     if (KeyboardMap.ContainsKey(kvp.Key))
                     {
                         System.Drawing.Color key_color = kvp.Value;
-                        KeyboardMap[kvp.Key].SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
+                        KeycapLayouts[KeyboardMap[kvp.Key]].SetColor(Utils.ColorUtils.DrawingColorToMediaColor(System.Drawing.Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(key_color, key_color.A / 255.0D))));
                     }
                 }
             }

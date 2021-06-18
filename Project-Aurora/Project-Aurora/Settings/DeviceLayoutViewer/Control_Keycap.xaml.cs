@@ -108,6 +108,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
             InitializeComponent();
             Keycap = GetKeycapViewer(key);
+            Keycap.UpdateText();
             DataContext = Keycap;
 
         }

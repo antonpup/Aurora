@@ -57,25 +57,39 @@ namespace Aurora.Settings.DeviceLayoutViewer
             Global.devicesLayout.DevicesConfigChanged += DevicesConfigChanged;
 
             editor_canvas.Children.Add(new LayerEditor(editor_canvas));
+
+            Global.devicesLayout.Load();
             //DeviceLayoutNumberChanged(this);
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            Global.devicesLayout.Load();
-        }
         private void DevicesConfigChanged(DeviceConfig changedConf)
         {
             var layoutQuery = DeviceLayouts.Where(l => l.DeviceConfig == changedConf);
             if (Global.devicesLayout.DevicesConfig.Values.Contains(changedConf)){
                 if (layoutQuery.Any())
                 {
-                    Layout_DeviceLayoutUpdated(layoutQuery.First());
+                    Control_DeviceLayout layout = layoutQuery.First();
+                     layout.DeviceConfig = changedConf;
+
+                     //Layout_DeviceLayoutUpdated(layout);
+                    UpdateLayoutsPosition();
                 }
                 else
                 {
                     Control_DeviceLayout layout = new Control_DeviceLayout(changedConf);
-                    layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
+                    //layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
+                    //layout.LayoutUpdated += (object sender, EventArgs e) => { UpdateLayoutsPosition(); };
+                    // el not loaded yet. Attach a wrapper handler that can be removed upon execution.
+                    EventHandler wrapperHandler = null;
+                    wrapperHandler = delegate
+                    {
+                        if (layout.KeycapLayouts.Count == 0)
+                            return;
+                        layout.LayoutUpdated -= wrapperHandler;
+                        UpdateLayoutsPosition();
+                    };
+                    layout.LayoutUpdated += wrapperHandler;
+                    layout.LayoutUpdated += wrapperHandler;
                     ///layout.DeviceConfig.ConfigurationChanged += Layout_DeviceConfigUpdated;
                     layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
                     layout.MouseDown += DeviceLayout_MouseDown;
@@ -110,6 +124,11 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 CalculateBitmap();
             }
+            else if (e.PropertyName.Equals(nameof(Configuration.VirtualkeyboardKeycapType)))
+            {
+                DeviceLayouts.Clear();
+                Global.devicesLayout.Load();
+            }
         }
         private void AddNewDeviceLayout(object sender, RoutedEventArgs e)
         {
@@ -126,7 +145,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             ContextMenu cm = new ContextMenu() { PlacementTarget = sender as Button, IsOpen = true };
             cm.Items.Add(menuItem);
         }
-        private void Layout_DeviceLayoutUpdated(object sender)
+        private void UpdateLayoutsPosition()
         {
             double current_width = 800;
             double current_height = 200;
@@ -166,8 +185,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
             layouts_viewbox.MaxWidth = layout_container.Width;
             layouts_viewbox.MaxHeight = layout_container.Height;
-            layouts_viewbox.UpdateLayout();
-            this.UpdateLayout();
             CalculateBitmap();
 
         }
@@ -247,7 +264,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 if (senderLayout.RenderTransform is TranslateTransform layoutTranslate)
                 {
                     senderLayout.DeviceConfig.Offset = new Point(layoutTranslate.X, layoutTranslate.Y);
-                    Global.devicesLayout.SaveConfiguration(senderLayout.DeviceConfig);
+                    Global.devicesLayout.LayoutPositionChanged(senderLayout.DeviceConfig);
                 }
 
             }

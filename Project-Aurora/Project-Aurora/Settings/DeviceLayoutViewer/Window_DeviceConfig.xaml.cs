@@ -66,7 +66,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
 
             layoutName.Text = Config.SelectedLayout;
             if (Config is KeyboardConfig keyboardConfig) 
-                this.keyboard_layout.SelectedItem = keyboardConfig.SelectedKeyboardLayout;
+                this.keyboard_layout.SelectedValue = keyboardConfig.SelectedKeyboardLayout;
             this.devices_disable_lighting.IsChecked = !Config.LightingEnabled;
             DataContext = this;
 
@@ -219,9 +219,10 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 Config.SelectedLayout = layoutName.Text;
                 var offset = new Point();
-                if(Config.Type == 0 && deviceLayout.KeyboardMap.ContainsKey(Devices.DeviceKeys.ESC))
+                var escIndex= deviceLayout.KeyboardMap.Where(lp => lp.Key == Devices.DeviceKeys.ESC);
+                if (Config.Type == 0 && escIndex.Any())
                 {
-                    var escConfig = deviceLayout.KeyboardMap[Devices.DeviceKeys.ESC].Config;
+                    var escConfig = deviceLayout.KeycapLayouts[escIndex.First().Value].Config;
                     offset.X = -escConfig.X;
                     offset.Y = -escConfig.Y;
                 }
