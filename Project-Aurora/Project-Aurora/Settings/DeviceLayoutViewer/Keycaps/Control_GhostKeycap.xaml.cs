@@ -89,21 +89,18 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
         {
             key_color = Color.FromArgb(255, 255, 255, 255); //No colors allowed!
 
-            if (!current_color.Equals(key_color))
+            if (IsSelected)
+            {
+                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+                state_was_selected = true;
+            }
+            else if (!current_color.Equals(key_color) || state_was_selected)
             {
                 if (isImage)
                 {
                     if (associatedKey != DeviceKeys.NONE)
                         keyBorder.Background = new SolidColorBrush(key_color);
                 }
-                current_color = key_color;
-            }
-
-            if (IsSelected)
-                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
-
-            if (!current_color.Equals(key_color) || IsSelected != state_was_selected)
-            {
                 if (keyBorder.IsEnabled)
                 {
                     if (isImage)
@@ -116,7 +113,8 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
                     keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
                     keyBorder.BorderThickness = new Thickness(0);
                 }
-                state_was_selected = !IsSelected;
+                current_color = key_color;
+                state_was_selected = false;
             }
         }
         public override void UpdateText() { }

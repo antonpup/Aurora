@@ -145,7 +145,7 @@ namespace Aurora.Controls
         {
             if (cz_list.SelectedItem != null)
             {
-                ((ColorZone)cz_list.SelectedItem).keysequence.keys = ks.SelectedDeviceKeys;
+                ((ColorZone)cz_list.SelectedItem).keysequence.keys = ks.List;
                 ConfigManager.Save(Global.Configuration);
             }
         }
