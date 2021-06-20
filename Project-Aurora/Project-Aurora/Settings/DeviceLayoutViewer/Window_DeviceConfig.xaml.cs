@@ -280,7 +280,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             _positionInBlock = Mouse.GetPosition(sender as UIElement);
 
             // capture the mouse (so the mouse move events are still triggered (even when the mouse is not above the control)
-            //SelectedKeycap?.CaptureMouse();
+            SelectedKeycap?.CaptureMouse();
 
         }
 
