@@ -24,7 +24,6 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
     public partial class Control_ImageKeycap : KeycapViewer
     {
         private Color? current_color = null;
-        private string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
 
         public Control_ImageKeycap()
         {
@@ -35,7 +34,7 @@ namespace Aurora.Settings.DeviceLayoutViewer.Keycaps
         {
             InitializeComponent();
 
-            string image_path = System.IO.Path.Combine(layoutsPath, "Images", Config.Image);
+            string image_path = Global.devicesLayout.calcLayoutPath("Images", Config.Image);
 
             keyBorder.IsEnabled = key.Enabled.Value;
 

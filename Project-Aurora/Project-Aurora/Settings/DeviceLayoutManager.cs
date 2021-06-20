@@ -62,8 +62,6 @@ namespace Aurora.Settings
 
         public Dictionary<int, DeviceKeyConfiguration> Keys = new Dictionary<int, DeviceKeyConfiguration>();
 
-        protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
-
         private System.Drawing.Rectangle Region = new System.Drawing.Rectangle(0, 0, 0, 0);
 
         private DeviceConfig Config;
@@ -72,18 +70,6 @@ namespace Aurora.Settings
         {
             Config = config;
 
-        }
-        private string GetFolder()
-        {
-            switch (Config.Type)
-            {
-                case 0:
-                    return "Keyboard";
-                case 1:
-                    return "Mouse";
-                default:
-                    return "OtherDevices";
-            }
         }
         protected class NewKeyboardLayout
         {
@@ -96,13 +82,26 @@ namespace Aurora.Settings
             [JsonProperty("keys")]
             public DeviceKeyConfiguration[] Keys = null;
         }
+        private DeviceConfig convertDeviceConfig(DeviceConfig config)
+        {
+            switch (config.Type)
+            {
+                case 0:
+                    return new KeyboardConfig(config);
+                case 1:
+                    return new MouseConfig(config);
+                default:
+                    return config;
+            }
+        }
         public List<DeviceKeyConfiguration> LoadLayout()
         {
                 var layoutConfigPath = "";
                 string keyboard_preference = Config.SelectedLayout;
+                Config = convertDeviceConfig(Config);
                 if (keyboard_preference != "" && keyboard_preference != "None")
                 {
-                    layoutConfigPath = Path.Combine(layoutsPath, GetFolder(), keyboard_preference + ".json");
+                    layoutConfigPath = Config.LayoutPath;
                 }
 
                 if (!String.IsNullOrWhiteSpace(layoutConfigPath) && File.Exists(layoutConfigPath))
@@ -171,8 +170,9 @@ namespace Aurora.Settings
 
 
                             NormalizeKeys(Keys);
-
-                            foreach (string feature in layoutConfig.included_features)
+                            
+                            //Old way of serializing the deviceLayouts
+                            /*foreach (string feature in layoutConfig.included_features)
                             {
                                 string feature_path = Path.Combine(layoutsPath, GetFolder(), "Extra Features", feature);
 
@@ -184,7 +184,7 @@ namespace Aurora.Settings
                                     AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
 
                                 }
-                            }
+                            }*/
 
                             NormalizeKeys(Keys);
                         }
@@ -287,7 +287,7 @@ namespace Aurora.Settings
 
             var content = JsonConvert.SerializeObject(config, Formatting.Indented);
 
-            File.WriteAllText(Path.Combine(layoutsPath, GetFolder(), Config.SelectedLayout + ".json"), content, Encoding.UTF8);
+            File.WriteAllText(Config.CustomLayoutPath, content, Encoding.UTF8);
         }
         public void AddFeature(KeyboardKey[] keys, KeyboardRegion? insertion_region = KeyboardRegion.TopLeft)
         {
@@ -476,7 +476,7 @@ namespace Aurora.Settings
         public bool InvisibleBackgroundEnabled = false;
 
         [JsonIgnore]
-        protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
+        public virtual string LayoutTypeDir => "OtherDevices";
 
         public DeviceConfig(DeviceConfig config)
         {
@@ -517,12 +517,15 @@ namespace Aurora.Settings
         }
 
         [JsonIgnore]
-        public virtual string LayoutPath => Path.Combine(layoutsPath, "OtherDevices", SelectedLayout + ".json");
+        public string LayoutPath => Global.devicesLayout.calcLayoutPath(LayoutTypeDir, SelectedLayout + ".json");
+
+        [JsonIgnore]
+        public string CustomLayoutPath => Path.Combine(Global.devicesLayout.customLayoutsPath, LayoutTypeDir, SelectedLayout + ".json");
 
     }
     public class MouseConfig : DeviceConfig
     {
-        public override string LayoutPath => Path.Combine(layoutsPath, "Mouse", SelectedLayout + ".json");
+        public override string LayoutTypeDir => "Mouse";
 
         public MouseConfig(DeviceConfig config) : base(config)
         {
@@ -534,6 +537,7 @@ namespace Aurora.Settings
     {
         public KeyboardPhysicalLayout SelectedKeyboardLayout = KeyboardPhysicalLayout.ANSI;
 
+        public override string LayoutTypeDir => "Keyboard";
         public KeyboardConfig(DeviceConfig config) : base(config)
         {
             if (config is KeyboardConfig keyboardConfig)
@@ -568,9 +572,7 @@ namespace Aurora.Settings
                     return "";
             }
         }
-        public string PhysicalLayoutPath => Path.Combine(layoutsPath, "Keyboard\\Plain Keyboard\\" + ConvertEnumToFileName() + ".json");
-        public override string LayoutPath => Path.Combine(layoutsPath, "Keyboard", SelectedLayout + ".json");
-
+        public string PhysicalLayoutPath => Global.devicesLayout.calcLayoutPath("Keyboard\\Plain Keyboard", ConvertEnumToFileName() + ".json");
         [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
         [DllImport("user32.dll")] static extern uint GetWindowThreadProcessId(IntPtr hwnd, IntPtr proccess);
         [DllImport("user32.dll")] static extern IntPtr GetKeyboardLayout(uint thread);
@@ -666,6 +668,31 @@ namespace Aurora.Settings
         public delegate void ConfigChangedEventHandler(DeviceConfig changedConf);
 
         public event ConfigChangedEventHandler DevicesConfigChanged;
+        [JsonIgnore]
+        protected string layoutsPath = System.IO.Path.Combine(Global.ExecutingDirectory, "DeviceLayouts");
+        [JsonIgnore]
+        public string customLayoutsPath = System.IO.Path.Combine(Global.AppDataDirectory, "DeviceLayouts");
+
+        private string[] deviceDirs = {"Images","Keyboard", "Mouse", "OtherDevices"};
+
+        public string calcLayoutPath(string LayoutTypeDir, string file)
+        {
+            if (File.Exists(Path.Combine(Global.devicesLayout.customLayoutsPath, LayoutTypeDir, file)))
+            {
+                return Path.Combine(Global.devicesLayout.customLayoutsPath, LayoutTypeDir, file);
+            }
+            return Path.Combine(layoutsPath, LayoutTypeDir, file);
+        }
+
+        public DeviceLayoutManager()
+        {
+            foreach (var item in deviceDirs)
+            {
+                var dict = new DirectoryInfo(Path.Combine(customLayoutsPath, item));
+                if (!dict.Exists)
+                    dict.Create();
+            }
+        }
         public void AddNewDeviceLayout()
         {
             var devConf = new DeviceConfig(DevicesConfig.Count);
