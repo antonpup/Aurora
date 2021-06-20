@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,13 +39,25 @@ namespace Aurora.Settings.DeviceLayoutViewer
         public Control_EditKeycapData()
         {
             InitializeComponent();
+            Loaded += OnLoad;
             IsCollapsed = true;
         }
         public Control_EditKeycapData(Control_Keycap layout)
         {
             InitializeComponent();
+            Loaded += OnLoad;
             DataContext = layout;
             IsCollapsed = true;
+
+        }
+
+        void OnLoad(object sender, RoutedEventArgs e)
+        {
+            if ((DataContext as Control_Keycap).Config.Tag == -1)
+            {
+                GhostKeyLabel.Visibility = Visibility.Visible;
+                TagTextBox.Visibility = Visibility.Collapsed;
+            }
         }
         private void collapseButton_Click(object sender, RoutedEventArgs e)
         {

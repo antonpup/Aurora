@@ -67,7 +67,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 }
             }
             RenderTransform = new TranslateTransform(DeviceConfig.Offset.X, DeviceConfig.Offset.Y);
-            ResizeLayout();
         }
         private void KeycapPositionChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -130,6 +129,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             InitializeComponent();
             DataContext = this;
+            KeycapLayouts.CollectionChanged += HandleChange;
 
         }
         public Control_DeviceLayout(DeviceConfig config)
@@ -141,6 +141,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
             DeviceConfig = config;
 
             DataContext = this;
+            KeycapLayouts.CollectionChanged += HandleChange;
 
             //device_layout = contentPresenter.ContentTemplate;
 
@@ -154,7 +155,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
             {
                 Dispatcher.Invoke(() =>
                 {
-                    KeycapLayouts.CollectionChanged -= HandleChange;
                     DeviceLayout layout = new DeviceLayout(DeviceConfig);
                     Keys = layout.LoadLayout();
                     foreach (var key in Keys)
@@ -162,7 +162,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                         key.Key.DeviceId = DeviceConfig.Id.ViewPort;
                     }
                     ResizeLayout();
-                    KeycapLayouts.CollectionChanged += HandleChange;
                 });
             });
         }

@@ -18,9 +18,9 @@
                             <ControlTemplate TargetType="{x:Type ItemsControl}">
                                 <Grid>
                                     <ItemsPresenter/>
-                                    <Grid Height="80" Width="800">
-                                        <Grid.Style>
-                                            <Style TargetType="{x:Type Grid}">
+                                    <Canvas x:Name="canvas" Height="80" Width="800">
+                                        <Canvas.Style>
+                                            <Style TargetType="{x:Type Canvas}">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding DeviceLayouts.Count}" Value="0">
@@ -28,11 +28,11 @@
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </Grid.Style>
-                                        <TextBlock TextAlignment="Center" Foreground="Red" FontSize="20" FontWeight="Bold">
+                                        </Canvas.Style>
+                                        <TextBlock TextAlignment="Center" Foreground="Red" FontSize="20" FontWeight="Bold"  Panel.ZIndex="1001">
                                         To enable/disable layout editor right click on this box
                                         </TextBlock>
-                                    </Grid>
+                                    </Canvas>
                                 </Grid>
                             </ControlTemplate>
                         </ItemsControl.Template>
@@ -52,7 +52,7 @@
         <Label x:Name="keyboard_record_message" Content="Please select key(s) you want to assign" HorizontalAlignment="Right" Foreground="Red" Height="26" VerticalAlignment="Bottom" Margin="0,0,40,0" Grid.Column="1" Padding="0" IsHitTestVisible="False"  />
         <Grid HorizontalAlignment="Right" VerticalAlignment="Bottom"  MouseDown="AddNewDeviceLayout" Width="30" Height="30">
             <Path Data="M0.5,0 L0.5,1 M0,0.5 L1,0.5"
-                      StrokeThickness="4"
+                      StrokeThickness="8"
                       Stretch="Fill"
                       Stroke="DimGray" />
         </Grid>

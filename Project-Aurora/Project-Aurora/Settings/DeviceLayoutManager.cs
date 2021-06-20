@@ -79,8 +79,10 @@ namespace Aurora.Settings
             {
                 case 0:
                     return "Keyboard";
-                default:
+                case 1:
                     return "Mouse";
+                default:
+                    return "OtherDevices";
             }
         }
         protected class NewKeyboardLayout
@@ -484,6 +486,7 @@ namespace Aurora.Settings
             ConfigurationChanged = config.ConfigurationChanged;
             LightingEnabled = config.LightingEnabled;
             TypeChangeEnabled = config.TypeChangeEnabled;
+            InvisibleBackgroundEnabled = config.InvisibleBackgroundEnabled;
         }
 
         public DeviceConfig(int viewPort)
@@ -514,8 +517,17 @@ namespace Aurora.Settings
         }
 
         [JsonIgnore]
-        public virtual string LayoutPath => Path.Combine(layoutsPath, "Mouse", SelectedLayout + ".json");
+        public virtual string LayoutPath => Path.Combine(layoutsPath, "OtherDevices", SelectedLayout + ".json");
 
+    }
+    public class MouseConfig : DeviceConfig
+    {
+        public override string LayoutPath => Path.Combine(layoutsPath, "Mouse", SelectedLayout + ".json");
+
+        public MouseConfig(DeviceConfig config) : base(config)
+        {
+            Type = 1;
+        }
     }
 
     public class KeyboardConfig : DeviceConfig

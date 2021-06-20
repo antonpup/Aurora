@@ -51,7 +51,7 @@ namespace Aurora.Settings
         {
             public bool Equals(DeviceKey key1, DeviceKey key2)
             {
-                return key1.Tag == key2.Tag && (key2.DeviceId == null || key1.DeviceId == key2.DeviceId);
+                return key1.Tag != -1 && key1.Tag == key2.Tag && (key2.DeviceId == null || key1.DeviceId == key2.DeviceId);
             }
 
 

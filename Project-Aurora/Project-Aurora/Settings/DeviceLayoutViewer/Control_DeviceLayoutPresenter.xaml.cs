@@ -18,6 +18,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using Aurora.Utils;
+using CSScriptLibrary;
 
 namespace Aurora.Settings.DeviceLayoutViewer
 {
@@ -29,7 +31,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
     {
         //List<Control_DeviceLayout> DeviceLayouts = new List<Control_DeviceLayout>();
         private System.Windows.Point _positionInBlock;
-
+        private int ZIndexCounter = 1000;
         public List<Control_Keycap> Keycaps => DeviceLayouts.SelectMany(dl => dl.KeycapLayouts).ToList();
 
         public static readonly DependencyProperty IsLayoutMoveEnabledProperty = DependencyProperty.Register("IsLayoutMoveEnabled",
@@ -95,6 +97,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     layout.MouseDown += DeviceLayout_MouseDown;
                     layout.MouseMove += DeviceLayout_MouseMove;
                     layout.MouseUp += DeviceLayout_MouseUp;
+                    Canvas.SetZIndex(layout, ZIndexCounter--);
                     DeviceLayouts.Add(layout);
                 }
             }
@@ -216,6 +219,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 layout.ReleaseMouseCapture();
                 Window_DeviceConfig configWindow = new Window_DeviceConfig(layout);
                 configWindow.WindowState = WindowState.Normal;
+                var location = this.PointToScreen(Mouse.GetPosition(this));
+                configWindow.Left = location.X - 200;
+                configWindow.Top = location.Y - 100;
                 configWindow.Activate();
                 configWindow.Show();
             }
