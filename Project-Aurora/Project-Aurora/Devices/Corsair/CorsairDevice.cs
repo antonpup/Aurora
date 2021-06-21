@@ -1,8 +1,5 @@
 ﻿using Aurora.Settings;
 using Aurora.Utils;
-using CorsairRGB.NET;
-using CorsairRGB.NET.Enums;
-using CorsairRGB.NET.Structures;
 using Mono.CSharp;
 using System;
 using System.Collections.Generic;
@@ -10,156 +7,202 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using CUESDK = CorsairRGB.NET.CUE;
+using Corsair.CUE.SDK;
+using IronPython.Runtime;
+using SharpDX.Direct3D11;
+using System.Threading;
+using Aurora.Profiles.Discord.GSI.Nodes;
+using NLog.Fluent;
+//using CUESDK = CorsairRGB.NET.CUE;
 
 namespace Aurora.Devices.Corsair
 {
-    public class CorsairDevice : DefaultDevice
+    public class CorsairDeviceConnector : AuroraDeviceConnector
     {
-        public override string DeviceName => "Corsair";
-
-        protected override string DeviceInfo => string.Join(", ", deviceInfos.Select(d => d.Model));
-
-        private readonly List<CorsairDeviceInfo> deviceInfos = new List<CorsairDeviceInfo>();
-
-        public override bool Initialize()
+        private List<Mutex> mutices = new List<Mutex>();
+        protected override string ConnectorName => "Corsair";
+        private int deviceWaitCounter = 0;
+        protected override bool InitializeImpl()
         {
-            CUESDK.PerformProtocolHandshake();
-            var error = CUESDK.GetLastError();
-            if (error != CorsairError.Success)
+            CUESDK.CorsairPerformProtocolHandshake();
+
+            var error = CUESDK.CorsairGetLastError();
+            if (error != CorsairError.CE_Success)
             {
                 LogError("Error: " + error);
-                return IsInitialized = false;
+                return false;
             }
 
-            for (int i = 0; i < CUESDK.GetDeviceCount(); i++)
-                deviceInfos.Add(CUESDK.GetDeviceInfo(i));
-
-            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive") && !CUESDK.RequestControl())
+            for (int i = 0; i < CUESDK.CorsairGetDeviceCount(); i++)
             {
-                LogError("Error requesting cuesdk exclusive control:" + CUESDK.GetLastError());
+                devices.Add(CreateDevice(CUESDK.CorsairGetDeviceInfo(i), i));
             }
-            CUESDK.SetLayerPriority(255);
 
-            return IsInitialized = true;
+            if (Global.Configuration.VarRegistry.GetVariable<bool>($"{ConnectorName}_exclusive") && !CUESDK.CorsairRequestControl(CorsairAccessMode.CAM_ExclusiveLightingControl))
+            {
+                LogError("Error requesting cuesdk exclusive control:" + CUESDK.CorsairGetLastError());
+            }
+            CUESDK.CorsairSetLayerPriority(255);
+
+            return true;
+        }
+        private CorsairDevice CreateDevice(CorsairDeviceInfo info, int index)
+        {
+            mutices.Add(new Mutex());
+            switch (info.type)
+            {
+                case CorsairDeviceType.CDT_Keyboard:
+                    return new CorsairKeyboard(info, index, this, mutices.Last());
+                case CorsairDeviceType.CDT_Mouse:
+                case CorsairDeviceType.CDT_MouseMat:
+                    return new CorsairDevice(info, index, this, mutices.Last(), AuroraDeviceType.Mouse);
+                case CorsairDeviceType.CDT_Headset:
+                case CorsairDeviceType.CDT_HeadsetStand:
+                    return new CorsairDevice(info, index, this, mutices.Last(), AuroraDeviceType.Headset);
+                case CorsairDeviceType.CDT_CommanderPro:
+                case CorsairDeviceType.CDT_LightingNodePro:
+                case CorsairDeviceType.CDT_MemoryModule:
+                case CorsairDeviceType.CDT_Cooler:
+                case CorsairDeviceType.CDT_Motherboard:
+                case CorsairDeviceType.CDT_GraphicsCard:
+                default:
+                    return new CorsairDevice(info, index, this, mutices.Last());
+            }
         }
 
-        public override void Shutdown()
+        protected override void ShutdownImpl()
         {
-            CUESDK.SetLayerPriority(0);
-            deviceInfos.Clear();
-            CUESDK.ReleaseControl();
-            IsInitialized = false;
+            CUESDK.CorsairSetLayerPriority(0);
+            CUESDK.CorsairReleaseControl(CorsairAccessMode.CAM_ExclusiveLightingControl);
+            mutices.ForEach(m => m.ReleaseMutex());
         }
 
-        public override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        internal bool LedBufferFinished()
         {
-            if (deviceInfos.Count != CUESDK.GetDeviceCount())
+            if (devices.Count != CUESDK.CorsairGetDeviceCount())
+            {
                 this.Reset();
-
-            for (int i = 0; i < deviceInfos.Count; i++)
-            {
-                var deviceInfo = deviceInfos[i];
-                if (deviceInfo.Type == CorsairDeviceType.Keyboard && Global.Configuration.DevicesDisableKeyboard)
-                    continue;
-
-                if ((deviceInfo.Type == CorsairDeviceType.Mouse || deviceInfo.Type == CorsairDeviceType.MouseMat)
-                    && Global.Configuration.DevicesDisableMouse)
-                    continue;
-
-                if ((deviceInfo.Type == CorsairDeviceType.Headset || deviceInfo.Type == CorsairDeviceType.HeadsetStand)
-                    && Global.Configuration.DevicesDisableHeadset)
-                    continue;
-
-                List<CorsairLedColor> colors = new List<CorsairLedColor>();
-
-                if (LedMaps.MapsMap.TryGetValue(deviceInfo.Type, out var dict) && dict.Count != 0)
-                {
-                    foreach (var (key, clr) in keyColors)
-                    {
-                        if (dict.TryGetValue((DeviceKeys)key, out var ledid))
-                        {
-                            colors.Add(new CorsairLedColor()
-                            {
-                                LedId = ledid,
-                                R = clr.R,
-                                G = clr.G,
-                                B = clr.B
-                            });
-                        }
-                    }
-                }
-                else
-                {
-                    if (keyColors.TryGetValue((int)DeviceKeys.Peripheral_Logo, out var clr))
-                    {
-                        if(deviceInfo.Type == CorsairDeviceType.LightingNodePro || deviceInfo.Type == CorsairDeviceType.CommanderPro)
-                        {
-                            int totalLeds = 0;
-                            for (int j = 0; j < deviceInfo.Channels.ChannelsCount; j++)
-                            {
-                                totalLeds += deviceInfo.Channels.Channels[j].TotalLedsCount;
-                                foreach (var ledid in LedMaps.ChannelLeds[j])
-                                {
-                                    if (colors.Count == totalLeds)
-                                        continue;
-
-                                    colors.Add(new CorsairLedColor()
-                                    {
-                                        LedId = ledid,
-                                        R = clr.R,
-                                        G = clr.G,
-                                        B = clr.B
-                                    });
-                                }
-                            }
-                        }
-                        else
-                        {
-                            CorsairLedId initial = GetInitialLedIdForDeviceType(deviceInfo.Type);
-
-                            if (initial == CorsairLedId.I_Invalid)
-                                continue;
-
-                            for(int j = 0; j <  deviceInfo.LedsCount; j++)
-                            {
-                                colors.Add(new CorsairLedColor()
-                                {
-                                    LedId = initial++,
-                                    R = clr.R,
-                                    G = clr.G,
-                                    B = clr.B
-                                });
-                            }
-                        }
-                    }
-                }
-
-                if (colors.Count == 0)
-                    continue;
-
-                CUESDK.SetDeviceColors(i, colors.ToArray());
+                return false;
             }
+                
+            deviceWaitCounter++;
+            if(deviceWaitCounter != devices.Count)
+            {
+                return false;
+            }
+            CUESDK.CorsairSetLedsColorsFlushBuffer();
+            mutices.ForEach(m => m.ReleaseMutex());
+            return true;
+            
+        }
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
+        {
+            variableRegistry.Register($"{ConnectorName}_exclusive", false, "Request exclusive control");
+        }
+    }
 
-            return CUESDK.Update();
+
+    public class CorsairDevice : AuroraDevice
+    {
+        protected override string DeviceName => deviceInfo.model;
+
+        // protected override string DeviceInfo => string.Join(", ", deviceInfos.Select(d => d.model));
+        protected CorsairLedColor[] colors;
+        private AuroraDeviceType type;
+        protected override AuroraDeviceType AuroraDeviceType => type;
+
+        protected CorsairDeviceInfo deviceInfo;
+        protected int deviceIndex;
+        protected CorsairDeviceConnector connector;
+        protected Mutex mutex;
+
+        public CorsairDevice(CorsairDeviceInfo deviceInfo, int index, CorsairDeviceConnector con, Mutex mutex, AuroraDeviceType type = AuroraDeviceType.Unkown)
+        {
+            this.deviceInfo = deviceInfo;
+            deviceIndex = index;
+            connector = con;
+            this.mutex = mutex;
+            this.type = type;
+            colors = new CorsairLedColor[deviceInfo.ledsCount];
+            if (CUESDK.CorsairGetLedsColorsByDeviceIndex(index, deviceInfo.ledsCount, colors) != true)
+            {
+                LogError("Did not get device led list");
+            }
+        }
+        protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
+        {
+            for (int i = 0; i < deviceInfo.ledsCount; i++)
+            {
+                if (composition.keyColors.TryGetValue(i, out Color clr))
+                {
+                    colors[i] = new CorsairLedColor()
+                    {
+                        ledId = colors[i].ledId,
+                        r = clr.R,
+                        g = clr.G,
+                        b = clr.B
+                    };
+                }
+            }
+            CUESDK.CorsairSetLedsColorsBufferByDeviceIndex(deviceIndex, deviceInfo.ledsCount, colors);
+            mutex.WaitOne();
+            if(!connector.LedBufferFinished())
+            {
+                mutex.WaitOne();
+                mutex.ReleaseMutex();
+            }
+            return true;
         }
 
         private CorsairLedId GetInitialLedIdForDeviceType(CorsairDeviceType type)
         {
             return type switch
             {
-                CorsairDeviceType.Headset => CorsairLedId.H_LeftLogo,
-                CorsairDeviceType.MemoryModule => CorsairLedId.DRAM_1,
-                CorsairDeviceType.Cooler => CorsairLedId.LC_C1_1,
-                CorsairDeviceType.Motherboard => CorsairLedId.MB_Zone1,
-                CorsairDeviceType.GraphicsCard => CorsairLedId.GPU_Zone1,
-                _ => CorsairLedId.I_Invalid
+                CorsairDeviceType.CDT_Headset => CorsairLedId.CLH_LeftLogo,
+                CorsairDeviceType.CDT_MemoryModule => CorsairLedId.CLDRAM_1,
+                CorsairDeviceType.CDT_Cooler => CorsairLedId.CLLC_C1_1,
+                CorsairDeviceType.CDT_Motherboard => CorsairLedId.CLMB_Zone1,
+                CorsairDeviceType.CDT_GraphicsCard => CorsairLedId.CLGPU_Zone1,
+                _ => CorsairLedId.CLI_Invalid
             };
         }
 
-        protected override void RegisterVariables(VariableRegistry variableRegistry)
+
+    }
+    public class CorsairKeyboard : CorsairDevice
+    {
+        protected override string DeviceName => deviceInfo.model;
+
+        // protected override string DeviceInfo => string.Join(", ", deviceInfos.Select(d => d.model));
+        protected override AuroraDeviceType AuroraDeviceType => AuroraDeviceType.Keyboard;
+
+        public CorsairKeyboard(CorsairDeviceInfo deviceInfo, int index, CorsairDeviceConnector con, Mutex mutex) :base(deviceInfo, index, con, mutex)
         {
-            variableRegistry.Register($"{DeviceName}_exclusive", false, "Request exclusive control");
+        }
+
+        protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
+        {
+            int i = 0;
+            foreach (var (key, clr) in composition.keyColors)
+            {
+                if (LedMaps.KeyboardLedMap.TryGetValue((DeviceKeys)key, out var ledid))
+                {
+                    colors[i] = new CorsairLedColor()
+                    {
+                        ledId = ledid,
+                        r = clr.R,
+                        g = clr.G,
+                        b = clr.B
+                    };
+                    i++;
+                }
+            }
+            CUESDK.CorsairSetLedsColorsBufferByDeviceIndex(deviceIndex, deviceInfo.ledsCount, colors);
+            mutex.WaitOne();
+            connector.LedBufferFinished();
+            mutex.WaitOne();
+            mutex.ReleaseMutex();
+            return true;
         }
     }
 }

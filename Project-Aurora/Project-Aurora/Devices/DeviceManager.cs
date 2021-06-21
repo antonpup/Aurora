@@ -169,6 +169,9 @@ namespace Aurora.Devices
             {
                 DeviceContainers.Add(new DeviceContainer(inst));
             }
+            var CorsairConnector = new Corsair.CorsairDeviceConnector();
+            DeviceContainers.Add(new DeviceContainer(new OldAuroraDeviceWrapper(CorsairConnector)));
+            DeviceConnectors.Add(CorsairConnector);
             var OpenRGBConnector = new OpenRGB.OpenRGBDeviceConnector();
             DeviceContainers.Add(new DeviceContainer(new OldAuroraDeviceWrapper(OpenRGBConnector)));
             DeviceConnectors.Add(OpenRGBConnector);
