@@ -39,19 +39,23 @@ namespace Aurora.Devices.Razer
 
         public override bool Initialize()
         {
-            if (!Chroma.SdkAvailable)
-            {
-                LogError("SDK not available. Install Razer synapse");
-                return IsInitialized = false;
-            }
-
             try
             {
+                if (!Chroma.SdkAvailable)
+                {
+                    LogError("SDK not available. Install Razer synapse");
+                    return IsInitialized = false;
+                }
+
                 Chroma.Instance.Initialize();
             }
             catch (Corale.Colore.Razer.NativeCallException e)
             {
                 LogError("Error initializing:" + e.Message);
+                return IsInitialized = false;
+            }
+            catch (Exception e)
+            {
                 return IsInitialized = false;
             }
 

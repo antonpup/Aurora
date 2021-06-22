@@ -98,7 +98,7 @@ namespace Aurora.Devices.OpenRGB
                     }
                     else
                     {
-                        KeyMapping.Add(500 + overIndex);
+                        KeyMapping.Add(500 + overIndex++);
                     }
                 }
             }
