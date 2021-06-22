@@ -64,7 +64,7 @@ namespace Aurora.Devices.OpenRGB
     {
         private OpenRGBDevice Device;
         private OpenRGBColor[] DeviceColors;
-        private List<DK> KeyMapping;
+        private List<int> KeyMapping;
         private int DeviceIndex;
         static object update_lock = new object();
         private OpenRGBDeviceConnector Connector;
@@ -86,18 +86,19 @@ namespace Aurora.Devices.OpenRGB
             for (var ledIdx = 0; ledIdx < Device.Leds.Length; ledIdx++)
                 DeviceColors[ledIdx] = new OpenRGBColor();
 
+            int overIndex = 0;
             if (Device.Type == OpenRGBDeviceType.Keyboard)
             {
-                KeyMapping = new List<DK>();
+                KeyMapping = new List<int>();
                 for (int j = 0; j < Device.Leds.Length; j++)
                 {
                     if (OpenRGBKeyNames.Keyboard.TryGetValue(Device.Leds[j].Name, out var dk))
                     {
-                        KeyMapping.Add(dk);
+                        KeyMapping.Add((int)dk);
                     }
                     else
                     {
-                        KeyMapping.Add(DK.NONE);
+                        KeyMapping.Add(500 + overIndex);
                     }
                 }
             }
