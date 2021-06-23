@@ -478,6 +478,9 @@ namespace Aurora.Settings
         [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; } = false;
         [JsonProperty("devices_disable_mouse")] public bool DevicesDisableMouse { get; set; } = false;
         [JsonProperty("devices_disable_headset")] public bool DevicesDisableHeadset { get; set; } = false;
+        [JsonProperty("devices_disable_openrgb_keyboard")] public bool DevicesDisableOpenRGBKeyboard { get; set; } = false;
+        [JsonProperty("devices_disable_openrgb_mouse")] public bool DevicesDisableOpenRGBMouse { get; set; } = false;
+        [JsonProperty("devices_disable_openrgb_headset")] public bool DevicesDisableOpenRGBHeadset { get; set; } = false;
         [JsonProperty("unified_hid_disabled")] public bool UnifiedHidDisabled { get; set; } = false;
         public bool OverlaysInPreview { get; set; } = true;
 

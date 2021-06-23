@@ -173,19 +173,19 @@ namespace Aurora.Devices.OpenRGB
                 case OpenRGBDeviceType.Ledstrip:
                     break;
                 case OpenRGBDeviceType.Keyboard:
-                    return AuroraDeviceType.Keyboard;
+                    return AuroraDeviceType.OpenRGBKeyboard;
                 case OpenRGBDeviceType.Mouse:
-                    return AuroraDeviceType.Mouse;
+                    return AuroraDeviceType.OpenRGBMouse;
                 case OpenRGBDeviceType.Mousemat:
                     break;
                 case OpenRGBDeviceType.Headset:
-                    return AuroraDeviceType.Headset;
+                    return AuroraDeviceType.OpenRGBHeadset;
                 case OpenRGBDeviceType.HeadsetStand:
                     break;
                 case OpenRGBDeviceType.Unknown:
-                    return AuroraDeviceType.Unkown;
+                    return AuroraDeviceType.OpenRGBUnkown;
                 default:
-                    return AuroraDeviceType.Unkown;
+                    return AuroraDeviceType.OpenRGBUnkown;
             }
             return AuroraDeviceType.Unkown;
         }

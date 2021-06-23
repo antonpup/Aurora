@@ -18,6 +18,10 @@ namespace Aurora.Devices
         Mouse       = 1,
         Unkown      = 2,
         Headset     = 3,
+        OpenRGBKeyboard = 4,
+        OpenRGBMouse = 5,
+        OpenRGBUnkown = 6,
+        OpenRGBHeadset = 7,
     }
     public class UniqueDeviceId
     {
@@ -117,7 +121,10 @@ namespace Aurora.Devices
         {
             if (GetDeviceType() == AuroraDeviceType.Keyboard && Global.Configuration.DevicesDisableKeyboard ||
                 GetDeviceType() == AuroraDeviceType.Mouse && Global.Configuration.DevicesDisableMouse ||
-                GetDeviceType() == AuroraDeviceType.Headset && Global.Configuration.DevicesDisableHeadset)
+                GetDeviceType() == AuroraDeviceType.Headset && Global.Configuration.DevicesDisableHeadset ||
+                GetDeviceType() == AuroraDeviceType.OpenRGBKeyboard && Global.Configuration.DevicesDisableOpenRGBKeyboard ||
+                GetDeviceType() == AuroraDeviceType.OpenRGBMouse && Global.Configuration.DevicesDisableOpenRGBMouse ||
+                GetDeviceType() == AuroraDeviceType.OpenRGBHeadset && Global.Configuration.DevicesDisableOpenRGBHeadset)
             {
                 Disconnect();
             }
