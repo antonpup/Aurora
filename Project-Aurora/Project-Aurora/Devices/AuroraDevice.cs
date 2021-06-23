@@ -14,10 +14,10 @@ namespace Aurora.Devices
 {
     public enum AuroraDeviceType
     {
-        Unkown,
-        Keyboard,
-        Mouse,
-        Headset
+        Keyboard    = 0,
+        Mouse       = 1,
+        Unkown      = 2,
+        Headset     = 3,
     }
     public class UniqueDeviceId
     {

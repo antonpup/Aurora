@@ -1,4 +1,5 @@
-﻿using Aurora.Settings.DeviceLayoutViewer;
+﻿using Aurora.Devices;
+using Aurora.Settings.DeviceLayoutViewer;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -786,6 +787,33 @@ namespace Aurora.Settings
 
             DevicesConfigChanged.Invoke(config);
             Save();
+        }
+        public List<string> GetLayoutsForType(AuroraDeviceType type)
+        {
+            string customLayouts = Path.Combine(customLayoutsPath, deviceDirs[(int)type+1]);
+            List<string> FilesName = new List<string>() { "None" };
+            if (Directory.Exists(customLayouts))
+            {
+                foreach (var name in Directory.GetFiles(customLayouts))
+                {
+                    FilesName.Add(name.Split('\\').Last().Split('.').First());
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(customLayouts);
+            }
+            string layouts = Path.Combine(layoutsPath, deviceDirs[(int)type + 1]);
+            if (Directory.Exists(layouts))
+            {
+                foreach (var name in Directory.GetFiles(layouts))
+                {
+                    string lname = name.Split('\\').Last().Split('.').First();
+                    if (!FilesName.Where(n => n.Equals(lname)).Any())
+                        FilesName.Add(lname);
+                }
+            }
+            return FilesName;
         }
     }
 }

@@ -130,30 +130,14 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 }
             }
         }
-        private List<string> GetBrandsName(string dicName)
-        {
-            string layoutsPath = Path.Combine(Global.ExecutingDirectory, "DeviceLayouts", dicName);
-            List<string> FilesName = new List<string>() { "None" };
-            if (Directory.Exists(layoutsPath))
-            {
-                foreach (var name in Directory.GetFiles(layoutsPath))
-                {
-                    FilesName.Add(name.Split('\\').Last().Split('.').First());
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(layoutsPath);
-            }
-            return FilesName;
-        }
         private void LoadDeviceType(int type)
         {
+            this.device_layout.SelectedValue = "None";
             switch (type)
             {
                 case 0:
                     this.device_type.SelectedItem = "Keyboard";
-                    this.device_layout.ItemsSource = GetBrandsName("Keyboard");
+                    this.device_layout.ItemsSource = Global.devicesLayout.GetLayoutsForType(Devices.AuroraDeviceType.Keyboard);
                     this.keyboard_layout.Visibility = Visibility.Visible;
                     this.keyboard_layout_tb.Visibility = Visibility.Visible;
                     deviceLayout.DeviceConfig = new KeyboardConfig(Config);
@@ -161,7 +145,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     break;
                 case 1:
                     this.device_type.SelectedItem = "Mouse";
-                    this.device_layout.ItemsSource = GetBrandsName("Mouse");
+                    this.device_layout.ItemsSource = Global.devicesLayout.GetLayoutsForType(Devices.AuroraDeviceType.Mouse);
                     this.keyboard_layout.Visibility = Visibility.Collapsed;
                     this.keyboard_layout_tb.Visibility = Visibility.Collapsed;
                     Config.Type = 1;
@@ -170,12 +154,13 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 default:
                     Config.Type = 2;
                     this.device_type.SelectedItem = "Other Devices";
-                    this.device_layout.ItemsSource = GetBrandsName("OtherDevices");
+                    this.device_layout.ItemsSource = Global.devicesLayout.GetLayoutsForType(Devices.AuroraDeviceType.Unkown);
                     this.keyboard_layout.Visibility = Visibility.Collapsed;
                     this.keyboard_layout_tb.Visibility = Visibility.Collapsed;
                     deviceLayout.DeviceConfig = new DeviceConfig(Config);
                     break;
             }
+            this.device_layout.SelectedValue = "None";
         }
         
         private void device_view_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -193,7 +178,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
             if (IsLoaded)
             {
                 Config.Type = this.device_type.SelectedIndex;
-                this.device_layout.SelectedItem = "None";
                 LoadDeviceType(Config.Type);
             }
         }
@@ -268,6 +252,8 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     offset.Y = -escConfig.Y;
                 }
                 new DeviceLayout(Config).SaveLayout(deviceLayout.KeycapLayouts.ToList(), offset);
+                LoadDeviceType(Config.Type);
+                this.device_layout.SelectedItem = Config.SelectedLayout;
             }
 
         }
@@ -372,7 +358,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 keyConf.VisualName = SelectedKeycap.Config.VisualName;
             }
             keyConf.Tag = getValidTag(keyConf.Tag);
-            
+            //if 
             var keycap = new Control_Keycap(keyConf);
             keycap.MouseDown += KeyMouseDown;
             keycap.MouseMove += KeyMouseMove;
