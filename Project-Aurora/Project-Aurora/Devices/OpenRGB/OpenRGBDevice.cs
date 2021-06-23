@@ -64,7 +64,7 @@ namespace Aurora.Devices.OpenRGB
     {
         private OpenRGBDevice Device;
         private OpenRGBColor[] DeviceColors;
-        private List<int> KeyMapping;
+        private List<DeviceKey> KeyMapping = new List<DeviceKey>();
         private int DeviceIndex;
         static object update_lock = new object();
         private OpenRGBDeviceConnector Connector;
@@ -87,19 +87,23 @@ namespace Aurora.Devices.OpenRGB
                 DeviceColors[ledIdx] = new OpenRGBColor();
 
             int overIndex = 0;
-            if (Device.Type == OpenRGBDeviceType.Keyboard)
+
+            for (int j = 0; j < Device.Leds.Length; j++)
             {
-                KeyMapping = new List<int>();
-                for (int j = 0; j < Device.Leds.Length; j++)
+                if (Device.Type == OpenRGBDeviceType.Keyboard)
                 {
                     if (OpenRGBKeyNames.Keyboard.TryGetValue(Device.Leds[j].Name, out var dk))
                     {
-                        KeyMapping.Add((int)dk);
+                        KeyMapping.Add(new DeviceKey(dk));
                     }
                     else
                     {
-                        KeyMapping.Add(500 + overIndex++);
+                        KeyMapping.Add(new DeviceKey(500 + overIndex++, Device.Leds[j].Name));
                     }
+                }
+                else
+                {
+                    KeyMapping.Add(new DeviceKey(j, Device.Leds[j].Name));
                 }
             }
         }
@@ -124,19 +128,9 @@ namespace Aurora.Devices.OpenRGB
 
             for (int ledIdx = 0; ledIdx < Device.Leds.Length; ledIdx++)
             {
-                if (Device.Type == OpenRGBDeviceType.Keyboard)
+                if (composition.keyColors.TryGetValue(KeyMapping[ledIdx].Tag, out var keyColor))
                 {
-                    if (composition.keyColors.TryGetValue((int)KeyMapping[ledIdx], out var keyColor))
-                    {
-                        DeviceColors[ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
-                    }
-                }
-                else
-                {
-                    if (composition.keyColors.TryGetValue(ledIdx, out var keyColor))
-                    {
-                        DeviceColors[ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
-                    }
+                    DeviceColors[ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
                 }
             }
 
@@ -195,5 +189,7 @@ namespace Aurora.Devices.OpenRGB
             }
             return AuroraDeviceType.Unkown;
         }
+
+        public override List<DeviceKey> GetAllDeviceKey() => KeyMapping;
     }
 }

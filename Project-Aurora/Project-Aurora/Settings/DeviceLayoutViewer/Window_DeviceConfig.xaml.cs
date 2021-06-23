@@ -33,8 +33,9 @@ namespace Aurora.Settings.DeviceLayoutViewer
         private System.Windows.Point _positionInBlock;
 
         private bool isHorizontal = true;
+        private bool isPlus = true;
 
-       // private Control_Keycap SelectedKey;
+        // private Control_Keycap SelectedKey;
 
         public ObservableCollection<Control_Keycap> KeycapCollection
         {
@@ -325,40 +326,67 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 }
             }
         }
-        private int getValidTag(int tag)
+        private DeviceKey getValidKey(DeviceKey key)
         {
-            if(KeycapCollection.Where(l => l.Config.Tag == tag).Any())
+            var deviceQuery = Global.dev_manager.IndividualDevices.Where(d => d.id == (Devices.UniqueDeviceId)device_view.SelectedItem);
+            if (deviceQuery.Any())
             {
-                return getValidTag(tag + 1);
+                var deviceKeys = deviceQuery.First().GetAllDeviceKey();
+                foreach (var deviceKey in deviceKeys)
+                {
+                    if (!KeycapCollection.Where(l => l.Config.Tag == deviceKey.Tag).Any())
+                    {
+                        return deviceKey;
+                    }
+                }
             }
-            return tag;
+            if (KeycapCollection.Where(l => l.Config.Tag == key.Tag).Any())
+            {
+                key.Tag += 1;
+                return getValidKey(key);
+            }
+            return key;
         }
-        private void addKey_Click(object sender, RoutedEventArgs e)
+        private DeviceKeyConfiguration newKeyConfigBase()
         {
             var keyConf = new DeviceKeyConfiguration();
             keyConf.Height = 30;
             keyConf.Width = 30;
             keyConf.Tag = 0;
             keyConf.VisualName = "";
+            int addValue = 7;
+            if (!isPlus)
+                addValue = -7;
             if (SelectedKeycap != null)
             {
+                keyConf.X = SelectedKeycap.Config.X;
+                keyConf.Y = SelectedKeycap.Config.Y;
                 if (isHorizontal)
                 {
-                    keyConf.X = SelectedKeycap.Config.X + SelectedKeycap.Config.Width + 7;
-                    keyConf.Y = SelectedKeycap.Config.Y;
+                    if(isPlus)
+                        keyConf.X += SelectedKeycap.Config.Width + 7;
+                    else
+                        keyConf.X -= SelectedKeycap.Config.Width + 7;
                 }
                 else
                 {
-                    keyConf.X = SelectedKeycap.Config.X;
-                    keyConf.Y = SelectedKeycap.Config.Y + SelectedKeycap.Config.Height + 7;
+                    if (isPlus)
+                        keyConf.Y += SelectedKeycap.Config.Height + 7;
+                    else
+                        keyConf.Y -= SelectedKeycap.Config.Height + 7;
+
                 }
                 keyConf.Height = (int)SelectedKeycap.Height;
                 keyConf.Width = (int)SelectedKeycap.Width; ;
                 keyConf.Tag = SelectedKeycap.Config.Tag + 1;
                 keyConf.VisualName = SelectedKeycap.Config.VisualName;
             }
-            keyConf.Tag = getValidTag(keyConf.Tag);
-            //if 
+            return keyConf;
+        }
+        private void addKey_Click(object sender, RoutedEventArgs e)
+        {
+            var keyConf = newKeyConfigBase();
+            keyConf.Key = getValidKey(keyConf.Key);
             var keycap = new Control_Keycap(keyConf);
             keycap.MouseDown += KeyMouseDown;
             keycap.MouseMove += KeyMouseMove;
@@ -369,24 +397,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void addGhostKey_Click(object sender, RoutedEventArgs e)
         {
-            var keyConf = new DeviceKeyConfiguration();
-            keyConf.Height = 30;
-            keyConf.Width = 30;
-            keyConf.VisualName = "";
-            if (SelectedKeycap != null)
-            {
-                if (isHorizontal)
-                {
-                    keyConf.X = SelectedKeycap.Config.X + SelectedKeycap.Config.Width + 7;
-                    keyConf.Y = SelectedKeycap.Config.Y;
-                }
-                else
-                {
-                    keyConf.X = SelectedKeycap.Config.X;
-                    keyConf.Y = SelectedKeycap.Config.Y + SelectedKeycap.Config.Height + 7;
-                }
-                keyConf.VisualName = SelectedKeycap.Config.VisualName;
-            }
+            var keyConf = newKeyConfigBase();
             keyConf.Tag = -1;
             var keycap = new Control_Keycap(keyConf);
             keycap.MouseDown += KeyMouseDown;
@@ -416,7 +427,18 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 (sender as Button).Content = "Vertical";
             }
         }
-        
+        private void changeNewKeyPosition_Click(object sender, RoutedEventArgs e)
+        {
+            isPlus = !isPlus;
+            if (isPlus)
+            {
+                (sender as Button).Content = "Plus";
+            }
+            else
+            {
+                (sender as Button).Content = "Minus";
+            }
+        }
         private void UpdateKeysThread(CancellationToken token)
         {
             while (!token.IsCancellationRequested)

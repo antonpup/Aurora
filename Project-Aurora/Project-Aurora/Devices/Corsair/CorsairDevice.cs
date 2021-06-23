@@ -115,6 +115,7 @@ namespace Aurora.Devices.Corsair
         protected int deviceIndex;
         protected CorsairDeviceConnector connector;
         protected Mutex mutex;
+        protected List<DeviceKey> KeyMapping = new List<DeviceKey>();
 
         public CorsairDevice(CorsairDeviceInfo deviceInfo, int index, CorsairDeviceConnector con, Mutex mutex, AuroraDeviceType type = AuroraDeviceType.Unkown)
         {
@@ -128,6 +129,14 @@ namespace Aurora.Devices.Corsair
             {
                 LogError("Did not get device led list");
             }
+            /*if (deviceInfo.type == CorsairDeviceType.CDT_Keyboard)
+            {
+
+            }
+            else
+            {
+                KeyMapping.Add(new DeviceKey(j, Device.Leds[j].Name));
+            }*/
         }
         protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
         {
@@ -167,7 +176,7 @@ namespace Aurora.Devices.Corsair
             };
         }
 
-
+        public override List<DeviceKey> GetAllDeviceKey() => KeyMapping;
     }
     public class CorsairKeyboard : CorsairDevice
     {
@@ -178,6 +187,14 @@ namespace Aurora.Devices.Corsair
 
         public CorsairKeyboard(CorsairDeviceInfo deviceInfo, int index, CorsairDeviceConnector con, Mutex mutex) :base(deviceInfo, index, con, mutex)
         {
+           /* if (LedMaps.KeyboardLedMap.TryGetValue(Device.Leds[j].Name, out var dk))
+            {
+                KeyMapping.Add(new DeviceKey(dk));
+            }
+            else
+            {
+                KeyMapping.Add(new DeviceKey(500 + overIndex++, Device.Leds[j].Name));
+            }*/
         }
 
         protected override bool UpdateDeviceImpl(DeviceColorComposition composition)

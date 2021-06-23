@@ -155,6 +155,8 @@ namespace Aurora.Devices
         {
         }
 
+        public abstract List<DeviceKey> GetAllDeviceKey();
+
         protected abstract string DeviceName { get; }
         public string GetDeviceName() => DeviceName;
 

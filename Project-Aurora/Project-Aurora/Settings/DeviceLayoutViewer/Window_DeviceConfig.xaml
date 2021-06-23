@@ -87,7 +87,8 @@
                     </ListBox>etc. -->
                     <StackPanel Orientation="Horizontal" Height="20">
                         <Button  Click="removeKey_Click" Height="15" Margin="1">Remove Key</Button>
-                        <Button Click="changeNewKey_Click" Height="15" Margin="50,1,0,1">Horizontal</Button>
+                        <Button Click="changeNewKeyPosition_Click" Height="15" Margin="50,1,0,1">Plus</Button>
+                        <Button Click="changeNewKey_Click" Height="15" Margin="10,1,0,1">Horizontal</Button>
                         <Button Click="addGhostKey_Click" Height="15" Margin="10,1" VerticalAlignment="Stretch">Add Ghost Key</Button>
                         <Button Click="addKey_Click" Height="15" Margin="1">Add Key</Button>
                         

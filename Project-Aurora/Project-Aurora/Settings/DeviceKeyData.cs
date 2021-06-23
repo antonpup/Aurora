@@ -89,6 +89,12 @@ namespace Aurora.Settings
             else
                 VisualName = key.ToString();
         }
+        public DeviceKey(int key, string visualName, int? deviceId = null)
+        {
+            Tag = key;
+            DeviceId = deviceId;
+            VisualName = visualName;
+        }
         public static implicit operator DeviceKey(Devices.DeviceKeys k) => new DeviceKey(k);
 
         public static implicit operator DeviceKey(Int64 k) => new DeviceKey((int)k);
