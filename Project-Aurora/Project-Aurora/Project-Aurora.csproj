@@ -70,13 +70,13 @@
     <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
     <PackageReference Include="IronPython" Version="2.7.8.1" />
     <PackageReference Include="JsonSubTypes" Version="1.7.0" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.5" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.8-pre9" />
     <PackageReference Include="MouseKeyHook" Version="5.6.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.0" />
     <PackageReference Include="Octokit" Version="0.47.0" />
-    <PackageReference Include="OpenRGB.NET" Version="1.2.0" />
+    <PackageReference Include="OpenRGB.NET" Version="1.7.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.2.8" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
