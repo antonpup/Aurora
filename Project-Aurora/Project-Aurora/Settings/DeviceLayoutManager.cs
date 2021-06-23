@@ -173,9 +173,9 @@ namespace Aurora.Settings
                             NormalizeKeys(Keys);
                             
                             //Old way of serializing the deviceLayouts
-                            /*foreach (string feature in layoutConfig.included_features)
+                            foreach (string feature in layoutConfig.included_features)
                             {
-                                string feature_path = Path.Combine(layoutsPath, GetFolder(), "Extra Features", feature);
+                                string feature_path = Path.Combine(Global.ExecutingDirectory, "DeviceLayouts", "Keyboard", "Extra Features", feature);
 
                                 if (File.Exists(feature_path))
                                 {
@@ -185,7 +185,7 @@ namespace Aurora.Settings
                                     AddFeature(feature_config.grouped_keys.ToArray(), feature_config.origin_region);
 
                                 }
-                            }*/
+                            }
 
                             NormalizeKeys(Keys);
                         }
