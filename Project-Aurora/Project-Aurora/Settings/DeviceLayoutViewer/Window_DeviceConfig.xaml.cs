@@ -133,7 +133,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
         }
         private void LoadDeviceType(int type)
         {
-            this.device_layout.SelectedValue = "None";
             switch (type)
             {
                 case 0:
@@ -161,7 +160,6 @@ namespace Aurora.Settings.DeviceLayoutViewer
                     deviceLayout.DeviceConfig = new DeviceConfig(Config);
                     break;
             }
-            this.device_layout.SelectedValue = "None";
         }
         
         private void device_view_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -186,9 +184,10 @@ namespace Aurora.Settings.DeviceLayoutViewer
         {
             if (IsLoaded)
             {
-                Config.SelectedLayout = this.device_layout.SelectedItem.ToString();
+                if (device_layout.SelectedItem is null) device_layout.SelectedItem = "None";
+                Config.SelectedLayout = device_layout.SelectedItem?.ToString();
                 deviceLayout.ConfigChanged();
-                layoutName.Text = this.device_layout.SelectedItem.ToString();
+                layoutName.Text = device_layout.SelectedItem.ToString();
 
             }
         }
@@ -254,7 +253,7 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 }
                 new DeviceLayout(Config).SaveLayout(deviceLayout.KeycapLayouts.ToList(), offset);
                 LoadDeviceType(Config.Type);
-                this.device_layout.SelectedItem = Config.SelectedLayout;
+                this.device_layout.SelectedValue = Config.SelectedLayout;
             }
 
         }
