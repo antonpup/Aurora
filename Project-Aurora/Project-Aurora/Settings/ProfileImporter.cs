@@ -2,7 +2,7 @@
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles;
 using Aurora.Settings.Layers;
-using CorsairRGB.NET.Enums;
+using Corsair.CUE.SDK;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -101,50 +101,50 @@ namespace Aurora.Settings
                                             {
                                                 try
                                                 {
-                                                    CorsairRGB.NET.Enums.CorsairLedId? keyValue = null;
+                                                    CorsairLedId? keyValue = null;
 
                                                     switch (key.Value)
                                                     {
                                                         case "0":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_0;
+                                                            keyValue = CorsairLedId.CLK_0;
                                                             break;
                                                         case "1":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_1;
+                                                            keyValue = CorsairLedId.CLK_1;
                                                             break;
                                                         case "2":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_2;
+                                                            keyValue = CorsairLedId.CLK_2;
                                                             break;
                                                         case "3":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_3;
+                                                            keyValue = CorsairLedId.CLK_3;
                                                             break;
                                                         case "4":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_4;
+                                                            keyValue = CorsairLedId.CLK_4;
                                                             break;
                                                         case "5":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_5;
+                                                            keyValue = CorsairLedId.CLK_5;
                                                             break;
                                                         case "6":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_6;
+                                                            keyValue = CorsairLedId.CLK_6;
                                                             break;
                                                         case "7":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_7;
+                                                            keyValue = CorsairLedId.CLK_7;
                                                             break;
                                                         case "8":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_8;
+                                                            keyValue = CorsairLedId.CLK_8;
                                                             break;
                                                         case "9":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_9;
+                                                            keyValue = CorsairLedId.CLK_9;
                                                             break;
                                                         case "Led_KeyboardLogo":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_Logo;
+                                                            keyValue = CorsairLedId.CLK_Logo;
                                                             break;
                                                         case "Led_KeyboardTopLogo2":
-                                                            keyValue = CorsairRGB.NET.Enums.CorsairLedId.K_Logo;
+                                                            keyValue = CorsairLedId.CLK_Logo;
                                                             break;
                                                         default:
                                                             if (key.Value.StartsWith("Led_Top"))
                                                                 key.Value = "G18";
-                                                            if(Enum.TryParse<CorsairLedId>("K_" + key.Value, out var corsairLedId)){
+                                                            if(Enum.TryParse<CorsairLedId>("CLK_" + key.Value, out var corsairLedId)){
                                                                 keyValue = corsairLedId;
                                                             }
                                                             else
@@ -763,283 +763,283 @@ namespace Aurora.Settings
         /// </summary>
         /// <param name="CorsairKey">The CorsairLedId to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys ToDeviceKeys(CorsairRGB.NET.Enums.CorsairLedId CorsairKey)
+        public static DeviceKeys ToDeviceKeys(CorsairLedId CorsairKey)
         {
             switch (CorsairKey)
             {
-                case (CorsairLedId.K_Logo):
+                case (CorsairLedId.CLK_Logo):
                     return DeviceKeys.LOGO;
-                case (CorsairLedId.K_Brightness):
+                case (CorsairLedId.CLK_Brightness):
                     return DeviceKeys.BRIGHTNESS_SWITCH;
-                case (CorsairLedId.K_WinLock):
+                case (CorsairLedId.CLK_WinLock):
                     return DeviceKeys.LOCK_SWITCH;
 
-                case (CorsairLedId.K_Mute):
+                case (CorsairLedId.CLK_Mute):
                     return DeviceKeys.VOLUME_MUTE;
-                case (CorsairLedId.K_VolumeUp):
+                case (CorsairLedId.CLK_VolumeUp):
                     return DeviceKeys.VOLUME_UP;
-                case (CorsairLedId.K_VolumeDown):
+                case (CorsairLedId.CLK_VolumeDown):
                     return DeviceKeys.VOLUME_DOWN;
-                case (CorsairLedId.K_Stop):
+                case (CorsairLedId.CLK_Stop):
                     return DeviceKeys.MEDIA_STOP;
-                case (CorsairLedId.K_PlayPause):
+                case (CorsairLedId.CLK_PlayPause):
                     return DeviceKeys.MEDIA_PLAY_PAUSE;
-                case (CorsairLedId.K_ScanPreviousTrack):
+                case (CorsairLedId.CLK_ScanPreviousTrack):
                     return DeviceKeys.MEDIA_PREVIOUS;
-                case (CorsairLedId.K_ScanNextTrack):
+                case (CorsairLedId.CLK_ScanNextTrack):
                     return DeviceKeys.MEDIA_NEXT;
 
-                case (CorsairLedId.K_Escape):
+                case (CorsairLedId.CLK_Escape):
                     return DeviceKeys.ESC;
-                case (CorsairLedId.K_F1):
+                case (CorsairLedId.CLK_F1):
                     return DeviceKeys.F1;
-                case (CorsairLedId.K_F2):
+                case (CorsairLedId.CLK_F2):
                     return DeviceKeys.F2;
-                case (CorsairLedId.K_F3):
+                case (CorsairLedId.CLK_F3):
                     return DeviceKeys.F3;
-                case (CorsairLedId.K_F4):
+                case (CorsairLedId.CLK_F4):
                     return DeviceKeys.F4;
-                case (CorsairLedId.K_F5):
+                case (CorsairLedId.CLK_F5):
                     return DeviceKeys.F5;
-                case (CorsairLedId.K_F6):
+                case (CorsairLedId.CLK_F6):
                     return DeviceKeys.F6;
-                case (CorsairLedId.K_F7):
+                case (CorsairLedId.CLK_F7):
                     return DeviceKeys.F7;
-                case (CorsairLedId.K_F8):
+                case (CorsairLedId.CLK_F8):
                     return DeviceKeys.F8;
-                case (CorsairLedId.K_F9):
+                case (CorsairLedId.CLK_F9):
                     return DeviceKeys.F9;
-                case (CorsairLedId.K_F10):
+                case (CorsairLedId.CLK_F10):
                     return DeviceKeys.F10;
-                case (CorsairLedId.K_F11):
+                case (CorsairLedId.CLK_F11):
                     return DeviceKeys.F11;
-                case (CorsairLedId.K_F12):
+                case (CorsairLedId.CLK_F12):
                     return DeviceKeys.F12;
-                case (CorsairLedId.K_PrintScreen):
+                case (CorsairLedId.CLK_PrintScreen):
                     return DeviceKeys.PRINT_SCREEN;
-                case (CorsairLedId.K_ScrollLock):
+                case (CorsairLedId.CLK_ScrollLock):
                     return DeviceKeys.SCROLL_LOCK;
-                case (CorsairLedId.K_PauseBreak):
+                case (CorsairLedId.CLK_PauseBreak):
                     return DeviceKeys.PAUSE_BREAK;
-                case (CorsairLedId.K_GraveAccentAndTilde):
+                case (CorsairLedId.CLK_GraveAccentAndTilde):
                     return DeviceKeys.TILDE;
-                case (CorsairLedId.K_1):
+                case (CorsairLedId.CLK_1):
                     return DeviceKeys.ONE;
-                case (CorsairLedId.K_2):
+                case (CorsairLedId.CLK_2):
                     return DeviceKeys.TWO;
-                case (CorsairLedId.K_3):
+                case (CorsairLedId.CLK_3):
                     return DeviceKeys.THREE;
-                case (CorsairLedId.K_4):
+                case (CorsairLedId.CLK_4):
                     return DeviceKeys.FOUR;
-                case (CorsairLedId.K_5):
+                case (CorsairLedId.CLK_5):
                     return DeviceKeys.FIVE;
-                case (CorsairLedId.K_6):
+                case (CorsairLedId.CLK_6):
                     return DeviceKeys.SIX;
-                case (CorsairLedId.K_7):
+                case (CorsairLedId.CLK_7):
                     return DeviceKeys.SEVEN;
-                case (CorsairLedId.K_8):
+                case (CorsairLedId.CLK_8):
                     return DeviceKeys.EIGHT;
-                case (CorsairLedId.K_9):
+                case (CorsairLedId.CLK_9):
                     return DeviceKeys.NINE;
-                case (CorsairLedId.K_0):
+                case (CorsairLedId.CLK_0):
                     return DeviceKeys.ZERO;
-                case (CorsairLedId.K_MinusAndUnderscore):
+                case (CorsairLedId.CLK_MinusAndUnderscore):
                     return DeviceKeys.MINUS;
-                case (CorsairLedId.K_EqualsAndPlus):
+                case (CorsairLedId.CLK_EqualsAndPlus):
                     return DeviceKeys.EQUALS;
-                case (CorsairLedId.K_Backspace):
+                case (CorsairLedId.CLK_Backspace):
                     return DeviceKeys.BACKSPACE;
-                case (CorsairLedId.K_Insert):
+                case (CorsairLedId.CLK_Insert):
                     return DeviceKeys.INSERT;
-                case (CorsairLedId.K_Home):
+                case (CorsairLedId.CLK_Home):
                     return DeviceKeys.HOME;
-                case (CorsairLedId.K_PageUp):
+                case (CorsairLedId.CLK_PageUp):
                     return DeviceKeys.PAGE_UP;
-                case (CorsairLedId.K_NumLock):
+                case (CorsairLedId.CLK_NumLock):
                     return DeviceKeys.NUM_LOCK;
-                case (CorsairLedId.K_KeypadSlash):
+                case (CorsairLedId.CLK_KeypadSlash):
                     return DeviceKeys.NUM_SLASH;
-                case (CorsairLedId.K_KeypadAsterisk):
+                case (CorsairLedId.CLK_KeypadAsterisk):
                     return DeviceKeys.NUM_ASTERISK;
-                case (CorsairLedId.K_KeypadMinus):
+                case (CorsairLedId.CLK_KeypadMinus):
                     return DeviceKeys.NUM_MINUS;
-                case (CorsairLedId.K_Tab):
+                case (CorsairLedId.CLK_Tab):
                     return DeviceKeys.TAB;
-                case (CorsairLedId.K_Q):
+                case (CorsairLedId.CLK_Q):
                     return DeviceKeys.Q;
-                case (CorsairLedId.K_W):
+                case (CorsairLedId.CLK_W):
                     return DeviceKeys.W;
-                case (CorsairLedId.K_E):
+                case (CorsairLedId.CLK_E):
                     return DeviceKeys.E;
-                case (CorsairLedId.K_R):
+                case (CorsairLedId.CLK_R):
                     return DeviceKeys.R;
-                case (CorsairLedId.K_T):
+                case (CorsairLedId.CLK_T):
                     return DeviceKeys.T;
-                case (CorsairLedId.K_Y):
+                case (CorsairLedId.CLK_Y):
                     return DeviceKeys.Y;
-                case (CorsairLedId.K_U):
+                case (CorsairLedId.CLK_U):
                     return DeviceKeys.U;
-                case (CorsairLedId.K_I):
+                case (CorsairLedId.CLK_I):
                     return DeviceKeys.I;
-                case (CorsairLedId.K_O):
+                case (CorsairLedId.CLK_O):
                     return DeviceKeys.O;
-                case (CorsairLedId.K_P):
+                case (CorsairLedId.CLK_P):
                     return DeviceKeys.P;
-                case (CorsairLedId.K_BracketLeft):
+                case (CorsairLedId.CLK_BracketLeft):
                     return DeviceKeys.OPEN_BRACKET;
-                case (CorsairLedId.K_BracketRight):
+                case (CorsairLedId.CLK_BracketRight):
                     return DeviceKeys.CLOSE_BRACKET;
-                case (CorsairLedId.K_Backslash):
+                case (CorsairLedId.CLK_Backslash):
                     return DeviceKeys.BACKSLASH;
-                case (CorsairLedId.K_Delete):
+                case (CorsairLedId.CLK_Delete):
                     return DeviceKeys.DELETE;
-                case (CorsairLedId.K_End):
+                case (CorsairLedId.CLK_End):
                     return DeviceKeys.END;
-                case (CorsairLedId.K_PageDown):
+                case (CorsairLedId.CLK_PageDown):
                     return DeviceKeys.PAGE_DOWN;
-                case (CorsairLedId.K_Keypad7):
+                case (CorsairLedId.CLK_Keypad7):
                     return DeviceKeys.NUM_SEVEN;
-                case (CorsairLedId.K_Keypad8):
+                case (CorsairLedId.CLK_Keypad8):
                     return DeviceKeys.NUM_EIGHT;
-                case (CorsairLedId.K_Keypad9):
+                case (CorsairLedId.CLK_Keypad9):
                     return DeviceKeys.NUM_NINE;
-                case (CorsairLedId.K_KeypadPlus):
+                case (CorsairLedId.CLK_KeypadPlus):
                     return DeviceKeys.NUM_PLUS;
-                case (CorsairLedId.K_CapsLock):
+                case (CorsairLedId.CLK_CapsLock):
                     return DeviceKeys.CAPS_LOCK;
-                case (CorsairLedId.K_A):
+                case (CorsairLedId.CLK_A):
                     return DeviceKeys.A;
-                case (CorsairLedId.K_S):
+                case (CorsairLedId.CLK_S):
                     return DeviceKeys.S;
-                case (CorsairLedId.K_D):
+                case (CorsairLedId.CLK_D):
                     return DeviceKeys.D;
-                case (CorsairLedId.K_F):
+                case (CorsairLedId.CLK_F):
                     return DeviceKeys.F;
-                case (CorsairLedId.K_G):
+                case (CorsairLedId.CLK_G):
                     return DeviceKeys.G;
-                case (CorsairLedId.K_H):
+                case (CorsairLedId.CLK_H):
                     return DeviceKeys.H;
-                case (CorsairLedId.K_J):
+                case (CorsairLedId.CLK_J):
                     return DeviceKeys.J;
-                case (CorsairLedId.K_K):
+                case (CorsairLedId.CLK_K):
                     return DeviceKeys.K;
-                case (CorsairLedId.K_L):
+                case (CorsairLedId.CLK_L):
                     return DeviceKeys.L;
-                case (CorsairLedId.K_SemicolonAndColon):
+                case (CorsairLedId.CLK_SemicolonAndColon):
                     return DeviceKeys.SEMICOLON;
-                case (CorsairLedId.K_ApostropheAndDoubleQuote):
+                case (CorsairLedId.CLK_ApostropheAndDoubleQuote):
                     return DeviceKeys.APOSTROPHE;
-                case (CorsairLedId.K_NonUsTilde):
+                case (CorsairLedId.CLK_NonUsTilde):
                     return DeviceKeys.HASHTAG;
-                case (CorsairLedId.K_Enter):
+                case (CorsairLedId.CLK_Enter):
                     return DeviceKeys.ENTER;
-                case (CorsairLedId.K_Keypad4):
+                case (CorsairLedId.CLK_Keypad4):
                     return DeviceKeys.NUM_FOUR;
-                case (CorsairLedId.K_Keypad5):
+                case (CorsairLedId.CLK_Keypad5):
                     return DeviceKeys.NUM_FIVE;
-                case (CorsairLedId.K_Keypad6):
+                case (CorsairLedId.CLK_Keypad6):
                     return DeviceKeys.NUM_SIX;
-                case (CorsairLedId.K_LeftShift):
+                case (CorsairLedId.CLK_LeftShift):
                     return DeviceKeys.LEFT_SHIFT;
-                case (CorsairLedId.K_NonUsBackslash):
+                case (CorsairLedId.CLK_NonUsBackslash):
                     return DeviceKeys.BACKSLASH_UK;
-                case (CorsairLedId.K_Z):
+                case (CorsairLedId.CLK_Z):
                     return DeviceKeys.Z;
-                case (CorsairLedId.K_X):
+                case (CorsairLedId.CLK_X):
                     return DeviceKeys.X;
-                case (CorsairLedId.K_C):
+                case (CorsairLedId.CLK_C):
                     return DeviceKeys.C;
-                case (CorsairLedId.K_V):
+                case (CorsairLedId.CLK_V):
                     return DeviceKeys.V;
-                case (CorsairLedId.K_B):
+                case (CorsairLedId.CLK_B):
                     return DeviceKeys.B;
-                case (CorsairLedId.K_N):
+                case (CorsairLedId.CLK_N):
                     return DeviceKeys.N;
-                case (CorsairLedId.K_M):
+                case (CorsairLedId.CLK_M):
                     return DeviceKeys.M;
-                case (CorsairLedId.K_CommaAndLessThan):
+                case (CorsairLedId.CLK_CommaAndLessThan):
                     return DeviceKeys.COMMA;
-                case (CorsairLedId.K_PeriodAndBiggerThan):
+                case (CorsairLedId.CLK_PeriodAndBiggerThan):
                     return DeviceKeys.PERIOD;
-                case (CorsairLedId.K_SlashAndQuestionMark):
+                case (CorsairLedId.CLK_SlashAndQuestionMark):
                     return DeviceKeys.FORWARD_SLASH;
-                case (CorsairLedId.K_RightShift):
+                case (CorsairLedId.CLK_RightShift):
                     return DeviceKeys.RIGHT_SHIFT;
-                case (CorsairLedId.K_UpArrow):
+                case (CorsairLedId.CLK_UpArrow):
                     return DeviceKeys.ARROW_UP;
-                case (CorsairLedId.K_Keypad1):
+                case (CorsairLedId.CLK_Keypad1):
                     return DeviceKeys.NUM_ONE;
-                case (CorsairLedId.K_Keypad2):
+                case (CorsairLedId.CLK_Keypad2):
                     return DeviceKeys.NUM_TWO;
-                case (CorsairLedId.K_Keypad3):
+                case (CorsairLedId.CLK_Keypad3):
                     return DeviceKeys.NUM_THREE;
-                case (CorsairLedId.K_KeypadEnter):
+                case (CorsairLedId.CLK_KeypadEnter):
                     return DeviceKeys.NUM_ENTER;
-                case (CorsairLedId.K_LeftCtrl):
+                case (CorsairLedId.CLK_LeftCtrl):
                     return DeviceKeys.LEFT_CONTROL;
-                case (CorsairLedId.K_LeftGui):
+                case (CorsairLedId.CLK_LeftGui):
                     return DeviceKeys.LEFT_WINDOWS;
-                case (CorsairLedId.K_LeftAlt):
+                case (CorsairLedId.CLK_LeftAlt):
                     return DeviceKeys.LEFT_ALT;
-                case (CorsairLedId.K_Space):
+                case (CorsairLedId.CLK_Space):
                     return DeviceKeys.SPACE;
-                case (CorsairLedId.K_RightAlt):
+                case (CorsairLedId.CLK_RightAlt):
                     return DeviceKeys.RIGHT_ALT;
-                case (CorsairLedId.K_RightGui):
+                case (CorsairLedId.CLK_RightGui):
                     return DeviceKeys.RIGHT_WINDOWS;
-                case (CorsairLedId.K_Application):
+                case (CorsairLedId.CLK_Application):
                     return DeviceKeys.APPLICATION_SELECT;
-                case (CorsairLedId.K_RightCtrl):
+                case (CorsairLedId.CLK_RightCtrl):
                     return DeviceKeys.RIGHT_CONTROL;
-                case (CorsairLedId.K_LeftArrow):
+                case (CorsairLedId.CLK_LeftArrow):
                     return DeviceKeys.ARROW_LEFT;
-                case (CorsairLedId.K_DownArrow):
+                case (CorsairLedId.CLK_DownArrow):
                     return DeviceKeys.ARROW_DOWN;
-                case (CorsairLedId.K_RightArrow):
+                case (CorsairLedId.CLK_RightArrow):
                     return DeviceKeys.ARROW_RIGHT;
-                case (CorsairLedId.K_Keypad0):
+                case (CorsairLedId.CLK_Keypad0):
                     return DeviceKeys.NUM_ZERO;
-                case (CorsairLedId.K_KeypadPeriodAndDelete):
+                case (CorsairLedId.CLK_KeypadPeriodAndDelete):
                     return DeviceKeys.NUM_PERIOD;
 
-                case (CorsairLedId.K_Fn):
+                case (CorsairLedId.CLK_Fn):
                     return DeviceKeys.FN_Key;
 
-                case (CorsairLedId.K_G1):
+                case (CorsairLedId.CLK_G1):
                     return DeviceKeys.G1;
-                case (CorsairLedId.K_G2):
+                case (CorsairLedId.CLK_G2):
                     return DeviceKeys.G2;
-                case (CorsairLedId.K_G3):
+                case (CorsairLedId.CLK_G3):
                     return DeviceKeys.G3;
-                case (CorsairLedId.K_G4):
+                case (CorsairLedId.CLK_G4):
                     return DeviceKeys.G4;
-                case (CorsairLedId.K_G5):
+                case (CorsairLedId.CLK_G5):
                     return DeviceKeys.G5;
-                case (CorsairLedId.K_G6):
+                case (CorsairLedId.CLK_G6):
                     return DeviceKeys.G6;
-                case (CorsairLedId.K_G7):
+                case (CorsairLedId.CLK_G7):
                     return DeviceKeys.G7;
-                case (CorsairLedId.K_G8):
+                case (CorsairLedId.CLK_G8):
                     return DeviceKeys.G8;
-                case (CorsairLedId.K_G9):
+                case (CorsairLedId.CLK_G9):
                     return DeviceKeys.G9;
-                case (CorsairLedId.K_G10):
+                case (CorsairLedId.CLK_G10):
                     return DeviceKeys.G10;
-                case (CorsairLedId.K_G11):
+                case (CorsairLedId.CLK_G11):
                     return DeviceKeys.G11;
-                case (CorsairLedId.K_G12):
+                case (CorsairLedId.CLK_G12):
                     return DeviceKeys.G12;
-                case (CorsairLedId.K_G13):
+                case (CorsairLedId.CLK_G13):
                     return DeviceKeys.G13;
-                case (CorsairLedId.K_G14):
+                case (CorsairLedId.CLK_G14):
                     return DeviceKeys.G14;
-                case (CorsairLedId.K_G15):
+                case (CorsairLedId.CLK_G15):
                     return DeviceKeys.G15;
-                case (CorsairLedId.K_G16):
+                case (CorsairLedId.CLK_G16):
                     return DeviceKeys.G16;
-                case (CorsairLedId.K_G17):
+                case (CorsairLedId.CLK_G17):
                     return DeviceKeys.G17;
-                case (CorsairLedId.K_G18):
+                case (CorsairLedId.CLK_G18):
                     return DeviceKeys.G18;
 
                 default:
