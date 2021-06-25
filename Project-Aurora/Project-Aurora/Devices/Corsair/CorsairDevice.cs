@@ -76,23 +76,6 @@ namespace Aurora.Devices.Corsair
             allDeviceUpdated.Dispose();
         }
 
-        internal bool LedBufferFinished(Mutex mutex)
-        {
-            if (Devices.Count != CUESDK.CorsairGetDeviceCount())
-            {
-                this.Reset();
-                return false;
-            }
-
-            deviceWaitCounter++;
-            if(deviceWaitCounter != Devices.Count)
-            {
-                return false;
-            }
-            CUESDK.CorsairSetLedsColorsFlushBuffer();
-            return true;
-            
-        }
         public override void DeviceLedUpdateFinished()
         {
             if (Devices.Count != CUESDK.CorsairGetDeviceCount())
@@ -102,7 +85,7 @@ namespace Aurora.Devices.Corsair
             }
 
             deviceWaitCounter++;
-            if (deviceWaitCounter != Devices.Count)
+            if (deviceWaitCounter != Devices.Where(d => d.id.ViewPort != null).ToList().Count)
             {
                 allDeviceUpdated.Wait();
                 return;
