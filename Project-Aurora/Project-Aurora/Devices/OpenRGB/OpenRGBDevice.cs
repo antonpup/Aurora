@@ -37,8 +37,8 @@ namespace Aurora.Devices.OpenRGB
 
                 for (var i = 0; i < _devices.Length; i++)
                 {
-                    OpenRGBAuroraDevice device = new OpenRGBAuroraDevice(_devices[i], this, i);
-                    devices.Add(device);
+                    OpenRGBAuroraDevice device = new OpenRGBAuroraDevice(_devices[i], i, _openRgb);
+                    RegisterDevice(device);
                 }
             }
             catch (Exception e)
@@ -67,20 +67,17 @@ namespace Aurora.Devices.OpenRGB
         private List<DeviceKey> KeyMapping = new List<DeviceKey>();
         private int DeviceIndex;
         static object update_lock = new object();
-        private OpenRGBDeviceConnector Connector;
-
-        protected Dictionary<DeviceKeys, object> LedMap = new Dictionary<DeviceKeys, object>();
-
+        private OpenRGBClient _openRgb;
         protected override string DeviceName => Device.Name;
 
         protected override AuroraDeviceType AuroraDeviceType => AuroraDeviceTypeConverter(Device.Type);
 
         public int Id { get; set; }
 
-        public OpenRGBAuroraDevice(OpenRGBDevice device, OpenRGBDeviceConnector connector, int deviceIndex)
+        public OpenRGBAuroraDevice(OpenRGBDevice device, int deviceIndex, OpenRGBClient openRgb)
         {
             Device = device;
-            Connector = connector;
+            _openRgb = openRgb;
             DeviceIndex = deviceIndex;
             DeviceColors = new OpenRGBColor[Device.Leds.Length];
             for (var ledIdx = 0; ledIdx < Device.Leds.Length; ledIdx++)
@@ -107,17 +104,7 @@ namespace Aurora.Devices.OpenRGB
                 }
             }
         }
-        protected override void DisconnectImpl()
-        {
-            try
-            {
-                Connector.UpdateLeds(DeviceIndex, DeviceColors);
-            }
-            catch
-            {
-                //we tried.
-            }
-        }
+
         protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
         {
 
@@ -138,7 +125,7 @@ namespace Aurora.Devices.OpenRGB
             {
                 lock (update_lock)
                 {
-                    Connector.UpdateLeds(DeviceIndex, DeviceColors);
+                    _openRgb.UpdateLeds(DeviceIndex, DeviceColors);
                 }
             }
             catch (Exception exc)

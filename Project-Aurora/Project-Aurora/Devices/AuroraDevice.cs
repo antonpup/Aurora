@@ -58,6 +58,7 @@ namespace Aurora.Devices
         private long LastUpdateTime = 0;
         private bool UpdateIsOngoing = false;
         private bool DeviceIsConnected = false;
+        private AuroraDeviceConnector connector;
 
         public UniqueDeviceId id = null;
         private VariableRegistry variableRegistry;
@@ -100,7 +101,7 @@ namespace Aurora.Devices
                     Watch.Stop();
                     LastUpdateTime = Watch.ElapsedMilliseconds;
 
-
+                    await Task.Run(() => connector?.DeviceLedUpdateFinished());
                     UpdateFinished.Invoke(this, new EventArgs());
                     UpdateIsOngoing = false;
                 }
@@ -115,13 +116,13 @@ namespace Aurora.Devices
         }
         public async void Connect()
         {
-            if (GetDeviceType() == AuroraDeviceType.Keyboard && Global.Configuration.DevicesDisableKeyboard ||
+            /*if (GetDeviceType() == AuroraDeviceType.Keyboard && Global.Configuration.DevicesDisableKeyboard ||
                 GetDeviceType() == AuroraDeviceType.Mouse && Global.Configuration.DevicesDisableMouse ||
                 GetDeviceType() == AuroraDeviceType.Headset && Global.Configuration.DevicesDisableHeadset)
             {
                 Disconnect();
             }
-            else
+            else*/
             {
                 try
                 {
@@ -191,6 +192,11 @@ namespace Aurora.Devices
         protected Color CorrectAlpha(Color clr) => Utils.ColorUtils.CorrectWithAlpha(clr);
 
         protected VariableRegistry GlobalVarRegistry => Global.Configuration.VarRegistry;
+
+        public void SetConnector(AuroraDeviceConnector connector)
+        {
+            this.connector = connector;
+        }
     }
 
     public abstract class AuroraKeyboardDevice : AuroraDevice

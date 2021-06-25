@@ -726,7 +726,8 @@ namespace Aurora.Settings
 
                 foreach ( var conf in DevicesConfig)
                 {
-                    conf.Value.Id.ViewPort = conf.Key;
+                    //conf.Value.Id.ViewPort = conf.Key;
+                    Global.dev_manager.RegisterViewPort(ref conf.Value.Id, conf.Key);
                     DevicesConfigChanged.Invoke(conf.Value);
                 }
                 
