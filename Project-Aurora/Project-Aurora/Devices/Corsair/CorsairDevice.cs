@@ -113,14 +113,20 @@ namespace Aurora.Devices.Corsair
 
         protected CorsairDeviceInfo deviceInfo;
         protected int deviceIndex;
-        protected Dictionary<DeviceKey, CorsairLedId> KeyMapping = new Dictionary<DeviceKey, CorsairLedId>();
+        //protected Dictionary<DeviceKey, CorsairLedId> KeyMapping = new Dictionary<DeviceKey, CorsairLedId>();
 
         public CorsairDevice(CorsairDeviceInfo deviceInfo, int index, AuroraDeviceType type = AuroraDeviceType.Unkown)
         {
             this.deviceInfo = deviceInfo;
             deviceIndex = index;
             this.type = type;
-            var possibleLedId = System.Enum.GetValues(typeof(CorsairLedId)).Cast<CorsairLedId>()
+            var ledPositions = CUESDK.CorsairGetLedPositionsByDeviceIndex(deviceIndex);
+
+            foreach (var pos in ledPositions.pLedPosition)
+            {
+                colors.Add(new CorsairLedColor { ledId = pos.ledId});
+            }
+            /*var possibleLedId = System.Enum.GetValues(typeof(CorsairLedId)).Cast<CorsairLedId>()
                                 .Where(l => l != CorsairLedId.CLI_Last)
                                 .Select(l => new CorsairLedColor { ledId = l }).ToArray();
 
@@ -140,11 +146,11 @@ namespace Aurora.Devices.Corsair
             if (KeyMapping.Count != deviceInfo.ledsCount)
             {
                 LogError("Not all of the led was discover");
-            }
+            }*/
         }
         protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
         {
-            for (int i = 0; i < deviceInfo.ledsCount; i++)
+            for (int i = 0; i < colors.Count; i++)
             {
                 if (composition.keyColors.TryGetValue(i, out Color clr))
                 {
