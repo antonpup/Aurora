@@ -60,7 +60,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bloody.NET" Version="1.0.4" />
-    <PackageReference Include="Colore" Version="5.2.0" />
+    <PackageReference Include="Colore" Version="6.0.0" />
     <PackageReference Include="CS-Script" Version="3.30.0" />
     <PackageReference Include="CUESDK.NET" Version="3.0.361.2" />
     <PackageReference Include="FastMember" Version="1.5.0" />

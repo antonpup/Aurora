@@ -1,5 +1,5 @@
-﻿using Corale.Colore.Razer.Keyboard;
-using Corale.Colore.Razer.Mouse;
+﻿using Colore.Effects.Keyboard;
+using Colore.Effects.Mouse;
 using System;
 using System.Collections.Generic;
 using System.Linq;
