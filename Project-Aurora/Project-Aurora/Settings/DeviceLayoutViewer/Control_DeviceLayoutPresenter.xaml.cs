@@ -61,9 +61,14 @@ namespace Aurora.Settings.DeviceLayoutViewer
             editor_canvas.Children.Add(new LayerEditor(editor_canvas));
 
             Global.devicesLayout.Load();
+            Loaded += OnLoad;
             //DeviceLayoutNumberChanged(this);
         }
 
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            UpdateLayoutsPosition();
+        }
         private void DevicesConfigChanged(DeviceConfig changedConf)
         {
             var layoutQuery = DeviceLayouts.Where(l => l.DeviceConfig == changedConf);
@@ -79,31 +84,19 @@ namespace Aurora.Settings.DeviceLayoutViewer
                 else
                 {
                     Control_DeviceLayout layout = new Control_DeviceLayout(changedConf);
-                    //layout.DeviceLayoutUpdated += Layout_DeviceLayoutUpdated;
-                    //layout.LayoutUpdated += (object sender, EventArgs e) => { UpdateLayoutsPosition(); };
-                    // el not loaded yet. Attach a wrapper handler that can be removed upon execution.
-                    EventHandler wrapperHandler = null;
-                    wrapperHandler = delegate
-                    {
-                        if (layout.KeycapLayouts.Count == 0)
-                            return;
-                        layout.LayoutUpdated -= wrapperHandler;
-                        UpdateLayoutsPosition();
-                    };
-                    layout.LayoutUpdated += wrapperHandler;
-                    layout.LayoutUpdated += wrapperHandler;
-                    ///layout.DeviceConfig.ConfigurationChanged += Layout_DeviceConfigUpdated;
                     layout.MouseDoubleClick += DeviceLayout_MouseDoubleClick;
                     layout.MouseDown += DeviceLayout_MouseDown;
                     layout.MouseMove += DeviceLayout_MouseMove;
                     layout.MouseUp += DeviceLayout_MouseUp;
                     Canvas.SetZIndex(layout, ZIndexCounter--);
                     DeviceLayouts.Add(layout);
+                    UpdateLayoutsPosition();
                 }
             }
             else
             {
                 DeviceLayouts.Remove(layoutQuery.First());
+                UpdateLayoutsPosition();
             }
         }
 

@@ -88,26 +88,42 @@ namespace Aurora.Settings.DeviceLayoutViewer
             KeyboardMap = KeycapLayouts.ToDictionary(k => k.GetKey(), k => i++, new DeviceKey.EqualityComparer());
             int layout_height = 10;
             int layout_width = 10;
+            int offset_x = int.MaxValue;
+            int offset_y = int.MaxValue;
             foreach (Control_Keycap key in KeycapLayouts)
             {
                 var keyConfig = key.Config;
                 if (keyConfig.Width + keyConfig.X > layout_width)
                     layout_width = (int)keyConfig.Width + keyConfig.X;
-
+                if (keyConfig.X < offset_x)
+                    offset_x = keyConfig.X;
                 if (keyConfig.Height + keyConfig.Y > layout_height)
                     layout_height = (int)keyConfig.Height + keyConfig.Y;
-
+                if (keyConfig.Y < offset_y)
+                    offset_y = keyConfig.Y;
             }
-
+            if(offset_x != 0 || offset_y != 0)
+            {
+                foreach (Control_Keycap key in KeycapLayouts)
+                {
+                    key.Config.PropertyChanged -= KeycapPositionChanged;
+                    key.Config.X -= offset_x;
+                    key.Config.Y -= offset_y;
+                    key.Config.PropertyChanged += KeycapPositionChanged;
+                }
+            }
             //Update size
-            DeviceWidth = layout_width;
-            DeviceHeight = layout_height;
-            this.Width = DeviceWidth;
-            this.Height = DeviceHeight;
+            DeviceWidth = layout_width - offset_x;
+            DeviceHeight = layout_height - offset_y;
             if (KeycapLayouts.Count == 0)
             {
                 this.Width = 450;
                 this.Height = 200;
+            }
+            else
+            {
+                this.Width = DeviceWidth;
+                this.Height = DeviceHeight;
             }
             UpdateLayout();
         }
@@ -151,19 +167,13 @@ namespace Aurora.Settings.DeviceLayoutViewer
         public void ConfigChanged()
         {
             BackgroundVisibility = DeviceConfig.InvisibleBackgroundEnabled;
-            Task.Run(() =>
+            DeviceLayout layout = new DeviceLayout(DeviceConfig);
+            Keys = layout.LoadLayout();
+            foreach (var key in Keys)
             {
-                Dispatcher.Invoke(() =>
-                {
-                    DeviceLayout layout = new DeviceLayout(DeviceConfig);
-                    Keys = layout.LoadLayout();
-                    foreach (var key in Keys)
-                    {
-                        key.Key.DeviceId = DeviceConfig.Id.ViewPort;
-                    }
-                    ResizeLayout();
-                });
-            });
+                key.Key.DeviceId = DeviceConfig.Id.ViewPort;
+            }
+            ResizeLayout();
         }
 
         private List<DeviceKeyConfiguration> _Keys = new List<DeviceKeyConfiguration>();

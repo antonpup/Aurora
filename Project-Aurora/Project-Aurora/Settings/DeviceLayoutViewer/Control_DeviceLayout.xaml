@@ -12,12 +12,12 @@
     <ItemsControl.Template>
         <ControlTemplate TargetType="{x:Type local:Control_DeviceLayout}">
             <Grid x:Name="container">
-                <Viewbox x:Name="device_viewbox" StretchDirection="Both" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                    <Border x:Name="device_border" Margin="5,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" CornerRadius="8" MinHeight="30" MinWidth="30">
+                <Viewbox x:Name="device_viewbox" StretchDirection="Both" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Border x:Name="device_border" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="8" MinHeight="30" MinWidth="30">
                         <Grid x:Name="devicecontainer" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" >
                             <ItemsPresenter/>
 
-                            <Grid Height="80" Width="400">
+                            <Grid Height="80" Width="80">
                                 <Grid.Style>
                                     <Style TargetType="{x:Type Grid}">
                                         <Setter Property="Visibility" Value="Collapsed" />
