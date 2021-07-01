@@ -699,15 +699,24 @@ namespace Aurora.Settings
                     dict.Create();
             }
         }
+        private int FindUnusedViewPort(int viewPort = 0)
+        {
+            if (DevicesConfig.Where(c => c.Value.Id.ViewPort == viewPort).Any())
+            {
+                return FindUnusedViewPort(viewPort + 1);
+            }
+            return viewPort;
+        }
         public void AddNewDeviceLayout()
         {
-            var devConf = new DeviceConfig(DevicesConfig.Count);
+            int viewPort = FindUnusedViewPort();
+            var devConf = new DeviceConfig(viewPort);
             if (devConf.Id.ViewPort == 0)
             {
                 devConf.Type = 0;
                 devConf.TypeChangeEnabled = false;
             }
-            DevicesConfig[DevicesConfig.Count] = devConf;
+            DevicesConfig[viewPort] = devConf;
             DevicesConfigChanged.Invoke(devConf);
             Save();
         }
@@ -731,7 +740,8 @@ namespace Aurora.Settings
 
                 foreach ( var conf in DevicesConfig)
                 {
-                    conf.Value.Id.ViewPort = conf.Key;
+                    //conf.Value.Id.ViewPort = conf.Key;
+                    Global.dev_manager.RegisterViewPort(ref conf.Value.Id, conf.Key);
                     DevicesConfigChanged.Invoke(conf.Value);
                 }
                 

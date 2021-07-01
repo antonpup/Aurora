@@ -58,7 +58,7 @@ namespace Aurora.Devices
     public abstract class AuroraDeviceConnector
     {
         //private Dictionary<string, AuroraDevice> Devices = new Dictionary<string, AuroraDevice>();
-        protected List<AuroraDevice> devices = new List<AuroraDevice>();
+        private List<AuroraDevice> devices = new List<AuroraDevice>();
         public IReadOnlyList<AuroraDevice> Devices => devices.AsReadOnly();
         private bool isInitialized;
         public event EventHandler NewSuccessfulInitiation;
@@ -91,7 +91,20 @@ namespace Aurora.Devices
             }
             
         }
+        protected void RegisterDevice(AuroraDevice device)
+        {
+            device.SetConnector(this);
+            RegisterDeviceId(device);
+            devices.Add(device);
+            Global.Configuration.VarRegistry.Combine(device.GetRegisteredVariables());
+            device.ConnectionHandler += ConnectionHandling;
+            device.UpdateFinished += DeviceUpdated;
+            device.Connect();
+        }
+        public virtual void DeviceLedUpdateFinished()
+        {
 
+        }
         /// <summary>
         /// Is called first. Initialize the device here
         /// </summary>
@@ -112,14 +125,6 @@ namespace Aurora.Devices
                     if (await Task.Run(() => InitializeImpl()))
                     {
                         DisconnectedDeviceCount = 0;
-                        foreach (var device in Devices)
-                        {
-                            Global.Configuration.VarRegistry.Combine(device.GetRegisteredVariables());
-                            device.ConnectionHandler += ConnectionHandling;
-                            device.UpdateFinished += DeviceUpdated;
-                            RegisterDeviceId(device);
-                            device.Connect();
-                        }
                         if (Devices.Any())
                         {
                             isInitialized = true;
