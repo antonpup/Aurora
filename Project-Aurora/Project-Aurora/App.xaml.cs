@@ -463,9 +463,12 @@ namespace Aurora
                 {
                     if (e.KeyDown)
                     {
-                        float brightness = Global.Configuration.GlobalBrightness;
-                        brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
-                        Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
+                        float brightness = Global.Configuration.KeyboardBrightness; // Changed Global to Keyboard (for OpenRGB devices)
+                        brightness += keys == Keys.VolumeUp ? 0.01f : -0.01f;
+//                        Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
+                        Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));      // Added Global Brightness for SDK Devices
+                        Global.Configuration.KeyboardBrightness = Math.Max(0f, Math.Min(1f, brightness));    // Added Keyboard for Brightness too (for OpenRGB devices
+                        Global.Configuration.PeripheralBrightness = Math.Max(0f, Math.Min(1f, brightness));  // Added Pheripheral for Brightness too (for Pheripheral devices)
 
                         ConfigManager.Save(Global.Configuration);
                     }
