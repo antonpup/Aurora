@@ -233,8 +233,29 @@
       "profile": "https://github.com/xQwexx",
       "contributions": [
         "code"
+        "question",
+        "maintenance",
+        "doc",
+        "design",        
+        "review"    
+        "ideas"
       ]
-    }
+    },
+    {
+      "login": "Predator4578",
+      "name": "Codename-Antares",
+      "avatar_url": "https://avatars.githubusercontent.com/Predator4578",
+      "profile": "https://github.com/Predator4578",
+      "contributions": [
+        "code"
+        "question",
+        "maintenance",
+        "doc",
+        "design",        
+        "review"    
+        "ideas"
+      ]
+    }    
   ],
   "contributorsPerLine": 7
 }
