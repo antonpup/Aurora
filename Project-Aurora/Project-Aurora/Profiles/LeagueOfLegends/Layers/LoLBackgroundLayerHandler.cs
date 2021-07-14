@@ -26,7 +26,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         {
             base.Default();
 
-            _ChampionColors = DefaultChampionColors.GetDictionary();
+            _ChampionColors = new Dictionary<Champion, Color>(DefaultChampionColors.Colors);
         }
     }
 
@@ -43,8 +43,10 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             var currentChampion = (gamestate as GSI.GameState_LoL)?.Player.Champion ?? Champion.None;
-            if (!Properties.ChampionColors.TryGetValue(currentChampion, out var currentColor))
-                currentColor = Color.Black;
+            if (!Properties.ChampionColors.ContainsKey(currentChampion))
+                Properties.ChampionColors.Add(currentChampion, DefaultChampionColors.Colors[currentChampion]);
+
+            var currentColor = Properties.ChampionColors[currentChampion];
 
             //if the player changes champion
             //or if the color is adjusted in the UI

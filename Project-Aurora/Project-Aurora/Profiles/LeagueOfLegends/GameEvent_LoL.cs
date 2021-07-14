@@ -129,9 +129,9 @@ namespace Aurora.Profiles.LeagueOfLegends
                     return;
                 //if we can't find it, skip
 
-                s.Player.Champion = EnumUtils.TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, Champion.None);
-                s.Player.SpellD = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellOne.displayName, true, SummonerSpell.Unknown);
-                s.Player.SpellF = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellTwo.displayName, true, SummonerSpell.Unknown);
+                s.Player.Champion = EnumUtils.TryParseOr(p.championName.Replace(" ", "").Replace("'", "").Replace(".", ""), true, Champion.Unknown);
+                s.Player.SpellD = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellOne.displayName.Replace(" ", ""), true, SummonerSpell.Unknown);
+                s.Player.SpellF = EnumUtils.TryParseOr(p.summonerSpells.summonerSpellTwo.displayName.Replace(" ", ""), true, SummonerSpell.Unknown);
                 s.Player.Team = EnumUtils.TryParseOr(p.team, true, Team.Unknown);
                 s.Player.Position = EnumUtils.TryParseOr(p.position, true, Position.Unknown);
 

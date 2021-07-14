@@ -37,6 +37,9 @@ namespace Aurora.Profiles
 
             foreach (Layer lyr in settings.Layers)
                 lyr.SetGameState(_game_state);
+
+            foreach (Layer lyr in settings.OverlayLayers)
+                lyr.SetGameState(_game_state);
         }
 
         public override void ResetGameState()
