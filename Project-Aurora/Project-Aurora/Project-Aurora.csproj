@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
@@ -85,7 +85,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
     <PackageReference Include="TaskScheduler" Version="2.8.18" />
-    <PackageReference Include="Vulcan.NET" Version="1.1.3" />
+    <PackageReference Include="Vulcan.NET" Version="2.0.0" />
     <PackageReference Include="Wooting.NET" Version="1.2.0" />
     <PackageReference Include="Xceed.Wpf.Toolkit" Version="2.9.15603.14400" />
     <PackageReference Include="YeeLightAPI_SnakePin" Version="0.0.6" />
