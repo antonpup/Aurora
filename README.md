@@ -7,7 +7,7 @@
 
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
-Have a look at our [website](https://www.project-aurora.com/) for a better look at Aurora and its features!
+Have a look at our [website](https://www.project-aurora.com/#) for a better look at Aurora and its features!
 
 You can find the list of **Supported Games and Devices** [here](https://github.com/antonpup/Aurora/wiki/Supported-Games-&-Devices)
 
