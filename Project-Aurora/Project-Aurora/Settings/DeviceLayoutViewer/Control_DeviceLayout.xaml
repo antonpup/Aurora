@@ -17,18 +17,18 @@
                         <Grid x:Name="devicecontainer" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" >
                             <ItemsPresenter/>
 
-                            <Grid Height="80" Width="80">
+                            <Grid Height="200" Width="450">
                                 <Grid.Style>
                                     <Style TargetType="{x:Type Grid}">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Count}" Value="0">
+                                            <DataTrigger Binding="{Binding KeycapLayouts.Count}" Value="0">
                                                 <Setter Property="Visibility" Value="Visible" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Grid.Style>
-                                <TextBlock TextAlignment="Center" Foreground="Red" FontSize="20" FontWeight="Bold">
+                                <TextBlock TextAlignment="Center" Foreground="Red" FontSize="20" FontWeight="Bold" VerticalAlignment="Center">
                                     No Device selected <LineBreak/>
                                     Please doubleclick on this box
                                 </TextBlock>
