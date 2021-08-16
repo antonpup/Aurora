@@ -69,7 +69,7 @@
     <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
     <PackageReference Include="IronPython" Version="2.7.8.1" />
     <PackageReference Include="JsonSubTypes" Version="1.7.0" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.7" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.8" />
     <PackageReference Include="MouseKeyHook" Version="5.6.0" />
     <PackageReference Include="NAudio" Version="1.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
@@ -85,7 +85,7 @@
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
     <PackageReference Include="TaskScheduler" Version="2.8.18" />
-    <PackageReference Include="Vulcan.NET" Version="2.0.0" />
+    <PackageReference Include="Vulcan.NET" Version="2.2.0" />
     <PackageReference Include="Wooting.NET" Version="1.2.0" />
     <PackageReference Include="Xceed.Wpf.Toolkit" Version="2.9.15603.14400" />
     <PackageReference Include="YeeLightAPI_SnakePin" Version="0.0.6" />
