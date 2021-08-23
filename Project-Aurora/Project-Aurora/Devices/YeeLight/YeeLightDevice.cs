@@ -19,11 +19,18 @@ namespace Aurora.Devices.YeeLight
 {
     public class YeeLightDevice : DefaultDevice
     {
+        private static readonly object syncLock = new object();
+
         public override string DeviceName => "YeeLight";
 
         private const int lightListenPort = 55443;
         private readonly Stopwatch updateDelayStopWatch = new Stopwatch();
         private List<YeeLightAPI.YeeLightDevice> lights = new List<YeeLightAPI.YeeLightDevice>();
+
+        protected override string DeviceInfo => String.Join(
+            ", ",
+            lights.Select(light => light.GetLightIPAddressAndPort().ipAddress + ":" + light.GetLightIPAddressAndPort().port + (light.IsMusicMode() ? "(m)" : ""))
+        );
 
         public override bool Initialize()
         {
@@ -100,26 +107,63 @@ namespace Aurora.Devices.YeeLight
             }
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        private Color previousColor = Color.Empty;
+        private int whiteCounter = 10;
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            // Reduce sending based on user config
             if (!updateDelayStopWatch.IsRunning)
             {
                 updateDelayStopWatch.Start();
             }
 
-            if (updateDelayStopWatch.ElapsedMilliseconds <= Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"))
+            var sendDelay = Math.Max(5, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"));
+            if (updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
                 return false;
 
             var targetKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             if (!keyColors.TryGetValue(targetKey, out var targetColor))
                 return false;
+            if (previousColor.Equals(targetColor))
+                if (targetColor.R == targetColor.G && targetColor.G == targetColor.B)
+                {
+                    if (whiteCounter == 0)
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
 
-            if ((targetColor.R + targetColor.G + targetColor.B) > 0)
+            whiteCounter--;
+            lights.ForEach(x =>
             {
-                lights.ForEach(x => x.SetColor(targetColor.R, targetColor.G, targetColor.B));
-                updateDelayStopWatch.Restart();
-            }
+                if (targetColor.R == targetColor.G && targetColor.G == targetColor.B)
+                {
+                    if (whiteCounter <= 0)
+                        x.SetTemperature(6500);
+                    else
+                    {
+                        x.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                    }
+                    x.SetBrightness(targetColor.R * 100 / 255);
+                }
+                else if ((targetColor.R + targetColor.G + targetColor.B) > 0)
+                {
+                    x.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                    x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, targetColor.B)) * 100 / 255);
+                    whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
+                }
+                else
+                {
+                    x.SetBrightness(0);
+                    whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
+                }
+            });
+            previousColor = targetColor;
+            updateDelayStopWatch.Restart();
+
 
             return true;
         }
@@ -132,6 +176,7 @@ namespace Aurora.Devices.YeeLight
             variableRegistry.Register($"{DeviceName}_send_delay", 35, "Send delay (ms)");
             variableRegistry.Register($"{DeviceName}_IP", "", "YeeLight IP(s)", null, null, "Comma separated IPv4 or IPv6 addresses.");
             variableRegistry.Register($"{DeviceName}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and empty out the IP field to auto-discover lights.");
+            variableRegistry.Register($"{DeviceName}_white_delay", 10, "White mode delay(ticks)", null, null, "How many ticks should happen before white mode is activated.");
         }
 
         private void ConnectNewDevice(IPAddress lightIP)

@@ -17,6 +17,9 @@ namespace Aurora.EffectsEngine.Animations
         public PointF EndPoint { get { return _end_point; } }
         public Color EndColor { get { return _end_color; } }
 
+        PointF _scaledStartPoint;
+        PointF _scaledEndPoint;
+
         public AnimationFrame SetStartPoint(PointF startPoint)
         {
             _start_point = startPoint;
@@ -111,13 +114,20 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        protected override void virtUpdate()
+        {
+            base.virtUpdate();
+
+            _scaledStartPoint = new PointF((_start_point.X * Scale) + Offset.X, (_start_point.Y * Scale) + Offset.Y);
+            _scaledEndPoint = new PointF((_end_point.X * Scale) + Offset.X, (_end_point.Y * Scale) + Offset.Y);
+
+            _rotatePoint = _scaledStartPoint;
+        }
+
+        public override void Draw(Graphics g)
         {
             if (_start_point.Equals(_end_point))
                 return;
-
-            PointF _scaledStartPoint = new PointF((_start_point.X * scale) + offset.X, (_start_point.Y * scale) + offset.Y);
-            PointF _scaledEndPoint = new PointF((_end_point.X * scale) + offset.X, (_end_point.Y * scale) + offset.Y);
 
             if (_pen == null || _invalidated)
             {
@@ -128,13 +138,10 @@ namespace Aurora.EffectsEngine.Animations
                 _invalidated = false;
             }
 
-            _pen.ScaleTransform(scale, scale);
-
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, _scaledStartPoint, MatrixOrder.Append);
+            _pen.ScaleTransform(Scale, Scale);
 
             Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
+            g.Transform = _transformationMatrix;
             g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
             g.Transform = originalMatrix;
         }

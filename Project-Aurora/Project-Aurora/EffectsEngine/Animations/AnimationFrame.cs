@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -70,6 +71,53 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal float _angle = 0.0f;
 
+
+        private float _scale = 1.0f;
+        private PointF _offset = default(PointF);
+        protected PointF _rotatePoint;
+
+        protected RectangleF _scaledDimension;
+        internal Matrix _transformationMatrix;
+
+        public float Scale
+        {
+            get { return _scale; }
+            set
+            {
+                if (_scale != value)
+                {
+                    _scale = value;
+                    updateMatrices();
+                }
+            }
+        }
+        public PointF Offset
+        {
+            get { return _offset; }
+            set
+            {
+                if (_offset != value)
+                {
+                    _offset = value;
+                    updateMatrices();
+                }
+            }
+        }
+        public PointF RotatePoint
+        {
+            get { return _rotatePoint; }
+            set
+            {
+                if (_rotatePoint != value)
+                {
+                    _rotatePoint = value;
+                    updateMatrices();
+                }
+            }
+        }
+        public Matrix TransformationMatrix { get { return _transformationMatrix; } }
+        public RectangleF ScaledDimension { get { return _scaledDimension; } }
+
         public Color Color { get { return _color; } }
         public RectangleF Dimension { get { return _dimension; } }
         public int Width { get { return _width; } }
@@ -83,14 +131,17 @@ namespace Aurora.EffectsEngine.Animations
             _dimension = new RectangleF();
             _width = 1;
             _duration = 0.0f;
+            updateMatrices();
         }
 
         public AnimationFrame(Rectangle dimension, Color color, int width = 1, float duration = 0.0f)
         {
+
             _color = color;
             _dimension = dimension;
             _width = width;
             _duration = duration;
+            updateMatrices();
         }
 
         public AnimationFrame(RectangleF dimension, Color color, int width = 1, float duration = 0.0f)
@@ -99,6 +150,39 @@ namespace Aurora.EffectsEngine.Animations
             _dimension = dimension;
             _width = width;
             _duration = duration;
+            updateMatrices();
+        }
+
+        protected virtual void virtUpdate()
+        {
+
+        }
+
+        void updateMatrices()
+        {
+            virtUpdate();
+            _transformationMatrix = new Matrix();
+
+
+            _scaledDimension = new RectangleF(_dimension.X * _scale, _dimension.Y * _scale, _dimension.Width * _scale, _dimension.Height * _scale);
+            _scaledDimension.Offset(_offset);
+
+            if(_rotatePoint == null) 
+                _rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
+
+            if(_rotatePoint != null)
+                _transformationMatrix.RotateAt(-_angle, _rotatePoint, MatrixOrder.Append);
+            _transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
+        }
+
+        public void setOffsetAndScale(PointF offset, float scale)
+        {
+            if(_offset != offset || _scale != scale)
+            {
+                _offset = offset;
+                _scale = scale;
+                updateMatrices();
+            }
         }
 
         public AnimationFrame SetColor(Color color)
@@ -151,7 +235,7 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
-        public virtual void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF)) { }
+        public virtual void Draw(Graphics g) { }
         public virtual AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
             amount = GetTransitionValue(amount);

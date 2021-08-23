@@ -34,7 +34,7 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Graphics g)
         {
             if (_pen == null || _invalidated)
             {
@@ -45,18 +45,10 @@ namespace Aurora.EffectsEngine.Animations
                 _invalidated = false;
             }
 
-            _pen.ScaleTransform(scale, scale);
-            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
-            _scaledDimension.Offset(offset);
-
-            PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
-
-            Matrix transformationMatrix = new Matrix();
-            transformationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
-            transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
+            _pen.ScaleTransform(Scale, Scale);
 
             Matrix originalMatrix = g.Transform;
-            g.Transform = transformationMatrix;
+            g.Transform = _transformationMatrix;
             g.DrawRectangle(_pen, _scaledDimension.X, _scaledDimension.Y, _scaledDimension.Width, _scaledDimension.Height);
             g.Transform = originalMatrix;
 

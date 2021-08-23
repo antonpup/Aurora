@@ -25,19 +25,10 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush = brush;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Graphics g)
         {
-            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
-            _scaledDimension.Offset(offset);
-
-            PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
-
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
-            rotationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
-
             Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
+            g.Transform = _transformationMatrix;
             g.FillRectangle(_gradientBrush.GetDrawingBrush(), _scaledDimension);
             g.Transform = originalMatrix;
         }

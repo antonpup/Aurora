@@ -68,14 +68,6 @@ namespace Aurora.Devices
         void Reset();
 
         /// <summary>
-        /// Updates the device with a specified color arrangement.
-        /// </summary>
-        /// <param name="keyColors">A dictionary of DeviceKeys their corresponding Colors</param>
-        /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
-        /// <returns></returns>
-        bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
-
-        /// <summary>
         /// Updates the device with a specified color composition.
         /// </summary>
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>

@@ -48,8 +48,7 @@ namespace Aurora.Devices.Asus
             while (!colorQueue.IsEmpty)
                 colorQueue.TryDequeue(out _);
 
-            // queue a clone of the colors
-            colorQueue.Enqueue(new Dictionary<DeviceKeys, Color>(colors));
+            colorQueue.Enqueue(colors);
         }
 
         public void Start()

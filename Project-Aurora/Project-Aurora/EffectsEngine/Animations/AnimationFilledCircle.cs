@@ -27,7 +27,14 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        protected override void virtUpdate()
+        {
+            base.virtUpdate();
+
+            _rotatePoint = new PointF(_center.X * Scale, _center.Y * Scale);
+        }
+
+        public override void Draw(Graphics g)
         {
             if (_brush == null || _invalidated)
             {
@@ -35,14 +42,8 @@ namespace Aurora.EffectsEngine.Animations
                 _invalidated = false;
             }
 
-            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
-            _scaledDimension.Offset(offset);
-
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
-
             Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
+            g.Transform = _transformationMatrix;
             g.FillEllipse(_brush, _scaledDimension);
             g.Transform = originalMatrix;
         }

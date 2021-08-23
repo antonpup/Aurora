@@ -13,10 +13,6 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         private Dictionary<DeviceKeys, Color> _BitmapColors = new Dictionary<DeviceKeys, Color>();
 
-        public Dictionary<DeviceKeys, Color> BitmapColors {
-            get { return new Dictionary<DeviceKeys, Color>(_BitmapColors); }
-        }
-
         public AnimationFrame SetKeyColor(DeviceKeys Key, Color Color)
         {
             if (_BitmapColors.ContainsKey(Key))
@@ -30,14 +26,16 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationFrame SetBitmapColors(Dictionary<DeviceKeys, Color> ColorMapping)
         {
             if(ColorMapping != null)
+            {
+                _BitmapColors.Clear();
                 _BitmapColors = ColorMapping;
+            }
 
             return this;
         }
 
         public AnimationManualColorFrame()
         {
-            _BitmapColors = new Dictionary<DeviceKeys, Color>();
             _duration = 0.0f;
         }
 
@@ -48,7 +46,7 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Graphics g)
         {
             // Offset has no effect on this type of animation frame
             if (_brush == null || _invalidated)
@@ -61,7 +59,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 var region = Effects.GetBitmappingFromDeviceKey(kvp.Key);
 
-                g.FillRectangle(new SolidBrush(kvp.Value), region.Left * scale, region.Top * scale, region.Width * scale, region.Height * scale);
+                g.FillRectangle(new SolidBrush(kvp.Value), region.Left * Scale, region.Top * Scale, region.Width * Scale, region.Height * Scale);
             }
         }
 
@@ -72,7 +70,9 @@ namespace Aurora.EffectsEngine.Animations
                 throw new FormatException("Cannot blend with another type");
             }
 
-            Dictionary<DeviceKeys, Color> _combinedBitmapColors = new Dictionary<DeviceKeys, Color>();
+
+            AnimationManualColorFrame newAnim = new AnimationManualColorFrame();
+            Dictionary<DeviceKeys, Color> _combinedBitmapColors = newAnim._BitmapColors;
             amount = GetTransitionValue(amount);
 
             foreach (var kvp in _BitmapColors)
@@ -94,9 +94,6 @@ namespace Aurora.EffectsEngine.Animations
                     _combinedBitmapColors.Add(kvp.Key, Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, amount));
                 }
             }
-
-            AnimationManualColorFrame newAnim = new AnimationManualColorFrame();
-            newAnim._BitmapColors = _combinedBitmapColors;
 
             return newAnim;
         }

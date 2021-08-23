@@ -39,12 +39,13 @@ namespace Aurora.Settings.Layers
             return new Control_PercentGradientLayer(this);
         }
 
+        private readonly EffectLayer effectLayer = new EffectLayer();
         public override EffectLayer Render(IGameState state)
         {
             double value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
             double maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 
-            return new EffectLayer().PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
+            return effectLayer.PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
         }
 
         public override void SetApplication(Application profile)

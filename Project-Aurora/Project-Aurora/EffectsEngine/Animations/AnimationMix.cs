@@ -83,11 +83,10 @@ namespace Aurora.EffectsEngine.Animations
 
         public float GetDuration()
         {
-            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
             float current_duration, return_val = 0.0f;
             
-            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
             {
                 current_duration = track.Value.GetShift() + track.Value.AnimationDuration;
                 if (current_duration > return_val)
@@ -99,16 +98,14 @@ namespace Aurora.EffectsEngine.Animations
 
         public Dictionary<string, AnimationTrack> GetTracks()
         {
-            return new Dictionary<string, AnimationTrack>(_tracks);
+            return _tracks;
         }
 
         public bool AnyActiveTracksAt(float time)
         {
-            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
-
             bool return_val = false;
 
-            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
             {
                 if (track.Value.ContainsAnimationAt(time))
                     return_val = true;
@@ -119,26 +116,49 @@ namespace Aurora.EffectsEngine.Animations
 
         public void Draw(Graphics g, float time, float scale = 1.0f, PointF offset = default(PointF))
         {
-            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
-
-            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            if (_automatically_remove_complete)
             {
-                if (track.Value.ContainsAnimationAt(time))
-                {
-                    try
-                    {
-                        track.Value.GetFrame(time).Draw(g, scale, offset);
-                    }
-                    catch (Exception exc)
-                    {
-                        System.Console.WriteLine();
-                    }
+                Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
-                }
-                else
+                foreach (KeyValuePair<string, AnimationTrack> track in _local)
                 {
-                    if (_automatically_remove_complete)
+                    if (track.Value.ContainsAnimationAt(time))
+                    {
+                        try
+                        {
+                            var frame = track.Value.GetFrame(time);
+                            frame.setOffsetAndScale(offset, scale);
+                            frame.Draw(g);
+                        }
+                        catch (Exception exc)
+                        {
+                            System.Console.WriteLine();
+                        }
+
+                    }
+                    else
+                    {
                         RemoveTrack(track.Key);
+                    }
+                }
+            }else
+            {
+                foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
+                {
+                    if (track.Value.ContainsAnimationAt(time))
+                    {
+                        try
+                        {
+                            var frame = track.Value.GetFrame(time);
+                            frame.setOffsetAndScale(offset, scale);
+                            frame.Draw(g);
+                        }
+                        catch (Exception exc)
+                        {
+                            System.Console.WriteLine();
+                        }
+
+                    }
                 }
             }
         }

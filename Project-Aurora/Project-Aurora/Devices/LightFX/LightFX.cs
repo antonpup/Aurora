@@ -320,19 +320,14 @@ namespace Aurora.Devices.LightFX
 
         bool NumLock = (((ushort)LightFXSDK.GetKeyState(0x90)) & 0xffff) != 0;
 
+        private readonly List<Color> leftColor = new List<Color>();
+        private readonly List<Color> midleftColor = new List<Color>();
+        private readonly List<Color> midRightColor = new List<Color>();
+        private readonly List<Color> rightColor = new List<Color>();
+        private readonly List<Color> numpadColor = new List<Color>();
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
-            List<Color> leftColor = new List<Color>();
-
-            List<Color> midleftColor = new List<Color>();
-
-
-            List<Color> midRightColor = new List<Color>();
-
-            List<Color> rightColor = new List<Color>();
-
-            List<Color> numpadColor = new List<Color>();
 
 
             try {
@@ -435,7 +430,7 @@ namespace Aurora.Devices.LightFX
                 if (NumLock) {
                     midRightColor.AddRange(rightColor);
                     rightColor.Clear();
-                    rightColor = numpadColor;
+                    rightColor.AddRange(numpadColor);
                 }
                 if (leftColor.Any()) {
                     var mostUsed = leftColor.GroupBy(item => item)

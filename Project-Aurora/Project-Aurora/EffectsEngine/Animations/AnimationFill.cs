@@ -14,7 +14,7 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Graphics g)
         {
             // Offset has no effect on this. I think.
             if (_brush == null || _invalidated)

@@ -184,7 +184,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public Dictionary<float, AnimationFrame> GetAnimations()
         {
-            return new Dictionary<float, AnimationFrame>(_animations);
+            return _animations;
         }
 
         private Tuple<float, float> GetCloseValues(float time)

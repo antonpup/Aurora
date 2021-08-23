@@ -31,14 +31,20 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
         }
 
+        private bool working = false;
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            newFrame = false;
-            lock(actionLock)
-            {
-                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
-                currentComp.Item2);
-            }
+            if (!working)
+                lock (actionLock)
+                {
+                    if (!working)
+                    {
+                        working = true;
+                        newFrame = false;
+                        Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+                        working = false;
+                    }
+                }
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
@@ -57,8 +63,8 @@ namespace Aurora.Devices
 
     public class DeviceManager
     {
-        private const int RETRY_INTERVAL = 10000;
-        private const int RETRY_ATTEMPTS = 5;
+        private const int RETRY_INTERVAL = 4000;
+        private const int RETRY_ATTEMPTS = 8;
         private bool _InitializeOnceAllowed;
         private bool suspended;
         private bool resumed;

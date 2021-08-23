@@ -54,7 +54,7 @@ namespace Aurora.Devices.CoolerMaster
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             foreach (var (dev, colors) in InitializedDevices)
             {

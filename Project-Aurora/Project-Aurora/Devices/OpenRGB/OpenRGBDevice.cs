@@ -83,7 +83,7 @@ namespace Aurora.Devices.OpenRGB
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;

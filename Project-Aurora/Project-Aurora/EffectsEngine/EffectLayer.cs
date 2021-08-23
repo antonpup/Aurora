@@ -429,7 +429,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer Set(Devices.DeviceKeys[] keys, Color color)
         {
-            foreach(var key in keys)
+            foreach (var key in keys)
                 SetOneKey(key, color);
 
             return this;
@@ -504,7 +504,8 @@ namespace Aurora.EffectsEngine
         /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
         /// <param name="sourceRegion">The source region of the rendered content. This is used when calculating the transformation matrix, so that this
         /// rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
-        public EffectLayer DrawTransformed(KeySequence sequence, Action<Matrix> configureMatrix, Action<Graphics> render, RectangleF sourceRegion) {
+        public EffectLayer DrawTransformed(KeySequence sequence, Action<Matrix> configureMatrix, Action<Graphics> render, RectangleF sourceRegion)
+        {
             // The matrix represents the transformation that will be applied to the rendered content
             var matrix = new Matrix();
 
@@ -514,7 +515,8 @@ namespace Aurora.EffectsEngine
             var boundsRaw = sequence.GetAffectedRegion();
             var bounds = new RectangleF((int)Math.Round(boundsRaw.X), (int)Math.Round(boundsRaw.Y), (int)boundsRaw.Width, (int)boundsRaw.Height);
 
-            using (var gfx = Graphics.FromImage(colormap)) {
+            using (var gfx = Graphics.FromImage(colormap))
+            {
 
                 // First, calculate the scaling required to transform the sourceRect's size into the bounds' size
                 float sx = bounds.Width / sourceRegion.Width, sy = bounds.Height / sourceRegion.Height;
@@ -840,12 +842,15 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            if ((percentEffectType == PercentEffectType.Highest_Key || percentEffectType == PercentEffectType.Highest_Key_Blend) && keys.Length > 0) {
+            if ((percentEffectType == PercentEffectType.Highest_Key || percentEffectType == PercentEffectType.Highest_Key_Blend) && keys.Length > 0)
+            {
                 var activeKey = (int)Math.Ceiling(value / (total / keys.Length)) - 1;
                 var col = percentEffectType == PercentEffectType.Highest_Key ? foregroundColor : Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total);
                 SetOneKey(keys[Math.Min(Math.Max(activeKey, 0), keys.Length - 1)], col);
 
-            } else {
+            }
+            else
+            {
                 for (int i = 0; i < keys.Count(); i++)
                 {
                     Devices.DeviceKeys current_key = keys[i];
@@ -908,31 +913,39 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            for (int i = 0; i < keys.Count(); i++)
+            switch (percentEffectType)
             {
-                Devices.DeviceKeys current_key = keys[i];
-
-                switch (percentEffectType)
-                {
-                    case (PercentEffectType.AllAtOnce):
+                case (PercentEffectType.AllAtOnce):
+                    for (int i = 0; i < keys.Count(); i++)
+                    {
+                        Devices.DeviceKeys current_key = keys[i];
                         SetOneKey(current_key, spectrum.GetColorAt((float)progress_total, 1.0f, flash_amount));
-                        break;
-                    case (PercentEffectType.Progressive_Gradual):
+                    }
+                    break;
+                case (PercentEffectType.Progressive_Gradual):
+                    for (int i = 0; i < keys.Count(); i++)
+                    {
+                        Devices.DeviceKeys current_key = keys[i];
                         if (i == (int)progress)
                         {
                             double percent = (double)progress - i;
-                            SetOneKey(current_key,
+                            SetOneKey(
+                                current_key,
                                 Utils.ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount), percent)
-                                );
+                            );
                         }
                         else if (i < (int)progress)
                             SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
-                        break;
-                    default:
+                    }
+                    break;
+                default:
+                    for (int i = 0; i < keys.Count(); i++)
+                    {
+                        Devices.DeviceKeys current_key = keys[i];
                         if (i < (int)progress)
                             SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
-                        break;
-                }
+                    }
+                    break;
             }
 
             return this;
@@ -960,9 +973,9 @@ namespace Aurora.EffectsEngine
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
-                    if(!blink_background)
+                    if (!blink_background)
                         foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
-                    if(blink_background)
+                    if (blink_background)
                         backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
@@ -1075,7 +1088,7 @@ namespace Aurora.EffectsEngine
 
                     g.Transform = myMatrix;
                     LinearGradientBrush brush = spectrum.ToLinearGradient(width, 0, x_pos, 0, flash_amount);
-					brush.WrapMode = WrapMode.Tile;
+                    brush.WrapMode = WrapMode.Tile;
                     g.FillRectangle(brush, rect);
                 }
 
@@ -1198,7 +1211,7 @@ namespace Aurora.EffectsEngine
             int alpha_mask_stride = srcData_alpha.Stride;
             IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
 
-            
+
             BitmapData srcData = colormap.LockBits(
                 new Rectangle(0, 0, colormap.Width, colormap.Height),
                 ImageLockMode.ReadWrite,
