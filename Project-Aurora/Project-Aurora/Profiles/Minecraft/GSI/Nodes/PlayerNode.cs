@@ -20,6 +20,7 @@ namespace Aurora.Profiles.Minecraft.GSI.Nodes {
 
         public int ExperienceLevel;
         public float Experience;
+        [AutoJsonIgnore]
         public float ExperienceMax = 1;
 
         public int FoodLevel;
