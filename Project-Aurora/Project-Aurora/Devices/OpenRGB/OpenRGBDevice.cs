@@ -1,15 +1,11 @@
 ﻿using Aurora.Settings;
 using OpenRGB.NET;
-using OpenRGB.NET.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
 using OpenRGBDevice = OpenRGB.NET.Models.Device;
@@ -21,12 +17,10 @@ namespace Aurora.Devices.OpenRGB
     public class OpenRGBAuroraDevice : DefaultDevice
     {
         public override string DeviceName => "OpenRGB";
-        protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.Name));
+        protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.OrgbDevice.Name));
 
         private OpenRGBClient _openRgb;
-        private OpenRGBDevice[] _devices;
-        private OpenRGBColor[][] _deviceColors;
-        private List<DK>[] _keyMappings;
+        private List<HelperOpenRGBDevice> _devices;
 
         public override bool Initialize()
         {
@@ -35,79 +29,24 @@ namespace Aurora.Devices.OpenRGB
 
             try
             {
-                _openRgb = new OpenRGBClient(name: "Aurora");
+                var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
+                var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
+                var usePeriphLogo = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_use_periph_logo");
+                var ignoreDirectMode = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_ignore_direct");
+
+                _openRgb = new OpenRGBClient(name: "Aurora", ip: ip, port: port);
                 _openRgb.Connect();
 
-                _devices = _openRgb.GetAllControllerData();
+                var devices = _openRgb.GetAllControllerData();
+                _devices = new List<HelperOpenRGBDevice>();
 
-                _deviceColors = new OpenRGBColor[_devices.Length][];
-                _keyMappings = new List<DK>[_devices.Length];
-
-                for (var i = 0; i < _devices.Length; i++)
+                for (int i = 0; i < devices.Length; i++)
                 {
-                    var dev = _devices[i];
-
-                    _deviceColors[i] = new OpenRGBColor[dev.Leds.Length];
-                    for (var ledIdx = 0; ledIdx < dev.Leds.Length; ledIdx++)
-                        _deviceColors[i][ledIdx] = new OpenRGBColor();
-
-                    _keyMappings[i] = new List<DK>();
-
-                    for (int j = 0; j < dev.Leds.Length; j++)
+                    if (devices[i].Modes.Any(m => m.Name == "Direct") || ignoreDirectMode)
                     {
-                        if (dev.Type == OpenRGBDeviceType.Keyboard)
-                        {
-                            if (OpenRGBKeyNames.Keyboard.TryGetValue(dev.Leds[j].Name, out var dk))
-                            {
-                                _keyMappings[i].Add(dk);
-                            }
-                            else
-                            {
-                                _keyMappings[i].Add(DK.NONE);
-                            }
-                        }
-                        else if (dev.Type == OpenRGBDeviceType.Mouse)
-                        {
-                            if (OpenRGBKeyNames.Mouse.TryGetValue(dev.Leds[j].Name, out var dk))
-                            {
-                                _keyMappings[i].Add(dk);
-                            }
-                            else
-                            {
-                                _keyMappings[i].Add(DK.Peripheral_Logo);
-                            }
-                        }
-                        else
-                        {
-                            _keyMappings[i].Add(DK.Peripheral_Logo);
-                        }
-                    }
-
-                    uint LedOffset = 0;
-                    for (int j = 0; j < dev.Zones.Length; j++)
-                    {
-                        if (dev.Zones[j].Type == OpenRGBZoneType.Linear)
-                        {
-                            for (int k = 0; k < dev.Zones[j].LedCount; k++)
-                            {
-                                if (dev.Type == OpenRGBDeviceType.Mousemat)
-                                {
-                                    if (k < 15)
-                                    {
-                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.MousepadLights[k];
-                                    }
-                                }
-                                else
-                                {
-                                    //TODO - scale zones with more than 32 LEDs
-                                    if (k < 32)
-                                    {
-                                        _keyMappings[i][(int)(LedOffset + k)] = OpenRGBKeyNames.AdditionalLights[k];
-                                    }
-                                }
-                            }
-                        }
-                        LedOffset += dev.Zones[j].LedCount;
+                        var helper = new HelperOpenRGBDevice(i, devices[i]);
+                        helper.ProcessMappings(usePeriphLogo);
+                        _devices.Add(helper);
                     }
                 }
             }
@@ -127,11 +66,11 @@ namespace Aurora.Devices.OpenRGB
             if (!IsInitialized)
                 return;
 
-            for (var i = 0; i < _devices.Length; i++)
+            foreach (var d in _devices)
             {
                 try
                 {
-                    _openRgb.UpdateLeds(i, _devices[i].Colors);
+                    _openRgb.UpdateLeds(d.Index, d.OrgbDevice.Colors);
                 }
                 catch
                 {
@@ -149,28 +88,23 @@ namespace Aurora.Devices.OpenRGB
             if (!IsInitialized)
                 return false;
 
-            for (var i = 0; i < _devices.Length; i++)
+            foreach (var device in _devices)
             {
-                //should probably store these bools somewhere when initing
-                //might also add this as a property in the library
-                if (!_devices[i].Modes.Any(m => m.Name == "Direct"))
-                    continue;
-
-                for (int ledIdx = 0; ledIdx < _devices[i].Leds.Length; ledIdx++)
+                for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
                 {
-                    if (keyColors.TryGetValue(_keyMappings[i][ledIdx], out var keyColor))
+                    if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
                     {
-                        _deviceColors[i][ledIdx] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                        device.Colors[ledIndex] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
                     }
                 }
 
                 try
                 {
-                    _openRgb.UpdateLeds(i, _deviceColors[i]);
+                    _openRgb.UpdateLeds(device.Index, device.Colors);
                 }
                 catch (Exception exc)
                 {
-                    LogError($"Failed to update OpenRGB device {_devices[i].Name}: " + exc);
+                    LogError($"Failed to update OpenRGB device {device.OrgbDevice.Name}: " + exc);
                     Reset();
                 }
             }
@@ -184,7 +118,76 @@ namespace Aurora.Devices.OpenRGB
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
-            variableRegistry.Register($"{DeviceName}_sleep", 25, "Sleep for", 1000, 0);
+            variableRegistry.Register($"{DeviceName}_sleep", 0, "Sleep for", 1000, 0);
+            variableRegistry.Register($"{DeviceName}_ip", "127.0.0.1", "IP Address");
+            variableRegistry.Register($"{DeviceName}_port", 6742, "Port", 1024, 65535);
+            variableRegistry.Register($"{DeviceName}_ignore_direct", false, "Ignore Direct mode");
+            variableRegistry.Register($"{DeviceName}_use_periph_logo", true, "Use peripheral logo for unknown leds");
+        }
+    }
+
+    public class HelperOpenRGBDevice
+    {
+        public int Index { get; }
+        public OpenRGBDevice OrgbDevice { get; }
+        public OpenRGBColor[] Colors { get; }
+        public DK[] Mapping { get; }
+
+        public HelperOpenRGBDevice(int idx, OpenRGBDevice dev)
+        {
+            Index = idx;
+            OrgbDevice = dev;
+            Colors = Enumerable.Range(0, dev.Leds.Length).Select(_ => new OpenRGBColor()).ToArray();
+            Mapping = new DK[dev.Leds.Length];
+        }
+
+        internal void ProcessMappings(bool usePeriphLogo)
+        {
+            for (int ledIndex = 0; ledIndex < OrgbDevice.Leds.Length; ledIndex++)
+            {
+                if (OpenRGBKeyNames.KeyNames.TryGetValue(OrgbDevice.Leds[ledIndex].Name, out var devKey))
+                {
+                    Mapping[ledIndex] = devKey;
+                }
+                else
+                {
+                    Mapping[ledIndex] = usePeriphLogo ? DK.Peripheral_Logo : DK.NONE;
+                }
+            }
+
+            if (usePeriphLogo)
+                return;
+
+            //if we have the option enabled,
+            //we'll skip these as users may not want 
+            //linear zones to depend on additionalllight
+
+            uint ledOffset = 0;
+            for (int zoneIndex = 0; zoneIndex < OrgbDevice.Zones.Length; zoneIndex++)
+            {
+                if (OrgbDevice.Zones[zoneIndex].Type == OpenRGBZoneType.Linear)
+                {
+                    for (int zoneLedIndex = 0; zoneLedIndex < OrgbDevice.Zones[zoneIndex].LedCount; zoneLedIndex++)
+                    {
+                        if (OrgbDevice.Type == OpenRGBDeviceType.Mousemat)
+                        {
+                            if (zoneLedIndex < 15)
+                            {
+                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRGBKeyNames.MousepadLights[zoneLedIndex];
+                            }
+                        }
+                        else
+                        {
+                            //TODO - scale zones with more than 32 LEDs
+                            if (zoneLedIndex < 32)
+                            {
+                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRGBKeyNames.AdditionalLights[zoneLedIndex];
+                            }
+                        }
+                    }
+                }
+                ledOffset += OrgbDevice.Zones[zoneIndex].LedCount;
+            }
         }
     }
 }
