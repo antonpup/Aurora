@@ -43,12 +43,12 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         {
             List<string> slots = _ParsedData.Properties().Select(p => p.Name).ToList();
             
-            foreach (string item_slot in slots)
+            foreach (string ItemSlot in slots)
             {
-                if (item_slot.StartsWith("slot"))
-                    this.inventory.Add(new Item(_ParsedData[item_slot].ToString()));
-                else if(item_slot.StartsWith("stash"))
-                    this.stash.Add(new Item(_ParsedData[item_slot].ToString()));
+                if (ItemSlot.StartsWith("slot"))
+                    this.inventory.Add(new Item(_ParsedData[ItemSlot].ToString()));
+                else if(ItemSlot.StartsWith("stash"))
+                    this.stash.Add(new Item(_ParsedData[ItemSlot].ToString()));
             }
         }
 
@@ -81,13 +81,13 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// Checks if item exists in the inventory
         /// </summary>
-        /// <param name="itemname">The item name</param>
+        /// <param name="itemName">The item name</param>
         /// <returns>A boolean if item is in the inventory</returns>
-        public bool InventoryContains(string itemname)
+        public bool InventoryContains(string ItemName)
         {
-            foreach(Item inventory_item in this.inventory)
+            foreach(Item InventoryItem in this.inventory)
             {
-                if (inventory_item.Name.Equals(itemname))
+                if (InventoryItem.Name.Equals(ItemName))
                     return true;
             }
 
@@ -99,11 +99,11 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="itemname">The item name</param>
         /// <returns>A boolean if item is in the stash</returns>
-        public bool StashContains(string itemname)
+        public bool StashContains(string ItemName)
         {
-            foreach (Item stash_item in this.stash)
+            foreach (Item StashItem in this.stash)
             {
-                if (stash_item.Name.Equals(itemname))
+                if (StashItem.Name.Equals(ItemName))
                     return true;
             }
 
@@ -113,13 +113,13 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// Gets index of the first occurence of the item in the inventory
         /// </summary>
-        /// <param name="itemname">The item name</param>
+        /// <param name="itemName">The item name</param>
         /// <returns>The first index at which item is found, -1 if not found.</returns>
-        public int InventoryIndexOf(string itemname)
+        public int InventoryIndexOf(string ItemName)
         {
             for (int x = 0; x < this.inventory.Count; x++)
             {
-                if (this.inventory[x].Name.Equals(itemname))
+                if (this.inventory[x].Name.Equals(ItemName))
                     return x;
             }
 
@@ -131,11 +131,11 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// </summary>
         /// <param name="itemname">The item name</param>
         /// <returns>The first index at which item is found, -1 if not found.</returns>
-        public int StashIndexOf(string itemname)
+        public int StashIndexOf(string ItemName)
         {
             for (int x = 0; x < this.stash.Count; x++)
             {
-                if (this.stash[x].Name == itemname)
+                if (this.stash[x].Name == ItemName)
                     return x;
             }
 
