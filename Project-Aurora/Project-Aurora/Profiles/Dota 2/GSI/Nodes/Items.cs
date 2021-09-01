@@ -19,7 +19,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// Gets the array of the inventory items
         /// </summary>
-        [Range(0, 5)]
+        [Range(0, 8)]
         public Item[] InventoryItems
         {
             get { return inventory.ToArray(); }
@@ -42,11 +42,12 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         internal Items_Dota2(string json_data) : base(json_data)
         {
             List<string> slots = _ParsedData.Properties().Select(p => p.Name).ToList();
+            
             foreach (string item_slot in slots)
             {
                 if (item_slot.StartsWith("slot"))
                     this.inventory.Add(new Item(_ParsedData[item_slot].ToString()));
-                else
+                else if(item_slot.StartsWith("stash"))
                     this.stash.Add(new Item(_ParsedData[item_slot].ToString()));
             }
         }
