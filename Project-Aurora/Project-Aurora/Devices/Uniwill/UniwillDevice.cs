@@ -48,7 +48,6 @@ namespace Aurora.Devices.Uniwill
 
         public UniwillDevice()
         {
-            devicename = KeyboardFactory.GetOEMName();
             ChoiceGamingCenter();
         }
 
@@ -128,6 +127,8 @@ namespace Aurora.Devices.Uniwill
             {
                 try
                 {
+                    devicename = KeyboardFactory.GetOEMName();
+
                     keyboard = KeyboardFactory.CreateHIDDevice("hidkeyboard");
                     if (keyboard != null)
                     {
