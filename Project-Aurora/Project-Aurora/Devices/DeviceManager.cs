@@ -91,23 +91,27 @@ namespace Aurora.Devices
         public DeviceManager()
         {
             AddDevicesFromAssembly();
-            AddDevicesFromScripts();
-            AddDevicesFromDlls();
+            AddDevicesFromScripts(Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices"));
+            AddDevicesFromScripts(Path.Combine(Global.AppDataDirectory, "Scripts", "Devices"));
+            AddDevicesFromDlls(Path.Combine(Global.ExecutingDirectory, "Plugins", "Devices"));
+            AddDevicesFromDlls(Path.Combine(Global.AppDataDirectory, "Plugins", "Devices"));
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
         }
 
-        private void AddDevicesFromScripts()
+        private void AddDevicesFromScripts(string scriptFolder)
         {
-            string devices_scripts_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices");
+            if (!Directory.Exists(scriptFolder))
+                Directory.CreateDirectory(scriptFolder);
 
-            if (!Directory.Exists(devices_scripts_path))
+            var files = Directory.GetFiles(scriptFolder);
+            if (files.Length == 0)
                 return;
 
-            Global.logger.Info("Loading devices from scripts...");
+            Global.logger.Info($"Loading device scripts from {scriptFolder}");
 
-            foreach (string device_script in Directory.EnumerateFiles(devices_scripts_path, "*.*"))
+            foreach (string device_script in files)
             {
                 try
                 {
@@ -124,6 +128,8 @@ namespace Aurora.Devices
                                 IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
                                 DeviceContainers.Add(new DeviceContainer(scripted_device));
+                                Global.logger.Info($"Loaded device script {device_script}");
+
                             }
                             else
                                 Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
@@ -138,6 +144,7 @@ namespace Aurora.Devices
                                 IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
 
                                 DeviceContainers.Add(new DeviceContainer(scripted_device));
+                                Global.logger.Info($"Loaded device script {device_script}");
                             }
 
                             break;
@@ -170,16 +177,18 @@ namespace Aurora.Devices
             }
         }
 
-        private void AddDevicesFromDlls()
+        private void AddDevicesFromDlls(string dllFolder)
         {
-            string deviceDllFolder = Path.Combine(Global.AppDataDirectory, "Plugins", "Devices");
+            if (!Directory.Exists(dllFolder))
+                Directory.CreateDirectory(dllFolder);
 
-            if (!Directory.Exists(deviceDllFolder))
+            var files = Directory.GetFiles(dllFolder, "*.dll");
+            if (files.Length == 0)
                 return;
 
-            Global.logger.Info("Loading devices from plugins");
+            Global.logger.Info($"Loading devices plugins from {dllFolder}");
 
-            foreach (var deviceDll in Directory.EnumerateFiles(deviceDllFolder, "*.dll"))
+            foreach (var deviceDll in files)
             {
                 try
                 {
@@ -192,6 +201,8 @@ namespace Aurora.Devices
                             IDevice devDll = (IDevice)Activator.CreateInstance(type);
 
                             DeviceContainers.Add(new DeviceContainer(devDll));
+
+                            Global.logger.Info($"Loaded device plugin {deviceDll}");
                         }
                     }
                 }
