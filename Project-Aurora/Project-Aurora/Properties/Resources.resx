@@ -178,6 +178,9 @@
   <data name="overwatch_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\overwatch_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="rust_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\rust_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="pd2_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\pd2_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

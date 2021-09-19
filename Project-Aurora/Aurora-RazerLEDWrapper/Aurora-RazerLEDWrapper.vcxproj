@@ -22,7 +22,7 @@
     <ProjectGuid>{004D1E3E-F20E-4ECA-ABB1-467D1CE2C173}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AuroraRazerLEDWrapper</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

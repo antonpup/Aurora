@@ -170,6 +170,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\*.png" />
+    <None Remove="Resources\rust_icon.png" />
     <Resource Include="Resources\aurora_icon.ico" />
 
     <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />
@@ -178,6 +179,12 @@
     <Resource Include="Resources\Win64\Aurora-LightFXWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
     <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Profiles\Rust\Control_Rust.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
 </Project>
