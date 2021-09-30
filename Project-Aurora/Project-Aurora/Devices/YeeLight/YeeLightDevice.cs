@@ -29,7 +29,7 @@ namespace Aurora.Devices.YeeLight
 
         protected override string DeviceInfo => String.Join(
             ", ",
-            lights.Select(light => light.GetLightIPAddressAndPort().ipAddress + ":" + light.GetLightIPAddressAndPort().port + (light.IsMusicMode() ? "(m)" : ""))
+            lights.Select(light => light.GetLightIPAddressAndPort().ipAddress + ":" + light.GetLightIPAddressAndPort().port + "w:" + whiteCounter + (light.IsMusicMode() ? "(m)" : ""))
         );
 
         public override bool Initialize()
@@ -127,18 +127,22 @@ namespace Aurora.Devices.YeeLight
                 return ProceedSameColor(targetColor);
 
             whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
-            lights.ForEach(x =>
+            if ((targetColor.R + targetColor.G + targetColor.B) > 0)
             {
-                if ((targetColor.R + targetColor.G + targetColor.B) > 0)
+                lights.ForEach(x =>
                 {
                     x.SetColor(targetColor.R, targetColor.G, targetColor.B);
                     x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, targetColor.B)) * 100 / 255);
-                }
-                else
+                });
+            }
+            else
+            {
+                lights.ForEach(x =>
                 {
+                    x.SetColor(1, 1, 1);
                     x.SetBrightness(1);
-                }
-            });
+                });
+            }
             previousColor = targetColor;
             updateDelayStopWatch.Restart();
 
@@ -163,27 +167,20 @@ namespace Aurora.Devices.YeeLight
             {
                 if (whiteCounter == 0)
                 {
+                    updateDelayStopWatch.Restart();
                     return true;
                 }
-                else if (whiteCounter == Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay"))
+                else if (whiteCounter == 1)
                 {
                     lights.ForEach(x =>
                     {
-                        if (whiteCounter <= 0)
-                            x.SetTemperature(6500);
-                        else
-                        {
-                            x.SetColor(targetColor.R, targetColor.G, targetColor.B);
-                        }
+                        x.SetTemperature(6500);
                         x.SetBrightness(targetColor.R * 100 / 255);
                     });
-                    updateDelayStopWatch.Restart();
                 }
-                else
-                {
-                    whiteCounter--;
-                }
+                whiteCounter--;
             }
+            updateDelayStopWatch.Restart();
             return true;
         }
 
