@@ -124,41 +124,19 @@ namespace Aurora.Devices.YeeLight
             if (!keyColors.TryGetValue(targetKey, out var targetColor))
                 return false;
             if (previousColor.Equals(targetColor))
-                if (targetColor.R == targetColor.G && targetColor.G == targetColor.B)
-                {
-                    if (whiteCounter == 0)
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
+                return ProceedSameColor(targetColor);
 
-            whiteCounter--;
+            whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
             lights.ForEach(x =>
             {
-                if (targetColor.R == targetColor.G && targetColor.G == targetColor.B)
-                {
-                    if (whiteCounter <= 0)
-                        x.SetTemperature(6500);
-                    else
-                    {
-                        x.SetColor(targetColor.R, targetColor.G, targetColor.B);
-                    }
-                    x.SetBrightness(targetColor.R * 100 / 255);
-                }
-                else if ((targetColor.R + targetColor.G + targetColor.B) > 0)
+                if ((targetColor.R + targetColor.G + targetColor.B) > 0)
                 {
                     x.SetColor(targetColor.R, targetColor.G, targetColor.B);
                     x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, targetColor.B)) * 100 / 255);
-                    whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
                 }
                 else
                 {
-                    x.SetBrightness(0);
-                    whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
+                    x.SetBrightness(1);
                 }
             });
             previousColor = targetColor;
@@ -177,6 +155,41 @@ namespace Aurora.Devices.YeeLight
             variableRegistry.Register($"{DeviceName}_IP", "", "YeeLight IP(s)", null, null, "Comma separated IPv4 or IPv6 addresses.");
             variableRegistry.Register($"{DeviceName}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and empty out the IP field to auto-discover lights.");
             variableRegistry.Register($"{DeviceName}_white_delay", 10, "White mode delay(ticks)", null, null, "How many ticks should happen before white mode is activated.");
+        }
+
+        private bool ProceedSameColor(Color targetColor)
+        {
+            if (isWhiteTone(targetColor))
+            {
+                if (whiteCounter == 0)
+                {
+                    return true;
+                }
+                else if (whiteCounter == Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay"))
+                {
+                    lights.ForEach(x =>
+                    {
+                        if (whiteCounter <= 0)
+                            x.SetTemperature(6500);
+                        else
+                        {
+                            x.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                        }
+                        x.SetBrightness(targetColor.R * 100 / 255);
+                    });
+                    updateDelayStopWatch.Restart();
+                }
+                else
+                {
+                    whiteCounter--;
+                }
+            }
+            return true;
+        }
+
+        private bool isWhiteTone(Color color)
+        {
+            return color.R == color.G && color.G == color.B;
         }
 
         private void ConnectNewDevice(IPAddress lightIP)
