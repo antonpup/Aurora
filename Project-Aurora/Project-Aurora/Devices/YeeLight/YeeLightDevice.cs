@@ -76,6 +76,7 @@ namespace Aurora.Devices.YeeLight
                         }
                     }
 
+                    updateDelayStopWatch.Start();
                     IsInitialized = lights.All(x => x.IsConnected());
                 }
                 catch (Exception exc)
@@ -111,10 +112,6 @@ namespace Aurora.Devices.YeeLight
         private int whiteCounter = 10;
         protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!updateDelayStopWatch.IsRunning)
-            {
-                updateDelayStopWatch.Start();
-            }
 
             var sendDelay = Math.Max(5, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"));
             if (updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
@@ -127,22 +124,11 @@ namespace Aurora.Devices.YeeLight
                 return ProceedSameColor(targetColor);
 
             whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
-            if ((targetColor.R + targetColor.G + targetColor.B) > 0)
+            lights.ForEach(x =>
             {
-                lights.ForEach(x =>
-                {
-                    x.SetColor(targetColor.R, targetColor.G, targetColor.B);
-                    x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, targetColor.B)) * 100 / 255);
-                });
-            }
-            else
-            {
-                lights.ForEach(x =>
-                {
-                    x.SetColor(1, 1, 1);
-                    x.SetBrightness(1);
-                });
-            }
+                x.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, Math.Max(targetColor.B, (short)1))) * 100 / 255);
+            });
             previousColor = targetColor;
             updateDelayStopWatch.Restart();
 

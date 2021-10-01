@@ -39,10 +39,16 @@ namespace Aurora.Devices
                 {
                     if (!working)
                     {
-                        working = true;
-                        newFrame = false;
-                        Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
-                        working = false;
+                        try
+                        {
+                            working = true;
+                            newFrame = false;
+                            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+                        }
+                        finally
+                        {
+                            working = false;
+                        }
                     }
                 }
         }
@@ -51,13 +57,10 @@ namespace Aurora.Devices
         {
             newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            lock (Worker)
-            {
-                if (Worker.IsBusy)
-                    return;
-                else
-                    Worker.RunWorkerAsync();
-            }
+            if (Worker.IsBusy)
+                return;
+            else
+                Worker.RunWorkerAsync();
         }
     }
 
