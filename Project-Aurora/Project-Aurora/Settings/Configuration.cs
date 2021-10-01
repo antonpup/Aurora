@@ -308,6 +308,10 @@ namespace Aurora.Settings
         [Description("HyperX Alloy Elite RGB")]
         HyperX_Alloy_Elite_RGB = 1400,
  
+        //XPG range is 1500-1599
+        [Description("XPG Mage/Summoner")]
+        XPG_Summoner = 1500
+
     }
 
     public enum PreferredKeyboardLocalization
