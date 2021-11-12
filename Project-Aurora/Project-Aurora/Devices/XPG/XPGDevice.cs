@@ -13,65 +13,9 @@ using System.ComponentModel; // DoWorkEventArgs
 namespace Aurora.Devices.XPG
 {
 
-    class XPGDevice : IDevice
+    class XPGDevice : DefaultDevice
     {
-        // XPG device is implemented as a script for ScriptedDevice, but we
-        // also want the script to call Shutdown() when UpdateDevice() fails.
-        // This lets us easily handle the peripheral being disconnected and
-        // reconnected. However, we can't override the interface method
-        // from ScriptedDevice, use aggregation instead.
-        private Devices.ScriptedDevice.ScriptedDevice device;
-
-        public XPGDevice()
-        {
-            device = new Devices.ScriptedDevice.ScriptedDevice(new XPGDeviceScript());
-        }
-
-        public Settings.VariableRegistry RegisteredVariables => device.RegisteredVariables;
-        public string DeviceName => "XPG";
-        public string DeviceDetails => device.DeviceDetails;
-        public string DeviceUpdatePerformance => device.DeviceUpdatePerformance;
-        public bool Initialize() => device.Initialize();
-        public void Shutdown() => device.Shutdown();
-        public void Reset() => device.Reset();
-        public bool Reconnect() => device.Reconnect();
-        public bool IsInitialized => device.IsInitialized;
-        public bool IsConnected() => device.IsConnected();
-        public bool IsKeyboardConnected() => device.IsKeyboardConnected();
-        public bool IsPeripheralConnected() => device.IsPeripheralConnected();
-
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
-        {
-            if (IsInitialized)
-            {
-                bool success = device.UpdateDevice(keyColors, e, forced);
-                if (!success) {
-                    device.Shutdown();
-                }
-                return success;
-            }
-            return false;
-        }
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            if (IsInitialized)
-            {
-                bool success = device.UpdateDevice(colorComposition, e, forced);
-                if (!success) {
-                    device.Shutdown();
-                }
-                return success;
-            }
-            return false;
-        }
-
-    }
-
-
-    internal class XPGDeviceScript
-    {
-        public string devicename = "XPG script";
-        public bool enabled = true;
+        public override string DeviceName => "XPG";
 
         private Stopwatch updateStopwatch = new Stopwatch();
 
@@ -85,35 +29,70 @@ namespace Aurora.Devices.XPG
         [DllImport("libxpgp_aurora", CallingConvention = CallingConvention.Cdecl, EntryPoint = "UpdateDevice")]
         private static extern int cUpdateDevice(byte[] array, int bytesize);
 
+        private bool crashed = false;
+        private bool initialized = false;
+        public override bool IsInitialized => initialized && !crashed;
 
-        public bool Initialize()
+        protected override string DeviceInfo => crashed ? "Error" : "OK";
+
+        public override bool Initialize()
         {
-            int error = cInitialize();
-            if (error > 0) // a proper error occured
+            if (crashed)
             {
-                throw new Exception("Error initializing XPGDeviceScript");
+                return false;
             }
-            return error == 0; // true if we have a device
+            if (!initialized)
+            {
+                int error = cInitialize();
+                if (error > 0) // a proper error occured
+                {
+                    crashed = true; // unlikely to work on the second try either
+                }
+                if (error == 0) // no error + device found
+                {
+                    initialized = true;
+                }
+            }
+            return IsInitialized;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             updateStopwatch.Reset();
-            cReset();
+            if (IsInitialized)
+            {
+                cReset();
+            }
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
-            updateStopwatch.Reset();
+            Reset();
             cShutdown();
+            initialized = false;
+        }
+
+        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        {
+            if (IsInitialized)
+            {
+                bool success = TryUpdateDevice(keyColors, forced);
+                if (!success)
+                {
+                    this.Shutdown();
+                }
+                return success;
+            }
+            return false;
         }
 
         private const int colorcount = 108; // highest value we use is FN_Key (107)
         private const int bytesize = 4 * colorcount;
         private byte[] currentColors = new byte[bytesize];
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced)
+        private byte[] spareBuffer = new byte[bytesize];
+        private bool TryUpdateDevice(Dictionary<DeviceKeys, Color> keyColors, bool forced)
         {
-            byte[] newColors = new byte[bytesize]; // zero-init
+            byte[] newColors = this.spareBuffer;
             if (keyColors.ContainsKey(DeviceKeys.Peripheral))
             {
                 Color color = keyColors[DeviceKeys.Peripheral];
@@ -124,6 +103,11 @@ namespace Aurora.Devices.XPG
                     newColors[4 * k + 2] = color.B;
                     newColors[4 * k + 3] = color.A;
                 }
+            }
+            else
+            {
+                // start with current colors to support partial updates
+                Array.Copy(this.currentColors, newColors, bytesize);
             }
             foreach (KeyValuePair<DeviceKeys, Color> kvp in keyColors)
             {
@@ -157,6 +141,7 @@ namespace Aurora.Devices.XPG
                     return false;
                 }
                 updateStopwatch.Restart();
+                this.spareBuffer = this.currentColors;
                 this.currentColors = newColors;
             }
             return true;
