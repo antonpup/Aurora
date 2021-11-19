@@ -15,11 +15,27 @@ namespace Aurora.Devices.Vulcan
     public class VulcanDevice : DefaultDevice
     {
         public override string DeviceName => "Vulcan";
-        public override bool IsInitialized => VulcanKeyboard.IsConnected;
 
-        public override bool Initialize() => VulcanKeyboard.Initialize();
+        protected override string DeviceInfo => string.Join(",", _keyboards.Select(kb => kb.KeyboardType));
 
-        public override void Shutdown() => VulcanKeyboard.Disconnect();
+        private List<IVulcanKeyboard> _keyboards;
+
+        public override bool Initialize()
+        {
+            _keyboards = VulcanFinder.FindKeyboards().ToList();
+
+            return IsInitialized = _keyboards.Count > 0;
+        }
+
+        public override void Shutdown()
+        {
+            foreach (var keyboard in _keyboards)
+            {
+                keyboard.Dispose();
+            }
+
+            _keyboards.Clear();
+        }
 
         protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
@@ -28,11 +44,21 @@ namespace Aurora.Devices.Vulcan
 
             foreach (var key in keyColors)
             {
-                if (VulcanKeyMap.KeyMap.TryGetValue(key.Key, out var vulcanKey))
-                    VulcanKeyboard.SetKeyColor(vulcanKey, ColorUtils.CorrectWithAlpha(key.Value));
+                foreach (var keyboard in _keyboards)
+                {
+                    if (VulcanKeyMap.KeyMap.TryGetValue(key.Key, out var vulcanKey))
+                    {
+                        var color = ColorUtils.CorrectWithAlpha(key.Value);
+                        keyboard.SetKeyColor(vulcanKey,color.R, color.G, color.B );
+                    }
+                }
+            }
+            foreach (var keyboard in _keyboards)
+            {
+                keyboard.Update();
             }
 
-            return VulcanKeyboard.Update();
+            return true;
         }
     }
 }
