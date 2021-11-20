@@ -52,6 +52,8 @@ namespace Aurora.EffectsEngine.Animations
             if (_brush == null || _invalidated)
             {
                 _brush = new SolidBrush(_color);
+
+                virtUpdate();
                 _invalidated = false;
             }
 

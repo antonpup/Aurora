@@ -66,7 +66,11 @@ namespace Aurora.EffectsEngine
             {
                 if (disposing)
                 {
+                    foreach (IDisposable disposable in over_layers)
+                        disposable.Dispose();
                     over_layers.Clear();
+                    foreach (IDisposable disposable in layers)
+                        disposable.Dispose();
                     layers.Clear();
                 }
 

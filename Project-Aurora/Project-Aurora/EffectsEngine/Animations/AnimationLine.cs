@@ -116,12 +116,13 @@ namespace Aurora.EffectsEngine.Animations
 
         protected override void virtUpdate()
         {
-            base.virtUpdate();
 
             _scaledStartPoint = new PointF((_start_point.X * Scale) + Offset.X, (_start_point.Y * Scale) + Offset.Y);
             _scaledEndPoint = new PointF((_end_point.X * Scale) + Offset.X, (_end_point.Y * Scale) + Offset.Y);
 
             _rotatePoint = _scaledStartPoint;
+
+            base.virtUpdate();
         }
 
         public override void Draw(Graphics g)
@@ -131,19 +132,31 @@ namespace Aurora.EffectsEngine.Animations
 
             if (_pen == null || _invalidated)
             {
-                _pen = new Pen(new LinearGradientBrush(_scaledStartPoint, _scaledEndPoint, _color, _end_color));
-                _pen.Width = _width;
-                _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                if (!_scaledStartPoint.Equals(_scaledEndPoint))
+                {
+                    _pen = new Pen(new LinearGradientBrush(_scaledStartPoint, _scaledEndPoint, _color, _end_color));
+                    _pen.Width = _width;
+                    _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
 
-                _invalidated = false;
+                    _pen.ScaleTransform(Scale, Scale);
+
+                    virtUpdate();
+
+                    _invalidated = false;
+                }else
+                {
+                    _pen = new Pen(new LinearGradientBrush(_scaledStartPoint, new PointF(1, 1), _color, _end_color));
+                    virtUpdate();
+                    System.Console.WriteLine("0 length line");
+                }
             }
 
-            _pen.ScaleTransform(Scale, Scale);
-
-            Matrix originalMatrix = g.Transform;
-            g.Transform = _transformationMatrix;
-            g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
-            g.Transform = originalMatrix;
+            if (g != null)
+            {
+                g.ResetTransform();
+                g.Transform = _transformationMatrix;
+                g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
+            }
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

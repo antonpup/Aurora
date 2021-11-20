@@ -21,7 +21,6 @@ namespace Aurora.Devices
         public Thread UpdateThread { get; set; } = null;
 
         private Tuple<DeviceColorComposition, bool> currentComp = null;
-        private bool newFrame = false;
 
         public readonly object actionLock = new object();
 
@@ -42,8 +41,13 @@ namespace Aurora.Devices
                         try
                         {
                             working = true;
-                            newFrame = false;
                             Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+                        }
+                        catch (Exception e)
+                        {
+                            string message = "Error while updating device: " + Device.DeviceName;
+                            System.Console.WriteLine(message);
+                            System.Windows.MessageBox.Show(message);
                         }
                         finally
                         {
@@ -55,7 +59,6 @@ namespace Aurora.Devices
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
-            newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
             if (Worker.IsBusy)
                 return;
@@ -325,8 +328,7 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.actionLock)
-                    dc.UpdateDevice(composition, forced);
+                dc.UpdateDevice(composition, forced);
             }
         }
 

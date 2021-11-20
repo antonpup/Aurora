@@ -122,18 +122,14 @@ namespace Aurora.Devices.YeeLight
                 return false;
             if (previousColor.Equals(targetColor))
                 return ProceedSameColor(targetColor);
-
-            whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
-            lights.ForEach(x =>
-            {
-                x.SetColor(targetColor.R, targetColor.G, targetColor.B);
-                x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, Math.Max(targetColor.B, (short)1))) * 100 / 255);
-            });
             previousColor = targetColor;
-            updateDelayStopWatch.Restart();
 
-
-            return true;
+            if (isWhiteTone(targetColor))
+            {
+                return ProceedDifferentWhiteColor(targetColor);
+            }
+            whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
+            return ProceedColor(targetColor);
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
@@ -151,21 +147,55 @@ namespace Aurora.Devices.YeeLight
         {
             if (isWhiteTone(targetColor))
             {
-                if (whiteCounter == 0)
-                {
-                    updateDelayStopWatch.Restart();
-                    return true;
-                }
-                else if (whiteCounter == 1)
-                {
-                    lights.ForEach(x =>
-                    {
-                        x.SetTemperature(6500);
-                        x.SetBrightness(targetColor.R * 100 / 255);
-                    });
-                }
-                whiteCounter--;
+                return ProceedWhiteColor(targetColor);
             }
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private bool ProceedWhiteColor(Color targetColor)
+        {
+            if (whiteCounter == 0)
+            {
+                updateDelayStopWatch.Restart();
+                return true;
+            }
+            else if (whiteCounter == 1)
+            {
+                lights.ForEach(x =>
+                {
+                    x.SetTemperature(6500);
+                    x.SetBrightness(targetColor.R * 100 / 255);
+                });
+            }
+            whiteCounter--;
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private bool ProceedDifferentWhiteColor(Color targetColor)
+        {
+            if (whiteCounter > 0)
+            {
+                whiteCounter--;
+                return ProceedColor(targetColor);
+            }
+            lights.ForEach(x =>
+            {
+                x.SetTemperature(6500);
+                x.SetBrightness(targetColor.R * 100 / 255);
+            });
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private bool ProceedColor(Color targetColor)
+        {
+            lights.ForEach(x =>
+            {
+                x.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, Math.Max(targetColor.B, (short)1))) * 100 / 255);
+            });
             updateDelayStopWatch.Restart();
             return true;
         }

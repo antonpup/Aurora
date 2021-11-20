@@ -49,6 +49,7 @@ namespace Aurora.Controls
                     //stkPanelTracks.Children.Add(new Separator());
                 }
 
+                ContextMix.SetScale(AnimationScale);
                 AnimationMixUpdated?.Invoke(this, ContextMix);
             }
         }
@@ -92,7 +93,16 @@ namespace Aurora.Controls
 
         public Bitmap RenderedBitmap;
 
-        public float AnimationScale = 1.0f;
+        private float _animationScale = 1.0f;
+        public float AnimationScale {
+            get {
+                return _animationScale;
+            }
+            set {
+                _animationScale = value;
+                ContextMix.SetScale(AnimationScale);
+            }
+        }
 
         private float _currentPlaybackTime = 0.0f;
 
@@ -164,8 +174,7 @@ namespace Aurora.Controls
             using (Graphics g = Graphics.FromImage(newBitmap))
             {
                 g.Clear(System.Drawing.Color.Black);
-
-                ContextMix.Draw(g, _currentPlaybackTime, AnimationScale);
+                ContextMix.Draw(g, _currentPlaybackTime);
             }
 
             RenderedBitmap = newBitmap;

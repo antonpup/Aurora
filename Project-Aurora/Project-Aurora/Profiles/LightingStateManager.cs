@@ -359,6 +359,7 @@ namespace Aurora.Profiles
                     catch (Exception exc)
                     {
                         Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
+                        System.Windows.MessageBox.Show("Error while updating light effects: " + exc.Message);
                     }
                 }
                 watch.Stop();
@@ -366,7 +367,6 @@ namespace Aurora.Profiles
                 updateTimer?.Change(Math.Max(timerInterval - watch.ElapsedMilliseconds, 8), Timeout.Infinite);
                 watch.Reset();
             }, null, 0, System.Threading.Timeout.Infinite);
-            //GC.KeepAlive(updateTimer);
         }
 
         private void UpdateProcess()

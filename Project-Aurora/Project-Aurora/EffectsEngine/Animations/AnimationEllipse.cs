@@ -94,9 +94,9 @@ namespace Aurora.EffectsEngine.Animations
 
         protected override void virtUpdate()
         {
-            base.virtUpdate();
-
             _rotatePoint = new PointF(_center.X * Scale, _center.Y * Scale);
+
+            base.virtUpdate();
         }
 
         public override void Draw(Graphics g)
@@ -106,6 +106,8 @@ namespace Aurora.EffectsEngine.Animations
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+
+                virtUpdate();
                 _invalidated = false;
             }
 

@@ -15,7 +15,7 @@ namespace Aurora.EffectsEngine
     public class EffectLayer : IDisposable
     {
         private String name;
-        private Bitmap colormap;
+        private readonly Bitmap colormap;
 
         private object bufferLock = new object();
 
@@ -286,7 +286,6 @@ namespace Aurora.EffectsEngine
         public void Dispose()
         {
             colormap.Dispose();
-            colormap = null;
         }
 
         /// <summary>
@@ -369,41 +368,6 @@ namespace Aurora.EffectsEngine
                 g.FillRectangle(new SolidBrush(color), rect);
                 needsRender = true;
             }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Sets a specific coordinate on the bitmap with a specified color.
-        /// </summary>
-        /// <param name="x">X Coordinate on the bitmap</param>
-        /// <param name="y">Y Coordinate on the bitmap</param>
-        /// <param name="color">Color to be used</param>
-        /// <returns>Itself</returns>
-        public EffectLayer Set(int x, int y, Color color)
-        {
-            BitmapData srcData = colormap.LockBits(
-                    new Rectangle(x, y, 1, 1),
-                    ImageLockMode.WriteOnly,
-                    PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            unsafe
-            {
-                byte* p = (byte*)(void*)Scan0;
-
-                p[0] = color.B;
-                p[1] = color.G;
-                p[2] = color.R;
-                p[3] = color.A;
-            }
-
-            colormap.UnlockBits(srcData);
-
-            needsRender = true;
 
             return this;
         }

@@ -335,11 +335,12 @@ namespace Aurora
 
                     using (Bitmap map = pizelated_render.GetBitmap())
                     {
+                        previousframe.Dispose();
                         previousframe = new Bitmap(map);
                     }
                 }
 
-
+                background.Dispose();
                 frame.Dispose();
             }
         }

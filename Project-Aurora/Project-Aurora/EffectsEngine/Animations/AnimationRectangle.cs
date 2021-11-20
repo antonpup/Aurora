@@ -42,16 +42,14 @@ namespace Aurora.EffectsEngine.Animations
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
 
+                virtUpdate();
                 _invalidated = false;
             }
 
-            _pen.ScaleTransform(Scale, Scale);
 
-            Matrix originalMatrix = g.Transform;
+            g.ResetTransform();
             g.Transform = _transformationMatrix;
             g.DrawRectangle(_pen, _scaledDimension.X, _scaledDimension.Y, _scaledDimension.Width, _scaledDimension.Height);
-            g.Transform = originalMatrix;
-
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

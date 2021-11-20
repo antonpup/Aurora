@@ -87,7 +87,7 @@ namespace Aurora.EffectsEngine.Animations
                 if (_scale != value)
                 {
                     _scale = value;
-                    updateMatrices();
+                    _invalidated = true;
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace Aurora.EffectsEngine.Animations
                 if (_offset != value)
                 {
                     _offset = value;
-                    updateMatrices();
+                    _invalidated = true;
                 }
             }
         }
@@ -111,7 +111,7 @@ namespace Aurora.EffectsEngine.Animations
                 if (_rotatePoint != value)
                 {
                     _rotatePoint = value;
-                    updateMatrices();
+                    _invalidated = true;
                 }
             }
         }
@@ -131,7 +131,6 @@ namespace Aurora.EffectsEngine.Animations
             _dimension = new RectangleF();
             _width = 1;
             _duration = 0.0f;
-            updateMatrices();
         }
 
         public AnimationFrame(Rectangle dimension, Color color, int width = 1, float duration = 0.0f)
@@ -141,7 +140,6 @@ namespace Aurora.EffectsEngine.Animations
             _dimension = dimension;
             _width = width;
             _duration = duration;
-            updateMatrices();
         }
 
         public AnimationFrame(RectangleF dimension, Color color, int width = 1, float duration = 0.0f)
@@ -150,17 +148,15 @@ namespace Aurora.EffectsEngine.Animations
             _dimension = dimension;
             _width = width;
             _duration = duration;
-            updateMatrices();
         }
 
         protected virtual void virtUpdate()
         {
-
+            updateMatrices();
         }
 
         void updateMatrices()
         {
-            virtUpdate();
             _transformationMatrix = new Matrix();
 
 
@@ -170,18 +166,27 @@ namespace Aurora.EffectsEngine.Animations
             if(_rotatePoint == null) 
                 _rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
 
-            if(_rotatePoint != null)
-                _transformationMatrix.RotateAt(-_angle, _rotatePoint, MatrixOrder.Append);
+            _transformationMatrix.RotateAt(-_angle, _rotatePoint, MatrixOrder.Append);
             _transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
+
+            _invalidated = false;
         }
 
-        public void setOffsetAndScale(PointF offset, float scale)
+        public void SetOffset(PointF offset)
         {
-            if(_offset != offset || _scale != scale)
+            if (_offset != offset)
             {
                 _offset = offset;
+                _invalidated = true;
+            }
+        }
+
+        public void SetScale(float scale)
+        {
+            if (_scale != scale)
+            {
                 _scale = scale;
-                updateMatrices();
+                _invalidated = true;
             }
         }
 
@@ -189,6 +194,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             _color = color;
             _invalidated = true;
+            _brush = null;
 
             return this;
         }

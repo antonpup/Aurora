@@ -136,11 +136,12 @@ namespace Aurora.Profiles.Desktop
                         float transition_value = 1.0f - raindrops[raindrop];
                         float radius = transition_value * Effects.canvas_biggest;
 
-                        layer.GetGraphics().DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
-                            pt.X - radius,
-                            pt.Y - radius,
-                            2 * radius,
-                            2 * radius);
+                        using(Graphics g = layer.GetGraphics())
+                            g.DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
+                                pt.X - radius,
+                                pt.Y - radius,
+                                2 * radius,
+                                2 * radius);
 
                         raindrops[raindrop] -= getDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
                     }

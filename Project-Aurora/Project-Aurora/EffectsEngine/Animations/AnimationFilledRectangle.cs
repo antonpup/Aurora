@@ -14,10 +14,6 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public AnimationFilledRectangle(PointF center, float rect_width, float rect_height, Color color, float duration = 0.0f) : base(center, rect_width, rect_height, color, 1, duration)
-        {
-        }
-
         public AnimationFilledRectangle(float x, float y, float rect_width, float rect_height, Color color, float duration = 0.0f) : base(x, y, rect_width, rect_height, color, 1, duration)
         {
         }
@@ -27,13 +23,13 @@ namespace Aurora.EffectsEngine.Animations
             if (_brush == null || _invalidated)
             {
                 _brush = new SolidBrush(_color);
+                virtUpdate();
                 _invalidated = false;
             }
 
-            Matrix originalMatrix = g.Transform;
+            g.ResetTransform();
             g.Transform = _transformationMatrix;
             g.FillRectangle(_brush, _scaledDimension);
-            g.Transform = originalMatrix;
         }
         
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
