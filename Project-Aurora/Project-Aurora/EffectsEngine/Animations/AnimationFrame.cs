@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Threading;
+using System.Windows;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -70,11 +72,12 @@ namespace Aurora.EffectsEngine.Animations
         internal AnimationFrameTransitionType _transitionType = AnimationFrameTransitionType.Linear;
         [Newtonsoft.Json.JsonProperty]
         internal float _angle = 0.0f;
+        [Newtonsoft.Json.JsonProperty]
+        protected PointF _center;
 
 
-        private float _scale = 1.0f;
-        private PointF _offset = default(PointF);
-        protected PointF _rotatePoint;
+        protected float _scale = 1.0f;
+        protected PointF _offset = default(PointF);
 
         protected RectangleF _scaledDimension;
         internal Matrix _transformationMatrix;
@@ -105,12 +108,12 @@ namespace Aurora.EffectsEngine.Animations
         }
         public PointF RotatePoint
         {
-            get { return _rotatePoint; }
+            get { return _center; }
             set
             {
-                if (_rotatePoint != value)
+                if (_center != value)
                 {
-                    _rotatePoint = value;
+                    _center = value;
                     _invalidated = true;
                 }
             }
@@ -131,6 +134,16 @@ namespace Aurora.EffectsEngine.Animations
             _dimension = new RectangleF();
             _width = 1;
             _duration = 0.0f;
+        }
+
+        public AnimationFrame(AnimationFrame frame)
+        {
+            _dimension = frame.Dimension;
+            _color = frame.Color;
+            _duration = frame.Duration;
+            _width = frame.Width;
+            _scale = frame.Scale;
+            _offset = frame.Offset;
         }
 
         public AnimationFrame(Rectangle dimension, Color color, int width = 1, float duration = 0.0f)
@@ -159,14 +172,13 @@ namespace Aurora.EffectsEngine.Animations
         {
             _transformationMatrix = new Matrix();
 
-
             _scaledDimension = new RectangleF(_dimension.X * _scale, _dimension.Y * _scale, _dimension.Width * _scale, _dimension.Height * _scale);
             _scaledDimension.Offset(_offset);
 
-            if(_rotatePoint == null) 
-                _rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
+            if(_center == null) 
+                _center = new PointF(_scaledDimension.X + _dimension.Width/2, _scaledDimension.Y + _scaledDimension.Height/2);
 
-            _transformationMatrix.RotateAt(-_angle, _rotatePoint, MatrixOrder.Append);
+            _transformationMatrix.RotateAt(-_angle, _center, MatrixOrder.Append);
             _transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
 
             _invalidated = false;
@@ -246,14 +258,26 @@ namespace Aurora.EffectsEngine.Animations
         {
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
+            RectangleF newrect = new RectangleF(CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
+
+            PointF newRotatingPoint = new PointF(CalculateNewValue(_center.X, otherAnim._center.X, amount),
+                CalculateNewValue(_center.Y, otherAnim._center.Y, amount)
+                );
+
+            float newAngle = CalculateNewValue(_angle, otherAnim._angle, amount);
+            float newScale = CalculateNewValue(_scale, otherAnim._scale, amount);
+            int newWidth = CalculateNewValue(_width, otherAnim._width, amount);
 
             AnimationFrame newframe = new AnimationFrame();
             newframe._dimension = newrect;
+
+            newframe._angle = newAngle;
+            newframe._scale = newScale;
+            newframe._width = newWidth;
             newframe._color = Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount);
 
             return newframe;
@@ -302,12 +326,28 @@ namespace Aurora.EffectsEngine.Animations
             return returnamount;
         }
 
+        internal float CalculateNewValue(float first, float second, double amount)
+        {
+            if (first == second)
+                return first;
+            else
+                return (float)(first * (1.0 - amount) + second * (amount));
+        }
+
         internal double CalculateNewValue(double first, double second, double amount)
         {
             if (first == second)
                 return first;
             else
                 return (double)(first * (1.0 - amount) + second * (amount));
+        }
+
+        internal int CalculateNewValue(int first, int second, double amount)
+        {
+            if (first == second)
+                return first;
+            else
+                return (int)(first * (1.0 - amount) + second * (amount));
         }
 
         public virtual AnimationFrame GetCopy()

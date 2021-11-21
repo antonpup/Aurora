@@ -237,7 +237,8 @@ namespace Aurora
 
         public void ForceImageRender(Bitmap forcedframe)
         {
-            _forcedFrame = forcedframe;
+            if(forcedframe != null)
+                _forcedFrame = (Bitmap) forcedframe.Clone();
         }
 
         public void SetCanvasSize(int width, int height)
@@ -299,6 +300,9 @@ namespace Aurora
                         g.Clear(Color.Black);
 
                         g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
+
+                        _forcedFrame.Dispose();
+                        _forcedFrame = null;
                     }
                 }
 

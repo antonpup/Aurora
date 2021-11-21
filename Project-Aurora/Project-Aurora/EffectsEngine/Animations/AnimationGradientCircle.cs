@@ -40,7 +40,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             base.virtUpdate();
 
-            _rotatePoint = new PointF(_center.X * Scale, _center.Y * Scale);
+            _center = new PointF(_center.X * Scale, _center.Y * Scale);
         }
 
         public override void Draw(Graphics g)

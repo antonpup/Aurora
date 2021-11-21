@@ -94,7 +94,7 @@ namespace Aurora.EffectsEngine.Animations
 
         protected override void virtUpdate()
         {
-            _rotatePoint = new PointF(_center.X * Scale, _center.Y * Scale);
+            base._center = new PointF(_center.X * Scale, _center.Y * Scale);
 
             base.virtUpdate();
         }
@@ -106,17 +106,14 @@ namespace Aurora.EffectsEngine.Animations
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                _pen.ScaleTransform(Scale, Scale);
 
                 virtUpdate();
                 _invalidated = false;
             }
 
-            _pen.ScaleTransform(Scale, Scale);
-
-            Matrix originalMatrix = g.Transform;
-            g.Transform = _transformationMatrix;
+            g.ResetTransform();
             g.DrawEllipse(_pen, _scaledDimension);
-            g.Transform = originalMatrix;
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

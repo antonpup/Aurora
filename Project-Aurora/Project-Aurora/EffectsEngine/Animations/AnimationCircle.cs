@@ -8,8 +8,6 @@ namespace Aurora.EffectsEngine.Animations
     {
         [Newtonsoft.Json.JsonProperty]
         internal float _radius = 0.0f;
-        [Newtonsoft.Json.JsonProperty]
-        internal PointF _center = new PointF();
 
         public float Radius { get { return _radius; } }
         public PointF Center { get { return _center; } }
@@ -19,6 +17,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             _radius = radius;
             _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _center = new PointF(_dimension.X + _radius, _dimension.Y + _radius);
             _invalidated = true;
 
             return this;
@@ -41,6 +40,18 @@ namespace Aurora.EffectsEngine.Animations
             _color = Utils.ColorUtils.GenerateRandomColor();
             _width = 1;
             _duration = 0.0f;
+        }
+
+        public AnimationCircle(AnimationFrame frame, float radius) : base(frame)
+        {
+            _radius = radius;
+            _center = new PointF(_dimension.X + _radius, _dimension.Y + _radius);
+        }
+
+        public AnimationCircle(AnimationCircle animationCircle) : base(animationCircle)
+        {
+            _radius = animationCircle.Radius;
+            _center = animationCircle.Center;
         }
 
         public AnimationCircle(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
@@ -75,13 +86,6 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        protected override void virtUpdate()
-        {
-            _rotatePoint = new PointF(_center.X * Scale, _center.Y * Scale);
-
-            base.virtUpdate();
-        }
-
         public override void Draw(Graphics g)
         {
             if (_pen == null || _invalidated)
@@ -89,15 +93,17 @@ namespace Aurora.EffectsEngine.Animations
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-                ///_pen.ScaleTransform(Scale, Scale);
+                _pen.ScaleTransform(Scale, Scale);
 
                 virtUpdate();
                 _invalidated = false;
             }
 
-            g.ResetTransform();
-            g.Transform = _transformationMatrix;
-            g.DrawEllipse(_pen, _scaledDimension);
+            if(_scaledDimension.Width > 1 && _scaledDimension.Height > 1)
+            {
+                g.ResetTransform();
+                g.DrawEllipse(_pen, _scaledDimension);
+            }
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -106,19 +112,15 @@ namespace Aurora.EffectsEngine.Animations
             {
                 throw new FormatException("Cannot blend with another type");
             }
+            AnimationCircle otherCircle = (AnimationCircle)otherAnim;
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
-                );
+            AnimationFrame newFrame = base.BlendWith(otherCircle, amount);
 
-            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
+            float newRadius = (float)CalculateNewValue(_radius, otherCircle._radius, amount);
 
-            return new AnimationCircle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth).SetAngle(newAngle);
+            return new AnimationCircle(newFrame, newRadius);
         }
 
         public override AnimationFrame GetCopy()

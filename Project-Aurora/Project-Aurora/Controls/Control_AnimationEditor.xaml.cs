@@ -58,6 +58,7 @@ namespace Aurora.Controls
             InitializeComponent();
 
             UpdateVirtualKeyboard();
+            UpdateScale(keyboard_overlayPreview.ActualWidth);
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
         }
@@ -136,7 +137,9 @@ namespace Aurora.Controls
             {
                 using (MemoryStream memory = new MemoryStream())
                 {
-                    (sender as Control_AnimationMixPresenter).RenderedBitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+                    Bitmap renderedBitmap = (sender as Control_AnimationMixPresenter).RenderedBitmap;
+                    renderedBitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Bmp);
+
                     memory.Position = 0;
                     BitmapImage bitmapimage = new BitmapImage();
                     bitmapimage.BeginInit();
@@ -158,17 +161,28 @@ namespace Aurora.Controls
             UpdateScale(e.NewSize.Width);
         }
 
+        private float _prevScale = 0;
         private void UpdateScale(double width)
         {
             float scale = (float)(width / Effects.canvas_width);
-
             if (scale < 1.0f)
                 scale = 1.0f;
+            if(_prevScale == 0)
+            {
+                animMixer.AnimationScale = scale;
 
-            animMixer.AnimationScale = scale;
+                _prevScale = scale;
+            }
+            else if (_prevScale != scale)
+            {
 
-            rulerHorizontalPixels.MarkSize = scale;
-            rulerVerticalPixels.MarkSize = scale;
+                animMixer.AnimationScale = scale;
+
+                rulerHorizontalPixels.MarkSize = scale;
+                rulerVerticalPixels.MarkSize = scale;
+
+                _prevScale = scale;
+            }
         }
 
         private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame frame)

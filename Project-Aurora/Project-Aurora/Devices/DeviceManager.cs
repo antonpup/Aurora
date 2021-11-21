@@ -30,7 +30,7 @@ namespace Aurora.Devices
             Worker.DoWork += WorkerOnDoWork;
         }
 
-        private bool working = false;
+        public bool working = false;
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
             if (!working)
@@ -69,8 +69,8 @@ namespace Aurora.Devices
 
     public class DeviceManager
     {
-        private const int RETRY_INTERVAL = 4000;
-        private const int RETRY_ATTEMPTS = 8;
+        private const int RETRY_INTERVAL = 2000;
+        private const int RETRY_ATTEMPTS = 6;
         private bool _InitializeOnceAllowed;
         private bool suspended;
         private bool resumed;
@@ -254,7 +254,6 @@ namespace Aurora.Devices
                 {
                     if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                         continue;
-
                     lock (dc.actionLock)
                         dc.Device.Initialize();
                 }
@@ -309,6 +308,7 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
+                dc.working = true;
                 lock (dc.actionLock)
                     dc.Device.Shutdown();
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
@@ -319,6 +319,7 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
+                dc.working = true;
                 lock (dc.actionLock)
                     dc.Device.Reset();
             }

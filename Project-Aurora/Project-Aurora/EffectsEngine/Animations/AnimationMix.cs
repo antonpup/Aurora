@@ -119,7 +119,7 @@ namespace Aurora.EffectsEngine.Animations
                      }
                      catch (Exception exc)
                      {
-                         System.Console.WriteLine();
+                         System.Console.WriteLine("Animation mix draw error: " + exc.Message);
                      }
                  }
                  else if(_automatically_remove_complete)

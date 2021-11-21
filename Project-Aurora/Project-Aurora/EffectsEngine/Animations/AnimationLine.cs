@@ -120,7 +120,7 @@ namespace Aurora.EffectsEngine.Animations
             _scaledStartPoint = new PointF((_start_point.X * Scale) + Offset.X, (_start_point.Y * Scale) + Offset.Y);
             _scaledEndPoint = new PointF((_end_point.X * Scale) + Offset.X, (_end_point.Y * Scale) + Offset.Y);
 
-            _rotatePoint = _scaledStartPoint;
+            _center = _scaledStartPoint;
 
             base.virtUpdate();
         }
@@ -176,7 +176,7 @@ namespace Aurora.EffectsEngine.Animations
                 (float)CalculateNewValue(_end_point.Y, (otherAnim as AnimationLine)._end_point.Y, amount)
                 );
 
-            int newwidth = (int)Math.Round(CalculateNewValue(_width, otherAnim._width, amount));
+            int newwidth = CalculateNewValue(_width, otherAnim._width, amount);
             float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
