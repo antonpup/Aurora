@@ -195,7 +195,8 @@ namespace Aurora.Utils
 
                             for (int libraryId = 1; libraryFolders.ContainsKey(libraryId.ToString()); libraryId++)
                             {
-                                string libraryPath = (string)libraryFolders[libraryId.ToString()];
+                                Dictionary<string, object> library = (Dictionary<string, object>)libraryFolders[libraryId.ToString()];
+                                string libraryPath = (string)library["path"];
 
                                 manifestFile = Path.Combine(libraryPath, "steamapps", string.Format("appmanifest_{0}.acf", gameId));
                                 if (File.Exists(manifestFile))
