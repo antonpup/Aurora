@@ -10,6 +10,10 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
+        public AnimationFilledRectangle(AnimationFrame animationFrame) : base(animationFrame)
+        {
+        }
+
         public AnimationFilledRectangle(RectangleF dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
         {
         }
@@ -31,36 +35,25 @@ namespace Aurora.EffectsEngine.Animations
             g.Transform = _transformationMatrix;
             g.FillRectangle(_brush, _scaledDimension);
         }
-        
+
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
         {
             if (!(otherAnim is AnimationFilledRectangle))
             {
                 throw new FormatException("Cannot blend with another type");
             }
+            AnimationFilledRectangle otherCircle = (AnimationFilledRectangle)otherAnim;
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
-                );
+            AnimationFrame newFrame = base.BlendWith(otherCircle, amount);
 
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
-
-            return new AnimationFilledRectangle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount)).SetAngle(newAngle);
+            return new AnimationFilledRectangle(newFrame);
         }
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationFilledRectangle(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationFilledRectangle(this);
         }
 
         public override bool Equals(object obj)

@@ -56,6 +56,20 @@ namespace Aurora.EffectsEngine.Animations
             _duration = 0.0f;
         }
 
+        public AnimationEllipse(AnimationFrame frame, float radiusX, float radiusY) : base(frame)
+        {
+            _radius_x = radiusX;
+            _radius_y = radiusY;
+            _center = new PointF(_dimension.X + _radius_x, _dimension.Y + _radius_y);
+        }
+
+        public AnimationEllipse(AnimationEllipse animationEllipse) : base(animationEllipse)
+        {
+            _radius_x = animationEllipse._radius_x;
+            _radius_y = animationEllipse._radius_y;
+            _center = animationEllipse._center;
+        }
+
         public AnimationEllipse(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
             _radius_x = dimension.Width / 2.0f;
@@ -139,13 +153,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationEllipse(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationEllipse(this);
         }
 
         public override bool Equals(object obj)

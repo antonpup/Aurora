@@ -144,6 +144,9 @@ namespace Aurora.EffectsEngine.Animations
             _width = frame.Width;
             _scale = frame.Scale;
             _offset = frame.Offset;
+            _angle = frame.Angle;
+            _center = frame.RotatePoint;
+            _transitionType = frame.TransitionType;
         }
 
         public AnimationFrame(Rectangle dimension, Color color, int width = 1, float duration = 0.0f)
@@ -352,17 +355,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public virtual AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            AnimationFrame copy = new AnimationFrame();
-            copy._dimension = newrect;
-            copy._color = Color.FromArgb(_color.A, _color.R, _color.G, _color.B);
-
-            return copy;
+            return new AnimationFrame(this);
         }
 
         public override bool Equals(object obj)

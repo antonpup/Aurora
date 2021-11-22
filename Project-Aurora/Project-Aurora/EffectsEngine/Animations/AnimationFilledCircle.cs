@@ -14,14 +14,6 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public AnimationFilledCircle(Rectangle dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
-        {
-        }
-
-        public AnimationFilledCircle(RectangleF dimension, Color color, float duration = 0.0f) : base(dimension, color, 1, duration)
-        {
-        }
-
         public AnimationFilledCircle(PointF center, float radius, Color color, int width = 1, float duration = 0.0f) : base(center, radius, color, width, duration)
         {
         }
@@ -65,13 +57,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationFilledCircle(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationFilledCircle(this);
         }
 
         public override bool Equals(object obj)

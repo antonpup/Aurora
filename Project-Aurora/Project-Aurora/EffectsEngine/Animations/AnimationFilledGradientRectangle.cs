@@ -15,6 +15,16 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
+        public AnimationFilledGradientRectangle(AnimationFilledGradientRectangle animationFilledGradientRectangle) : base(animationFilledGradientRectangle)
+        {
+            _gradientBrush = animationFilledGradientRectangle.GradientBrush;
+        }
+
+        public AnimationFilledGradientRectangle(AnimationFrame animationFrame, EffectBrush effectBrush) : base(animationFrame)
+        {
+            _gradientBrush = effectBrush;
+        }
+
         public AnimationFilledGradientRectangle(RectangleF dimension, EffectBrush brush, float duration = 0.0f) : base(dimension, Color.Transparent, duration)
         {
             _gradientBrush = brush;
@@ -39,29 +49,18 @@ namespace Aurora.EffectsEngine.Animations
             {
                 throw new FormatException("Cannot blend with another type");
             }
+            AnimationFilledGradientRectangle otherCircle = (AnimationFilledGradientRectangle)otherAnim;
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
-                );
+            AnimationFrame newFrame = base.BlendWith(otherCircle, amount);
 
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
-
-            return new AnimationFilledGradientRectangle(newrect, _gradientBrush.BlendEffectBrush((otherAnim as AnimationFilledGradientRectangle)._gradientBrush, amount)).SetAngle(newAngle);
+            return new AnimationFilledGradientRectangle(newFrame, _gradientBrush);
         }
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationFilledGradientRectangle(newrect, new EffectBrush(_gradientBrush), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationFilledGradientRectangle(this);
         }
 
         public override bool Equals(object obj)

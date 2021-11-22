@@ -12,7 +12,6 @@ namespace Aurora.EffectsEngine.Animations
         public float Radius { get { return _radius; } }
         public PointF Center { get { return _center; } }
 
-
         public AnimationFrame SetRadius(float radius)
         {
             _radius = radius;
@@ -118,20 +117,14 @@ namespace Aurora.EffectsEngine.Animations
 
             AnimationFrame newFrame = base.BlendWith(otherCircle, amount);
 
-            float newRadius = (float)CalculateNewValue(_radius, otherCircle._radius, amount);
+            float newRadius = CalculateNewValue(_radius, otherCircle._radius, amount);
 
             return new AnimationCircle(newFrame, newRadius);
         }
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationCircle(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationCircle(this);
         }
 
         public override bool Equals(object obj)
