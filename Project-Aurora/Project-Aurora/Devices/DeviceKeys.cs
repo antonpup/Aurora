@@ -1575,6 +1575,24 @@ namespace Aurora.Devices
         ADDITIONALLIGHT57 = 274,
 
         /// <summary>
+        /// Additional Light 58
+        /// </summary>
+        [Description("Additional Light 58")]
+        ADDITIONALLIGHT58 = 275,
+
+        /// <summary>
+        /// Additional Light 59
+        /// </summary>
+        [Description("Additional Light 59")]
+        ADDITIONALLIGHT59 = 276,
+
+        /// <summary>
+        /// Additional Light 60
+        /// </summary>
+        [Description("Additional Light 60")]
+        ADDITIONALLIGHT60 = 277,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]
