@@ -14,6 +14,7 @@ using YeeLightAPI.YeeLightDeviceLocator;
 using YeeLightAPI.YeeLightConstants;
 using YeeLightAPI.YeeLightExceptions;
 using YeeLightAPI;
+using static YeeLightAPI.YeeLightExceptions.Exceptions;
 
 namespace Aurora.Devices.YeeLight
 {
@@ -112,7 +113,19 @@ namespace Aurora.Devices.YeeLight
         private int whiteCounter = 10;
         protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            try
+            {
+                return TryUpdate(keyColors);
+            }catch(Exception excp)
+            {
+                Reset();
+                return TryUpdate(keyColors);
+            }
+            return false;
+        }
 
+        private bool TryUpdate(Dictionary<DeviceKeys, Color> keyColors)
+        {
             var sendDelay = Math.Max(5, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"));
             if (updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
                 return false;
