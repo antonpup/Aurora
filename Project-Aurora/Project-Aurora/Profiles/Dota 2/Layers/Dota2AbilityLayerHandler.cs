@@ -53,6 +53,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             return new Control_Dota2AbilityLayer(this);
         }
 
+        private List<string> ignoredAbilities = new List<string>() { "seasonal", "high_five" };
         public override EffectLayer Render(IGameState state)
         {
             EffectLayer abilities_layer = new EffectLayer("Dota 2 - Abilities");
@@ -66,13 +67,11 @@ namespace Aurora.Profiles.Dota_2.Layers
                     for (int index = 0; index < dota2state.Abilities.Count; index++)
                     {
                         Ability ability = dota2state.Abilities[index];
-                        if (ability.Name.Contains("seasonal") || ability.Name.Contains("high_five"))
-                            continue;  
+                        foreach(string ignoredKeyword in ignoredAbilities)
+                            if (ability.Name.Contains(ignoredKeyword))
+                                continue;  
                         
                         Devices.DeviceKeys key = Properties.AbilityKeys[index];
-
-                        if (ability.IsUltimate)
-                            key = Properties.AbilityKeys[5];
 
                         if (ability.CanCast && ability.Cooldown == 0 && ability.Level > 0)
                             abilities_layer.Set(key, Properties.CanCastAbilityColor);
