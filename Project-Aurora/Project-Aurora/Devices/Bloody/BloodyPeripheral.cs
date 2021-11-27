@@ -38,6 +38,10 @@ namespace Aurora.Devices.Bloody
             _peripheralType = peripheralType;
         }
 
+        public override string ToString()
+        {
+            return _peripheralType.ToString();
+        }
 
         public static List<BloodyPeripheral> GetDevices()
         {

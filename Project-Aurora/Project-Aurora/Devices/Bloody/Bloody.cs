@@ -14,7 +14,8 @@ namespace Aurora.Devices.Bloody
 {
     public class BloodyDevice : DefaultDevice
     {
-        public override string DeviceName => IsInitialized ? "Bloody:" + GetDeviceNames() : "Bloody";
+        public override string DeviceName => "Bloody";
+        protected override string DeviceInfo => IsInitialized ? GetDeviceNames() : base.DeviceInfo;
 
         private BloodyKeyboard keyboard;
         private List<BloodyPeripheral> peripherals;
@@ -88,7 +89,7 @@ namespace Aurora.Devices.Bloody
 
         private string GetDeviceNames()
         {
-            return (keyboard != null ? " Keyboard" : "") + (peripherals.ConvertAll(peripheral => " " + peripheral.PeripheralType));
+            return (keyboard != null ? " Keyboard" : "") + String.Join(" ", peripherals);
         }
     }
 }
