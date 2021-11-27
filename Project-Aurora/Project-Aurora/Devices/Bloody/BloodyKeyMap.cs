@@ -99,7 +99,43 @@ namespace Aurora.Devices.Bloody
             [DeviceKeys.PAGE_DOWN] = Key.PAGE_DOWN,
             [DeviceKeys.ARROW_RIGHT] = Key.ARROW_RIGHT,
             [DeviceKeys.ADDITIONALLIGHT1] = Key.LEFT_BAR,
-            [DeviceKeys.ADDITIONALLIGHT2] = Key.RIGHT_BAR
+            [DeviceKeys.ADDITIONALLIGHT2] = Key.RIGHT_BAR,
+        };
+        public static Dictionary<BloodyPeripheralLed, DeviceKeys> MouseLightMap = new Dictionary<BloodyPeripheralLed, DeviceKeys>()
+        {
+            [BloodyPeripheralLed.L2] = DeviceKeys.PERIPHERAL_LIGHT1,
+            [BloodyPeripheralLed.L3] = DeviceKeys.PERIPHERAL_LIGHT2,
+            [BloodyPeripheralLed.L4] = DeviceKeys.PERIPHERAL_LIGHT3,
+            [BloodyPeripheralLed.L5] = DeviceKeys.PERIPHERAL_LIGHT4,
+            [BloodyPeripheralLed.L6] = DeviceKeys.PERIPHERAL_LIGHT5,
+            [BloodyPeripheralLed.L7] = DeviceKeys.PERIPHERAL_LIGHT6,
+            [BloodyPeripheralLed.L10] = DeviceKeys.PERIPHERAL_LIGHT7, 
+            [BloodyPeripheralLed.L9 ] = DeviceKeys.PERIPHERAL_LIGHT13,
+            [BloodyPeripheralLed.L8 ] = DeviceKeys.PERIPHERAL_LIGHT14,
+            [BloodyPeripheralLed.L14] = DeviceKeys.PERIPHERAL_LIGHT15,
+            [BloodyPeripheralLed.L13] = DeviceKeys.PERIPHERAL_LIGHT16,
+
+
+            [BloodyPeripheralLed.L11] = DeviceKeys.Peripheral_Logo,
+            [BloodyPeripheralLed.L15] = DeviceKeys.Peripheral_ScrollWheel,
+        };
+        public static Dictionary<BloodyPeripheralLed, DeviceKeys> MousePadLightMap = new Dictionary<BloodyPeripheralLed, DeviceKeys>()
+        {
+            [BloodyPeripheralLed.L1] = DeviceKeys.MOUSEPADLIGHT1,
+            [BloodyPeripheralLed.L2] = DeviceKeys.MOUSEPADLIGHT2,
+            [BloodyPeripheralLed.L3] = DeviceKeys.MOUSEPADLIGHT3,
+            [BloodyPeripheralLed.L4] = DeviceKeys.MOUSEPADLIGHT4,
+            [BloodyPeripheralLed.L5] = DeviceKeys.MOUSEPADLIGHT5,
+            [BloodyPeripheralLed.L6] = DeviceKeys.MOUSEPADLIGHT6,
+            [BloodyPeripheralLed.L7] = DeviceKeys.MOUSEPADLIGHT7,
+            [BloodyPeripheralLed.L8] = DeviceKeys.MOUSEPADLIGHT8,
+            [BloodyPeripheralLed.L9] = DeviceKeys.MOUSEPADLIGHT9,
+            [BloodyPeripheralLed.L10] = DeviceKeys.MOUSEPADLIGHT10,
+            [BloodyPeripheralLed.L11] = DeviceKeys.MOUSEPADLIGHT11,
+            [BloodyPeripheralLed.L12] = DeviceKeys.MOUSEPADLIGHT12,
+            [BloodyPeripheralLed.L13] = DeviceKeys.MOUSEPADLIGHT13,
+            [BloodyPeripheralLed.L14] = DeviceKeys.MOUSEPADLIGHT14,
+            [BloodyPeripheralLed.L15] = DeviceKeys.MOUSEPADLIGHT15,
         };
     }
 }
