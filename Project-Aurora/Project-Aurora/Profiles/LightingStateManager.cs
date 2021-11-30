@@ -79,7 +79,7 @@ namespace Aurora.Profiles
             if (Initialized)
                 return true;
 
-            processMonitor = new ActiveProcessMonitor();
+            processMonitor = ActiveProcessMonitor.Instance;
             runningProcessMonitor = new RunningProcessMonitor();
 
             // Register all Application types in the assembly

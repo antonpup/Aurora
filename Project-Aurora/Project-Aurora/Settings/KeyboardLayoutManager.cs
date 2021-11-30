@@ -871,6 +871,9 @@ namespace Aurora.Settings
                     case PreferredMousepad.SteelSeries_QcK_2_Zone:
                         mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
                         break;
+                    case PreferredMousepad.Bloody_MP50RS:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "bloody_mp-50rs.json");
+                        break;
                 }
 
                 string mouse_feature_path = "";

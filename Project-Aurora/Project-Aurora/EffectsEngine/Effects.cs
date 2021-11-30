@@ -98,6 +98,8 @@ namespace Aurora
 
     public class Effects
     {
+        private const int MAX_DEVICE_ID = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
+        
         int filenamecount = 0;
         public bool isrecording = false;
         Bitmap previousframe = null;
@@ -176,9 +178,9 @@ namespace Aurora
         /// </summary>
         public static Aurora.Settings.FreeFormObject WholeCanvasFreeForm => new Settings.FreeFormObject(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
 
-        private static Dictionary<Devices.DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<Devices.DeviceKeys, BitmapRectangle>();
+        private static Dictionary<DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<DeviceKeys, BitmapRectangle>(MAX_DEVICE_ID);
 
-        private static Dictionary<Devices.DeviceKeys, Color> keyColors = new Dictionary<Devices.DeviceKeys, Color>();
+        private static Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
 
         public Effects()
         {
@@ -276,7 +278,7 @@ namespace Aurora
                     background += layer;
 
                 //Apply Brightness
-                Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>();
+                Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
 
                 foreach (Devices.DeviceKeys key in possible_peripheral_keys)
                 {
@@ -306,7 +308,7 @@ namespace Aurora
                     }
                 }
 
-                Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>();
+                Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
                 Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
 
                 foreach (Devices.DeviceKeys key in allKeys)
@@ -318,7 +320,7 @@ namespace Aurora
 
                 DeviceColorComposition dcc = new DeviceColorComposition()
                 {
-                    keyColors = new Dictionary<DeviceKeys, Color>(keyColors),
+                    keyColors = keyColors,
                     keyBitmap = background.GetBitmap()
                 };
 

@@ -424,6 +424,8 @@ namespace Aurora.Settings
         SteelSeries_QcK_Prism = 100,
         [Description("SteelSeries - Two-zone QcK Mousepad")]
         SteelSeries_QcK_2_Zone = 101,
+        [Description("Bloody - MP-50RS")]
+        Bloody_MP50RS = 102,
     }
 
 
