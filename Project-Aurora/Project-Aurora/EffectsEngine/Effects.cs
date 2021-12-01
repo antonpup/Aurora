@@ -262,6 +262,9 @@ namespace Aurora
             Effects.bitmap_map = bitmap_map;
         }
 
+
+        private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new Dictionary<DeviceKeys, Color>(possible_peripheral_keys.Length);
+        private readonly Dictionary<DeviceKeys, Color> _keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
         public void PushFrame(EffectFrame frame)
         {
             lock (bitmap_lock)
@@ -278,18 +281,17 @@ namespace Aurora
                     background += layer;
 
                 //Apply Brightness
-                Dictionary<DeviceKeys, Color> peripehralColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
-
-                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
+                _peripheralColors.Clear();
+                foreach (DeviceKeys key in possible_peripheral_keys)
                 {
-                    if(!peripehralColors.ContainsKey(key))
-                        peripehralColors.Add(key, background.Get(key));
+                    if(!_peripheralColors.ContainsKey(key))
+                        _peripheralColors.Add(key, background.Get(key));
                 }
 
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
 
-                foreach (Devices.DeviceKeys key in possible_peripheral_keys)
-                    background.Set(key, Utils.ColorUtils.BlendColors(peripehralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
+                foreach (DeviceKeys key in possible_peripheral_keys)
+                    background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
 
 
                 //if (Global.Configuration.UseVolumeAsBrightness)
@@ -308,19 +310,19 @@ namespace Aurora
                     }
                 }
 
-                Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
+                _keyColors.Clear();
                 Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
 
                 foreach (Devices.DeviceKeys key in allKeys)
-                    keyColors[key] = background.Get(key);
+                    _keyColors[key] = background.Get(key);
 
-                Effects.keyColors = new Dictionary<DeviceKeys, Color>(keyColors);
+                Effects.keyColors = _keyColors;
 
                 pushedframes++;
 
                 DeviceColorComposition dcc = new DeviceColorComposition()
                 {
-                    keyColors = keyColors,
+                    keyColors = _keyColors,
                     keyBitmap = background.GetBitmap()
                 };
 

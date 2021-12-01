@@ -11,11 +11,12 @@ namespace Aurora.Utils
 {
     public static class BitmapUtils
     {
-        public static Color GetRegionColor(Bitmap map, BitmapRectangle rectangle)
+
+        public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
         {
             try
             {
-                if (rectangle.IsEmpty)
+                if (rectangle.IsEmpty || rectangle.Height == 0 || rectangle.Width == 0)
                     return Color.FromArgb(0, 0, 0);
 
                 long Red = 0;
@@ -24,33 +25,36 @@ namespace Aurora.Utils
                 long Alpha = 0;
 
                 BitmapData srcData = map.LockBits(
-                    rectangle.Rectangle,
+                    rectangle,
                     ImageLockMode.ReadOnly,
                     PixelFormat.Format32bppArgb);
 
                 int stride = srcData.Stride;
 
-                IntPtr Scan0 = srcData.Scan0;
+                IntPtr scan0 = srcData.Scan0;
 
                 unsafe
                 {
-                    byte* p = (byte*)(void*)Scan0;
+                    byte* p = (byte*)(void*)scan0;
 
                     for (int y = 0; y < rectangle.Height; y++)
                     {
+                        var i = y * stride;
                         for (int x = 0; x < rectangle.Width; x++)
                         {
-                            Blue += p[(y * stride) + x * 4];
-                            Green += p[(y * stride) + x * 4 + 1];
-                            Red += p[(y * stride) + x * 4 + 2];
-                            Alpha += p[(y * stride) + x * 4 + 3];
+                            var j = i + x * 4;
+                            Blue += p[j];
+                            Green += p[j + 1];
+                            Red += p[j + 2];
+                            Alpha += p[j + 3];
                         }
                     }
                 }
 
                 map.UnlockBits(srcData);
 
-                return Color.FromArgb((int)(Alpha / rectangle.Area), (int)(Red / rectangle.Area), (int)(Green / rectangle.Area), (int)(Blue / rectangle.Area));
+                var area = rectangle.Width * rectangle.Height;
+                return Color.FromArgb((int)(Alpha / area), (int)(Red / area), (int)(Green / area), (int)(Blue / area));
             }
             catch (Exception exc)
             {
@@ -58,11 +62,6 @@ namespace Aurora.Utils
 
                 return Color.FromArgb(0, 0, 0);
             }
-        }
-
-        public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
-        {
-            return GetRegionColor(map, new BitmapRectangle(rectangle));
         }
 
         public static Color GetAverageColor(Image screenshot)
