@@ -76,7 +76,7 @@ namespace Aurora.Devices.Corsair
             allDeviceUpdated.Dispose();
         }
 
-        protected override void DeviceLedUpdateFinished()
+        public override void DeviceLedUpdateFinished()
         {
             if (Devices.Count != CUESDK.CorsairGetDeviceCount())
             {

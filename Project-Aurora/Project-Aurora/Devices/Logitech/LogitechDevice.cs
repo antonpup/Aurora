@@ -67,7 +67,7 @@ namespace Aurora.Devices.Logitech
 
             //reset keys to peripheral_logo here so if we dont find any better color for them,
             //at least the leds wont turn off :)
-            if (keyColors.TryGetValue(genericKey, out var periph))
+            if (keyColors.TryGetValue((int)genericKey, out var periph))
             {
                 speakers = periph;
                 mousepad = periph;

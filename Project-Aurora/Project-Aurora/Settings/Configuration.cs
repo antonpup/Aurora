@@ -556,11 +556,6 @@ namespace Aurora.Settings
         /// Called after the configuration file has been deserialized or created for the first time.
         /// </summary>
         public void OnPostLoad() {
-            if (!UnifiedHidDisabled) {
-                DevicesDisabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
-                UnifiedHidDisabled = true;
-            }
-
             // Setup events that will trigger PropertyChanged when child collections change (to trigger a save)
             ExcludedPrograms.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ExcludedPrograms)));
             DevicesDisabled.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DevicesDisabled)));
@@ -609,11 +604,6 @@ namespace Aurora.Settings
 
         private static void DeserializeErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
-            {
-                dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
-                e.ErrorContext.Handled = true;
-            }
             if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.NZXT.NZXTDevice") && e.CurrentObject is HashSet<Type>)
             {
                 e.ErrorContext.Handled = true;

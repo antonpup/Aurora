@@ -29,7 +29,7 @@ namespace Aurora.Devices.Rampage
             IsInitialized = false;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) {
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false) {
             if (mouse!=null)
             {
                 UpdateMouse(keyColors);
@@ -46,13 +46,13 @@ namespace Aurora.Devices.Rampage
             variableRegistry.Register($"{DeviceName}_sleep", 30, "Sleep for", 1000, 0);
         }
 
-        private void UpdateMouse(Dictionary<DeviceKeys, Color> keyColors)
+        private void UpdateMouse(Dictionary<int, Color> keyColors)
         {
-            keyColors.TryGetValue(DeviceKeys.Peripheral, out var peripheralColor);
+            keyColors.TryGetValue((int)DeviceKeys.Peripheral, out var peripheralColor);
             mouse.SetColor(ColorUtils.CorrectWithAlpha(peripheralColor));
             foreach (var keyValuePair in RampageKeyMap.MouseLightMap)
             {
-                if (keyColors.TryGetValue(keyValuePair.Value, out var color))
+                if (keyColors.TryGetValue((int)keyValuePair.Value, out var color))
                 {
                     var fromArgb = Color.FromArgb(
                         Math.Max(color.A - 128, 0),

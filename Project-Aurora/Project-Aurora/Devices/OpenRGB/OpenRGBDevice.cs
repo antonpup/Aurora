@@ -19,7 +19,6 @@ namespace Aurora.Devices.OpenRGB
     {
 
         protected override string ConnectorName => "OpenRGB";
-        protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.OrgbDevice.Name));
 
         private OpenRGBClient _openRgb;
 
@@ -72,7 +71,7 @@ namespace Aurora.Devices.OpenRGB
 
         public int Id { get; set; }
 
-        protected OpenRGBAuroraDevice(OpenRGBDevice device, int deviceIndex, OpenRGBClient openRgb)
+        public OpenRGBAuroraDevice(OpenRGBDevice device, int deviceIndex, OpenRGBClient openRgb)
         {
             Device = device;
             _openRgb = openRgb;
@@ -87,7 +86,7 @@ namespace Aurora.Devices.OpenRGB
             {
                 if (Device.Type == OpenRGBDeviceType.Keyboard)
                 {
-                    if (OpenRGBKeyNames.Keyboard.TryGetValue(Device.Leds[j].Name, out var dk))
+                    if (OpenRGBKeyNames.KeyNames.TryGetValue(Device.Leds[j].Name, out var dk))
                     {
                         KeyMapping.Add(new DeviceKey(dk));
                     }

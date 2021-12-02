@@ -20,7 +20,7 @@ namespace Aurora.Devices.Bloody
         private BloodyKeyboard keyboard;
         private List<BloodyPeripheral> peripherals;
 
-        private event EventHandler<Dictionary<DeviceKeys, Color>> deviceUpdated;
+        private event EventHandler<Dictionary<int, Color>> deviceUpdated;
 
         public override bool Initialize()
         {
@@ -47,12 +47,12 @@ namespace Aurora.Devices.Bloody
             IsInitialized = false;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) {
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false) {
             deviceUpdated(this, keyColors);
             return true;
         }
 
-        private void UpdateKeyboard(object sender, Dictionary<DeviceKeys, Color> keyColors)
+        private void UpdateKeyboard(object sender, Dictionary<int, Color> keyColors)
         {
             foreach (var (key, clr) in keyColors)
             {
@@ -63,7 +63,7 @@ namespace Aurora.Devices.Bloody
             keyboard.Update();
         }
 
-        private void UpdatePeripherals(object sender, Dictionary<DeviceKeys, Color> keyColors)
+        private void UpdatePeripherals(object sender, Dictionary<int, Color> keyColors)
         {
             foreach(var dev in peripherals)
             {
@@ -79,8 +79,7 @@ namespace Aurora.Devices.Bloody
                 }
                 foreach (KeyValuePair<BloodyPeripheralLed, DeviceKeys> ledAndKey in keyMap)
                 {
-                    Color color;
-                    keyColors.TryGetValue(ledAndKey.Value, out color);
+                    keyColors.TryGetValue((int)ledAndKey.Value, out var color);
                     dev.SetKeyColor(ledAndKey.Key, ColorUtils.CorrectWithAlpha(color));
                 }
                 dev.Update();

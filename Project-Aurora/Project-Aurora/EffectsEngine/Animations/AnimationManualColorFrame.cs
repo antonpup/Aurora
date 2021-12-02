@@ -1,10 +1,7 @@
-﻿using Aurora.Devices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Aurora.Settings;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -13,9 +10,7 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         private Dictionary<DeviceKey, Color> _BitmapColors = new Dictionary<DeviceKey, Color>();
 
-        public Dictionary<DeviceKey, Color> BitmapColors {
-            get { _BitmapColors }
-        }
+        public Dictionary<DeviceKey, Color> BitmapColors => _BitmapColors;
 
         public AnimationFrame SetKeyColor(DeviceKey Key, Color Color)
         {

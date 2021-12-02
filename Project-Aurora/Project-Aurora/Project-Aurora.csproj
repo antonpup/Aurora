@@ -65,7 +65,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Bloody.NET" Version="1.0.4" />
-    <PackageReference Include="Colore" Version="5.2.0" />
+    <PackageReference Include="Colore" Version="6.0.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="3.30.5.1" />
     <PackageReference Include="CUESDK.NET" Version="3.0.361.2" />
@@ -109,6 +109,12 @@
     </None>
     <None Update="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="DeviceLayouts\OtherDevices\monitor_leds.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="DeviceLayouts\OtherDevices\bloody_mp-50rs.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
