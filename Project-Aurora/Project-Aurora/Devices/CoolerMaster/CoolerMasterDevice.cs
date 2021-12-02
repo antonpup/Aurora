@@ -54,7 +54,7 @@ namespace Aurora.Devices.CoolerMaster
             IsInitialized = false;
         }
 
-        protected override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             foreach (var (dev, colors) in InitializedDevices)
             {
@@ -75,11 +75,12 @@ namespace Aurora.Devices.CoolerMaster
 
                 foreach (var (dk, clr) in keyColors)
                 {
-                    DK key = dk;
+                    DK key = (DeviceKeys)dk;
                     //HACK: the layouts for some reason switch backslash and enter
                     //around between ANSI and ISO needlessly. We swap them around here
-                    if (key == DK.ENTER && !Global.kbLayout.Loaded_Localization.IsANSI())
-                        key = DK.BACKSLASH;
+                    //TODO fix it to work
+                    /*if (key == DK.ENTER && !Global.kbLayout.Loaded_Localization.IsANSI())
+                        key = DK.BACKSLASH;*/
 
                     if (dict.TryGetValue(key, out var position))
                         colors.KeyColor[position.row, position.column] = new Native.KEY_COLOR(ColorUtils.CorrectWithAlpha(clr));

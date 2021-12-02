@@ -1,0 +1,37 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
+        "tag": -1,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 143,
+      "Height": 232,
+      "Image": "Logi_G502_outline.png",
+      "IsImage": true
+    },
+    "160": {
+      "Key": {
+        "visual_name": "Logo",
+        "tag": 160,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 30,
+      "Y": 107,
+      "Width": 45,
+      "Height": 65,
+      "Image": "Logi_G502_logo.png",
+      "IsImage": true
+    }
+  }
+}

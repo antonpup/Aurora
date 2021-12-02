@@ -15,8 +15,8 @@ namespace Aurora.Settings
 	    private readonly InputEvents inputEvents;
 	    private String recordingType = "";
         private bool isSingleKey = false;
-        private List<DeviceKeys> recordedKeys = new List<DeviceKeys>();
-        public delegate void RecordingFinishedHandler(DeviceKeys[] resulting_keys);
+        private List<DeviceKey> recordedKeys = new List<DeviceKey>();
+        public delegate void RecordingFinishedHandler(DeviceKey[] resulting_keys);
         public event RecordingFinishedHandler FinishedRecording;
 
         public KeyRecorder(InputEvents inputEvents)
@@ -43,7 +43,7 @@ namespace Aurora.Settings
             }
         }
 
-        public void AddKey(DeviceKeys key)
+        public void AddKey(DeviceKey key)
         {
             if (!IsRecording())
                 return;
@@ -59,7 +59,7 @@ namespace Aurora.Settings
             }
         }
 
-        public void RemoveKey(DeviceKeys key)
+        public void RemoveKey(DeviceKey key)
         {
             if (!IsRecording())
                 return;
@@ -70,12 +70,12 @@ namespace Aurora.Settings
             }
         }
 
-        public bool HasRecorded(DeviceKeys key)
+        public bool HasRecorded(DeviceKey key)
         {
             return recordedKeys.Contains(key);
         }
 
-        public DeviceKeys[] GetKeys()
+        public DeviceKey[] GetKeys()
         {
             return recordedKeys.ToArray();
         }
@@ -120,7 +120,7 @@ namespace Aurora.Settings
         {
             recordingType = "";
             isSingleKey = false;
-            recordedKeys = new List<DeviceKeys>();
+            recordedKeys = new List<DeviceKey>();
         }
 
         public bool IsSingleKey()

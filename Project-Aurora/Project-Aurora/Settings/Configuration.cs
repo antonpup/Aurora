@@ -480,11 +480,9 @@ namespace Aurora.Settings
         public bool HighPriority { get; set; } = false;
         public BitmapAccuracy BitmapAccuracy { get; set; } = BitmapAccuracy.Okay;
         public bool EnableAudioCapture { get; set; } = false;
-
         [JsonProperty("updates_check_on_start_up")] public bool UpdatesCheckOnStartUp { get; set; } = true;
         [JsonProperty("start_silently")] public bool StartSilently { get; set; } = false;
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
-        [JsonProperty("mouse_orientation")] public MouseOrientationType MouseOrientation { get; set; } = MouseOrientationType.RightHanded;
         [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
         [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.None;

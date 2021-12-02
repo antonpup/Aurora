@@ -143,14 +143,15 @@ namespace Aurora.Settings.Layers
                 if(shortcutKeys.Length > 0)
                 {
 
-                    Devices.DeviceKeys[] selectedKeys = Utils.KeyUtils.GetDeviceKeys(shortcutKeys, true, !Console.NumberLock)
+                    DeviceKey[] selectedKeys = Utils.KeyUtils.GetDeviceKeys(shortcutKeys, true, !Console.NumberLock)
                         .Concat(Utils.KeyUtils.GetDeviceKeys(heldKeys, true)).ToArray();
 
                     if (Properties.DimBackground)
                     {
-                        Devices.DeviceKeys[] backgroundKeys = Utils.KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
-                        sc_assistant_layer.Set(backgroundKeys, Properties.DimColor);
-                        //sc_assistant_layer.Fill(Properties.DimColor);
+                        //TODO ALex
+                        //DeviceKey[] backgroundKeys = Utils.KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
+                        //sc_assistant_layer.Set(backgroundKeys, Properties.DimColor);
+                        sc_assistant_layer.Fill(Properties.DimColor);
                     }
 
                     sc_assistant_layer.Set(selectedKeys, Properties.PrimaryColor);

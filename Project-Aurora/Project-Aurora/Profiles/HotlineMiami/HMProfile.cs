@@ -31,7 +31,7 @@ namespace Aurora.Profiles.HotlineMiami
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D })
                     }
                 }
                 ),
@@ -40,7 +40,7 @@ namespace Aurora.Profiles.HotlineMiami
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.R, Devices.DeviceKeys.ESC })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.SPACE, Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.R, Devices.DeviceKeys.ESC })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

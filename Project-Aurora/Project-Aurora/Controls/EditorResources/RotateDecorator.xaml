@@ -22,18 +22,18 @@
     <!-- RotateDecorator Template -->
     <ControlTemplate x:Key="RotateDecoratorTemplate" TargetType="{x:Type Control}">
         <Grid>
-            <s:RotateThumb Margin="-18,-18,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <s:RotateThumb Margin="0,-18,-18,0" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <s:RotateThumb Margin="-18,-18,0,0" Height="10" Width="10" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <s:RotateThumb Margin="0,-18,-25,0" Height="10" Width="10" VerticalAlignment="Top" HorizontalAlignment="Right">
                 <s:RotateThumb.RenderTransform>
                     <RotateTransform Angle="90" />
                 </s:RotateThumb.RenderTransform>
             </s:RotateThumb>
-            <s:RotateThumb Margin="0,0,-18,-18" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+            <s:RotateThumb Margin="0,0,-25,-25" Height="10" Width="10" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                 <s:RotateThumb.RenderTransform>
                     <RotateTransform Angle="180" />
                 </s:RotateThumb.RenderTransform>
             </s:RotateThumb>
-            <s:RotateThumb Margin="-18,0,0,-18" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <s:RotateThumb Margin="-18,0,0,-25" Height="10" Width="10" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                 <s:RotateThumb.RenderTransform>
                     <RotateTransform Angle="270" />
                 </s:RotateThumb.RenderTransform>

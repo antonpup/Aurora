@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Settings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Aurora.Controls
             }
         }
 
-        public List<Devices.DeviceKeys> List
+        public List<Aurora.Settings.DeviceKey> List
         {
             get
             {
@@ -53,7 +54,8 @@ namespace Aurora.Controls
             {
                 if (Sequence == null)
                     Sequence = new Settings.KeySequence(value.ToArray());
-                else {
+                else
+                {
                     Sequence.keys = value;
                 }
                 SequenceKeysChange?.Invoke(this, new EventArgs());
@@ -65,14 +67,17 @@ namespace Aurora.Controls
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty SequenceProperty = DependencyProperty.Register("Sequence", typeof(Settings.KeySequence), typeof(UserControl), new PropertyMetadata(new Settings.KeySequence(), SequencePropertyChanged));
 
-        public Settings.KeySequence Sequence {
+        public Settings.KeySequence Sequence
+        {
             get => (Settings.KeySequence)GetValue(SequenceProperty);
             set => SetValue(SequenceProperty, value);
         }
 
-        private static void SequencePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) {
+        private static void SequencePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
             var source = (KeySequence)sender;
-            if (!(e.NewValue is Settings.KeySequence@new)) {
+            if (!(e.NewValue is Settings.KeySequence @new))
+            {
                 source.Sequence = new Settings.KeySequence();
                 return;
             }
@@ -85,7 +90,8 @@ namespace Aurora.Controls
             source.sequence_updateToLayerEditor();
 
             // Manually update the keysequence list. Gross
-            if (source.allowListRefresh) {
+            if (source.allowListRefresh)
+            {
                 source.keys_keysequence.Items.Clear();
                 foreach (var key in @new.keys)
                     source.keys_keysequence.Items.Add(key);
@@ -116,13 +122,14 @@ namespace Aurora.Controls
 
                 this.sequence_freestyle_checkbox.IsEnabled = value;
                 this.sequence_freestyle_checkbox.ToolTip = (value ? null : "Freestyle has been disabled.");
-                    
+
             }
         }
 
         #region ShowOnCanvas property
         // Drawn freeform object bounds will only appear if this is true.
-        public bool ShowOnCanvas {
+        public bool ShowOnCanvas
+        {
             get => (bool)GetValue(ShowOnCanvasProperty);
             set => SetValue(ShowOnCanvasProperty, value);
         }
@@ -214,7 +221,7 @@ namespace Aurora.Controls
 
                     button.Content = "Assign Keys";
 
-                    Devices.DeviceKeys[] recorded_keys = Global.key_recorder.GetKeys();
+                    DeviceKey[] recorded_keys = Global.key_recorder.GetKeys();
 
                     if (sequence_listbox.SelectedIndex > 0 && sequence_listbox.SelectedIndex < (sequence_listbox.Items.Count - 1))
                     {
@@ -276,7 +283,7 @@ namespace Aurora.Controls
 
         private void freeform_updated(Settings.FreeFormObject newfreeform)
         {
-            if(newfreeform != null)
+            if (newfreeform != null)
             {
                 Sequence.freeform = newfreeform;
 
@@ -309,7 +316,7 @@ namespace Aurora.Controls
 
         private void UserControl_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue is bool)
+            if (e.NewValue is bool)
             {
                 this.keys_keysequence.IsEnabled = (bool)e.NewValue;
                 this.sequence_record.IsEnabled = (bool)e.NewValue;
@@ -328,7 +335,7 @@ namespace Aurora.Controls
 
         private void keys_keysequence_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(keys_keysequence.SelectedItems.Count <= 1)
+            if (keys_keysequence.SelectedItems.Count <= 1)
             {
                 this.sequence_up.IsEnabled = IsEnabled && true;
                 this.sequence_down.IsEnabled = IsEnabled && true;
@@ -361,7 +368,7 @@ namespace Aurora.Controls
                 else
                     sequence_removeFromLayerEditor();
             }
-                
+
         }
     }
 }

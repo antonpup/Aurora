@@ -12,7 +12,4 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-
-    <Canvas x:Name="editor_canvas">
-    </Canvas>
 </UserControl>

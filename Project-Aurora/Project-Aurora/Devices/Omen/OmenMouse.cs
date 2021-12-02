@@ -65,18 +65,18 @@ namespace Aurora.Devices.Omen
             MOUSE_LIGHTING_ZONE_WHEEL = 2,                          /* Wheel zone */
         }
 
-        public void SetLights(Dictionary<DeviceKeys, Color> keyColors)
+        public void SetLights(Dictionary<int, Color> keyColors)
         {
             if (hMouse != IntPtr.Zero)
             {
-                foreach (KeyValuePair<DeviceKeys, Color> keyColor in keyColors)
+                foreach (var keyColor in keyColors)
                 {
-                    switch (keyColor.Key)
+                    switch ((DeviceKeys)keyColor.Key)
                     {
                         case DeviceKeys.Peripheral_Logo:
                         case DeviceKeys.Peripheral_FrontLight:
                         case DeviceKeys.Peripheral_ScrollWheel:
-                            SetLight(keyColor.Key, keyColor.Value);
+                            SetLight((DeviceKeys)keyColor.Key, keyColor.Value);
                             break;
                     }
                 }

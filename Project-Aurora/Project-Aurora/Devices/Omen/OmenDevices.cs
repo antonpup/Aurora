@@ -55,8 +55,9 @@ namespace Aurora.Devices.Omen
 
         public bool Initialize()
         {
-            Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
-            Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
+            //TODO fix this
+            /*Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
+            Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;*/
 
             lock (this)
             {
@@ -161,7 +162,7 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {

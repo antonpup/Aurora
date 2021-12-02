@@ -1,0 +1,125 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 1,
+      "Y": 0,
+      "Width": 122,
+      "Height": 232,
+      "Image": "SteelSeries_Rival_650_outline.png"
+    },
+    "1": {
+      "Key": {
+        "tag": 1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 52,
+      "Y": 36,
+      "Width": 14,
+      "Height": 36,
+      "Image": "SteelSeries_Rival_650_wheel.png"
+    },
+    "0": {
+      "Key": {
+        "tag": 0,
+        "visual_name": "Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 30,
+      "Y": 170,
+      "Width": 45,
+      "Height": 45,
+      "Image": "SteelSeries_Rival_300_logo.png"
+    },
+    "2": {
+      "Key": {
+        "tag": 2,
+        "visual_name": "L1"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 31,
+      "Y": 103,
+      "Width": 12,
+      "Height": 37,
+      "Image": "SteelSeries_Rival_650_L1.png"
+    },
+    "3": {
+      "Key": {
+        "tag": 3,
+        "visual_name": "L2"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 20,
+      "Y": 138,
+      "Width": 17,
+      "Height": 14,
+      "Image": "SteelSeries_Rival_650_L2.png"
+    },
+    "4": {
+      "Key": {
+        "tag": 4,
+        "visual_name": "L3"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 8,
+      "Y": 151,
+      "Width": 13,
+      "Height": 14,
+      "Image": "SteelSeries_Rival_650_L3.png"
+    },
+    "5": {
+      "Key": {
+        "tag": 5,
+        "visual_name": "R1"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 76,
+      "Y": 103,
+      "Width": 13,
+      "Height": 37,
+      "Image": "SteelSeries_Rival_650_R1.png"
+    },
+    "6": {
+      "Key": {
+        "tag": 6,
+        "visual_name": "R2"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 85,
+      "Y": 139,
+      "Width": 17,
+      "Height": 14,
+      "Image": "SteelSeries_Rival_650_R2.png"
+    },
+    "7": {
+      "Key": {
+        "tag": 7,
+        "visual_name": "R3"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 98,
+      "Y": 152,
+      "Width": 14,
+      "Height": 14,
+      "Image": "SteelSeries_Rival_650_R3.png"
+    }
+  },
+  "jis_key_modifications": {}
+}

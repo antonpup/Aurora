@@ -21,15 +21,6 @@ namespace Aurora.EffectsEngine
 
         private bool needsRender = false;
 
-        Color peripheral;
-
-        private static Devices.DeviceKeys[] possible_peripheral_keys = {
-                Devices.DeviceKeys.Peripheral,
-                Devices.DeviceKeys.Peripheral_FrontLight,
-                Devices.DeviceKeys.Peripheral_ScrollWheel,
-                Devices.DeviceKeys.Peripheral_Logo
-            };
-
         static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
 
         /// <summary>
@@ -39,7 +30,6 @@ namespace Aurora.EffectsEngine
         {
             name = "Effect Layer";
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
         }
@@ -52,7 +42,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = another_layer.name;
             colormap = new Bitmap(another_layer.colormap);
-            peripheral = another_layer.peripheral;
 
             needsRender = another_layer.needsRender;
         }
@@ -65,7 +54,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
         }
@@ -79,7 +67,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = color;
 
             Fill(color);
         }
@@ -96,7 +83,6 @@ namespace Aurora.EffectsEngine
         {
             this.name = name;
             colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
-            peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
 
@@ -378,7 +364,7 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(Devices.DeviceKeys key, Color color)
+        public EffectLayer Set(DeviceKey key, Color color)
         {
             SetOneKey(key, color);
 
@@ -391,7 +377,7 @@ namespace Aurora.EffectsEngine
         /// <param name="keys">Array of DeviceKeys to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(Devices.DeviceKeys[] keys, Color color)
+        public EffectLayer Set(DeviceKey[] keys, Color color)
         {
             foreach (var key in keys)
                 SetOneKey(key, color);
@@ -536,7 +522,9 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        private EffectLayer SetOneKey(Devices.DeviceKeys key, Color color) => SetOneKey(key, new SolidBrush(color));
+
+        private EffectLayer SetOneKey(DeviceKey key, Color color) => SetOneKey(key, new SolidBrush(color));
+
 
         /// <summary>
         /// Sets one DeviceKeys key with a specific brush on the bitmap
@@ -544,44 +532,22 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="brush">Brush to be used</param>
         /// <returns>Itself</returns>
-        private EffectLayer SetOneKey(Devices.DeviceKeys key, Brush brush)
+        private EffectLayer SetOneKey(DeviceKey key, Brush brush)
         {
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-            if (key == Devices.DeviceKeys.Peripheral)
+            if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
+                keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
             {
-                if (brush is SolidBrush solidBrush)
-                    peripheral = solidBrush.Color;
-                // TODO Add support for this ^ to other brush types
-
-                using (Graphics g = Graphics.FromImage(colormap))
-                {
-                    foreach (Devices.DeviceKeys peri_key in possible_peripheral_keys)
-                    {
-                        BitmapRectangle peri_keymaping = Effects.GetBitmappingFromDeviceKey(peri_key);
-
-                        if (peri_keymaping.IsValid)
-                            g.FillRectangle(brush, peri_keymaping.Rectangle);
-                    }
-
-                    needsRender = true;
-                }
+                Global.logger.Warn("Coudln't set key color " + key.ToString());
+                return this;
             }
             else
             {
-                if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
-                    keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
+                using (Graphics g = Graphics.FromImage(colormap))
                 {
-                    Global.logger.Warn("Coudln't set key color " + key.ToString());
-                    return this;
-                }
-                else
-                {
-                    using (Graphics g = Graphics.FromImage(colormap))
-                    {
-                        g.FillRectangle(brush, keymaping.Rectangle);
-                        needsRender = true;
-                    }
+                    g.FillRectangle(brush, keymaping.Rectangle);
+                    needsRender = true;
                 }
             }
 
@@ -594,7 +560,7 @@ namespace Aurora.EffectsEngine
         /// <param name="x">X Coordiante on the bitmap</param>
         /// <param name="y">Y Coordinate on the bitmap</param>
         /// <returns>Color at (X,Y)</returns>
-        public Color Get(int x, int y)
+        public Color Get(int deviceId, int x, int y)
         {
             BitmapData srcData = colormap.LockBits(
                     new Rectangle(x, y, 1, 1),
@@ -627,23 +593,16 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>Color of the Key</returns>
-        public Color Get(Devices.DeviceKeys key)
+        public Color Get(DeviceKey key)
         {
             try
             {
                 BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                if (keymaping.IsEmpty && key == Devices.DeviceKeys.Peripheral)
-                {
-                    return peripheral;
-                }
-                else
-                {
-                    if (keymaping.IsEmpty)
-                        return Color.FromArgb(0, 0, 0);
+                if (keymaping.IsEmpty || keymaping.Height + keymaping.Top > colormap.Height || keymaping.Width + keymaping.Left > colormap.Width)
+                    return Color.FromArgb(0, 0, 0);
 
-                    return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
-                }
+                return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
             }
             catch (Exception exc)
             {
@@ -688,8 +647,6 @@ namespace Aurora.EffectsEngine
                     g.DrawImage(rhs.colormap, 0, 0);
             }
 
-            added.peripheral = Utils.ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
-
             return added;
         }
 
@@ -730,8 +687,6 @@ namespace Aurora.EffectsEngine
             }
 
             layer.colormap.UnlockBits(srcData);
-
-            layer.peripheral = Utils.ColorUtils.MultiplyColorByScalar(layer.peripheral, value);
 
             return layer;
         }
@@ -785,7 +740,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, DeviceKey[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -817,7 +772,7 @@ namespace Aurora.EffectsEngine
             {
                 for (int i = 0; i < keys.Count(); i++)
                 {
-                    Devices.DeviceKeys current_key = keys[i];
+                    DeviceKey current_key = keys[i];
 
                     switch (percentEffectType)
                     {
@@ -857,7 +812,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(ColorSpectrum spectrum, Devices.DeviceKeys[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
+        public EffectLayer PercentEffect(ColorSpectrum spectrum, DeviceKey[] keys, double value, double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false)
         {
             double progress_total = value / total;
             if (progress_total < 0.0)
@@ -882,14 +837,14 @@ namespace Aurora.EffectsEngine
                 case (PercentEffectType.AllAtOnce):
                     for (int i = 0; i < keys.Count(); i++)
                     {
-                        Devices.DeviceKeys current_key = keys[i];
+                        DeviceKey current_key = keys[i];
                         SetOneKey(current_key, spectrum.GetColorAt((float)progress_total, 1.0f, flash_amount));
                     }
                     break;
                 case (PercentEffectType.Progressive_Gradual):
                     for (int i = 0; i < keys.Count(); i++)
                     {
-                        Devices.DeviceKeys current_key = keys[i];
+                        DeviceKey current_key = keys[i];
                         if (i == (int)progress)
                         {
                             double percent = (double)progress - i;
@@ -905,7 +860,7 @@ namespace Aurora.EffectsEngine
                 default:
                     for (int i = 0; i < keys.Count(); i++)
                     {
-                        Devices.DeviceKeys current_key = keys[i];
+                        DeviceKey current_key = keys[i];
                         if (i < (int)progress)
                             SetOneKey(current_key, spectrum.GetColorAt((float)i / (float)(keys.Count() - 1), 1.0f, flash_amount));
                     }
@@ -937,9 +892,9 @@ namespace Aurora.EffectsEngine
             {
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
-                    if (!blink_background)
+                    if(!blink_background)
                         foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
-                    if (blink_background)
+                    if(blink_background)
                         backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
@@ -1052,7 +1007,7 @@ namespace Aurora.EffectsEngine
 
                     g.Transform = myMatrix;
                     LinearGradientBrush brush = spectrum.ToLinearGradient(width, 0, x_pos, 0, flash_amount);
-                    brush.WrapMode = WrapMode.Tile;
+					brush.WrapMode = WrapMode.Tile;
                     g.FillRectangle(brush, rect);
                 }
 
@@ -1175,7 +1130,7 @@ namespace Aurora.EffectsEngine
             int alpha_mask_stride = srcData_alpha.Stride;
             IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
 
-
+            
             BitmapData srcData = colormap.LockBits(
                 new Rectangle(0, 0, colormap.Width, colormap.Height),
                 ImageLockMode.ReadWrite,

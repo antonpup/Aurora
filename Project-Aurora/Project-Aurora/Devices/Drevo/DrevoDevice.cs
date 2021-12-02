@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Aurora.Utils;
+using System;
 using DrevoRadi;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -54,10 +55,11 @@ namespace Aurora.Devices.Drevo
             }
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        /// Updates the device with a specified color arrangement.
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (!IsInitialized)
-                return false;
+            if (e.Cancel) return false;
+            if (!IsInitialized) return false;
 
             try
             {
@@ -68,15 +70,15 @@ namespace Aurora.Devices.Drevo
                 bitmap[3] = 0x7F;
                 int index = 0;
 
-                foreach (var key in keyColors)
+                foreach (var (dk, clr) in keyColors)
                 {
-                    index = DrevoRadiSDK.ToDrevoBitmap((int)key.Key);
+                    index = DrevoRadiSDK.ToDrevoBitmap(dk);
                     if (index != -1)
                     {
                         index = index * 3 + 4;
-                        bitmap[index] = key.Value.R;
-                        bitmap[index + 1] = key.Value.G;
-                        bitmap[index + 2] = key.Value.B;
+                        bitmap[index] = clr.R;
+                        bitmap[index + 1] = clr.G;
+                        bitmap[index + 2] = clr.B;
                     }
                 }
 

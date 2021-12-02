@@ -1,0 +1,37 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "visual_name": "NONE",
+        "tag": -1,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 153,
+      "Height": 232,
+      "Image": "Corsair_Katar_outline.png",
+      "IsImage": true
+    },
+    "160": {
+      "Key": {
+        "visual_name": "Logo",
+        "tag": 160,
+        "device_id": null
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 58,
+      "Y": 187,
+      "Width": 35,
+      "Height": 22,
+      "Image": "Corsair_Katar_logo.png",
+      "IsImage": true
+    }
+  }
+}

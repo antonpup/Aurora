@@ -112,7 +112,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new LayerHandlerProperties
                     {
                         _PrimaryColor = Color.FromArgb(255, 134, 0),
-                        _Sequence = new KeySequence(new[] { DK.O, DK.P, DK.L, DK.SEMICOLON, DK.PERIOD, DK.FORWARD_SLASH })
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.O, DK.P, DK.L, DK.SEMICOLON, DK.PERIOD, DK.FORWARD_SLASH })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsOrangePressed"))
@@ -122,7 +122,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new LayerHandlerProperties
                     {
                         _PrimaryColor = Color.Blue,
-                        _Sequence = new KeySequence(new[] { DK.U, DK.I, DK.J, DK.K, DK.M, DK.COMMA })
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.U, DK.I, DK.J, DK.K, DK.M, DK.COMMA })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsBluePressed"))
@@ -132,7 +132,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new LayerHandlerProperties
                     {
                         _PrimaryColor = Color.Yellow,
-                        _Sequence = new KeySequence(new[] { DK.T, DK.Y, DK.G, DK.H, DK.B, DK.N })
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.T, DK.Y, DK.G, DK.H, DK.B, DK.N })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsYellowPressed"))
@@ -142,7 +142,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new LayerHandlerProperties
                     {
                         _PrimaryColor = Color.Red,
-                        _Sequence = new KeySequence(new[] { DK.E, DK.R, DK.D, DK.F, DK.C, DK.V })
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.E, DK.R, DK.D, DK.F, DK.C, DK.V })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsRedPressed"))
@@ -152,7 +152,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new LayerHandlerProperties
                     {
                         _PrimaryColor = Color.FromArgb(0, 255, 69),
-                        _Sequence = new KeySequence(new[] { DK.Q, DK.W, DK.A, DK.S, DK.Z, DK.X })
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.Q, DK.W, DK.A, DK.S, DK.Z, DK.X })
                     }
                 }, new OverrideLogicBuilder()
                     .SetDynamicBoolean("_Enabled", new BooleanGSIBoolean("Player/IsGreenPressed"))
@@ -162,7 +162,7 @@ namespace Aurora.Profiles.CloneHero
                     Properties = new LayerHandlerProperties
                     {
                         _PrimaryColor = Color.FromArgb(208, 181, 0),
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.OPEN_BRACKET, DK.CLOSE_BRACKET, DK.APOSTROPHE
                         }),
                     }
@@ -210,7 +210,7 @@ namespace Aurora.Profiles.CloneHero
                         _TriggerPath = "Player/Score",
                         _StackMode = AnimationStackMode.Stack,
                         _forceKeySequence = true,
-                        _Sequence = new KeySequence(new[] { DK.PRINT_SCREEN, DK.SCROLL_LOCK, DK.PAUSE_BREAK, DK.INSERT, DK.HOME, DK.HOME, DK.PAGE_UP,
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.PRINT_SCREEN, DK.SCROLL_LOCK, DK.PAUSE_BREAK, DK.INSERT, DK.HOME, DK.HOME, DK.PAGE_UP,
                                                             DK.DELETE, DK.END, DK.PAGE_DOWN, DK.ARROW_UP, DK.ARROW_LEFT, DK.ARROW_DOWN, DK.ARROW_RIGHT})
                     }
                 }, new OverrideLogicBuilder()
@@ -230,7 +230,7 @@ namespace Aurora.Profiles.CloneHero
                         _TriggerPath = "Player/Score",
                         _StackMode = AnimationStackMode.Stack,
                         _forceKeySequence = true,
-                        _Sequence = new KeySequence(new[] { DK.PRINT_SCREEN, DK.SCROLL_LOCK, DK.PAUSE_BREAK, DK.INSERT, DK.HOME, DK.HOME, DK.PAGE_UP,
+                        _Sequence = new KeySequence(new DeviceKey[] { DK.PRINT_SCREEN, DK.SCROLL_LOCK, DK.PAUSE_BREAK, DK.INSERT, DK.HOME, DK.HOME, DK.PAGE_UP,
                                                             DK.DELETE, DK.END, DK.PAGE_DOWN, DK.ARROW_UP, DK.ARROW_LEFT, DK.ARROW_DOWN, DK.ARROW_RIGHT})
                     }
                 }, new OverrideLogicBuilder()

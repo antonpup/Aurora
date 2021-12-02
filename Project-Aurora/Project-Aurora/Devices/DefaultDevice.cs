@@ -39,7 +39,7 @@ namespace Aurora.Devices
             Initialize();
         }
 
-        protected abstract bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
+        protected abstract bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false);
 
         Stopwatch _tempStopWatch = new Stopwatch();
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)

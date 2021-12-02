@@ -11,9 +11,13 @@ namespace Aurora.EffectsEngine.Animations
     public class AnimationManualColorFrame : AnimationFrame
     {
         [Newtonsoft.Json.JsonProperty]
-        private Dictionary<DeviceKeys, Color> _BitmapColors = new Dictionary<DeviceKeys, Color>();
+        private Dictionary<DeviceKey, Color> _BitmapColors = new Dictionary<DeviceKey, Color>();
 
-        public AnimationFrame SetKeyColor(DeviceKeys Key, Color Color)
+        public Dictionary<DeviceKey, Color> BitmapColors {
+            get { _BitmapColors }
+        }
+
+        public AnimationFrame SetKeyColor(DeviceKey Key, Color Color)
         {
             if (_BitmapColors.ContainsKey(Key))
                 _BitmapColors[Key] = Color;
@@ -23,7 +27,7 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
-        public AnimationFrame SetBitmapColors(Dictionary<DeviceKeys, Color> ColorMapping)
+        public AnimationFrame SetBitmapColors(Dictionary<DeviceKey, Color> ColorMapping)
         {
             if(ColorMapping != null)
             {
@@ -39,7 +43,7 @@ namespace Aurora.EffectsEngine.Animations
             _duration = 0.0f;
         }
 
-        public AnimationManualColorFrame(Dictionary<DeviceKeys, Color> ColorMapping, float duration = 0.0f)
+        public AnimationManualColorFrame(Dictionary<DeviceKey, Color> ColorMapping, float duration = 0.0f)
         {
             _BitmapColors = ColorMapping;
 
@@ -74,7 +78,7 @@ namespace Aurora.EffectsEngine.Animations
 
 
             AnimationManualColorFrame newAnim = new AnimationManualColorFrame();
-            Dictionary<DeviceKeys, Color> _combinedBitmapColors = newAnim._BitmapColors;
+            Dictionary<DeviceKey, Color> _combinedBitmapColors = newAnim._BitmapColors;
             amount = GetTransitionValue(amount);
 
             foreach (var kvp in _BitmapColors)
@@ -102,7 +106,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override AnimationFrame GetCopy()
         {
-            Dictionary<DeviceKeys, Color> newmapping = new Dictionary<DeviceKeys, Color>(_BitmapColors);
+            Dictionary<DeviceKey, Color> newmapping = new Dictionary<DeviceKey, Color>(_BitmapColors);
 
             return new AnimationManualColorFrame(newmapping, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
         }

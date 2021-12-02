@@ -19,13 +19,13 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        protected override void ApplyColors(Dictionary<DeviceKeys, Color> colors)
+        protected override void ApplyColors(Dictionary<int, Color> colors)
         {
             lock (configLock)
             {
                 foreach (var keyPair in config.KeyMapper)
                 {
-                    if (colors.TryGetValue(keyPair.Value, out var color))
+                    if (colors.TryGetValue((int)keyPair.Value, out var color))
                         SetRgbLight(keyPair.Key, color);
                 }
             }

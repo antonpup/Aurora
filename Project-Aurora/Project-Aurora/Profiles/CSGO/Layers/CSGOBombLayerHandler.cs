@@ -50,7 +50,7 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.NUM_LOCK, Devices.DeviceKeys.NUM_SLASH, Devices.DeviceKeys.NUM_ASTERISK, Devices.DeviceKeys.NUM_MINUS, Devices.DeviceKeys.NUM_SEVEN, Devices.DeviceKeys.NUM_EIGHT, Devices.DeviceKeys.NUM_NINE, Devices.DeviceKeys.NUM_PLUS, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE, Devices.DeviceKeys.NUM_SIX, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_ZERO, Devices.DeviceKeys.NUM_PERIOD, Devices.DeviceKeys.NUM_ENTER });
+            this._Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.NUM_LOCK, Devices.DeviceKeys.NUM_SLASH, Devices.DeviceKeys.NUM_ASTERISK, Devices.DeviceKeys.NUM_MINUS, Devices.DeviceKeys.NUM_SEVEN, Devices.DeviceKeys.NUM_EIGHT, Devices.DeviceKeys.NUM_NINE, Devices.DeviceKeys.NUM_PLUS, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE, Devices.DeviceKeys.NUM_SIX, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_ZERO, Devices.DeviceKeys.NUM_PERIOD, Devices.DeviceKeys.NUM_ENTER });
             this._FlashColor = Color.FromArgb(255, 0, 0);
             this._PrimedColor = Color.FromArgb(0, 255, 0);
             this._DisplayWinningTeamColor = true;

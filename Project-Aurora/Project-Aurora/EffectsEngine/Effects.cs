@@ -5,6 +5,7 @@ using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
 using System.Timers;
+using Aurora.Settings;
 
 namespace Aurora
 {
@@ -111,13 +112,6 @@ namespace Aurora
         int pushedframes = 0;
         Timer fpsDebugTimer = new Timer(1000D);
 
-        public static Devices.DeviceKeys[] possible_peripheral_keys = {
-                    Devices.DeviceKeys.Peripheral,
-                    Devices.DeviceKeys.Peripheral_FrontLight,
-                    Devices.DeviceKeys.Peripheral_ScrollWheel,
-                    Devices.DeviceKeys.Peripheral_Logo
-                };
-
         Bitmap _forcedFrame = null;
 
 
@@ -153,6 +147,8 @@ namespace Aurora
         {
             get
             {
+                if (grid_width == 0)
+                    return 0;
                 return canvas_width / grid_width;
             }
         }
@@ -161,6 +157,8 @@ namespace Aurora
         {
             get
             {
+                if (grid_height == 0)
+                    return 0;
                 return canvas_height / grid_height;
             }
         }
@@ -178,15 +176,15 @@ namespace Aurora
         /// </summary>
         public static Aurora.Settings.FreeFormObject WholeCanvasFreeForm => new Settings.FreeFormObject(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
 
-        private static Dictionary<DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<DeviceKeys, BitmapRectangle>(MAX_DEVICE_ID);
+        private static Dictionary<DeviceKey, BitmapRectangle> bitmap_map = new Dictionary<DeviceKey, BitmapRectangle>(MAX_DEVICE_ID, new DeviceKey.EqualityComparer());
 
-        private static Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
+        private static Dictionary<DeviceKey, Color> keyColors = new Dictionary<DeviceKey, Color>(MAX_DEVICE_ID, new DeviceKey.EqualityComparer());
 
         public Effects()
         {
-            Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
+            DeviceKey[] allKeys = bitmap_map.Keys.ToArray();
 
-            foreach (Devices.DeviceKeys key in allKeys)
+            foreach (var key in allKeys)
             {
                 keyColors.Add(key, Color.FromArgb(0, 0, 0));
             }
@@ -249,15 +247,15 @@ namespace Aurora
             canvas_height = height == 0 ? 1 : height;
         }
 
-        public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)
+        public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKey key)
         {
             if (bitmap_map.ContainsKey(key))
-                return bitmap_map[key];
-            else
-                return BitmapRectangle.emptyRectangle;
+                return bitmap_map[bitmap_map.Keys.First(k => k == key)];
+
+            return BitmapRectangle.emptyRectangle;
         }
 
-        public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)
+        public void SetBitmapping(Dictionary<DeviceKey, BitmapRectangle> bitmap_map)
         {
             Effects.bitmap_map = bitmap_map;
         }
@@ -280,18 +278,10 @@ namespace Aurora
                 foreach (EffectLayer layer in over_layers_array)
                     background += layer;
 
-                //Apply Brightness
-                _peripheralColors.Clear();
-                foreach (DeviceKeys key in possible_peripheral_keys)
-                {
-                    if(!_peripheralColors.ContainsKey(key))
-                        _peripheralColors.Add(key, background.Get(key));
-                }
-
                 background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
 
-                foreach (DeviceKeys key in possible_peripheral_keys)
-                    background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
+                //foreach (DeviceKeys key in possible_peripheral_keys)
+                //    background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
 
 
                 //if (Global.Configuration.UseVolumeAsBrightness)
@@ -311,21 +301,34 @@ namespace Aurora
                 }
 
                 _keyColors.Clear();
-                Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
+                DeviceKey[] allKeys = bitmap_map.Keys.ToArray();
 
-                foreach (Devices.DeviceKeys key in allKeys)
+                foreach (var key in allKeys)
+                {
                     _keyColors[key] = background.Get(key);
+                }
 
                 Effects.keyColors = _keyColors;
 
                 pushedframes++;
 
-                DeviceColorComposition dcc = new DeviceColorComposition()
+                Dictionary<int, DeviceColorComposition> dcc = new Dictionary<int, DeviceColorComposition>();
+                foreach (var item in keyColors.Keys)
                 {
-                    keyColors = _keyColors,
-                    keyBitmap = background.GetBitmap()
-                };
+                    if (item.DeviceId == null)
+                        continue;
+                    if(!dcc.ContainsKey(item.DeviceId.Value))
+                    {
+                        dcc[item.DeviceId.Value] = new DeviceColorComposition()
+                        {
+                            keyColors = new Dictionary<int, Color>(), //TODO test  =_keyColors
+                            keyBitmap = background.GetBitmap()
+                        };
+                    }
+                    dcc[item.DeviceId.Value].keyColors.Add(item.Tag, keyColors[item]);
+                }
 
+                //TODO
                 Global.dev_manager.UpdateDevices(dcc);
 
                 var hander = NewLayerRender;
@@ -336,7 +339,7 @@ namespace Aurora
                 {
 
                     EffectLayer pizelated_render = new EffectLayer();
-                    foreach (Devices.DeviceKeys key in allKeys)
+                    foreach (DeviceKey key in allKeys)
                     {
                         pizelated_render.Set(key, background.Get(key));
                     }
@@ -353,7 +356,7 @@ namespace Aurora
             }
         }
 
-        public Dictionary<DeviceKeys, Color> GetKeyboardLights()
+        public Dictionary<DeviceKey, Color> GetDevicesColor()
         {
             return Effects.keyColors;
         }

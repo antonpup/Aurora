@@ -152,7 +152,6 @@ namespace Aurora.Utils {
         }
     }
 
-
     /// <summary>
     /// Converter that takes an enum value and outputs it's description.
     /// </summary>

@@ -26,7 +26,8 @@ namespace Aurora.Devices.Asus
             // BackSlash Key
             deviceKeyToKey[DeviceKeys.BACKSLASH_UK] = keyboard.Lights[(int)(4 * keyboard.Width + 1)];
             
-            if (Global.Configuration.KeyboardBrand == Settings.PreferredKeyboard.Asus_Strix_Scope)
+
+            if (Global.Configuration.KeyboardBrand == Settings.PreferredKeyboard.Asus_Strix_Scope) //"Asus_Strix_Scope")
             {
                 // Left Windows Key
                 deviceKeyToKey[DeviceKeys.LEFT_WINDOWS] = keyboard.Lights[(int)(5 * keyboard.Width + 2)];
@@ -37,14 +38,14 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        protected override void ApplyColors(Dictionary<DeviceKeys, Color> colors)
+        protected override void ApplyColors(Dictionary<int, Color> colors)
         {
             if (Global.Configuration.DevicesDisableKeyboard)
                 return;
 
             foreach (var keyPair in colors)
             {
-                if (!deviceKeyToKey.TryGetValue(keyPair.Key, out var light))
+                if (!deviceKeyToKey.TryGetValue((DeviceKeys)keyPair.Key, out var light))
                     continue;
             
                 SetRgbLight(light, keyPair.Value);

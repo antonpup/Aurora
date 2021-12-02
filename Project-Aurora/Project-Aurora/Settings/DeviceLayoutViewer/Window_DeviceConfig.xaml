@@ -1,0 +1,129 @@
+﻿<Window  x:Class="Aurora.Settings.DeviceLayoutViewer.Window_DeviceConfig"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" 
+    xmlns:local="clr-namespace:Aurora.Settings.DeviceLayoutViewer"
+    xmlns:enum="clr-namespace:Aurora.Settings"
+    xmlns:Controls="clr-namespace:Aurora.Controls"
+    xmlns:u="clr-namespace:Aurora.Utils"
+    Title="Device Config"
+    MinHeight="54" MinWidth="450"
+    Height="Auto" Width="Auto"
+    SizeToContent="WidthAndHeight"
+         
+    ResizeMode="CanMinimize"
+    ShowInTaskbar="True"
+    WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v" />
+    </Window.Resources>
+        
+    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" >
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Margin="0">
+            
+            <StackPanel Margin="5" Background="Gray" Grid.Row="0">
+
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <StackPanel Orientation="Vertical" Width="150">
+                        <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device View:"/>
+                        <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Type:"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Device Layout:" VerticalAlignment="Top"/>
+                        <TextBlock x:Name="keyboard_layout_tb" HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keyboard Layout:" VerticalAlignment="Top"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"  Width="250">
+                        <ComboBox x:Name="device_view" DisplayMemberPath="DeviceName" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="200" SelectionChanged="device_view_SelectionChanged"/>
+                        <ComboBox x:Name="device_type" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="200" SelectionChanged="device_type_SelectionChanged"/>
+                        <ComboBox x:Name="device_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="200" SelectionChanged="device_layout_SelectionChanged"/>
+                        <ComboBox x:Name="keyboard_layout" HorizontalAlignment="Left" Margin="0,1,0,1" VerticalAlignment="Top" Width="200" SelectionChanged="keyboard_layout_SelectionChanged" ItemsSource="{u:EnumToItemsSource {x:Type enum:KeyboardPhysicalLayout}}"  DisplayMemberPath="Text" SelectedValuePath="Value"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox x:Name="devices_disable_lighting" Content="Disable Lighting" Margin="0,1,0,1" Checked="device_disable_lighting_Checked" Unchecked="device_disable_lighting_Checked" />
+                    <CheckBox x:Name="device_invisible_background" Content="Invisible Background"  Margin="0,1,0,1"  Checked="device_invisible_background_Checked" Unchecked="device_invisible_background_Checked"/>
+                    <CheckBox x:Name="enable_preview" Content="Layout Preview" Margin="0,1,0,1" Checked="enable_layout_preview_Checked" Unchecked="enable_layout_preview_Checked" />
+                    
+
+                </StackPanel>
+                <StackPanel Visibility="{Binding IsChecked, ElementName=enable_preview, Converter={StaticResource b2v}}"  Height="320"> <!--ItemsSource="{Binding KeycapLayouts, ElementName=deviceLayout}" -->
+                    <Controls:ReorderableListBox x:Name="keycap_list" ItemsSource="{Binding KeycapCollection}" SelectedItem="{Binding SelectedKeycap, Mode=TwoWay}" 
+                                                 DragElementTag="Dragger" SelectionMode="Single" DockPanel.Dock="Bottom"
+                                                 ScrollViewer.CanContentScroll="False" 
+                                                 VirtualizingPanel.VirtualizationMode="Standard"
+                                                 VirtualizingPanel.IsVirtualizing="False"
+                                                 Height="300">
+
+                        <ListBox.ItemTemplate>
+                            <HierarchicalDataTemplate>
+                                <DockPanel  HorizontalAlignment="Stretch" Width="380" >
+                                    <local:Control_EditKeycapData DataContext="{Binding}" Width="350"/>
+                                    <Image Source="/Aurora;component/Resources/Layers_Drag.png" Tag="Dragger" Cursor="SizeNS" Width="16" Height="16" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="0,0,5,0" ToolTip="Drag to change Key visibilty" />
+                                </DockPanel>
+                            </HierarchicalDataTemplate>
+                        </ListBox.ItemTemplate>
+                    </Controls:ReorderableListBox>
+                    <!-- <ListBox x:Name="keycap_list"  
+                        VerticalContentAlignment="Top"
+                        VirtualizingPanel.IsVirtualizing="False"
+                        VirtualizingPanel.VirtualizationMode="Standard"
+                        Margin="5"
+                        SelectionMode="Single"
+                        SelectionChanged="keycap_list_SelectionChanged"
+                        ScrollViewer.VerticalScrollBarVisibility="Visible"
+                        ScrollViewer.CanContentScroll="False" Height="206">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <local:Control_EditKeycapData DataContext="{Binding}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        
+                    </ListBox>etc. -->
+                    <StackPanel Orientation="Horizontal" Height="20">
+                        <Button  Click="removeKey_Click" Height="15" Margin="1">Remove Key</Button>
+                        <Button Click="changeNewKeyPosition_Click" Height="15" Margin="50,1,0,1">Plus</Button>
+                        <Button Click="changeNewKey_Click" Height="15" Margin="10,1,0,1">Horizontal</Button>
+                        <Button Click="addGhostKey_Click" Height="15" Margin="10,1" VerticalAlignment="Stretch">Add Ghost Key</Button>
+                        <Button Click="addKey_Click" Height="15" Margin="1">Add Key</Button>
+                        
+                        
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <!-- Accept or Cancel -->
+            <StackPanel Orientation="Horizontal"  VerticalAlignment="Bottom"  HorizontalAlignment="Right" Grid.Column="0" Margin="5">
+                <Button Name="deleteButton" Click="deviceDelete_Click" IsDefault="True" Margin="5">Delete Device</Button>
+                <Button Name="okButton" Click="okButton_Click" IsDefault="True" Margin="5">OK</Button>
+                <Button Name="cancelButton" Click="cancelButton_Click" IsCancel="True" Margin="5">Cancel</Button>
+            </StackPanel>
+        </StackPanel>
+        <Grid x:Name="layoutPreview" HorizontalAlignment="Stretch" Grid.Column="1">
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsChecked, ElementName=enable_preview}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid VerticalAlignment="Center" MinWidth="300">
+                <local:Control_DeviceLayout x:Name="deviceLayout"  Margin="2"/>
+            </Grid>
+
+            <StackPanel  Orientation="Horizontal" VerticalAlignment="Bottom"  HorizontalAlignment="Right"  Grid.Row="1">
+                <TextBox x:Name="layoutName" Height="20" Width="180" />
+                <Button Name="saveLayoutButton" Click="saveLayout_Click" IsDefault="True" Margin="5">Save Layout</Button>
+
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Window>

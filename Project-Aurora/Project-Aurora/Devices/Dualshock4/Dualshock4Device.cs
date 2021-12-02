@@ -122,7 +122,6 @@ namespace Aurora.Devices.Dualshock
             if (DS4Devices.getDS4Controllers().Count() != devices.Count)
                 Reset();
         }
-
         public override bool Initialize()
         {
             if (IsInitialized)
@@ -154,9 +153,10 @@ namespace Aurora.Devices.Dualshock
             isDisconnecting = false;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (keyColors.TryGetValue(key, out var clr))
+            if (keyColors.TryGetValue((int)key, out var clr))
             {
                 foreach (var dev in devices)
                 {

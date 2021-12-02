@@ -1303,6 +1303,7 @@ namespace Aurora.Devices
         [Description("Peripheral Light 1")]
         PERIPHERAL_LIGHT1 = 217,
 
+
         /// <summary>
         /// Peripheral Light 2
         /// </summary>
@@ -1598,4 +1599,5 @@ namespace Aurora.Devices
         [Description("None")]
         NONE = -1,
     };
+
 }

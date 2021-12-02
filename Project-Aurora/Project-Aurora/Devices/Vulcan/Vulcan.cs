@@ -37,18 +37,18 @@ namespace Aurora.Devices.Vulcan
             _keyboards.Clear();
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
-            foreach (var key in keyColors)
+            foreach (var (key, clr) in keyColors)
             {
                 foreach (var keyboard in _keyboards)
                 {
-                    if (VulcanKeyMap.KeyMap.TryGetValue(key.Key, out var vulcanKey))
+                    if (VulcanKeyMap.KeyMap.TryGetValue((DeviceKeys)key, out var vulcanKey))
                     {
-                        var color = ColorUtils.CorrectWithAlpha(key.Value);
+                        var color = ColorUtils.CorrectWithAlpha(clr);
                         keyboard.SetKeyColor(vulcanKey,color.R, color.G, color.B );
                     }
                 }

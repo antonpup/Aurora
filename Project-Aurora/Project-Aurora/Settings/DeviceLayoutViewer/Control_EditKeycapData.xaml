@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Aurora.Settings.DeviceLayoutViewer.Control_EditKeycapData"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Aurora.Settings.DeviceLayoutViewer"
+             mc:Ignorable="d" 
+             x:Name="editKeycapData"
+             d:DesignHeight="150" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" Height="20">
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center"  MouseDown="collapseButton_Click" Width="20" Height="20">
+                <Path Data="M0.5,0 L0.5,1 M0,0.5 L1,0.5"
+                      StrokeThickness="5"
+                      Stretch="Fill"
+                      Stroke="DimGray" />
+            </Grid>
+            <StackPanel x:Name="TagTextBox" Orientation="Horizontal"  Margin="0,1,0,1">
+                <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Tag: "/>
+                <TextBox Text="{Binding Path=Config.Tag, Mode=TwoWay}" Height="15" Width="40" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+            </StackPanel>
+            <StackPanel x:Name="GhostKeyLabel" Orientation="Horizontal"  Margin="0,1,0,1" Visibility="Collapsed">
+                <TextBox Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Ghost Key" IsReadOnly="True"/>
+            </StackPanel>
+            <TextBlock Margin="20,1,0,1" Height="15" TextWrapping="Wrap" Text="X: "/>
+            <TextBox  x:Name="keycap_x" Text="{Binding Path=Config.X, Mode=TwoWay}" Height="15" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+            <TextBlock Margin="2,1,0,1" Height="15" TextWrapping="Wrap" Text="Y: "/>
+            <TextBox  x:Name="keycap_y" Text="{Binding Path=Config.Y, Mode=TwoWay}" Height="15" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+            <TextBlock Margin="10,1,0,1" Height="22" TextWrapping="Wrap" Text="W: "/>
+            <TextBox  x:Name="keycap_width" Text="{Binding Path=Config.Width, Mode=TwoWay}" Height="15" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+            <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="H: "/>
+            <TextBox  x:Name="keycap_height" Text="{Binding Path=Config.Height, Mode=TwoWay}" Height="15" Width="30" Margin="0,1,0,1" PreviewTextInput="NumberValidationTextBox"/>
+
+        </StackPanel>
+        <StackPanel x:Name="keycapData">
+            <StackPanel Margin="5" Orientation="Horizontal">
+                <TextBlock Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Text: "/>
+                <TextBox Text="{Binding Path=Config.VisualName, Mode=TwoWay}" HorizontalAlignment="Left" Height="15" Width="50" Margin="2,1,0,1"/>
+                <TextBlock Margin="10,1,0,1" Height="22" TextWrapping="Wrap" Text="Image: "/>
+                <TextBox Text="{Binding Path=Config.Image, Mode=TwoWay}" Height="15" Width="150" Margin="0,1,0,1"/>
+            </StackPanel>
+            <StackPanel Margin="0" Orientation="Horizontal">
+
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

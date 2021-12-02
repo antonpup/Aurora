@@ -30,7 +30,7 @@ namespace Aurora.Settings
         /// <summary>
         /// An array of DeviceKeys keys to be used with KeySequenceType.Sequence type.
         /// </summary>
-        public List<Devices.DeviceKeys> keys;
+        public List<DeviceKey> keys;
 
         /// <summary>
         /// The type of this KeySequence instance.
@@ -44,28 +44,28 @@ namespace Aurora.Settings
 
         public KeySequence()
         {
-            keys = new List<Devices.DeviceKeys>();
+            keys = new List<DeviceKey>();
             type = KeySequenceType.Sequence;
             freeform = new FreeFormObject();
         }
 
         public KeySequence(KeySequence otherKeysequence)
         {
-            this.keys = new List<Devices.DeviceKeys>(otherKeysequence.keys);
+            this.keys = new List<DeviceKey>(otherKeysequence.keys);
             type = otherKeysequence.type;
             this.freeform = otherKeysequence.freeform;
         }
 
         public KeySequence(FreeFormObject freeform)
         {
-            this.keys = new List<Devices.DeviceKeys>();
+            this.keys = new List<DeviceKey>();
             type = KeySequenceType.FreeForm;
             this.freeform = freeform;
         }
 
-        public KeySequence(Devices.DeviceKeys[] keys)
+        public KeySequence(DeviceKey[] keys)
         {
-            this.keys = new List<Devices.DeviceKeys>(keys);
+            this.keys = new List<DeviceKey>(keys);
             type = KeySequenceType.Sequence;
             freeform = new FreeFormObject();
         }
@@ -83,7 +83,7 @@ namespace Aurora.Settings
                     float right = top;
                     float bottom = right;
 
-                    foreach(Devices.DeviceKeys key in this.keys)
+                    foreach(DeviceKey key in this.keys)
                     {
                         BitmapRectangle keyMapping = Effects.GetBitmappingFromDeviceKey(key);
 
@@ -125,7 +125,7 @@ namespace Aurora.Settings
             if (ReferenceEquals(null, p)) return false;
             if (ReferenceEquals(this, p)) return true;
 
-            return (new HashSet<Devices.DeviceKeys>(keys).SetEquals(p.keys)) &&
+            return (new HashSet<DeviceKey>(keys).SetEquals(p.keys)) &&
                 type == p.type &&
                 freeform.Equals(p.freeform);
         }

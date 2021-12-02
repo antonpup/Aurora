@@ -86,7 +86,8 @@ namespace Aurora.Devices
         }
 
         public List<DeviceContainer> DeviceContainers { get; } = new List<DeviceContainer>();
-
+        public List<AuroraDeviceConnector> DeviceConnectors { get; } = new List<AuroraDeviceConnector>();
+        public IEnumerable<AuroraDevice> IndividualDevices => DeviceConnectors.SelectMany(d => d.Devices);
         public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
 
         public event EventHandler RetryAttemptsChanged;
@@ -170,6 +171,7 @@ namespace Aurora.Devices
                               where typeof(IDevice).IsAssignableFrom(type)
                               && !type.IsAbstract
                               && type != typeof(ScriptedDevice.ScriptedDevice)
+                              && type != typeof(OldAuroraDeviceWrapper)
                               let inst = (IDevice)Activator.CreateInstance(type)
                               orderby inst.DeviceName
                               select inst;
@@ -178,6 +180,12 @@ namespace Aurora.Devices
             {
                 DeviceContainers.Add(new DeviceContainer(inst));
             }
+            var CorsairConnector = new Corsair.CorsairDeviceConnector();
+            DeviceContainers.Add(new DeviceContainer(new OldAuroraDeviceWrapper(CorsairConnector)));
+            DeviceConnectors.Add(CorsairConnector);
+            var OpenRGBConnector = new OpenRGB.OpenRGBDeviceConnector();
+            DeviceContainers.Add(new DeviceContainer(new OldAuroraDeviceWrapper(OpenRGBConnector)));
+            DeviceConnectors.Add(OpenRGBConnector);
         }
 
         private void AddDevicesFromDlls(string dllFolder)
@@ -297,6 +305,7 @@ namespace Aurora.Devices
 
                 Global.logger.Info(s);
             }
+            DeviceConnectors.ForEach(dc => dc.Initialize());
 
             if (devicesToRetry > 0)
                 Task.Run(RetryAll);
@@ -313,6 +322,7 @@ namespace Aurora.Devices
                     dc.Device.Shutdown();
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
+            DeviceConnectors.ForEach(dc => dc.Shutdown());
         }
 
         public void ResetDevices()
@@ -323,13 +333,45 @@ namespace Aurora.Devices
                 lock (dc.actionLock)
                     dc.Device.Reset();
             }
+            DeviceConnectors.ForEach(dc => dc.Reset());
         }
 
-        public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
+        public void RegisterViewPort(ref UniqueDeviceId devicId, int viewPort)
+        {
+            foreach (var dc in IndividualDevices)
+            {
+                if (dc.id?.ViewPort == viewPort)
+                    dc.id.ViewPort = null;
+            }
+            devicId.ViewPort = viewPort;
+            foreach (var dc in IndividualDevices)
+            {
+                if (dc.id == devicId)
+                    dc.id = devicId;
+            }
+        }
+        public void UpdateDevices(Dictionary<int, DeviceColorComposition> compositionList, bool forced = false)
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.UpdateDevice(composition, forced);
+                lock (dc.actionLock)
+                {
+
+                    foreach (var composition in compositionList)
+                    {
+                        if (!IndividualDevices.Where(dc => dc.id?.ViewPort == composition.Key).Any())
+                            dc.UpdateDevice(composition.Value, forced);
+                    }
+
+                }
+            }
+            foreach (var item in compositionList)
+            {
+                var dc = IndividualDevices.Where(d => d.IsConnected() && d.id.ViewPort == item.Key);
+                if (dc.Any())
+                {
+                    dc.First().UpdateDevice(item.Value);
+                }
             }
         }
 

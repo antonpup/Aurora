@@ -31,14 +31,14 @@ namespace Aurora.Profiles.Osu {
                 new Layer("Drawing", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = Color.DeepSkyBlue,
-                        _Sequence = new KeySequence(new[] { DeviceKeys.C })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.C })
                     }
                 }),
 
                 new Layer("Clickers", new SolidColorLayerHandler {
                     Properties = new LayerHandlerProperties {
                         _PrimaryColor = Color.FromArgb(255, 0, 240),
-                        _Sequence = new KeySequence(new[] { DeviceKeys.Z,DeviceKeys.LEFT_ALT })
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.Z,DeviceKeys.LEFT_ALT })
                     }
                 }),
 
@@ -48,7 +48,7 @@ namespace Aurora.Profiles.Osu {
                         _SecondaryColor = Color.Red,
                         _VariablePath = "Game/Accuracy",
                         _MaxVariablePath = "100",
-                        _Sequence = new KeySequence(new[] { DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO }),
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO }),
                         _PercentType = PercentEffectType.Progressive_Gradual
                     }
                 }),
@@ -89,7 +89,7 @@ namespace Aurora.Profiles.Osu {
                         _SecondaryColor = Color.Black,
                         _VariablePath = "Game/HP",
                         _MaxVariablePath = "200",
-                        _Sequence = new KeySequence(new[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4, DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8, DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 }),
+                        _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4, DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8, DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12 }),
                         _PercentType = PercentEffectType.Progressive_Gradual
                     }
                 }),

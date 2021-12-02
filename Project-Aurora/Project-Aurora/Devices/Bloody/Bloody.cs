@@ -54,10 +54,10 @@ namespace Aurora.Devices.Bloody
 
         private void UpdateKeyboard(object sender, Dictionary<DeviceKeys, Color> keyColors)
         {
-            foreach (var key in keyColors)
+            foreach (var (key, clr) in keyColors)
             {
-                if (BloodyKeyMap.KeyMap.TryGetValue(key.Key, out var bloodyKey))
-                    keyboard.SetKeyColor(bloodyKey, ColorUtils.CorrectWithAlpha(key.Value));
+                if (BloodyKeyMap.KeyMap.TryGetValue((DeviceKeys)key, out var bloodyKey))
+                    keyboard.SetKeyColor(bloodyKey, ColorUtils.CorrectWithAlpha(clr));
             }
 
             keyboard.Update();

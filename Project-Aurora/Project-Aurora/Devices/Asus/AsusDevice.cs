@@ -47,7 +47,7 @@ namespace Aurora.Devices.Asus
         {
             if (!isActive)
                 return "Not Initialized";
-
+            
             if (asusHandler.DeviceCount == 0)
                 return "Initialized: No devices connected";
 
@@ -58,11 +58,12 @@ namespace Aurora.Devices.Asus
         public bool Initialize()
         {
             asusHandler?.Stop();
-
+            
             asusHandler = new AsusHandler(
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
             isActive = asusHandler.Start();
+
             return isActive;
         }
 
@@ -70,7 +71,7 @@ namespace Aurora.Devices.Asus
         public void Shutdown()
         {
             if (!isActive) return;
-
+            
             asusHandler.Stop();
             isActive = false;
         }
@@ -87,7 +88,7 @@ namespace Aurora.Devices.Asus
         {
             Shutdown();
             Initialize();
-
+            
             return isActive;
         }
 
@@ -123,6 +124,6 @@ namespace Aurora.Devices.Asus
 
             return true;
         }
-
+        
     }
 }

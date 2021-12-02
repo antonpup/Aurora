@@ -111,7 +111,7 @@ namespace Aurora.Devices.YeeLight
 
         private Color previousColor = Color.Empty;
         private int whiteCounter = 10;
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
@@ -124,14 +124,14 @@ namespace Aurora.Devices.YeeLight
             return false;
         }
 
-        private bool TryUpdate(Dictionary<DeviceKeys, Color> keyColors)
+        private bool TryUpdate(Dictionary<int, Color> keyColors)
         {
             var sendDelay = Math.Max(5, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"));
             if (updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
                 return false;
 
             var targetKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
-            if (!keyColors.TryGetValue(targetKey, out var targetColor))
+            if (!keyColors.TryGetValue((int)targetKey, out var targetColor))
                 return false;
             if (previousColor.Equals(targetColor))
                 return ProceedSameColor(targetColor);

@@ -58,7 +58,7 @@ namespace Aurora.Profiles.StardewValley
                         _MaxVariablePath = "Player/Health/Max",
                         _PrimaryColor = Color.Lime,
                         _SecondaryColor = Color.Red,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE, DK.SIX, DK.SEVEN, DK.EIGHT, DK.NINE, DK.ZERO
                         })
                     }
@@ -74,7 +74,7 @@ namespace Aurora.Profiles.StardewValley
                         _MaxVariablePath = "Player/Energy/Max",
                         _PrimaryColor = Color.Yellow,
                         _SecondaryColor = Color.Red,
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12
                         })
                     }

@@ -25,7 +25,7 @@ namespace Aurora.Profiles.TModLoader {
                         _MaxVariablePath = "Player/MaxHealth",
                         _PrimaryColor = Color.FromArgb(255, 0, 0),
                         _SecondaryColor = Color.FromArgb(128, 0, 255),
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.F1, DK.F2, DK.F3, DK.F4, DK.F5, DK.F6, DK.F7, DK.F8, DK.F9, DK.F10, DK.F11, DK.F12
                         }),
                         _BlinkThreshold = 0.25
@@ -37,7 +37,7 @@ namespace Aurora.Profiles.TModLoader {
                         _MaxVariablePath = "Player/MaxMana",
                         _PrimaryColor = Color.FromArgb(0, 0, 255),
                         _SecondaryColor = Color.FromArgb(0, 0, 128),
-                        _Sequence = new KeySequence(new[] {
+                        _Sequence = new KeySequence(new DeviceKey[] {
                             DK.ONE, DK.TWO, DK.THREE, DK.FOUR, DK.FIVE, DK.SIX, DK.SEVEN, DK.EIGHT, DK.NINE, DK.ZERO, DK.MINUS, DK.EQUALS
                         }),
                         _BlinkThreshold = 0.25

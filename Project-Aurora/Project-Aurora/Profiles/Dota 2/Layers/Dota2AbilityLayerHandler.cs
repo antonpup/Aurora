@@ -26,10 +26,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         [JsonIgnore]
         public Color CanNotCastAbilityColor { get { return Logic._CanNotCastAbilityColor ?? _CanNotCastAbilityColor ?? Color.Empty; } }
 
-        public List<Devices.DeviceKeys> _AbilityKeys { get; set; }
+        public List<DeviceKey> _AbilityKeys { get; set; }
 
         [JsonIgnore]
-        public List<Devices.DeviceKeys> AbilityKeys { get { return Logic._AbilityKeys ?? _AbilityKeys ?? new List<Devices.DeviceKeys>(); } }
+        public List<DeviceKey> AbilityKeys { get { return Logic._AbilityKeys ?? _AbilityKeys ?? new List<DeviceKey>(); } }
 
         public Dota2AbilityLayerHandlerProperties() : base() { }
 
@@ -41,7 +41,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             this._CanCastAbilityColor = Color.FromArgb(0, 255, 0);
             this._CanNotCastAbilityColor = Color.FromArgb(255, 0, 0);
-            this._AbilityKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.R };
+            this._AbilityKeys = new List<DeviceKey>() { Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.R };
         }
 
     }
@@ -72,8 +72,8 @@ namespace Aurora.Profiles.Dota_2.Layers
                                 continue;
 
                         if(index < Properties.AbilityKeys.Count)
-                        {
-                            Devices.DeviceKeys key = Properties.AbilityKeys[index];
+{
+                            DeviceKey key = Properties.AbilityKeys[index];
 
                             if (ability.CanCast && ability.Cooldown == 0 && ability.Level > 0)
                                 abilities_layer.Set(key, Properties.CanCastAbilityColor);

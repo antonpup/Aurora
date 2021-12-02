@@ -31,7 +31,7 @@ namespace Aurora.Profiles.XCOM
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.Orange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.HOME, Devices.DeviceKeys.Z })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.W, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.Q, Devices.DeviceKeys.E, Devices.DeviceKeys.HOME, Devices.DeviceKeys.Z })
                     }
                 }
                 ),
@@ -40,7 +40,7 @@ namespace Aurora.Profiles.XCOM
                     Properties = new LayerHandlerProperties()
                     {
                         _PrimaryColor = Color.DarkOrange,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.ENTER, Devices.DeviceKeys.ESC, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.BACKSPACE, Devices.DeviceKeys.F1, Devices.DeviceKeys.R, Devices.DeviceKeys.B, Devices.DeviceKeys.Y })
+                        _Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.ENTER, Devices.DeviceKeys.ESC, Devices.DeviceKeys.V, Devices.DeviceKeys.X, Devices.DeviceKeys.BACKSPACE, Devices.DeviceKeys.F1, Devices.DeviceKeys.R, Devices.DeviceKeys.B, Devices.DeviceKeys.Y })
                     }
                 }),
                 new Layer("Wrapper Lighting", new Aurora.Settings.Layers.WrapperLightsLayerHandler()),

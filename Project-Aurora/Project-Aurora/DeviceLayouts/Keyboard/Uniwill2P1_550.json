@@ -1,0 +1,365 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [
+    15,
+    16,
+    34,
+    35,
+    36,
+    37,
+    55,
+    56,
+    57,
+    58,
+    73,
+    74,
+    75,
+    90,
+    91,
+    92,
+    93,
+    99,
+    105,
+    106
+  ],
+  "key_modifications": {
+    "2": {
+      "VisualName": null,
+      "X": 37,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "3": {
+      "VisualName": null,
+      "X": 74,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "4": {
+      "VisualName": null,
+      "X": 111,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "5": {
+      "VisualName": null,
+      "X": 148,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "6": {
+      "VisualName": null,
+      "X": 185,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "7": {
+      "VisualName": null,
+      "X": 222,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "8": {
+      "VisualName": null,
+      "X": 259,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "9": {
+      "VisualName": null,
+      "X": 296,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "10": {
+      "VisualName": null,
+      "X": 333,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "11": {
+      "VisualName": null,
+      "X": 370,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "12": {
+      "VisualName": null,
+      "X": 407,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "13": {
+      "VisualName": null,
+      "X": 444,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "14": {
+      "VisualName": null,
+      "X": 518,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "31": {
+      "VisualName": null,
+      "X": 481,
+      "Y": 0,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "32": {
+      "VisualName": "Home",
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "33": {
+      "VisualName": "PGUP",
+      "X": 555,
+      "Y": 74,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "51": {
+      "VisualName": null,
+      "X": null,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": 9.0,
+      "Enabled": null
+    },
+    "52": {
+      "VisualName": null,
+      "X": 555,
+      "Y": 0,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "53": {
+      "VisualName": null,
+      "X": 555,
+      "Y": 148,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "54": {
+      "VisualName": "PGDN",
+      "X": 555,
+      "Y": 111,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "88": {
+      "VisualName": null,
+      "X": null,
+      "Y": null,
+      "Width": -37,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "89": {
+      "VisualName": null,
+      "X": 518,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "94": {
+      "VisualName": null,
+      "X": null,
+      "Y": null,
+      "Width": -10,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "95": {
+      "VisualName": null,
+      "X": 85,
+      "Y": null,
+      "Width": -9,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "96": {
+      "VisualName": null,
+      "X": 122,
+      "Y": null,
+      "Width": -12,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "97": {
+      "VisualName": null,
+      "X": 159,
+      "Y": null,
+      "Width": -30,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "98": {
+      "VisualName": null,
+      "X": 344,
+      "Y": null,
+      "Width": -11,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "100": {
+      "VisualName": "App",
+      "X": 381,
+      "Y": null,
+      "Width": -11,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "101": {
+      "VisualName": null,
+      "X": 418,
+      "Y": null,
+      "Width": 8,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "102": {
+      "VisualName": null,
+      "X": 481,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "103": {
+      "VisualName": null,
+      "X": 518,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    },
+    "104": {
+      "VisualName": null,
+      "X": 555,
+      "Y": null,
+      "Width": null,
+      "Height": null,
+      "Image": null,
+      "FontSize": null,
+      "Enabled": null
+    }
+  },
+  "key_to_add": {
+    "107": {
+      "Key": {
+        "visual_name": "FN",
+        "tag": 107,
+        "device_id": null
+      },
+      "FontSize": 9.0,
+      "Enabled": true,
+      "X": 48,
+      "Y": 185,
+      "Width": 30,
+      "Height": 30,
+      "Image": "",
+      "IsImage": false
+    }
+  },
+  "jis_key_modifications": {}
+}
