@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using Aurora.Utils;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
 using OpenRGBDevice = OpenRGB.NET.Models.Device;
@@ -90,11 +91,31 @@ namespace Aurora.Devices.OpenRGB
 
             foreach (var device in _devices)
             {
-                for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+                var calibrationName = $"{DeviceName}_{device.OrgbDevice.Serial.Trim()}_cal";
+                if (Global.Configuration.VarRegistry.GetRegisteredVariableKeys().Contains(calibrationName))
                 {
-                    if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
+                    var calibration =
+                        Global.Configuration.VarRegistry.GetVariable<RealColor>(calibrationName).GetDrawingColor();
+                    for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
                     {
-                        device.Colors[ledIndex] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                        if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
+                        {
+                            device.Colors[ledIndex] = new OpenRGBColor(
+                                (byte) (keyColor.R * calibration.R/255), 
+                                (byte) (keyColor.G * calibration.G/255),  
+                                (byte) (keyColor.B * calibration.B/255)
+                                );
+                        }
+                    }
+                }
+                else
+                {
+                    for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+                    {
+                        if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
+                        {
+                            device.Colors[ledIndex] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                        }
                     }
                 }
 
