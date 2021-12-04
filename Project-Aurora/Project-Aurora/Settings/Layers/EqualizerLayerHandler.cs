@@ -196,8 +196,6 @@ namespace Aurora.Settings.Layers
         {
             return new Control_EqualizerLayer(this);
         }
-
-        private Dictionary<int, float> _prevAmplitudes = new();
         public override EffectLayer Render(IGameState gamestate)
         {
             try
@@ -376,15 +374,18 @@ namespace Aurora.Settings.Layers
             }
         }
 
+
+        private Dictionary<int, float> _prevAmplitudes = new();
         private float calculateSoundDropout(int index, float newValue)
         {
             var hasOldValue = _prevAmplitudes.TryGetValue(index, out var oldValue);
             if (hasOldValue)
             {
-                var res = Math.Max(oldValue / 2, newValue);
+                var res = Math.Max(oldValue * 0.9f, newValue);
                 _prevAmplitudes[index] = res;
                 return res;
             }
+            _prevAmplitudes[index] = newValue;
             return newValue;
         }
 
