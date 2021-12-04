@@ -10,7 +10,7 @@
     <RootNamespace>Aurora</RootNamespace>
     <AssemblyName>Aurora</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9</LangVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
