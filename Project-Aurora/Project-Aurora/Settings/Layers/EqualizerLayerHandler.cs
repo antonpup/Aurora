@@ -282,7 +282,6 @@ namespace Aurora.Settings.Layers
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
                                 Brush brush = GetBrush(fft_val, x, sourceRect.Width);
                                 var yOff = -Math.Max(Math.Min(fft_val / scaled_max_amplitude * 1000.0f, halfHeight), -halfHeight);
-                                yOff = calculateSoundDropout(x, yOff);
                                 g.DrawLine(new Pen(brush), x, halfHeight, x, halfHeight + yOff);
                             }
                             break;
@@ -291,8 +290,7 @@ namespace Aurora.Settings.Layers
                             for (int x = 0; x < (int)sourceRect.Width; x++) {
                                 float fft_val = _local_fft.Length > x * wave_step_amount ? _local_fft[x * wave_step_amount].X : 0.0f;
                                 Brush brush = GetBrush(fft_val, x, sourceRect.Width);
-                                var h = calculateSoundDropout(x ,Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, sourceRect.Height));
-                                g.DrawLine(new Pen(brush), x, sourceRect.Height, x, sourceRect.Height - h);
+                                g.DrawLine(new Pen(brush), x, sourceRect.Height, x, sourceRect.Height - Math.Min(Math.Abs(fft_val / scaled_max_amplitude) * 1000.0f, sourceRect.Height));
                             }
                             break;
 
@@ -343,7 +341,6 @@ namespace Aurora.Settings.Layers
 
                                 if (previous_freq_results[f_x] - fft_val > 0.10)
                                     fft_val = previous_freq_results[f_x] - 0.15f;
-                                fft_val = calculateSoundDropout(f_x, fft_val);
 
                                 float x = f_x * bar_width;
                                 float y = sourceRect.Height;
@@ -372,21 +369,6 @@ namespace Aurora.Settings.Layers
                 Global.logger.Error("Error encountered in the Equalizer layer. Exception: " + exc.ToString());
                 return new EffectLayer();
             }
-        }
-
-
-        private Dictionary<int, float> _prevAmplitudes = new();
-        private float calculateSoundDropout(int index, float newValue)
-        {
-            var hasOldValue = _prevAmplitudes.TryGetValue(index, out var oldValue);
-            if (hasOldValue)
-            {
-                var res = Math.Max(oldValue * 0.9f, newValue);
-                _prevAmplitudes[index] = res;
-                return res;
-            }
-            _prevAmplitudes[index] = newValue;
-            return newValue;
         }
 
         void OnDataAvailable(object sender, WaveInEventArgs e)
