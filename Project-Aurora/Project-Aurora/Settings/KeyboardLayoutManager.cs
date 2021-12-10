@@ -702,6 +702,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g513.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G915)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g915.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
@@ -912,6 +914,9 @@ namespace Aurora.Settings
                         break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                        break;
+                    case PreferredMouse.Bloody_W60:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "bloody_w60_features.json");
                         break;
                     case PreferredMouse.OMEN_Photon:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");

@@ -190,6 +190,8 @@ namespace Aurora.Settings
         Logitech_G815 = 105,
         [Description("Logitech - G513")]
         Logitech_G513 = 106,
+        [Description("Logitech - G915")]
+        Logitech_G915 = 107,
 		
         //Corsair range is 200-299
         [Description("Corsair - K95")]
@@ -395,7 +397,10 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-
+        
+        [Description("Bloody - W60")]
+        Bloody_W60 = 800,
+        
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900,

@@ -109,9 +109,6 @@
     <None Update="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="kb_layouts\Extra Features\bloody_mp-50rs.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
