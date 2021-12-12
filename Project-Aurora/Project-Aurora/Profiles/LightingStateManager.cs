@@ -66,6 +66,11 @@ namespace Aurora.Profiles
         private ActiveProcessMonitor processMonitor;
         private RunningProcessMonitor runningProcessMonitor;
         public RunningProcessMonitor RunningProcessMonitor => runningProcessMonitor;
+        
+        
+
+        private Func<string, bool> _isRunningProcess;
+        private Func<ILightEvent, bool> _isOverlayActiveProfile;
 
         public LightingStateManager()
         {
@@ -81,6 +86,11 @@ namespace Aurora.Profiles
 
             processMonitor = ActiveProcessMonitor.Instance;
             runningProcessMonitor = new RunningProcessMonitor();
+            _isRunningProcess = name => runningProcessMonitor.IsProcessRunning(name);
+            _isOverlayActiveProfile = evt =>
+                evt.IsOverlayEnabled &&
+                (evt.Config.ProcessNames == null ||
+                 evt.Config.ProcessNames.Any(_isRunningProcess));
 
             // Register all Application types in the assembly
             var profileTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
@@ -331,7 +341,7 @@ namespace Aurora.Profiles
 
         private Timer updateTimer;
 
-        private const int timerInterval = 12;
+        private const int timerInterval = 8;
 
         private long nextProcessNameUpdate;
         private long currentTick;
@@ -343,12 +353,21 @@ namespace Aurora.Profiles
         public string PreviewProfileKey { get { return previewModeProfileKey; } set { previewModeProfileKey = value ?? string.Empty; } }
 
         Stopwatch watch = new Stopwatch();
-
-
+        
+        private Semaphore updateLock = new Semaphore(1, 1);
+        private bool locked = false;
         private void InitUpdate()
         {
             updateTimer = new System.Threading.Timer(g =>
             {
+                if (locked)
+                {
+                    return;
+                }
+
+                locked = true;
+
+                updateLock.WaitOne();
                 watch.Start();
                 if (Global.isDebug)
                     Update();
@@ -368,6 +387,8 @@ namespace Aurora.Profiles
                 currentTick += watch.ElapsedMilliseconds;
                 updateTimer?.Change(Math.Max(timerInterval - watch.ElapsedMilliseconds, UPDATE_PERIOD), Timeout.Infinite);
                 watch.Reset();
+                locked = false;
+                updateLock.Release();
             }, null, 0, System.Threading.Timeout.Infinite);
         }
 
@@ -528,14 +549,15 @@ namespace Aurora.Profiles
         }
         /// <summary>Gets the current application.</summary>
         public ILightEvent GetCurrentProfile() => GetCurrentProfile(out bool _);
-
         /// <summary>
         /// Returns a list of all profiles that should have their overlays active. This will include processes that running but not in the foreground.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ILightEvent> GetOverlayActiveProfiles() => Events.Values
-            .Where(evt => evt.IsOverlayEnabled)
-            .Where(evt => evt.Config.ProcessNames == null || evt.Config.ProcessNames.Any(name => runningProcessMonitor.IsProcessRunning(name)));
+        public IEnumerable<ILightEvent> GetOverlayActiveProfiles()
+        {
+            return Events.Values
+                .Where(_isOverlayActiveProfile);
+        }
         //.Where(evt => evt.Config.ProcessTitles == null || ProcessUtils.AnyProcessWithTitleExists(evt.Config.ProcessTitles));
 
         /// <summary>KeyDown handler that checks the current application's profiles for keybinds.

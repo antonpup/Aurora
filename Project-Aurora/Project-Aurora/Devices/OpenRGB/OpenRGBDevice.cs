@@ -114,7 +114,10 @@ namespace Aurora.Devices.OpenRGB
                     {
                         if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
                         {
-                            device.Colors[ledIndex] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                            var deviceKey = device.Colors[ledIndex];
+                            deviceKey.R = keyColor.R;
+                            deviceKey.G = keyColor.G;
+                            deviceKey.B = keyColor.B;
                         }
                     }
                 }

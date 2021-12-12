@@ -17,12 +17,11 @@ namespace Aurora.Devices
     {
         public IDevice Device { get; set; }
 
-        public BackgroundWorker Worker = new BackgroundWorker();
-        public Thread UpdateThread { get; set; } = null;
+        public BackgroundWorker Worker = new();
 
-        private Tuple<DeviceColorComposition, bool> currentComp = null;
+        private Tuple<DeviceColorComposition, bool> currentComp;
 
-        public readonly object actionLock = new object();
+        public readonly object actionLock = new();
 
         public DeviceContainer(IDevice device)
         {
