@@ -44,8 +44,9 @@ namespace Aurora.Devices
                         }
                         catch (Exception e)
                         {
-                            string message = "Error while updating device: " + Device.DeviceName + "\n" + e.Message;
+                            string message = "Error while updating device: " + Device.DeviceName + "\nException is logged" + e.Message;
                             System.Console.WriteLine(message);
+                            Global.logger.Error(message, e);
                             System.Windows.MessageBox.Show(message);
                         }
                         finally
