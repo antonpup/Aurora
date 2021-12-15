@@ -472,6 +472,7 @@ namespace Aurora.Settings
 
         //General Program Settings
         [JsonProperty("allow_peripheral_devices")] public bool AllowPeripheralDevices { get; set; } = true;
+        [JsonProperty("close_on_exception")] public bool CloseProgramOnException { get; set; } = true;
         [JsonProperty("allow_wrappers_in_background")] public bool AllowWrappersInBackground { get; set; } = true;
         [JsonProperty("allow_all_logitech_bitmaps")] public bool AllowAllLogitechBitmaps { get; set; } = true;
 
