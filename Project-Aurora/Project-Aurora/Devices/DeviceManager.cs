@@ -17,12 +17,11 @@ namespace Aurora.Devices
     {
         public IDevice Device { get; set; }
 
-        public BackgroundWorker Worker = new BackgroundWorker();
-        public Thread UpdateThread { get; set; } = null;
+        public BackgroundWorker Worker = new();
 
-        private Tuple<DeviceColorComposition, bool> currentComp = null;
+        private Tuple<DeviceColorComposition, bool> currentComp;
 
-        public readonly object actionLock = new object();
+        public readonly object actionLock = new();
 
         public DeviceContainer(IDevice device)
         {
@@ -45,8 +44,9 @@ namespace Aurora.Devices
                         }
                         catch (Exception e)
                         {
-                            string message = "Error while updating device: " + Device.DeviceName + "\n" + e.Message;
+                            string message = "Error while updating device: " + Device.DeviceName + "\nException is logged" + e.Message;
                             System.Console.WriteLine(message);
+                            Global.logger.Error(message, e);
                             System.Windows.MessageBox.Show(message);
                         }
                         finally

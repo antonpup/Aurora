@@ -162,6 +162,11 @@ namespace Aurora.Devices.YeeLight
             {
                 return ProceedWhiteColor(targetColor);
             }
+
+            if (ShouldSendKeepAlive())
+            {
+                return ProceedColor(targetColor);
+            }
             updateDelayStopWatch.Restart();
             return true;
         }
@@ -170,10 +175,18 @@ namespace Aurora.Devices.YeeLight
         {
             if (whiteCounter == 0)
             {
+                if (ShouldSendKeepAlive())
+                {
+                    lights.ForEach(x =>
+                    {
+                        x.SetTemperature(6500);
+                        x.SetBrightness(targetColor.R * 100 / 255);
+                    });
+                }
                 updateDelayStopWatch.Restart();
                 return true;
             }
-            else if (whiteCounter == 1)
+            if (whiteCounter == 1)
             {
                 lights.ForEach(x =>
                 {
@@ -213,7 +226,20 @@ namespace Aurora.Devices.YeeLight
             return true;
         }
 
-        private bool isWhiteTone(Color color)
+        private const int KeepAliveCounter = 500;
+        private int _keepAlive = KeepAliveCounter;
+        private bool ShouldSendKeepAlive()
+        {
+            if (_keepAlive-- == 0)
+            {
+                _keepAlive = KeepAliveCounter;
+                return true;
+            }
+
+            return false;
+        }
+
+            private bool isWhiteTone(Color color)
         {
             return color.R == color.G && color.G == color.B;
         }

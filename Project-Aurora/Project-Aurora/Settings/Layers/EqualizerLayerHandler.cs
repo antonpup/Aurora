@@ -196,7 +196,6 @@ namespace Aurora.Settings.Layers
         {
             return new Control_EqualizerLayer(this);
         }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             try
@@ -242,8 +241,8 @@ namespace Aurora.Settings.Layers
                     previous_freq_results = new float[freqs.Length];
 
                 //Maintain local copies of fft, to prevent data overwrite
-                Complex[] _local_fft = _ffts;
-                Complex[] _local_fft_previous = _ffts_prev;
+                Complex[] _local_fft = new List<Complex>(_ffts).ToArray();
+                Complex[] _local_fft_previous = new List<Complex>(_ffts_prev).ToArray();
 
                 bool BgEnabled = false;
                 switch (Properties.BackgroundMode)

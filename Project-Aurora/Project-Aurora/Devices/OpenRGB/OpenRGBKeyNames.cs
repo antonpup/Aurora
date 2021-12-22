@@ -138,6 +138,8 @@ namespace Aurora.Devices.OpenRGB
             { "Key: G1"               , DK.G1                     },
             { "Key: G2"               , DK.G2                     },
             { "Key: G3"               , DK.G3                     },
+            { "Key: G4"               , DK.G4                     },
+            { "Key: G5"               , DK.G5                     },
             //{ "Logo"                  , DK.Peripheral_Logo        },
             { "Mouse"                 , DK.Peripheral_Logo        },
             { "Scroll Wheel"          , DK.Peripheral_ScrollWheel },
