@@ -15,7 +15,7 @@
       "margin_left_bits": 0,
       "margin_top_bits": -3,
       "image": "Corsair_strafe_mk2_logo.png",
-      "enabled": false,
+      "enabled": true,
       "absolute_location": true
     },
     {
