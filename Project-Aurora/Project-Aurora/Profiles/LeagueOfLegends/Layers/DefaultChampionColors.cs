@@ -14,7 +14,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
         /// Default colors for the champions. generated with vibrant-js and the icons for the champions
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<Champion, Color> GetDictionary() => new Dictionary<Champion, Color>()
+        public static Dictionary<Champion, Color> Colors => new Dictionary<Champion, Color>()
         {
             [Champion.Unknown] = Color.FromArgb(120, 120, 120),
             [Champion.None] = Color.FromArgb(120, 120, 120),
@@ -82,6 +82,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             [Champion.Leblanc] = Color.FromArgb(68, 15, 128),
             [Champion.LeeSin] = Color.FromArgb(214, 39, 80),
             [Champion.Leona] = Color.FromArgb(193, 105, 37),
+            [Champion.Lillia] = Color.FromArgb(88, 4, 199),
             [Champion.Lissandra] = Color.FromArgb(52, 86, 125),
             [Champion.Lucian] = Color.FromArgb(6, 40, 82),
             [Champion.Lulu] = Color.FromArgb(77, 58, 199),
@@ -113,11 +114,14 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             [Champion.RekSai] = Color.FromArgb(49, 0, 133),
             [Champion.Renekton] = Color.FromArgb(30, 74, 12),
             [Champion.Rengar] = Color.FromArgb(212, 150, 6),
+            [Champion.Rell] = Color.FromArgb(199, 157, 4),
             [Champion.Riven] = Color.FromArgb(57, 255, 43),
             [Champion.Rumble] = Color.FromArgb(198, 50, 28),
             [Champion.Ryze] = Color.FromArgb(67, 88, 202),
+            [Champion.Samira] = Color.FromArgb(166, 2, 2),
             [Champion.Sejuani] = Color.FromArgb(29, 107, 193),
             [Champion.Senna] = Color.FromArgb(40, 161, 215),
+            [Champion.Seraphine] = Color.FromArgb(247, 87, 255),
             [Champion.Sett] = Color.FromArgb(172, 76, 92),
             [Champion.Shaco] = Color.FromArgb(84, 68, 164),
             [Champion.Shen] = Color.FromArgb(92, 102, 195),
@@ -159,6 +163,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             [Champion.Wukong] = Color.FromArgb(231, 62, 33),
             [Champion.Yasuo] = Color.FromArgb(65, 116, 178),
             [Champion.Yorick] = Color.FromArgb(58, 104, 197),
+            [Champion.Yone] = Color.FromArgb(219, 59, 59),
             [Champion.Yuumi] = Color.FromArgb(180, 116, 76),
             [Champion.Zac] = Color.FromArgb(97, 184, 75),
             [Champion.Zed] = Color.FromArgb(148, 0, 0),

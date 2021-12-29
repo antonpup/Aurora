@@ -148,35 +148,8 @@
   <data name="removeprofile_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\removeprofile_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LogitechInstall_Step1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\logitechinstall\step1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LogitechInstall_Step2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\logitechinstall\step2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LogitechInstall_Step3" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\logitechinstall\step3.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LogitechInstall_Step4" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\logitechinstall\step4.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="LogitechInstall_Step5" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\logitechinstall\step5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="rocketleague_256x256" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\rocketleague_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CorsairInstall_Step1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\corsairinstall\step1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="CorsairInstall_Step2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\corsairinstall\step2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RazerInstall_Step1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\razerinstall\step1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="RazerInstall_Step2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\razerinstall\step2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FreeForm_Circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\freeform_circle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -252,12 +225,6 @@
   </data>
   <data name="Borderlands2_256x256" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Borderlands2_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SteelSeriesInstall_Step1" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SteelSeriesInstall\Step1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SteelSeriesInstall_Step2" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SteelSeriesInstall\Step2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="rot_tombraider" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\rot_tombraider.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace Aurora.Utils {
 
@@ -12,7 +13,7 @@ namespace Aurora.Utils {
     /// Will handle the creation of devices if required. If another AudioDevice is using that device, they will share the same reference.
     /// Can be hot-swapped to a different device, moving all events to the newly selected device.
     /// </summary>
-    public sealed class AudioDeviceProxy : IDisposable {
+    public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfaces.IMMNotificationClient {
 
         public const string DEFAULT_DEVICE_ID = ""; // special ID to indicate the default device
 
@@ -24,6 +25,7 @@ namespace Aurora.Utils {
 
         // ID of currently selected device.
         private string deviceId;
+        private bool defaultDeviceChanged = false;
 
         static AudioDeviceProxy() {
             // Tried using a static class to update the device lists when they changed, but it caused an AccessViolation. Will try look into this again in future
@@ -38,6 +40,7 @@ namespace Aurora.Utils {
         public AudioDeviceProxy(string deviceId, DataFlow flow) {
             Flow = flow;
             DeviceId = deviceId ?? DEFAULT_DEVICE_ID;
+            deviceEnumerator.RegisterEndpointNotificationCallback(this);
         }
 
         /// <summary>Indicates recorded data is available on the selected device.</summary>
@@ -64,7 +67,8 @@ namespace Aurora.Utils {
             get => deviceId;
             set {
                 value ??= DEFAULT_DEVICE_ID; // Ensure not-null (if null, assume default device)
-                if (deviceId == value) return;
+                if (deviceId == value && !(defaultDeviceChanged && deviceId == DEFAULT_DEVICE_ID)) return;
+                defaultDeviceChanged = false;
                 deviceId = value;
                 UpdateDevice();
             }
@@ -100,9 +104,67 @@ namespace Aurora.Utils {
             WaveIn = null;
         }
 
+        private void AddPlaybackDevice(MMDevice device)
+        {
+            try
+            {
+                PlaybackDevices.Add(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+            }
+            finally
+            {
+                var selectedDevice = Global.Configuration.GSIAudioRenderDevice;
+                if (selectedDevice.Equals(device.ID))
+                {
+                    //probably need to fill this. somehow this is still fine
+                }
+            }
+        }
+
+        private void AddRecordingDevice(MMDevice device)
+        {
+            try
+            {
+                RecordingDevices.Add(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+            }
+            finally
+            {
+                var selectedDevice = Global.Configuration.GSIAudioRenderDevice;
+                if (selectedDevice.Equals(device.ID))
+                {
+
+                }
+            }
+        }
+
         #region Device Enumeration
         public static ObservableCollection<KeyValuePair<string, string>> PlaybackDevices { get; } = new ObservableCollection<KeyValuePair<string, string>>();
         public static ObservableCollection<KeyValuePair<string, string>> RecordingDevices { get; } = new ObservableCollection<KeyValuePair<string, string>>();
+        public void OnDeviceAdded(string pwstrDeviceId)
+        {
+            var device = deviceEnumerator.GetDevice(pwstrDeviceId);
+            switch (device.DataFlow)
+            {
+                case DataFlow.Render:
+                    AddPlaybackDevice(device);
+                    break;
+                case DataFlow.Capture:
+                    AddRecordingDevice(device);
+                    break;
+            }
+        }
+        public void OnDeviceRemoved(string deviceId)
+        {
+            var device = deviceEnumerator.GetDevice(deviceId);
+            switch (device.DataFlow)
+            {
+                case DataFlow.Render:
+                    PlaybackDevices.Remove(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+                    break;
+                case DataFlow.Capture:
+                    RecordingDevices.Remove(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+                    break;
+            }
+        }
 
         // Updates the target list with the devices of the given dataflow type.
         private static void RefreshDeviceList(ObservableCollection<KeyValuePair<string, string>> target, DataFlow flow) {
@@ -120,6 +182,40 @@ namespace Aurora.Utils {
         }
         #endregion
 
+        #region IMMNotificationClient Implementation
+
+        /// <summary>
+        /// Update the device when changed by the system.
+        /// </summary>
+        public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+            => defaultDeviceChanged = true;
+
+        // Methods from interface not used
+        public void OnDeviceStateChanged(string deviceId, DeviceState newState)
+        {
+            var device = deviceEnumerator.GetDevice(deviceId);
+            var kv = new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName);
+            switch (device.DataFlow)
+            {
+                case DataFlow.Render:
+                    if (!PlaybackDevices.Contains(kv))
+                    {
+                        AddPlaybackDevice(device);
+                    }
+                    break;
+                case DataFlow.Capture:
+                    RecordingDevices.Remove(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+                    if (!RecordingDevices.Contains(kv))
+                    {
+                        AddRecordingDevice(device);
+                    }
+                    break;
+            }
+        }
+        public void OnPropertyValueChanged(string pwstrDeviceId, PropertyKey key) { }
+
+        #endregion
+
         #region IDisposable Implementation
         private bool disposedValue = false;
         public void Dispose() => Dispose(true);
@@ -127,6 +223,7 @@ namespace Aurora.Utils {
             if (!disposedValue) {
                 if (disposing)
                     DisposeCurrentDevice();
+                deviceEnumerator.UnregisterEndpointNotificationCallback(this);
                 disposedValue = true;
             }
         }

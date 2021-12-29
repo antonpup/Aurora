@@ -1,14 +1,10 @@
-using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Aurora.Utils;
-using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
@@ -17,16 +13,9 @@ namespace Aurora.Settings
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public KeySequence Keys { get; set; }
         [OnChangedMethod(nameof(OnEnabledChanged))] public bool Enabled { get; set; }
         [JsonIgnore] public bool ExceptionHit { get; set; }
         [JsonIgnore] public Exception Exception { get; set; }
-
-        public ScriptSettings(dynamic script)
-        {
-            if (script?.DefaultKeys != null && script?.DefaultKeys is KeySequence)
-                Keys = script.DefaultKeys;
-        }
 
         private void OnEnabledChanged() {
             if (Enabled) {
@@ -69,13 +58,24 @@ namespace Aurora.Settings
                 l.SetProfile(app);
         }
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool disposing)
         {
             foreach (Layer l in Layers)
                 l.Dispose();
 
             foreach (Layer l in OverlayLayers)
                 l.Dispose();
+        }
+
+        ~ApplicationProfile()
+        {
+            Dispose(false);
         }
     }
 }

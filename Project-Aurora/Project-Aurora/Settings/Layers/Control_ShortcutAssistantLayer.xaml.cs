@@ -44,7 +44,7 @@ namespace Aurora.Settings.Layers
 
         public void SetSettings()
         {
-            this.comboboxPresentationType.SelectedItem = ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType;
+            this.comboboxPresentationType.SelectedValue = ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType;
 
             this.stackPanelShortcuts.Children.Clear();
             foreach(Keybind keyb in ((ShortcutAssistantLayerHandler)this.DataContext).Properties._ShortcutKeys)
@@ -168,7 +168,7 @@ namespace Aurora.Settings.Layers
         private void comboboxPresentationType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && this.DataContext is ShortcutAssistantLayerHandler && sender is ComboBox)
-                ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)Enum.Parse(typeof(ShortcutAssistantPresentationType), (sender as ComboBox).SelectedIndex.ToString());
+                ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)(sender as ComboBox).SelectedValue;
         }
     }
 }

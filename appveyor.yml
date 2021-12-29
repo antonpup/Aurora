@@ -1,4 +1,4 @@
-version: 0.8.0+{build}
+version: 0.8.1+{build}
 pull_requests:
   do_not_increment_build_number: true
 branches:
@@ -17,8 +17,6 @@ init:
       }
 
 before_build:
-- ps: >-
-    (Get-Content Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs) -replace '\[assembly: AssemblyFileVersion\("(.*)"\)\]', "[assembly: AssemblyFileVersion(`"$($env:APPVEYOR_BUILD_VERSION)`")]" | Set-Content Project-Aurora\Project-Aurora\Properties\AssemblyInfo.cs
 - cmd: >-
     git submodule update --init --recursive
     

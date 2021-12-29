@@ -1,14 +1,12 @@
-﻿<UserControl
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_SolidFillLayer"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             x:Class="Aurora.Settings.Layers.Control_SolidFillLayer"
+             mc:Ignorable="d">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Color:" VerticalAlignment="Top" Margin="0,4,0,0"/>
-        <xctk:ColorPicker x:Name="ColorPicker_primaryColor" HorizontalAlignment="Left" Height="24" Margin="36,0,0,0" VerticalAlignment="Top" Width="139" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_primaryColor_SelectedColorChanged" UsingAlphaChannel="True"/>
+        <TextBlock Text="Color:" Margin="0,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:ColorPicker SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="36,0,0,0" Height="24" Width="139" HorizontalAlignment="Left" VerticalAlignment="Top" />
     </Grid>
 </UserControl>

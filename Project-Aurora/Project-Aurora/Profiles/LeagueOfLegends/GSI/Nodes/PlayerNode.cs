@@ -76,6 +76,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Leblanc,
         LeeSin,
         Leona,
+        Lillia,
         Lissandra,
         Lucian,
         Lulu,
@@ -107,11 +108,14 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         RekSai,
         Renekton,
         Rengar,
+        Rell,
         Riven,
         Rumble,
         Ryze,
+        Samira,
         Sejuani,
         Senna,
+        Seraphine,
         Sett,
         Shaco,
         Shen,
@@ -153,6 +157,7 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Wukong,
         Yasuo,
         Yorick,
+        Yone,
         Yuumi,
         Zac,
         Zed,
@@ -174,18 +179,20 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
     {
         Unknown = -1,
         None = 0,
-        Cleanse,//210
-        Exhaust,//210
-        Flash,//300
-        Ghost,//180
-        Heal,//240
-        Smite,//oof
-        Teleport,//260
-        Clarity,//240
-        Ignite,//180
-        Barrier,//180
-        Mark,//80
-        Dash//0
+        Cleanse,
+        Exhaust,
+        Flash,
+        Ghost,
+        Heal,
+        Smite,
+        Teleport,
+        Clarity,
+        Ignite,
+        Barrier,
+        Mark,
+        Dash,
+        ChillingSmite,
+        ChallengingSmite
     }
 
     public enum Position

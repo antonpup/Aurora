@@ -2,7 +2,7 @@
 using Aurora.Utils;
 using System;
 using System.IO;
-using Ionic.Zip;
+using System.IO.Compression;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;

@@ -1,9 +1,9 @@
 ﻿using Aurora.Controls;
 using Aurora.Profiles.Payday_2.GSI;
 using Aurora.Settings;
-using Ionic.Zip;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -64,11 +64,11 @@ namespace Aurora.Profiles.Payday_2
                     {
                         using (MemoryStream gsi_pd2_ms = new MemoryStream(Properties.Resources.PD2_GSI))
                         {
-                            using (ZipFile zip = ZipFile.Read(gsi_pd2_ms))
+                            using (ZipArchive zip = new ZipArchive(gsi_pd2_ms))
                             {
-                                foreach (ZipEntry entry in zip)
+                                foreach (ZipArchiveEntry entry in zip.Entries)
                                 {
-                                    entry.Extract(pd2path, ExtractExistingFileAction.OverwriteSilently);
+                                    entry.ExtractToFile(pd2path, true);
                                 }
                             }
 
@@ -96,7 +96,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Game.State = (GSI.Nodes.GameStates)Enum.Parse(typeof(GSI.Nodes.GameStates), this.preview_gamestate.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_PD2).Game.State = (GSI.Nodes.GameStates)preview_gamestate.SelectedValue;
             }
         }
 
@@ -104,7 +104,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Level.Phase = (GSI.Nodes.LevelPhase)Enum.Parse(typeof(GSI.Nodes.LevelPhase), this.preview_levelphase.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_PD2).Level.Phase = (GSI.Nodes.LevelPhase)preview_levelphase.SelectedValue;
             }
         }
 
@@ -112,7 +112,7 @@ namespace Aurora.Profiles.Payday_2
         {
             if (IsLoaded)
             {
-                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.State = (GSI.Nodes.PlayerState)Enum.Parse(typeof(GSI.Nodes.PlayerState), this.preview_playerstate.SelectedIndex.ToString());
+                (profile_manager.Config.Event._game_state as GameState_PD2).Players.LocalPlayer.State = (GSI.Nodes.PlayerState)preview_playerstate.SelectedValue;
             }
         }
 

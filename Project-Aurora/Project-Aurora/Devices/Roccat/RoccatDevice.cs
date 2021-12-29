@@ -35,7 +35,7 @@ using System.ComponentModel;
 
 namespace Aurora.Devices.Roccat
 {
-    class RoccatDevice : Device
+    class RoccatDevice : IDevice
     {
         private String devicename = "Roccat";
         private bool isInitialized = false;
@@ -173,20 +173,20 @@ namespace Aurora.Devices.Roccat
 
         private byte layout = 0x01; //TALKFX_RYOS_LAYOUT_US
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
+        public string DeviceDetails
         {
-            if (isInitialized)
+            get
             {
-                return devicename + ": " + (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
-            }
-            else
-            {
-                return devicename + ": Not initialized";
+                if (isInitialized)
+                {
+                    return (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
+                }
+                else
+                {
+                    return "Not Initialized";
+                }
             }
         }
 
@@ -211,16 +211,6 @@ namespace Aurora.Devices.Roccat
                         )
                     {
                         throw new Exception("No devices connected");
-                    }
-                    if (Global.Configuration.roccat_first_time)
-                    {
-                        App.Current.Dispatcher.Invoke(() =>
-                        {
-                            RoccatInstallInstructions instructions = new RoccatInstallInstructions();
-                            instructions.ShowDialog();
-                        });
-                        Global.Configuration.roccat_first_time = false;
-                        Settings.ConfigManager.Save(Global.Configuration);
                     }
                     isInitialized = true;
                     return true;
@@ -253,7 +243,7 @@ namespace Aurora.Devices.Roccat
 
         public void Reset()
         {
-            if (this.IsInitialized())
+            if (this.IsInitialized)
             {
                 Restoregeneric();
             }
@@ -287,10 +277,7 @@ namespace Aurora.Devices.Roccat
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -309,11 +296,11 @@ namespace Aurora.Devices.Roccat
             try
             {
                 DeviceLayout layout = DeviceLayout.ISO;
-                if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.dvorak
-                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.us
-                    || Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.ru)
+                if (Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.dvorak
+                    || Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.us
+                    || Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.ru)
                     layout = DeviceLayout.ANSI;
-                else if (Global.Configuration.keyboard_localization == PreferredKeyboardLocalization.jpn)
+                else if (Global.Configuration.KeyboardLocalization == PreferredKeyboardLocalization.jpn)
                     layout = DeviceLayout.JP;
 
                 foreach (KeyValuePair<DeviceKeys, System.Drawing.Color> key in keyColors)
@@ -411,7 +398,7 @@ namespace Aurora.Devices.Roccat
 
         public bool IsPeripheralConnected()
         {
-            return this.IsInitialized();
+            return this.IsInitialized;
         }
 
         private Roccat_Talk.TalkFX.Color ConvertToRoccatColor(System.Drawing.Color color)
@@ -419,23 +406,23 @@ namespace Aurora.Devices.Roccat
             return new Roccat_Talk.TalkFX.Color(color.R, color.G, color.B);
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null)
+            get
             {
+                if (default_registry == null)
+                {
 
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
-                default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
-                default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_enable_generic", true, "Enable Generic support");
+                    default_registry.Register($"{devicename}_enable_ryos", true, "Enable Ryos support");
+                    default_registry.Register($"{devicename}_restore_fallback", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 0, 0, 255)), "Color", new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(255, 255, 255, 255)), new Aurora.Utils.RealColor(System.Drawing.Color.FromArgb(0, 0, 0, 0)), "Set restore color for your generic roccat devices");
+                }
+
+                return default_registry;
             }
-
-            return default_registry;
         }
     }
 }

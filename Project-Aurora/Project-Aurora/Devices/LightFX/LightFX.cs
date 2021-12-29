@@ -14,7 +14,7 @@ using LightFXAPI;
 
 namespace Aurora.Devices.LightFX
 {
-    class LightFxDevice : Device
+    class LightFxDevice : IDevice
     {
         private String devicename = "LightFX";
         private bool isInitialized = false;
@@ -29,21 +29,11 @@ namespace Aurora.Devices.LightFX
         private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
         private long lastUpdateTime = 0;
 
-        public string GetDeviceName()
-        {
-            return devicename;
-        }
+        public string DeviceName => devicename;
 
-        public string GetDeviceDetails()
-        {
-            if (isInitialized) {
-                return devicename + ": Initialized";
-            } else {
-                return devicename + ": Not initialized";
-            }
-        }
-
-
+        public string DeviceDetails => IsInitialized
+            ? "Initialized"
+            : "Not Initialized";
 
         public int deviceStatus()
         {
@@ -248,7 +238,7 @@ namespace Aurora.Devices.LightFX
 
         public void Reset()
         {
-            if (this.IsInitialized() && (keyboard_updated || peripheral_updated)) {
+            if (this.IsInitialized&& (keyboard_updated || peripheral_updated)) {
                 keyboard_updated = false;
                 peripheral_updated = false;
             }
@@ -261,10 +251,7 @@ namespace Aurora.Devices.LightFX
             return isInitialized;
         }
 
-        public bool IsInitialized()
-        {
-            return isInitialized;
-        }
+        public bool IsInitialized => isInitialized;
 
         public bool IsConnected()
         {
@@ -333,19 +320,14 @@ namespace Aurora.Devices.LightFX
 
         bool NumLock = (((ushort)LightFXSDK.GetKeyState(0x90)) & 0xffff) != 0;
 
+        private readonly List<Color> leftColor = new List<Color>();
+        private readonly List<Color> midleftColor = new List<Color>();
+        private readonly List<Color> midRightColor = new List<Color>();
+        private readonly List<Color> rightColor = new List<Color>();
+        private readonly List<Color> numpadColor = new List<Color>();
         public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
-            List<Color> leftColor = new List<Color>();
-
-            List<Color> midleftColor = new List<Color>();
-
-
-            List<Color> midRightColor = new List<Color>();
-
-            List<Color> rightColor = new List<Color>();
-
-            List<Color> numpadColor = new List<Color>();
 
 
             try {
@@ -448,7 +430,7 @@ namespace Aurora.Devices.LightFX
                 if (NumLock) {
                     midRightColor.AddRange(rightColor);
                     rightColor.Clear();
-                    rightColor = numpadColor;
+                    rightColor.AddRange(numpadColor);
                 }
                 if (leftColor.Any()) {
                     var mostUsed = leftColor.GroupBy(item => item)
@@ -575,20 +557,21 @@ namespace Aurora.Devices.LightFX
             return isInitialized;
         }
 
-        public string GetDeviceUpdatePerformance()
-        {
-            return (isInitialized ? lastUpdateTime + " ms" : "");
-        }
+        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
 
-        public VariableRegistry GetRegisteredVariables()
+        public VariableRegistry RegisteredVariables
         {
-            if (default_registry == null) {
-                default_registry = new VariableRegistry();
-                default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
-                default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
-                default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
+            get
+            {
+                if (default_registry == null)
+                {
+                    default_registry = new VariableRegistry();
+                    default_registry.Register($"{devicename}_custom_pid", false, "Use Custom PID");
+                    default_registry.Register($"{devicename}_pid", 0, "Device PID: 0x", flags: VariableFlags.UseHEX);
+                    default_registry.Register($"{devicename}_length", true, "Use 12 byte data");
+                }
+                return default_registry;
             }
-            return default_registry;
         }
     }
 }
