@@ -72,7 +72,7 @@ jobs:
         type: 'zip'
         filename: 'binaries.zip'
         path: |
-          "Build\Release"
+          ".\Build\Release"
       
     - name: Upload files to a GitHub release
       uses: svenstaro/upload-release-action@2.2.1
