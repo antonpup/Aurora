@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: Aurora CD
 
 on:
   push:
@@ -69,8 +69,7 @@ jobs:
     - name: Archive Release
       uses: vimtor/action-zip@v1
       with:
-        files: |
-          "Build\Release\"
+        files: Build\Release\
         dest: Binaries.zip
       
     - name: Installer Release
