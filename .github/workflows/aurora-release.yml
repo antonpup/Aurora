@@ -67,14 +67,13 @@ jobs:
       shell: cmd
       
     - name: Archive Release
-      uses: thedoctor0/zip-release@master
+      uses: vimtor/action-zip@v1
       with:
-        type: 'zip'
-        filename: 'binaries.zip'
-        path: |
-          ".\Build\Release"
+        files: |
+          "Build\Release"
+        dest: Binaries.zip
       
-    - name: Upload files to a GitHub release
+    - name: Installer Release
       uses: svenstaro/upload-release-action@2.2.1
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
