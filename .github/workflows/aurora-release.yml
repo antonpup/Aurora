@@ -65,10 +65,20 @@ jobs:
       run: |
         "%programfiles(x86)%\Inno Setup 6\iscc.exe" /DEXTERNAL_VERSION=${{steps.buildnumber.outputs.build_number}} Installer\installer.iss
       shell: cmd
-
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v2
+      
+    - name: Archive Release
+      uses: thedoctor0/zip-release@master
       with:
-        name: Installer
-        path: "Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe"
+        type: 'zip'
+        filename: 'binaries.zip'
+        path: |
+          "Build\Release"
+      
+    - name: Upload files to a GitHub release
+      uses: svenstaro/upload-release-action@2.2.1
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: "Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe"
+        tag: ${{ github.ref }}
+        overwrite: false
+
