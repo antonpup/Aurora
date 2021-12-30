@@ -78,6 +78,14 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: "Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe"
-        tag: ${{ github.ref }}
+        tag: v${{steps.buildnumber.outputs.build_number}}
+        overwrite: false
+      
+    - name: Zip Release
+      uses: svenstaro/upload-release-action@2.2.1
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: Binaries.zip
+        tag: v${{steps.buildnumber.outputs.build_number}}
         overwrite: false
 
