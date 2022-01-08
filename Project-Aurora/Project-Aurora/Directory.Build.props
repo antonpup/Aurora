@@ -11,6 +11,7 @@
 
     <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_VERSION)</FileVersion>
     <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.1</FileVersion>
+    <Authors>$(GITHUB_REPOSITORY)</Authors>
 
   </PropertyGroup>
 
