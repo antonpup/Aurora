@@ -85,7 +85,7 @@ namespace Aurora.Settings
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
 
-            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}";
+            this.lblVersion.Content = (v[0].ToString().Length > 0 ? "" : "beta ") + $"v{v}";
 
             var rzVersion = RzHelper.GetSdkVersion();
             var rzSdkEnabled = RzHelper.IsSdkEnabled();
