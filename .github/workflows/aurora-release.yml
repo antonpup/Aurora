@@ -51,6 +51,7 @@ jobs:
     - name: Build
       run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
       env:
+        APPVEYOR_BUILD_VERSION: v${{steps.buildnumber.outputs.build_number}}
         Configuration: ${{ matrix.configuration }}
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
