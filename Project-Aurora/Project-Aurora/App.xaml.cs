@@ -520,11 +520,10 @@ namespace Aurora
             Global.logger.Fatal("Fatal Exception caught : " + exc, exc);
             Global.logger.Fatal(String.Format("Runtime terminating: {0}", e.IsTerminating));
             LogManager.Flush();
-
             
-            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             if (Global.Configuration.CloseProgramOnException)
             {
+                System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
                 //Perform exit operations
                 System.Windows.Application.Current.Shutdown();
             }
@@ -539,9 +538,9 @@ namespace Aurora
                 e.Handled = true;
             else
                 throw exc;
-            System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
             if (Global.Configuration.CloseProgramOnException)
             {
+                System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
                 //Perform exit operations
                 System.Windows.Application.Current.Shutdown();
             }
