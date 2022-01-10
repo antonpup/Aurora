@@ -37,7 +37,7 @@ namespace Aurora.Utils
         /// It will download files marked for update by MarkAppForUpdate(string).
         /// This will also retrieve deleted files.
         /// </summary>
-        /// <param name="branch">The branch in antonpup/Aurora to pull the pointers from.</param>
+        /// <param name="branch">The branch in Aurora-RGB/Aurora to pull the pointers from.</param>
         /// <param name="useOctokit">Get the pointers through GitHub's Content API using Octokit. Recommend this to be false to avoid rate limiting by GitHub's API.</param>
         public static async Task FetchPointers(string branch, bool useOctokit = false)
         {
@@ -67,9 +67,9 @@ namespace Aurora.Utils
                 {
                     try
                     {
-                        //TEMPLATE: https://github.com/antonpup/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
+                        //TEMPLATE: https://github.com/Aurora-RGB/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
                         // This should redirect to raw.githubusercontent.com and comply with 301 redirect requests
-                        string content = await pointerClient.GetStringAsync(@"https://github.com/antonpup/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app + ".json");
+                        string content = await pointerClient.GetStringAsync(@"https://github.com/Aurora-RGB/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app + ".json");
                         File.WriteAllText(Path.Combine(pointerPath, app) + ".json", content);
                     }
                     catch (Exception e)
@@ -84,7 +84,7 @@ namespace Aurora.Utils
         /// Async task to fetch all pointer files contained in a specific branch from the Aurora repository.
         /// It will download all files, including those for applications merged to the branch before a release.
         /// </summary>
-        /// <param name="branch">The branch in antonpup/Aurora to pull the pointers from.</param>
+        /// <param name="branch">The branch in Aurora-RGB/Aurora to pull the pointers from.</param>
         /// <param name="useOctokit">Get the pointers through GitHub's Content API using Octokit. Recommend this to be false to avoid rate limiting by GitHub's API.</param>
         public static async Task FetchDevPointers(string branch, bool useOctokit = false)
         {
@@ -117,9 +117,9 @@ namespace Aurora.Utils
 
                     try
                     {
-                        //TEMPLATE: https://github.com/antonpup/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
+                        //TEMPLATE: https://github.com/Aurora-RGB/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
                         // This should redirect to raw.githubusercontent.com and comply with 301 redirect requests
-                        string fContent = await pointerClient.GetStringAsync(@"https://github.com/antonpup/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app);
+                        string fContent = await pointerClient.GetStringAsync(@"https://github.com/Aurora-RGB/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app);
                         File.WriteAllText(Path.Combine(pointerPath, app), fContent);
                     }
                     catch (Exception e)

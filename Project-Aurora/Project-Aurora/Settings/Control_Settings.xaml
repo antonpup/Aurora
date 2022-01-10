@@ -278,7 +278,7 @@
         </TabItem>
         <TabItem Header="Updates">
             <Grid>
-                <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
+                <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="You can view all changelogs on Github "/><Hyperlink NavigateUri="https://github.com/Aurora-RGB/Aurora/releases" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="here"/></Hyperlink><Run Text="."/></TextBlock>
                 <Button Content="Check for Updates" HorizontalAlignment="Left" Margin="10,31,0,0" VerticalAlignment="Top" Click="updates_check_Click"/>
                 <CheckBox Content="Automatically check for updates on program start" IsChecked="{Binding UpdatesCheckOnStartUp}" Margin="10,56,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <CheckBox Content="Automatically check for pointer updates on program start" IsChecked="{Binding GetPointerUpdates}" Margin="10,76,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -292,10 +292,10 @@
                         <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/>
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="You can report problems and give suggestions by "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
+                        <Run Text="You can report problems and give suggestions by "/><Hyperlink NavigateUri="https://github.com/Aurora-RGB/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
+                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/Aurora-RGB/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
                         <LineBreak/>
                         <LineBreak/>
                         <Run Text="Game logos and other images are owned by their respective owners."/>
@@ -307,7 +307,7 @@
                         <Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink>
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="Made by all the"/> <Hyperlink NavigateUri="https://github.com/antonpup/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
+                        <Run Text="Made by all the"/> <Hyperlink NavigateUri="https://github.com/Aurora-RGB/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
                 </TextBlock>
                 <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                 <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>
