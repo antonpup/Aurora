@@ -25,12 +25,11 @@ jobs:
       with:
         token: ${{secrets.github_token}}
         
-    
-    - uses: jungwinter/split@v2
+    - uses: rishabhgupta/split-by@v1
       id: split
       with:
-        msg: ${{env.GITHUB_REPOSITORY}}
-        separator: '/'
+        string: ${{env.GITHUB_REPOSITORY}}
+        split-by: '/'
     
     - name: Checkout
       uses: actions/checkout@v2
