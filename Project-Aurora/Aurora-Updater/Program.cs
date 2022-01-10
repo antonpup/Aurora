@@ -85,8 +85,8 @@ namespace Aurora_Updater
             }
             versionMajor = new Version(_maj.TrimStart('v') + ".0.0", true);
             
-            string owner = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).CompanyName;
-            string repository = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName;
+            string owner = FileVersionInfo.GetVersionInfo(auroraPath).CompanyName;
+            string repository = FileVersionInfo.GetVersionInfo(auroraPath).ProductName;
 
             //Initialize UpdateManager
             StaticStorage.Manager = new UpdateManager(versionMajor, owner, repository);
