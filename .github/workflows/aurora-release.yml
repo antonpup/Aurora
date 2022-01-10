@@ -31,7 +31,7 @@ jobs:
         string: ${{env.GITHUB_REPOSITORY}}
         split-by: '/'
     - run: | 
-       echo "${{env.GITHUB_REPOSITORY}}"
+       echo "${{GITHUB_REPOSITORY}}"
     - run: | 
        echo "${{ steps.split.outputs._0}}"
     - run: | 
