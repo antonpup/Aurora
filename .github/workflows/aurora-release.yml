@@ -79,7 +79,7 @@ jobs:
       uses: vimtor/action-zip@v1
       with:
         files: Build\Release\
-        dest: Binaries.zip
+        dest: Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
       
     - name: Installer Release
       uses: svenstaro/upload-release-action@2.2.1
