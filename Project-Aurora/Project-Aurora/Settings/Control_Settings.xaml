@@ -294,10 +294,10 @@
                         <Run Text="This is a public Beta version of Aurora, there will be bugs and issues."/>
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="You can report problems and give suggestions by "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
+                        <Run Text="You can report problems and give suggestions by "/><Hyperlink x:Name="LnkIssues" NavigateUri="https://github.com/Aurora-RGB/Aurora/issues/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="making an issue."/></Hyperlink>
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="The source code for this project is available on "/><Hyperlink NavigateUri="https://github.com/antonpup/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
+                        <Run Text="The source code for this project is available on "/><Hyperlink x:Name="LnkRepository" NavigateUri="https://github.com/Aurora-RGB/Aurora/" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Github"/></Hyperlink>
                         <LineBreak/>
                         <LineBreak/>
                         <Run Text="Game logos and other images are owned by their respective owners."/>
@@ -309,7 +309,7 @@
                         <Hyperlink NavigateUri="https://discord.gg/YAuBmg9" RequestNavigate="Hyperlink_RequestNavigate"><Run Text="Aurora's Discord Server"/></Hyperlink>
                         <LineBreak/>
                         <LineBreak/>
-                        <Run Text="Made by all the"/> <Hyperlink NavigateUri="https://github.com/antonpup/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
+                        <Run Text="Made by all the"/> <Hyperlink x:Name="LnkContributors" NavigateUri="https://github.com/Aurora-RGB/Aurora#contributors-" RequestNavigate="Hyperlink_RequestNavigate"> <Run Text="contributors"/></Hyperlink>
                 </TextBlock>
                 <Label x:Name="lblVersion" Content="VERSION PLACEHOLDER" HorizontalAlignment="Left" Margin="198,12,0,0" VerticalAlignment="Top"/>
                 <Image HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Source="/Aurora;component/Resources/aurora_logo.png" Width="128"/>

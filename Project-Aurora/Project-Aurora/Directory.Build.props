@@ -3,15 +3,18 @@
   <PropertyGroup>
     <Title>Aurora</Title>
     <Description>Unified Lighting Effects across different RGB devices</Description>
-    <Product>Aurora</Product>
     <Copyright>Copyright ©  2017</Copyright>
 
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 
     <FileVersion Condition=" '$(FileVersion)' == '' ">$(APPVEYOR_BUILD_VERSION)</FileVersion>
-    <FileVersion Condition=" '$(FileVersion)' == '' ">0.8.1</FileVersion>
-    <Authors>$(GITHUB_REPOSITORY)</Authors>
+    <FileVersion Condition=" '$(FileVersion)' == '' ">v0</FileVersion>
+    <Company>$(OWNER)</Company>
+    <Company Condition=" '$(Company)' == '' ">Aurora-RGB</Company>
+    <Product>$(REPOSITORY)</Product>
+    <Product Condition=" '$(Product)' == '' ">Aurora</Product>
 
   </PropertyGroup>
 
