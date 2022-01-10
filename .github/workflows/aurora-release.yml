@@ -28,7 +28,7 @@ jobs:
     - uses: rishabhgupta/split-by@v1
       id: split
       with:
-        string: ${{env.GITHUB_REPOSITORY}}
+        string: ${{github.repository}}
         split-by: '/'
     - run: | 
        echo "${{github.repository}}"
