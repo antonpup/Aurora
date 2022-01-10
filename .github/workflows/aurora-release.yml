@@ -24,6 +24,13 @@ jobs:
       uses: einaregilsson/build-number@v3 
       with:
         token: ${{secrets.github_token}}
+        
+    
+    - uses: jungwinter/split@v2
+      id: split
+      with:
+        msg: ${{env.GITHUB_REPOSITORY}}
+        separator: '/'
     
     - name: Checkout
       uses: actions/checkout@v2
@@ -52,6 +59,8 @@ jobs:
       run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
       env:
         APPVEYOR_BUILD_VERSION: v${{steps.buildnumber.outputs.build_number}}
+        OWNER: ${{ steps.split.outputs._0 }}
+        REPOSITORY: ${{ steps.split.outputs._1 }}
         Configuration: ${{ matrix.configuration }}
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
@@ -85,7 +94,7 @@ jobs:
       uses: svenstaro/upload-release-action@2.2.1
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: Binaries.zip
+        file: Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
         tag: v${{steps.buildnumber.outputs.build_number}}
         overwrite: false
 
