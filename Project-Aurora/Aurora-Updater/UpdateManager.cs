@@ -75,11 +75,11 @@ namespace Aurora_Updater
         private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
         public Release LatestRelease;
 
-        public UpdateManager(Version version)
+        public UpdateManager(Version version, string author, string repoName)
         {
             LoadSettings();
             PerformCleanup();
-            FetchData(version);
+            FetchData(version, author, repoName);
         }
 
         public void LoadSettings()
@@ -109,20 +109,23 @@ namespace Aurora_Updater
             return (int)((downloadProgess + extractProgess) / 2.0f * 100.0f);
         }
 
-        private bool FetchData(Version version)
+        private bool FetchData(Version version, string owner, string repositoryName)
         {
             try
             {
                 if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
-                    LatestRelease = gClient.Repository.Release.GetAll("antonpup", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
+                    LatestRelease = gClient.Repository.Release.GetAll(owner, repositoryName, new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
                 else
-                    LatestRelease = gClient.Repository.Release.GetLatest("antonpup", "Aurora").Result;
+                    LatestRelease = gClient.Repository.Release.GetLatest(owner, repositoryName).Result;
 
                 //Console.WriteLine(reply);
             }
             catch (Exception exc)
             {
                 updateState = UpdateStatus.Error;
+                MessageBox.Show(
+                    $"Could not find update.\r\nError:\r\n{exc}",
+                    "Aurora Updater - Error");
                 return false;
             }
 
