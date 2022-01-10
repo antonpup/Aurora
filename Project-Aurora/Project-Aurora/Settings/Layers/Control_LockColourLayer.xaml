@@ -6,29 +6,27 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
              xmlns:utils="clr-namespace:Aurora.Utils"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:local="clr-namespace:Aurora.Settings.Layers"
              mc:Ignorable="d" x:Name="ctrlMain">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <utils:ColorConverter x:Key="ColorConverter"/>
-            <utils:KeysToStringVC x:Key="KeysToStringVC"/>
-            <DataTemplate x:Key="KeysTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource KeysToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
+        <utils:EnumToDescriptionConverter x:Key="EnumDescriptionConverter" />
     </UserControl.Resources>
     <Grid>
         <Label HorizontalAlignment="Left" Margin="0,27,0,0" Content="Off Color:" VerticalAlignment="Top" Height="24" Padding="0" VerticalContentAlignment="Center"  />
-        <xctk:ColorPicker x:Name="clrPrimary" Margin="55,56,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="210" UsingAlphaChannel="True"/>
+        <xctk:ColorPicker x:Name="clrPrimary" Margin="55,56,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._PrimaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DrawingToMediaColorConv}}" HorizontalAlignment="Left" Width="210" UsingAlphaChannel="True"/>
 
         <Label HorizontalAlignment="Left" Margin="0,56,0,0" Content="On Color:" VerticalAlignment="Top" Padding="0" VerticalContentAlignment="Center" Height="24"/>
-        <xctk:ColorPicker x:Name="clrSecondary" Margin="56,27,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ColorConverter}}" HorizontalAlignment="Left" Width="209" UsingAlphaChannel="True"/>
+        <xctk:ColorPicker x:Name="clrSecondary" Margin="56,27,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" SelectedColor="{Binding Path=Properties._SecondaryColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DrawingToMediaColorConv}}" HorizontalAlignment="Left" Width="209" UsingAlphaChannel="True"/>
 
         <CheckBox Content="Pulse" Margin="10,85,324,0" VerticalAlignment="Top" IsChecked="{Binding Path=Properties._Pulse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
         <Label Content="Lock Key:" Padding="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbKey" Margin="54,0,0,0" VerticalAlignment="Top" ItemTemplate="{StaticResource KeysTemplate}" SelectedItem="{Binding Path=Properties._ToggledKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="211"/>
-        <Controls:KeySequence x:Name="keysLock" HorizontalAlignment="Left" Margin="270,36,0,10" Title="Lock Colour Affected Keys" RecordingTag="Lock Colour Affected Keys" SequenceUpdated="keysLock_SequenceUpdated"/>
-        <!--="{Binding Path=Properties._Sequence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+        <ComboBox x:Name="cmbKey" Margin="54,0,0,0" VerticalAlignment="Top" SelectedItem="{Binding Path=Properties._ToggledKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="211">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource EnumDescriptionConverter}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <Controls:KeySequence Sequence="{Binding Path=Properties._Sequence}" HorizontalAlignment="Left" Margin="270,36,0,10" Title="Lock Colour Affected Keys" RecordingTag="Lock Colour Affected Keys" />
     </Grid>
 </UserControl>

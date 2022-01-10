@@ -81,12 +81,12 @@ namespace Aurora.Controls {
             { typeof(float), bind => new SingleUpDown{ Increment = .1f }.SetBindingChain(SingleUpDown.ValueProperty, bind) },
 
             // Colours
-            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.ColorConverter()) },
+            { typeof(System.Drawing.Color), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new Utils.DrawingMediaColorConverter()) },
             { typeof(RealColor), bind => new ColorPicker{ ColorMode = ColorMode.ColorCanvas }.SetBindingChain(ColorPicker.SelectedColorProperty, bind, new RealColorConverter()) },
 
             // Gradient colour
             { typeof(Settings.LayerEffectConfig), bind => new Control_GradientEditor((Settings.LayerEffectConfig)((Control_FieldPresenter)bind.Source).Value) },
-            { typeof(EffectsEngine.EffectBrush), bind => new ColorBox.ColorBox().SetBindingChain(ColorBox.ColorBox.BrushProperty, bind, new EffectBrushToBrushConverter(), BindingMode.TwoWay) },
+            { typeof(EffectsEngine.EffectBrush), bind => new ColorBox.ColorBox().SetBindingChain(ColorBox.ColorBox.BrushProperty, bind, new EffectMediaBrushConverter(), BindingMode.TwoWay) },
 
             // KeySequences
             { typeof(Settings.KeySequence), bind => new Controls.KeySequence {

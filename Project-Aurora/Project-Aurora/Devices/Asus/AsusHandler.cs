@@ -25,20 +25,22 @@ namespace Aurora.Devices.Asus
         /// </summary>
         public bool HasSdk => AuraSdk != null;
 
-        public AsusHandler(bool enableUnsupportedVersion = false)
+        public AsusHandler(bool enableUnsupportedVersion = false, bool forceInitialize = false)
         {
+            string message = "";
             try
             {
-                if (CheckVersion(enableUnsupportedVersion, out string message))
+                if (CheckVersion(enableUnsupportedVersion, forceInitialize, out message))
                     AuraSdk = new AuraSdk() as IAuraSdk2;
                 else
                     AuraSdk = null;
                 
                 Log(message);
             }
-            catch
+            catch(Exception e)
             {
-                Log("AuraSDK not installed!");
+                Log(message);
+                Log("There was an error initializing the AuraSDK: " + e);
                 AuraSdk = null;
             }
         }
@@ -47,7 +49,7 @@ namespace Aurora.Devices.Asus
         /// Checks to see if the version of Aura installed is the correct one
         /// </summary>
         /// <returns>true if the registry entry equals to <see cref="RecommendedAsusVersion"/></returns>
-        private bool CheckVersion(bool enableUnsupportedVersion, out string message)
+        private bool CheckVersion(bool enableUnsupportedVersion, bool forceInitialize, out string message)
         {
             message = null;
 
@@ -72,12 +74,18 @@ namespace Aurora.Devices.Asus
                                 message = $"Found version of Asus Aura SDK v{str}, which is not supported, if you have issues uninstall and reinstall to v{RecommendedAsusVersion}";
                                 return true;
                             }
-                            
+                                
                             message = $"Found version of Asus Aura SDK v{str}, which is not supported, either uninstall and reinstall to v{RecommendedAsusVersion} or enable Unsupported Asus SDK Version in 'View Options'";
                             return false;
                         }
                     }
                 }
+            }
+
+            if (forceInitialize)
+            {
+                message = $"Could not find Asus Aura SDK, forcefully initializing";
+                return true;
             }
 
             message = $"Could not find Asus Aura SDK, please install version v{RecommendedAsusVersion}";

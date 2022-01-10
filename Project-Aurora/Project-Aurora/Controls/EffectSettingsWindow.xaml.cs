@@ -52,7 +52,7 @@ namespace Aurora.Controls
             this.effect_speed_slider.Value = EffectConfig.speed;
             this.effect_speed_label.Text = "x " + EffectConfig.speed;
             this.effect_angle.Text = EffectConfig.angle.ToString();
-            this.effect_animation_type.SelectedIndex = (int)EffectConfig.animation_type;
+            this.effect_animation_type.SelectedValue = EffectConfig.animation_type;
             this.effect_animation_reversed.IsChecked = EffectConfig.animation_reverse;
             Brush brush = EffectConfig.brush.GetMediaBrush();
             try
@@ -154,7 +154,7 @@ namespace Aurora.Controls
         {
             if (IsLoaded)
             {
-                EffectConfig.animation_type = (AnimationType)Enum.Parse(typeof(AnimationType),effect_animation_type.SelectedIndex.ToString());
+                EffectConfig.animation_type = (AnimationType)effect_animation_type.SelectedValue;
             }
         }
 

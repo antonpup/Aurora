@@ -44,7 +44,7 @@ namespace Aurora.Utils
 
 		public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
-			if (Global.Configuration.detection_mode == Settings.ApplicationDetectionMode.WindowsEvents)
+			if (Global.Configuration.DetectionMode == Settings.ApplicationDetectionMode.WindowsEvents)
 			{
 				GetActiveWindowsProcessname();
 			}

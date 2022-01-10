@@ -7,22 +7,9 @@
              xmlns:local="clr-namespace:Aurora.Profiles.GTA5.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-             xmlns:EnumGTA5="clr-namespace:Aurora.Profiles.GTA5"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
+             xmlns:g="clr-namespace:Aurora.Profiles.GTA5"
+             xmlns:u="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="GTA5_PoliceEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumGTA5:GTA5_PoliceEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:GTA5_PoliceEffectsToStringVC x:Key="GTA5_PoliceEffectsToStringVC"/>
-            <DataTemplate x:Key="GTA5_PoliceEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource GTA5_PoliceEffectsToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
     
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_LeftSiren" Margin="89,0,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="155" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_LeftSiren_SelectedColorChanged" UsingAlphaChannel="True"/>
@@ -30,7 +17,7 @@
         <xctk:ColorPicker x:Name="ColorPicker_RightSiren" Margin="97,25,0,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="147" ColorMode="ColorCanvas" SelectedColorChanged="ColorPicker_RightSiren_SelectedColorChanged" UsingAlphaChannel="True"/>
         <Label HorizontalAlignment="Left" Margin="0,27,0,0" Padding="0" Content="Right Siren Color:" VerticalAlignment="Top"/>
         <CheckBox x:Name="Checkbox_DisplayOnPeripherals" Content="Display effect on peripheral devices" HorizontalAlignment="Left" Margin="0,77,0,0" Checked="Checkbox_DisplayOnPeripherals_Checked" Unchecked="Checkbox_DisplayOnPeripherals_Checked" Height="16" VerticalAlignment="Top"/>
-        <ComboBox x:Name="ComboBox_SirenEffectType" HorizontalAlignment="Left" Margin="68,50,0,0" VerticalAlignment="Top" Width="176" ItemsSource="{Binding Source={StaticResource GTA5_PoliceEffects}}" ItemTemplate="{Binding Source={StaticResource GTA5_PoliceEffectsTemplate}}" SelectionChanged="ComboBox_SirenEffectType_SelectionChanged"/>
+        <ComboBox x:Name="ComboBox_SirenEffectType" HorizontalAlignment="Left" Margin="68,50,0,0" VerticalAlignment="Top" Width="176" ItemsSource="{u:EnumToItemsSource {x:Type g:GTA5_PoliceEffects}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="ComboBox_SirenEffectType_SelectionChanged"/>
         <Label HorizontalAlignment="Left" Margin="0,53,0,0" Padding="0" Content="Effect Type:" VerticalAlignment="Top"/>
         <Controls:KeySequence x:Name="KeySequence_LeftSiren" Margin="254,0,0,0" RecordingTag="GTA 5 - Left Siren" Title="Left Siren Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_LeftSiren_SequenceUpdated"/>
         <Controls:KeySequence x:Name="KeySequence_RightSiren" Margin="489,0,0,0" RecordingTag="GTA 5 - Right Siren" Title="Right Siren Keys" HorizontalAlignment="Left" Width="230" SequenceUpdated="KeySequence_RightSiren_SequenceUpdated"/>

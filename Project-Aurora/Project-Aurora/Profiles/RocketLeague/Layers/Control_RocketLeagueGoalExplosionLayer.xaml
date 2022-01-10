@@ -7,15 +7,10 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Utils="clr-namespace:Aurora.Utils"
              mc:Ignorable="d">
-    <UserControl.Resources >
-        <ResourceDictionary>
-            <Utils:ColorConverter x:Key="ColorConverter"/>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <Grid>
         <CheckBox x:Name="Checkbox_ShowFriendlyGoalExplosion" Content="Show friendly goal explosions" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding Properties._ShowFriendlyGoalExplosion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <CheckBox x:Name="Checkbox_ShowEnemyExplosion" Content="Show enemy goal explosions" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" IsChecked="{Binding Properties._ShowEnemyGoalExplosion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <CheckBox x:Name="Checkbox_BackgroundEnabled" Content="Enable background" HorizontalAlignment="Left" Margin="0,42,0,0" IsChecked="{Binding Properties._Background, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <xctk:ColorPicker x:Name="BackgroundColorPicker" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,40,0,0" Width="100" ColorMode="ColorCanvas" SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource ColorConverter},  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <xctk:ColorPicker x:Name="BackgroundColorPicker" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="140,40,0,0" Width="100" ColorMode="ColorCanvas" SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource DrawingToMediaColorConv},  Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </Grid>
 </UserControl>

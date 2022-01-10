@@ -6,23 +6,9 @@
              xmlns:local="clr-namespace:Aurora.Controls"
              xmlns:System="clr-namespace:System;assembly=mscorlib" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:EnumValueConverters="clr-namespace:Aurora.Utils"
-             xmlns:EnumLayerEffects="clr-namespace:Aurora.Settings"
-             mc:Ignorable="d" MinHeight="204" MaxWidth="550" MinWidth="525"
-             >
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ObjectDataProvider x:Key="LayerEffects" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="EnumLayerEffects:LayerEffects" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-            <EnumValueConverters:LayerEffectsToStringVC x:Key="LayerEffectsToStringVC"/>
-            <DataTemplate x:Key="LayerEffectsTemplate">
-                <TextBlock Text="{Binding Converter={StaticResource LayerEffectsToStringVC}}" />
-            </DataTemplate>
-        </ResourceDictionary>
-    </UserControl.Resources>
+             xmlns:u="clr-namespace:Aurora.Utils"
+             xmlns:s="clr-namespace:Aurora.Settings"
+             mc:Ignorable="d" MinHeight="204" MaxWidth="550" MinWidth="525">
 
     <Grid>
         <xctk:ColorPicker x:Name="cz_colorpicker" Margin="66,75,0,0" Height="24" VerticalAlignment="Top" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="cz_colorpicker_SelectedColorChanged" HorizontalAlignment="Left" Width="177" />
@@ -34,7 +20,7 @@
         <TextBox x:Name="cz_name_textbox" Height="23" Margin="70,46,0,0" Text="" VerticalAlignment="Top" TextChanged="cz_name_textbox_TextChanged" HorizontalAlignment="Left" Width="173"/>
         <local:KeySequence x:Name="ks" Margin="0,131,0,0" HorizontalAlignment="Left" Width="243" Title="Zone Keys" RecordingTag="Color Zone Keys" SequenceUpdated="ks_SequenceUpdated"/>
         <TextBlock HorizontalAlignment="Left" Margin="0,108,0,0" TextWrapping="Wrap" Text="Zone Effect:" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cz_effect" HorizontalAlignment="Left" Margin="67,104,0,0" VerticalAlignment="Top" Width="151" ItemsSource="{Binding Source={StaticResource LayerEffects}}" ItemTemplate="{Binding Source={StaticResource LayerEffectsTemplate}}" SelectionChanged="cz_effect_SelectionChanged"/>
+        <ComboBox x:Name="cz_effect" HorizontalAlignment="Left" Margin="67,104,0,0" VerticalAlignment="Top" Width="151" ItemsSource="{u:EnumToItemsSource {x:Type s:LayerEffects}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="cz_effect_SelectionChanged"/>
         <Button x:Name="effect_settings_button" Content="..." HorizontalAlignment="Left" Margin="223,104,0,0" VerticalAlignment="Top" Width="20" Click="effect_settings_button_Click"/>
         <Button x:Name="cz_list_up" Content="Move Zone Up" HorizontalAlignment="Right" Margin="0,97,10,0" VerticalAlignment="Top" Width="100" Click="cz_list_up_Click"/>
         <Button x:Name="cz_list_down" Content="Move Zone Down" HorizontalAlignment="Right" Margin="0,122,10,0" VerticalAlignment="Top" Width="100" Click="cz_list_down_Click"/>

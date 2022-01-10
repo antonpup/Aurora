@@ -480,7 +480,7 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.keyboard_brand, Global.Configuration.mouse_preference, Global.Configuration.mouse_orientation);
+                LoadBrand(Global.Configuration.KeyboardBrand, Global.Configuration.MousePreference, Global.Configuration.MouseOrientation);
             });
         }
 
@@ -497,7 +497,7 @@ namespace Aurora.Settings
             //Load keyboard layout
             if (Directory.Exists(layoutsPath))
             {
-                PreferredKeyboardLocalization layout = Global.Configuration.keyboard_localization;
+                PreferredKeyboardLocalization layout = Global.Configuration.KeyboardLocalization;
 
                 if (layout == PreferredKeyboardLocalization.iso)
                 {
@@ -736,6 +736,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk750.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_MK730)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_mk730.json");
+            else if (keyboard_preference == PreferredKeyboard.Cooler_Master_SK650)
+                layoutConfigPath = Path.Combine(layoutsPath, "cooler_master_sk650.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
@@ -788,7 +790,13 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_shine_7.json");
             else if (keyboard_preference == PreferredKeyboard.Ducky_One_2_RGB_TKL)
                 layoutConfigPath = Path.Combine(layoutsPath, "ducky_one_2_rgb_tkl.json");
- 
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Sequencer)
+                layoutConfigPath = Path.Combine(layoutsPath, "omen_sequencer.json");
+            else if (keyboard_preference == PreferredKeyboard.OMEN_Four_Zone)
+                layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
+            else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
+                layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
+
             else
             {
                 LoadNone();
@@ -897,6 +905,21 @@ namespace Aurora.Settings
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
                         break;
+                    case PreferredMouse.OMEN_Photon:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Outpost_Plus_Photon:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Vector:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_features.json");
+                        break;
+                    case PreferredMouse.OMEN_Vector_Essentials:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
+                        break;
+                    case PreferredMouse.Razer_Mamba_TE:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_mamba_te_features.json");
+                        break;
                 }
 
                 if (!string.IsNullOrWhiteSpace(mouse_feature_path))
@@ -1002,6 +1025,32 @@ namespace Aurora.Settings
             keytext.Remove(DeviceKeys.ADDITIONALLIGHT30);
             keytext.Remove(DeviceKeys.ADDITIONALLIGHT31);
             keytext.Remove(DeviceKeys.ADDITIONALLIGHT32);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT32);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT33);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT34);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT35);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT36);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT37);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT38);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT39);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT40);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT41);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT42);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT43);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT44);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT45);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT46);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT47);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT48);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT49);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT50);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT51);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT52);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT53);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT54);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT55);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT56);
+            keytext.Remove(DeviceKeys.ADDITIONALLIGHT57);
             keytext.Remove(DeviceKeys.LEFT_CONTROL);
             keytext.Remove(DeviceKeys.LEFT_WINDOWS);
             keytext.Remove(DeviceKeys.LEFT_ALT);
@@ -1110,7 +1159,7 @@ namespace Aurora.Settings
                 }
 
                 _bitmapMapInvalid = false;
-                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width) 
+                //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width)
                 Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
                 Global.effengine.SetBitmapping(this.bitmap_map);
             }
@@ -1199,7 +1248,7 @@ namespace Aurora.Settings
                     keycap = new Control_GhostKeycap(key, image_path);
                 else
                 {
-                    switch (Global.Configuration.virtualkeyboard_keycap_type)
+                    switch (Global.Configuration.VirtualkeyboardKeycapType)
                     {
                         case KeycapType.Default_backglow:
                             keycap = new Control_DefaultKeycapBackglow(key, image_path);

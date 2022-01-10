@@ -70,7 +70,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/Popat0"><img src="https://avatars1.githubusercontent.com/u/712015?v=4" width="100px;" alt=""/><br /><sub><b>Popat0</b></sub></a><br /><a href="#question-Popat0" title="Answering Questions">💬</a></td>
     <td align="center"><a href="https://github.com/Fluto"><img src="https://avatars3.githubusercontent.com/u/7686594?v=4" width="100px;" alt=""/><br /><sub><b>Fluto</b></sub></a><br /><a href="https://github.com/antonpup/Aurora/commits?author=Fluto" title="Code">💻</a></td>
     <td align="center"><a href="http://stuntguy3000.com"><img src="https://avatars1.githubusercontent.com/u/1522389?v=4" width="100px;" alt=""/><br /><sub><b>Luke Anderson</b></sub></a><br /><a href="https://github.com/antonpup/Aurora/commits?author=stuntguy3000" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/thingamajig0"><img src="https://avatars1.githubusercontent.com/u/31176843?v=4" width="100px;" alt=""/><br /><sub><b>thingamajig0</b></sub></a><br /><a href="https://github.com/antonpup/Aurora/commits?author=thingamajig0" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Lexevolution"><img src="https://avatars1.githubusercontent.com/u/31176843?v=4" width="100px;" alt=""/><br /><sub><b>Lexevo</b></sub></a><br /><a href="https://github.com/antonpup/Aurora/commits?author=Lexevolution" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/rushdie99"><img src="https://avatars3.githubusercontent.com/u/9208301?v=4" width="100px;" alt=""/><br /><sub><b>polinyeh</b></sub></a><br /><a href="https://github.com/antonpup/Aurora/commits?author=rushdie99" title="Code">💻</a></td>
   </tr>
   <tr>
@@ -112,4 +112,3 @@ If you're a developer or just a software user you can help the project by:
 * [ColorBox](http://colorbox.codeplex.com/) - Used for gradient editor/picker. This repo contains a modified version of ColorBox, to suit Aurora's needs a bit more.
 * [SharpDX](http://sharpdx.org/) - Used for Raw Input for nonblocking input reading for key binds and interactive effects
 * [HidLibrary](https://github.com/mikeobrien/HidLibrary) - Used for communication with HID devices
-* [NZXTSharp](https://github.com/akmadian/NZXTSharp) - NZXT SDK, Used for NZXT support
