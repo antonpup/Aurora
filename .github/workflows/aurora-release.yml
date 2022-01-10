@@ -30,6 +30,12 @@ jobs:
       with:
         string: ${{env.GITHUB_REPOSITORY}}
         split-by: '/'
+    - run: | 
+       echo "${{env.GITHUB_REPOSITORY}}"
+    - run: | 
+       echo "${{ steps.split.outputs._0}}"
+    - run: | 
+       echo "${{ steps.split.outputs._1}}"
     
     - name: Checkout
       uses: actions/checkout@v2
