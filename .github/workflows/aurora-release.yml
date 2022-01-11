@@ -67,11 +67,10 @@ jobs:
         "%programfiles(x86)%\Inno Setup 6\iscc.exe" /DEXTERNAL_VERSION=${{steps.buildnumber.outputs.build_number}} Installer\installer.iss
       shell: cmd
       
-    - name: Archive Release
-      uses: vimtor/action-zip@v1
-      with:
-        files: Build\Release\
-        dest: Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
+    - name: Archive Build
+      shell: pwsh
+      run: |
+        Compress-Archive .\Build\Release\* Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
       
     - name: Installer Release
       uses: svenstaro/upload-release-action@2.2.1
