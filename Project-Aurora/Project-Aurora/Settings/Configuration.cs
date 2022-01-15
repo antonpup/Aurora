@@ -265,7 +265,7 @@ namespace Aurora.Settings
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
-
+ 
 
         [Description("UNIWILL2ND (ANSI)")]
         Uniwill2ND_35X_1 = 2101,
