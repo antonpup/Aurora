@@ -265,7 +265,7 @@ namespace Aurora.Settings
         [Description("SoundBlasterX VanguardK08")]
         SoundBlasterX_Vanguard_K08 = 1100,
 
- 
+
 
         [Description("UNIWILL2ND (ANSI)")]
         Uniwill2ND_35X_1 = 2101,
@@ -308,6 +308,10 @@ namespace Aurora.Settings
         [Description("HyperX Alloy Elite RGB")]
         HyperX_Alloy_Elite_RGB = 1400,
  
+        //MSI range is 1500-1599
+        [Description("MSI GP66 US")]
+        MSI_GP66_US = 1500,
+
     }
 
     public enum PreferredKeyboardLocalization
