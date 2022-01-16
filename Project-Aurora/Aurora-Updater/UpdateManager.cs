@@ -245,11 +245,11 @@ namespace Aurora_Updater
 
                     for (int i = 0; i < countOfEntries; i++)
                     {
-                        float percentage = ((float)i / (float)countOfEntries);
+                        float percentage = i / (float)countOfEntries;
 
                         var fileEntry = updateFile.Entries[i];
                         log.Enqueue(new LogEntry($"[{Math.Truncate(percentage * 100)}%] Updating: {fileEntry.FullName}"));
-                        this.extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
+                        extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
 
                         if (ignoreFiles.Contains(fileEntry.FullName))
                             continue;
@@ -259,6 +259,7 @@ namespace Aurora_Updater
                             var filePath = Path.Combine(Program.exePath, fileEntry.FullName);
                             if (File.Exists(filePath))
                                 File.Move(filePath, $"{filePath}.updateremove");
+                            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
                             fileEntry.ExtractToFile(filePath);
                         }
                         catch (IOException e)
@@ -267,7 +268,6 @@ namespace Aurora_Updater
 
                             MessageBox.Show($"{fileEntry.FullName} is inaccessible.\r\nPlease close Aurora.\r\n\r\n {e.Message}");
                             i--;
-                            continue;
                         }
                     }
 
