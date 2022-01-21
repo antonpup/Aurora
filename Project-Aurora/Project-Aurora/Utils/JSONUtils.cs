@@ -41,6 +41,7 @@ namespace Aurora.Utils
                 case "Aurora.Profiles.TheDivision.TheDivisionSettings":
                     return typeof(Settings.ApplicationProfile);
                 case "Aurora.Profiles.Overwatch.OverwatchProfile":
+                case "Aurora.Profiles.Rust.RustProfile":
                 case "Aurora.Profiles.WormsWMD.WormsWMDProfile":
                 case "Aurora.Profiles.Blade_and_Soul.BnSProfile":
                 case "Aurora.Profiles.Magic_Duels_2012.MagicDuels2012Profile":
