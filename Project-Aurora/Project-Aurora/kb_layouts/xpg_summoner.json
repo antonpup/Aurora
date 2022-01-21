@@ -1,0 +1,68 @@
+{
+  "keys_to_remove": [
+    51, 71, 77
+  ],
+  "key_modifications": {
+    "50": {
+      "line_break": null,
+      "width": 30
+    },
+    "52": {
+      "line_break": null,
+      "margin_left": 67.0
+    },
+    "72": {
+      "visualName": null,
+      "tag": 72,
+      "line_break": null,
+      "margin_left": 7.0,
+      "margin_top": 0.0,
+      "width": 74.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 7,
+      "height_bits": 3,
+      "margin_left_bits": 0,
+      "margin_top_bits": 0,
+      "enabled": null
+    },
+    "76": {
+      "visualName": null,
+      "tag": 76,
+      "line_break": null,
+      "margin_left": 0.0,
+      "margin_top": 0.0,
+      "width": 78.0,
+      "height": 30.0,
+      "font_size": 12.0,
+      "width_bits": 7,
+      "height_bits": 3,
+      "margin_left_bits": 0,
+      "margin_top_bits": 0,
+      "enabled": null
+    },
+    "88": {
+      "tag": 88,
+      "line_break": null,
+      "width": 93
+    },
+    "99": {
+      "visualName": "FN",
+      "tag": 107,
+      "line_break": null,
+      "margin_left": null,
+      "margin_top": null,
+      "width": null,
+      "height": null,
+      "font_size": null,
+      "width_bits": null,
+      "height_bits": null,
+      "margin_left_bits": null,
+      "margin_top_bits": null,
+      "enabled": null
+    }
+  },
+  "included_features": [
+    "xpg_summoner_right_features.json"
+  ]
+}
