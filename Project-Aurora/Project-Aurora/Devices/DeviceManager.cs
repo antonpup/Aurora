@@ -27,6 +27,11 @@ namespace Aurora.Devices
         {
             this.Device = device;
             Worker.DoWork += WorkerOnDoWork;
+            Worker.WorkerSupportsCancellation = true;
+            Worker.RunWorkerCompleted += (_, _) =>
+            {
+                working = false;
+            };
         }
 
         public bool working = false;
@@ -35,24 +40,17 @@ namespace Aurora.Devices
             if (!working)
                 lock (actionLock)
                 {
-                    if (!working)
+                    try
                     {
-                        try
-                        {
-                            working = true;
-                            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
-                        }
-                        catch (Exception e)
-                        {
-                            string message = "Error while updating device: " + Device.DeviceName + "\nException is logged" + e.Message;
-                            System.Console.WriteLine(message);
-                            Global.logger.Error(message, e);
-                            System.Windows.MessageBox.Show(message);
-                        }
-                        finally
-                        {
-                            working = false;
-                        }
+                        working = true;
+                        Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+                    }
+                    catch (Exception e)
+                    {
+                        string message = "Error while updating device: " + Device.DeviceName + "\nException is logged" + e.Message;
+                        System.Console.WriteLine(message);
+                        Global.logger.Error(message, e);
+                        System.Windows.MessageBox.Show(message);
                     }
                 }
         }
@@ -60,9 +58,7 @@ namespace Aurora.Devices
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (Worker.IsBusy)
-                return;
-            else
+            if (!Worker.IsBusy)
                 Worker.RunWorkerAsync();
         }
     }
@@ -308,9 +304,11 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.working = true;
                 lock (dc.actionLock)
+                {
+                    dc.working = true;
                     dc.Device.Shutdown();
+                }
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
         }
@@ -319,9 +317,11 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.working = true;
                 lock (dc.actionLock)
+                {
+                    dc.working = true;
                     dc.Device.Reset();
+                }
             }
         }
 
