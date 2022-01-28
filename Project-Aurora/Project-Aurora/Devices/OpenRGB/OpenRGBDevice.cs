@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Aurora.Utils;
+using Microsoft.Scripting.Utils;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
 using OpenRGBDevice = OpenRGB.NET.Models.Device;
@@ -33,7 +34,6 @@ namespace Aurora.Devices.OpenRGB
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
                 var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
                 var usePeriphLogo = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_use_periph_logo");
-                var ignoreDirectMode = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_ignore_direct");
 
                 _openRgb = new OpenRGBClient(name: "Aurora", ip: ip, port: port);
                 _openRgb.Connect();
@@ -43,12 +43,13 @@ namespace Aurora.Devices.OpenRGB
 
                 for (int i = 0; i < devices.Length; i++)
                 {
-                    if (devices[i].Modes.Any(m => m.Name == "Direct") || ignoreDirectMode)
-                    {
-                        var helper = new HelperOpenRGBDevice(i, devices[i]);
-                        helper.ProcessMappings(usePeriphLogo);
-                        _devices.Add(helper);
-                    }
+                    var device = devices[i];
+                    var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
+                    if (directMode == null) continue;
+                    _openRgb.SetMode(i, device.Modes.FindIndex(mode => mode ==directMode));
+                    var helper = new HelperOpenRGBDevice(i, device);
+                    helper.ProcessMappings(usePeriphLogo);
+                    _devices.Add(helper);
                 }
             }
             catch (Exception e)
@@ -145,7 +146,6 @@ namespace Aurora.Devices.OpenRGB
             variableRegistry.Register($"{DeviceName}_sleep", 0, "Sleep for", 1000, 0);
             variableRegistry.Register($"{DeviceName}_ip", "127.0.0.1", "IP Address");
             variableRegistry.Register($"{DeviceName}_port", 6742, "Port", 1024, 65535);
-            variableRegistry.Register($"{DeviceName}_ignore_direct", false, "Ignore Direct mode");
             variableRegistry.Register($"{DeviceName}_use_periph_logo", true, "Use peripheral logo for unknown leds");
         }
     }
