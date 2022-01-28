@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using Microsoft.Scripting.Utils;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
 using OpenRGBDevice = OpenRGB.NET.Models.Device;
@@ -42,8 +43,12 @@ namespace Aurora.Devices.OpenRGB
 
                 for (int i = 0; i < devices.Length; i++)
                 {
-                    if (devices[i].Modes.Any(m => m.Name == "Direct") || ignoreDirectMode)
+                    var device = devices[i];
+                    var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
+                    if (directMode != null || ignoreDirectMode)
                     {
+                        if (directMode != null)
+                            _openRgb.SetMode(i, device.Modes.FindIndex(mode => mode == directMode));
                         var helper = new HelperOpenRGBDevice(i, devices[i]);
                         helper.ProcessMappings(usePeriphLogo);
                         _devices.Add(helper);
