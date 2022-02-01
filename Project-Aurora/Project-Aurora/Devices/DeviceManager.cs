@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Amib.Threading;
 
 namespace Aurora.Devices
 {
@@ -17,24 +18,19 @@ namespace Aurora.Devices
     {
         public IDevice Device { get; set; }
 
-        public BackgroundWorker Worker = new BackgroundWorker();
-        public Thread UpdateThread { get; set; } = null;
+        private SmartThreadPool Worker = new SmartThreadPool(1000, 1, 1);
 
-        private Tuple<DeviceColorComposition, bool> currentComp = null;
-        private bool newFrame = false;
+        private Tuple<DeviceColorComposition, bool> currentComp;
 
         public readonly object actionLock = new object();
 
         public DeviceContainer(IDevice device)
         {
             this.Device = device;
-            Worker.DoWork += WorkerOnDoWork;
-            Worker.WorkerSupportsCancellation = true;
         }
 
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            newFrame = false;
             lock(actionLock)
             {
                 Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
@@ -44,12 +40,13 @@ namespace Aurora.Devices
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
-            newFrame = true;
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            lock (Worker)
+            if (Worker.WaitingCallbacks < 1)
             {
-                if (!Worker.IsBusy)
-                    Worker.RunWorkerAsync();
+                Worker.QueueWorkItem((() =>
+                {
+                    WorkerOnDoWork(null, null);
+                }));
             }
         }
     }
