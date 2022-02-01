@@ -59,7 +59,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             this._ItemCooldownColor = Color.FromArgb(0, 0, 0);
             this._ItemNoChargersColor = Color.FromArgb(150, 150, 150);
             this._UseItemColors = true;
-            this._ItemKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.DELETE, Devices.DeviceKeys.END, Devices.DeviceKeys.PAGE_DOWN };
+            this._ItemKeys = new List<Devices.DeviceKeys>() { Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.INSERT, Devices.DeviceKeys.HOME, Devices.DeviceKeys.PAGE_UP, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE , Devices.DeviceKeys.NUM_SIX };
         }
 
     }
@@ -350,9 +350,9 @@ namespace Aurora.Profiles.Dota_2.Layers
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
 
-                if (Properties.ItemKeys.Count >= 12)
+                if (Properties.ItemKeys.Count >= 6)
                 {
-                    for (int index = 0; index < 6; index++)
+                    for (int index = 0; index < dota2state.Items.InventoryCount; index++)
                     {
                         Item item = dota2state.Items.GetInventoryAt(index);
                         Devices.DeviceKeys key = Properties.ItemKeys[index];
@@ -383,10 +383,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                         }
                     }
 
-                    for (int index = 0; index < 6; index++)
+                    for (int index = 0; index < dota2state.Items.StashCount; index++)
                     {
                         Item item = dota2state.Items.GetStashAt(index);
-                        Devices.DeviceKeys key = Properties.ItemKeys[6 + index];
+                        Devices.DeviceKeys key = Properties.ItemKeys[9 + index];
 
                         if (item.Name.Equals("empty"))
                         {
