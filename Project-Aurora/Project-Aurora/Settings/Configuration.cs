@@ -308,8 +308,8 @@ namespace Aurora.Settings
         [Description("HyperX Alloy Elite RGB")]
         HyperX_Alloy_Elite_RGB = 1400,
         //Keychron q1 knob
-        [Description("Keychron q1 knob 75%")]
-        Keychron_Q1_Knob = 0107,
+        [Description("Keychron q1 knob ansi 75%")]
+        Keychron_Q1_Knob_Ansi = 0107,
  
     }
 
