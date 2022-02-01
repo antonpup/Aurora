@@ -10,14 +10,15 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Amib.Threading;
 
 namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public IDevice Device { get; set; }
+        public IDevice Device { get; }
 
-        public BackgroundWorker Worker = new();
+        private SmartThreadPool Worker = new(1000, 1);
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
@@ -26,40 +27,27 @@ namespace Aurora.Devices
         public DeviceContainer(IDevice device)
         {
             this.Device = device;
-            Worker.DoWork += WorkerOnDoWork;
-            Worker.WorkerSupportsCancellation = true;
-            Worker.RunWorkerCompleted += (_, _) =>
-            {
-                working = false;
-            };
         }
 
-        public bool working = false;
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            if (!working)
-                lock (actionLock)
-                {
-                    try
-                    {
-                        working = true;
-                        Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
-                    }
-                    catch (Exception e)
-                    {
-                        string message = "Error while updating device: " + Device.DeviceName + "\nException is logged" + e.Message;
-                        System.Console.WriteLine(message);
-                        Global.logger.Error(message, e);
-                        System.Windows.MessageBox.Show(message);
-                    }
-                }
+            lock(actionLock)
+            {
+                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
+                currentComp.Item2);
+            }
         }
 
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (!Worker.IsBusy)
-                Worker.RunWorkerAsync();
+            if (Worker.WaitingCallbacks < 1)
+            {
+                Worker.QueueWorkItem((() =>
+                {
+                    WorkerOnDoWork(null, null);
+                }));
+            }
         }
     }
 
@@ -306,7 +294,6 @@ namespace Aurora.Devices
             {
                 lock (dc.actionLock)
                 {
-                    dc.working = true;
                     dc.Device.Shutdown();
                 }
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
@@ -319,7 +306,6 @@ namespace Aurora.Devices
             {
                 lock (dc.actionLock)
                 {
-                    dc.working = true;
                     dc.Device.Reset();
                 }
             }
