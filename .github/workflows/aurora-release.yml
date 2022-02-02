@@ -87,11 +87,12 @@ jobs:
         Compress-Archive .\Build\Release\* Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
       
     - name: Release
-      uses: meeDamian/github-release@2.0
+      uses: softprops/action-gh-release@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         draft: true
-        files: >
+        files: |
           Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe
           Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
         tag: v${{steps.buildnumber.outputs.build_number}}
+        allow_override: true
