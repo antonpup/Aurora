@@ -86,18 +86,13 @@ jobs:
       run: |
         Compress-Archive .\Build\Release\* Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
       
-    - name: Installer Release
-      uses: svenstaro/upload-release-action@2.2.1
+    - name: Release
+      uses: softprops/action-gh-release@v1
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: "Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        draft: true
+        files: |
+          Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe
+          Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
         tag: v${{steps.buildnumber.outputs.build_number}}
-        overwrite: false
-      
-    - name: Zip Release
-      uses: svenstaro/upload-release-action@2.2.1
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
-        tag: v${{steps.buildnumber.outputs.build_number}}
-        overwrite: false
+        allow_override: true
