@@ -50,8 +50,10 @@ namespace Aurora.EffectsEngine
         /// <param name="another_layer">EffectLayer instance to copy data from</param>
         public EffectLayer(EffectLayer another_layer)
         {
-            this.name = another_layer.name;
-            colormap = new Bitmap(another_layer.colormap);
+            name = another_layer.name;
+            var graphicsUnit = another_layer.GetGraphics().PageUnit;
+            var rectangleF = another_layer.colormap.GetBounds(ref graphicsUnit);
+            colormap = another_layer.colormap.Clone(rectangleF, another_layer.colormap.PixelFormat);
             peripheral = another_layer.peripheral;
 
             needsRender = another_layer.needsRender;
@@ -701,39 +703,32 @@ namespace Aurora.EffectsEngine
         /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
-            BitmapData srcData = layer.colormap.LockBits(
-            new Rectangle(0, 0, layer.colormap.Width, layer.colormap.Height),
-            ImageLockMode.ReadWrite,
-            PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            int width = layer.colormap.Width;
-            int height = layer.colormap.Height;
-
-            unsafe
-            {
-                byte* p = (byte*)(void*)Scan0;
-
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        //p[(y * stride) + x * 4] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4], value);
-                        //p[(y * stride) + x * 4 + 1] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4 + 1], value);
-                        //p[(y * stride) + x * 4 + 2] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4 + 2], value);
-                        p[(y * stride) + x * 4 + 3] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4 + 3], value);
-                    }
-                }
-            }
-
-            layer.colormap.UnlockBits(srcData);
-
-            layer.peripheral = Utils.ColorUtils.MultiplyColorByScalar(layer.peripheral, value);
-
+            SetOpacity(layer.colormap, layer.GetGraphics(), (float) value);
             return layer;
+        }
+        
+        public static void SetOpacity(Image image, Graphics gfx, float opacity)
+        {
+            var colorMatrix = new ColorMatrix();
+            colorMatrix.Matrix33 = opacity;
+            var imageAttributes = new ImageAttributes();
+            imageAttributes.SetColorMatrix(
+                colorMatrix,
+                ColorMatrixFlag.Default,
+                ColorAdjustType.Bitmap);
+            using (gfx)
+            {
+                gfx.SmoothingMode = SmoothingMode.AntiAlias;
+                gfx.DrawImage(
+                    image,
+                    new Rectangle(0, 0, image.Width, image.Height),
+                    0,
+                    0,
+                    image.Width,
+                    image.Height,
+                    GraphicsUnit.Pixel,
+                    imageAttributes);
+            }
         }
 
         /// <summary>
