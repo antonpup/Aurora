@@ -1,0 +1,203 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 200,
+      "Height": 168,
+      "Image": ""
+    },
+    "160": {
+      "Key": {
+        "tag": 160,
+        "visual_name": "Mouse Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 75,
+      "Y": 89,
+      "Width": 50,
+      "Height": 50,
+      "Image": ""
+    },
+    "161": {
+      "Key": {
+        "tag": 161,
+        "visual_name": "Scroll Wheel"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 75,
+      "Y": 29,
+      "Width": 50,
+      "Height": 50,
+      "Image": ""
+    },
+    "201": {
+      "Key": {
+        "tag": 201,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 56,
+      "Width": 16,
+      "Height": 56,
+      "Image": ""
+    },
+    "202": {
+      "Key": {
+        "tag": 202,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 112,
+      "Width": 16,
+      "Height": 56,
+      "Image": ""
+    },
+    "203": {
+      "Key": {
+        "tag": 203,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 16,
+      "Y": 152,
+      "Width": 56,
+      "Height": 16,
+      "Image": ""
+    },
+    "204": {
+      "Key": {
+        "tag": 204,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 72,
+      "Y": 152,
+      "Width": 56,
+      "Height": 16,
+      "Image": ""
+    },
+    "205": {
+      "Key": {
+        "tag": 205,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 127,
+      "Y": 152,
+      "Width": 56,
+      "Height": 16,
+      "Image": ""
+    },
+    "206": {
+      "Key": {
+        "tag": 206,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 185,
+      "Y": 112,
+      "Width": 16,
+      "Height": 56,
+      "Image": ""
+    },
+    "207": {
+      "Key": {
+        "tag": 207,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 185,
+      "Y": 56,
+      "Width": 16,
+      "Height": 56,
+      "Image": ""
+    },
+    "208": {
+      "Key": {
+        "tag": 208,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 185,
+      "Y": 0,
+      "Width": 16,
+      "Height": 56,
+      "Image": ""
+    },
+    "209": {
+      "Key": {
+        "tag": 209,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 127,
+      "Y": 0,
+      "Width": 56,
+      "Height": 16,
+      "Image": ""
+    },
+    "210": {
+      "Key": {
+        "tag": 210,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 72,
+      "Y": 0,
+      "Width": 56,
+      "Height": 16,
+      "Image": ""
+    },
+    "211": {
+      "Key": {
+        "tag": 211,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 16,
+      "Y": 0,
+      "Width": 56,
+      "Height": 16,
+      "Image": ""
+    },
+    "212": {
+      "Key": {
+        "tag": 212,
+        "visual_name": ""
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 56,
+      "Image": ""
+    }
+  },
+  "jis_key_modifications": {}
+}

@@ -1,0 +1,47 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 143,
+      "Height": 232,
+      "Image": "Logi_G502_outline.png"
+    },
+    "160": {
+      "Key": {
+        "tag": 160,
+        "visual_name": "Logo"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 50,
+      "Y": 145,
+      "Width": 24,
+      "Height": 22,
+      "Image": "Logi_G900_logo.png"
+    },
+    "237": {
+      "Key": {
+        "tag": 237,
+        "visual_name": "DPI"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 29,
+      "Y": 107,
+      "Width": 11,
+      "Height": 26,
+      "Image": "Logi_G502_dpi.png"
+    }
+  },
+  "jis_key_modifications": {}
+}

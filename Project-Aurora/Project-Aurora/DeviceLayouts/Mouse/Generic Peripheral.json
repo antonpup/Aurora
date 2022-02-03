@@ -1,0 +1,34 @@
+﻿{
+  "IsNewFormat": true,
+  "keys_to_remove": [],
+  "key_modifications": {},
+  "key_to_add": {
+    "-1": {
+      "Key": {
+        "tag": -1,
+        "visual_name": "NONE"
+      },
+      "FontSize": null,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 90,
+      "Height": 90,
+      "Image": ""
+    },
+    "0": {
+      "Key": {
+        "tag": 0,
+        "visual_name": "Mouse/\r\nHeadset"
+      },
+      "FontSize": 12.0,
+      "Enabled": true,
+      "X": 0,
+      "Y": 0,
+      "Width": 90,
+      "Height": 90,
+      "Image": ""
+    }
+  },
+  "jis_key_modifications": {}
+}
