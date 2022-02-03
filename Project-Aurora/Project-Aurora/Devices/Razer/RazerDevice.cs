@@ -84,13 +84,15 @@ namespace Aurora.Devices.Razer
 
             if (keyColors.TryGetValue(DeviceKeys.Peripheral_Logo, out var clr))
             {
-                keyboard.Set(ToColore(clr));
                 mousepad.Set(ToColore(clr));
                 mouse.Set(ToColore(clr));
                 headset = ToColore(clr);
                 chromalink.Set(ToColore(clr));
                 keypad.Set(ToColore(clr));
             }
+
+            if (keyColors.TryGetValue(DeviceKeys.MEDIA_PLAY_PAUSE, out var clrMedia))
+                keyboard.Set(ToColore(clrMedia));
 
             foreach (var key in keyColors)
             {

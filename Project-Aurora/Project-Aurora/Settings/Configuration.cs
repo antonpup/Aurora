@@ -218,6 +218,8 @@ namespace Aurora.Settings
         Razer_Blackwidow_TE = 302,
         [Description("Razer - Blade")]
         Razer_Blade = 303,
+        [Description("Razer - Blackwidow Elite")]
+        Razer_Blackwidow_Elite = 304,
 
         //Clevo range is 400-499
 
