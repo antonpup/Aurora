@@ -23,10 +23,16 @@ namespace Aurora.Devices
         private Tuple<DeviceColorComposition, bool> currentComp;
 
         public readonly object actionLock = new();
+        private readonly Action _updateAction;
 
         public DeviceContainer(IDevice device)
         {
-            this.Device = device;
+            Device = device;
+            var args = new DoWorkEventArgs(null);
+            _updateAction = () =>
+            {
+                WorkerOnDoWork(this, args);
+            };
         }
 
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
@@ -37,16 +43,12 @@ namespace Aurora.Devices
                 currentComp.Item2);
             }
         }
-
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
             if (Worker.WaitingCallbacks < 1)
             {
-                Worker.QueueWorkItem((() =>
-                {
-                    WorkerOnDoWork(null, null);
-                }));
+                Worker.QueueWorkItem(_updateAction);
             }
         }
     }
