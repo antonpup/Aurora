@@ -681,18 +681,16 @@ namespace Aurora.EffectsEngine
         /// <returns>A new instance of EffectLayer, which is a combination of two passed EffectLayers</returns>
         public static EffectLayer operator +(EffectLayer lhs, EffectLayer rhs)
         {
-            EffectLayer added = new EffectLayer(lhs);
-            added.name += " + " + rhs.name;
+            lhs.name += " + " + rhs.name;
 
-            using (Graphics g = added.GetGraphics())
+            using (Graphics g = lhs.GetGraphics())
             {
                 lock (rhs.bufferLock)
                     g.DrawImage(rhs.colormap, 0, 0);
             }
 
-            added.peripheral = Utils.ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
-
-            return added;
+            lhs.peripheral = Utils.ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
+            return lhs;
         }
 
         /// <summary>
@@ -703,7 +701,10 @@ namespace Aurora.EffectsEngine
         /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
-            SetOpacity(layer.colormap, layer.GetGraphics(), (float) value);
+            if (value > 0.95)
+            {
+                SetOpacity(layer.colormap, layer.GetGraphics(), (float) value);
+            }
             return layer;
         }
         
@@ -718,7 +719,6 @@ namespace Aurora.EffectsEngine
                 ColorAdjustType.Bitmap);
             using (gfx)
             {
-                gfx.SmoothingMode = SmoothingMode.AntiAlias;
                 gfx.DrawImage(
                     image,
                     new Rectangle(0, 0, image.Width, image.Height),
