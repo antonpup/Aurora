@@ -95,7 +95,7 @@ jobs:
         files: |
           Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe
           Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
-        tag: v${{steps.buildnumber.outputs.build_number}}
+        tag_name: v${{steps.buildnumber.outputs.build_number}}
         allow_override: false
         prerelease: true
 
