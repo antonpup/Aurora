@@ -86,7 +86,7 @@ namespace Aurora.Profiles
         protected UserControl control;
         public virtual UserControl Control { get { return control ?? (control = (UserControl)Activator.CreateInstance(this.Config.OverviewControlType, this)); } }
 
-        internal Dictionary<string, IEffectScript> EffectScripts { get; set; }
+        internal Dictionary<string, Func<IEffectScript>> EffectScripts { get; set; }
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -106,7 +106,7 @@ namespace Aurora.Profiles
                     }
                 }
             };
-            EffectScripts = new Dictionary<string, IEffectScript>();
+            EffectScripts = new Dictionary<string, Func<IEffectScript>>();
             if (config.GameStateType != null)
                 ParameterLookup = new GameStateParameterLookup(config.GameStateType);
         }
@@ -373,7 +373,7 @@ namespace Aurora.Profiles
                 SaveProfile(sender as ApplicationProfile);
         }
 
-        public bool RegisterEffect(string key, IEffectScript obj)
+        public bool RegisterEffect(string key, Func<IEffectScript> obj)
         {
             if (Disposed)
                 return false;
@@ -494,10 +494,11 @@ namespace Aurora.Profiles
                                     Type typ = ((IronPython.Runtime.Types.PythonType)v.Value).__clrtype__();
                                     if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
                                     {
-                                        IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
-                                        if (obj != null)
+                                        Func<IEffectScript> scriptCreator = () => Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
+                                        var scriptSpecimen = scriptCreator.Invoke();
+                                        if (scriptSpecimen != null)
                                         {
-                                            if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                            if (!(scriptSpecimen.ID != null && this.RegisterEffect(scriptSpecimen.ID, scriptCreator)))
                                                 Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
                                             else
                                                 anyLoaded = true;
@@ -517,8 +518,9 @@ namespace Aurora.Profiles
                             {
                                 if (effectType.IsAssignableFrom(typ))
                                 {
-                                    IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
-                                    if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                    Func<IEffectScript> scriptCreator = () => (IEffectScript) Activator.CreateInstance(typ);
+                                    var scriptSpecimen = scriptCreator.Invoke();
+                                    if (!(scriptSpecimen.ID != null && this.RegisterEffect(scriptSpecimen.ID, scriptCreator)))
                                         Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
                                     else
                                         anyLoaded = true;
