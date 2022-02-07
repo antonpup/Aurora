@@ -14,6 +14,7 @@ using System.Windows.Controls;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
+    [Obsolete]
     public class PD2BackgroundLayerHandlerProperties : LayerHandlerProperties2Color<PD2BackgroundLayerHandlerProperties>
     {
         public Color? _AmbientColor { get; set; }
@@ -100,6 +101,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
     }
 
+    [Obsolete]
     public class PD2BackgroundLayerHandler : LayerHandler<PD2BackgroundLayerHandlerProperties>
     {
         private float no_return_flashamount = 1.0f;

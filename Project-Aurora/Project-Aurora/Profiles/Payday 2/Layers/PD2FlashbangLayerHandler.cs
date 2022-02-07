@@ -17,6 +17,7 @@ using System.Windows.Controls;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
+    [Obsolete]
     public class PD2FlashbangLayerHandlerProperties : LayerHandlerProperties2Color<PD2FlashbangLayerHandlerProperties>
     {
         public Color? _FlashbangColor { get; set; }
@@ -37,6 +38,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
     }
 
+    [Obsolete]
     public class PD2FlashbangLayerHandler : LayerHandler<PD2FlashbangLayerHandlerProperties>
     {
         protected override UserControl CreateControl()

@@ -14,6 +14,7 @@ using System.Windows.Controls;
 
 namespace Aurora.Profiles.Payday_2.Layers
 {
+    [Obsolete]
     public class PD2StatesLayerHandlerProperties : LayerHandlerProperties2Color<PD2StatesLayerHandlerProperties>
     {
         public Color? _DownedColor { get; set; }
@@ -58,6 +59,7 @@ namespace Aurora.Profiles.Payday_2.Layers
 
     }
 
+    [Obsolete]
     public class PD2StatesLayerHandler : LayerHandler<PD2StatesLayerHandlerProperties>
     {
         protected override UserControl CreateControl()

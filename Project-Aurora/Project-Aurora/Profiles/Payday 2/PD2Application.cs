@@ -19,7 +19,8 @@ namespace Aurora.Profiles.Payday_2
         {
             AllowLayer<PD2BackgroundLayerHandler>();
             AllowLayer<PD2FlashbangLayerHandler>();
-            AllowLayer<PD2StatesLayerHandler>();            
+            AllowLayer<PD2StatesLayerHandler>();
+            AllowLayer<PD2MaskOnAnimationLayerHandler>();
         }
     }
 }
