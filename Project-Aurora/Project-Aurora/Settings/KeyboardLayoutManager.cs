@@ -798,7 +798,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
             else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
                 layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
-
+            else if (keyboard_preference == PreferredKeyboard.Keychron_Q1_Knob_Ansi)
+                    layoutConfigPath = Path.Combine(layoutsPath, "keychron_q1_knob_ansi.json");
             else
             {
                 LoadNone();

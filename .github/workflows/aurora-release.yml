@@ -1,0 +1,98 @@
+name: Aurora CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: Project-Aurora/Project-Aurora.sln
+
+    steps:
+    - name: Generate build number
+      id: buildnumber
+      uses: einaregilsson/build-number@v3 
+      with:
+        token: ${{secrets.github_token}}
+        
+    - uses: rishabhgupta/split-by@v1
+      id: split
+      with:
+        string: ${{github.repository}}
+        split-by: '/'
+    - run: | 
+       echo "${{github.repository}}"
+    - run: | 
+       echo "${{ steps.split.outputs._0}}"
+    - run: | 
+       echo "${{ steps.split.outputs._1}}"
+    
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        submodules: true
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Build
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      env:
+        APPVEYOR_BUILD_VERSION: v${{steps.buildnumber.outputs.build_number}}
+        OWNER: ${{ steps.split.outputs._0 }}
+        REPOSITORY: ${{ steps.split.outputs._1 }}
+        Configuration: ${{ matrix.configuration }}
+
+    # Decode the base 64 encoded pfx and save the Signing_Certificate
+    #- name: Decode the pfx
+    #  run: |
+    #    $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
+    #   $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
+    #   [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
+
+    # Create the app package by building and packaging the Windows Application Packaging project
+    - name: Building the installer
+      run: |
+        "%programfiles(x86)%\Inno Setup 6\iscc.exe" /DEXTERNAL_VERSION=${{steps.buildnumber.outputs.build_number}} Installer\installer.iss
+      shell: cmd
+      
+    - name: Archive Build
+      shell: pwsh
+      run: |
+        Compress-Archive .\Build\Release\* Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
+      
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        draft: true
+        files: |
+          Aurora-setup-v${{steps.buildnumber.outputs.build_number}}.exe
+          Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
+        tag_name: v${{steps.buildnumber.outputs.build_number}}
+        allow_override: true
