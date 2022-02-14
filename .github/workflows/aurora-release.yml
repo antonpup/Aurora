@@ -48,7 +48,7 @@ jobs:
       uses: actions/cache@v1
       id: cache
       with:
-        path: %userprofile%\.nuget\packages
+        path: '%userprofile%\.nuget\packages'
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
