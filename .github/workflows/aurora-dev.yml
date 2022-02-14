@@ -57,7 +57,7 @@ jobs:
       run: nuget restore $env:Solution_Name
 
     - name: Build
-      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      run: dotnet build $env:Solution_Name --configuration $env:Configuration --no-restore
       env:
         APPVEYOR_BUILD_VERSION: v${{steps.buildnumber.outputs.build_number}}
         OWNER: ${{ steps.split.outputs._0 }}
