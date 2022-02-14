@@ -56,9 +56,12 @@ jobs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: nuget restore $env:Solution_Name
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
+      # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v1.0.2
+
     - name: Build
-      run: dotnet build $env:Solution_Name --configuration $env:Configuration --no-restore
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
       env:
         APPVEYOR_BUILD_VERSION: v${{steps.buildnumber.outputs.build_number}}
         OWNER: ${{ steps.split.outputs._0 }}
