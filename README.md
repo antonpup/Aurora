@@ -3,21 +3,36 @@
 
 [Link to Aurora's webpage, includes some demos and changelogs](http://project-aurora.com/)
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-) [![Latest Version](https://img.shields.io/github/release/antonpup/aurora.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Total Downloads](https://img.shields.io/github/downloads/antonpup/aurora/total.svg)](https://github.com/antonpup/Aurora/releases/latest) [![Build status](https://ci.appveyor.com/api/projects/status/jh44k7r5ewelxiss/branch/dev?svg=true)](https://ci.appveyor.com/project/antonpup/aurora/branch/dev) ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
+[![All Contributors](https://img.shields.io/badge/all_contributors-17-orange.svg?style=flat-square)](#contributors-)
+[![Latest Version](https://img.shields.io/github/v/release/Aurora-RGB/Aurora?label=latest)](https://github.com/Aurora-RGB/Aurora/releases/latest)
+[![Latest Beta](https://img.shields.io/github/v/release/Aurora-RGB/Aurora?include_prereleases&label=beta)](https://github.com/Aurora-RGB/Aurora/releasest)
+[![Total Downloads](https://img.shields.io/github/downloads/Aurora-RGB/Aurora/total.svg)](https://github.com/Aurora-RGB/Aurora/releases/latest)
+![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
 
+## Available Forks
+Original Aurora's development paused for a while. During that time other forks have appeared while some of the Aurora's original contributors created more modern software *Artemis*.
+
+While Artemis is a much more advanced and cross-platform, it is currently missing some game integrations (GSI games).
+
+| Project                                                                     | Main features                                                                                                                                                                                           | Performance                   | Notes                                                                    |   |
+|-----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------|--------------------------------------------------------------------------|---|
+| [Artemis](https://github.com/Predator4578/Aurora)                           | * Advanced animations<br/>* Minimal impact on games<br/>* Device layout editor<br/>* Linux support (incoming)<br/>* Modularity. Maintainable and fast partial updates<br/>* Active development          | Best                          | Some games that use GSI are not supported yet.                           |   |
+| [Predator4578 and<br/>Qwexx's fork](https://github.com/Predator4578/Aurora) | * Layout editor. You can add devices different than keyboard & mouse and edit their layouts<br/> You can even add multiple keyboards, adjust their locations etc.                                       | Same as original        | Software data is not compatible with other forks.                        |   |
+| [Aytackydln's fork](https://github.com/Aytackydln/Aurora)                   | * Increased animation update rate (5x, ~150 fps)<br/>* Improved background performance<br/>* Yeelight automatic white mode<br/>* Many fixes from different users<br/>* Many fixes for unique user cases | Even better despite higher fps | No animation fps selection yet.<br/>Some devices may not work good with that |   |
+Using this build is also fine. [Aytackydln's fork](https://github.com/Aytackydln/Aurora) is planned to be merged here once it is polished.
+
+# Project Aurora
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.
 
 Have a look at our [website](https://www.project-aurora.com/) for a better look at Aurora and its features!
 
-You can find the list of **Supported Games and Devices** [here](https://github.com/antonpup/Aurora/wiki/Supported-Games-&-Devices)
+You can find the list of **Supported Games and Devices** [here](https://github.com/Aurora-RGB/Aurora/wiki/Supported-Games-&-Devices)
 
 ## Download
 
-[Latest stable release](https://github.com/antonpup/Aurora/releases/latest)
+[Latest stable release](https://github.com/Aurora-RGB/Aurora/releases/latest)
 
-[Most recent release (potentially unstable)](https://github.com/antonpup/Aurora/releases)
-
-[Bleeding-edge builds (decent chance they're going to have issues)](https://ci.appveyor.com/project/antonpup/aurora/branch/dev/artifacts)
+[Most recent release (potentially unstable)](https://github.com/Aurora-RGB/Aurora/releases)
 
 ## Discord Server
 

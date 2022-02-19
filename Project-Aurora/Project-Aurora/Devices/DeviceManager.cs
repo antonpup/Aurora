@@ -18,7 +18,7 @@ namespace Aurora.Devices
     {
         public IDevice Device { get; }
 
-        private SmartThreadPool Worker = new(1000, 1);
+        private SmartThreadPool Worker = new SmartThreadPool(1000, 1);
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
