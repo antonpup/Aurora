@@ -762,7 +762,9 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
- 
+            else if (keyboard_preference == PreferredKeyboard.MSI_GP66_US)
+                layoutConfigPath = Path.Combine(layoutsPath, "msi_gp66_us.json");
+
             else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_1)
                 layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_1.json");
             else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_2)

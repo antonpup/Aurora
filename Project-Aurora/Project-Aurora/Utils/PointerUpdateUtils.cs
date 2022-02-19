@@ -55,7 +55,7 @@ namespace Aurora.Utils
                     // Use Octokit to get pointer files through API
                     try
                     {
-                        IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath + "/" + app + ".json", branch);
+                        IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("Aurora-RGB", "Aurora", repoPath + "/" + app + ".json", branch);
                         File.WriteAllText(Path.Combine(pointerPath, repoFile.ElementAt(0).Name), repoFile.ElementAt(0).Content);
                     }
                     catch (Exception e)
@@ -93,7 +93,7 @@ namespace Aurora.Utils
             string repoPath = "Project-Aurora/Project-Aurora/Pointers";
 
             // API call to get directory in repo where pointer jsons are held
-            IReadOnlyCollection<RepositoryContent> content = await octokitClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath, branch);
+            IReadOnlyCollection<RepositoryContent> content = await octokitClient.Repository.Content.GetAllContentsByRef("Aurora-RGB", "Aurora", repoPath, branch);
 
             foreach (RepositoryContent pointerRepoFiles in content)
             {
@@ -102,7 +102,7 @@ namespace Aurora.Utils
                     // Use Octokit to get pointer files through API
                     try
                     {
-                        IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("antonpup", "Aurora", repoPath + "/" + pointerRepoFiles.Name, branch);
+                        IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("Aurora-RGB", "Aurora", repoPath + "/" + pointerRepoFiles.Name, branch);
                         File.WriteAllText(Path.Combine(pointerPath, repoFile.ElementAt(0).Name), repoFile.ElementAt(0).Content);
                     }
                     catch (Exception e)

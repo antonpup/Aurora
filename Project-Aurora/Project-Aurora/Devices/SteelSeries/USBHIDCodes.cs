@@ -114,9 +114,9 @@ public enum USBHIDCodes
 
     BACKSLASH_UK = 0x64,    // Keyboard Non-US \ and |
     APPLICATION_SELECT = 0x65,
+    POWER = 0x66,
 
-    // skip unused special keys from 0x66 to 0xA4
-    //0x66	Keyboard Power
+    // skip unused special keys from 0x67 to 0xA4
     //0x67	Keypad =
     //0x68  Keyboard F13
     //0x69	Keyboard F14
