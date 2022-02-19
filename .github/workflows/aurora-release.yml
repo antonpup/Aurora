@@ -30,12 +30,6 @@ jobs:
       with:
         string: ${{github.repository}}
         split-by: '/'
-    - run: | 
-       echo "${{github.repository}}"
-    - run: | 
-       echo "${{ steps.split.outputs._0}}"
-    - run: | 
-       echo "${{ steps.split.outputs._1}}"
     
     - name: Checkout
       uses: actions/checkout@v2
@@ -43,18 +37,11 @@ jobs:
         fetch-depth: 0
         submodules: true
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
-    - name: Restore Nuget Cache
-      uses: actions/cache@v1
-      id: cache
+      # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
       with:
-        path: '%userprofile%\.nuget\packages'
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: NuGet Restore
-      if: steps.cache.outputs.cache-hit != 'true'
-      run: nuget restore $env:Solution_Name
+        dotnet-version: 5.0.x
 
       # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
