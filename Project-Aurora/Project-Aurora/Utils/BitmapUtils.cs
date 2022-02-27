@@ -64,20 +64,6 @@ namespace Aurora.Utils
             }
         }
 
-        public static Color GetAverageColor(Image screenshot)
-        {
-            var scaled_down_image = new Bitmap(16, 16);
-
-            using (var graphics = Graphics.FromImage(scaled_down_image))
-                graphics.DrawImage(screenshot, 0, 0, 16, 16);
-
-            Color avg = Utils.ColorUtils.GetAverageColor(scaled_down_image);
-
-            scaled_down_image?.Dispose();
-
-            return avg;
-        }
-
         /// <summary>
         /// Returns a color matrix that when applied to an image alters its brightness.
         /// Taken from https://docs.rainmeter.net/tips/colormatrix-guide/
@@ -199,48 +185,5 @@ namespace Aurora.Utils
             }
             return result;
         }
-
-        /// <summary>
-        /// Applies a color matrix to a givem Image
-        /// </summary>
-        /// <param name="img"></param>
-        /// <param name="mtx"></param>
-        /// <returns></returns>
-        public static void ApplyColorMatrix(this Image img, ColorMatrix mtx)
-        {
-            using (var att = new ImageAttributes())
-            {
-                att.SetColorMatrix(mtx);
-                using (var g = Graphics.FromImage(img))
-                {
-                    g.DrawImage(img,
-                                new Rectangle(0, 0, img.Width, img.Height),
-                                0,
-                                0,
-                                img.Width,
-                                img.Height,
-                                GraphicsUnit.Pixel,
-                                att);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adjusts the brightness of an image using a color matrix. brightness is a value between -1 and 1
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static void AdjustBrightness(this Image bmp, float b) =>
-            ApplyColorMatrix(bmp, new ColorMatrix(GetBrightnessColorMatrix(b)));
-
-        /// <summary>
-        /// Adjusts the saturation of an image using a color matrix. Uses a value between 0 (grayscale) and ~2
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static void AdjustSaturation(this Image bmp, float s) =>
-            ApplyColorMatrix(bmp, new ColorMatrix(GetSaturationColorMatrix(s)));
     }
 }

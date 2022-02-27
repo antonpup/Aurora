@@ -360,15 +360,7 @@ namespace Aurora.Profiles
         {
             updateTimer = new System.Threading.Timer(g =>
             {
-                try
-                {
-                    TimerUpdate();
-                }
-                catch (Exception exc)
-                {
-                    System.Windows.MessageBox.Show("Updater timer exception: " + exc.Message);
-                    throw;
-                }
+                TimerUpdate();
             }, null, 0, System.Threading.Timeout.Infinite);
         }
 
