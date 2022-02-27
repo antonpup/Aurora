@@ -67,9 +67,8 @@ namespace Aurora.Profiles.Dota_2.Layers
                     for (int index = 0; index < dota2state.Abilities.Count; index++)
                     {
                         Ability ability = dota2state.Abilities[index];
-                        foreach(string ignoredKeyword in ignoredAbilities)
-                            if (ability.Name.Contains(ignoredKeyword))
-                                continue;
+                        if (ignoredAbilities.Any(ignoredAbilityName => ability.Name.Contains(ignoredAbilityName)))
+                            continue;
 
                         if(index < Properties.AbilityKeys.Count)
                         {

@@ -151,9 +151,11 @@ namespace Aurora.Profiles.LeagueOfLegends
                 s.Match.EarthDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "earth");
                 s.Match.OceanDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "water");
                 s.Match.CloudDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "air");
+                s.Match.ChemtechDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "chemtech");
+                s.Match.HextechDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "hextech");
                 s.Match.ElderDragonsKilled = drags.Count(d => d.DragonType.ToLower() == "elder");
 
-                 s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev is _BaronKillEvent);
+                s.Match.BaronsKilled = allGameData.events.Events.Count(ev => ev is _BaronKillEvent);
                 s.Match.HeraldsKilled = allGameData.events.Events.Count(ev => ev is _HeraldKillEvent);
                 s.Match.DragonsKilled = allGameData.events.Events.Count(ev => ev is _DragonKillEvent);
                 s.Match.TurretsKilled = allGameData.events.Events.Count(ev => ev is _TurretKillEvent);

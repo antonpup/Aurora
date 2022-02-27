@@ -67,16 +67,14 @@ namespace Aurora.Utils
         /// <returns>The color byte</returns>
         public static byte ColorByteMultiplication(byte color, double value)
         {
-            byte returnbyte = color;
+            var val = (int)(color * value);
 
-            if ((double)returnbyte * value >= 255.0)
-                returnbyte = 255;
-            else if ((double)returnbyte * value <= 0.0)
-                returnbyte = 0;
-            else
-                returnbyte = (byte)((double)returnbyte * value);
+            if (val > 255)
+                return 255;
+            if (val < 0)
+                return 0;
 
-            return returnbyte;
+            return (byte) val;
         }
 
         /// <summary>

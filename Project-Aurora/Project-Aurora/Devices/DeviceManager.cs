@@ -10,60 +10,46 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Amib.Threading;
 
 namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public IDevice Device { get; set; }
+        public IDevice Device { get; }
 
-        public BackgroundWorker Worker = new();
+        private SmartThreadPool Worker = new SmartThreadPool(1000, 1);
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
         public readonly object actionLock = new();
+        private readonly Action _updateAction;
 
         public DeviceContainer(IDevice device)
         {
-            this.Device = device;
-            Worker.DoWork += WorkerOnDoWork;
+            Device = device;
+            var args = new DoWorkEventArgs(null);
+            _updateAction = () =>
+            {
+                WorkerOnDoWork(this, args);
+            };
         }
 
-        public bool working = false;
         private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
         {
-            if (!working)
-                lock (actionLock)
-                {
-                    if (!working)
-                    {
-                        try
-                        {
-                            working = true;
-                            Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
-                        }
-                        catch (Exception e)
-                        {
-                            string message = "Error while updating device: " + Device.DeviceName + "\nException is logged" + e.Message;
-                            System.Console.WriteLine(message);
-                            Global.logger.Error(message, e);
-                            System.Windows.MessageBox.Show(message);
-                        }
-                        finally
-                        {
-                            working = false;
-                        }
-                    }
-                }
+            lock(actionLock)
+            {
+                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
+                currentComp.Item2);
+            }
         }
-
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (Worker.IsBusy)
-                return;
-            else
-                Worker.RunWorkerAsync();
+            if (Worker.WaitingCallbacks < 1)
+            {
+                Worker.QueueWorkItem(_updateAction);
+            }
         }
     }
 
@@ -308,9 +294,10 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.working = true;
                 lock (dc.actionLock)
+                {
                     dc.Device.Shutdown();
+                }
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
         }
@@ -319,9 +306,10 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.working = true;
                 lock (dc.actionLock)
+                {
                     dc.Device.Reset();
+                }
             }
         }
 

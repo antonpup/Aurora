@@ -20,6 +20,7 @@
     <OutputPath>$(SolutionDir)..\Build\$(Configuration)</OutputPath>
     <ApplicationIcon>Resources\aurora_icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -85,6 +86,7 @@
     <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
     <PackageReference Include="SignedBuild-Hardcodet.NotifyIcon.Wpf" Version="1.0.5" />
+    <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Console" Version="4.3.1" />
     <PackageReference Include="System.Management" Version="5.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />

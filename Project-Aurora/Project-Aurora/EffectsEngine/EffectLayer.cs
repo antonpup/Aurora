@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
+using Aurora.Utils;
 
 namespace Aurora.EffectsEngine
 {
@@ -14,12 +15,13 @@ namespace Aurora.EffectsEngine
     /// </summary>
     public class EffectLayer : IDisposable
     {
-        private String name;
-        private readonly Bitmap colormap;
+        private readonly String _name;
+        private readonly Bitmap _colormap;
+        private float _opacity = 1;
 
-        private object bufferLock = new object();
+        private readonly object _bufferLock = new();
 
-        private bool needsRender = false;
+        private bool _needsRender = false;
 
         Color peripheral;
 
@@ -30,15 +32,14 @@ namespace Aurora.EffectsEngine
                 Devices.DeviceKeys.Peripheral_Logo
             };
 
-        static private ColorSpectrum rainbow = new ColorSpectrum(ColorSpectrum.RainbowLoop);
-
         /// <summary>
         /// Creates a new instance of the EffectLayer class with default parameters.
         /// </summary>
         public EffectLayer()
         {
-            name = "Effect Layer";
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _name = "Effect Layer";
+            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            Graphics.FromImage(_colormap);
             peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
@@ -47,14 +48,17 @@ namespace Aurora.EffectsEngine
         /// <summary>
         ///  A copy constructor, Creates a new instance of the EffectLayer class from another EffectLayer instance.
         /// </summary>
-        /// <param name="another_layer">EffectLayer instance to copy data from</param>
-        public EffectLayer(EffectLayer another_layer)
+        /// <param name="anotherLayer">EffectLayer instance to copy data from</param>
+        public EffectLayer(EffectLayer anotherLayer)
         {
-            this.name = another_layer.name;
-            colormap = new Bitmap(another_layer.colormap);
-            peripheral = another_layer.peripheral;
+            _name = anotherLayer._name;
+            var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
+            var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
+            _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
+            Graphics.FromImage(_colormap);
+            peripheral = anotherLayer.peripheral;
 
-            needsRender = another_layer.needsRender;
+            _needsRender = anotherLayer._needsRender;
         }
 
         /// <summary>
@@ -63,8 +67,9 @@ namespace Aurora.EffectsEngine
         /// <param name="name">A layer name</param>
         public EffectLayer(string name)
         {
-            this.name = name;
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            this._name = name;
+            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            Graphics.FromImage(_colormap);
             peripheral = Color.FromArgb(0, 0, 0, 0);
 
             Fill(Color.FromArgb(0, 0, 0, 0));
@@ -77,8 +82,9 @@ namespace Aurora.EffectsEngine
         /// <param name="color">A color to fill the bitmap with</param>
         public EffectLayer(string name, Color color)
         {
-            this.name = name;
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            this._name = name;
+            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            Graphics.FromImage(_colormap);
             peripheral = color;
 
             Fill(color);
@@ -94,8 +100,9 @@ namespace Aurora.EffectsEngine
         /// <param name="rect">A rectangle specifying what region to apply effects in</param>
         public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config, RectangleF rect = new RectangleF())
         {
-            this.name = name;
-            colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            this._name = name;
+            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            Graphics.FromImage(_colormap);
             peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
@@ -285,7 +292,7 @@ namespace Aurora.EffectsEngine
 
         public void Dispose()
         {
-            colormap.Dispose();
+            _colormap.Dispose();
         }
 
         /// <summary>
@@ -332,7 +339,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer Fill(Brush brush)
         {
-            using (Graphics g = Graphics.FromImage(colormap))
+            using (Graphics g = Graphics.FromImage(_colormap))
             {
                 /*if(brush is PathGradientBrush)
                 {
@@ -347,9 +354,9 @@ namespace Aurora.EffectsEngine
                     g.FillRectangle(brush, rect);
                 }
                 */
-                Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
+                Rectangle rect = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
                 g.FillRectangle(brush, rect);
-                needsRender = true;
+                _needsRender = true;
             }
 
             return this;
@@ -362,11 +369,11 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer Fill(Color color)
         {
-            using (Graphics g = Graphics.FromImage(colormap))
+            using (Graphics g = GetGraphics())
             {
-                Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
+                Rectangle rect = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
                 g.FillRectangle(new SolidBrush(color), rect);
-                needsRender = true;
+                _needsRender = true;
             }
 
             return this;
@@ -422,7 +429,7 @@ namespace Aurora.EffectsEngine
             }
             else
             {
-                using (Graphics g = Graphics.FromImage(colormap))
+                using (Graphics g = Graphics.FromImage(_colormap))
                 {
                     float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                     float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
@@ -479,7 +486,7 @@ namespace Aurora.EffectsEngine
             var boundsRaw = sequence.GetAffectedRegion();
             var bounds = new RectangleF((int)Math.Round(boundsRaw.X), (int)Math.Round(boundsRaw.Y), (int)boundsRaw.Width, (int)boundsRaw.Height);
 
-            using (var gfx = Graphics.FromImage(colormap))
+            using (var gfx = Graphics.FromImage(_colormap))
             {
 
                 // First, calculate the scaling required to transform the sourceRect's size into the bounds' size
@@ -554,7 +561,7 @@ namespace Aurora.EffectsEngine
                     peripheral = solidBrush.Color;
                 // TODO Add support for this ^ to other brush types
 
-                using (Graphics g = Graphics.FromImage(colormap))
+                using (Graphics g = Graphics.FromImage(_colormap))
                 {
                     foreach (Devices.DeviceKeys peri_key in possible_peripheral_keys)
                     {
@@ -564,7 +571,7 @@ namespace Aurora.EffectsEngine
                             g.FillRectangle(brush, peri_keymaping.Rectangle);
                     }
 
-                    needsRender = true;
+                    _needsRender = true;
                 }
             }
             else
@@ -577,10 +584,10 @@ namespace Aurora.EffectsEngine
                 }
                 else
                 {
-                    using (Graphics g = Graphics.FromImage(colormap))
+                    using (Graphics g = Graphics.FromImage(_colormap))
                     {
                         g.FillRectangle(brush, keymaping.Rectangle);
-                        needsRender = true;
+                        _needsRender = true;
                     }
                 }
             }
@@ -596,7 +603,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Color at (X,Y)</returns>
         public Color Get(int x, int y)
         {
-            BitmapData srcData = colormap.LockBits(
+            BitmapData srcData = _colormap.LockBits(
                     new Rectangle(x, y, 1, 1),
                     ImageLockMode.ReadOnly,
                     PixelFormat.Format32bppArgb);
@@ -617,7 +624,7 @@ namespace Aurora.EffectsEngine
                 alpha = p[3];
             }
 
-            colormap.UnlockBits(srcData);
+            _colormap.UnlockBits(srcData);
 
             return Color.FromArgb(alpha, red, green, blue);
         }
@@ -642,7 +649,7 @@ namespace Aurora.EffectsEngine
                     if (keymaping.IsEmpty)
                         return Color.FromArgb(0, 0, 0);
 
-                    return Utils.BitmapUtils.GetRegionColor(colormap, keymaping.Rectangle);
+                    return Utils.BitmapUtils.GetRegionColor(_colormap, keymaping.Rectangle);
                 }
             }
             catch (Exception exc)
@@ -652,14 +659,13 @@ namespace Aurora.EffectsEngine
                 return Color.FromArgb(0, 0, 0);
             }
         }
-
         /// <summary>
         /// Get an instance of Drawing.Graphics, to allow drawing on the bitmap.
         /// </summary>
         /// <returns>Graphics instance</returns>
         public Graphics GetGraphics()
         {
-            return Graphics.FromImage(colormap);
+            return Graphics.FromImage(_colormap);
         }
 
         /// <summary>
@@ -668,7 +674,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Layer Bitmap</returns>
         public Bitmap GetBitmap()
         {
-            return colormap;
+            return _colormap;
         }
 
         /// <summary>
@@ -679,18 +685,30 @@ namespace Aurora.EffectsEngine
         /// <returns>A new instance of EffectLayer, which is a combination of two passed EffectLayers</returns>
         public static EffectLayer operator +(EffectLayer lhs, EffectLayer rhs)
         {
-            EffectLayer added = new EffectLayer(lhs);
-            added.name += " + " + rhs.name;
-
-            using (Graphics g = added.GetGraphics())
+            var colorMatrix = new ColorMatrix();
+            colorMatrix.Matrix33 = rhs._opacity;
+            var imageAttributes = new ImageAttributes();
+            imageAttributes.SetColorMatrix(
+                colorMatrix,
+                ColorMatrixFlag.Default,
+                ColorAdjustType.Bitmap);
+            
+            using (Graphics g = lhs.GetGraphics())
             {
-                lock (rhs.bufferLock)
-                    g.DrawImage(rhs.colormap, 0, 0);
+                lock (rhs._bufferLock)  //g.DrawImage(rhs.colormap, 0, 0);
+                    g.DrawImage(
+                        rhs._colormap,
+                        new Rectangle(0, 0, lhs._colormap.Width, lhs._colormap.Height),
+                        0,
+                        0,
+                        lhs._colormap.Width,
+                        lhs._colormap.Height,
+                        GraphicsUnit.Pixel,
+                        imageAttributes);
             }
 
-            added.peripheral = Utils.ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
-
-            return added;
+            lhs.peripheral = ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
+            return lhs;
         }
 
         /// <summary>
@@ -701,39 +719,31 @@ namespace Aurora.EffectsEngine
         /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
-            BitmapData srcData = layer.colormap.LockBits(
-            new Rectangle(0, 0, layer.colormap.Width, layer.colormap.Height),
-            ImageLockMode.ReadWrite,
-            PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            int width = layer.colormap.Width;
-            int height = layer.colormap.Height;
-
-            unsafe
-            {
-                byte* p = (byte*)(void*)Scan0;
-
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        //p[(y * stride) + x * 4] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4], value);
-                        //p[(y * stride) + x * 4 + 1] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4 + 1], value);
-                        //p[(y * stride) + x * 4 + 2] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4 + 2], value);
-                        p[(y * stride) + x * 4 + 3] = Utils.ColorUtils.ColorByteMultiplication(p[(y * stride) + x * 4 + 3], value);
-                    }
-                }
-            }
-
-            layer.colormap.UnlockBits(srcData);
-
-            layer.peripheral = Utils.ColorUtils.MultiplyColorByScalar(layer.peripheral, value);
-
+            layer._opacity = (float) value;
             return layer;
+        }
+        
+        public static void SetOpacity(Image image, Graphics gfx, float opacity)
+        {
+            var colorMatrix = new ColorMatrix();
+            colorMatrix.Matrix33 = opacity;
+            var imageAttributes = new ImageAttributes();
+            imageAttributes.SetColorMatrix(
+                colorMatrix,
+                ColorMatrixFlag.Default,
+                ColorAdjustType.Bitmap);
+            using (gfx)
+            {
+                gfx.DrawImage(
+                    image,
+                    new Rectangle(0, 0, image.Width, image.Height),
+                    0,
+                    0,
+                    image.Width,
+                    image.Height,
+                    GraphicsUnit.Pixel,
+                    imageAttributes);
+            }
         }
 
         /// <summary>
@@ -944,7 +954,7 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            using (Graphics g = Graphics.FromImage(colormap))
+            using (Graphics g = Graphics.FromImage(_colormap))
             {
                 float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                 float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
@@ -1017,7 +1027,7 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            using (Graphics g = Graphics.FromImage(colormap))
+            using (Graphics g = Graphics.FromImage(_colormap))
             {
                 float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                 float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
@@ -1068,7 +1078,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer DrawFreeForm(Settings.FreeFormObject freeform, Color color)
         {
-            using (Graphics g = Graphics.FromImage(colormap))
+            using (Graphics g = Graphics.FromImage(_colormap))
             {
                 float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                 float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
@@ -1136,7 +1146,7 @@ namespace Aurora.EffectsEngine
 
                         EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config, rect);
 
-                        using (Graphics g = Graphics.FromImage(colormap))
+                        using (Graphics g = Graphics.FromImage(_colormap))
                         {
                             PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
 
@@ -1163,12 +1173,12 @@ namespace Aurora.EffectsEngine
         public EffectLayer Exclude(KeySequence sequence)
         {
             //Create draw alpha mask
-            EffectLayer _alpha_mask = new EffectLayer(this.name + " - Alpha Mask", Color.Transparent);
+            EffectLayer _alpha_mask = new EffectLayer(this._name + " - Alpha Mask", Color.Transparent);
             _alpha_mask.Set(sequence, Color.Black);
 
             //Apply alpha mask
-            BitmapData srcData_alpha = _alpha_mask.colormap.LockBits(
-                new Rectangle(0, 0, _alpha_mask.colormap.Width, _alpha_mask.colormap.Height),
+            BitmapData srcData_alpha = _alpha_mask._colormap.LockBits(
+                new Rectangle(0, 0, _alpha_mask._colormap.Width, _alpha_mask._colormap.Height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1176,8 +1186,8 @@ namespace Aurora.EffectsEngine
             IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
 
 
-            BitmapData srcData = colormap.LockBits(
-                new Rectangle(0, 0, colormap.Width, colormap.Height),
+            BitmapData srcData = _colormap.LockBits(
+                new Rectangle(0, 0, _colormap.Width, _colormap.Height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1185,8 +1195,8 @@ namespace Aurora.EffectsEngine
 
             IntPtr Scan0 = srcData.Scan0;
 
-            int width = colormap.Width;
-            int height = colormap.Height;
+            int width = _colormap.Width;
+            int height = _colormap.Height;
 
             unsafe
             {
@@ -1204,8 +1214,8 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            _alpha_mask.colormap.UnlockBits(srcData_alpha);
-            colormap.UnlockBits(srcData);
+            _alpha_mask._colormap.UnlockBits(srcData_alpha);
+            _colormap.UnlockBits(srcData);
 
             return this;
         }
@@ -1218,12 +1228,12 @@ namespace Aurora.EffectsEngine
         public EffectLayer OnlyInclude(KeySequence sequence)
         {
             //Create draw alpha mask
-            EffectLayer _alpha_mask = new EffectLayer(this.name + " - Alpha Mask", Color.Transparent);
+            EffectLayer _alpha_mask = new EffectLayer(this._name + " - Alpha Mask", Color.Transparent);
             _alpha_mask.Set(sequence, Color.Black);
 
             //Apply alpha mask
-            BitmapData srcData_alpha = _alpha_mask.colormap.LockBits(
-                new Rectangle(0, 0, _alpha_mask.colormap.Width, _alpha_mask.colormap.Height),
+            BitmapData srcData_alpha = _alpha_mask._colormap.LockBits(
+                new Rectangle(0, 0, _alpha_mask._colormap.Width, _alpha_mask._colormap.Height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1231,8 +1241,8 @@ namespace Aurora.EffectsEngine
             IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
 
 
-            BitmapData srcData = colormap.LockBits(
-                new Rectangle(0, 0, colormap.Width, colormap.Height),
+            BitmapData srcData = _colormap.LockBits(
+                new Rectangle(0, 0, _colormap.Width, _colormap.Height),
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1240,8 +1250,8 @@ namespace Aurora.EffectsEngine
 
             IntPtr Scan0 = srcData.Scan0;
 
-            int width = colormap.Width;
-            int height = colormap.Height;
+            int width = _colormap.Width;
+            int height = _colormap.Height;
 
             unsafe
             {
@@ -1259,8 +1269,8 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            _alpha_mask.colormap.UnlockBits(srcData_alpha);
-            colormap.UnlockBits(srcData);
+            _alpha_mask._colormap.UnlockBits(srcData_alpha);
+            _colormap.UnlockBits(srcData);
 
             return this;
         }
@@ -1271,7 +1281,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Layer name</returns>
         public override string ToString()
         {
-            return name;
+            return _name;
         }
     }
 }

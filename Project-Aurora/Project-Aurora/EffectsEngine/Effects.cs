@@ -263,8 +263,8 @@ namespace Aurora
         }
 
 
-        private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new Dictionary<DeviceKeys, Color>(possible_peripheral_keys.Length);
-        private readonly Dictionary<DeviceKeys, Color> _keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
+        private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(possible_peripheral_keys.Length);
+        private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MAX_DEVICE_ID);
         public void PushFrame(EffectFrame frame)
         {
             lock (bitmap_lock)

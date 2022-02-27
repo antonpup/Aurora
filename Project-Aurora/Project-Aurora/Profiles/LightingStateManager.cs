@@ -360,36 +360,41 @@ namespace Aurora.Profiles
         {
             updateTimer = new System.Threading.Timer(g =>
             {
-                if (locked)
-                {
-                    return;
-                }
-
-                locked = true;
-
-                updateLock.WaitOne();
-                watch.Start();
-                if (Global.isDebug)
-                    Update();
-                else
-                {
-                    try
-                    {
-                        Update();
-                    }
-                    catch (Exception exc)
-                    {
-                        Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
-                        System.Windows.MessageBox.Show("Error while updating light effects: " + exc.Message);
-                    }
-                }
-                watch.Stop();
-                currentTick += watch.ElapsedMilliseconds;
-                updateTimer?.Change(Math.Max(timerInterval - watch.ElapsedMilliseconds, UPDATE_PERIOD), Timeout.Infinite);
-                watch.Reset();
-                locked = false;
-                updateLock.Release();
+                TimerUpdate();
             }, null, 0, System.Threading.Timeout.Infinite);
+        }
+
+        private void TimerUpdate()
+        {
+            if (locked)
+            {
+                return;
+            }
+
+            locked = true;
+
+            updateLock.WaitOne();
+            watch.Start();
+            if (Global.isDebug)
+                Update();
+            else
+            {
+                try
+                {
+                    Update();
+                }
+                catch (Exception exc)
+                {
+                    Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
+                    System.Windows.MessageBox.Show("Error while updating light effects: " + exc.Message);
+                }
+            }
+            watch.Stop();
+            currentTick += watch.ElapsedMilliseconds;
+            updateTimer?.Change(Math.Max(timerInterval - watch.ElapsedMilliseconds, UPDATE_PERIOD), Timeout.Infinite);
+            watch.Reset();
+            locked = false;
+            updateLock.Release();
         }
 
         private void UpdateProcess()
