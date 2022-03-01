@@ -108,7 +108,7 @@ namespace Aurora.Controls
 
         private float _currentPlaybackTime = 0.0f;
 
-        private Timer _playbackTimer = new Timer(LightingStateManager.UPDATE_PERIOD);
+        private Timer _playbackTimer = new Timer(Global.Configuration.UpdateDelay);
 
         public Control_AnimationMixPresenter()
         {
@@ -124,7 +124,7 @@ namespace Aurora.Controls
                 var cm = ContextMix;
                 Task.Run(() =>
                 {
-                    _currentPlaybackTime += (float)LightingStateManager.UPDATE_PERIOD / 1000;
+                    _currentPlaybackTime += (float)Global.Configuration.UpdateDelay / 1000;
 
                     if (!cm.AnyActiveTracksAt(_currentPlaybackTime))
                     {

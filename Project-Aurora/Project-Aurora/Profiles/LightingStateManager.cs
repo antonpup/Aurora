@@ -41,8 +41,6 @@ namespace Aurora.Profiles
 
     public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
     {
-        public static readonly int UPDATE_PERIOD = 8;
-
         public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
 
         public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
@@ -341,8 +339,6 @@ namespace Aurora.Profiles
 
         private Timer updateTimer;
 
-        private const int timerInterval = 8;
-
         private long nextProcessNameUpdate;
         private long currentTick;
         private string previewModeProfileKey = "";
@@ -358,7 +354,7 @@ namespace Aurora.Profiles
         private bool locked = false;
         private void InitUpdate()
         {
-            updateTimer = new System.Threading.Timer(g =>
+            updateTimer = new Timer(g =>
             {
                 TimerUpdate();
             }, null, 0, System.Threading.Timeout.Infinite);
@@ -391,7 +387,7 @@ namespace Aurora.Profiles
             }
             watch.Stop();
             currentTick += watch.ElapsedMilliseconds;
-            updateTimer?.Change(Math.Max(timerInterval - watch.ElapsedMilliseconds, UPDATE_PERIOD), Timeout.Infinite);
+            updateTimer?.Change(Math.Max(Global.Configuration.UpdateDelay - watch.ElapsedMilliseconds, Global.Configuration.UpdateDelay), Timeout.Infinite);
             watch.Reset();
             locked = false;
             updateLock.Release();

@@ -51,6 +51,11 @@
                 <xctk:IntegerUpDown Value="{Binding NighttimeEndHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="326,249,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <xctk:IntegerUpDown Value="{Binding NighttimeEndMinute, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="59" Margin="389,249,0,0" Width="49" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text=":" Margin="381,252,0,0" Width="3" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                
+                <TextBlock Text="Update delay:" Margin="11,284,0,0" />
+                <xctk:IntegerUpDown Value="{Binding UpdateDelay, UpdateSourceTrigger=PropertyChanged}" Minimum="8" Maximum="120" Margin="90,280,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="FPS:" Margin="150,284,0,0" />
+                <TextBlock Text="{Binding Fps, UpdateSourceTrigger=PropertyChanged}" Margin="180,284,0,0" />
 
                 <!-- Excluded Programs List -->
                 <ListBox ItemsSource="{Binding ExcludedPrograms}" SelectedItem="{Binding SelectedExcludedProgram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:Control_Settings}}, Mode=OneWayToSource}"  Margin="512,139,0,0" Width="160" Height="199" HorizontalAlignment="Left" VerticalAlignment="Top" />

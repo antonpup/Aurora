@@ -494,6 +494,14 @@ namespace Aurora.Settings
         public BitmapAccuracy BitmapAccuracy { get; set; } = BitmapAccuracy.Okay;
         public bool EnableAudioCapture { get; set; } = false;
 
+
+        public int UpdateDelay { get; set; } = 30;
+
+        public double Fps
+        {
+            get => 1000d / UpdateDelay;
+        }
+
         [JsonProperty("updates_check_on_start_up")] public bool UpdatesCheckOnStartUp { get; set; } = true;
         [JsonProperty("start_silently")] public bool StartSilently { get; set; } = false;
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
