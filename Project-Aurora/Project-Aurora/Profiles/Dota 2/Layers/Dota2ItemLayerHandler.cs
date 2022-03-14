@@ -41,6 +41,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         [JsonIgnore]
         public Color ItemNoChargersColor { get { return Logic._ItemNoChargersColor ?? _ItemNoChargersColor ?? Color.Empty; } }
 
+        [JsonProperty("item_keys2")]    //changed property name to reset because some update broke this setting
         public List<Devices.DeviceKeys> _ItemKeys { get; set; }
 
         [JsonIgnore]
