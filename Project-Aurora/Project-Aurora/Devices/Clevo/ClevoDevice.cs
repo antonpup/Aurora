@@ -182,8 +182,8 @@ namespace Aurora.Devices.Clevo
                     int spacebar_x = (int)spacebar_center.X - keymap_esc.Left;
                     int height = (int)spacebar_center.Y - keymap_esc.Top;
 
-                    BitmapRectangle region_left =
-                        new BitmapRectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
+                    Rectangle region_left =
+                        new Rectangle(keymap_esc.Left, keymap_esc.Top, spacebar_x, height);
 
                     Color RegionLeftColor;
 
@@ -203,8 +203,8 @@ namespace Aurora.Devices.Clevo
 
                     int f11_x_width = Convert.ToInt32(keymap_f11.Center.X - spacebar_x);
 
-                    BitmapRectangle region_center =
-                        new BitmapRectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
+                    Rectangle region_center =
+                        new Rectangle(spacebar_x, keymap_esc.Top, f11_x_width, height);
 
                     Color RegionCenterColor;
                     lock (colorComposition.bitmapLock)
@@ -220,7 +220,7 @@ namespace Aurora.Devices.Clevo
 
                     // Right Side
                     BitmapRectangle keymap_numenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
-                    BitmapRectangle region_right = new BitmapRectangle(Convert.ToInt32(keymap_f11.Center.X),
+                    Rectangle region_right = new Rectangle(Convert.ToInt32(keymap_f11.Center.X),
                         keymap_esc.Top, Convert.ToInt32(keymap_numenter.Center.X - keymap_f11.Center.X), height);
 
                     Color RegionRightColor;

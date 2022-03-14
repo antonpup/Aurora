@@ -52,7 +52,7 @@ namespace Aurora.Devices.Corsair
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (deviceInfos.Count != CUESDK.GetDeviceCount())
                 this.Reset();

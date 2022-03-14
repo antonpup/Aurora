@@ -51,6 +51,11 @@
                 <xctk:IntegerUpDown Value="{Binding NighttimeEndHour, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="23" Margin="326,249,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <xctk:IntegerUpDown Value="{Binding NighttimeEndMinute, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="59" Margin="389,249,0,0" Width="49" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text=":" Margin="381,252,0,0" Width="3" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                
+                <TextBlock Text="Update delay:" Margin="11,284,0,0" />
+                <xctk:IntegerUpDown Value="{Binding UpdateDelay, UpdateSourceTrigger=PropertyChanged}" Minimum="8" Maximum="120" Margin="90,280,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="FPS:" Margin="150,284,0,0" />
+                <TextBlock Text="{Binding Fps, UpdateSourceTrigger=PropertyChanged}" Margin="180,284,0,0" />
 
                 <!-- Excluded Programs List -->
                 <ListBox ItemsSource="{Binding ExcludedPrograms}" SelectedItem="{Binding SelectedExcludedProgram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:Control_Settings}}, Mode=OneWayToSource}"  Margin="512,139,0,0" Width="160" Height="199" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -137,13 +142,14 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="150"/>
+                            <RowDefinition Height="170"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard Layout:" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard:" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Mouse:" VerticalAlignment="Top"/>
+                            <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Mousepad:" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Keycap type:" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Mouse Orientation:" VerticalAlignment="Top"/>
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top" ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best"/>
@@ -152,6 +158,7 @@
                             <ComboBox SelectedValue="{Binding KeyboardLocalization}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredKeyboardLocalization}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedValue="{Binding KeyboardBrand}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredKeyboard}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedValue="{Binding MousePreference}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredMouse}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                            <ComboBox SelectedValue="{Binding MousepadPreference}" ItemsSource="{u:EnumToItemsSource {x:Type local:PreferredMousepad}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedValue="{Binding VirtualkeyboardKeycapType}" ItemsSource="{u:EnumToItemsSource {x:Type local:KeycapType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedValue="{Binding MouseOrientation}" ItemsSource="{u:EnumToItemsSource {x:Type local:MouseOrientationType}}" DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedValue="{Binding BitmapAccuracy}" ItemsSource="{u:EnumToItemsSource {x:Type local:BitmapAccuracy}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />

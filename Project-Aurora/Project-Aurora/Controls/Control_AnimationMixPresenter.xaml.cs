@@ -1,4 +1,5 @@
 ﻿using Aurora.EffectsEngine.Animations;
+using Aurora.Profiles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -49,6 +50,7 @@ namespace Aurora.Controls
                     //stkPanelTracks.Children.Add(new Separator());
                 }
 
+                ContextMix.SetScale(AnimationScale);
                 AnimationMixUpdated?.Invoke(this, ContextMix);
             }
         }
@@ -92,17 +94,25 @@ namespace Aurora.Controls
 
         public Bitmap RenderedBitmap;
 
-        public float AnimationScale = 1.0f;
+        private float _animationScale = 1.0f;
+        public float AnimationScale {
+            get {
+                return _animationScale;
+            }
+            set {
+                _animationScale = value;
+                if(ContextMix != null)
+                    ContextMix.SetScale(AnimationScale);
+            }
+        }
 
         private float _currentPlaybackTime = 0.0f;
 
-        private Timer _playbackTimer = new Timer(33);
+        private Timer _playbackTimer = new Timer(Global.Configuration.UpdateDelay);
 
         public Control_AnimationMixPresenter()
         {
             InitializeComponent();
-
-            RenderedBitmap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
 
             _playbackTimer.Elapsed += _playbackTimer_Elapsed;
         }
@@ -110,19 +120,39 @@ namespace Aurora.Controls
         private void _playbackTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>
+            {
+                var cm = ContextMix;
+                Task.Run(() =>
                 {
-                    _currentPlaybackTime += 0.033f;
+                    _currentPlaybackTime += (float)Global.Configuration.UpdateDelay / 1000;
 
-                    if (!ContextMix.AnyActiveTracksAt(_currentPlaybackTime))
+                    if (!cm.AnyActiveTracksAt(_currentPlaybackTime))
                     {
                         _currentPlaybackTime = 0.0f;
                         _playbackTimer.Stop();
                     }
 
-                    gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100.0, 0, 0, 0);
+                    Bitmap newBitmap = new Bitmap((int)(Effects.canvas_width * AnimationScale), (int)(Effects.canvas_height * AnimationScale));
+                    RenderedBitmap = newBitmap;
 
-                    UpdatePlaybackTime();
+                    using (Graphics g = Graphics.FromImage(newBitmap))
+                    {
+                        g.Clear(System.Drawing.Color.Black);
+                        cm.Draw(g, _currentPlaybackTime);
+                    }
+
+                    Dispatcher.Invoke(() =>
+                    {
+
+                        if (chkbxDrawToDevices.IsChecked.Value)
+                            Global.effengine.ForceImageRender(newBitmap);
+
+                        AnimationMixRendered?.Invoke(this);
+
+                        UpdatePlaybackTime();
+                    });
                 });
+            });
         }
 
         private void btnPlayStop_Click(object sender, RoutedEventArgs e)
@@ -154,26 +184,13 @@ namespace Aurora.Controls
 
         public void UpdatePlaybackTime()
         {
+
+            gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100.0, 0, 0, 0);
+
             int seconds = (int)_currentPlaybackTime;
             int milliseconds = (int)((_currentPlaybackTime - seconds) * 1000.0);
 
             this.txtblkCurrentTime.Text = $"{seconds};{milliseconds}";
-
-            Bitmap newBitmap = new Bitmap((int)(Effects.canvas_width * AnimationScale), (int)(Effects.canvas_height * AnimationScale));
-
-            using (Graphics g = Graphics.FromImage(newBitmap))
-            {
-                g.Clear(System.Drawing.Color.Black);
-
-                ContextMix.Draw(g, _currentPlaybackTime, AnimationScale);
-            }
-
-            RenderedBitmap = newBitmap;
-
-            if (chkbxDrawToDevices.IsChecked.Value)
-                Global.effengine.ForceImageRender(RenderedBitmap);
-
-            AnimationMixRendered?.Invoke(this);
         }
 
         private double ConvertToLocation(float time)

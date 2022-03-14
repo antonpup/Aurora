@@ -38,7 +38,7 @@ namespace Aurora.EffectsEngine
 			Color.FromArgb(255, 0, 0)
 			);
 
-		private Dictionary<float, Color> colors;
+		private readonly Dictionary<float, Color> colors = new Dictionary<float, Color>();
 		private float shift = 0.0f;
 
 		/// <summary>
@@ -46,8 +46,6 @@ namespace Aurora.EffectsEngine
 		/// </summary>
 		public ColorSpectrum()
 		{
-			colors = new Dictionary<float, Color>();
-
 			colors[0.0f] = Color.FromArgb(255, 0, 0);
 			colors[1.0f] = Color.FromArgb(255, 0, 0);
 		}
@@ -58,8 +56,6 @@ namespace Aurora.EffectsEngine
 		/// <param name="color"></param>
 		public ColorSpectrum(Color color)
 		{
-			colors = new Dictionary<float, Color>();
-
 			colors[0.0f] = color;
 			colors[1.0f] = color;
 		}
@@ -71,8 +67,6 @@ namespace Aurora.EffectsEngine
 		/// <param name="endcolor">The ending color (at 1.0f)</param>
 		public ColorSpectrum(Color startcolor, Color endcolor)
 		{
-			colors = new Dictionary<float, Color>();
-
 			colors[0.0f] = startcolor;
 			colors[1.0f] = endcolor;
 		}
@@ -83,8 +77,6 @@ namespace Aurora.EffectsEngine
 		/// <param name="colorslist">The passed array of colors</param>
 		public ColorSpectrum(params Color[] colorslist)
 		{
-			colors = new Dictionary<float, Color>();
-
 			for (int i = 0; i < colorslist.Length; i++)
 			{
 				float position = i / (float)(colorslist.Length - 1);
@@ -99,7 +91,7 @@ namespace Aurora.EffectsEngine
 		/// <param name="otherspectrum">The passed ColorSpectrum</param>
 		public ColorSpectrum(ColorSpectrum otherspectrum)
 		{
-			colors = otherspectrum.colors;
+			colors = new Dictionary<float, Color>(otherspectrum.colors);
 		}
 
 		/// <summary>
@@ -115,7 +107,9 @@ namespace Aurora.EffectsEngine
 				newcolors[1.0f - kvp.Key] = kvp.Value;
 			}
 
-			colors = newcolors;
+			colors.Clear();
+			foreach (var e in newcolors)
+				colors.Add(e.Key, e.Value);
 
 			return this;
 		}
@@ -290,7 +284,9 @@ namespace Aurora.EffectsEngine
 			foreach (KeyValuePair<float, Color> kvp in colors)
 				newcolors[kvp.Key] = Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
 
-			colors = newcolors;
+			colors.Clear();
+			foreach (var e in newcolors)
+				colors.Add(e.Key, e.Value);
 
 			return this;
 		}

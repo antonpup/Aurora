@@ -166,8 +166,8 @@ namespace Aurora.Devices.AtmoOrbDevice
                     {
 
                         averageColor = Utils.BitmapUtils.GetRegionColor(
-                            (Bitmap)colorComposition.keyBitmap,
-                            new BitmapRectangle(0, 0, colorComposition.keyBitmap.Width,
+                            colorComposition.keyBitmap,
+                            new Rectangle(0, 0, colorComposition.keyBitmap.Width,
                                 colorComposition.keyBitmap.Height)
                         );
                     }

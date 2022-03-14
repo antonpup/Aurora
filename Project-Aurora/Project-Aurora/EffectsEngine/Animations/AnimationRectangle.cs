@@ -14,6 +14,10 @@ namespace Aurora.EffectsEngine.Animations
             _duration = 0.0f;
         }
 
+        public AnimationRectangle(AnimationFrame animationFrame) : base(animationFrame)
+        {
+        }
+
         public AnimationRectangle(RectangleF dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
         }
@@ -34,7 +38,7 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Graphics g)
         {
             if (_pen == null || _invalidated)
             {
@@ -42,24 +46,14 @@ namespace Aurora.EffectsEngine.Animations
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
 
+                virtUpdate();
                 _invalidated = false;
             }
 
-            _pen.ScaleTransform(scale, scale);
-            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
-            _scaledDimension.Offset(offset);
 
-            PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
-
-            Matrix transformationMatrix = new Matrix();
-            transformationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
-            transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
-
-            Matrix originalMatrix = g.Transform;
-            g.Transform = transformationMatrix;
+            g.ResetTransform();
+            g.Transform = _transformationMatrix;
             g.DrawRectangle(_pen, _scaledDimension.X, _scaledDimension.Y, _scaledDimension.Width, _scaledDimension.Height);
-            g.Transform = originalMatrix;
-
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -68,30 +62,18 @@ namespace Aurora.EffectsEngine.Animations
             {
                 throw new FormatException("Cannot blend with another type");
             }
+            AnimationRectangle otherCircle = (AnimationRectangle)otherAnim;
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
-                );
+            AnimationFrame newFrame = base.BlendWith(otherCircle, amount);
 
-            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
-
-            return new AnimationRectangle(newrect, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), newwidth).SetAngle(newAngle);
+            return new AnimationRectangle(newFrame);
         }
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationRectangle(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationRectangle(this);
         }
 
         public override bool Equals(object obj)

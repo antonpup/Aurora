@@ -12,7 +12,7 @@ namespace Aurora.Devices.Asus
         private static readonly List<AsusSyncConfiguredDevice> allConfigDevices = new List<AsusSyncConfiguredDevice>();
         
         /// <inheritdoc />
-        public AsusSyncConfiguredDevice(AsusHandler asusHandler, IAuraSyncDevice device, AsusConfig.AsusConfigDevice config,  int frameRate = 30) : base(asusHandler, device, frameRate)
+        public AsusSyncConfiguredDevice(AsusHandler asusHandler, IAuraSyncDevice device, AsusConfig.AsusConfigDevice config,  int frameRate = 60) : base(asusHandler, device, frameRate)
         {
             this.config = config;
             allConfigDevices.Add(this);

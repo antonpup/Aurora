@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using AuraServiceLib;
+using Aurora.Settings;
+using Aurora.Utils;
 
 namespace Aurora.Devices.Asus
 {
@@ -21,7 +23,7 @@ namespace Aurora.Devices.Asus
         private readonly AsusHandler asusHandler;
         private readonly ConcurrentQueue<Dictionary<DeviceKeys, Color>> colorQueue = new ConcurrentQueue<Dictionary<DeviceKeys, Color>>();
         private CancellationTokenSource tokenSource = new CancellationTokenSource();
-        private readonly int frameRateMillis;
+        private readonly long frameRateMillis;
         private readonly DeviceKeys[] defaultKeys = { DeviceKeys.Peripheral, DeviceKeys.Peripheral_Logo, DeviceKeys.SPACE };
 
         private readonly Stopwatch stopwatch = new Stopwatch();
@@ -30,7 +32,7 @@ namespace Aurora.Devices.Asus
         private const int DiscountTries = 3;
         private int disconnectCounter = 0;
 
-        public AuraSyncDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 30)
+        public AuraSyncDevice(AsusHandler asusHandler, IAuraSyncDevice device, int frameRate = 60)
         {
             this.asusHandler = asusHandler;
             this.device = device;
@@ -46,8 +48,7 @@ namespace Aurora.Devices.Asus
             while (!colorQueue.IsEmpty)
                 colorQueue.TryDequeue(out _);
 
-            // queue a clone of the colors
-            colorQueue.Enqueue(new Dictionary<DeviceKeys, Color>(colors));
+            colorQueue.Enqueue(colors);
         }
 
         public void Start()
@@ -83,7 +84,7 @@ namespace Aurora.Devices.Asus
             {
                 try
                 {
-                    await Task.Delay(frameRateMillis, token);
+                    await Task.Delay((int)Math.Max(frameRateMillis - LastUpdateMillis, 5), token);
                     // wait for the next tick before drawing
                     var colors = GetLatestColors();
                     if (colors == null) continue;
@@ -147,12 +148,6 @@ namespace Aurora.Devices.Asus
         }
 
         //0x00BBGGRR
-        protected void SetRgbLight(IAuraRgbKey rgbLight, Color color)
-        {
-            rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16);
-        }
-
-        //0x00BBGGRR
         protected void SetRgbLight(IAuraRgbLight rgbLight, Color color)
         {
             rgbLight.Color = (uint)(color.R | color.G << 8 | color.B << 16);
@@ -160,7 +155,14 @@ namespace Aurora.Devices.Asus
 
         protected void SetRgbLight(int index, Color color)
         {
-            SetRgbLight(device.Lights[index], color);
+            //calibrate for led and fans
+            var colorCal = Global.Configuration.VarRegistry.GetVariable<RealColor>($"Asus_color_cal");
+            var calibratedColor = Color.FromArgb(
+                color.A,
+                color.R * colorCal.GetDrawingColor().R / 255,
+                color.G * colorCal.GetDrawingColor().G / 255,
+                color.B * colorCal.GetDrawingColor().B / 255);
+            SetRgbLight(device.Lights[index], calibratedColor);
         }
 
         private Dictionary<DeviceKeys, Color> GetLatestColors()

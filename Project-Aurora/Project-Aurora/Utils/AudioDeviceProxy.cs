@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace Aurora.Utils {
 
@@ -103,9 +104,67 @@ namespace Aurora.Utils {
             WaveIn = null;
         }
 
+        private void AddPlaybackDevice(MMDevice device)
+        {
+            try
+            {
+                PlaybackDevices.Add(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+            }
+            finally
+            {
+                var selectedDevice = Global.Configuration.GSIAudioRenderDevice;
+                if (selectedDevice.Equals(device.ID))
+                {
+                    //probably need to fill this. somehow this is still fine
+                }
+            }
+        }
+
+        private void AddRecordingDevice(MMDevice device)
+        {
+            try
+            {
+                RecordingDevices.Add(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+            }
+            finally
+            {
+                var selectedDevice = Global.Configuration.GSIAudioRenderDevice;
+                if (selectedDevice.Equals(device.ID))
+                {
+
+                }
+            }
+        }
+
         #region Device Enumeration
         public static ObservableCollection<KeyValuePair<string, string>> PlaybackDevices { get; } = new ObservableCollection<KeyValuePair<string, string>>();
         public static ObservableCollection<KeyValuePair<string, string>> RecordingDevices { get; } = new ObservableCollection<KeyValuePair<string, string>>();
+        public void OnDeviceAdded(string pwstrDeviceId)
+        {
+            var device = deviceEnumerator.GetDevice(pwstrDeviceId);
+            switch (device.DataFlow)
+            {
+                case DataFlow.Render:
+                    AddPlaybackDevice(device);
+                    break;
+                case DataFlow.Capture:
+                    AddRecordingDevice(device);
+                    break;
+            }
+        }
+        public void OnDeviceRemoved(string deviceId)
+        {
+            var device = deviceEnumerator.GetDevice(deviceId);
+            switch (device.DataFlow)
+            {
+                case DataFlow.Render:
+                    PlaybackDevices.Remove(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+                    break;
+                case DataFlow.Capture:
+                    RecordingDevices.Remove(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+                    break;
+            }
+        }
 
         // Updates the target list with the devices of the given dataflow type.
         private static void RefreshDeviceList(ObservableCollection<KeyValuePair<string, string>> target, DataFlow flow) {
@@ -132,9 +191,27 @@ namespace Aurora.Utils {
             => defaultDeviceChanged = true;
 
         // Methods from interface not used
-        public void OnDeviceAdded(string pwstrDeviceId) { }
-        public void OnDeviceRemoved(string deviceId) { }
-        public void OnDeviceStateChanged(string deviceId, DeviceState newState) { }
+        public void OnDeviceStateChanged(string deviceId, DeviceState newState)
+        {
+            var device = deviceEnumerator.GetDevice(deviceId);
+            var kv = new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName);
+            switch (device.DataFlow)
+            {
+                case DataFlow.Render:
+                    if (!PlaybackDevices.Contains(kv))
+                    {
+                        AddPlaybackDevice(device);
+                    }
+                    break;
+                case DataFlow.Capture:
+                    RecordingDevices.Remove(new KeyValuePair<string, string>(device.ID, device.DeviceFriendlyName));
+                    if (!RecordingDevices.Contains(kv))
+                    {
+                        AddRecordingDevice(device);
+                    }
+                    break;
+            }
+        }
         public void OnPropertyValueChanged(string pwstrDeviceId, PropertyKey key) { }
 
         #endregion

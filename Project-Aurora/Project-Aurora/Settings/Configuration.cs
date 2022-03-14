@@ -190,6 +190,8 @@ namespace Aurora.Settings
         Logitech_G815 = 105,
         [Description("Logitech - G513")]
         Logitech_G513 = 106,
+        [Description("Logitech - G915")]
+        Logitech_G915 = 107,
 		
         //Corsair range is 200-299
         [Description("Corsair - K95")]
@@ -368,8 +370,6 @@ namespace Aurora.Settings
 
         [Description("Generic Peripheral")]
         Generic_Peripheral = 1,
-        [Description("Razer/Corsair Mousepad + Mouse")]
-        Generic_Mousepad = 2,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]
@@ -404,10 +404,10 @@ namespace Aurora.Settings
         SteelSeries_Rival_300 = 700,
         [Description("SteelSeries - Rival 300 HP OMEN Edition")]
         SteelSeries_Rival_300_HP_OMEN_Edition = 701,
-        [Description("SteelSeries - QcK Prism Mousepad + Mouse")]
-        SteelSeries_QcK_Prism = 702,
-        [Description("SteelSeries - Two-zone QcK Mousepad + Mouse")]
-        SteelSeries_QcK_2_Zone = 703,
+        
+        [Description("Bloody - W60")]
+        Bloody_W60 = 800,
+        
         //Asus range is 900-999
         [Description("Asus - Pugio")]
         Asus_Pugio = 900,
@@ -422,6 +422,24 @@ namespace Aurora.Settings
         [Description("OMEN Vector Essentials")]
         OMEN_Vector_Essentials = 1003,
     }
+
+    public enum PreferredMousepad
+    {
+        [Description("None")]
+        None = 0,
+
+        [Description("Razer/Corsair Mousepad")]
+        Generic_Mousepad = 1,
+
+        //Steelseries range is 100-299
+        [Description("SteelSeries - QcK Prism Mousepad")]
+        SteelSeries_QcK_Prism = 100,
+        [Description("SteelSeries - Two-zone QcK Mousepad")]
+        SteelSeries_QcK_2_Zone = 101,
+        [Description("Bloody - MP-50RS")]
+        Bloody_MP50RS = 102,
+    }
+
 
     public enum KeycapType
     {
@@ -461,6 +479,7 @@ namespace Aurora.Settings
 
         //General Program Settings
         [JsonProperty("allow_peripheral_devices")] public bool AllowPeripheralDevices { get; set; } = true;
+        [JsonProperty("close_on_exception")] public bool CloseProgramOnException { get; set; } = true;
         [JsonProperty("allow_wrappers_in_background")] public bool AllowWrappersInBackground { get; set; } = true;
         [JsonProperty("allow_all_logitech_bitmaps")] public bool AllowAllLogitechBitmaps { get; set; } = true;
 
@@ -475,6 +494,14 @@ namespace Aurora.Settings
         public BitmapAccuracy BitmapAccuracy { get; set; } = BitmapAccuracy.Okay;
         public bool EnableAudioCapture { get; set; } = false;
 
+
+        public int UpdateDelay { get; set; } = 30;
+
+        public double Fps
+        {
+            get => 1000d / UpdateDelay;
+        }
+
         [JsonProperty("updates_check_on_start_up")] public bool UpdatesCheckOnStartUp { get; set; } = true;
         [JsonProperty("start_silently")] public bool StartSilently { get; set; } = false;
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
@@ -482,6 +509,7 @@ namespace Aurora.Settings
         [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
         [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.None;
+        [JsonProperty("mousepad_preference")] public PreferredMousepad MousepadPreference { get; set; } = PreferredMousepad.None;
         [JsonProperty("virtualkeyboard_keycap_type")] public KeycapType VirtualkeyboardKeycapType { get; set; } = KeycapType.Default;
         [JsonProperty("detection_mode")] public ApplicationDetectionMode DetectionMode { get; set; } = ApplicationDetectionMode.WindowsEvents;
         [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; } = false;

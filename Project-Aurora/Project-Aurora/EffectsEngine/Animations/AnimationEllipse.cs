@@ -56,6 +56,20 @@ namespace Aurora.EffectsEngine.Animations
             _duration = 0.0f;
         }
 
+        public AnimationEllipse(AnimationFrame frame, float radiusX, float radiusY) : base(frame)
+        {
+            _radius_x = radiusX;
+            _radius_y = radiusY;
+            _center = new PointF(_dimension.X + _radius_x, _dimension.Y + _radius_y);
+        }
+
+        public AnimationEllipse(AnimationEllipse animationEllipse) : base(animationEllipse)
+        {
+            _radius_x = animationEllipse._radius_x;
+            _radius_y = animationEllipse._radius_y;
+            _center = animationEllipse._center;
+        }
+
         public AnimationEllipse(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
             _radius_x = dimension.Width / 2.0f;
@@ -92,27 +106,28 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        protected override void virtUpdate()
+        {
+            base._center = new PointF(_center.X * Scale, _center.Y * Scale);
+
+            base.virtUpdate();
+        }
+
+        public override void Draw(Graphics g)
         {
             if (_pen == null || _invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                _pen.ScaleTransform(Scale, Scale);
+
+                virtUpdate();
                 _invalidated = false;
             }
 
-            _pen.ScaleTransform(scale, scale);
-            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
-            _scaledDimension.Offset(offset);
-
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, new PointF(_center.X * scale, _center.Y * scale), MatrixOrder.Append);
-
-            Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
+            g.ResetTransform();
             g.DrawEllipse(_pen, _scaledDimension);
-            g.Transform = originalMatrix;
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -138,13 +153,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationEllipse(newrect, Color.FromArgb(_color.A, _color.R, _color.G, _color.B), _width, _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationEllipse(this);
         }
 
         public override bool Equals(object obj)

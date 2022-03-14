@@ -170,7 +170,7 @@ namespace Aurora
 
             if (!settingsloaded)
             {
-                virtual_keyboard_timer = new Timer(33);
+                virtual_keyboard_timer = new Timer(8);
                 virtual_keyboard_timer.Elapsed += new ElapsedEventHandler(virtual_keyboard_timer_Tick);
                 virtual_keyboard_timer.Start();
 
@@ -254,9 +254,9 @@ namespace Aurora
 
                             if (IsActive)
                             {
-                                keylights = Global.effengine.GetKeyboardLights();
-                                Global.kbLayout.SetKeyboardColors(keylights);
                             }
+                            keylights = Global.effengine.GetKeyboardLights();
+                            Global.kbLayout.SetKeyboardColors(keylights);
 
                             if (Global.key_recorder.IsRecording())
                                 this.keyboard_record_message.Visibility = Visibility.Visible;

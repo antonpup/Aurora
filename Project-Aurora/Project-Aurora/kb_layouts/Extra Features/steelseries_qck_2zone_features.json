@@ -1,5 +1,5 @@
 {
-    "group_tag": "mouse",
+    "group_tag": "mousepad",
     "origin_region": 4,
     "grouped_keys": [
         {
@@ -10,34 +10,6 @@
             "height": 168.0,
             "width_bits": 6,
             "height_bits": 6,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "Mouse Logo",
-            "tag": 160,
-            "margin_left": 90.0,
-            "margin_top": -111.0,
-            "width": 50.0,
-            "height": 50.0,
-            "width_bits": 2,
-            "height_bits": 2,
-            "margin_left_bits": 2,
-            "margin_top_bits": -6,
-            "enabled": true,
-            "absolute_location": true
-        },
-        {
-            "visualName": "Scroll Wheel",
-            "tag": 161,
-            "margin_left": 90.0,
-            "margin_top": -171.0,
-            "width": 50.0,
-            "height": 50.0,
-            "width_bits": 2,
-            "height_bits": 2,
             "margin_left_bits": 2,
             "margin_top_bits": -6,
             "enabled": true,

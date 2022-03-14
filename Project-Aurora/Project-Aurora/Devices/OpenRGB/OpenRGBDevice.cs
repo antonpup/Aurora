@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using Aurora.Utils;
 using Microsoft.Scripting.Utils;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
@@ -33,7 +34,6 @@ namespace Aurora.Devices.OpenRGB
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
                 var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
                 var usePeriphLogo = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_use_periph_logo");
-                var ignoreDirectMode = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_ignore_direct");
 
                 _openRgb = new OpenRGBClient(name: "Aurora", ip: ip, port: port);
                 _openRgb.Connect();
@@ -45,14 +45,11 @@ namespace Aurora.Devices.OpenRGB
                 {
                     var device = devices[i];
                     var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
-                    if (directMode != null || ignoreDirectMode)
-                    {
-                        if (directMode != null)
-                            _openRgb.SetMode(i, device.Modes.FindIndex(mode => mode == directMode));
-                        var helper = new HelperOpenRGBDevice(i, devices[i]);
-                        helper.ProcessMappings(usePeriphLogo);
-                        _devices.Add(helper);
-                    }
+                    if (directMode == null) continue;
+                    _openRgb.SetMode(i, device.Modes.FindIndex(mode => mode ==directMode));
+                    var helper = new HelperOpenRGBDevice(i, device);
+                    helper.ProcessMappings(usePeriphLogo);
+                    _devices.Add(helper);
                 }
             }
             catch (Exception e)
@@ -88,18 +85,41 @@ namespace Aurora.Devices.OpenRGB
             IsInitialized = false;
         }
 
-        public override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
             foreach (var device in _devices)
             {
-                for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+                var calibrationName = $"{DeviceName}_{device.OrgbDevice.Serial.Trim()}_cal";
+                if (Global.Configuration.VarRegistry.GetRegisteredVariableKeys().Contains(calibrationName))
                 {
-                    if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
+                    var calibration =
+                        Global.Configuration.VarRegistry.GetVariable<RealColor>(calibrationName).GetDrawingColor();
+                    for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
                     {
-                        device.Colors[ledIndex] = new OpenRGBColor(keyColor.R, keyColor.G, keyColor.B);
+                        if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
+                        {
+                            device.Colors[ledIndex] = new OpenRGBColor(
+                                (byte) (keyColor.R * calibration.R/255), 
+                                (byte) (keyColor.G * calibration.G/255),  
+                                (byte) (keyColor.B * calibration.B/255)
+                                );
+                        }
+                    }
+                }
+                else
+                {
+                    for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+                    {
+                        if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
+                        {
+                            var deviceKey = device.Colors[ledIndex];
+                            deviceKey.R = keyColor.R;
+                            deviceKey.G = keyColor.G;
+                            deviceKey.B = keyColor.B;
+                        }
                     }
                 }
 
@@ -126,7 +146,6 @@ namespace Aurora.Devices.OpenRGB
             variableRegistry.Register($"{DeviceName}_sleep", 0, "Sleep for", 1000, 0);
             variableRegistry.Register($"{DeviceName}_ip", "127.0.0.1", "IP Address");
             variableRegistry.Register($"{DeviceName}_port", 6742, "Port", 1024, 65535);
-            variableRegistry.Register($"{DeviceName}_ignore_direct", false, "Ignore Direct mode");
             variableRegistry.Register($"{DeviceName}_use_periph_logo", true, "Use peripheral logo for unknown leds");
         }
     }
@@ -184,7 +203,7 @@ namespace Aurora.Devices.OpenRGB
                         else
                         {
                             //TODO - scale zones with more than 32 LEDs
-                            if (zoneLedIndex < 32)
+                            if (zoneLedIndex < 60)
                             {
                                 Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRGBKeyNames.AdditionalLights[zoneLedIndex];
                             }

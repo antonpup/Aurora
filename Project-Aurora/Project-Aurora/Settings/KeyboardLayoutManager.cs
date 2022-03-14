@@ -480,11 +480,11 @@ namespace Aurora.Settings
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                LoadBrand(Global.Configuration.KeyboardBrand, Global.Configuration.MousePreference, Global.Configuration.MouseOrientation);
+                LoadBrand(Global.Configuration.KeyboardBrand, Global.Configuration.MousePreference, Global.Configuration.MousepadPreference, Global.Configuration.MouseOrientation);
             });
         }
 
-        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
+        public void LoadBrand(PreferredKeyboard keyboard_preference = PreferredKeyboard.None, PreferredMouse mouse_preference = PreferredMouse.None, PreferredMousepad mousepad_preference = PreferredMousepad.None, MouseOrientationType mouse_orientation = MouseOrientationType.RightHanded)
         {
 #if !DEBUG
             try
@@ -702,6 +702,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g513.json");
             else if (keyboard_preference == PreferredKeyboard.Logitech_G213)
                 layoutConfigPath = Path.Combine(layoutsPath, "logitech_g213.json");
+            else if (keyboard_preference == PreferredKeyboard.Logitech_G915)
+                layoutConfigPath = Path.Combine(layoutsPath, "logitech_g915.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k95.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K95_PL)
@@ -862,15 +864,29 @@ namespace Aurora.Settings
                     }
                 }
 
+                string mousepad_feature_path = "";
+                switch (mousepad_preference)
+                {
+                    case PreferredMousepad.Generic_Mousepad:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
+                        break;
+                    case PreferredMousepad.SteelSeries_QcK_Prism:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
+                        break;
+                    case PreferredMousepad.SteelSeries_QcK_2_Zone:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
+                        break;
+                    case PreferredMousepad.Bloody_MP50RS:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "bloody_mp-50rs.json");
+                        break;
+                }
+
                 string mouse_feature_path = "";
 
                 switch (mouse_preference)
                 {
                     case PreferredMouse.Generic_Peripheral:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
-                        break;
-                    case PreferredMouse.Generic_Mousepad:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
                         break;
                     case PreferredMouse.Logitech_G900:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
@@ -899,14 +915,11 @@ namespace Aurora.Settings
                     case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json");
                         break;
-                    case PreferredMouse.SteelSeries_QcK_Prism:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_QcK_2_Zone:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_2zone_features.json");
-                        break;
                     case PreferredMouse.Asus_Pugio:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
+                        break;
+                    case PreferredMouse.Bloody_W60:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "bloody_w60_features.json");
                         break;
                     case PreferredMouse.OMEN_Photon:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");
@@ -960,7 +973,42 @@ namespace Aurora.Settings
                     virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
                 }
 
-            }
+                    if (!string.IsNullOrWhiteSpace(mousepad_feature_path))
+                    {
+                        string feature_content = File.ReadAllText(mousepad_feature_path, Encoding.UTF8);
+                        VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+
+                        if (mouse_orientation == MouseOrientationType.LeftHanded)
+                        {
+                            if (featureConfig.origin_region == KeyboardRegion.TopRight)
+                                featureConfig.origin_region = KeyboardRegion.TopLeft;
+                            else if (featureConfig.origin_region == KeyboardRegion.BottomRight)
+                                featureConfig.origin_region = KeyboardRegion.BottomLeft;
+
+                            double outlineWidth = 0.0;
+                            int outlineWidthBits = 0;
+
+                            foreach (var key in featureConfig.grouped_keys)
+                            {
+                                if (outlineWidth == 0.0 && outlineWidthBits == 0) //We found outline (NOTE: Outline has to be first in the grouped keys)
+                                {
+                                    if (key.tag == DeviceKeys.NONE)
+                                    {
+                                        outlineWidth = key.width.Value + 2 * key.margin_left.Value;
+                                        //outlineWidthBits = key.width_bits.Value + 2 * key.margin_left_bits.Value;
+                                    }
+                                }
+
+                                key.margin_left -= outlineWidth;
+                                //key.margin_left_bits -= outlineWidthBits;
+                            }
+
+                        }
+
+                        virtualKeyboardGroup.AddFeature(featureConfig.grouped_keys.ToArray(), featureConfig.origin_region);
+                    }
+
+                }
 #if !DEBUG
             }
             catch (Exception e)
@@ -1087,15 +1135,30 @@ namespace Aurora.Settings
             return PixelToByte((double)pixel);
         }
 
+        private static Func<double, int> _pixelToByte = delegate (double pixel) { return defaultPixelToByte(pixel); };
+
+        private static int defaultPixelToByte(double pixel)
+        { return (int)Math.Round(pixel / (double)(Global.Configuration.BitmapAccuracy)); }
+
+        private static int bestPixelToByte(double pixel)
+        { return (int)Math.Round(pixel); }
+
         public static int PixelToByte(double pixel)
         {
-            return (int)Math.Round(pixel / (double)(Global.Configuration.BitmapAccuracy));
+            return _pixelToByte(pixel);
         }
 
         private void Configuration_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(Configuration.BitmapAccuracy)))
             {
+                if(Global.Configuration.BitmapAccuracy == BitmapAccuracy.Best)
+                {
+                    _pixelToByte = delegate (double pixel) { return bestPixelToByte(pixel); };
+                }else
+                {
+                    _pixelToByte = delegate (double pixel) { return defaultPixelToByte(pixel); };
+                }
                 Global.LightingStateManager.PostUpdate += this.LightingStateManager_PostUpdate;
             }
         }

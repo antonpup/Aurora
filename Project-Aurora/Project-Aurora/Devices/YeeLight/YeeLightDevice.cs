@@ -14,16 +14,24 @@ using YeeLightAPI.YeeLightDeviceLocator;
 using YeeLightAPI.YeeLightConstants;
 using YeeLightAPI.YeeLightExceptions;
 using YeeLightAPI;
+using static YeeLightAPI.YeeLightExceptions.Exceptions;
 
 namespace Aurora.Devices.YeeLight
 {
     public class YeeLightDevice : DefaultDevice
     {
+        private static readonly object syncLock = new object();
+
         public override string DeviceName => "YeeLight";
 
         private const int lightListenPort = 55443;
         private readonly Stopwatch updateDelayStopWatch = new Stopwatch();
         private List<YeeLightAPI.YeeLightDevice> lights = new List<YeeLightAPI.YeeLightDevice>();
+
+        protected override string DeviceInfo => String.Join(
+            ", ",
+            lights.Select(light => light.GetLightIPAddressAndPort().ipAddress + ":" + light.GetLightIPAddressAndPort().port + "w:" + whiteCounter + (light.IsMusicMode() ? "(m)" : ""))
+        );
 
         public override bool Initialize()
         {
@@ -69,6 +77,7 @@ namespace Aurora.Devices.YeeLight
                         }
                     }
 
+                    updateDelayStopWatch.Start();
                     IsInitialized = lights.All(x => x.IsConnected());
                 }
                 catch (Exception exc)
@@ -100,28 +109,40 @@ namespace Aurora.Devices.YeeLight
             }
         }
 
-        public override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        private Color previousColor = Color.Empty;
+        private int whiteCounter = 10;
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            // Reduce sending based on user config
-            if (!updateDelayStopWatch.IsRunning)
+            try
             {
-                updateDelayStopWatch.Start();
+                return TryUpdate(keyColors);
+            }catch(Exception excp)
+            {
+                Reset();
+                return TryUpdate(keyColors);
             }
+            return false;
+        }
 
-            if (updateDelayStopWatch.ElapsedMilliseconds <= Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"))
+        private bool TryUpdate(Dictionary<DeviceKeys, Color> keyColors)
+        {
+            var sendDelay = Math.Max(5, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"));
+            if (updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
                 return false;
 
             var targetKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             if (!keyColors.TryGetValue(targetKey, out var targetColor))
                 return false;
+            if (previousColor.Equals(targetColor))
+                return ProceedSameColor(targetColor);
+            previousColor = targetColor;
 
-            if ((targetColor.R + targetColor.G + targetColor.B) > 0)
+            if (isWhiteTone(targetColor))
             {
-                lights.ForEach(x => x.SetColor(targetColor.R, targetColor.G, targetColor.B));
-                updateDelayStopWatch.Restart();
+                return ProceedDifferentWhiteColor(targetColor);
             }
-
-            return true;
+            whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
+            return ProceedColor(targetColor);
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
@@ -132,6 +153,95 @@ namespace Aurora.Devices.YeeLight
             variableRegistry.Register($"{DeviceName}_send_delay", 35, "Send delay (ms)");
             variableRegistry.Register($"{DeviceName}_IP", "", "YeeLight IP(s)", null, null, "Comma separated IPv4 or IPv6 addresses.");
             variableRegistry.Register($"{DeviceName}_auto_discovery", false, "Auto-discovery", null, null, "Enable this and empty out the IP field to auto-discover lights.");
+            variableRegistry.Register($"{DeviceName}_white_delay", 10, "White mode delay(ticks)", null, null, "How many ticks should happen before white mode is activated.");
+        }
+
+        private bool ProceedSameColor(Color targetColor)
+        {
+            if (isWhiteTone(targetColor))
+            {
+                return ProceedWhiteColor(targetColor);
+            }
+
+            if (ShouldSendKeepAlive())
+            {
+                return ProceedColor(targetColor);
+            }
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private bool ProceedWhiteColor(Color targetColor)
+        {
+            if (whiteCounter == 0)
+            {
+                if (ShouldSendKeepAlive())
+                {
+                    lights.ForEach(x =>
+                    {
+                        x.SetTemperature(6500);
+                        x.SetBrightness(targetColor.R * 100 / 255);
+                    });
+                }
+                updateDelayStopWatch.Restart();
+                return true;
+            }
+            if (whiteCounter == 1)
+            {
+                lights.ForEach(x =>
+                {
+                    x.SetTemperature(6500);
+                    x.SetBrightness(targetColor.R * 100 / 255);
+                });
+            }
+            whiteCounter--;
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private bool ProceedDifferentWhiteColor(Color targetColor)
+        {
+            if (whiteCounter > 0)
+            {
+                whiteCounter--;
+                return ProceedColor(targetColor);
+            }
+            lights.ForEach(x =>
+            {
+                x.SetTemperature(6500);
+                x.SetBrightness(targetColor.R * 100 / 255);
+            });
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private bool ProceedColor(Color targetColor)
+        {
+            lights.ForEach(x =>
+            {
+                x.SetColor(targetColor.R, targetColor.G, targetColor.B);
+                x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, Math.Max(targetColor.B, (short)1))) * 100 / 255);
+            });
+            updateDelayStopWatch.Restart();
+            return true;
+        }
+
+        private const int KeepAliveCounter = 500;
+        private int _keepAlive = KeepAliveCounter;
+        private bool ShouldSendKeepAlive()
+        {
+            if (_keepAlive-- == 0)
+            {
+                _keepAlive = KeepAliveCounter;
+                return true;
+            }
+
+            return false;
+        }
+
+            private bool isWhiteTone(Color color)
+        {
+            return color.R == color.G && color.G == color.B;
         }
 
         private void ConnectNewDevice(IPAddress lightIP)

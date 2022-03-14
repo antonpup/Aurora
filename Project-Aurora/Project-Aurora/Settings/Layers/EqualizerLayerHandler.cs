@@ -152,14 +152,18 @@ namespace Aurora.Settings.Layers
     {
         public event NewLayerRendered NewLayerRender = delegate { };
 
-        private AudioDeviceProxy deviceProxy;
-        private AudioDeviceProxy DeviceProxy {
+        private AudioDeviceProxy _deviceProxy;
+        private int _channels;
+        private int _bufferIncrement;
+        private AudioDeviceProxy DeviceProxy {  //_deviceProxy.WaveIn.WaveFormat is a very expensive line
             get {
-                if (deviceProxy == null) {
-                    deviceProxy = new AudioDeviceProxy(DataFlow.Render);
-                    deviceProxy.WaveInDataAvailable += OnDataAvailable;
+                if (_deviceProxy == null) {
+                    _deviceProxy = new AudioDeviceProxy(DataFlow.Render);
+                    _channels = _deviceProxy.WaveIn.WaveFormat.Channels;
+                    _bufferIncrement = _deviceProxy.WaveIn.WaveFormat.BlockAlign;
+                    _deviceProxy.WaveInDataAvailable += OnDataAvailable;
                 }
-                return deviceProxy;
+                return _deviceProxy;
             }
         }
 
@@ -184,7 +188,7 @@ namespace Aurora.Settings.Layers
             _ffts = new Complex[fftLength];
             _ffts_prev = new Complex[fftLength];
 
-            sampleAggregator.FftCalculated += new EventHandler<FftEventArgs>(FftCalculated);
+            sampleAggregator.FftCalculated += FftCalculated;
             sampleAggregator.PerformFFT = true;
         }
 
@@ -192,7 +196,6 @@ namespace Aurora.Settings.Layers
         {
             return new Control_EqualizerLayer(this);
         }
-
         public override EffectLayer Render(IGameState gamestate)
         {
             try
@@ -217,7 +220,7 @@ namespace Aurora.Settings.Layers
 
                 EffectLayer equalizer_layer = new EffectLayer();
 
-                if (deviceProxy is null)
+                if (_deviceProxy is null)
                     return equalizer_layer;
 
                 // Update device ID. If it has changed, it will re-assign itself to the new device
@@ -378,12 +381,11 @@ namespace Aurora.Settings.Layers
             {
                 byte[] buffer = e.Buffer;
                 int bytesRecorded = e.BytesRecorded;
-                int bufferIncrement = DeviceProxy.WaveIn.WaveFormat.BlockAlign;
 
                 // 4 bytes per channel, bufferIncrement is numChannels * 4
-                for (int index = 0; index < bytesRecorded; index += bufferIncrement) // Loop over the bytes, respecting the channel grouping
+                for (int index = 0; index < bytesRecorded; index += _bufferIncrement) // Loop over the bytes, respecting the channel grouping
                 {
-                    if (DeviceProxy.WaveIn.WaveFormat.Channels == 2)
+                    if (_channels == 2)
                         // If recording has two channels, take the largest value and add that to the sampleAggregator.
                         sampleAggregator.Add(Math.Max(BitConverter.ToSingle(buffer, index), BitConverter.ToSingle(buffer, index + 4)));
                     else
@@ -398,8 +400,9 @@ namespace Aurora.Settings.Layers
             // Do something with e.result!
             //Global.logger.LogLine($"{e.Result.ToString()}");
 
-            _ffts_prev = new List<Complex>(_ffts).ToArray();
-            _ffts = new List<Complex>(e.Result).ToArray();
+            _ffts_prev = _ffts;
+            _ffts = 
+                _ffts = new List<Complex>(e.Result).ToArray();;
         }
 
         private int freqToBin(float freq)
@@ -444,8 +447,8 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            deviceProxy?.Dispose();
-            deviceProxy = null;
+            _deviceProxy?.Dispose();
+            _deviceProxy = null;
         }
     }
 

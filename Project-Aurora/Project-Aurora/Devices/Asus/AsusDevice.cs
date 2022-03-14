@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Win32;
 
 namespace Aurora.Devices.Asus
@@ -11,6 +13,13 @@ namespace Aurora.Devices.Asus
         public const string deviceName = "Asus";
         private AsusHandler asusHandler = new AsusHandler();
         private bool isActive = false;
+
+        private readonly Stopwatch watch = new Stopwatch();
+        private long lastUpdateTime;
+        private long updateTime;
+        public string DeviceUpdatePerformance => IsInitialized
+            ? lastUpdateTime + "(" + updateTime + ")" + " ms"
+            : "";
 
         private VariableRegistry defaultRegistry = null;
         /// <inheritdoc />
@@ -23,6 +32,7 @@ namespace Aurora.Devices.Asus
                 defaultRegistry = new VariableRegistry();
                 defaultRegistry.Register($"{DeviceName}_enable_unsupported_version", false, "Enable Unsupported Asus SDK Version");
                 defaultRegistry.Register($"{DeviceName}_force_initialize", false, "Force initialization");
+                defaultRegistry.Register($"{DeviceName}_color_cal", new RealColor(Color.FromArgb(255, 255, 255, 255)), "Color Calibration");
                 return defaultRegistry;
             }
         }
@@ -37,7 +47,7 @@ namespace Aurora.Devices.Asus
         {
             if (!isActive)
                 return "Not Initialized";
-            
+
             if (asusHandler.DeviceCount == 0)
                 return "Initialized: No devices connected";
 
@@ -45,13 +55,10 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        public string DeviceUpdatePerformance => "";
-
-        /// <inheritdoc />
         public bool Initialize()
         {
             asusHandler?.Stop();
-            
+
             asusHandler = new AsusHandler(
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
@@ -63,7 +70,7 @@ namespace Aurora.Devices.Asus
         public void Shutdown()
         {
             if (!isActive) return;
-            
+
             asusHandler.Stop();
             isActive = false;
         }
@@ -80,7 +87,7 @@ namespace Aurora.Devices.Asus
         {
             Shutdown();
             Initialize();
-            
+
             return isActive;
         }
 
@@ -103,18 +110,19 @@ namespace Aurora.Devices.Asus
         }
 
         /// <inheritdoc />
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        Stopwatch _tempStopWatch = new Stopwatch();
+        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            asusHandler.UpdateColors(keyColors);
+            _tempStopWatch.Restart();
+
+            asusHandler.UpdateColors(colorComposition.keyColors);
+
+            lastUpdateTime = watch.ElapsedMilliseconds;
+            updateTime = _tempStopWatch.ElapsedMilliseconds;
+            watch.Restart();
+
             return true;
         }
 
-        /// <inheritdoc />
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            asusHandler.UpdateColors(colorComposition.keyColors);
-            return true;
-        }
-        
     }
 }

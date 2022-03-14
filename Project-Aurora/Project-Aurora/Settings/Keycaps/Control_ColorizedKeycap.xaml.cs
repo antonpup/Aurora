@@ -23,7 +23,7 @@ namespace Aurora.Settings.Keycaps
     /// </summary>
     public partial class Control_ColorizedKeycap : UserControl, IKeycap
     {
-        private Color? current_color = null;
+        private Color current_color;
         private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
         private bool isImage = false;
 

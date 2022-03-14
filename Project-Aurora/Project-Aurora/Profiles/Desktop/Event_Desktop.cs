@@ -23,14 +23,17 @@ namespace Aurora.Profiles.Desktop
 
         public override void UpdateLights(EffectFrame frame)
         {
-            var layers = new Queue<EffectLayer>(Application.Profile.Layers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
-            
+            var layers = new Queue<EffectLayer>(
+                Application.Profile.Layers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state))
+            );
+
             //Scripts before interactive and shortcut assistant layers
             //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);
 
             if (Global.Configuration.TimeBasedDimmingEnabled)
             {
-                if (Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingEndHour)) {
+                if (Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingEndHour))
+                {
                     layers.Clear();
 
                     EffectLayer time_based_dim_layer = new EffectLayer("Time Based Dim");
@@ -45,7 +48,7 @@ namespace Aurora.Profiles.Desktop
 
         public override void SetGameState(IGameState new_game_state)
         {
-            
+
         }
 
         public new bool IsEnabled

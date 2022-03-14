@@ -14,6 +14,7 @@ namespace Aurora.Devices
     {
         private readonly Stopwatch watch = new Stopwatch();
         private long lastUpdateTime;
+        private long updateTime;
 
         public abstract string DeviceName { get; }
 
@@ -24,7 +25,7 @@ namespace Aurora.Devices
             : "Not Initialized";
 
         public string DeviceUpdatePerformance => IsInitialized
-            ? lastUpdateTime + " ms"
+            ? lastUpdateTime + "(" + updateTime + ")" + " ms"
             : "";
 
         public virtual bool IsInitialized { get; protected set; }
@@ -38,16 +39,20 @@ namespace Aurora.Devices
             Initialize();
         }
 
-        public abstract bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
+        protected abstract bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
 
+        Stopwatch _tempStopWatch = new Stopwatch();
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
-            watch.Restart();
-
+            _tempStopWatch.Restart();
             bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
 
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
+            if (update_result)
+            {
+                lastUpdateTime = watch.ElapsedMilliseconds;
+                updateTime = _tempStopWatch.ElapsedMilliseconds;
+                watch.Restart();
+            }
 
             return update_result;
         }
