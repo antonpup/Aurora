@@ -1,5 +1,4 @@
 ﻿using Aurora.EffectsEngine;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Aurora.Devices;
@@ -198,7 +197,6 @@ namespace Aurora
 
         private void FpsDebugTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("fps = " + pushedframes);
             pushedframes = 0;
         }
 
@@ -219,22 +217,10 @@ namespace Aurora
 
             if (currentsecond >= nextsecond)
             {
-                System.Diagnostics.Debug.WriteLine("fps = " + (double)renderedframes / ((double)(currentsecond - (nextsecond - 1000L)) / 1000D));
-
                 nextsecond = currentsecond + 1000L;
                 renderedframes = 0;
             }
 
-        }
-
-        public void ToggleRecord()
-        {
-            isrecording = !isrecording;
-
-            if (isrecording)
-                recordTimer.Start();
-            else
-                recordTimer.Stop();
         }
 
         public void ForceImageRender(Bitmap forcedframe)
@@ -356,34 +342,6 @@ namespace Aurora
         public Dictionary<DeviceKeys, Color> GetKeyboardLights()
         {
             return Effects.keyColors;
-        }
-
-        [System.Runtime.InteropServices.DllImport("msvcrt.dll")]
-        private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
-
-        public static bool CompareMemCmp(Bitmap b1, Bitmap b2)
-        {
-            if ((b1 == null) != (b2 == null)) return false;
-            if (b1.Size != b2.Size) return false;
-
-            var bd1 = b1.LockBits(new Rectangle(new Point(0, 0), b1.Size), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            var bd2 = b2.LockBits(new Rectangle(new Point(0, 0), b2.Size), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            try
-            {
-                IntPtr bd1scan0 = bd1.Scan0;
-                IntPtr bd2scan0 = bd2.Scan0;
-
-                int stride = bd1.Stride;
-                int len = stride * b1.Height;
-
-                return memcmp(bd1scan0, bd2scan0, len) == 0;
-            }
-            finally
-            {
-                b1.UnlockBits(bd1);
-                b2.UnlockBits(bd2);
-            }
         }
     }
 }

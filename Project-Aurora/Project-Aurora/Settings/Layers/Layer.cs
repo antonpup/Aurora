@@ -86,7 +86,7 @@ namespace Aurora.Settings.Layers
         }
 
         public void SetGameState(IGameState new_game_state) => Handler.SetGameState(new_game_state);
-        public void Dispose() => Handler.Dispose();
+        public void Dispose() => Handler?.Dispose();
     }
 
     /// <summary>
