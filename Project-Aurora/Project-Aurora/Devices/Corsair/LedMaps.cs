@@ -149,6 +149,7 @@ namespace Aurora.Devices.Corsair
             //[DeviceKeys.M1] = CorsairLedId.K_M1,
             //[DeviceKeys.M2] = CorsairLedId.K_M2,
             //[DeviceKeys.M3] = CorsairLedId.K_M3,
+            [DeviceKeys.LOGO] = CorsairLedId.K_Logo,
             [DeviceKeys.G11] = CorsairLedId.K_G11,
             [DeviceKeys.G12] = CorsairLedId.K_G12,
             [DeviceKeys.G13] = CorsairLedId.K_G13,

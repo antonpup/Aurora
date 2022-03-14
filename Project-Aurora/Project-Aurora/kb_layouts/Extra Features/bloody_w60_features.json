@@ -1,0 +1,153 @@
+{
+	"group_tag": "mouse",
+	"origin_region": 4,
+	"grouped_keys": [
+		{
+			"tag": -1,
+			"margin_left": 0.0,
+			"margin_top": -232.0,
+			"width": 150.0,
+			"height": 210.0,
+			"margin_left_bits": 1,
+			"margin_top_bits": -19,
+			"width_bits": 13,
+			"height_bits": 19,
+			"image": "Bloody_W60_outline.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Scroll Wheel",
+			"tag": 161,
+			"margin_left": 81.0,
+			"margin_top": -204.0,
+			"width": 4.0,
+			"height": 20.0,
+			"image": "bloody_w60_Scroll_Led.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Peripheral Logo",
+			"tag": 160,
+			"margin_left": 61.0,
+			"margin_top": -85.0,
+			"width": 38.0,
+			"height": 39.0,
+			"image": "Bloody_Logo.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Left Side 1",
+			"tag": 217,
+			"margin_left": 19.0,
+			"margin_top": -146.0,
+			"width": 15.0,
+			"height": 40.0,
+			"image": "bloody_w60_ls_1.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Left Side 2",
+			"tag": 218,
+			"margin_left": 28.0,
+			"margin_top": -117.0,
+			"width": 10.0,
+			"height": 30.0,
+			"image": "bloody_w60_ls_2.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Left Side 3",
+			"tag": 219,
+			"margin_left": 37.0,
+			"margin_top": -114.0,
+			"width": 8.0,
+			"height": 23.0,
+			"margin_left_bits": 1,
+			"image": "bloody_w60_ls_3.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Mid 1",
+			"tag": 220,
+			"margin_left": 46.0,
+			"margin_top": -118.0,
+			"width": 40.0,
+			"height": 16.0,
+			"image": "bloody_w60_ms_1.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Mid 2",
+			"tag": 221,
+			"margin_left": 65.0,
+			"margin_top": -128.0,
+			"width": 50.0,
+			"height": 12.0,
+			"image": "bloody_w60_ms_2.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Mid 3",
+			"tag": 222,
+			"margin_left": 96.0,
+			"margin_top": -139.0,
+			"width": 40.0,
+			"height": 14.0,
+			"image": "bloody_w60_ms_3.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Bottom 1",
+			"tag": 223,
+			"margin_left": 7.0,
+			"margin_top": -80.0,
+			"width": 38.0,
+			"height": 50.0,
+			"image": "bloody_w60_bl_1.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Bottom 2",
+			"tag": 229,
+			"margin_left": 38.0,
+			"margin_top": -37.0,
+			"width": 36.0,
+			"height": 18.0,
+			"image": "bloody_w60_bl_2.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Bottom 3",
+			"tag": 230,
+			"margin_left": 70.0,
+			"margin_top": -38.0,
+			"width": 36.0,
+			"height": 19.0,
+			"image": "bloody_w60_bl_3.png",
+			"enabled": true,
+			"absolute_location": true
+		},
+		{
+			"visualName": "Bottom 4",
+			"tag": 231,
+			"margin_left": 106.0,
+			"margin_top": -86.0,
+			"width": 22.0,
+			"height": 58.0,
+			"image": "bloody_w60_bl_4.png",
+			"enabled": true,
+			"absolute_location": true
+		}
+	]
+}

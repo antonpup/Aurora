@@ -173,7 +173,7 @@ namespace Aurora.Settings.Layers
 
                 // Draw the animation to a temporary canvas
                 using (Graphics g = temp.GetGraphics())
-                    Properties.AnimationMix.Draw(g, anim.currentTime, 1f, offset);
+                    Properties.AnimationMix.Draw(g, anim.currentTime, offset);
                 
                 // Draw from this temp canvas to the actual layer, performing the scale down if it's needed.
                 using (Graphics g = animationLayer.GetGraphics())

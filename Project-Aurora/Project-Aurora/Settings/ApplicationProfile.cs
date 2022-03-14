@@ -1,14 +1,10 @@
-using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Aurora.Utils;
-using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace Aurora.Settings
 {
@@ -62,13 +58,24 @@ namespace Aurora.Settings
                 l.SetProfile(app);
         }
 
-        public virtual void Dispose()
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        protected virtual void Dispose(bool disposing)
         {
             foreach (Layer l in Layers)
                 l.Dispose();
 
             foreach (Layer l in OverlayLayers)
                 l.Dispose();
+        }
+
+        ~ApplicationProfile()
+        {
+            Dispose(false);
         }
     }
 }

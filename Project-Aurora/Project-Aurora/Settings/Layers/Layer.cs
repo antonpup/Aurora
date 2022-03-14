@@ -7,6 +7,7 @@ using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Controls;
 
@@ -57,14 +58,17 @@ namespace Aurora.Settings.Layers
         }
 
         public EffectLayer Render(IGameState gs) {
+            Stopwatch timer = Stopwatch.StartNew();
             if (OverrideLogic != null) {
                 // For every property which has an override logic assigned
                 foreach (var kvp in OverrideLogic)
                     // Set the value of the logic evaluation as the override for this property
                     ((IValueOverridable)Handler.Properties).SetOverride(kvp.Key, kvp.Value.Evaluate(gs));
             }
-            
-            return ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : new EffectLayer();
+
+            EffectLayer effectLayer = ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : new EffectLayer();
+            timer.Stop();
+            return effectLayer;
         }
 
         public void SetProfile(Application profile) {
@@ -82,7 +86,7 @@ namespace Aurora.Settings.Layers
         }
 
         public void SetGameState(IGameState new_game_state) => Handler.SetGameState(new_game_state);
-        public void Dispose() => Handler.Dispose();
+        public void Dispose() => Handler?.Dispose();
     }
 
     /// <summary>

@@ -241,7 +241,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             Dispatcher.Invoke(() =>
             {
-                item_slot6_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                item_slot7_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
                 if (resulting_keys.Length > 0)
                 {
@@ -266,14 +266,14 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             Dispatcher.Invoke(() =>
             {
-                item_slot6_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                item_slot8_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
                         (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[7] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.item_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 7);
+                    UIUtils.SetSingleKey(this.item_slot8_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 7);
                 }
             });
 
@@ -291,14 +291,14 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             Dispatcher.Invoke(() =>
             {
-                item_slot6_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+                item_slot9_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
                         (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[8] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.item_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 8);
+                    UIUtils.SetSingleKey(this.item_slot9_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 8);
                 }
             });
 

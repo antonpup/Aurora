@@ -16,13 +16,13 @@ namespace Aurora.Devices
 {
     public class DeviceContainer
     {
-        public IDevice Device { get; set; }
+        public IDevice Device { get; }
 
-        private SmartThreadPool Worker = new SmartThreadPool(1000, 1, 1);
+        private SmartThreadPool Worker = new SmartThreadPool(1000, 1);
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
-        public readonly object actionLock = new object();
+        public readonly object actionLock = new();
         private readonly Action _updateAction;
 
         public DeviceContainer(IDevice device)
@@ -55,8 +55,8 @@ namespace Aurora.Devices
 
     public class DeviceManager
     {
-        private const int RETRY_INTERVAL = 10000;
-        private const int RETRY_ATTEMPTS = 5;
+        private const int RETRY_INTERVAL = 2000;
+        private const int RETRY_ATTEMPTS = 6;
         private bool _InitializeOnceAllowed;
         private bool suspended;
         private bool resumed;
@@ -240,8 +240,7 @@ namespace Aurora.Devices
                 {
                     if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                         continue;
-
-                    lock(dc.actionLock)
+                    lock (dc.actionLock)
                         dc.Device.Initialize();
                 }
                 RetryAttempts--;
@@ -296,7 +295,9 @@ namespace Aurora.Devices
             foreach (var dc in InitializedDeviceContainers)
             {
                 lock (dc.actionLock)
+                {
                     dc.Device.Shutdown();
+                }
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
         }
@@ -306,7 +307,9 @@ namespace Aurora.Devices
             foreach (var dc in InitializedDeviceContainers)
             {
                 lock (dc.actionLock)
+                {
                     dc.Device.Reset();
+                }
             }
         }
 
@@ -314,8 +317,7 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.actionLock)
-                    dc.UpdateDevice(composition, forced);
+                dc.UpdateDevice(composition, forced);
             }
         }
 

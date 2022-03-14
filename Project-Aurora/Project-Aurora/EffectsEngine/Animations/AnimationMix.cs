@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -7,25 +8,20 @@ namespace Aurora.EffectsEngine.Animations
     public class AnimationMix
     {
         [Newtonsoft.Json.JsonProperty]
-        private Dictionary<string, AnimationTrack> _tracks;
+        private readonly ConcurrentDictionary<string, AnimationTrack> _tracks = new ConcurrentDictionary<string, AnimationTrack>();
 
         /// <summary>
         /// When true, will remove Animation tracks that no longer have any animations.
         /// </summary>
         [Newtonsoft.Json.JsonProperty]
-        private bool _automatically_remove_complete;
+        private bool _automatically_remove_complete = false;
 
         public AnimationMix()
         {
-            _tracks = new Dictionary<string, AnimationTrack>();
-            _automatically_remove_complete = false;
         }
 
         public AnimationMix(AnimationTrack[] tracks)
         {
-            _tracks = new Dictionary<string, AnimationTrack>();
-            _automatically_remove_complete = false;
-
             foreach (var track in tracks)
                 AddTrack(track);
         }
@@ -44,26 +40,15 @@ namespace Aurora.EffectsEngine.Animations
                 if (_tracks.ContainsKey(track.GetName()))
                     _tracks[track.GetName()] = track;
                 else
-                    _tracks.Add(track.GetName(), track);
+                    _tracks.TryAdd(track.GetName(), track);
             }
-
-            return this;
-        }
-
-        public AnimationMix AddTrack(string track_name, AnimationTrack track)
-        {
-            if (_tracks.ContainsKey(track_name))
-                _tracks[track_name] = track;
-            else
-                _tracks.Add(track_name, track);
 
             return this;
         }
 
         public AnimationMix RemoveTrack(string track_name)
         {
-            if (_tracks.ContainsKey(track_name))
-                _tracks.Remove(track_name);
+            _tracks.TryRemove(track_name, out _);
 
             return this;
         }
@@ -83,11 +68,10 @@ namespace Aurora.EffectsEngine.Animations
 
         public float GetDuration()
         {
-            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
 
             float current_duration, return_val = 0.0f;
             
-            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
             {
                 current_duration = track.Value.GetShift() + track.Value.AnimationDuration;
                 if (current_duration > return_val)
@@ -97,50 +81,52 @@ namespace Aurora.EffectsEngine.Animations
             return return_val;
         }
 
-        public Dictionary<string, AnimationTrack> GetTracks()
+        public void SetScale(float scale)
         {
-            return new Dictionary<string, AnimationTrack>(_tracks);
+            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
+            {
+                track.Value.SetScale(scale);
+            }
+        }
+
+        public ConcurrentDictionary<string, AnimationTrack> GetTracks()
+        {
+            return _tracks;
         }
 
         public bool AnyActiveTracksAt(float time)
         {
-            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
-
-            bool return_val = false;
-
-            foreach (KeyValuePair<string, AnimationTrack> track in _local)
+            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
             {
                 if (track.Value.ContainsAnimationAt(time))
-                    return_val = true;
+                    return true;
             }
 
-            return return_val;
+            return false;
         }
 
-        public void Draw(Graphics g, float time, float scale = 1.0f, PointF offset = default(PointF))
+        public void Draw(Graphics g, float time, PointF offset = default(PointF))
         {
-            Dictionary<string, AnimationTrack> _local = new Dictionary<string, AnimationTrack>(_tracks);
-
-            foreach (KeyValuePair<string, AnimationTrack> track in _local)
-            {
-                if (track.Value.ContainsAnimationAt(time))
-                {
-                    try
-                    {
-                        track.Value.GetFrame(time).Draw(g, scale, offset);
-                    }
-                    catch (Exception exc)
-                    {
-                        System.Console.WriteLine();
-                    }
-
-                }
-                else
-                {
-                    if (_automatically_remove_complete)
-                        RemoveTrack(track.Key);
-                }
-            }
+             foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
+             {
+                 if (track.Value.ContainsAnimationAt(time))
+                 {
+                     try
+                     {
+                        var frame = track.Value.GetFrame(time);
+                        frame.SetOffset(offset);
+                        frame.Draw(g);
+                     }
+                     catch (Exception exc)
+                     {
+                         System.Console.WriteLine("Animation mix draw error: " + exc.Message);
+                     }
+                 }
+                 else if(_automatically_remove_complete)
+                 {
+                     RemoveTrack(track.Key);
+                 }
+             }
         }
 
         public AnimationMix Clear()

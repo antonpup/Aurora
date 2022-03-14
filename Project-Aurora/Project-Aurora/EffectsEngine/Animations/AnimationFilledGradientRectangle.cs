@@ -15,12 +15,17 @@ namespace Aurora.EffectsEngine.Animations
         {
         }
 
-        public AnimationFilledGradientRectangle(RectangleF dimension, EffectBrush brush, float duration = 0.0f) : base(dimension, Color.Transparent, duration)
+        public AnimationFilledGradientRectangle(AnimationFilledGradientRectangle animationFilledGradientRectangle) : base(animationFilledGradientRectangle)
         {
-            _gradientBrush = brush;
+            _gradientBrush = animationFilledGradientRectangle.GradientBrush;
         }
 
-        public AnimationFilledGradientRectangle(PointF center, float rect_width, float rect_height, EffectBrush brush, float duration = 0.0f) : base(center, rect_width, rect_height, Color.Transparent, duration)
+        public AnimationFilledGradientRectangle(AnimationFrame animationFrame, EffectBrush effectBrush) : base(animationFrame)
+        {
+            _gradientBrush = effectBrush;
+        }
+
+        public AnimationFilledGradientRectangle(RectangleF dimension, EffectBrush brush, float duration = 0.0f) : base(dimension, Color.Transparent, duration)
         {
             _gradientBrush = brush;
         }
@@ -30,24 +35,11 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush = brush;
         }
 
-        public override void Draw(Graphics g, float scale = 1.0f, PointF offset = default(PointF))
+        public override void Draw(Graphics g)
         {
-            RectangleF _scaledDimension = new RectangleF(_dimension.X * scale, _dimension.Y * scale, _dimension.Width * scale, _dimension.Height * scale);
-            _scaledDimension.Offset(offset);
-
-            PointF rotatePoint = new PointF(_scaledDimension.X, _scaledDimension.Y);
-
-            EffectBrush _newbrush = new EffectBrush(_gradientBrush);
-            _newbrush.start = new PointF(_newbrush.start.X * scale, _newbrush.start.Y * scale);
-            _newbrush.end = new PointF(_newbrush.end.X * scale, _newbrush.end.Y * scale);
-
-            Matrix rotationMatrix = new Matrix();
-            rotationMatrix.RotateAt(-_angle, rotatePoint, MatrixOrder.Append);
-            rotationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
-
             Matrix originalMatrix = g.Transform;
-            g.Transform = rotationMatrix;
-            g.FillRectangle(_newbrush.GetDrawingBrush(), _scaledDimension);
+            g.Transform = _transformationMatrix;
+            g.FillRectangle(_gradientBrush.GetDrawingBrush(), _scaledDimension);
             g.Transform = originalMatrix;
         }
 
@@ -57,29 +49,18 @@ namespace Aurora.EffectsEngine.Animations
             {
                 throw new FormatException("Cannot blend with another type");
             }
+            AnimationFilledGradientRectangle otherCircle = (AnimationFilledGradientRectangle)otherAnim;
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
-                );
+            AnimationFrame newFrame = base.BlendWith(otherCircle, amount);
 
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
-
-            return new AnimationFilledGradientRectangle(newrect, _gradientBrush.BlendEffectBrush((otherAnim as AnimationFilledGradientRectangle)._gradientBrush, amount)).SetAngle(newAngle);
+            return new AnimationFilledGradientRectangle(newFrame, _gradientBrush);
         }
 
         public override AnimationFrame GetCopy()
         {
-            RectangleF newrect = new RectangleF(_dimension.X,
-                _dimension.Y,
-                _dimension.Width,
-                _dimension.Height
-                );
-
-            return new AnimationFilledGradientRectangle(newrect, new EffectBrush(_gradientBrush), _duration).SetAngle(_angle).SetTransitionType(_transitionType);
+            return new AnimationFilledGradientRectangle(this);
         }
 
         public override bool Equals(object obj)

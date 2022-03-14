@@ -17,22 +17,27 @@ namespace Aurora.Utils
 
 	public sealed class ActiveProcessMonitor
 	{
+		private static readonly Lazy<ActiveProcessMonitor> singletonInstance = new Lazy<ActiveProcessMonitor>(() => new ActiveProcessMonitor());
+		
+		public static ActiveProcessMonitor Instance
+			=> singletonInstance.Value;
+		
 		private const uint WINEVENT_OUTOFCONTEXT = 0;
 		private const uint EVENT_SYSTEM_FOREGROUND = 3;
 		private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
 		private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
 		delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 		private string processPath = string.Empty;
-		public string ProcessPath { get { return processPath; } private set { processPath = value; ActiveProcessChanged?.Invoke(this, null); } }
+		public string ProcessPath { get { return processPath; } private set { processPath = value; ActiveProcessChanged?.Invoke(this, EventArgs.Empty); } }
 		public event EventHandler ActiveProcessChanged;
 
-		static WinEventDelegate dele;
+		private WinEventDelegate dele;
 
-		public ActiveProcessMonitor()
+		private ActiveProcessMonitor()
 		{
 			try
 			{
-				dele = new WinEventDelegate(WinEventProc);
+				dele = WinEventProc;
 				SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
 				SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
 			}
