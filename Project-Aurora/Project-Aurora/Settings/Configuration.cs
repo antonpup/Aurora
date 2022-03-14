@@ -311,6 +311,10 @@ namespace Aurora.Settings
         [Description("Keychron q1 knob ansi 75%")]
         Keychron_Q1_Knob_Ansi = 0107,
  
+        //MSI range is 1500-1599
+        [Description("MSI GP66 US")]
+        MSI_GP66_US = 1500,
+
     }
 
     public enum PreferredKeyboardLocalization

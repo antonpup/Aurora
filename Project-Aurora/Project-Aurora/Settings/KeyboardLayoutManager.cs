@@ -762,7 +762,9 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
- 
+            else if (keyboard_preference == PreferredKeyboard.MSI_GP66_US)
+                layoutConfigPath = Path.Combine(layoutsPath, "msi_gp66_us.json");
+
             else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_1)
                 layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_1.json");
             else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_2)
@@ -796,8 +798,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "omen_four_zone.json");
             else if (keyboard_preference == PreferredKeyboard.HyperX_Alloy_Elite_RGB)
                 layoutConfigPath = Path.Combine(layoutsPath, "hyperx_alloy_elite_rgb.json");
-            else if (keyboard_preference == PreferredKeyboard.Keychron_Q1_Knob)
-                    layoutConfigPath = Path.Combine(layoutsPath, "keychron_q1_knob.json");
+            else if (keyboard_preference == PreferredKeyboard.Keychron_Q1_Knob_Ansi)
+                    layoutConfigPath = Path.Combine(layoutsPath, "keychron_q1_knob_ansi.json");
             else
             {
                 LoadNone();
