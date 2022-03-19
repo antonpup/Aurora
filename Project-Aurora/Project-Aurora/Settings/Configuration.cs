@@ -430,6 +430,9 @@ namespace Aurora.Settings
 
         [Description("Razer/Corsair Mousepad")]
         Generic_Mousepad = 1,
+        
+        [Description("2 Zone + Logo Mousepad")]
+        Two_Zone_Plus_Logo_Mousepad,
 
         //Steelseries range is 100-299
         [Description("SteelSeries - QcK Prism Mousepad")]
