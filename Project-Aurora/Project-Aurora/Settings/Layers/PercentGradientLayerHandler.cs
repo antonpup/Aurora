@@ -39,7 +39,7 @@ namespace Aurora.Settings.Layers
             return new Control_PercentGradientLayer(this);
         }
 
-        private readonly EffectLayer effectLayer = new EffectLayer();
+        private readonly EffectLayer effectLayer = new();
         public override EffectLayer Render(IGameState state)
         {
             double value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
