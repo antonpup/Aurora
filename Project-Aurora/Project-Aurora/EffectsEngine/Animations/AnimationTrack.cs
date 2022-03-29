@@ -3,22 +3,27 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationTrack
     {
-        [Newtonsoft.Json.JsonProperty]
+        [JsonProperty]
         private readonly ConcurrentDictionary<float, AnimationFrame> _animations;
-        [Newtonsoft.Json.JsonProperty]
+        [JsonProperty]
         private float _animationDuration;
-        [Newtonsoft.Json.JsonProperty]
+        [JsonProperty]
         private string _track_name;
-        [Newtonsoft.Json.JsonProperty]
+        [JsonProperty]
         private float _shift;
 
-        private bool _SupportedTypeIdentified = false;
+        private bool _SupportedTypeIdentified;
         private Type _SupportedAnimationType = typeof(AnimationFrame);
+
+        [JsonIgnore]
+        private readonly Dictionary<int, AnimationFrame> _blendCache = new();
+        
         public Type SupportedAnimationType
         {
             get
@@ -36,7 +41,7 @@ namespace Aurora.EffectsEngine.Animations
             }
         }
 
-        public float AnimationDuration { get { return _animationDuration; } }
+        public float AnimationDuration => _animationDuration;
 
         public AnimationTrack(string track_name, float animationDuration, float shift = 0.0f)
         {
@@ -52,6 +57,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 frame.Scale = scale;
             }
+            _blendCache.Clear();
         }
 
         public AnimationTrack SetName(string name)
@@ -90,8 +96,7 @@ namespace Aurora.EffectsEngine.Animations
 
             if (time > _animationDuration || _animations.Count == 0)
                 return false;
-            else
-                return true;
+            return true;
         }
 
         public AnimationTrack SetFrame(float time, AnimationFrame animframe)
@@ -136,30 +141,14 @@ namespace Aurora.EffectsEngine.Animations
             return this;
         }
 
-        public AnimationTrack RemoveFrame(AnimationFrame frame)
-        {
-            foreach (KeyValuePair<float, AnimationFrame> kvp in _animations)
-            {
-                if (kvp.Value.Equals(frame))
-                {
-                    _animations.TryRemove(kvp.Key, out _);
-                    break;
-                }
-            }
-
-            UpdateDuration();
-            return this;
-        }
-
         public AnimationTrack Clear()
         {
             _animations.Clear();
+            _blendCache.Clear();
 
             UpdateDuration();
             return this;
         }
-
-        private readonly Dictionary<int, AnimationFrame> blendCache = new Dictionary<int, AnimationFrame>();
         public AnimationFrame GetFrame(float time)
         {
             if (!ContainsAnimationAt(time))
@@ -178,31 +167,24 @@ namespace Aurora.EffectsEngine.Animations
             //The time value is exact
             if (closeValues.Item1 == closeValues.Item2)
                 return _animations[closeValues.Item1];
-            else
+            if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time)
+                return _animations[closeValues.Item1];
+            if (_animations.ContainsKey(closeValues.Item1) && _animations.ContainsKey(closeValues.Item2))
             {
-                if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time)
-                    return _animations[closeValues.Item1];
-                else
+                int roundedTime = (int)Math.Round(time * 100);
+                AnimationFrame blend;
+                if (_blendCache.TryGetValue(roundedTime, out blend))
                 {
-                    if (_animations.ContainsKey(closeValues.Item1) && _animations.ContainsKey(closeValues.Item2))
-                    {
-                        int roundedTime = (int)Math.Round(time * 100);
-                        AnimationFrame blend;
-                        if (blendCache.ContainsKey(roundedTime))
-                        {
-                            blendCache.TryGetValue(roundedTime, out blend);
-                            return blend;
-                        }
-                        var blendAmount = ((double)(time - (closeValues.Item1 + _animations[closeValues.Item1]._duration)) /
-                            (double)(closeValues.Item2 - (closeValues.Item1 + _animations[closeValues.Item1]._duration)));
-                        blend = _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item2], blendAmount);
-                        blendCache.Add(roundedTime, blend);
-                        return blend;
-                    }
-                    else
-                        return (AnimationFrame)Activator.CreateInstance(SupportedAnimationType);
+                    return blend;
                 }
+                var blendAmount = (time - (closeValues.Item1 + _animations[closeValues.Item1]._duration)) /
+                                  (double)(closeValues.Item2 - (closeValues.Item1 + _animations[closeValues.Item1]._duration));
+                blend = _animations[closeValues.Item1].BlendWith(_animations[closeValues.Item2], blendAmount);
+                _blendCache.Add(roundedTime, blend);
+                return blend;
             }
+
+            return (AnimationFrame)Activator.CreateInstance(SupportedAnimationType);
         }
 
         public ConcurrentDictionary<float, AnimationFrame> GetAnimations()
@@ -232,6 +214,7 @@ namespace Aurora.EffectsEngine.Animations
 
         private void UpdateDuration()
         {
+            _blendCache.Clear();
             if (_animations.Count > 0)
             {
                 float max = _animations.Keys.Max();

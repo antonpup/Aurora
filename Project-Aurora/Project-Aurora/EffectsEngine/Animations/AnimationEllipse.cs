@@ -127,7 +127,7 @@ namespace Aurora.EffectsEngine.Animations
             }
 
             g.ResetTransform();
-            g.DrawEllipse(_pen, _scaledDimension);
+            g.DrawEllipse(_pen, _dimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

@@ -9,13 +9,13 @@ namespace Aurora
 {
     public class BitmapRectangle
     {
-        public static BitmapRectangle emptyRectangle = new BitmapRectangle();
+        public static readonly BitmapRectangle EmptyRectangle = new();
 
-        private readonly bool _isvalid = false;
-        public bool IsValid { get { return _isvalid; } }
+        private readonly bool _isvalid;
+        public bool IsValid => _isvalid;
 
         private readonly Rectangle _rectangle;
-        public Rectangle Rectangle { get { return _rectangle; } }
+        public Rectangle Rectangle => _rectangle;
 
         public bool IsEmpty
         {
@@ -28,22 +28,15 @@ namespace Aurora
             }
         }
 
-        public int Bottom { get { return _rectangle.Bottom; } }
-        public int Top { get { return _rectangle.Top; } }
-        public int Left { get { return _rectangle.Left; } }
-        public int Right { get { return _rectangle.Right; } }
-        public int Height { get { return _rectangle.Height; } }
-        public int Width { get { return _rectangle.Width; } }
-        public int Area { get { return _rectangle.Width * _rectangle.Height; } }
+        public int Bottom => _rectangle.Bottom;
+        public int Top => _rectangle.Top;
+        public int Left => _rectangle.Left;
+        public int Right => _rectangle.Right;
+        public int Height => _rectangle.Height;
+        public int Width => _rectangle.Width;
 
         private PointF _center;
-        public PointF Center
-        {
-            get
-            {
-                return _center;
-            }
-        }
+        public PointF Center => _center;
 
         private BitmapRectangle()
         {
@@ -240,7 +233,7 @@ namespace Aurora
             if (bitmap_map.ContainsKey(key))
                 return bitmap_map[key];
             else
-                return BitmapRectangle.emptyRectangle;
+                return BitmapRectangle.EmptyRectangle;
         }
 
         public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)

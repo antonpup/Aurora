@@ -378,6 +378,17 @@ namespace Aurora.EffectsEngine
 
             return this;
         }
+        
+        public void Clear()
+        {
+            using (Graphics g = GetGraphics())
+            {
+                Rectangle rect = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
+                g.CompositingMode = CompositingMode.SourceCopy;
+                g.FillRectangle(new SolidBrush(Color.Transparent), rect);
+                _needsRender = true;
+            }
+        }
 
         /// <summary>
         /// Sets a specific Devices.DeviceKeys on the bitmap with a specified color.
@@ -579,54 +590,18 @@ namespace Aurora.EffectsEngine
                 if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
                     keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
-                    Global.logger.Warn("Coudln't set key color " + key.ToString());
+                    Global.logger.Warn("Coudln't set key color " + key);
                     return this;
                 }
-                else
+
+                using (Graphics g = Graphics.FromImage(_colormap))
                 {
-                    using (Graphics g = Graphics.FromImage(_colormap))
-                    {
-                        g.FillRectangle(brush, keymaping.Rectangle);
-                        _needsRender = true;
-                    }
+                    g.FillRectangle(brush, keymaping.Rectangle);
+                    _needsRender = true;
                 }
             }
 
             return this;
-        }
-
-        /// <summary>
-        /// Retrieves a color of the specified X and Y coordinate on the bitmap
-        /// </summary>
-        /// <param name="x">X Coordiante on the bitmap</param>
-        /// <param name="y">Y Coordinate on the bitmap</param>
-        /// <returns>Color at (X,Y)</returns>
-        public Color Get(int x, int y)
-        {
-            BitmapData srcData = _colormap.LockBits(
-                    new Rectangle(x, y, 1, 1),
-                    ImageLockMode.ReadOnly,
-                    PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            byte red, green, blue, alpha;
-
-            unsafe
-            {
-                byte* p = (byte*)(void*)Scan0;
-
-                blue = p[0];
-                green = p[1];
-                red = p[2];
-                alpha = p[3];
-            }
-
-            _colormap.UnlockBits(srcData);
-
-            return Color.FromArgb(alpha, red, green, blue);
         }
 
         /// <summary>
@@ -721,29 +696,6 @@ namespace Aurora.EffectsEngine
         {
             layer._opacity = (float) value;
             return layer;
-        }
-        
-        public static void SetOpacity(Image image, Graphics gfx, float opacity)
-        {
-            var colorMatrix = new ColorMatrix();
-            colorMatrix.Matrix33 = opacity;
-            var imageAttributes = new ImageAttributes();
-            imageAttributes.SetColorMatrix(
-                colorMatrix,
-                ColorMatrixFlag.Default,
-                ColorAdjustType.Bitmap);
-            using (gfx)
-            {
-                gfx.DrawImage(
-                    image,
-                    new Rectangle(0, 0, image.Width, image.Height),
-                    0,
-                    0,
-                    image.Width,
-                    image.Height,
-                    GraphicsUnit.Pixel,
-                    imageAttributes);
-            }
         }
 
         /// <summary>
@@ -897,6 +849,7 @@ namespace Aurora.EffectsEngine
                     }
                     break;
                 case (PercentEffectType.Progressive_Gradual):
+                    Clear();
                     for (int i = 0; i < keys.Count(); i++)
                     {
                         Devices.DeviceKeys current_key = keys[i];
@@ -1068,101 +1021,6 @@ namespace Aurora.EffectsEngine
 
                 return this;
             }
-        }
-
-        /// <summary>
-        /// Draws a FreeFormObject on the layer bitmap using a specified color.
-        /// </summary>
-        /// <param name="freeform">The FreeFormObject that will be filled with a color</param>
-        /// <param name="color">The color to be used</param>
-        /// <returns>Itself</returns>
-        public EffectLayer DrawFreeForm(Settings.FreeFormObject freeform, Color color)
-        {
-            using (Graphics g = Graphics.FromImage(_colormap))
-            {
-                float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                float width = (float)Math.Round(freeform.Width * Effects.editor_to_canvas_width);
-                float height = (float)Math.Round(freeform.Height * Effects.editor_to_canvas_height);
-
-                if (width < 3) width = 3;
-                if (height < 3) height = 3;
-
-                Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
-
-                PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
-
-                Matrix myMatrix = new Matrix();
-                myMatrix.RotateAt(freeform.Angle, rotatePoint, MatrixOrder.Append);
-
-                g.Transform = myMatrix;
-                g.FillRectangle(new SolidBrush(color), rect);
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Draws ColorZones on the layer bitmap.
-        /// </summary>
-        /// <param name="colorzones">An array of ColorZones</param>
-        /// <returns>Itself</returns>
-        public EffectLayer DrawColorZones(ColorZone[] colorzones)
-        {
-            foreach (ColorZone cz in colorzones.Reverse())
-            {
-                if (cz.keysequence.type == KeySequenceType.Sequence)
-                {
-                    foreach (var key in cz.keysequence.keys)
-                        Set(key, cz.color);
-
-                    if (cz.effect != LayerEffects.None)
-                    {
-                        EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config);
-
-                        foreach (var key in cz.keysequence.keys)
-                            Set(key, Utils.ColorUtils.AddColors(Get(key), temp_layer.Get(key)));
-
-                        temp_layer.Dispose();
-                    }
-                }
-                else
-                {
-                    if (cz.effect == LayerEffects.None)
-                    {
-                        DrawFreeForm(cz.keysequence.freeform, cz.color);
-                    }
-                    else
-                    {
-                        float x_pos = (float)Math.Round((cz.keysequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                        float y_pos = (float)Math.Round((cz.keysequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                        float width = (float)Math.Round((double)(cz.keysequence.freeform.Width * Effects.editor_to_canvas_width));
-                        float height = (float)Math.Round((double)(cz.keysequence.freeform.Height * Effects.editor_to_canvas_height));
-
-                        if (width < 3) width = 3;
-                        if (height < 3) height = 3;
-
-                        Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
-
-                        EffectLayer temp_layer = new EffectLayer("Color Zone Effect", cz.effect, cz.effect_config, rect);
-
-                        using (Graphics g = Graphics.FromImage(_colormap))
-                        {
-                            PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
-
-                            Matrix myMatrix = new Matrix();
-                            myMatrix.RotateAt(cz.keysequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
-
-                            g.Transform = myMatrix;
-                            g.DrawImage(temp_layer.GetBitmap(), rect, rect, GraphicsUnit.Pixel);
-                        }
-
-                        temp_layer.Dispose();
-                    }
-                }
-            }
-
-            return this;
         }
 
         /// <summary>
