@@ -593,13 +593,11 @@ namespace Aurora.EffectsEngine
                     Global.logger.Warn("Coudln't set key color " + key);
                     return this;
                 }
-                else
+
+                using (Graphics g = Graphics.FromImage(_colormap))
                 {
-                    using (Graphics g = Graphics.FromImage(_colormap))
-                    {
-                        g.FillRectangle(brush, keymaping.Rectangle);
-                        _needsRender = true;
-                    }
+                    g.FillRectangle(brush, keymaping.Rectangle);
+                    _needsRender = true;
                 }
             }
 

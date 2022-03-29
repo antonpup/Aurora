@@ -9,8 +9,8 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal float _radius = 0.0f;
 
-        public float Radius { get { return _radius; } }
-        public PointF Center { get { return _center; } }
+        public float Radius => _radius;
+        public PointF Center => _center;
 
         public AnimationFrame SetRadius(float radius)
         {
@@ -87,21 +87,22 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g)
         {
-            if (_pen == null || _invalidated)
+            if (_invalidated)
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
-                _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-                _pen.ScaleTransform(Scale, Scale);
+                //_pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                //_pen.ScaleTransform(Scale, Scale);
 
                 virtUpdate();
                 _invalidated = false;
             }
 
-            if(_scaledDimension.Width > 1 && _scaledDimension.Height > 1)
+            if(_dimension.Width > 1 && _dimension.Height > 1)
             {
                 g.ResetTransform();
-                g.DrawEllipse(_pen, _scaledDimension);
+                g.Transform = _transformationMatrix;
+                g.DrawEllipse(_pen, _dimension);
             }
         }
 
