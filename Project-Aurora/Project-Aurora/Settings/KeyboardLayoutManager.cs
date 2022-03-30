@@ -870,6 +870,9 @@ namespace Aurora.Settings
                     case PreferredMousepad.Generic_Mousepad:
                         mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_mousepad.json");
                         break;
+                    case PreferredMousepad.Two_Zone_Plus_Logo_Mousepad:
+                        mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "2zone_1logo_mousepad.json");
+                        break;
                     case PreferredMousepad.SteelSeries_QcK_Prism:
                         mousepad_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_qck_prism_features.json");
                         break;

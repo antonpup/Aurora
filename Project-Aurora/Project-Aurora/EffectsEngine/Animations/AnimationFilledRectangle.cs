@@ -6,7 +6,7 @@ namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationFilledRectangle : AnimationRectangle
     {
-        public AnimationFilledRectangle() : base()
+        public AnimationFilledRectangle()
         {
         }
 
@@ -24,16 +24,19 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g)
         {
-            if (_brush == null || _invalidated)
+            if (_invalidated)
             {
-                _brush = new SolidBrush(_color);
+                _pen = new Pen(_color);
+                _pen.Width = _width;
+                _pen.Alignment = PenAlignment.Center;
+
                 virtUpdate();
                 _invalidated = false;
             }
 
             g.ResetTransform();
             g.Transform = _transformationMatrix;
-            g.FillRectangle(_brush, _scaledDimension);
+            g.FillRectangle(_brush, _dimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
