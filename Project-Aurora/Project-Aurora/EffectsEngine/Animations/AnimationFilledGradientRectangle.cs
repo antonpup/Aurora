@@ -9,9 +9,9 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal EffectBrush _gradientBrush;
 
-        public EffectBrush GradientBrush { get { return _gradientBrush; } }
+        public EffectBrush GradientBrush => _gradientBrush;
 
-        public AnimationFilledGradientRectangle() : base()
+        public AnimationFilledGradientRectangle()
         {
         }
 
@@ -37,10 +37,16 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g)
         {
-            Matrix originalMatrix = g.Transform;
+            if (_invalidated)
+            {
+                virtUpdate();
+                _invalidated = false;
+            }
+            
+            g.ResetTransform();
             g.Transform = _transformationMatrix;
-            g.FillRectangle(_gradientBrush.GetDrawingBrush(), _scaledDimension);
-            g.Transform = originalMatrix;
+            //g.FillRectangle(_gradientBrush.GetDrawingBrush(), _scaledDimension);
+            g.FillRectangle(_gradientBrush.GetDrawingBrush(), _dimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

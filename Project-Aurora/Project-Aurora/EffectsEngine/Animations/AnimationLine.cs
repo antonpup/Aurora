@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using CSScriptLibrary;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -47,11 +48,11 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationLine()
         {
             _start_point = new PointF(0, 0);
-            _end_point = new PointF(0, 0);
+            _end_point = new PointF(30, 30);
             _color = Utils.ColorUtils.GenerateRandomColor();
             _end_color = Utils.ColorUtils.GenerateRandomColor();
             _width = 1;
-            _duration = 0.0f;
+            _duration = 1.0f;
         }
 
         public AnimationLine(PointF start_point, PointF end_point, Color color, int width = 1, float duration = 0.0f)
@@ -130,7 +131,7 @@ namespace Aurora.EffectsEngine.Animations
             if (_start_point.Equals(_end_point))
                 return;
 
-            if (_pen == null || _invalidated)
+            if (_invalidated)
             {
                 if (!_scaledStartPoint.Equals(_scaledEndPoint))
                 {
@@ -141,7 +142,7 @@ namespace Aurora.EffectsEngine.Animations
                     System.Console.WriteLine("0 length line");
                 }
                 _pen.Width = _width;
-                _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+                _pen.Alignment = PenAlignment.Center;
 
                 _pen.ScaleTransform(Scale, Scale);
 

@@ -126,8 +126,8 @@ namespace Aurora.Settings.Layers
             long dt = _animTimeStopwatch.ElapsedMilliseconds;
             _animTimeStopwatch.Restart();
 
-            // Update all running animations. We have to call "ToList()" to prevent "Collection was modified; enumeration operation may not execute"
-            runningAnimations.ToList().ForEach(anim => {
+            // Update all running animations.
+            runningAnimations.ForEach(anim => {
                 anim.currentTime += dt / 1000f;
                 if (Properties.AnimationRepeat > 0)
                     anim.playTimes += (int)(anim.currentTime / Properties.AnimationDuration);
@@ -141,8 +141,8 @@ namespace Aurora.Settings.Layers
             // Check to see if the gamestate will cause any animations to trigger
             CheckTriggers(gamestate);
 
-            // Render each playing animation. We have to call "ToList()" to prevent "Collection was modified; enumeration operation may not execute"
-            runningAnimations.ToList().ForEach(anim => {
+            // Render each playing animation.
+            runningAnimations.ForEach(anim => {
                 EffectLayer temp = new EffectLayer();
 
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
@@ -150,9 +150,9 @@ namespace Aurora.Settings.Layers
                 PointF offset = Properties.KeyTriggerTranslate ? anim.offset : PointF.Empty;
 
                 // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
-                if (Properties.ScaleToKeySequenceBounds) {
+                RectangleF affectedRegion = Properties.Sequence.GetAffectedRegion();
+                if (Properties.ScaleToKeySequenceBounds && !affectedRegion.IsEmpty) {
                     // The dest rect should simply be the bounding region of the affected keys
-                    RectangleF affectedRegion = Properties.Sequence.GetAffectedRegion();
                     destRect = Rectangle.Truncate(affectedRegion);
 
                     // If we are scaling to key sequence bounds, we need to adapt the offset of the pressed key so that it

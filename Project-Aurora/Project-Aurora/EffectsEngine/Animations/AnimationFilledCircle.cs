@@ -37,7 +37,7 @@ namespace Aurora.EffectsEngine.Animations
             }
 
             g.ResetTransform();
-            g.FillEllipse(_brush, _scaledDimension);
+            g.FillEllipse(_brush, _dimension);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

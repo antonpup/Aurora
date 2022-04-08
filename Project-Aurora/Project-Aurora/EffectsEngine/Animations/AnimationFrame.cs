@@ -2,8 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Threading;
-using System.Windows;
 
 namespace Aurora.EffectsEngine.Animations
 {
@@ -66,20 +64,20 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal float _duration;
         internal Pen _pen = null;
-        internal Brush _brush = null;
+        internal Brush _brush;
         internal bool _invalidated = true;
         [Newtonsoft.Json.JsonProperty]
         internal AnimationFrameTransitionType _transitionType = AnimationFrameTransitionType.Linear;
         [Newtonsoft.Json.JsonProperty]
-        internal float _angle = 0.0f;
+        internal float _angle;
         [Newtonsoft.Json.JsonProperty]
-        protected PointF _center;
+        protected PointF _center = PointF.Empty;
 
 
         protected float _scale = 1.0f;
-        protected PointF _offset = default(PointF);
+        protected PointF _offset;
 
-        protected RectangleF _scaledDimension;
+        //protected RectangleF _scaledDimension;
         internal Matrix _transformationMatrix;
 
         public float Scale
@@ -94,39 +92,16 @@ namespace Aurora.EffectsEngine.Animations
                 }
             }
         }
-        public PointF Offset
-        {
-            get { return _offset; }
-            set
-            {
-                if (_offset != value)
-                {
-                    _offset = value;
-                    _invalidated = true;
-                }
-            }
-        }
-        public PointF RotatePoint
-        {
-            get { return _center; }
-            set
-            {
-                if (_center != value)
-                {
-                    _center = value;
-                    _invalidated = true;
-                }
-            }
-        }
-        public Matrix TransformationMatrix { get { return _transformationMatrix; } }
-        public RectangleF ScaledDimension { get { return _scaledDimension; } }
+        public PointF Offset => _offset;
 
-        public Color Color { get { return _color; } }
-        public RectangleF Dimension { get { return _dimension; } }
-        public int Width { get { return _width; } }
-        public float Duration { get { return _duration; } }
-        public AnimationFrameTransitionType TransitionType { get { return _transitionType; } }
-        public float Angle { get { return _angle; } }
+        public PointF RotatePoint => _center;
+
+        public Color Color => _color;
+        public RectangleF Dimension => _dimension;
+        public int Width => _width;
+        public float Duration => _duration;
+        public AnimationFrameTransitionType TransitionType => _transitionType;
+        public float Angle => _angle;
 
         public AnimationFrame()
         {
@@ -175,14 +150,18 @@ namespace Aurora.EffectsEngine.Animations
         {
             _transformationMatrix = new Matrix();
 
-            _scaledDimension = new RectangleF(_dimension.X * _scale, _dimension.Y * _scale, _dimension.Width * _scale, _dimension.Height * _scale);
-            _scaledDimension.Offset(_offset);
+            //_scaledDimension = new RectangleF(_dimension.X * _scale, _dimension.Y * _scale, _dimension.Width * _scale, _dimension.Height * _scale);
+            //_scaledDimension.Offset(_offset.X * _scale, _offset.Y * _scale);
 
-            if(_center == null) 
-                _center = new PointF(_scaledDimension.X + _dimension.Width/2, _scaledDimension.Y + _scaledDimension.Height/2);
-
+            if (_center.Equals(PointF.Empty) || float.IsNaN(_center.X))
+            {
+                _center = new PointF(_dimension.Width/2, _dimension.Height/2);
+            }
+            
             _transformationMatrix.RotateAt(-_angle, _center, MatrixOrder.Append);
-            _transformationMatrix.Translate(-_scaledDimension.Width / 2f, -_scaledDimension.Height / 2f);
+            _transformationMatrix.Scale(_scale, _scale);
+            
+            _transformationMatrix.Translate(-_offset.X, -_offset.Y, MatrixOrder.Append);
 
             _invalidated = false;
         }
@@ -192,15 +171,6 @@ namespace Aurora.EffectsEngine.Animations
             if (_offset != offset)
             {
                 _offset = offset;
-                _invalidated = true;
-            }
-        }
-
-        public void SetScale(float scale)
-        {
-            if (_scale != scale)
-            {
-                _scale = scale;
                 _invalidated = true;
             }
         }
@@ -267,9 +237,15 @@ namespace Aurora.EffectsEngine.Animations
                 CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            PointF newRotatingPoint = new PointF(CalculateNewValue(_center.X, otherAnim._center.X, amount),
+            PointF newRotatingPoint = new PointF(
+                CalculateNewValue(_center.X, otherAnim._center.X, amount),
                 CalculateNewValue(_center.Y, otherAnim._center.Y, amount)
                 );
+
+            PointF newOffset = new PointF(
+                CalculateNewValue(_offset.X, otherAnim._offset.X, amount),
+                CalculateNewValue(_offset.Y, otherAnim._offset.Y, amount)
+            );
 
             float newAngle = CalculateNewValue(_angle, otherAnim._angle, amount);
             float newScale = CalculateNewValue(_scale, otherAnim._scale, amount);
@@ -277,11 +253,14 @@ namespace Aurora.EffectsEngine.Animations
 
             AnimationFrame newframe = new AnimationFrame();
             newframe._dimension = newrect;
+            newframe._center = newRotatingPoint;
+            newframe._offset = newOffset;
 
             newframe._angle = newAngle;
             newframe._scale = newScale;
             newframe._width = newWidth;
             newframe._color = Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount);
+            
 
             return newframe;
         }
@@ -333,16 +312,14 @@ namespace Aurora.EffectsEngine.Animations
         {
             if (first == second)
                 return first;
-            else
-                return (float)(first * (1.0 - amount) + second * (amount));
+            return (float)(first * (1.0 - amount) + second * (amount));
         }
 
         internal double CalculateNewValue(double first, double second, double amount)
         {
             if (first == second)
                 return first;
-            else
-                return (double)(first * (1.0 - amount) + second * (amount));
+            return first * (1.0 - amount) + second * (amount);
         }
 
         internal int CalculateNewValue(int first, int second, double amount)
