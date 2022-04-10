@@ -240,6 +240,8 @@ namespace Aurora.Settings
         //Roccat range is 600-699
         [Description("Roccat Ryos")]
         Roccat_Ryos = 600,
+        [Description("Roccat Vulcan TKL")]
+        Roccat_Vualcan_TKL = 601,
 
         //Steelseries range is 700-799
         [Description("SteelSeries Apex M800")]

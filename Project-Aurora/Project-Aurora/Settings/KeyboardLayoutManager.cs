@@ -742,6 +742,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "cooler_master_sk650.json");
             else if (keyboard_preference == PreferredKeyboard.Roccat_Ryos)
                 layoutConfigPath = Path.Combine(layoutsPath, "roccat_ryos.json");
+            else if (keyboard_preference == PreferredKeyboard.Roccat_Vualcan_TKL)
+                layoutConfigPath = Path.Combine(layoutsPath, "roccat_vulcan_tkl.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M800)
                 layoutConfigPath = Path.Combine(layoutsPath, "steelseries_apex_m800.json");
             else if (keyboard_preference == PreferredKeyboard.SteelSeries_Apex_M750)

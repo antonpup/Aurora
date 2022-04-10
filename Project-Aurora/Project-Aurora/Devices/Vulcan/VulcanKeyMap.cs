@@ -116,7 +116,8 @@ namespace Aurora.Devices.Vulcan
             { DeviceKeys.NUM_PLUS, Key.NUM_PLUS },
             { DeviceKeys.NUM_ENTER, Key.NUM_ENTER },
             { DeviceKeys.BACKSLASH_UK, Key.ISO_BACKSLASH },
-            { DeviceKeys.HASHTAG, Key.ISO_HASH }
+            { DeviceKeys.HASHTAG, Key.ISO_HASH },
+            { DeviceKeys.VOLUME_MUTE, Key.MUTE }
         };
     }
 }
