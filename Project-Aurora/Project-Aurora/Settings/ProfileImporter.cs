@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Aurora.Utils;
 
 namespace Aurora.Settings
 {
@@ -730,7 +731,7 @@ namespace Aurora.Settings
                 {
                     ObjectCreationHandling = ObjectCreationHandling.Replace,
                     TypeNameHandling = TypeNameHandling.All,
-                    Binder = Utils.JSONUtils.SerializationBinder
+                    Binder = JSONUtils.SerializationBinder,
                 });
 
                 // Create a new profile on the current application (so that profiles can be imported from different applications)

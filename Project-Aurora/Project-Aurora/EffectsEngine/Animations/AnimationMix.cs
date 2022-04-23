@@ -2,12 +2,15 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Utils;
+using Newtonsoft.Json;
 
 namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationMix
     {
         [Newtonsoft.Json.JsonProperty]
+        [JsonConverter(typeof(ConcurrentDictionaryJsonConverterAdapter<string, AnimationTrack>))]
         private readonly ConcurrentDictionary<string, AnimationTrack> _tracks = new();
 
         /// <summary>
