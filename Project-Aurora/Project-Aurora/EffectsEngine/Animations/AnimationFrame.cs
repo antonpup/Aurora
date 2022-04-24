@@ -70,14 +70,11 @@ namespace Aurora.EffectsEngine.Animations
         internal AnimationFrameTransitionType _transitionType = AnimationFrameTransitionType.Linear;
         [Newtonsoft.Json.JsonProperty]
         internal float _angle;
-        [Newtonsoft.Json.JsonProperty]
-        protected PointF _center = PointF.Empty;
 
 
         protected float _scale = 1.0f;
         protected PointF _offset;
 
-        //protected RectangleF _scaledDimension;
         internal Matrix _transformationMatrix;
 
         public float Scale
@@ -93,8 +90,6 @@ namespace Aurora.EffectsEngine.Animations
             }
         }
         public PointF Offset => _offset;
-
-        public PointF RotatePoint => _center;
 
         public Color Color => _color;
         public RectangleF Dimension => _dimension;
@@ -120,13 +115,11 @@ namespace Aurora.EffectsEngine.Animations
             _scale = frame.Scale;
             _offset = frame.Offset;
             _angle = frame.Angle;
-            _center = frame.RotatePoint;
             _transitionType = frame.TransitionType;
         }
 
         public AnimationFrame(Rectangle dimension, Color color, int width = 1, float duration = 0.0f)
         {
-
             _color = color;
             _dimension = dimension;
             _width = width;
@@ -149,18 +142,9 @@ namespace Aurora.EffectsEngine.Animations
         void updateMatrices()
         {
             _transformationMatrix = new Matrix();
-
-            //_scaledDimension = new RectangleF(_dimension.X * _scale, _dimension.Y * _scale, _dimension.Width * _scale, _dimension.Height * _scale);
-            //_scaledDimension.Offset(_offset.X * _scale, _offset.Y * _scale);
-
-            if (_center.Equals(PointF.Empty) || float.IsNaN(_center.X))
-            {
-                _center = new PointF(_dimension.Width/2, _dimension.Height/2);
-            }
             
-            _transformationMatrix.RotateAt(-_angle, _center, MatrixOrder.Append);
-            _transformationMatrix.Scale(_scale, _scale);
-            
+            _transformationMatrix.RotateAt(-_angle, _dimension.Location, MatrixOrder.Append);
+            //_transformationMatrix.Scale(_scale, _scale, MatrixOrder.Append);
             _transformationMatrix.Translate(-_offset.X, -_offset.Y, MatrixOrder.Append);
 
             _invalidated = false;
@@ -237,11 +221,6 @@ namespace Aurora.EffectsEngine.Animations
                 CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            PointF newRotatingPoint = new PointF(
-                CalculateNewValue(_center.X, otherAnim._center.X, amount),
-                CalculateNewValue(_center.Y, otherAnim._center.Y, amount)
-                );
-
             PointF newOffset = new PointF(
                 CalculateNewValue(_offset.X, otherAnim._offset.X, amount),
                 CalculateNewValue(_offset.Y, otherAnim._offset.Y, amount)
@@ -253,7 +232,6 @@ namespace Aurora.EffectsEngine.Animations
 
             AnimationFrame newframe = new AnimationFrame();
             newframe._dimension = newrect;
-            newframe._center = newRotatingPoint;
             newframe._offset = newOffset;
 
             newframe._angle = newAngle;

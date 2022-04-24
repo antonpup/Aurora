@@ -26,9 +26,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             if (_invalidated)
             {
-                _pen = new Pen(_color);
-                _pen.Width = _width;
-                _pen.Alignment = PenAlignment.Center;
+                _brush = new SolidBrush(_color);
 
                 virtUpdate();
                 _invalidated = false;
@@ -36,7 +34,9 @@ namespace Aurora.EffectsEngine.Animations
 
             g.ResetTransform();
             g.Transform = _transformationMatrix;
-            g.FillRectangle(_brush, _dimension);
+            float drawX = _dimension.X - _dimension.Width/2;
+            float drawY = _dimension.Y - _dimension.Height/2;
+            g.FillRectangle(_brush, drawX, drawY, _dimension.Width, _dimension.Height);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

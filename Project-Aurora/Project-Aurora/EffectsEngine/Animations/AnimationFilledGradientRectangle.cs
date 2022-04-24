@@ -9,6 +9,8 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal EffectBrush _gradientBrush;
 
+        private readonly Brush _drawingBrush;
+
         public EffectBrush GradientBrush => _gradientBrush;
 
         public AnimationFilledGradientRectangle()
@@ -18,21 +20,25 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationFilledGradientRectangle(AnimationFilledGradientRectangle animationFilledGradientRectangle) : base(animationFilledGradientRectangle)
         {
             _gradientBrush = animationFilledGradientRectangle.GradientBrush;
+            _drawingBrush = _gradientBrush.GetDrawingBrush();
         }
 
         public AnimationFilledGradientRectangle(AnimationFrame animationFrame, EffectBrush effectBrush) : base(animationFrame)
         {
             _gradientBrush = effectBrush;
+            _drawingBrush = _gradientBrush.GetDrawingBrush();
         }
 
         public AnimationFilledGradientRectangle(RectangleF dimension, EffectBrush brush, float duration = 0.0f) : base(dimension, Color.Transparent, duration)
         {
             _gradientBrush = brush;
+            _drawingBrush = _gradientBrush.GetDrawingBrush();
         }
 
         public AnimationFilledGradientRectangle(float x, float y, float rect_width, float rect_height, EffectBrush brush, float duration = 0.0f) : base(x, y, rect_width, rect_height, Color.Transparent, duration)
         {
             _gradientBrush = brush;
+            _drawingBrush = _gradientBrush.GetDrawingBrush();
         }
 
         public override void Draw(Graphics g)
@@ -45,8 +51,9 @@ namespace Aurora.EffectsEngine.Animations
             
             g.ResetTransform();
             g.Transform = _transformationMatrix;
-            //g.FillRectangle(_gradientBrush.GetDrawingBrush(), _scaledDimension);
-            g.FillRectangle(_gradientBrush.GetDrawingBrush(), _dimension);
+            float drawX = _dimension.X - _dimension.Width/2;
+            float drawY = _dimension.Y - _dimension.Height/2;
+            g.FillRectangle(_drawingBrush, drawX, drawY, _dimension.Width, _dimension.Height);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)

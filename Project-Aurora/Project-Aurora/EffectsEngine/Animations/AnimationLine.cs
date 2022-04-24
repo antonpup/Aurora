@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using Aurora.Utils;
 using CSScriptLibrary;
 
 namespace Aurora.EffectsEngine.Animations
@@ -18,8 +19,8 @@ namespace Aurora.EffectsEngine.Animations
         public PointF EndPoint { get { return _end_point; } }
         public Color EndColor { get { return _end_color; } }
 
-        PointF _scaledStartPoint;
-        PointF _scaledEndPoint;
+        //PointF _scaledStartPoint;
+        //PointF _scaledEndPoint;
 
         public AnimationFrame SetStartPoint(PointF startPoint)
         {
@@ -115,17 +116,6 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        protected override void virtUpdate()
-        {
-
-            _scaledStartPoint = new PointF((_start_point.X * Scale) + Offset.X, (_start_point.Y * Scale) + Offset.Y);
-            _scaledEndPoint = new PointF((_end_point.X * Scale) + Offset.X, (_end_point.Y * Scale) + Offset.Y);
-
-            _center = _scaledStartPoint;
-
-            base.virtUpdate();
-        }
-
         public override void Draw(Graphics g)
         {
             if (_start_point.Equals(_end_point))
@@ -133,18 +123,11 @@ namespace Aurora.EffectsEngine.Animations
 
             if (_invalidated)
             {
-                if (!_scaledStartPoint.Equals(_scaledEndPoint))
-                {
-                    _pen = new Pen(new LinearGradientBrush(_scaledStartPoint, _scaledEndPoint, _color, _end_color));
-                }else
-                {
-                    _pen = new Pen(new LinearGradientBrush(_scaledStartPoint, new PointF(_scaledStartPoint.X + 1, _scaledStartPoint.Y + 1), _color, _end_color));
-                    System.Console.WriteLine("0 length line");
-                }
+                _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
                 _pen.Width = _width;
                 _pen.Alignment = PenAlignment.Center;
 
-                _pen.ScaleTransform(Scale, Scale);
+                //_pen.ScaleTransform(Scale, Scale);
 
                 virtUpdate();
 
@@ -153,7 +136,7 @@ namespace Aurora.EffectsEngine.Animations
 
             g.ResetTransform();
             g.Transform = _transformationMatrix;
-            g.DrawLine(_pen, _scaledStartPoint, _scaledEndPoint);
+            g.DrawLine(_pen, _start_point, _end_point);
         }
 
         public override AnimationFrame BlendWith(AnimationFrame otherAnim, double amount)
@@ -165,18 +148,18 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            PointF newstart = new PointF((float)CalculateNewValue(_start_point.X, (otherAnim as AnimationLine)._start_point.X, amount),
-                (float)CalculateNewValue(_start_point.Y, (otherAnim as AnimationLine)._start_point.Y, amount)
+            PointF newstart = new PointF(CalculateNewValue(_start_point.X, (otherAnim as AnimationLine)._start_point.X, amount),
+                CalculateNewValue(_start_point.Y, (otherAnim as AnimationLine)._start_point.Y, amount)
                 );
 
-            PointF newend = new PointF((float)CalculateNewValue(_end_point.X, (otherAnim as AnimationLine)._end_point.X, amount),
-                (float)CalculateNewValue(_end_point.Y, (otherAnim as AnimationLine)._end_point.Y, amount)
+            PointF newend = new PointF(CalculateNewValue(_end_point.X, (otherAnim as AnimationLine)._end_point.X, amount),
+                CalculateNewValue(_end_point.Y, (otherAnim as AnimationLine)._end_point.Y, amount)
                 );
 
             int newwidth = CalculateNewValue(_width, otherAnim._width, amount);
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
+            float newAngle = CalculateNewValue(_angle, otherAnim._angle, amount);
 
-            return new AnimationLine(newstart, newend, Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount), Utils.ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
+            return new AnimationLine(newstart, newend, ColorUtils.BlendColors(_color, otherAnim._color, amount), ColorUtils.BlendColors(_end_color, (otherAnim as AnimationLine)._end_color, amount), newwidth).SetAngle(newAngle);
         }
 
         public override AnimationFrame GetCopy()
