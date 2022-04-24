@@ -112,6 +112,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             if (isPlayingKillStreakAnimation && Utils.Time.GetMillisecondsSinceEpoch() >= ks_end_time)
                 isPlayingKillStreakAnimation = false;
+            else
+            {
+                _killstreakLayer.Clear();
+            }
 
             if (state is GameState_Dota2)
             {
