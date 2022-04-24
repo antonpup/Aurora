@@ -183,6 +183,7 @@ namespace Aurora.Settings.Layers
 
         private bool first = true;
 
+        private readonly EffectLayer _equalizerLayer = new("EqualizerLayer");
         public EqualizerLayerHandler()
         {
             _ffts = new Complex[fftLength];
@@ -218,10 +219,9 @@ namespace Aurora.Settings.Layers
                     first = false;
                 }
 
-                EffectLayer equalizer_layer = new EffectLayer();
 
                 if (_deviceProxy is null)
-                    return equalizer_layer;
+                    return _equalizerLayer;
 
                 // Update device ID. If it has changed, it will re-assign itself to the new device
                 DeviceProxy.DeviceId = Properties.DeviceId;
@@ -264,7 +264,7 @@ namespace Aurora.Settings.Layers
 
 
                 // Use the new transform render method to draw the equalizer layer
-                equalizer_layer.DrawTransformed(Properties.Sequence, g => {
+                _equalizerLayer.DrawTransformed(Properties.Sequence, g => {
                     // Here we draw the equalizer relative to our source rectangle and the DrawTransformed method handles sizing and positioning it correctly for us
 
                     // Draw a rectangle background over the entire source rect if bg is enabled
@@ -360,8 +360,8 @@ namespace Aurora.Settings.Layers
 
                 var hander = NewLayerRender;
                 if (hander != null)
-                    hander.Invoke(equalizer_layer.GetBitmap());
-                return equalizer_layer;
+                    hander.Invoke(_equalizerLayer.GetBitmap());
+                return _equalizerLayer;
 
             }
             catch (Exception exc)

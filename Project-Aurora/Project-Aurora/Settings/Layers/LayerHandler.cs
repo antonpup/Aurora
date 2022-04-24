@@ -188,6 +188,9 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         private EffectLayer _PreviousSecondRender = new EffectLayer(); //Layer before previous
 
+        [JsonIgnore]
+        private readonly EffectLayer _effectLayer = new();
+
         public LayerHandler()
         {
             //Properties = new LayerHandlerProperties();
@@ -202,7 +205,7 @@ namespace Aurora.Settings.Layers
 
         public virtual EffectLayer Render(IGameState gamestate)
         {
-            return new EffectLayer();
+            return _effectLayer;
         }
 
         public virtual void SetGameState(IGameState gamestate)

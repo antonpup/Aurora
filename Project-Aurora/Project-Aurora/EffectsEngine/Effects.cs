@@ -248,7 +248,7 @@ namespace Aurora
         {
             lock (bitmap_lock)
             {
-                EffectLayer background = new EffectLayer("Global Background", Color.FromArgb(0, 0, 0));
+                EffectLayer background = new EffectLayer("Global Background", Color.Black);
 
                 EffectLayer[] over_layers_array = frame.GetOverlayLayers().ToArray();
                 EffectLayer[] layers_array = frame.GetLayers().ToArray();
@@ -272,9 +272,8 @@ namespace Aurora
                 foreach (DeviceKeys key in possible_peripheral_keys)
                     background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
 
-
-                //if (Global.Configuration.UseVolumeAsBrightness)
-                    background *= Global.Configuration.GlobalBrightness;
+                background *= Global.Configuration.GlobalBrightness;
+                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.GlobalBrightness)), Color.Black));
 
                 if (_forcedFrame != null)
                 {

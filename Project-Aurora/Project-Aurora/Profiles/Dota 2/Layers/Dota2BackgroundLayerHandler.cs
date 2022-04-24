@@ -19,27 +19,27 @@ namespace Aurora.Profiles.Dota_2.Layers
         public Color? _DefaultColor { get; set; }
 
         [JsonIgnore]
-        public Color DefaultColor { get { return Logic._DefaultColor ?? _DefaultColor ?? Color.Empty; } }
+        public Color DefaultColor => Logic._DefaultColor ?? _DefaultColor ?? Color.Empty;
 
         public Color? _RadiantColor { get; set; }
 
         [JsonIgnore]
-        public Color RadiantColor { get { return Logic._RadiantColor ?? _RadiantColor ?? Color.Empty; } }
+        public Color RadiantColor => Logic._RadiantColor ?? _RadiantColor ?? Color.Empty;
 
         public Color? _DireColor { get; set; }
 
         [JsonIgnore]
-        public Color DireColor { get { return Logic._DireColor ?? _DireColor ?? Color.Empty; } }
+        public Color DireColor => Logic._DireColor ?? _DireColor ?? Color.Empty;
 
         public bool? _DimEnabled { get; set; }
 
         [JsonIgnore]
-        public bool DimEnabled { get { return Logic._DimEnabled ?? _DimEnabled ?? false; } }
+        public bool DimEnabled => Logic._DimEnabled ?? _DimEnabled ?? false;
 
         public double? _DimDelay { get; set; }
 
         [JsonIgnore]
-        public double DimDelay { get { return Logic._DimDelay ?? _DimDelay ?? 0.0; } }
+        public double DimDelay => Logic._DimDelay ?? _DimDelay ?? 0.0;
 
         public Dota2BackgroundLayerHandlerProperties() : base() { }
 
@@ -49,20 +49,21 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             base.Default();
 
-            this._DefaultColor = Color.FromArgb(140, 190, 230);
-            this._RadiantColor = Color.FromArgb(0, 140, 30);
-            this._DireColor = Color.FromArgb(200, 0, 0);
-            this._DimEnabled = true;
-            this._DimDelay = 15;
+            _DefaultColor = Color.FromArgb(140, 190, 230);
+            _RadiantColor = Color.FromArgb(0, 140, 30);
+            _DireColor = Color.FromArgb(200, 0, 0);
+            _DimEnabled = true;
+            _DimDelay = 15;
         }
 
     }
 
     public class Dota2BackgroundLayerHandler : LayerHandler<Dota2BackgroundLayerHandlerProperties>
     {
-        private bool isDimming = false;
+        private bool isDimming;
         private double dim_value = 1.0;
         private int dim_bg_at = 15;
+        private readonly EffectLayer _bgLayer = new("Dota 2 - Background");
 
         protected override UserControl CreateControl()
         {
@@ -71,8 +72,6 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer bg_layer = new EffectLayer("Dota 2 - Background");
-
             if (state is GameState_Dota2)
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
@@ -80,20 +79,20 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (dota2state.Previously.Hero.HealthPercent == 0 && dota2state.Hero.HealthPercent == 100 && !dota2state.Previously.Hero.IsAlive && dota2state.Hero.IsAlive)
                 {
                     isDimming = false;
-                    dim_bg_at = dota2state.Map.GameTime + (int)this.Properties.DimDelay;
+                    dim_bg_at = dota2state.Map.GameTime + (int)Properties.DimDelay;
                     dim_value = 1.0;
                 }
 
 
-                Color bg_color = this.Properties.DefaultColor;
+                Color bg_color = Properties.DefaultColor;
 
                 switch (dota2state.Player.Team)
                 {
                     case PlayerTeam.Dire:
-                        bg_color = this.Properties.DireColor;
+                        bg_color = Properties.DireColor;
                         break;
                     case PlayerTeam.Radiant:
-                        bg_color = this.Properties.RadiantColor;
+                        bg_color = Properties.RadiantColor;
                         break;
                     default:
                         break;
@@ -113,10 +112,10 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 }
 
-                bg_layer.Fill(bg_color);
+                _bgLayer.Fill(bg_color);
             }
 
-            return bg_layer;
+            return _bgLayer;
         }
 
         public override void SetApplication(Application profile)

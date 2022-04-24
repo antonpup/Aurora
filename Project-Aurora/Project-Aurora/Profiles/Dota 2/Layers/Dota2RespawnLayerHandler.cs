@@ -54,6 +54,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
     public class Dota2RespawnLayerHandler : LayerHandler<Dota2RespawnLayerHandlerProperties>
     {
+        private readonly EffectLayer _respawnLayer = new EffectLayer("Dota 2 - Respawn");
 
         protected override UserControl CreateControl()
         {
@@ -62,8 +63,6 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer respawn_layer = new EffectLayer("Dota 2 - Respawn");
-
             if (state is GameState_Dota2)
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
@@ -72,18 +71,22 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     double percent = (dota2state.Hero.SecondsToRespawn > 5 ? 0.0 : 1.0 - (dota2state.Hero.SecondsToRespawn / 5.0));
 
-                    respawn_layer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent));
+                    _respawnLayer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent));
 
-                    respawn_layer.PercentEffect(Properties.RespawningColor,
+                    _respawnLayer.PercentEffect(Properties.RespawningColor,
                             Properties.RespawnColor,
                             Properties.Sequence,
                             percent,
                             1.0,
                             PercentEffectType.AllAtOnce);
                 }
+                else
+                {
+                    _respawnLayer.Clear();
+                }
             }
 
-            return respawn_layer;
+            return _respawnLayer;
         }
 
         public override void SetApplication(Application profile)

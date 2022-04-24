@@ -121,6 +121,9 @@ namespace Aurora.Settings.Layers
 
     public class ShortcutAssistantLayerHandler : LayerHandler<ShortcutAssistantLayerHandlerProperties>
     {
+        private EffectLayer _scAssistantLayer = new("Shortcut Assistant");
+        private bool _clear = true;
+        
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_ShortcutAssistantLayer(this);
@@ -172,10 +175,16 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer sc_assistant_layer = new EffectLayer("Shortcut Assistant");
-
             if (IsLayerActive() == false)
-                return sc_assistant_layer;
+            {
+                if (!_clear)
+                {
+                    _scAssistantLayer.Clear();
+                    _clear = true;
+                }
+                return _scAssistantLayer;
+            }
+            _clear = false;
 
             // The layer is active. At this point we have at least 1 key to highlight
 
@@ -191,12 +200,12 @@ namespace Aurora.Settings.Layers
 
             // Convert to DeviceKeys
             Devices.DeviceKeys[] selectedKeys = BuildSelectedKeys(currentShortcutNode, heldKeysToHighlight);
-            Devices.DeviceKeys[] backgroundKeys = Utils.KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
+            Devices.DeviceKeys[] backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
 
             // Display keys
-            ApplyKeyColors(ref sc_assistant_layer, selectedKeys, backgroundKeys);
+            ApplyKeyColors(ref _scAssistantLayer, selectedKeys, backgroundKeys);
 
-            return sc_assistant_layer;
+            return _scAssistantLayer;
         }
 
         protected Devices.DeviceKeys[] BuildSelectedKeys(Tree<Keys> currentShortcutNode, Keys[] previousShortcutKeys)

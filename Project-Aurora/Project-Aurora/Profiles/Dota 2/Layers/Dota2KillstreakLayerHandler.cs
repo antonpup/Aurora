@@ -101,6 +101,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         private static long ks_duration = 4000;
         private static long ks_end_time = 0;
         private int current_kill_count = 0;
+        private readonly EffectLayer _killstreakLayer = new EffectLayer("Dota 2 - Killstreak");
 
         protected override UserControl CreateControl()
         {
@@ -111,8 +112,6 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             if (isPlayingKillStreakAnimation && Utils.Time.GetMillisecondsSinceEpoch() >= ks_end_time)
                 isPlayingKillStreakAnimation = false;
-
-            EffectLayer killstreak_layer = new EffectLayer("Dota 2 - Killstreak");
 
             if (state is GameState_Dota2)
             {
@@ -130,11 +129,11 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     Color ks_color = getKillStreakColor(dota2state.Player.KillStreak);
 
-                    killstreak_layer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, ks_color, getKSEffectValue()));
+                    _killstreakLayer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, ks_color, getKSEffectValue()));
                 }
             }
 
-            return killstreak_layer;
+            return _killstreakLayer;
         }
 
         public override void SetApplication(Application profile)

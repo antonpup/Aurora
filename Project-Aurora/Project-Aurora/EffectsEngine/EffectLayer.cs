@@ -6,6 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
+using Aurora.Devices;
 using Aurora.Utils;
 
 namespace Aurora.EffectsEngine
@@ -19,17 +20,47 @@ namespace Aurora.EffectsEngine
         private readonly Bitmap _colormap;
         private float _opacity = 1;
 
-        private readonly object _bufferLock = new();
+        private TextureBrush _textureBrush;
+        private bool _needsRender;
 
-        private bool _needsRender = false;
+        internal readonly Rectangle Dimension;
 
-        Color peripheral;
+        internal TextureBrush TextureBrush
+        {
+            get
+            {
+                if (_needsRender || _textureBrush == null)
+                {
+                    var colorMatrix = new ColorMatrix();
+                    colorMatrix.Matrix33 = _opacity;
+                    var imageAttributes = new ImageAttributes();
+                    imageAttributes.SetColorMatrix(
+                        colorMatrix,
+                        ColorMatrixFlag.Default,
+                        ColorAdjustType.Brush);
+                    imageAttributes.SetWrapMode(WrapMode.Clamp, Color.Empty);
 
-        private static Devices.DeviceKeys[] possible_peripheral_keys = {
-                Devices.DeviceKeys.Peripheral,
-                Devices.DeviceKeys.Peripheral_FrontLight,
-                Devices.DeviceKeys.Peripheral_ScrollWheel,
-                Devices.DeviceKeys.Peripheral_Logo
+                    _textureBrush?.Dispose();
+                    _textureBrush = new TextureBrush(_colormap, Dimension, imageAttributes);
+                    _needsRender = false;
+                }
+                else
+                {
+                    Console.Out.WriteLine("OK");;
+                }
+
+                return _textureBrush;
+            }
+            
+        }
+
+        Color _peripheral;
+
+        private static readonly DeviceKeys[] PossiblePeripheralKeys = {
+                DeviceKeys.Peripheral,
+                DeviceKeys.Peripheral_FrontLight,
+                DeviceKeys.Peripheral_ScrollWheel,
+                DeviceKeys.Peripheral_Logo
             };
 
         /// <summary>
@@ -39,10 +70,12 @@ namespace Aurora.EffectsEngine
         {
             _name = "Effect Layer";
             _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _textureBrush = new TextureBrush(_colormap);
+            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
-            peripheral = Color.FromArgb(0, 0, 0, 0);
+            _peripheral = Color.Empty;
 
-            Fill(Color.FromArgb(0, 0, 0, 0));
+            Fill(Color.Empty);
         }
 
         /// <summary>
@@ -55,8 +88,10 @@ namespace Aurora.EffectsEngine
             var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
             var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
             _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
+            _textureBrush = new TextureBrush(_colormap);
+            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
-            peripheral = anotherLayer.peripheral;
+            _peripheral = anotherLayer._peripheral;
 
             _needsRender = anotherLayer._needsRender;
         }
@@ -67,12 +102,14 @@ namespace Aurora.EffectsEngine
         /// <param name="name">A layer name</param>
         public EffectLayer(string name)
         {
-            this._name = name;
+            _name = name;
             _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _textureBrush = new TextureBrush(_colormap);
+            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
-            peripheral = Color.FromArgb(0, 0, 0, 0);
+            _peripheral = Color.Empty;
 
-            Fill(Color.FromArgb(0, 0, 0, 0));
+            Fill(Color.FromArgb(0, 1, 1, 1));
         }
 
         /// <summary>
@@ -82,10 +119,12 @@ namespace Aurora.EffectsEngine
         /// <param name="color">A color to fill the bitmap with</param>
         public EffectLayer(string name, Color color)
         {
-            this._name = name;
+            _name = name;
             _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _textureBrush = new TextureBrush(_colormap);
+            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
-            peripheral = color;
+            _peripheral = color;
 
             Fill(color);
         }
@@ -98,12 +137,14 @@ namespace Aurora.EffectsEngine
         /// <param name="effect">An enum specifying which LayerEffect to apply</param>
         /// <param name="effect_config">Configurations for the LayerEffect</param>
         /// <param name="rect">A rectangle specifying what region to apply effects in</param>
-        public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config, RectangleF rect = new RectangleF())
+        public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effect_config, RectangleF rect = new())
         {
-            this._name = name;
+            _name = name;
             _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _textureBrush = new TextureBrush(_colormap);
+            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
-            peripheral = new Color();
+            _peripheral = new Color();
             Brush brush;
             float shift = 0.0f;
 
@@ -292,6 +333,8 @@ namespace Aurora.EffectsEngine
 
         public void Dispose()
         {
+            _textureBrush.Dispose();
+            _textureBrush = null;
             _colormap.Dispose();
         }
 
@@ -337,29 +380,13 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="brush">Brush to be used during bitmap fill</param>
         /// <returns>Itself</returns>
-        public EffectLayer Fill(Brush brush)
+        public void Fill(Brush brush)
         {
             using (Graphics g = Graphics.FromImage(_colormap))
             {
-                /*if(brush is PathGradientBrush)
-                {
-                    GraphicsPath gp = new GraphicsPath();
-                    gp.AddEllipse((brush as PathGradientBrush).Rectangle);
-
-                    g.FillPath(brush, gp);
-                }
-                else
-                {
-                    Rectangle rect = new Rectangle(0, 0, colormap.Width, colormap.Height);
-                    g.FillRectangle(brush, rect);
-                }
-                */
-                Rectangle rect = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-                g.FillRectangle(brush, rect);
+                g.FillRectangle(brush, Dimension);
                 _needsRender = true;
             }
-
-            return this;
         }
 
         /// <summary>
@@ -371,8 +398,7 @@ namespace Aurora.EffectsEngine
         {
             using (Graphics g = GetGraphics())
             {
-                Rectangle rect = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-                g.FillRectangle(new SolidBrush(color), rect);
+                g.FillRectangle(new SolidBrush(color), Dimension);
                 _needsRender = true;
             }
 
@@ -381,11 +407,11 @@ namespace Aurora.EffectsEngine
         
         public void Clear()
         {
+            _keyBrushes.Clear();
             using (Graphics g = GetGraphics())
             {
-                Rectangle rect = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
                 g.CompositingMode = CompositingMode.SourceCopy;
-                g.FillRectangle(new SolidBrush(Color.Transparent), rect);
+                g.FillRectangle(ClearingBrush, Dimension);
                 _needsRender = true;
             }
         }
@@ -396,7 +422,7 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(Devices.DeviceKeys key, Color color)
+        public EffectLayer Set(DeviceKeys key, Color color)
         {
             SetOneKey(key, color);
 
@@ -408,13 +434,10 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="keys">Array of DeviceKeys to be set</param>
         /// <param name="color">Color to be used</param>
-        /// <returns>Itself</returns>
-        public EffectLayer Set(Devices.DeviceKeys[] keys, Color color)
+        public void Set(DeviceKeys[] keys, Color color)
         {
             foreach (var key in keys)
                 SetOneKey(key, color);
-
-            return this;
         }
 
         /// <summary>
@@ -458,7 +481,9 @@ namespace Aurora.EffectsEngine
                     myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
 
                     g.Transform = myMatrix;
+                    g.CompositingMode = CompositingMode.SourceCopy;
                     g.FillRectangle(brush, rect);
+                    _needsRender = true;
                 }
             }
 
@@ -485,8 +510,8 @@ namespace Aurora.EffectsEngine
         /// <param name="configureMatrix">An action that further configures the transformation matrix before render is called.</param>
         /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
         /// <param name="sourceRegion">The source region of the rendered content. This is used when calculating the transformation matrix, so that this
-        /// rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
-        public EffectLayer DrawTransformed(KeySequence sequence, Action<Matrix> configureMatrix, Action<Graphics> render, RectangleF sourceRegion)
+        ///     rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
+        public void DrawTransformed(KeySequence sequence, Action<Matrix> configureMatrix, Action<Graphics> render, RectangleF sourceRegion)
         {
             // The matrix represents the transformation that will be applied to the rendered content
             var matrix = new Matrix();
@@ -524,7 +549,7 @@ namespace Aurora.EffectsEngine
                 render(gfx);
             }
 
-            return this;
+            _needsRender = true;
         }
 
         /// <summary>
@@ -534,9 +559,11 @@ namespace Aurora.EffectsEngine
         /// <param name="sequence">The target sequence whose bounds will be used as the target location on the drawing canvas.</param>
         /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
         /// <param name="sourceRegion">The source region of the rendered content. This is used when calculating the transformation matrix, so that this
-        /// rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
-        public EffectLayer DrawTransformed(KeySequence sequence, Action<Graphics> render, RectangleF sourceRegion)
-            => DrawTransformed(sequence, _ => { }, render, sourceRegion);
+        ///     rectangle in the render context is transformed to the keysequence bounds in the layer's context. Note that no clipping is performed.</param>
+        public void DrawTransformed(KeySequence sequence, Action<Graphics> render, RectangleF sourceRegion)
+        {
+            DrawTransformed(sequence, _ => { }, render, sourceRegion);
+        }
 
         /// <summary>
         /// Allows drawing some arbitrary content to the sequence bounds, including translation, scaling and rotation.
@@ -545,44 +572,60 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="sequence">The target sequence whose bounds will be used as the target location on the drawing canvas.</param>
         /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
-        public EffectLayer DrawTransformed(KeySequence sequence, Action<Graphics> render) =>
-        DrawTransformed(sequence, render, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height));
+        public void DrawTransformed(KeySequence sequence, Action<Graphics> render)
+        {
+            DrawTransformed(sequence, render, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height));
+        }
 
         /// <summary>
         /// Sets one DeviceKeys key with a specific color on the bitmap
         /// </summary>
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
-        /// <returns>Itself</returns>
-        private EffectLayer SetOneKey(Devices.DeviceKeys key, Color color) => SetOneKey(key, new SolidBrush(color));
+        private void SetOneKey(DeviceKeys key, Color color)
+        {
+            SetOneKey(key, new SolidBrush(color));
+        }
+
+        private readonly Dictionary<DeviceKeys, SolidBrush> _keyBrushes = new();
+        private static readonly SolidBrush ClearingBrush = new(Color.Transparent);
 
         /// <summary>
         /// Sets one DeviceKeys key with a specific brush on the bitmap
         /// </summary>
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="brush">Brush to be used</param>
-        /// <returns>Itself</returns>
-        private EffectLayer SetOneKey(Devices.DeviceKeys key, Brush brush)
+        private void SetOneKey(DeviceKeys key, Brush brush)
         {
-            BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
-
-            if (key == Devices.DeviceKeys.Peripheral)
+            if (brush is SolidBrush solidBrush)
             {
-                if (brush is SolidBrush solidBrush)
-                    peripheral = solidBrush.Color;
+                if (_keyBrushes.TryGetValue(key, out var currentBrush) && currentBrush.Color == solidBrush.Color)
+                {
+                    return;
+                }
+                _keyBrushes[key] = solidBrush;
+            }
+            BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
+            _needsRender = true;
+
+            if (key == DeviceKeys.Peripheral)
+            {
+                if (brush is SolidBrush pSolidBrush)
+                    _peripheral = pSolidBrush.Color;
                 // TODO Add support for this ^ to other brush types
 
                 using (Graphics g = Graphics.FromImage(_colormap))
                 {
-                    foreach (Devices.DeviceKeys peri_key in possible_peripheral_keys)
+                    g.CompositingMode = CompositingMode.SourceCopy;
+                    foreach (DeviceKeys periKey in PossiblePeripheralKeys)
                     {
-                        BitmapRectangle peri_keymaping = Effects.GetBitmappingFromDeviceKey(peri_key);
+                        BitmapRectangle periKeymaping = Effects.GetBitmappingFromDeviceKey(periKey);
 
-                        if (peri_keymaping.IsValid)
-                            g.FillRectangle(brush, peri_keymaping.Rectangle);
+                        if (periKeymaping.IsValid)
+                        {
+                            g.FillRectangle(brush, periKeymaping.Rectangle);
+                        }
                     }
-
-                    _needsRender = true;
                 }
             }
             else
@@ -591,17 +634,15 @@ namespace Aurora.EffectsEngine
                     keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
                 {
                     Global.logger.Warn("Coudln't set key color " + key);
-                    return this;
+                    return;
                 }
 
                 using (Graphics g = Graphics.FromImage(_colormap))
                 {
+                    g.CompositingMode = CompositingMode.SourceCopy;
                     g.FillRectangle(brush, keymaping.Rectangle);
-                    _needsRender = true;
                 }
             }
-
-            return this;
         }
 
         /// <summary>
@@ -609,22 +650,26 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>Color of the Key</returns>
-        public Color Get(Devices.DeviceKeys key)
+        public Color Get(DeviceKeys key)
         {
+            if (_keyBrushes.TryGetValue(key, out var brush))
+            {
+                return brush.Color;
+            }
             try
             {
                 BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                if (keymaping.IsEmpty && key == Devices.DeviceKeys.Peripheral)
+                if (keymaping.IsEmpty && key == DeviceKeys.Peripheral)
                 {
-                    return peripheral;
+                    return _peripheral;
                 }
                 else
                 {
                     if (keymaping.IsEmpty)
                         return Color.FromArgb(0, 0, 0);
 
-                    return Utils.BitmapUtils.GetRegionColor(_colormap, keymaping.Rectangle);
+                    return BitmapUtils.GetRegionColor(_colormap, keymaping.Rectangle);
                 }
             }
             catch (Exception exc)
@@ -638,8 +683,9 @@ namespace Aurora.EffectsEngine
         /// Get an instance of Drawing.Graphics, to allow drawing on the bitmap.
         /// </summary>
         /// <returns>Graphics instance</returns>
-        public Graphics GetGraphics()
+        public Graphics GetGraphics()   //TODO deprecate
         {
+            _needsRender = true;
             return Graphics.FromImage(_colormap);
         }
 
@@ -657,32 +703,18 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="lhs">Left Hand Side EffectLayer</param>
         /// <param name="rhs">Right Hand Side EffectLayer</param>
-        /// <returns>A new instance of EffectLayer, which is a combination of two passed EffectLayers</returns>
+        /// <returns>Left hand side EffectLayer, which is a combination of two passed EffectLayers</returns>
         public static EffectLayer operator +(EffectLayer lhs, EffectLayer rhs)
         {
-            var colorMatrix = new ColorMatrix();
-            colorMatrix.Matrix33 = rhs._opacity;
-            var imageAttributes = new ImageAttributes();
-            imageAttributes.SetColorMatrix(
-                colorMatrix,
-                ColorMatrixFlag.Default,
-                ColorAdjustType.Bitmap);
-            
             using (Graphics g = lhs.GetGraphics())
             {
-                lock (rhs._bufferLock)  //g.DrawImage(rhs.colormap, 0, 0);
-                    g.DrawImage(
-                        rhs._colormap,
-                        new Rectangle(0, 0, lhs._colormap.Width, lhs._colormap.Height),
-                        0,
-                        0,
-                        lhs._colormap.Width,
-                        lhs._colormap.Height,
-                        GraphicsUnit.Pixel,
-                        imageAttributes);
+                g.CompositingMode = CompositingMode.SourceOver;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+                g.FillRectangle(rhs.TextureBrush, rhs.Dimension);
             }
+            lhs._needsRender = true;
 
-            lhs.peripheral = ColorUtils.AddColors(lhs.peripheral, rhs.peripheral);
+            lhs._peripheral = ColorUtils.AddColors(lhs._peripheral, rhs._peripheral);
             return lhs;
         }
 
@@ -694,7 +726,11 @@ namespace Aurora.EffectsEngine
         /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
-            layer._opacity = (float) value;
+            if (!ColorUtils.NearlyEqual(layer._opacity,(float)value, 0.001f))
+            {
+                layer._opacity = (float) value;
+                layer._needsRender = true;
+            }
             return layer;
         }
 
@@ -708,7 +744,7 @@ namespace Aurora.EffectsEngine
         /// <param name="total">The maxiumum progress value</param>
         /// <param name="percentEffectType">The percent effect type</param>
         /// <returns>Itself</returns>
-        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, Settings.KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
+        public EffectLayer PercentEffect(Color foregroundColor, Color backgroundColor, KeySequence sequence, double value, double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
         {
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed, blink_background);
@@ -762,7 +798,7 @@ namespace Aurora.EffectsEngine
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
                     if (blink_background)
-                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.Empty, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                     else
                         foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
@@ -901,9 +937,9 @@ namespace Aurora.EffectsEngine
                 if ((flash_reversed && progress_total >= flash_past) || (!flash_reversed && progress_total <= flash_past))
                 {
                     if (!blink_background)
-                        foregroundColor = Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin((Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                     if (blink_background)
-                        backgroundColor = Utils.ColorUtils.BlendColors(backgroundColor, Color.FromArgb(0, 0, 0, 0), Math.Sin((Utils.Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
+                        backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, Math.Sin((Time.GetMillisecondsSinceEpoch() % 1000.0D) / 1000.0D * Math.PI));
                 }
             }
 
@@ -911,8 +947,8 @@ namespace Aurora.EffectsEngine
             {
                 float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
                 float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                float width = (float)(freeform.Width * Effects.editor_to_canvas_width);
-                float height = (float)(freeform.Height * Effects.editor_to_canvas_height);
+                float width = freeform.Width * Effects.editor_to_canvas_width;
+                float height = freeform.Height * Effects.editor_to_canvas_height;
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
@@ -928,7 +964,7 @@ namespace Aurora.EffectsEngine
                     myMatrix.RotateAt(freeform.Angle, rotatePoint, MatrixOrder.Append);
 
                     g.Transform = myMatrix;
-                    g.FillRectangle(new SolidBrush(Utils.ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total)), rect);
+                    g.FillRectangle(new SolidBrush(ColorUtils.BlendColors(backgroundColor, foregroundColor, progress_total)), rect);
                 }
                 else
                 {
@@ -949,6 +985,7 @@ namespace Aurora.EffectsEngine
                     g.FillRectangle(new SolidBrush(foregroundColor), rect);
                 }
             }
+            _needsRender = true;
 
             return this;
         }
@@ -1018,6 +1055,7 @@ namespace Aurora.EffectsEngine
                     brush.WrapMode = WrapMode.Tile;
                     g.FillRectangle(brush, rect);
                 }
+                _needsRender = true;
 
                 return this;
             }
@@ -1027,16 +1065,15 @@ namespace Aurora.EffectsEngine
         /// Excludes provided sequence from the layer (Applies a mask)
         /// </summary>
         /// <param name="sequence">The mask to be applied</param>
-        /// <returns>Itself</returns>
-        public EffectLayer Exclude(KeySequence sequence)
+        public void Exclude(KeySequence sequence)
         {
             //Create draw alpha mask
-            EffectLayer _alpha_mask = new EffectLayer(this._name + " - Alpha Mask", Color.Transparent);
+            EffectLayer _alpha_mask = new EffectLayer(_name + " - Alpha Mask", Color.Transparent);
             _alpha_mask.Set(sequence, Color.Black);
 
             //Apply alpha mask
             BitmapData srcData_alpha = _alpha_mask._colormap.LockBits(
-                new Rectangle(0, 0, _alpha_mask._colormap.Width, _alpha_mask._colormap.Height),
+                Dimension,
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1045,7 +1082,7 @@ namespace Aurora.EffectsEngine
 
 
             BitmapData srcData = _colormap.LockBits(
-                new Rectangle(0, 0, _colormap.Width, _colormap.Height),
+                Dimension,
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1053,8 +1090,8 @@ namespace Aurora.EffectsEngine
 
             IntPtr Scan0 = srcData.Scan0;
 
-            int width = _colormap.Width;
-            int height = _colormap.Height;
+            int width = Dimension.Width;
+            int height = Dimension.Height;
 
             unsafe
             {
@@ -1074,16 +1111,14 @@ namespace Aurora.EffectsEngine
 
             _alpha_mask._colormap.UnlockBits(srcData_alpha);
             _colormap.UnlockBits(srcData);
-
-            return this;
+            _needsRender = true;
         }
 
         /// <summary>
         /// Inlcudes provided sequence from the layer (Applies a mask)
         /// </summary>
         /// <param name="sequence">The mask to be applied</param>
-        /// <returns>Itself</returns>
-        public EffectLayer OnlyInclude(KeySequence sequence)
+        public void OnlyInclude(KeySequence sequence)
         {
             //Create draw alpha mask
             EffectLayer _alpha_mask = new EffectLayer(this._name + " - Alpha Mask", Color.Transparent);
@@ -1091,7 +1126,7 @@ namespace Aurora.EffectsEngine
 
             //Apply alpha mask
             BitmapData srcData_alpha = _alpha_mask._colormap.LockBits(
-                new Rectangle(0, 0, _alpha_mask._colormap.Width, _alpha_mask._colormap.Height),
+                Dimension,
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1100,7 +1135,7 @@ namespace Aurora.EffectsEngine
 
 
             BitmapData srcData = _colormap.LockBits(
-                new Rectangle(0, 0, _colormap.Width, _colormap.Height),
+                Dimension,
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
 
@@ -1108,8 +1143,8 @@ namespace Aurora.EffectsEngine
 
             IntPtr Scan0 = srcData.Scan0;
 
-            int width = _colormap.Width;
-            int height = _colormap.Height;
+            int width = Dimension.Width;
+            int height = Dimension.Height;
 
             unsafe
             {
@@ -1129,8 +1164,7 @@ namespace Aurora.EffectsEngine
 
             _alpha_mask._colormap.UnlockBits(srcData_alpha);
             _colormap.UnlockBits(srcData);
-
-            return this;
+            _needsRender = true;
         }
 
         /// <summary>

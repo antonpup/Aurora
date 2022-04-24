@@ -53,16 +53,17 @@ namespace Aurora.Profiles.Dota_2.Layers
             return new Control_Dota2AbilityLayer(this);
         }
 
-        private List<string> ignoredAbilities = new List<string>() { "seasonal", "high_five" };
+        private List<string> ignoredAbilities = new() { "seasonal", "high_five" };
+        private readonly EffectLayer _abilitiesLayer = new("Dota 2 - Abilities");
+
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer abilities_layer = new EffectLayer("Dota 2 - Abilities");
-
             if (state is GameState_Dota2)
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
 
-                if (Properties.AbilityKeys.Count >= 6)
+                if (dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME ||
+                    dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
                 {
                     for (int index = 0; index < dota2state.Abilities.Count; index++)
                     {
@@ -75,17 +76,21 @@ namespace Aurora.Profiles.Dota_2.Layers
                             Devices.DeviceKeys key = Properties.AbilityKeys[index];
 
                             if (ability.CanCast && ability.Cooldown == 0 && ability.Level > 0)
-                                abilities_layer.Set(key, Properties.CanCastAbilityColor);
+                                _abilitiesLayer.Set(key, Properties.CanCastAbilityColor);
                             else if (ability.Cooldown <= 5 && ability.Level > 0)
-                                abilities_layer.Set(key, Utils.ColorUtils.BlendColors(Properties.CanCastAbilityColor, Properties.CanNotCastAbilityColor, (double)ability.Cooldown / 5.0));
+                                _abilitiesLayer.Set(key, Utils.ColorUtils.BlendColors(Properties.CanCastAbilityColor, Properties.CanNotCastAbilityColor, (double)ability.Cooldown / 5.0));
                             else
-                                abilities_layer.Set(key, Properties.CanNotCastAbilityColor);
+                                _abilitiesLayer.Set(key, Properties.CanNotCastAbilityColor);
                         }
                     }
                 }
+                else
+                {
+                    _abilitiesLayer.Clear();
+                }
             }
 
-            return abilities_layer;
+            return _abilitiesLayer;
         }
 
         public override void SetApplication(Application profile)

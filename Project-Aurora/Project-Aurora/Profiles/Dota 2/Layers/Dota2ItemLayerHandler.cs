@@ -338,6 +338,8 @@ namespace Aurora.Profiles.Dota_2.Layers
             { "regen", Color.FromArgb(146, 85, 183) }
         };
 
+        private readonly EffectLayer _itemsLayer = new("Dota 2 - Items");
+
         protected override UserControl CreateControl()
         {
             return new Control_Dota2ItemLayer(this);
@@ -345,13 +347,12 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer items_layer = new EffectLayer("Dota 2 - Items");
-
             if (state is GameState_Dota2)
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
 
-                if (Properties.ItemKeys.Count >= 6)
+                if (dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME ||
+                    dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
                 {
                     for (int index = 0; index < dota2state.Items.InventoryCount; index++)
                     {
@@ -359,28 +360,28 @@ namespace Aurora.Profiles.Dota_2.Layers
                         Devices.DeviceKeys key = Properties.ItemKeys[index];
 
                         if (item.Name.Equals("empty"))
-                            items_layer.Set(key, Properties.EmptyItemColor);
+                            _itemsLayer.Set(key, Properties.EmptyItemColor);
                         else
                         {
                             if (Properties.UseItemColors && item_colors.ContainsKey(item.Name))
                             {
                                 if (!String.IsNullOrWhiteSpace(item.ContainsRune))
-                                    items_layer.Set(key, Utils.ColorUtils.BlendColors(item_colors[item.Name], bottle_rune_colors[item.ContainsRune], 0.8));
+                                    _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(item_colors[item.Name], bottle_rune_colors[item.ContainsRune], 0.8));
                                 else
-                                    items_layer.Set(key, item_colors[item.Name]);
+                                    _itemsLayer.Set(key, item_colors[item.Name]);
                             }
                             else
-                                items_layer.Set(key, Properties.ItemsColor);
+                                _itemsLayer.Set(key, Properties.ItemsColor);
 
                             //Cooldown
                             if (item.Cooldown > 5)
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Properties.ItemCooldownColor, 1.0));
+                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, 1.0));
                             else if (item.Cooldown > 0 && item.Cooldown <= 5)
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
+                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
 
                             //Charges
                             if (item.Charges == 0)
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Properties.ItemNoChargersColor, 0.7));
+                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
                         }
                     }
 
@@ -391,35 +392,39 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                         if (item.Name.Equals("empty"))
                         {
-                            items_layer.Set(key, Properties.EmptyItemColor);
+                            _itemsLayer.Set(key, Properties.EmptyItemColor);
                         }
                         else
                         {
                             if (Properties.UseItemColors && item_colors.ContainsKey(item.Name))
                             {
                                 if (!String.IsNullOrWhiteSpace(item.ContainsRune))
-                                    items_layer.Set(key, Utils.ColorUtils.BlendColors(item_colors[item.Name], bottle_rune_colors[item.ContainsRune], 0.8));
+                                    _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(item_colors[item.Name], bottle_rune_colors[item.ContainsRune], 0.8));
                                 else
-                                    items_layer.Set(key, item_colors[item.Name]);
+                                    _itemsLayer.Set(key, item_colors[item.Name]);
                             }
                             else
-                                items_layer.Set(key, Properties.ItemsColor);
+                                _itemsLayer.Set(key, Properties.ItemsColor);
 
                             //Cooldown
                             if (item.Cooldown > 5)
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Properties.ItemCooldownColor, 1.0));
+                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, 1.0));
                             else if (item.Cooldown > 0 && item.Cooldown <= 5)
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
+                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
 
                             //Charges
                             if (item.Charges == 0)
-                                items_layer.Set(key, Utils.ColorUtils.BlendColors(items_layer.Get(key), Properties.ItemNoChargersColor, 0.7));
+                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
                         }
                     }
                 }
+                else
+                {
+                    _itemsLayer.Clear();
+                }
             }
 
-            return items_layer;
+            return _itemsLayer;
         }
 
         public override void SetApplication(Application profile)
