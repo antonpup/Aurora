@@ -726,7 +726,7 @@ namespace Aurora.EffectsEngine
         /// <returns>The passed instance of EffectLayer with adjustments</returns>
         public static EffectLayer operator *(EffectLayer layer, double value)
         {
-            if (!ColorUtils.NearlyEqual(layer._opacity,(float)value, 0.001f))
+            if (!ColorUtils.NearlyEqual(layer._opacity,(float)value, 0.0001f))
             {
                 layer._opacity = (float) value;
                 layer._needsRender = true;

@@ -56,6 +56,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         private List<string> ignoredAbilities = new() { "seasonal", "high_five" };
         private readonly EffectLayer _abilitiesLayer = new("Dota 2 - Abilities");
 
+        private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
             if (state is GameState_Dota2)
@@ -70,6 +71,8 @@ namespace Aurora.Profiles.Dota_2.Layers
                         Ability ability = dota2state.Abilities[index];
                         if (ignoredAbilities.Any(ignoredAbilityName => ability.Name.Contains(ignoredAbilityName)))
                             continue;
+                        
+                        _empty = false;
 
                         if(index < Properties.AbilityKeys.Count)
                         {
@@ -86,7 +89,11 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else
                 {
-                    _abilitiesLayer.Clear();
+                    if (!_empty)
+                    {
+                        _abilitiesLayer.Clear();
+                        _empty = true;
+                    }
                 }
             }
 

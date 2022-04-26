@@ -101,20 +101,20 @@ namespace Aurora.Profiles.Dota_2.Layers
         private static long ks_duration = 4000;
         private static long ks_end_time = 0;
         private int current_kill_count = 0;
-        private readonly EffectLayer _killstreakLayer = new EffectLayer("Dota 2 - Killstreak");
+        private readonly EffectLayer _killstreakLayer = new("Dota 2 - Killstreak");
 
         protected override UserControl CreateControl()
         {
             return new Control_Dota2KillstreakLayer(this);
         }
 
+        
+        private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
             if (isPlayingKillStreakAnimation && Utils.Time.GetMillisecondsSinceEpoch() >= ks_end_time)
-                isPlayingKillStreakAnimation = false;
-            else
             {
-                _killstreakLayer.Clear();
+                isPlayingKillStreakAnimation = false;
             }
 
             if (state is GameState_Dota2)
@@ -122,18 +122,30 @@ namespace Aurora.Profiles.Dota_2.Layers
                 GameState_Dota2 dota2state = state as GameState_Dota2;
 
                 if(current_kill_count < dota2state.Player.Kills)
-                {
+                {    //player got a kill
                     isPlayingKillStreakAnimation = true;
 
                     ks_end_time = Utils.Time.GetMillisecondsSinceEpoch() + ks_duration;
                 }
                 current_kill_count = dota2state.Player.Kills;
+                
+                var ksEffectValue = getKSEffectValue();
+                if (ksEffectValue <= 0 && !_empty)
+                {
+                    _killstreakLayer.Clear();
+                    _empty = true;
+                }
 
                 if (dota2state.Player.KillStreak >= 2)
                 {
                     Color ks_color = getKillStreakColor(dota2state.Player.KillStreak);
 
-                    _killstreakLayer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, ks_color, getKSEffectValue()));
+                    if (ksEffectValue > 0)
+                    {
+                        _killstreakLayer.Clear();
+                        _killstreakLayer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, ks_color, ksEffectValue));
+                        _empty = false;
+                    }
                 }
             }
 

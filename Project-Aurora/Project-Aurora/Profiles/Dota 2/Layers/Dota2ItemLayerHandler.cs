@@ -345,6 +345,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             return new Control_Dota2ItemLayer(this);
         }
 
+        private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
             if (state is GameState_Dota2)
@@ -354,6 +355,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME ||
                     dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
                 {
+                    _empty = false;
                     for (int index = 0; index < dota2state.Items.InventoryCount; index++)
                     {
                         Item item = dota2state.Items.GetInventoryAt(index);
@@ -420,7 +422,11 @@ namespace Aurora.Profiles.Dota_2.Layers
                 }
                 else
                 {
-                    _itemsLayer.Clear();
+                    if (!_empty)
+                    {
+                        _itemsLayer.Clear();
+                        _empty = true;
+                    }
                 }
             }
 

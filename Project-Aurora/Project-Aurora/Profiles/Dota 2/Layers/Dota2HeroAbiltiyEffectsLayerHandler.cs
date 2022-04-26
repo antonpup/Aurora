@@ -135,7 +135,6 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             previoustime = currenttime;
             currenttime = Utils.Time.GetMillisecondsSinceEpoch();
-            _abilityEffectsLayer.Clear();
 
             if (currenttime - previoustime > 300000 || (currenttime == 0 && previoustime == 0))
                 UpdateAnimations();
@@ -552,10 +551,11 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                 //Begin rendering
 
-                if (abiltiyeffect_keyframe >= abilityeffect_time)
+                if (currentabilityeffect != null && abiltiyeffect_keyframe >= abilityeffect_time)
                 {
                     currentabilityeffect = Dota2AbilityEffects.None;
                     abiltiyeffect_keyframe = 0.0f;
+                    _abilityEffectsLayer.Clear();
                 }
 
 
