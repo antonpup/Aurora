@@ -16,6 +16,8 @@ namespace Aurora.EffectsEngine
     /// </summary>
     public class EffectLayer : IDisposable
     {
+        public static readonly Lazy<EffectLayer> EmptyLayer = new();
+
         private readonly String _name;
         private readonly Bitmap _colormap;
         private float _opacity = 1;
@@ -29,25 +31,17 @@ namespace Aurora.EffectsEngine
         {
             get
             {
-                if (_needsRender || _textureBrush == null)
-                {
-                    var colorMatrix = new ColorMatrix();
-                    colorMatrix.Matrix33 = _opacity;
-                    var imageAttributes = new ImageAttributes();
-                    imageAttributes.SetColorMatrix(
-                        colorMatrix,
-                        ColorMatrixFlag.Default,
-                        ColorAdjustType.Brush);
-                    imageAttributes.SetWrapMode(WrapMode.Clamp, Color.Empty);
+                if (!_needsRender && _textureBrush != null) return _textureBrush;
 
-                    _textureBrush?.Dispose();
-                    _textureBrush = new TextureBrush(_colormap, Dimension, imageAttributes);
-                    _needsRender = false;
-                }
-                else
-                {
-                    Console.Out.WriteLine("OK");;
-                }
+                var colorMatrix = new ColorMatrix();
+                colorMatrix.Matrix33 = _opacity;
+                var imageAttributes = new ImageAttributes();
+                imageAttributes.SetColorMatrix(colorMatrix);
+                imageAttributes.SetWrapMode(WrapMode.Clamp, Color.Empty);
+
+                _textureBrush?.Dispose();
+                _textureBrush = new TextureBrush(_colormap, Dimension, imageAttributes);
+                _needsRender = false;
 
                 return _textureBrush;
             }
@@ -385,6 +379,7 @@ namespace Aurora.EffectsEngine
             using (Graphics g = Graphics.FromImage(_colormap))
             {
                 g.FillRectangle(brush, Dimension);
+                g.CompositingMode = CompositingMode.SourceCopy;
                 _needsRender = true;
             }
         }
@@ -394,10 +389,13 @@ namespace Aurora.EffectsEngine
         /// </summary>
         /// <param name="color">Color to be used during bitmap fill</param>
         /// <returns>Itself</returns>
+        [Obsolete("Use with Brush argument")]
         public EffectLayer Fill(Color color)
         {
             using (Graphics g = GetGraphics())
             {
+                //g.CompositingMode = CompositingMode.SourceCopy;
+                g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(new SolidBrush(color), Dimension);
                 _needsRender = true;
             }

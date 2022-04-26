@@ -70,7 +70,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             return new Control_Dota2BackgroundLayer(this);
         }
 
-        private Color _currentColor = Color.Empty;
+        private SolidBrush _currentColor = new(Color.Empty);
         public override EffectLayer Render(IGameState state)
         {
             if (state is GameState_Dota2)
@@ -113,11 +113,11 @@ namespace Aurora.Profiles.Dota_2.Layers
                     }
                 }
 
-                if (_currentColor != bg_color)
+                if (_currentColor.Color != bg_color)
                 {
+                    _currentColor = new SolidBrush(bg_color);
                     _bgLayer.Clear();
-                    _bgLayer.Fill(bg_color);
-                    _currentColor = bg_color;
+                    _bgLayer.Fill(_currentColor);
                 }
             }
 

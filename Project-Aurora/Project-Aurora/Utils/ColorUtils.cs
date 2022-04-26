@@ -89,10 +89,10 @@ namespace Aurora.Utils
             else if (percent > 1.0)
                 percent = 1.0;
 
-            int Red = (byte)Math.Min((Int32)foreground.R * percent + (Int32)background.R * (1.0 - percent), 255);
-            int Green = (byte)Math.Min((Int32)foreground.G * percent + (Int32)background.G * (1.0 - percent), 255);
-            int Blue = (byte)Math.Min((Int32)foreground.B * percent + (Int32)background.B * (1.0 - percent), 255);
-            int Alpha = (byte)Math.Min((Int32)foreground.A * percent + (Int32)background.A * (1.0 - percent), 255);
+            int Red = (byte)Math.Min(foreground.R * percent + background.R * (1.0 - percent), 255);
+            int Green = (byte)Math.Min(foreground.G * percent + background.G * (1.0 - percent), 255);
+            int Blue = (byte)Math.Min(foreground.B * percent + background.B * (1.0 - percent), 255);
+            int Alpha = (byte)Math.Min(foreground.A * percent + background.A * (1.0 - percent), 255);
 
             return DrawingColor.FromArgb(Alpha, Red, Green, Blue);
         }
@@ -104,53 +104,13 @@ namespace Aurora.Utils
         /// <param name="foreground">The foreground color</param>
         /// <returns>The sum of two colors including combined alpha</returns>
         public static DrawingColor AddColors(DrawingColor background, DrawingColor foreground)
-            => MediaColorToDrawingColor(AddColors(DrawingColorToMediaColor(background), DrawingColorToMediaColor(foreground)));
-
-        /// <summary>
-        /// Adds two colors together by using the "SRC over DST" blending algorithm by Porter and Duff
-        /// </summary>
-        /// <param name="background">The background color</param>
-        /// <param name="foreground">The foreground color</param>
-        /// <returns>The sum of two colors including combined alpha</returns>
-        public static MediaColor AddColors(MediaColor background, MediaColor foreground)
         {
-            //Do not calculate anything when at least one Alpha is 0 also prevents "new_alpha" to become 0 (can't divide through 0)
-            if (background.A <= 0 && foreground.A <= 0)
-                return MediaColor.FromArgb(0, 0, 0, 0);
-
-            if (background.A <= 0)
-                return foreground;
-
-            if (foreground.A <= 0)
-                return background;
-
-            float new_alpha = (background.ScA + foreground.ScA) - (background.ScA * foreground.ScA);
-
-            var bg_a = CorrectWithAlpha(background);
-            var fg_a = CorrectWithAlpha(foreground);
-
-            var color_final_a = MediaColor.FromScRgb(1, 1, 1, 1);
-            color_final_a.ScR = fg_a.ScR + (bg_a.ScR * (1 - foreground.ScA));
-            color_final_a.ScG = fg_a.ScG + (bg_a.ScG * (1 - foreground.ScA));
-            color_final_a.ScB = fg_a.ScB + (bg_a.ScB * (1 - foreground.ScA));
-
-            var color_final = MediaColor.FromScRgb(0, 0, 0, 0);
-            color_final.ScR = color_final_a.ScR / new_alpha;
-            color_final.ScG = color_final_a.ScG / new_alpha;
-            color_final.ScB = color_final_a.ScB / new_alpha;
-            color_final.ScA = new_alpha;
-
-            return color_final;
-        }
-
-        /// <summary>
-        /// Multiplies all non-alpha values by alpha.
-        /// </summary>
-        /// <param name="color">Color to correct</param>
-        /// <returns>Corrected Color</returns>
-        public static MediaColor CorrectWithAlpha(MediaColor color)
-        {
-            return MediaColor.FromScRgb(1, (color.ScR * color.ScA), (color.ScG * color.ScA), (color.ScB * color.ScA));
+            return DrawingColor.FromArgb(
+                (int)(1 - (255 - background.A) / 255d * (255 - foreground.A) / 255d) * 255,
+                foreground.R * foreground.A / 255 + background.R * ( 255 - background.A) / 255,
+                foreground.G * foreground.A / 255 + background.G * ( 255 - background.A) / 255,
+                foreground.B * foreground.A / 255 + background.B * ( 255 - background.A) / 255
+                );
         }
 
         /// <summary>
@@ -397,17 +357,6 @@ namespace Aurora.Utils
             var result = strength >= 0 ? component / (1 - Math.Sin(Math.PI * strength / 2))
                                        : component * (1 - Math.Sin(-Math.PI * strength / 2));
             component = MathUtils.Clamp(result, 0, 1);
-        }
-
-        /// <summary>
-        /// Returns a Luma coefficient for brightness of a color
-        /// </summary>
-        /// <param name="color">Color to be evaluated</param>
-        /// <returns>The brightness of the color. [0 = Dark, 255 = Bright]</returns>
-        public static byte GetColorBrightness(DrawingColor color)
-        {
-            //Source: http://stackoverflow.com/a/12043228
-            return (byte)(0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B);
         }
 
         public static MediaColor CloneMediaColor(MediaColor clr)
