@@ -43,10 +43,12 @@ namespace Aurora.Profiles.CSGO.Layers
 
     public class CSGODeathLayerHandler : LayerHandler<CSGODeathLayerHandlerProperties>
     {
-        private bool isDead = false;
-        private long fadeStartAt = 15;
-        private int fadeAlpha = 255;
-
+        private readonly EffectLayer _effectLayer = new("CSGO - Death Effect");
+        private bool _isDead;
+        private int _fadeAlpha = 255;
+        private long _lastTimeMillis;
+        private SolidBrush _solidBrush = new(Color.Empty);
+        
         protected override UserControl CreateControl()
         {
             return new Control_CSGODeathLayer(this);
@@ -54,54 +56,38 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer effectLayer = new EffectLayer("CSGO - Death Effect");
+            if (state is not GameState_CSGO gameState) return _effectLayer;
+            var deathColor = Properties.DeathColor;
 
-            if (state is GameState_CSGO)
+            // Confirm if CS:GO Player is correct
+            if (!gameState.Provider.SteamID.Equals(gameState.Player.SteamID)) return _effectLayer;
+
+            // Are they dead?
+            if (!_isDead && gameState.Player.State.Health <= 0 && gameState.Previously.Player.State.Health > 0)
             {
-                GameState_CSGO gameState = state as GameState_CSGO;
-                Color deathColor = this.Properties.DeathColor;
-
-                // Confirm if CS:GO Player is correct
-                if (gameState.Provider.SteamID.Equals(gameState.Player.SteamID))
-                {
-
-                    // Are they dead?
-                    if (!isDead && gameState.Player.State.Health <= 0 && gameState.Previously.Player.State.Health > 0)
-                    {
-                        isDead = true;
-
-                        fadeAlpha = 255;
-                        fadeStartAt = Utils.Time.GetMillisecondsSinceEpoch() + (long)(this.Properties.FadeOutAfter * 1000D);
-                    } else if (gameState.Player.State.Health > 0)
-                    {
-                        isDead = false;
-                        return effectLayer;
-                    }
-
-                    // If so...
-                    if (isDead)
-                    {
-
-                        Global.logger.Info("IsDead");
-                        if (fadeStartAt <= Utils.Time.GetMillisecondsSinceEpoch())
-                        {
-                            int fadeAlpha = getFadeAlpha();
-                            Global.logger.Info(fadeAlpha);
-
-                            deathColor = Color.FromArgb(fadeAlpha, deathColor.R, deathColor.G, deathColor.B);
-
-                            if (fadeAlpha == 0)
-                            {
-                                isDead = false;
-                            }
-                        }
-
-                        effectLayer.Fill(deathColor);
-                    }
-                }
+                _isDead = true;
+                _lastTimeMillis = Utils.Time.GetMillisecondsSinceEpoch();
+                _fadeAlpha = 255;
             }
 
-            return effectLayer;
+            if (!_isDead)
+            {
+                return _effectLayer;
+            }
+
+            // If so...
+            var fadeAlpha = GetFadeAlpha();
+            _solidBrush.Color = Color.FromArgb(fadeAlpha, deathColor.R, deathColor.G, deathColor.B);
+
+            if (fadeAlpha == 0)
+            {
+                _isDead = false;
+                _effectLayer.Clear();
+                return _effectLayer;
+            }
+
+            _effectLayer.Fill(_solidBrush);
+            return _effectLayer;
         }
 
         public override void SetApplication(Application profile)
@@ -110,10 +96,12 @@ namespace Aurora.Profiles.CSGO.Layers
             base.SetApplication(profile);
         }
 
-        private int getFadeAlpha()
+        private int GetFadeAlpha()
         {
-            fadeAlpha -= 15;
-            return fadeAlpha = (fadeAlpha < 0 ? 0 : fadeAlpha);
+            var t = Utils.Time.GetMillisecondsSinceEpoch() - _lastTimeMillis;
+            _lastTimeMillis = Utils.Time.GetMillisecondsSinceEpoch();
+            _fadeAlpha -= (int)(t / 10);
+            return _fadeAlpha = _fadeAlpha < 0 ? 0 : _fadeAlpha;
         }
     }
 }

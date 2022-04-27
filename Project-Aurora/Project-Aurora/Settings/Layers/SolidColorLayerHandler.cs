@@ -35,10 +35,6 @@ namespace Aurora.Settings.Layers
         
         public override EffectLayer Render(IGameState gamestate)
         {
-            if (Properties.Sequence.Equals(_propertiesSequence) && _brush.Color == Properties.PrimaryColor)
-            {
-                return _solidcolorLayer;
-            }
             _brush.Color = Properties.PrimaryColor;
             _propertiesSequence = Properties.Sequence;
             _solidcolorLayer.Set(_propertiesSequence, _brush);

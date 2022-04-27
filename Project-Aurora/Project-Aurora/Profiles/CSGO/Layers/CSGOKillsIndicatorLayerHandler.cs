@@ -1,17 +1,15 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Controls;
+using Aurora.Devices;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -20,14 +18,15 @@ namespace Aurora.Profiles.CSGO.Layers
         public Color? _RegularKillColor { get; set; }
 
         [JsonIgnore]
-        public Color RegularKillColor { get { return Logic._RegularKillColor ?? _RegularKillColor ?? Color.Empty; } }
+        public Color RegularKillColor => Logic._RegularKillColor ?? _RegularKillColor ?? Color.Empty;
 
         public Color? _HeadshotKillColor { get; set; }
 
         [JsonIgnore]
-        public Color HeadshotKillColor { get { return Logic._HeadshotKillColor ?? _HeadshotKillColor ?? Color.Empty; } }
+        public Color HeadshotKillColor => Logic._HeadshotKillColor ?? _HeadshotKillColor ?? Color.Empty;
 
-        public CSGOKillIndicatorLayerHandlerProperties() : base() { }
+        public CSGOKillIndicatorLayerHandlerProperties()
+        { }
 
         public CSGOKillIndicatorLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
@@ -35,24 +34,25 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.G1, Devices.DeviceKeys.G2, Devices.DeviceKeys.G3, Devices.DeviceKeys.G4, Devices.DeviceKeys.G5 });
-            this._RegularKillColor = Color.FromArgb(255, 204, 0);
-            this._HeadshotKillColor = Color.FromArgb(255, 0, 0);
+            _Sequence = new KeySequence(new[] { DeviceKeys.G1, DeviceKeys.G2, DeviceKeys.G3, DeviceKeys.G4, DeviceKeys.G5 });
+            _RegularKillColor = Color.FromArgb(255, 204, 0);
+            _HeadshotKillColor = Color.FromArgb(255, 0, 0);
         }
 
     }
 
     public class CSGOKillIndicatorLayerHandler : LayerHandler<CSGOKillIndicatorLayerHandlerProperties>
     {
-        enum RoundKillType
+        private enum RoundKillType
         {
             None,
             Regular,
             Headshot
-        };
+        }
 
-        private List<RoundKillType> roundKills = new List<RoundKillType>();
-        private int lastCountedKill = 0;
+        private List<RoundKillType> roundKills = new();
+        private int _lastCountedKill;
+        private readonly EffectLayer _killsIndicatorLayer = new("CSGO - Kills Indicator");
 
         protected override UserControl CreateControl()
         {
@@ -61,51 +61,47 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer kills_indicator_layer = new EffectLayer("CSGO - Kills Indicator");
+            if (state is not GameState_CSGO csgostate) return _killsIndicatorLayer;
 
-            if (state is GameState_CSGO)
+            if (_lastCountedKill != csgostate.Player.State.RoundKills)
             {
-                GameState_CSGO csgostate = state as GameState_CSGO;
-
-                if (lastCountedKill != csgostate.Player.State.RoundKills)
+                if (csgostate.Player.State.RoundKills == 0 ||
+                    (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined) ||
+                    (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
+                   )
+                    roundKills.Clear();
+                if (csgostate.Previously.Player.State.RoundKills != -1 && csgostate.Player.State.RoundKills != -1 && csgostate.Previously.Player.State.RoundKills < csgostate.Player.State.RoundKills && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
                 {
-                    if (csgostate.Player.State.RoundKills == 0 ||
-                        (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined) ||
-                        (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
-                    )
-                        roundKills.Clear();
-                    if (csgostate.Previously.Player.State.RoundKills != -1 && csgostate.Player.State.RoundKills != -1 && csgostate.Previously.Player.State.RoundKills < csgostate.Player.State.RoundKills && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
-                    {
-                        if (csgostate.Previously.Player.State.RoundKillHS != -1 && csgostate.Player.State.RoundKillHS != -1 && csgostate.Previously.Player.State.RoundKillHS < csgostate.Player.State.RoundKillHS)
-                            roundKills.Add(RoundKillType.Headshot);
-                        else
-                            roundKills.Add(RoundKillType.Regular);
-                    }
-
-                    lastCountedKill = csgostate.Player.State.RoundKills;
+                    if (csgostate.Previously.Player.State.RoundKillHS != -1 && csgostate.Player.State.RoundKillHS != -1 && csgostate.Previously.Player.State.RoundKillHS < csgostate.Player.State.RoundKillHS)
+                        roundKills.Add(RoundKillType.Headshot);
+                    else
+                        roundKills.Add(RoundKillType.Regular);
                 }
 
-                if (csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
+                _lastCountedKill = csgostate.Player.State.RoundKills;
+            }
+
+            if (!csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID)) return _killsIndicatorLayer;
+            for (var pos = 0; pos < Properties.Sequence.keys.Count; pos++)
+            {
+                if (pos < roundKills.Count)
                 {
-                    for (int pos = 0; pos < Properties.Sequence.keys.Count(); pos++)
+                    switch (roundKills[pos])
                     {
-                        if (pos < roundKills.Count)
-                        {
-                            switch (roundKills[pos])
-                            {
-                                case (RoundKillType.Regular):
-                                    kills_indicator_layer.Set(Properties.Sequence.keys[pos], Properties.RegularKillColor);
-                                    break;
-                                case (RoundKillType.Headshot):
-                                    kills_indicator_layer.Set(Properties.Sequence.keys[pos], Properties.HeadshotKillColor);
-                                    break;
-                            }
-                        }
+                        case RoundKillType.Regular:
+                            _killsIndicatorLayer.Set(Properties.Sequence.keys[pos], Properties.RegularKillColor);
+                            break;
+                        case RoundKillType.Headshot:
+                            _killsIndicatorLayer.Set(Properties.Sequence.keys[pos], Properties.HeadshotKillColor);
+                            break;
+                        case RoundKillType.None:
+                            _killsIndicatorLayer.Set(Properties.Sequence.keys[pos], Color.Empty);
+                            break;
                     }
                 }
             }
 
-            return kills_indicator_layer;
+            return _killsIndicatorLayer;
         }
 
         public override void SetApplication(Application profile)

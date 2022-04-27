@@ -23,7 +23,6 @@ namespace Aurora.Profiles.CSGO
             AllowLayer<CSGOBombLayerHandler>();
             AllowLayer<CSGOKillIndicatorLayerHandler>();
             AllowLayer<CSGOBurningLayerHandler>();
-            AllowLayer<CSGOFlashbangLayerHandler>();
             AllowLayer<CSGOTypingIndicatorLayerHandler>();
             AllowLayer<CSGOWinningTeamLayerHandler>();
             AllowLayer<CSGODeathLayerHandler>();

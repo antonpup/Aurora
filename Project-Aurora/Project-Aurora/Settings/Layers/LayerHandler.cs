@@ -183,13 +183,10 @@ namespace Aurora.Settings.Layers
         //public Color PrimaryColor { get; set; }
 
         [JsonIgnore]
-        private EffectLayer _PreviousRender = new EffectLayer(); //Previous layer
+        private EffectLayer _previousRender = EffectLayer.EmptyLayer.Value; //Previous layer
 
         [JsonIgnore]
-        private EffectLayer _PreviousSecondRender = new EffectLayer(); //Layer before previous
-
-        [JsonIgnore]
-        private readonly EffectLayer _effectLayer = new();
+        private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer.Value; //Layer before previous
 
         public LayerHandler()
         {
@@ -205,7 +202,7 @@ namespace Aurora.Settings.Layers
 
         public virtual EffectLayer Render(IGameState gamestate)
         {
-            return _effectLayer;
+            throw new NotImplementedException();
         }
 
         public virtual void SetGameState(IGameState gamestate)
@@ -218,14 +215,14 @@ namespace Aurora.Settings.Layers
             if (EnableSmoothing)
             {
                 EffectLayer returnLayer = new EffectLayer(rendered_layer);
-                EffectLayer previousLayer = new EffectLayer(_PreviousRender);
-                EffectLayer previousSecondLayer = new EffectLayer(_PreviousSecondRender);
+                EffectLayer previousLayer = new EffectLayer(_previousRender);
+                EffectLayer previousSecondLayer = new EffectLayer(_previousSecondRender);
 
                 returnLayer = returnLayer + (previousLayer * 0.50) + (previousSecondLayer * 0.25);
 
                 //Update previous layers
-                _PreviousSecondRender = _PreviousRender;
-                _PreviousRender = rendered_layer;
+                _previousSecondRender = _previousRender;
+                _previousRender = rendered_layer;
                 
                 //Last PostFX is exclusion
                 if (EnableExclusionMask)

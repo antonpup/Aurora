@@ -20,32 +20,32 @@ namespace Aurora.Profiles.CSGO.Layers
         public Color? _DefaultColor { get; set; }
 
         [JsonIgnore]
-        public Color DefaultColor { get { return Logic._DefaultColor ?? _DefaultColor ?? Color.Empty; } }
+        public Color DefaultColor => Logic._DefaultColor ?? _DefaultColor ?? Color.Empty;
 
         public Color? _CTColor { get; set; }
 
         [JsonIgnore]
-        public Color CTColor { get { return Logic._CTColor ?? _CTColor ?? Color.Empty; } }
+        public Color CTColor => Logic._CTColor ?? _CTColor ?? Color.Empty;
 
         public Color? _TColor { get; set; }
 
         [JsonIgnore]
-        public Color TColor { get { return Logic._TColor ?? _TColor ?? Color.Empty; } }
+        public Color TColor => Logic._TColor ?? _TColor ?? Color.Empty;
 
         public bool? _DimEnabled { get; set; }
 
         [JsonIgnore]
-        public bool DimEnabled { get { return Logic._DimEnabled ?? _DimEnabled ?? false; } }
+        public bool DimEnabled => Logic._DimEnabled ?? _DimEnabled ?? false;
 
         public double? _DimDelay { get; set; }
 
         [JsonIgnore]
-        public double DimDelay { get { return Logic._DimDelay ?? _DimDelay ?? 0.0; } }
+        public double DimDelay => Logic._DimDelay ?? _DimDelay ?? 0.0;
 
         public int? _DimAmount { get; set; }
 
         [JsonIgnore]
-        public int DimAmount { get { return Logic._DimAmount ?? _DimAmount ?? 100; } }
+        public int DimAmount => Logic._DimAmount ?? _DimAmount ?? 100;
 
         public CSGOBackgroundLayerHandlerProperties() : base() { }
 
@@ -55,21 +55,23 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._DefaultColor = Color.FromArgb(158, 205, 255);
-            this._CTColor = Color.FromArgb(33, 155, 221);
-            this._TColor = Color.FromArgb(221, 99, 33);
-            this._DimEnabled = true;
-            this._DimDelay = 15;
-            this._DimAmount = 20;
+            _DefaultColor = Color.FromArgb(158, 205, 255);
+            _CTColor = Color.FromArgb(33, 155, 221);
+            _TColor = Color.FromArgb(221, 99, 33);
+            _DimEnabled = true;
+            _DimDelay = 15;
+            _DimAmount = 20;
         }
 
     }
 
     public class CSGOBackgroundLayerHandler : LayerHandler<CSGOBackgroundLayerHandlerProperties>
     {
-        private bool isDimming = false;
-        private double dim_value = 100.0;
-        private long dim_bg_at = 15;
+        private bool _isDimming;
+        private double _dimValue = 100.0;
+        private long _dimBgAt = 15;
+        private readonly EffectLayer _bgLayer = new("CSGO - Background");
+        private SolidBrush _solidBrush = new(Color.Empty);
 
         protected override UserControl CreateControl()
         {
@@ -78,28 +80,26 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer bg_layer = new EffectLayer("CSGO - Background");
-
             if (state is GameState_CSGO)
             {
                 GameState_CSGO csgostate = state as GameState_CSGO;
 
                 if (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
                 {
-                    isDimming = false;
-                    dim_bg_at = Utils.Time.GetMillisecondsSinceEpoch() + (long)(this.Properties.DimDelay * 1000D);
-                    dim_value = 100.0;
+                    _isDimming = false;
+                    _dimBgAt = Utils.Time.GetMillisecondsSinceEpoch() + (long)(Properties.DimDelay * 1000D);
+                    _dimValue = 100.0;
                 }
 
-                Color bg_color = this.Properties.DefaultColor;
+                Color bg_color = Properties.DefaultColor;
 
                 switch (csgostate.Player.Team)
                 {
                     case PlayerTeam.T:
-                        bg_color = this.Properties.TColor;
+                        bg_color = Properties.TColor;
                         break;
                     case PlayerTeam.CT:
-                        bg_color = this.Properties.CTColor;
+                        bg_color = Properties.CTColor;
                         break;
                     default:
                         break;
@@ -107,22 +107,26 @@ namespace Aurora.Profiles.CSGO.Layers
 
                 if (csgostate.Player.Team == PlayerTeam.CT || csgostate.Player.Team == PlayerTeam.T)
                 {
-                    if (dim_bg_at <= Utils.Time.GetMillisecondsSinceEpoch() || csgostate.Player.State.Health == 0)
+                    if (_dimBgAt <= Utils.Time.GetMillisecondsSinceEpoch() || csgostate.Player.State.Health == 0)
                     {
-                        isDimming = true;
-                        bg_color = Utils.ColorUtils.MultiplyColorByScalar(bg_color, (getDimmingValue() / 100));
+                        _isDimming = true;
+                        bg_color = Utils.ColorUtils.MultiplyColorByScalar(bg_color, GetDimmingValue() / 100);
                     }
                     else
                     {
-                        isDimming = false;
-                        dim_value = 100.0;
+                        _isDimming = false;
+                        _dimValue = 100.0;
                     }
                 }
 
-                bg_layer.Fill(bg_color);
+                if (_solidBrush.Color != bg_color)
+                {
+                    _solidBrush.Color = bg_color;
+                    _bgLayer.Fill(bg_color);
+                }
             }
 
-            return bg_layer;
+            return _bgLayer;
         }
 
         public override void SetApplication(Application profile)
@@ -131,15 +135,15 @@ namespace Aurora.Profiles.CSGO.Layers
             base.SetApplication(profile);
         }
 
-        private double getDimmingValue()
+        private double GetDimmingValue()
         {
-            if (isDimming && Properties.DimEnabled)
+            if (_isDimming && Properties.DimEnabled)
             {
-                dim_value -= 2.0;
-                return dim_value = (dim_value < Math.Abs(Properties.DimAmount - 100) ? Math.Abs(Properties.DimAmount - 100) : dim_value);
+                _dimValue -= 2.0;
+                return _dimValue = _dimValue < Math.Abs(Properties.DimAmount - 100) ? Math.Abs(Properties.DimAmount - 100) : _dimValue;
             }
-            else
-                return dim_value = 100.0;
+
+            return _dimValue = 100.0;
         }
     }
 }

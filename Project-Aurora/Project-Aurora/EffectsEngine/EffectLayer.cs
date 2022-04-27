@@ -60,9 +60,10 @@ namespace Aurora.EffectsEngine
         /// <summary>
         /// Creates a new instance of the EffectLayer class with default parameters.
         /// </summary>
+        [Obsolete("Always name the layer")]
         public EffectLayer()
         {
-            _name = "Effect Layer";
+            _name = "Unknown Layer";
             _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
@@ -373,15 +374,12 @@ namespace Aurora.EffectsEngine
         /// Fills the entire bitmap of the EffectLayer with a specified brush.
         /// </summary>
         /// <param name="brush">Brush to be used during bitmap fill</param>
-        /// <returns>Itself</returns>
         public void Fill(Brush brush)
         {
-            using (Graphics g = Graphics.FromImage(_colormap))
-            {
-                g.FillRectangle(brush, Dimension);
-                g.CompositingMode = CompositingMode.SourceCopy;
-                _needsRender = true;
-            }
+            using var g = Graphics.FromImage(_colormap);
+            g.CompositingMode = CompositingMode.SourceCopy;
+            g.FillRectangle(brush, Dimension);
+            _needsRender = true;
         }
 
         /// <summary>
@@ -392,7 +390,7 @@ namespace Aurora.EffectsEngine
         [Obsolete("Use with Brush argument")]
         public EffectLayer Fill(Color color)
         {
-            using (Graphics g = GetGraphics())
+            using (var g = GetGraphics())
             {
                 //g.CompositingMode = CompositingMode.SourceCopy;
                 g.SmoothingMode = SmoothingMode.None;
@@ -406,12 +404,10 @@ namespace Aurora.EffectsEngine
         public void Clear()
         {
             _keyBrushes.Clear();
-            using (Graphics g = GetGraphics())
-            {
-                g.CompositingMode = CompositingMode.SourceCopy;
-                g.FillRectangle(ClearingBrush, Dimension);
-                _needsRender = true;
-            }
+            using var g = GetGraphics();
+            g.CompositingMode = CompositingMode.SourceCopy;
+            g.FillRectangle(ClearingBrush, Dimension);
+            _needsRender = true;
         }
 
         /// <summary>
@@ -446,6 +442,8 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer Set(KeySequence sequence, Color color) => Set(sequence, new SolidBrush(color));
 
+        private FreeFormObject _lastFreeform = new();
+        private bool _ksChanged = true;
         /// <summary>
         /// Sets a specific KeySequence on the bitmap with a specified brush.
         /// </summary>
@@ -461,31 +459,60 @@ namespace Aurora.EffectsEngine
             }
             else
             {
-                using (Graphics g = Graphics.FromImage(_colormap))
+                if (brush is not SolidBrush solidBrush)
                 {
-                    float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                    float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                    float width = (float)Math.Round((sequence.freeform.Width * Effects.editor_to_canvas_width));
-                    float height = (float)Math.Round((sequence.freeform.Height * Effects.editor_to_canvas_height));
-
-                    if (width < 3) width = 3;
-                    if (height < 3) height = 3;
-
-                    Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
-
-                    PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
-
-                    Matrix myMatrix = new Matrix();
-                    myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
-
-                    g.Transform = myMatrix;
-                    g.CompositingMode = CompositingMode.SourceCopy;
-                    g.FillRectangle(brush, rect);
-                    _needsRender = true;
+                    if (sequence.freeform.Equals(_lastFreeform) && !_ksChanged)
+                    {
+                        return this;
+                    }
                 }
+                else
+                {
+                    if (sequence.freeform.Equals(_lastFreeform) && !_ksChanged && _lastColor == solidBrush.Color)
+                    {
+                        return this;
+                    }
+                    _lastColor = solidBrush.Color;
+                }
+                Clear();
+
+                if (!sequence.freeform.Equals(_lastFreeform))
+                {
+                    _lastFreeform.ValuesChanged -= FreeformOnValuesChanged;
+                    _lastFreeform = sequence.freeform;
+                    sequence.freeform.ValuesChanged += FreeformOnValuesChanged;
+                }
+
+                _ksChanged = false;
+
+                using Graphics g = Graphics.FromImage(_colormap);
+                float x_pos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
+                float y_pos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
+                float width = (float)Math.Round(sequence.freeform.Width * Effects.editor_to_canvas_width);
+                float height = (float)Math.Round(sequence.freeform.Height * Effects.editor_to_canvas_height);
+
+                if (width < 3) width = 3;
+                if (height < 3) height = 3;
+
+                Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
+
+                PointF rotatePoint = new PointF(x_pos + width / 2.0f, y_pos + height / 2.0f);
+
+                Matrix myMatrix = new Matrix();
+                myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
+
+                g.Transform = myMatrix;
+                g.CompositingMode = CompositingMode.SourceCopy;
+                g.FillRectangle(brush, rect);
+                _needsRender = true;
             }
 
             return this;
+        }
+
+        private void FreeformOnValuesChanged(FreeFormObject newobject)
+        {
+            _ksChanged = true;
         }
 
         /// <summary>
@@ -587,6 +614,7 @@ namespace Aurora.EffectsEngine
 
         private readonly Dictionary<DeviceKeys, SolidBrush> _keyBrushes = new();
         private static readonly SolidBrush ClearingBrush = new(Color.Transparent);
+        private Color _lastColor = Color.Empty;
 
         /// <summary>
         /// Sets one DeviceKeys key with a specific brush on the bitmap
