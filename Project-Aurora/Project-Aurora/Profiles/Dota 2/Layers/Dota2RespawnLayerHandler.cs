@@ -61,7 +61,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             return new Control_Dota2RespawnLayer(this);
         }
 
-        private bool _empty = true;
+        private bool _empty = false;
         public override EffectLayer Render(IGameState state)
         {
             if (state is GameState_Dota2)
@@ -73,6 +73,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     double percent = dota2state.Hero.SecondsToRespawn > 5 ? 0.0 : 1.0 - dota2state.Hero.SecondsToRespawn / 5.0;
                     if (percent > 0)
                     {
+                        _empty = false;
                         _respawnLayer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent));
 
                         _respawnLayer.PercentEffect(Properties.RespawningColor,
