@@ -42,6 +42,8 @@ namespace Aurora.Settings.Layers
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class LockColourLayerHandler : LayerHandler<LockColourLayerHandlerProperties>
     {
+        private EffectLayer _effectLayer = new("LockColourLayer");
+
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_LockColourLayer(this);
@@ -64,7 +66,7 @@ namespace Aurora.Settings.Layers
             else
                 clr = Properties.SecondaryColor;
 
-            return new EffectLayer().Set(Properties.Sequence, clr);
+            return _effectLayer.Set(Properties.Sequence, clr);
         }
     }
 }

@@ -76,13 +76,12 @@
       },
       "LibreHardwareMonitorLib": {
         "type": "Direct",
-        "requested": "[0.8.8, )",
-        "resolved": "0.8.8",
-        "contentHash": "KBPf4HJkGtubkFG8PL7Hr0E736CW4KLk6vqiC4aXY6quEd861/3tBo9h8VVvrL/q2r58xVq5zaoylIjqB5bqHA==",
+        "requested": "[0.8.9, )",
+        "resolved": "0.8.9",
+        "contentHash": "e0axsjvbjtQLdsuL25PwYgPsOAZjDORY+K+qgvtvUh8Rt4P/t+Xk0sDKRCHVcTlr/J6UGWKcd0dhmE5v25ujqQ==",
         "dependencies": {
           "HidSharp": "2.1.0",
-          "NvAPIWrapper.Net": "0.8.1.101",
-          "System.Management": "4.7.0"
+          "System.Management": "5.0.0"
         }
       },
       "MouseKeyHook": {
@@ -388,11 +387,6 @@
           "Microsoft.Win32.Registry": "4.7.0",
           "NAudio.Core": "2.0.0"
         }
-      },
-      "NvAPIWrapper.Net": {
-        "type": "Transitive",
-        "resolved": "0.8.1.101",
-        "contentHash": "qX+5EQ32tCTqBkX/9BNfx7w4HPi18s3XhMubjbxSjPhYQ6pXWL+HGnaZEmGvFlOxvsQN+/6eV3x5bRo1CDY/mQ=="
       },
       "SharpDX": {
         "type": "Transitive",

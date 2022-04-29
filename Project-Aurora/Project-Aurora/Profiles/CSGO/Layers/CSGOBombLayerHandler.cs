@@ -1,17 +1,15 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Controls;
+using Aurora.Devices;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
+using Aurora.Utils;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -20,17 +18,14 @@ namespace Aurora.Profiles.CSGO.Layers
         public Color? _FlashColor { get; set; }
 
         [JsonIgnore]
-        public Color FlashColor { get { return Logic._FlashColor ?? _FlashColor ?? Color.Empty; } }
+        public Color FlashColor => Logic._FlashColor ?? _FlashColor ?? Color.Empty;
 
         public Color? _PrimedColor { get; set; }
 
         [JsonIgnore]
-        public Color PrimedColor { get { return Logic._PrimedColor ?? _PrimedColor ?? Color.Empty; } }
+        public Color PrimedColor => Logic._PrimedColor ?? _PrimedColor ?? Color.Empty;
 
         public bool? _DisplayWinningTeamColor { get; set; }
-
-        [JsonIgnore]
-        public bool DisplayWinningTeamColor { get { return Logic._DisplayWinningTeamColor ?? _DisplayWinningTeamColor ?? false; } }
 
         public bool? _GradualEffect { get; set; }
 
@@ -42,7 +37,8 @@ namespace Aurora.Profiles.CSGO.Layers
         [JsonIgnore]
         public bool PeripheralUse { get { return Logic._PeripheralUse ?? _PeripheralUse ?? false; } }
 
-        public CSGOBombLayerHandlerProperties() : base() { }
+        public CSGOBombLayerHandlerProperties()
+        { }
 
         public CSGOBombLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
@@ -50,107 +46,114 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new Devices.DeviceKeys[] { Devices.DeviceKeys.NUM_LOCK, Devices.DeviceKeys.NUM_SLASH, Devices.DeviceKeys.NUM_ASTERISK, Devices.DeviceKeys.NUM_MINUS, Devices.DeviceKeys.NUM_SEVEN, Devices.DeviceKeys.NUM_EIGHT, Devices.DeviceKeys.NUM_NINE, Devices.DeviceKeys.NUM_PLUS, Devices.DeviceKeys.NUM_FOUR, Devices.DeviceKeys.NUM_FIVE, Devices.DeviceKeys.NUM_SIX, Devices.DeviceKeys.NUM_ONE, Devices.DeviceKeys.NUM_TWO, Devices.DeviceKeys.NUM_THREE, Devices.DeviceKeys.NUM_ZERO, Devices.DeviceKeys.NUM_PERIOD, Devices.DeviceKeys.NUM_ENTER });
-            this._FlashColor = Color.FromArgb(255, 0, 0);
-            this._PrimedColor = Color.FromArgb(0, 255, 0);
-            this._DisplayWinningTeamColor = true;
-            this._GradualEffect = true;
-            this._PeripheralUse = true;
+            _Sequence = new KeySequence(new[] { DeviceKeys.NUM_LOCK, DeviceKeys.NUM_SLASH, DeviceKeys.NUM_ASTERISK, DeviceKeys.NUM_MINUS, DeviceKeys.NUM_SEVEN, DeviceKeys.NUM_EIGHT, DeviceKeys.NUM_NINE, DeviceKeys.NUM_PLUS, DeviceKeys.NUM_FOUR, DeviceKeys.NUM_FIVE, DeviceKeys.NUM_SIX, DeviceKeys.NUM_ONE, DeviceKeys.NUM_TWO, DeviceKeys.NUM_THREE, DeviceKeys.NUM_ZERO, DeviceKeys.NUM_PERIOD, DeviceKeys.NUM_ENTER });
+            _FlashColor = Color.FromArgb(255, 0, 0);
+            _PrimedColor = Color.FromArgb(0, 255, 0);
+            _DisplayWinningTeamColor = true;
+            _GradualEffect = true;
+            _PeripheralUse = true;
         }
 
     }
 
     public class CSGOBombLayerHandler : LayerHandler<CSGOBombLayerHandlerProperties>
     {
-        private static Stopwatch bombtimer = new Stopwatch();
-        private static bool bombflash = false;
-        private static int bombflashcount = 0;
-        private static long bombflashtime = 0;
-        private static long bombflashedat = 0;
+        private static Stopwatch bombtimer = new();
+        private static bool bombflash;
+        private static int bombflashcount;
+        private static long bombflashtime;
+        private static long bombflashedat;
+        private readonly EffectLayer _bombEffectLayer = new("CSGO - Bomb Effect");
 
         protected override UserControl CreateControl()
         {
             return new Control_CSGOBombLayer(this);
         }
 
+        private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer bomb_effect_layer = new EffectLayer("CSGO - Bomb Effect");
+            if (state is not GameState_CSGO csgostate) return _bombEffectLayer;
 
-            if (state is GameState_CSGO)
+            if (csgostate.Round.Bomb != BombState.Planted)
             {
-                GameState_CSGO csgostate = state as GameState_CSGO;
-
-                if (csgostate.Round.Bomb == BombState.Planted)
-                {
-                    if (!bombtimer.IsRunning)
-                    {
-                        bombtimer.Restart();
-                        bombflashcount = 0;
-                        bombflashtime = 0;
-                        bombflashedat = 0;
-                    }
-
-                    double bombflashamount = 1.0;
-                    bool isCritical = false;
-
-                    if (bombtimer.ElapsedMilliseconds < 38000)
-                    {
-
-                        if (bombtimer.ElapsedMilliseconds >= bombflashtime)
-                        {
-                            bombflash = true;
-                            bombflashedat = bombtimer.ElapsedMilliseconds;
-                            bombflashtime = bombtimer.ElapsedMilliseconds + (1000 - (bombflashcount++ * 13));
-                        }
-
-                        if (bombtimer.ElapsedMilliseconds < bombflashedat || bombtimer.ElapsedMilliseconds > bombflashedat + 220)
-                            bombflashamount = 0.0;
-                        else
-                            bombflashamount = Math.Pow(Math.Sin((bombtimer.ElapsedMilliseconds - bombflashedat) / 80.0 + 0.25), 2.0);
-                    }
-                    else if (bombtimer.ElapsedMilliseconds >= 38000)
-                    {
-                        isCritical = true;
-                        bombflashamount = (double)bombtimer.ElapsedMilliseconds / 40000.0;
-                    }
-                    else if (bombtimer.ElapsedMilliseconds >= 45000)
-                    {
-                        bombtimer.Stop();
-                        csgostate.Round.Bomb = BombState.Undefined;
-                    }
-
-                    if (!isCritical)
-                    {
-                        if (bombflashamount <= 0.05 && bombflash)
-                            bombflash = false;
-
-                        if (!bombflash)
-                            bombflashamount = 0.0;
-                    }
-
-                    if (!Properties.GradualEffect)
-                        bombflashamount = Math.Round(bombflashamount);
-
-                    Color bombcolor = Properties.FlashColor;
-
-                    if (isCritical)
-                        bombcolor = Utils.ColorUtils.MultiplyColorByScalar(Properties.PrimedColor, Math.Min(bombflashamount, 1.0));
-                    else
-                        bombcolor = Utils.ColorUtils.MultiplyColorByScalar(Properties.FlashColor, Math.Min(bombflashamount, 1.0));
-
-                    bomb_effect_layer.Set(Properties.Sequence, bombcolor);
-
-                    if (Properties.PeripheralUse)
-                        bomb_effect_layer.Set(Devices.DeviceKeys.Peripheral, bombcolor);
-                }
-                else
+                if (!_empty)
                 {
                     bombtimer.Stop();
+                    _bombEffectLayer.Clear();
+                    _empty = true;
                 }
+                return _bombEffectLayer;
+            }
+            _empty = false;
+
+            if (!bombtimer.IsRunning)
+            {
+                bombtimer.Restart();
+                bombflashcount = 0;
+                bombflashtime = 0;
+                bombflashedat = 0;
             }
 
-            return bomb_effect_layer;
+            double bombflashamount = 1.0;
+            bool isCritical = false;
+
+            if (bombtimer.ElapsedMilliseconds < 38000)
+            {
+                if (bombtimer.ElapsedMilliseconds >= bombflashtime)
+                {
+                    bombflash = true;
+                    bombflashedat = bombtimer.ElapsedMilliseconds;
+                    bombflashtime = bombtimer.ElapsedMilliseconds + (1000 - (bombflashcount++ * 13));
+                }
+
+                if (bombtimer.ElapsedMilliseconds < bombflashedat || bombtimer.ElapsedMilliseconds > bombflashedat + 220)
+                    bombflashamount = 0.0;
+                else
+                    bombflashamount = Math.Pow(Math.Sin((bombtimer.ElapsedMilliseconds - bombflashedat) / 80.0 + 0.25), 2.0);
+            }
+            else if (bombtimer.ElapsedMilliseconds >= 38000)
+            {
+                isCritical = true;
+                bombflashamount = bombtimer.ElapsedMilliseconds / 40000.0;
+            }
+            else if (bombtimer.ElapsedMilliseconds >= 45000)
+            {
+                bombtimer.Stop();
+                csgostate.Round.Bomb = BombState.Undefined;
+            }
+
+            if (!isCritical)
+            {
+                if (bombflashamount <= 0.05 && bombflash)
+                    bombflash = false;
+
+                if (!bombflash)
+                    bombflashamount = 0.0;
+            }
+
+            if (!Properties.GradualEffect)
+                bombflashamount = Math.Round(bombflashamount);
+
+            Color bombcolor;
+            if (bombflashamount > 0)
+            {
+                if (isCritical)
+                    bombcolor = ColorUtils.MultiplyColorByScalar(Properties.PrimedColor, Math.Min(bombflashamount, 1.0));
+                else
+                    bombcolor = ColorUtils.MultiplyColorByScalar(Properties.FlashColor, Math.Min(bombflashamount, 1.0));
+            }
+            else
+            {
+                bombcolor = Color.Empty;
+            }
+
+            _bombEffectLayer.Set(Properties.Sequence, bombcolor);
+
+            if (Properties.PeripheralUse)
+                _bombEffectLayer.Set(DeviceKeys.Peripheral, bombcolor);
+
+            return _bombEffectLayer;
         }
 
         public override void SetApplication(Application profile)

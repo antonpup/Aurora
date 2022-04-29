@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Aurora.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.EffectsEngine.Animations
@@ -10,6 +11,7 @@ namespace Aurora.EffectsEngine.Animations
     public class AnimationTrack
     {
         [JsonProperty]
+        [JsonConverter(typeof(ConcurrentDictionaryJsonConverterAdapter<float, AnimationFrame>))]
         private readonly ConcurrentDictionary<float, AnimationFrame> _animations;
         [JsonProperty]
         private float _animationDuration;

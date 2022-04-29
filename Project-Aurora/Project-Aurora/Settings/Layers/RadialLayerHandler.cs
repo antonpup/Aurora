@@ -37,9 +37,9 @@ namespace Aurora.Settings.Layers {
     }
 
     public class RadialLayerHandler : LayerHandler<RadialLayerProperties> {
-
-        private Stopwatch sw = new Stopwatch();
+        private Stopwatch sw = new();
         private float angle;
+        private readonly EffectLayer _effectLayer = new("RadialLayer");
 
         protected override UserControl CreateControl() => new Control_RadialLayer(this);
 
@@ -53,7 +53,7 @@ namespace Aurora.Settings.Layers {
 
             var area = Properties.Sequence.GetAffectedRegion();
             var brush = Properties.Brush.GetBrush(area, angle, true);
-            return new EffectLayer().Set(Properties.Sequence, brush);
+            return _effectLayer.Set(Properties.Sequence, brush);
         }
     }
 }

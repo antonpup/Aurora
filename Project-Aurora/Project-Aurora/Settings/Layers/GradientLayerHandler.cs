@@ -41,42 +41,41 @@ namespace Aurora.Settings.Layers
             return new Control_GradientLayer(this);
         }
 
+        private readonly EffectLayer _gradientLayer = new("GradientLayer");
         public override EffectLayer Render(IGameState gamestate)
         {
-
-            EffectLayer gradient_layer = new EffectLayer();
-
             //If Wave Size 0 Gradiant Stop Moving Animation
             if (Properties.GradientConfig.gradient_size == 0)
             {
-                Properties.GradientConfig.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f) * 5.0f * Properties.GradientConfig.speed;
-                Properties.GradientConfig.shift_amount = Properties.GradientConfig.shift_amount % Effects.canvas_biggest;
+                Properties.GradientConfig.shift_amount += (Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f * 5.0f * Properties.GradientConfig.speed;
+                Properties.GradientConfig.shift_amount %= Effects.canvas_biggest;
                 Properties.GradientConfig.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
 
-                Color selected_color = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.canvas_biggest);
+                Color selectedColor = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.canvas_biggest);
 
-                gradient_layer.Set(Properties.Sequence, selected_color);
+                _gradientLayer.Set(Properties.Sequence, selectedColor);
             }
             else if (Properties.Sequence.type == KeySequenceType.Sequence)
             {
-                using var temp_layer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig);
+                using var tempLayer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig);
 
                 foreach (var key in Properties.Sequence.keys)
-                    gradient_layer.Set(key, temp_layer.Get(key));
+                    _gradientLayer.Set(key, tempLayer.Get(key));
             }
             else
             {
-                gradient_layer.DrawTransformed(
+                _gradientLayer.Clear();
+                _gradientLayer.DrawTransformed(
                     Properties.Sequence,
                     g =>
-                        {
-                            var rect = new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
-                            using var temp_layer_bitmap = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect).GetBitmap();
-                            g.DrawImage(temp_layer_bitmap, rect, rect, GraphicsUnit.Pixel);
-                        }
+                    {
+                        var rect = new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
+                        using var tempLayerBitmap = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
+                        g.FillRectangle(tempLayerBitmap.TextureBrush, tempLayerBitmap.Dimension);
+                    }
                 );
             }
-            return gradient_layer;
+            return _gradientLayer;
         }
     }
 }

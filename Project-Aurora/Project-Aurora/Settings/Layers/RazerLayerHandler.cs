@@ -63,12 +63,12 @@ namespace Aurora.Settings.Layers
     [LayerHandlerMeta(Name = "Razer Chroma", IsDefault = true)]
     public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     {
-        private Color[] _keyboardColors;
-        private Color[] _mousepadColors;
+        private readonly Color[] _keyboardColors;
+        private readonly Color[] _mousepadColors;
         private Color _mouseColor;
         private string _currentAppExecutable;
-        private int _currentAppPid;
         private bool _isDumping;
+        private readonly EffectLayer _layer = new("Chroma Layer");
 
         public RazerLayerHandler()
         {
@@ -82,7 +82,6 @@ namespace Aurora.Settings.Layers
                 var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
                 appList.Update();
                 _currentAppExecutable = appList.CurrentAppExecutable;
-                _currentAppPid = appList.CurrentAppPid;
             }
         }
 
@@ -93,7 +92,7 @@ namespace Aurora.Settings.Layers
 
         private void OnDataUpdated(object s, EventArgs e)
         {
-            if (!(s is AbstractDataProvider provider))
+            if (s is not AbstractDataProvider provider)
                 return;
 
             provider.Update();
@@ -118,7 +117,6 @@ namespace Aurora.Settings.Layers
             else if (provider is RzAppListDataProvider appList)
             {
                 _currentAppExecutable = appList.CurrentAppExecutable;
-                _currentAppPid = appList.CurrentAppPid;
             }
         }
 
@@ -150,33 +148,37 @@ namespace Aurora.Settings.Layers
         {
             var path = Path.Combine(Global.LogsDirectory, "RazerLayer");
             var filename = $"{provider.GetType().Name}_{Environment.TickCount}.bin";
-            using (var file = File.Open($@"{path}\{filename}", FileMode.Create)) {
-                var data = provider.Read();
-                file.Write(data, 0, data.Length);
-            }
+            using var file = File.Open($@"{path}\{filename}", FileMode.Create);
+            var data = provider.Read();
+            file.Write(data, 0, data.Length);
         }
 
+        private bool _empty = true;
         public override EffectLayer Render(IGameState gamestate)
         {
-            var layer = new EffectLayer();
-
             if (!IsCurrentAppValid())
-                return layer;
+            {
+                if (_empty) return _layer;
+                _layer.Clear();
+                _empty = true;
+                return _layer;
+            }
+            _empty = false;
 
             foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
             {
-                if (!TryGetColor(key, out Color color))
+                if (!TryGetColor(key, out var color))
                     continue;
                 
-                layer.Set(key, color);
+                _layer.Set(key, color);
             }
 
-            if (Properties.KeyCloneMap != null)
-                foreach (var target in Properties.KeyCloneMap)
-                    if(TryGetColor(target.Value, out var clr))
-                        layer.Set(target.Key, clr);
+            if (Properties.KeyCloneMap == null) return _layer;
+            foreach (var target in Properties.KeyCloneMap)
+                if(TryGetColor(target.Value, out var clr))
+                    _layer.Set(target.Key, clr);
 
-            return layer;
+            return _layer;
         }
 
         private bool TryGetColor(DeviceKeys key, out Color color)
@@ -199,7 +201,7 @@ namespace Aurora.Settings.Layers
 
         private bool IsCurrentAppValid() 
             => !string.IsNullOrEmpty(_currentAppExecutable)
-            && string.Compare(_currentAppExecutable, "Aurora.exe", true) != 0;
+            && string.Compare(_currentAppExecutable, "Aurora.exe", StringComparison.OrdinalIgnoreCase) != 0;
 
         private Color PostProcessColor(Color color)
         {

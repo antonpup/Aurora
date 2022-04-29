@@ -8,8 +8,8 @@ namespace Aurora.EffectsEngine
     /// </summary>
     public class EffectFrame : IDisposable
     {
-        Queue<EffectLayer> over_layers = new();
-        Queue<EffectLayer> layers = new();
+        readonly Queue<EffectLayer> over_layers = new();
+        readonly Queue<EffectLayer> layers = new();
 
         /// <summary>
         /// Adds layers into the frame
@@ -58,8 +58,6 @@ namespace Aurora.EffectsEngine
             {
                 if (disposing)
                 {
-                    foreach (IDisposable disposable in over_layers)
-                        disposable.Dispose();
                     over_layers.Clear();
                     layers.Clear();
                 }

@@ -1,18 +1,6 @@
 ﻿namespace Aurora.Settings
 {
     /// <summary>
-    /// The type of the FreeForm region.
-    /// </summary>
-    public enum FreeFormType
-    {
-        Line,
-        Rectangle,
-        Circle,
-        RectangleFilled,
-        CircleFilled
-    }
-
-    /// <summary>
     /// A delegate for a changed value
     /// </summary>
     /// <param name="newobject">The current instance of FreeFormObject</param>
@@ -23,27 +11,13 @@
     /// </summary>
     public class FreeFormObject
     {
-        FreeFormType _type;
-        /// <summary>
-        /// Get/Set the type of this region.
-        /// </summary>
-        public FreeFormType Type
-        {
-            get { return _type; }
-            set
-            {
-                _type = value;
-                ValuesChanged?.Invoke(this);
-            }
-        }
-
-        float _x;
+        private float _x;
         /// <summary>
         /// Get/Set the X coordinate for this region.
         /// </summary>
         public float X
         {
-            get { return _x; }
+            get => _x;
             set
             {
                 _x = value;
@@ -51,13 +25,13 @@
             }
         }
 
-        float _y;
+        private float _y;
         /// <summary>
         /// Get/Set the Y coordinate for this region.
         /// </summary>
         public float Y
         {
-            get { return _y; }
+            get => _y;
             set
             {
                 _y = value;
@@ -65,13 +39,13 @@
             }
         }
 
-        float _width;
+        private float _width;
         /// <summary>
         /// Get/Set the Width of this region.
         /// </summary>
         public float Width
         {
-            get { return _width; }
+            get => _width;
             set
             {
                 _width = value;
@@ -79,13 +53,13 @@
             }
         }
 
-        float _height;
+        private float _height;
         /// <summary>
         /// Get/Set the Height of this region.
         /// </summary>
         public float Height
         {
-            get { return _height; }
+            get => _height;
             set
             {
                 _height = value;
@@ -93,13 +67,13 @@
             }
         }
 
-        float _angle;
+        private float _angle;
         /// <summary>
         /// Get/Set the rotation angle of this region.
         /// </summary>
         public float Angle
         {
-            get { return _angle; }
+            get => _angle;
             set
             {
                 _angle = value;
@@ -117,7 +91,6 @@
         /// </summary>
         public FreeFormObject()
         {
-            _type = FreeFormType.Rectangle;
             _x = 0;
             _y = 0;
             _width = 30;
@@ -135,7 +108,6 @@
         /// <param name="angle">The rotation angle</param>
         public FreeFormObject(float x, float y, float width = 30.0f, float height = 30.0f, float angle = 0.0f)
         {
-            _type = FreeFormType.Rectangle;
             _x = x;
             _y = y;
             _width = width;
@@ -163,8 +135,7 @@
         /// <returns>A boolean value representing equality</returns>
         public bool Equals(FreeFormObject p)
         {
-            return _type == p._type &&
-                _x == p._x &&
+            return _x == p._x &&
                 _y == p._y &&
                 _width == p._width &&
                 _height == p._height &&
@@ -180,7 +151,6 @@
             unchecked
             {
                 int hash = 17;
-                hash = hash * 23 + _type.GetHashCode();
                 hash = hash * 23 + _x.GetHashCode();
                 hash = hash * 23 + _y.GetHashCode();
                 hash = hash * 23 + _width.GetHashCode();

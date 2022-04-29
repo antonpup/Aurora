@@ -3,6 +3,7 @@ using Aurora.Profiles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +33,9 @@ namespace Aurora.Settings.Layers
     [Overrides.LogicOverrideIgnoreProperty("_Sequence")]
     public class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerProperties>
     {
+        private readonly EffectLayer _effectLayer = new();
+        private SolidBrush _solidBrush = new(Color.Transparent);
+
         protected override UserControl CreateControl()
         {
             return new Control_SolidFillLayer(this);
@@ -39,7 +43,12 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            return new EffectLayer().Fill(Properties.PrimaryColor);
+            if (_solidBrush.Color != Properties.PrimaryColor)
+            {
+                _solidBrush = new SolidBrush(Properties.PrimaryColor);
+                _effectLayer.Fill(_solidBrush);
+            }
+            return _effectLayer;
         }
     }
 }

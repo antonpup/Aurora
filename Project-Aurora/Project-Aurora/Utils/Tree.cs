@@ -15,6 +15,8 @@ namespace Aurora.Utils
         /// </summary>
         public T Item { get { return _Item; } }
 
+        public bool IsLeaf { get { return _Children.Count == 0; } }
+
         private HashSet<Tree<T>> _Children = new HashSet<Tree<T>>();
 
         public Tree(T rootNode)
@@ -85,6 +87,19 @@ namespace Aurora.Utils
             }
                 
             return _returnChildren.ToArray();
+        }
+
+        public Tree<T> GetNodeByPath(T[] path)
+        {
+            Tree<T> node = this;
+            foreach (var key in path)
+            {
+                if (node != null)
+                {
+                    node = node.ContainsItem(key);
+                }
+            }
+            return node;
         }
 
         public override bool Equals(object obj)

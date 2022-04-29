@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.Windows.Data;
 using DrawingColor = System.Drawing.Color;
@@ -91,34 +89,12 @@ namespace Aurora.Utils
             else if (percent > 1.0)
                 percent = 1.0;
 
-            int Red = (byte)Math.Min((Int32)foreground.R * percent + (Int32)background.R * (1.0 - percent), 255);
-            int Green = (byte)Math.Min((Int32)foreground.G * percent + (Int32)background.G * (1.0 - percent), 255);
-            int Blue = (byte)Math.Min((Int32)foreground.B * percent + (Int32)background.B * (1.0 - percent), 255);
-            int Alpha = (byte)Math.Min((Int32)foreground.A * percent + (Int32)background.A * (1.0 - percent), 255);
+            int Red = (byte)Math.Min(foreground.R * percent + background.R * (1.0 - percent), 255);
+            int Green = (byte)Math.Min(foreground.G * percent + background.G * (1.0 - percent), 255);
+            int Blue = (byte)Math.Min(foreground.B * percent + background.B * (1.0 - percent), 255);
+            int Alpha = (byte)Math.Min(foreground.A * percent + background.A * (1.0 - percent), 255);
 
             return DrawingColor.FromArgb(Alpha, Red, Green, Blue);
-        }
-
-        /// <summary>
-        /// Blends two colors together by a specified amount
-        /// </summary>
-        /// <param name="background">The background color (When percent is at 0.0D, only this color is shown)</param>
-        /// <param name="foreground">The foreground color (When percent is at 1.0D, only this color is shown)</param>
-        /// <param name="percent">The blending percent value</param>
-        /// <returns>The blended color</returns>
-        public static MediaColor BlendColors(MediaColor background, MediaColor foreground, double percent)
-        {
-            if (percent < 0.0)
-                percent = 0.0;
-            else if (percent > 1.0)
-                percent = 1.0;
-
-            int Red = (byte)Math.Min((Int32)foreground.R * percent + (Int32)background.R * (1.0 - percent), 255);
-            int Green = (byte)Math.Min((Int32)foreground.G * percent + (Int32)background.G * (1.0 - percent), 255);
-            int Blue = (byte)Math.Min((Int32)foreground.B * percent + (Int32)background.B * (1.0 - percent), 255);
-            int Alpha = (byte)Math.Min((Int32)foreground.A * percent + (Int32)background.A * (1.0 - percent), 255);
-
-            return MediaColor.FromArgb((byte)Alpha, (byte)Red, (byte)Green, (byte)Blue);
         }
 
         /// <summary>
@@ -128,53 +104,13 @@ namespace Aurora.Utils
         /// <param name="foreground">The foreground color</param>
         /// <returns>The sum of two colors including combined alpha</returns>
         public static DrawingColor AddColors(DrawingColor background, DrawingColor foreground)
-            => MediaColorToDrawingColor(AddColors(DrawingColorToMediaColor(background), DrawingColorToMediaColor(foreground)));
-
-        /// <summary>
-        /// Adds two colors together by using the "SRC over DST" blending algorithm by Porter and Duff
-        /// </summary>
-        /// <param name="background">The background color</param>
-        /// <param name="foreground">The foreground color</param>
-        /// <returns>The sum of two colors including combined alpha</returns>
-        public static MediaColor AddColors(MediaColor background, MediaColor foreground)
         {
-            //Do not calculate anything when at least one Alpha is 0 also prevents "new_alpha" to become 0 (can't divide through 0)
-            if (background.A <= 0 && foreground.A <= 0)
-                return MediaColor.FromArgb(0, 0, 0, 0);
-
-            if (background.A <= 0)
-                return foreground;
-
-            if (foreground.A <= 0)
-                return background;
-
-            float new_alpha = (background.ScA + foreground.ScA) - (background.ScA * foreground.ScA);
-
-            var bg_a = CorrectWithAlpha(background);
-            var fg_a = CorrectWithAlpha(foreground);
-
-            var color_final_a = MediaColor.FromScRgb(1, 1, 1, 1);
-            color_final_a.ScR = fg_a.ScR + (bg_a.ScR * (1 - foreground.ScA));
-            color_final_a.ScG = fg_a.ScG + (bg_a.ScG * (1 - foreground.ScA));
-            color_final_a.ScB = fg_a.ScB + (bg_a.ScB * (1 - foreground.ScA));
-
-            var color_final = MediaColor.FromScRgb(0, 0, 0, 0);
-            color_final.ScR = color_final_a.ScR / new_alpha;
-            color_final.ScG = color_final_a.ScG / new_alpha;
-            color_final.ScB = color_final_a.ScB / new_alpha;
-            color_final.ScA = new_alpha;
-
-            return color_final;
-        }
-
-        /// <summary>
-        /// Multiplies all non-alpha values by alpha.
-        /// </summary>
-        /// <param name="color">Color to correct</param>
-        /// <returns>Corrected Color</returns>
-        public static MediaColor CorrectWithAlpha(MediaColor color)
-        {
-            return MediaColor.FromScRgb(1, (color.ScR * color.ScA), (color.ScG * color.ScA), (color.ScB * color.ScA));
+            return DrawingColor.FromArgb(
+                (int)(1 - (255 - background.A) / 255d * (255 - foreground.A) / 255d) * 255,
+                foreground.R * foreground.A / 255 + background.R * ( 255 - background.A) / 255,
+                foreground.G * foreground.A / 255 + background.G * ( 255 - background.A) / 255,
+                foreground.B * foreground.A / 255 + background.B * ( 255 - background.A) / 255
+                );
         }
 
         /// <summary>
@@ -236,21 +172,6 @@ namespace Aurora.Utils
         }
 
         /// <summary>
-        /// Generates a random color within a certain base color range
-        /// </summary>
-        /// <param name="baseColor">A base color range</param>
-        /// <returns>A random color within a base range</returns>
-        public static DrawingColor GenerateRandomColor(DrawingColor baseColor)
-        {
-            int red = (randomizer.Next(255) + baseColor.R) / 2;
-            int green = (randomizer.Next(255) + baseColor.G) / 2;
-            int blue = (randomizer.Next(255) + baseColor.B) / 2;
-            int alpha = (255 + baseColor.A) / 2;
-
-            return DrawingColor.FromArgb(alpha, red, green, blue);
-        }
-
-        /// <summary>
         /// Returns an average color from a presented Bitmap
         /// </summary>
         /// <param name="bitmap">The bitmap to be evaluated</param>
@@ -287,50 +208,6 @@ namespace Aurora.Utils
             }
 
             return DrawingColor.FromArgb((byte)(red / numPixels), (byte)(green / numPixels), (byte)(blue / numPixels));
-        }
-
-        /// <summary>
-        /// Returns an average color from a presented Bitmap
-        /// </summary>
-        /// <param name="bitmap">The bitmap to be evaluated</param>
-        /// <returns>An average color from the bitmap</returns>
-        public static DrawingColor GetAverageColor(Bitmap bitmap)
-        {
-            long Red = 0;
-            long Green = 0;
-            long Blue = 0;
-            long Alpha = 0;
-
-            int numPixels = bitmap.Width * bitmap.Height;
-
-            BitmapData srcData = bitmap.LockBits(
-                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
-                ImageLockMode.ReadOnly,
-                PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            unsafe
-            {
-                byte* p = (byte*)(void*)Scan0;
-
-                for (int y = 0; y < bitmap.Height; y++)
-                {
-                    for (int x = 0; x < bitmap.Width; x++)
-                    {
-                        Blue += p[(y * stride) + x * 4];
-                        Green += p[(y * stride) + x * 4 + 1];
-                        Red += p[(y * stride) + x * 4 + 2];
-                        Alpha += p[(y * stride) + x * 4 + 3];
-                    }
-                }
-            }
-
-            bitmap.UnlockBits(srcData);
-
-            return DrawingColor.FromArgb((int)(Alpha / numPixels), (int)(Red / numPixels), (int)(Green / numPixels), (int)(Blue / numPixels));
         }
 
         public static DrawingColor GetColorFromInt(int interger)
@@ -482,28 +359,6 @@ namespace Aurora.Utils
             component = MathUtils.Clamp(result, 0, 1);
         }
 
-        /// <summary>
-        /// Returns a Luma coefficient for brightness of a color
-        /// </summary>
-        /// <param name="color">Color to be evaluated</param>
-        /// <returns>The brightness of the color. [0 = Dark, 255 = Bright]</returns>
-        public static byte GetColorBrightness(DrawingColor color)
-        {
-            //Source: http://stackoverflow.com/a/12043228
-            return (byte)(0.2126 * color.R + 0.7152 * color.G + 0.0722 * color.B);
-        }
-
-        /// <summary>
-        /// Returns whether or not a color is considered to be dark, based on Luma coefficient
-        /// </summary>
-        /// <param name="color">Color to be evaluated</param>
-        /// <returns>Whether or not the color is dark</returns>
-        public static bool IsColorDark(DrawingColor color)
-        {
-            //Source: http://stackoverflow.com/a/12043228
-            return GetColorBrightness(color) < 40;
-        }
-
         public static MediaColor CloneMediaColor(MediaColor clr)
         {
             return MediaColor.FromArgb(clr.A, clr.R, clr.G, clr.B);
@@ -512,6 +367,40 @@ namespace Aurora.Utils
         public static DrawingColor CloneDrawingColor(DrawingColor clr)
         {
             return DrawingColor.FromArgb(clr.ToArgb());
+        }
+
+        public static bool NearlyEqual(float a, float b, float epsilon) {
+            const double MinNormal = 2.2250738585072014E-308d;
+            float absA = Math.Abs(a);
+            float absB = Math.Abs(b);
+            float diff = Math.Abs(a - b);
+
+            if (a.Equals(b)) { // shortcut, handles infinities
+                return true;
+            }
+            if (a == 0 || b == 0 || absA + absB < MinNormal) {
+                // a or b is zero or both are extremely close to it
+                // relative error is less meaningful here
+                return diff < (epsilon * MinNormal);
+            } // use relative error
+            return diff / (absA + absB) < epsilon;
+        }
+
+        public static bool NearlyEqual(double a, double b, double epsilon) {
+            const double MinNormal = 2.2250738585072014E-308d;
+            double absA = Math.Abs(a);
+            double absB = Math.Abs(b);
+            double diff = Math.Abs(a - b);
+
+            if (a.Equals(b)) { // shortcut, handles infinities
+                return true;
+            }
+            if (a == 0 || b == 0 || absA + absB < MinNormal) {
+                // a or b is zero or both are extremely close to it
+                // relative error is less meaningful here
+                return diff < (epsilon * MinNormal);
+            } // use relative error
+            return diff / (absA + absB) < epsilon;
         }
     }
 

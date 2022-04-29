@@ -54,36 +54,52 @@ namespace Aurora.Profiles.Dota_2.Layers
 
     public class Dota2RespawnLayerHandler : LayerHandler<Dota2RespawnLayerHandlerProperties>
     {
+        private readonly EffectLayer _respawnLayer = new("Dota 2 - Respawn");
 
         protected override UserControl CreateControl()
         {
             return new Control_Dota2RespawnLayer(this);
         }
 
+        private bool _empty = false;
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer respawn_layer = new EffectLayer("Dota 2 - Respawn");
-
             if (state is GameState_Dota2)
             {
                 GameState_Dota2 dota2state = state as GameState_Dota2;
 
                 if (dota2state.Player.Team != PlayerTeam.Undefined && dota2state.Player.Team != PlayerTeam.None && !dota2state.Hero.IsAlive)
                 {
-                    double percent = (dota2state.Hero.SecondsToRespawn > 5 ? 0.0 : 1.0 - (dota2state.Hero.SecondsToRespawn / 5.0));
+                    double percent = dota2state.Hero.SecondsToRespawn > 5 ? 0.0 : 1.0 - dota2state.Hero.SecondsToRespawn / 5.0;
+                    if (percent > 0)
+                    {
+                        _empty = false;
+                        _respawnLayer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent));
 
-                    respawn_layer.Fill(Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent));
-
-                    respawn_layer.PercentEffect(Properties.RespawningColor,
+                        _respawnLayer.PercentEffect(Properties.RespawningColor,
                             Properties.RespawnColor,
                             Properties.Sequence,
                             percent,
                             1.0,
                             PercentEffectType.AllAtOnce);
+                    }
+                    else
+                    {
+                        _respawnLayer.Clear();
+                        _empty = true;
+                    }
+                }
+                else
+                {
+                    if (!_empty)
+                    {
+                        _respawnLayer.Clear();
+                        _empty = true;
+                    }
                 }
             }
 
-            return respawn_layer;
+            return _respawnLayer;
         }
 
         public override void SetApplication(Application profile)

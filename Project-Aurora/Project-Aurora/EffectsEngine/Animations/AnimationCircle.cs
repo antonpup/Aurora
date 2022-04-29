@@ -7,16 +7,15 @@ namespace Aurora.EffectsEngine.Animations
     public class AnimationCircle : AnimationFrame
     {
         [Newtonsoft.Json.JsonProperty]
-        internal float _radius = 0.0f;
+        internal float _radius;
 
         public float Radius => _radius;
-        public PointF Center => _center;
+        public PointF Center => _dimension.Location;
 
         public AnimationFrame SetRadius(float radius)
         {
             _radius = radius;
-            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
-            _center = new PointF(_dimension.X + _radius, _dimension.Y + _radius);
+            _dimension = new RectangleF(_dimension.X - _radius, _dimension.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _invalidated = true;
 
             return this;
@@ -24,8 +23,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public AnimationFrame SetCenter(PointF center)
         {
-            _center = center;
-            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _dimension = new RectangleF(center.X - _radius, center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _invalidated = true;
 
             return this;
@@ -34,8 +32,7 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationCircle()
         {
             _radius = 0;
-            _center = new PointF(0, 0);
-            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _dimension = new RectangleF(- _radius, - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = Utils.ColorUtils.GenerateRandomColor();
             _width = 1;
             _duration = 0.0f;
@@ -44,32 +41,27 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationCircle(AnimationFrame frame, float radius) : base(frame)
         {
             _radius = radius;
-            _center = new PointF(_dimension.X + _radius, _dimension.Y + _radius);
         }
 
         public AnimationCircle(AnimationCircle animationCircle) : base(animationCircle)
         {
             _radius = animationCircle.Radius;
-            _center = animationCircle.Center;
         }
 
         public AnimationCircle(Rectangle dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
             _radius = dimension.Width / 2.0f;
-            _center = new PointF(dimension.X + _radius, dimension.Y + _radius);
         }
 
         public AnimationCircle(RectangleF dimension, Color color, int width = 1, float duration = 0.0f) : base(dimension, color, width, duration)
         {
             _radius = dimension.Width / 2.0f;
-            _center = new PointF(dimension.X + _radius, dimension.Y + _radius);
         }
 
         public AnimationCircle(PointF center, float radius, Color color, int width = 1, float duration = 0.0f)
         {
             _radius = radius;
-            _center = center;
-            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _dimension = new RectangleF(center.X - _radius, center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = color;
             _width = width;
             _duration = duration;
@@ -78,8 +70,7 @@ namespace Aurora.EffectsEngine.Animations
         public AnimationCircle(float x, float y, float radius, Color color, int width = 1, float duration = 0.0f)
         {
             _radius = radius;
-            _center = new PointF(x, y);
-            _dimension = new RectangleF(_center.X - _radius, _center.Y - _radius, 2.0f * _radius, 2.0f * _radius);
+            _dimension = new RectangleF(x - _radius, y - _radius, 2.0f * _radius, 2.0f * _radius);
             _color = color;
             _width = width;
             _duration = duration;
@@ -91,8 +82,8 @@ namespace Aurora.EffectsEngine.Animations
             {
                 _pen = new Pen(_color);
                 _pen.Width = _width;
-                //_pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-                //_pen.ScaleTransform(Scale, Scale);
+                _pen.Alignment = PenAlignment.Center;
+                _pen.ScaleTransform(Scale, Scale);
 
                 virtUpdate();
                 _invalidated = false;

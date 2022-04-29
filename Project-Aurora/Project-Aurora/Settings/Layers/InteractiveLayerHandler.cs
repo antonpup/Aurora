@@ -112,13 +112,15 @@ namespace Aurora.Settings.Layers
 
     public class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandlerProperties>
     {
-        private List<input_item> _input_list = new List<input_item>();
+        private List<input_item> _input_list = new();
         private Keys previous_key = Keys.None;
 
-        private long previoustime = 0;
-        private long currenttime = 0;
+        private long previoustime;
+        private long currenttime;
 
         private input_item holdKeyInputItem;
+        
+        EffectLayer interactive_layer = new("Interactive Effects");
 
         private float getDeltaTime()
         {
@@ -155,7 +157,7 @@ namespace Aurora.Settings.Layers
                 previous_key = Keys.None;
         }
 
-        private Dictionary<Devices.DeviceKeys, long> TimeOfLastPress = new Dictionary<Devices.DeviceKeys, long>();
+        private Dictionary<Devices.DeviceKeys, long> TimeOfLastPress = new();
         private const long pressBuffer = 300L;
 
         private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
@@ -291,7 +293,7 @@ namespace Aurora.Settings.Layers
         public override EffectLayer Render(IGameState gamestate)
         {
             previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+            currenttime = Time.GetMillisecondsSinceEpoch();
             lock (TimeOfLastPress)
             {
                 foreach (var lengthPresses in TimeOfLastPress.ToList())
@@ -302,8 +304,11 @@ namespace Aurora.Settings.Layers
                     }
                 }
             }
-            EffectLayer interactive_layer = new EffectLayer("Interactive Effects");
 
+            if (_input_list.Count > 0)
+            {
+                interactive_layer.Clear();
+            }
             foreach (var input in _input_list.ToArray())
             {
                 if (input == null)
