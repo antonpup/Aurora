@@ -77,15 +77,15 @@ namespace Aurora.Settings.Layers
         }
 
         public object Clone() {
-            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+            var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Utils.JSONUtils.SerializationBinder });
             return JsonConvert.DeserializeObject(
                 str,
-                this.GetType(),
-                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
-            );
+                GetType(),
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Utils.JSONUtils.SerializationBinder }
+            )!;
         }
 
-        public void SetGameState(IGameState new_game_state) => Handler.SetGameState(new_game_state);
+        public void SetGameState(IGameState newGameState) => Handler.SetGameState(newGameState);
         public void Dispose() => Handler?.Dispose();
     }
 

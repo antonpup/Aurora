@@ -80,70 +80,57 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (state is GameState_CSGO)
-            {
-                GameState_CSGO csgostate = state as GameState_CSGO;
+            if (state is not GameState_CSGO csgostate) return _bgLayer;
 
-                if (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
+            var inGame = csgostate.Previously.Player.State.Health is > -1 and < 100
+                         || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined);
+            if (csgostate.Player.State.Health == 100 && inGame && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
+            {
+                _isDimming = false;
+                _dimBgAt = Utils.Time.GetMillisecondsSinceEpoch() +  (long)Properties.DimDelay * 1000;
+                _dimValue = 100.0;
+            }
+
+            var bgColor = csgostate.Player.Team switch
+            {
+                PlayerTeam.T => Properties.TColor,
+                PlayerTeam.CT => Properties.CTColor,
+                _ => Properties.DefaultColor
+            };
+
+            if (csgostate.Player.Team is PlayerTeam.CT or PlayerTeam.T)
+            {
+                if (_dimBgAt <= Utils.Time.GetMillisecondsSinceEpoch() || csgostate.Player.State.Health == 0)
+                {
+                    _isDimming = true;
+                    bgColor = Utils.ColorUtils.MultiplyColorByScalar(bgColor, GetDimmingValue() / 100);
+                }
+                else
                 {
                     _isDimming = false;
-                    _dimBgAt = Utils.Time.GetMillisecondsSinceEpoch() + (long)(Properties.DimDelay * 1000D);
                     _dimValue = 100.0;
                 }
-
-                Color bg_color = Properties.DefaultColor;
-
-                switch (csgostate.Player.Team)
-                {
-                    case PlayerTeam.T:
-                        bg_color = Properties.TColor;
-                        break;
-                    case PlayerTeam.CT:
-                        bg_color = Properties.CTColor;
-                        break;
-                    default:
-                        break;
-                }
-
-                if (csgostate.Player.Team == PlayerTeam.CT || csgostate.Player.Team == PlayerTeam.T)
-                {
-                    if (_dimBgAt <= Utils.Time.GetMillisecondsSinceEpoch() || csgostate.Player.State.Health == 0)
-                    {
-                        _isDimming = true;
-                        bg_color = Utils.ColorUtils.MultiplyColorByScalar(bg_color, GetDimmingValue() / 100);
-                    }
-                    else
-                    {
-                        _isDimming = false;
-                        _dimValue = 100.0;
-                    }
-                }
-
-                if (_solidBrush.Color != bg_color)
-                {
-                    _solidBrush.Color = bg_color;
-                    _bgLayer.Fill(bg_color);
-                }
             }
+
+            if (_solidBrush.Color == bgColor) return _bgLayer;
+            _solidBrush.Color = bgColor;
+            _bgLayer.Fill(_solidBrush);
 
             return _bgLayer;
         }
 
         public override void SetApplication(Application profile)
         {
-            (Control as Control_CSGOBackgroundLayer).SetProfile(profile);
+            (Control as Control_CSGOBackgroundLayer)?.SetProfile(profile);
             base.SetApplication(profile);
         }
 
         private double GetDimmingValue()
         {
-            if (_isDimming && Properties.DimEnabled)
-            {
-                _dimValue -= 2.0;
-                return _dimValue = _dimValue < Math.Abs(Properties.DimAmount - 100) ? Math.Abs(Properties.DimAmount - 100) : _dimValue;
-            }
+            if (!_isDimming || !Properties.DimEnabled) return _dimValue = 100.0;
+            _dimValue -= 2.0;
+            return _dimValue = _dimValue < Math.Abs(Properties.DimAmount - 100) ? Math.Abs(Properties.DimAmount - 100) : _dimValue;
 
-            return _dimValue = 100.0;
         }
     }
 }

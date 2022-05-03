@@ -86,16 +86,17 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            double value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
+            var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
             if (ColorUtils.NearlyEqual(_value, value, 0.001))
             {
                 return _effectLayer;
             }
             _value = value;
             
-            double maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
+            var maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 
-            return _effectLayer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
+            _effectLayer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
+            return _effectLayer;
         }
 
         public override void SetApplication(Application profile)

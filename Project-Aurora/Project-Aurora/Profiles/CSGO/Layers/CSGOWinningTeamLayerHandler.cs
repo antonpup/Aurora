@@ -64,9 +64,12 @@ namespace Aurora.Profiles.CSGO.Layers
 
         private bool _showAnimation;
 
+        private SolidBrush _solidBrush = new(Color.Empty);
+
         public CSGOWinningTeamLayerHandler()
         {
             _animationMix = new AnimationMix(_tracks);
+            SetTracks();
         }
 
         protected override UserControl CreateControl()
@@ -85,15 +88,13 @@ namespace Aurora.Profiles.CSGO.Layers
             // Block animations after end of round
             if (csgostate.Map.Phase == MapPhase.Undefined || csgostate.Round.Phase != RoundPhase.Over)
             {
-                if (!_empty)
-                {
-                    _effectLayer.Clear();
-                    _empty = true;
-                }
+                if (_empty) return _effectLayer;
+                _effectLayer.Clear();
+                _empty = true;
                 return _effectLayer;
             }
 
-            var color = Color.White;
+            _solidBrush.Color = Color.White;
 
             // Triggers directly after a team wins a round
             if (csgostate.Round.WinTeam != RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam == RoundWinTeam.Undefined)
@@ -107,58 +108,53 @@ namespace Aurora.Profiles.CSGO.Layers
 
                     if (tScore > ctScore)
                     {
-                        color = Properties.TColor;
+                        _solidBrush.Color = Properties.TColor;
                     }
                     else if (ctScore > tScore)
                     {
-                        color = Properties.CTColor;
+                        _solidBrush.Color = Properties.CTColor;
                     }
                 }
                 else
                 {
-                    color = csgostate.Round.WinTeam switch
+                    _solidBrush.Color = csgostate.Round.WinTeam switch
                     {
                         // End of round
                         RoundWinTeam.T => Properties.TColor,
                         RoundWinTeam.CT => Properties.CTColor,
-                        _ => color
+                        _ => _solidBrush.Color
                     };
                 }
 
-                SetTracks(color);
                 _animationMix.Clear();
                 _showAnimation = true;
             }
 
             if (!_showAnimation) return _effectLayer;
 
-
-
             _empty = false;
-            _effectLayer.Fill(color);
+            _effectLayer.Fill(_solidBrush);
             _animationMix.Draw(_effectLayer.GetGraphics(), _winningTeamEffectKeyframe);
             _winningTeamEffectKeyframe += (_currenttime - _previoustime) / 1000.0f;
 
-            if (_winningTeamEffectKeyframe >= WinningTeamEffectAnimationTime)
-            {
-                _showAnimation = false;
-                _winningTeamEffectKeyframe = 0;
-            }
+            if (!(_winningTeamEffectKeyframe >= WinningTeamEffectAnimationTime)) return _effectLayer;
+            _showAnimation = false;
+            _winningTeamEffectKeyframe = 0;
 
             return _effectLayer;
         }
 
         public override void SetApplication(Application profile)
         {
-            (Control as Control_CSGOWinningTeamLayer).SetProfile(profile);
+            (Control as Control_CSGOWinningTeamLayer)?.SetProfile(profile);
             base.SetApplication(profile);
         }
 
-        private void SetTracks(Color playerColor)
+        private void SetTracks()
         {
-            for (int i = 0; i < _tracks.Length; i++)
+            foreach (var track in _tracks)
             {
-                _tracks[i].SetFrame(
+                track.SetFrame(
                     0.0f,
                     new AnimationCircle(
                         (int)(Effects.canvas_width_center * 0.9),
@@ -168,7 +164,7 @@ namespace Aurora.Profiles.CSGO.Layers
                         4)
                 );
 
-                _tracks[i].SetFrame(
+                track.SetFrame(
                     1.0f,
                     new AnimationCircle(
                         (int)(Effects.canvas_width_center * 0.9),
