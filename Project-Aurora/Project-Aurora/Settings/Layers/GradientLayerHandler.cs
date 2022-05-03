@@ -77,5 +77,11 @@ namespace Aurora.Settings.Layers
             }
             return _gradientLayer;
         }
+
+        public override void Dispose()
+        {
+            _gradientLayer.Dispose();
+            base.Dispose();
+        }
     }
 }

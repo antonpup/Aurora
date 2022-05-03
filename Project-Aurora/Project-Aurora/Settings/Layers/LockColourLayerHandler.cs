@@ -1,34 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using System.Windows.Forms;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using System.Windows.Input;
-using Newtonsoft.Json;
-using System.Drawing;
 using Aurora.Utils;
-using System.Windows.Forms;
-using System.Windows.Controls;
+using Newtonsoft.Json;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace Aurora.Settings.Layers
 {
     public class LockColourLayerHandlerProperties : LayerHandlerProperties2Color<LockColourLayerHandlerProperties>
     {
-        public LockColourLayerHandlerProperties() : base() { }
+        public LockColourLayerHandlerProperties()
+        { }
 
         public LockColourLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
         public Keys? _ToggledKey { get; set; }
 
         [JsonIgnore]
-        public Keys ToggledKey { get { return (Logic._ToggledKey ?? _ToggledKey) ?? (Keys)0; } }
+        public Keys ToggledKey => (Logic._ToggledKey ?? _ToggledKey) ?? 0;
 
         public bool? _Pulse { get; set; }
 
         [JsonIgnore]
-        public bool Pulse { get { return (Logic._Pulse ?? _Pulse) ?? false; } }
+        public bool Pulse => (Logic._Pulse ?? _Pulse) ?? false;
 
         public override void Default()
         {
@@ -42,9 +38,9 @@ namespace Aurora.Settings.Layers
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class LockColourLayerHandler : LayerHandler<LockColourLayerHandlerProperties>
     {
-        private EffectLayer _effectLayer = new("LockColourLayer");
+        private readonly EffectLayer _effectLayer = new("LockColourLayer - Deprecated");
 
-        protected override System.Windows.Controls.UserControl CreateControl()
+        protected override UserControl CreateControl()
         {
             return new Control_LockColourLayer(this);
         }
@@ -57,11 +53,9 @@ namespace Aurora.Settings.Layers
             {
                 clr = Properties.PrimaryColor;
 
-                if (Properties.Pulse)
-                {
-                    double d = Math.Pow(Math.Sin(((Utils.Time.GetMillisecondsSinceEpoch() % 1500L) / 1500.0D) * Math.PI), 2);
-                    clr = ColorUtils.MultiplyColorByScalar(clr, d);
-                }
+                if (!Properties.Pulse) return _effectLayer.Set(Properties.Sequence, clr);
+                var d = Math.Pow(Math.Sin(Time.GetMillisecondsSinceEpoch() % 1500L / 1500.0D * Math.PI), 2);
+                clr = ColorUtils.MultiplyColorByScalar(clr, d);
             }
             else
                 clr = Properties.SecondaryColor;

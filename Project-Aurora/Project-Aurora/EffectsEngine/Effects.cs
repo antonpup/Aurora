@@ -230,10 +230,7 @@ namespace Aurora
 
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)
         {
-            if (bitmap_map.ContainsKey(key))
-                return bitmap_map[key];
-            else
-                return BitmapRectangle.EmptyRectangle;
+            return bitmap_map.ContainsKey(key) ? bitmap_map[key] : BitmapRectangle.EmptyRectangle;
         }
 
         public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)
@@ -244,96 +241,89 @@ namespace Aurora
 
         private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(possible_peripheral_keys.Length);
         private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MAX_DEVICE_ID);
+
         public void PushFrame(EffectFrame frame)
         {
-            lock (bitmap_lock)
+            var background = new EffectLayer("Global Background", Color.Black);
+
+            var overLayersArray = frame.GetOverlayLayers().ToArray();
+            var layersArray = frame.GetLayers().ToArray();
+
+            foreach (var layer in layersArray)
+                background += layer;
+
+            foreach (var layer in overLayersArray)
+                background += layer;
+
+            //Apply Brightness
+            _peripheralColors.Clear();
+            foreach (var key in possible_peripheral_keys)
             {
-                EffectLayer background = new EffectLayer("Global Background", Color.Black);
-
-                EffectLayer[] over_layers_array = frame.GetOverlayLayers().ToArray();
-                EffectLayer[] layers_array = frame.GetLayers().ToArray();
-
-                foreach (EffectLayer layer in layers_array)
-                    background += layer;
-
-                foreach (EffectLayer layer in over_layers_array)
-                    background += layer;
-
-                //Apply Brightness
-                _peripheralColors.Clear();
-                foreach (DeviceKeys key in possible_peripheral_keys)
-                {
-                    if(!_peripheralColors.ContainsKey(key))
-                        _peripheralColors.Add(key, background.Get(key));
-                }
-
-                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
-
-                foreach (DeviceKeys key in possible_peripheral_keys)
-                    background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
-
-                background *= Global.Configuration.GlobalBrightness;
-                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.GlobalBrightness)), Color.Black));
-
-                if (_forcedFrame != null)
-                {
-                    using (Graphics g = background.GetGraphics())
-                    {
-                        g.Clear(Color.Black);
-
-                        g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
-
-                        _forcedFrame.Dispose();
-                        _forcedFrame = null;
-                    }
-                }
-
-                _keyColors.Clear();
-                Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
-
-                foreach (Devices.DeviceKeys key in allKeys)
-                    _keyColors[key] = background.Get(key);
-
-                Effects.keyColors = _keyColors;
-
-                pushedframes++;
-
-                DeviceColorComposition dcc = new DeviceColorComposition()
-                {
-                    keyColors = _keyColors,
-                    keyBitmap = background.GetBitmap()
-                };
-
-                Global.dev_manager.UpdateDevices(dcc);
-
-                var hander = NewLayerRender;
-                if (hander != null)
-                    hander.Invoke(background.GetBitmap());
-
-                if (isrecording)
-                {
-
-                    EffectLayer pizelated_render = new EffectLayer();
-                    foreach (Devices.DeviceKeys key in allKeys)
-                    {
-                        pizelated_render.Set(key, background.Get(key));
-                    }
-
-                    using (Bitmap map = pizelated_render.GetBitmap())
-                    {
-                        previousframe.Dispose();
-                        previousframe = new Bitmap(map);
-                    }
-                }
-
-                background.Dispose();
-                frame.Dispose();
+                if (!_peripheralColors.ContainsKey(key))
+                    _peripheralColors.Add(key, background.Get(key));
             }
+
+            background.Fill(Color.FromArgb((int) (255.0f * (1.0f - Global.Configuration.KeyboardBrightness)),
+                Color.Black));
+
+            foreach (var key in possible_peripheral_keys)
+                background.Set(key,
+                    Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black,
+                        (1.0f - Global.Configuration.PeripheralBrightness)));
+
+            background *= Global.Configuration.GlobalBrightness;
+            background.Fill(
+                Color.FromArgb((int) (255.0f * (1.0f - Global.Configuration.GlobalBrightness)), Color.Black));
+
+            if (_forcedFrame != null)
+            {
+                using var g = background.GetGraphics();
+                g.Clear(Color.Black);
+
+                g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
+
+                _forcedFrame.Dispose();
+                _forcedFrame = null;
+            }
+
+            _keyColors.Clear();
+            var allKeys = bitmap_map.Keys.ToArray();
+
+            foreach (var key in allKeys)
+                _keyColors[key] = background.Get(key);
+
+            keyColors = _keyColors;
+
+            pushedframes++;
+
+            var dcc = new DeviceColorComposition
+            {
+                keyColors = _keyColors,
+                keyBitmap = background.GetBitmap()
+            };
+
+            Global.dev_manager.UpdateDevices(dcc);
+
+            if (isrecording)
+            {
+                var pizelatedRender = new EffectLayer();
+                foreach (var key in allKeys)
+                {
+                    pizelatedRender.Set(key, background.Get(key));
+                }
+
+                using var map = pizelatedRender.GetBitmap();
+                previousframe.Dispose();
+                previousframe = new Bitmap(map);
+            }
+
+            background.Dispose();
+            frame.Dispose();
         }
 
         public Dictionary<DeviceKeys, Color> GetKeyboardLights()
         {
-            return Effects.keyColors;
+            return keyColors;
         }
     }
 }
