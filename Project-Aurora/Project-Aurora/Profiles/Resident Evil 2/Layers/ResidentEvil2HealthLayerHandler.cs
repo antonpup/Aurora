@@ -54,20 +54,20 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
         private static float[] fullAnimTimes = { animationTimes[0] + breakTimes[0], animationTimes[1] + breakTimes[1], animationTimes[2] + breakTimes[2] };
 
         static AnimationTrack hbFine = new AnimationTrack("HBScan", fullAnimTimes[0])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Green))
-            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Green))
+            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.Green))
+            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.Green))
             .SetFrame(breakTimes[0], new AnimationFill(Color.Black));
         static AnimationTrack hbLiteFine = new AnimationTrack("HBScan", fullAnimTimes[0])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.YellowGreen))
-            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.YellowGreen))
+            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.YellowGreen))
+            .SetFrame(animationTimes[0], new AnimationFilledRectangle(125, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.YellowGreen))
             .SetFrame(breakTimes[0], new AnimationFill(Color.Black));
         static AnimationTrack hbCaution = new AnimationTrack("HBScan", fullAnimTimes[1])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Gold))
-            .SetFrame(animationTimes[1], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Gold))
+            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.Gold))
+            .SetFrame(animationTimes[1], new AnimationFilledRectangle(125, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.Gold))
             .SetFrame(breakTimes[1], new AnimationFill(Color.Black));
         static AnimationTrack hbDanger = new AnimationTrack("HBScan", fullAnimTimes[2])
-            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Red))
-            .SetFrame(animationTimes[2], new AnimationFilledRectangle(125, Effects.canvas_height_center, 20, Effects.canvas_height, Color.Red))
+            .SetFrame(0, new AnimationFilledRectangle(-5, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.Red))
+            .SetFrame(animationTimes[2], new AnimationFilledRectangle(125, Effects.CanvasHeightCenter, 20, Effects.canvas_height, Color.Red))
             .SetFrame(breakTimes[2], new AnimationFill(Color.Black));
 
         AnimationMix mixFine = new AnimationMix(new[] { hbFine });

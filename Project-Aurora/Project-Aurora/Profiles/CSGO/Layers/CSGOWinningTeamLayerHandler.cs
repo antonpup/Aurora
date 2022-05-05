@@ -157,8 +157,8 @@ namespace Aurora.Profiles.CSGO.Layers
                 track.SetFrame(
                     0.0f,
                     new AnimationCircle(
-                        (int)(Effects.canvas_width_center * 0.9),
-                        Effects.canvas_height_center,
+                        (int)(Effects.CanvasWidthCenter * 0.9),
+                        Effects.CanvasHeightCenter,
                         0,
                         Color.Black,
                         4)
@@ -167,9 +167,9 @@ namespace Aurora.Profiles.CSGO.Layers
                 track.SetFrame(
                     1.0f,
                     new AnimationCircle(
-                        (int)(Effects.canvas_width_center * 0.9),
-                        Effects.canvas_height_center,
-                        Effects.canvas_biggest / 2.0f,
+                        (int)(Effects.CanvasWidthCenter * 0.9),
+                        Effects.CanvasHeightCenter,
+                        Effects.CanvasBiggest / 2.0f,
                         Color.Black,
                         4)
                 );

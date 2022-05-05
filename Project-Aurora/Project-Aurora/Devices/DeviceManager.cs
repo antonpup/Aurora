@@ -18,7 +18,7 @@ namespace Aurora.Devices
     {
         public IDevice Device { get; }
 
-        private SmartThreadPool Worker = new SmartThreadPool(1000, 1);
+        private readonly SmartThreadPool _worker = new(1000, 1);
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
@@ -46,9 +46,9 @@ namespace Aurora.Devices
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (Worker.WaitingCallbacks < 1)
+            if (_worker.WaitingCallbacks < 1)
             {
-                Worker.QueueWorkItem(_updateAction);
+                _worker.QueueWorkItem(_updateAction);
             }
         }
     }
@@ -71,7 +71,7 @@ namespace Aurora.Devices
             }
         }
 
-        public List<DeviceContainer> DeviceContainers { get; } = new List<DeviceContainer>();
+        public List<DeviceContainer> DeviceContainers { get; } = new();
 
         public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
 

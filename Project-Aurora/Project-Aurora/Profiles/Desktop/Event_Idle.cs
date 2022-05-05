@@ -134,7 +134,7 @@ namespace Aurora.Profiles.Desktop
                         PointF pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
 
                         float transition_value = 1.0f - raindrops[raindrop];
-                        float radius = transition_value * Effects.canvas_biggest;
+                        float radius = transition_value * Effects.CanvasBiggest;
 
                         using(Graphics g = layer.GetGraphics())
                             g.DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
@@ -226,7 +226,7 @@ namespace Aurora.Profiles.Desktop
 					{
 						PointF pt = Effects.GetBitmappingFromDeviceKey(d).Center;
 						float transitionValue = 1.0f - raindrops[d];
-						float radius = transitionValue * Effects.canvas_biggest;
+						float radius = transitionValue * Effects.CanvasBiggest;
 						raindrops[d] -= getDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
 						return new Tuple<Devices.DeviceKeys, PointF, float, float>(d, pt, transitionValue, radius);
 

@@ -467,14 +467,16 @@ namespace Aurora.Profiles
             UpdatedEvents.Clear();
 
             //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
-            if ((Global.Configuration.TimeBasedDimmingEnabled &&
-               Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingStartMinute, Global.Configuration.TimeBasedDimmingEndHour, Global.Configuration.TimeBasedDimmingEndMinute)))
+            var dimmingStartTime = new TimeSpan(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingStartMinute, 0);
+            var dimmingEndTime = new TimeSpan(Global.Configuration.TimeBasedDimmingEndHour, Global.Configuration.TimeBasedDimmingEndMinute, 0);
+            if (Global.Configuration.TimeBasedDimmingEnabled &&
+                Time.IsCurrentTimeBetween(dimmingStartTime, dimmingEndTime))
             {
                 StopUnUpdatedEvents();
                 return;
             }
 
-            string raw_process_name = Path.GetFileName(processMonitor.ProcessPath);
+            var rawProcessName = Path.GetFileName(processMonitor.ProcessPath);
 
             UpdateProcess();
             EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
@@ -484,18 +486,17 @@ namespace Aurora.Profiles
             //TODO: Move these IdleEffects to an event
             //this.UpdateIdleEffects(newFrame);
 
-            ILightEvent profile = GetCurrentProfile(out bool preview);
+            var profile = GetCurrentProfile(out var preview);
 
             // If the current foreground process is excluded from Aurora, disable the lighting manager
-            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(raw_process_name))
+            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(rawProcessName))
             {
                 StopUnUpdatedEvents();
                 Global.dev_manager.ShutdownDevices();
                 Global.effengine.PushFrame(newFrame);
                 return;
             }
-            else
-                Global.dev_manager.InitializeOnce();
+            Global.dev_manager.InitializeOnce();
             debugTimer.Restart();
 
             //Need to do another check in case Desktop is disabled or the selected preview is disabled
@@ -525,16 +526,16 @@ namespace Aurora.Profiles
 
         /// <summary>Gets the current application.</summary>
         /// <param name="preview">Boolean indicating whether the application is selected because it is previewing (true) or because the process is open (false).</param>
-        public ILightEvent GetCurrentProfile(out bool preview)
+        private ILightEvent GetCurrentProfile(out bool preview)
         {
-            string process_name = Path.GetFileName(processMonitor.ProcessPath).ToLower();
-            string process_title = processMonitor.GetActiveWindowsProcessTitle();
+            var processName = Path.GetFileName(processMonitor.ProcessPath).ToLower();
+            var processTitle = processMonitor.GetActiveWindowsProcessTitle();
             ILightEvent profile = null;
             ILightEvent tempProfile = null;
             preview = false;
 
             //TODO: GetProfile that checks based on event type
-            if ((tempProfile = GetProfileFromProcessData(process_name, process_title)) != null && tempProfile.IsEnabled)
+            if ((tempProfile = GetProfileFromProcessData(processName, processTitle)) != null && tempProfile.IsEnabled)
                 profile = tempProfile;
             else if ((tempProfile = GetProfileFromProcessName(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
             {
@@ -544,7 +545,7 @@ namespace Aurora.Profiles
             else if (Global.Configuration.AllowWrappersInBackground && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.IsEnabled)
                 profile = tempProfile;
 
-            profile = profile ?? DesktopProfile;
+            profile ??= DesktopProfile;
 
             return profile;
         }
@@ -556,8 +557,7 @@ namespace Aurora.Profiles
         /// <returns></returns>
         public IEnumerable<ILightEvent> GetOverlayActiveProfiles()
         {
-            return Events.Values
-                .Where(_isOverlayActiveProfile);
+            return Events.Values.Where(_isOverlayActiveProfile);
         }
         //.Where(evt => evt.Config.ProcessTitles == null || ProcessUtils.AnyProcessWithTitleExists(evt.Config.ProcessTitles));
 

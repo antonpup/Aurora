@@ -1,4 +1,6 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using System.Collections;
+using Aurora.EffectsEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Aurora.Devices;
@@ -88,33 +90,46 @@ namespace Aurora
 
     public delegate void NewLayerRendered(Bitmap bitmap);
 
+    class EnumHashGetter: IEqualityComparer<Enum>
+    {
+        public static EnumHashGetter Instance = new();
+
+        private EnumHashGetter()
+        {
+        }
+
+        public bool Equals(Enum x, Enum y)
+        {
+            return object.Equals(x, y);
+        }
+
+        public int GetHashCode(Enum obj)
+        {
+            return Convert.ToInt32(obj);
+        }
+    }
+
     public class Effects
     {
-        private const int MAX_DEVICE_ID = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
-        
-        int filenamecount = 0;
-        public bool isrecording = false;
-        Bitmap previousframe = null;
-        long nextsecond = 0L;
-        long currentsecond = 0L;
-        int renderedframes = 0;
-        long render_time = 0L;
-        Timer recordTimer = new Timer(1000D / 15D); // 30fps
-        int pushedframes = 0;
-        Timer fpsDebugTimer = new Timer(1000D);
+        private const int MaxDeviceId = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
 
-        public static Devices.DeviceKeys[] possible_peripheral_keys = {
-                    Devices.DeviceKeys.Peripheral,
-                    Devices.DeviceKeys.Peripheral_FrontLight,
-                    Devices.DeviceKeys.Peripheral_ScrollWheel,
-                    Devices.DeviceKeys.Peripheral_Logo
+        private int filenamecount;
+        private bool isrecording = false;
+        private Bitmap previousframe;
+        private long nextsecond;
+        private long currentsecond;
+        private long render_time = 0L;
+        private Timer recordTimer = new(1000D / 15D); // 30fps
+
+        private static readonly DeviceKeys[] possible_peripheral_keys = {
+                    DeviceKeys.Peripheral,
+                    DeviceKeys.Peripheral_FrontLight,
+                    DeviceKeys.Peripheral_ScrollWheel,
+                    DeviceKeys.Peripheral_Logo
                 };
 
-        Bitmap _forcedFrame = null;
-
-
-        private static object bitmap_lock = new object();
-
+        private Bitmap _forcedFrame;
+        
         public event NewLayerRendered NewLayerRender = delegate { };
 
         public static int canvas_width = 1;
@@ -125,72 +140,31 @@ namespace Aurora
         public static float grid_width = 1.0f;
         public static float grid_height = 1.0f;
 
-        public static float canvas_width_center
-        {
-            get
-            {
-                return canvas_width / 2.0f;
-            }
-        }
-
-        public static float canvas_height_center
-        {
-            get
-            {
-                return canvas_height / 2.0f;
-            }
-        }
-
-        public static float editor_to_canvas_width
-        {
-            get
-            {
-                return canvas_width / grid_width;
-            }
-        }
-
-        public static float editor_to_canvas_height
-        {
-            get
-            {
-                return canvas_height / grid_height;
-            }
-        }
-
-        public static int canvas_biggest
-        {
-            get
-            {
-                return Effects.canvas_width > Effects.canvas_height ? Effects.canvas_width : Effects.canvas_height;
-            }
-        }
+        public static float CanvasWidthCenter => canvas_width / 2.0f;
+        public static float CanvasHeightCenter => canvas_height / 2.0f;
+        public static float EditorToCanvasWidth => canvas_width / grid_width;
+        public static float EditorToCanvasHeight => canvas_height / grid_height;
+        public static int CanvasBiggest => canvas_width > canvas_height ? canvas_width : canvas_height;
 
         /// <summary>
         /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
         /// </summary>
-        public static Aurora.Settings.FreeFormObject WholeCanvasFreeForm => new Settings.FreeFormObject(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
+        public static Settings.FreeFormObject WholeCanvasFreeForm => new(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
 
-        private static Dictionary<DeviceKeys, BitmapRectangle> bitmap_map = new Dictionary<DeviceKeys, BitmapRectangle>(MAX_DEVICE_ID);
+        private static Dictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
-        private static Dictionary<DeviceKeys, Color> keyColors = new Dictionary<DeviceKeys, Color>(MAX_DEVICE_ID);
+        private static readonly Dictionary<DeviceKeys, Color> keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
         public Effects()
         {
-            Devices.DeviceKeys[] allKeys = bitmap_map.Keys.ToArray();
+            var allKeys = _bitmapMap.Keys.ToArray();
 
-            foreach (Devices.DeviceKeys key in allKeys)
+            foreach (var key in allKeys)
             {
-                keyColors.Add(key, Color.FromArgb(0, 0, 0));
+                keyColors.Add(key, Color.Black);
             }
 
             recordTimer.Elapsed += RecordTimer_Elapsed;
-
-            fpsDebugTimer.Elapsed += FpsDebugTimer_Elapsed;
-        }
-
-        private void FpsDebugTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            pushedframes = 0;
         }
 
         private void RecordTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -202,16 +176,13 @@ namespace Aurora
 
             if (previousframe != null)
             {
-                Bitmap tempbmp = new Bitmap(previousframe);
-
-                renderedframes++;
+                var tempbmp = new Bitmap(previousframe);
                 tempbmp.Save("renders\\" + (filenamecount++) + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             }
 
             if (currentsecond >= nextsecond)
             {
                 nextsecond = currentsecond + 1000L;
-                renderedframes = 0;
             }
 
         }
@@ -230,17 +201,16 @@ namespace Aurora
 
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)
         {
-            return bitmap_map.ContainsKey(key) ? bitmap_map[key] : BitmapRectangle.EmptyRectangle;
+            return _bitmapMap.ContainsKey(key) ? _bitmapMap[key] : BitmapRectangle.EmptyRectangle;
         }
 
         public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)
         {
-            Effects.bitmap_map = bitmap_map;
+            _bitmapMap = bitmap_map;
         }
 
 
         private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(possible_peripheral_keys.Length);
-        private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MAX_DEVICE_ID);
 
         public void PushFrame(EffectFrame frame)
         {
@@ -286,19 +256,14 @@ namespace Aurora
                 _forcedFrame = null;
             }
 
-            _keyColors.Clear();
-            var allKeys = bitmap_map.Keys.ToArray();
+            var allKeys = _bitmapMap.Keys.ToArray();
 
             foreach (var key in allKeys)
-                _keyColors[key] = background.Get(key);
-
-            keyColors = _keyColors;
-
-            pushedframes++;
+                keyColors[key] = background.Get(key);
 
             var dcc = new DeviceColorComposition
             {
-                keyColors = _keyColors,
+                keyColors = keyColors,
                 keyBitmap = background.GetBitmap()
             };
 

@@ -48,10 +48,10 @@ namespace Aurora.Settings.Layers
             if (Properties.GradientConfig.gradient_size == 0)
             {
                 Properties.GradientConfig.shift_amount += (Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f * 5.0f * Properties.GradientConfig.speed;
-                Properties.GradientConfig.shift_amount %= Effects.canvas_biggest;
+                Properties.GradientConfig.shift_amount %= Effects.CanvasBiggest;
                 Properties.GradientConfig.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
 
-                Color selectedColor = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.canvas_biggest);
+                Color selectedColor = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.CanvasBiggest);
 
                 _gradientLayer.Set(Properties.Sequence, selectedColor);
             }

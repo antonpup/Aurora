@@ -155,7 +155,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Horizontal:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 5.0f * effectConfig.speed;
-                    effectConfig.shift_amount %= Effects.canvas_biggest;
+                    effectConfig.shift_amount %= Effects.CanvasBiggest;
 
                     if (effectConfig.animation_type == AnimationType.Translate_XY)
                         shift = effectConfig.shift_amount;
@@ -173,7 +173,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Vertical:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 5.0f * effectConfig.speed;
-                    effectConfig.shift_amount %= Effects.canvas_biggest;
+                    effectConfig.shift_amount %= Effects.CanvasBiggest;
 
                     if (effectConfig.animation_type == AnimationType.Translate_XY)
                         shift = effectConfig.shift_amount;
@@ -191,7 +191,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Diagonal:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 5.0f * effectConfig.speed;
-                    effectConfig.shift_amount %= Effects.canvas_biggest;
+                    effectConfig.shift_amount %= Effects.CanvasBiggest;
 
                     if (effectConfig.animation_type == AnimationType.Translate_XY)
                         shift = effectConfig.shift_amount;
@@ -209,7 +209,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Diagonal_Other:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 5.0f * effectConfig.speed;
-                    effectConfig.shift_amount %= Effects.canvas_biggest;
+                    effectConfig.shift_amount %= Effects.CanvasBiggest;
 
                     if (effectConfig.animation_type == AnimationType.Translate_XY)
                         shift = effectConfig.shift_amount;
@@ -227,7 +227,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.RainbowShift_Custom_Angle:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 5.0f * effectConfig.speed;
-                    effectConfig.shift_amount %= Effects.canvas_biggest;
+                    effectConfig.shift_amount %= Effects.CanvasBiggest;
 
 
                     if (effectConfig.animation_type == AnimationType.Translate_XY)
@@ -246,15 +246,15 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.GradientShift_Custom_Angle:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 0.067f * effectConfig.speed;
-                    effectConfig.shift_amount %= Effects.canvas_biggest;
+                    effectConfig.shift_amount %= Effects.CanvasBiggest;
 
                     shift = effectConfig.animation_type switch
                     {
                         AnimationType.Translate_XY => effectConfig.shift_amount,
                         AnimationType.Zoom_in when effectConfig.brush.type == EffectBrush.BrushType.Radial =>
-                            (Effects.canvas_biggest - effectConfig.shift_amount) * 40.0f % Effects.canvas_biggest,
+                            (Effects.CanvasBiggest - effectConfig.shift_amount) * 40.0f % Effects.CanvasBiggest,
                         AnimationType.Zoom_out when effectConfig.brush.type == EffectBrush.BrushType.Radial =>
-                            effectConfig.shift_amount * 40.0f % Effects.canvas_biggest,
+                            effectConfig.shift_amount * 40.0f % Effects.CanvasBiggest,
                         _ => shift
                     };
 
@@ -284,7 +284,7 @@ namespace Aurora.EffectsEngine
                         {
                             if (effectConfig.animation_type == AnimationType.Zoom_in || effectConfig.animation_type == AnimationType.Zoom_out)
                             {
-                                float percent = shift / Effects.canvas_biggest;
+                                float percent = shift / Effects.CanvasBiggest;
 
                                 float x_offset = Effects.canvas_width / 2.0f * percent;
                                 float y_offset = Effects.canvas_height / 2.0f * percent;
@@ -347,7 +347,7 @@ namespace Aurora.EffectsEngine
         {
             var brush = new LinearGradientBrush(
                 new Point(0, 0),
-                new Point(Effects.canvas_biggest, 0),
+                new Point(Effects.CanvasBiggest, 0),
                 Color.Red, Color.Red);
             Color[] colors = {
                 Color.FromArgb(255, 0, 0),
@@ -489,10 +489,10 @@ namespace Aurora.EffectsEngine
                 _ksChanged = false;
 
                 using var g = Graphics.FromImage(_colormap);
-                var xPos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-                var yPos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-                var width = (float)Math.Round(sequence.freeform.Width * Effects.editor_to_canvas_width);
-                var height = (float)Math.Round(sequence.freeform.Height * Effects.editor_to_canvas_height);
+                var xPos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
+                var yPos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+                var width = (float)Math.Round(sequence.freeform.Width * Effects.EditorToCanvasWidth);
+                var height = (float)Math.Round(sequence.freeform.Height * Effects.EditorToCanvasHeight);
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
@@ -706,6 +706,7 @@ namespace Aurora.EffectsEngine
                 return Color.FromArgb(0, 0, 0);
             }
         }
+
         /// <summary>
         /// Get an instance of Drawing.Graphics, to allow drawing on the bitmap.
         /// </summary>
@@ -971,10 +972,10 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-            var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-            var width = freeform.Width * Effects.editor_to_canvas_width;
-            var height = freeform.Height * Effects.editor_to_canvas_height;
+            var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
+            var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+            var width = freeform.Width * Effects.EditorToCanvasWidth;
+            var height = freeform.Height * Effects.EditorToCanvasHeight;
 
             if (width < 3) width = 3;
             if (height < 3) height = 3;
@@ -1037,10 +1038,10 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width);
-            var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height);
-            var width = freeform.Width * Effects.editor_to_canvas_width;
-            var height = freeform.Height * Effects.editor_to_canvas_height;
+            var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
+            var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+            var width = freeform.Width * Effects.EditorToCanvasWidth;
+            var height = freeform.Height * Effects.EditorToCanvasHeight;
 
             if (width < 3) width = 3;
             if (height < 3) height = 3;
