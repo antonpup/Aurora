@@ -183,10 +183,10 @@ namespace Aurora.Settings.Layers
         //public Color PrimaryColor { get; set; }
 
         [JsonIgnore]
-        private EffectLayer _previousRender = EffectLayer.EmptyLayer.Value; //Previous layer
+        private EffectLayer _previousRender = EffectLayer.EmptyLayer; //Previous layer
 
         [JsonIgnore]
-        private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer.Value; //Layer before previous
+        private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer; //Layer before previous
 
         public LayerHandler()
         {
