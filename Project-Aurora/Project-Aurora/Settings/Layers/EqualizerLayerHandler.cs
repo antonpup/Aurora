@@ -420,9 +420,12 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            _deviceProxy.WaveInDataAvailable -= OnDataAvailable;
-            _deviceProxy?.Dispose();
-            _deviceProxy = null;
+            if (_deviceProxy != null)
+            {
+                _deviceProxy.WaveInDataAvailable -= OnDataAvailable;
+                _deviceProxy.Dispose();
+                _deviceProxy = null;
+            }
         }
     }
 
