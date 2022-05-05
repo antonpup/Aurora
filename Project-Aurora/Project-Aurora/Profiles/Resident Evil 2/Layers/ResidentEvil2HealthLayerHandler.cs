@@ -93,22 +93,22 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                     switch (re2state.Player.Status)
                     {
                         case Player_ResidentEvil2.PlayerStatus.Fine:
-                            bg_layer.Fill(Color.Green);
+                            bg_layer.FillOver(Color.Green);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.LiteFine:
-                            bg_layer.Fill(Color.YellowGreen);
+                            bg_layer.FillOver(Color.YellowGreen);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Caution:
-                            bg_layer.Fill(Color.Gold);
+                            bg_layer.FillOver(Color.Gold);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Danger:
-                            bg_layer.Fill(Color.Red);
+                            bg_layer.FillOver(Color.Red);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Dead:
-                            bg_layer.Fill(Color.DarkGray);
+                            bg_layer.FillOver(Color.DarkGray);
                             break;
                         default:
-                            bg_layer.Fill(Color.DarkSlateBlue);
+                            bg_layer.FillOver(Color.DarkSlateBlue);
                             break;
                     }
 
@@ -124,30 +124,30 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
                     switch (re2state.Player.Status)
                     {
                         case Player_ResidentEvil2.PlayerStatus.Fine:
-                            bg_layer.Fill(Color.FromArgb(8, Color.Green.R, Color.Green.G, Color.Green.B));
+                            bg_layer.FillOver(Color.FromArgb(8, Color.Green.R, Color.Green.G, Color.Green.B));
                             heartbeat_animationTime = fullAnimTimes[0];
                             mixFine.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.LiteFine:
-                            bg_layer.Fill(Color.FromArgb(8, Color.YellowGreen.R, Color.YellowGreen.G, Color.YellowGreen.B));
+                            bg_layer.FillOver(Color.FromArgb(8, Color.YellowGreen.R, Color.YellowGreen.G, Color.YellowGreen.B));
                             heartbeat_animationTime = fullAnimTimes[0];
                             mixLiteFine.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Caution:
-                            bg_layer.Fill(Color.FromArgb(8, Color.Gold.R, Color.Gold.G, Color.Gold.B));
+                            bg_layer.FillOver(Color.FromArgb(8, Color.Gold.R, Color.Gold.G, Color.Gold.B));
                             heartbeat_animationTime = fullAnimTimes[1];
                             mixCaution.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Danger:
-                            bg_layer.Fill(Color.FromArgb(8, Color.Red.R, Color.Red.G, Color.Red.B));
+                            bg_layer.FillOver(Color.FromArgb(8, Color.Red.R, Color.Red.G, Color.Red.B));
                             heartbeat_animationTime = fullAnimTimes[2];
                             mixDanger.Draw(bg_layer.GetGraphics(), heartbeat_keyframe);
                             break;
                         case Player_ResidentEvil2.PlayerStatus.Dead:
-                            bg_layer.Fill(Color.DarkGray);
+                            bg_layer.FillOver(Color.DarkGray);
                             break;
                         default:
-                            bg_layer.Fill(Color.DarkSlateBlue);
+                            bg_layer.FillOver(Color.DarkSlateBlue);
                             break;
                     }
 

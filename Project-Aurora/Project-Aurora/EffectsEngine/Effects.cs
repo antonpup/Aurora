@@ -121,11 +121,64 @@ namespace Aurora
         private long render_time = 0L;
         private Timer recordTimer = new(1000D / 15D); // 30fps
 
-        private static readonly DeviceKeys[] possible_peripheral_keys = {
+        private static readonly DeviceKeys[] PossiblePeripheralKeys = {
                     DeviceKeys.Peripheral,
                     DeviceKeys.Peripheral_FrontLight,
                     DeviceKeys.Peripheral_ScrollWheel,
-                    DeviceKeys.Peripheral_Logo
+                    DeviceKeys.Peripheral_Logo,
+                    DeviceKeys.MOUSEPADLIGHT1,
+                    DeviceKeys.MOUSEPADLIGHT2,
+                    DeviceKeys.MOUSEPADLIGHT3,
+                    DeviceKeys.MOUSEPADLIGHT4,
+                    DeviceKeys.MOUSEPADLIGHT5,
+                    DeviceKeys.MOUSEPADLIGHT6,
+                    DeviceKeys.MOUSEPADLIGHT7,
+                    DeviceKeys.MOUSEPADLIGHT8,
+                    DeviceKeys.MOUSEPADLIGHT9,
+                    DeviceKeys.MOUSEPADLIGHT1,
+                    DeviceKeys.MOUSEPADLIGHT2,
+                    DeviceKeys.MOUSEPADLIGHT3,
+                    DeviceKeys.MOUSEPADLIGHT4,
+                    DeviceKeys.MOUSEPADLIGHT5,
+                    DeviceKeys.MOUSEPADLIGHT6,
+                    DeviceKeys.MOUSEPADLIGHT7,
+                    DeviceKeys.MOUSEPADLIGHT8,
+                    DeviceKeys.MOUSEPADLIGHT9,
+                    DeviceKeys.MOUSEPADLIGHT10,
+                    DeviceKeys.MOUSEPADLIGHT11,
+                    DeviceKeys.MOUSEPADLIGHT12,
+                    DeviceKeys.MOUSEPADLIGHT13,
+                    DeviceKeys.MOUSEPADLIGHT14,
+                    DeviceKeys.MOUSEPADLIGHT15,
+                    DeviceKeys.PERIPHERAL_LIGHT1,
+                    DeviceKeys.PERIPHERAL_LIGHT2,
+                    DeviceKeys.PERIPHERAL_LIGHT3,
+                    DeviceKeys.PERIPHERAL_LIGHT4,
+                    DeviceKeys.PERIPHERAL_LIGHT5,
+                    DeviceKeys.PERIPHERAL_LIGHT6,
+                    DeviceKeys.PERIPHERAL_LIGHT7,
+                    DeviceKeys.PERIPHERAL_LIGHT8,
+                    DeviceKeys.PERIPHERAL_LIGHT9,
+                    DeviceKeys.PERIPHERAL_LIGHT1,
+                    DeviceKeys.PERIPHERAL_LIGHT2,
+                    DeviceKeys.PERIPHERAL_LIGHT3,
+                    DeviceKeys.PERIPHERAL_LIGHT4,
+                    DeviceKeys.PERIPHERAL_LIGHT5,
+                    DeviceKeys.PERIPHERAL_LIGHT6,
+                    DeviceKeys.PERIPHERAL_LIGHT7,
+                    DeviceKeys.PERIPHERAL_LIGHT8,
+                    DeviceKeys.PERIPHERAL_LIGHT9,
+                    DeviceKeys.PERIPHERAL_LIGHT10,
+                    DeviceKeys.PERIPHERAL_LIGHT11,
+                    DeviceKeys.PERIPHERAL_LIGHT12,
+                    DeviceKeys.PERIPHERAL_LIGHT13,
+                    DeviceKeys.PERIPHERAL_LIGHT14,
+                    DeviceKeys.PERIPHERAL_LIGHT15,
+                    DeviceKeys.PERIPHERAL_LIGHT16,
+                    DeviceKeys.PERIPHERAL_LIGHT17,
+                    DeviceKeys.PERIPHERAL_LIGHT18,
+                    DeviceKeys.PERIPHERAL_LIGHT19,
+                    DeviceKeys.PERIPHERAL_LIGHT20,
                 };
 
         private Bitmap _forcedFrame;
@@ -154,6 +207,9 @@ namespace Aurora
         private static Dictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
         private static readonly Dictionary<DeviceKeys, Color> keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
+
+        private Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
+        private EffectLayer _background => _effectLayerFactory.Value;
 
         public Effects()
         {
@@ -210,44 +266,42 @@ namespace Aurora
         }
 
 
-        private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(possible_peripheral_keys.Length);
+        private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(PossiblePeripheralKeys.Length, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
+        private readonly SolidBrush _keyboardDarknessBrush = new(Color.Empty);
+        private readonly SolidBrush _blackBrush = new(Color.Black);
         public void PushFrame(EffectFrame frame)
         {
-            var background = new EffectLayer("Global Background", Color.Black);
+            //_background = new EffectLayer("Global Background", Color.Black);
+            _background.Fill(_blackBrush);
 
-            var overLayersArray = frame.GetOverlayLayers().ToArray();
-            var layersArray = frame.GetLayers().ToArray();
+            var overLayersArray = frame.GetOverlayLayers();
+            var layersArray = frame.GetLayers();
 
             foreach (var layer in layersArray)
-                background += layer;
-
+                _background.Add(layer);
             foreach (var layer in overLayersArray)
-                background += layer;
+                _background.Add(layer);
 
             //Apply Brightness
-            _peripheralColors.Clear();
-            foreach (var key in possible_peripheral_keys)
+            foreach (var key in PossiblePeripheralKeys)
             {
-                if (!_peripheralColors.ContainsKey(key))
-                    _peripheralColors.Add(key, background.Get(key));
+                _peripheralColors[key] = _background.Get(key);
             }
 
-            background.Fill(Color.FromArgb((int) (255.0f * (1.0f - Global.Configuration.KeyboardBrightness)),
-                Color.Black));
+            var keyboardDarkness = 1.0f - Global.Configuration.KeyboardBrightness * Global.Configuration.GlobalBrightness;
+            _keyboardDarknessBrush.Color = Color.FromArgb((int) (255.0f * keyboardDarkness), Color.Black);
+            _background.FillOver(_keyboardDarknessBrush);
 
-            foreach (var key in possible_peripheral_keys)
-                background.Set(key,
-                    Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black,
-                        (1.0f - Global.Configuration.PeripheralBrightness)));
-
-            background *= Global.Configuration.GlobalBrightness;
-            background.Fill(
-                Color.FromArgb((int) (255.0f * (1.0f - Global.Configuration.GlobalBrightness)), Color.Black));
+            var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
+            foreach (var key in PossiblePeripheralKeys)
+            {
+                _background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, peripheralDarkness));
+            }
 
             if (_forcedFrame != null)
             {
-                using var g = background.GetGraphics();
+                using var g = _background.GetGraphics();
                 g.Clear(Color.Black);
 
                 g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
@@ -259,31 +313,18 @@ namespace Aurora
             var allKeys = _bitmapMap.Keys.ToArray();
 
             foreach (var key in allKeys)
-                keyColors[key] = background.Get(key);
+                keyColors[key] = _background.Get(key);
 
             var dcc = new DeviceColorComposition
             {
                 keyColors = keyColors,
-                keyBitmap = background.GetBitmap()
+                keyBitmap = _background.GetBitmap()
             };
-
             Global.dev_manager.UpdateDevices(dcc);
 
-            if (isrecording)
-            {
-                var pizelatedRender = new EffectLayer();
-                foreach (var key in allKeys)
-                {
-                    pizelatedRender.Set(key, background.Get(key));
-                }
-
-                using var map = pizelatedRender.GetBitmap();
-                previousframe.Dispose();
-                previousframe = new Bitmap(map);
-            }
-
-            background.Dispose();
             frame.Dispose();
+            //_background.Dispose();
+            //_background = null;
         }
 
         public Dictionary<DeviceKeys, Color> GetKeyboardLights()

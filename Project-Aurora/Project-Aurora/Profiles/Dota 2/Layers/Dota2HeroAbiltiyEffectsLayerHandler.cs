@@ -566,7 +566,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.NevermoreShadowraze:
@@ -591,7 +591,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
                     var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
 
-                    _abilityEffectsLayer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
                     break;
                 }
                 case Dota2AbilityEffects.AntimageBlink:
@@ -608,7 +608,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
                     var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
 
-                    _abilityEffectsLayer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
                     break;
                 }
                 case Dota2AbilityEffects.AncientApparitionIceBlast:
@@ -619,7 +619,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     var alphaPercent = (float)Math.Pow(Math.Sin(((double)_abilityEffectKeyframe / (_abilityEffectTime / 16)) * Math.PI), 2.0);
 
-                    _abilityEffectsLayer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
 
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
@@ -656,7 +656,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.DragonKnightBreatheFire:
@@ -671,7 +671,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.EarthshakerEchoSlam:
@@ -682,7 +682,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.ElderTitanEarthSplitter:

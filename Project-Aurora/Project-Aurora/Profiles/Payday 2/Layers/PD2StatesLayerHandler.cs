@@ -86,11 +86,11 @@ namespace Aurora.Profiles.Payday_2.Layers
 
                         Color incapColor = Color.FromArgb(incapAlpha, Properties.DownedColor);
 
-                        states_layer.Fill(incapColor).Set(Devices.DeviceKeys.Peripheral, incapColor);
+                        states_layer.FillOver(incapColor).Set(Devices.DeviceKeys.Peripheral, incapColor);
                     }
                     else if (pd2state.LocalPlayer.State == PlayerState.Arrested)
                     {
-                        states_layer.Fill(Properties.ArrestedColor).Set(Devices.DeviceKeys.Peripheral, Properties.ArrestedColor);
+                        states_layer.FillOver(Properties.ArrestedColor).Set(Devices.DeviceKeys.Peripheral, Properties.ArrestedColor);
                     }
 
                     if (pd2state.LocalPlayer.IsSwanSong && Properties.ShowSwanSong)

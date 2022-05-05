@@ -14,11 +14,11 @@ namespace Aurora.Profiles.Desktop
 {
     public class Event_Desktop : LightEvent
     {
-        private long internalcounter;
+        private long _internalCounter;
 
-        public Event_Desktop() : base()
+        public Event_Desktop()
         {
-            internalcounter = 0;
+            _internalCounter = 0;
         }
 
         public override void UpdateLights(EffectFrame frame)
@@ -36,24 +36,19 @@ namespace Aurora.Profiles.Desktop
                 {
                     layers.Clear();
 
-                    EffectLayer time_based_dim_layer = new EffectLayer("Time Based Dim");
-                    time_based_dim_layer.Fill(Color.Black);
+                    var timeBasedDimLayer = new EffectLayer("Time Based Dim");
+                    timeBasedDimLayer.FillOver(Color.Black);
 
-                    layers.Enqueue(time_based_dim_layer);
+                    layers.Enqueue(timeBasedDimLayer);
                 }
             }
 
             frame.AddLayers(layers.ToArray());
         }
 
-        public override void SetGameState(IGameState new_game_state)
+        public override void SetGameState(IGameState newGameState)
         {
 
-        }
-
-        public new bool IsEnabled
-        {
-            get { return true; }
         }
     }
 }

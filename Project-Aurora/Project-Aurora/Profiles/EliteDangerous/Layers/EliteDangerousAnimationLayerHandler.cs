@@ -135,14 +135,14 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private void BgFadeIn(EffectLayer animation_layer)
         {
             layerFadeState = Math.Min(1, layerFadeState + 0.07f);
-            animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+            animation_layer.FillOver(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
         }
 
         private void BgFadeOut(EffectLayer animation_layer)
         {
             if (!(layerFadeState > 0)) return;
             layerFadeState = Math.Max(0, layerFadeState - 0.03f);
-            animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+            animation_layer.FillOver(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
         }
 
         public override EffectLayer Render(IGameState state)

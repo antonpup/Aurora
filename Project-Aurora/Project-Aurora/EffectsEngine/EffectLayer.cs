@@ -71,7 +71,7 @@ namespace Aurora.EffectsEngine
             Graphics.FromImage(_colormap);
             _peripheral = Color.Empty;
 
-            Fill(Color.Empty);
+            FillOver(Color.Empty);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Aurora.EffectsEngine
             Graphics.FromImage(_colormap);
             _peripheral = Color.Empty;
 
-            Fill(Color.FromArgb(0, 1, 1, 1));
+            FillOver(Color.FromArgb(0, 1, 1, 1));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Aurora.EffectsEngine
             Graphics.FromImage(_colormap);
             _peripheral = color;
 
-            Fill(color);
+            FillOver(color);
         }
 
         /// <summary>
@@ -147,12 +147,12 @@ namespace Aurora.EffectsEngine
             switch (effect)
             {
                 case LayerEffects.ColorOverlay:
-                    Fill(effectConfig.primary);
+                    FillOver(effectConfig.primary);
                     break;
                 case LayerEffects.ColorBreathing:
-                    Fill(effectConfig.primary);
+                    FillOver(effectConfig.primary);
                     float sine = (float)Math.Pow(Math.Sin((double)(Time.GetMillisecondsSinceEpoch() % 10000L / 10000.0f) * 2 * Math.PI * effectConfig.speed), 2);
-                    Fill(Color.FromArgb((byte)(sine * 255), effectConfig.secondary));
+                    FillOver(Color.FromArgb((byte)(sine * 255), effectConfig.secondary));
                     break;
                 case LayerEffects.RainbowShift_Horizontal:
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 5.0f * effectConfig.speed;
@@ -384,35 +384,48 @@ namespace Aurora.EffectsEngine
             using var g = Graphics.FromImage(_colormap);
             g.CompositingMode = CompositingMode.SourceCopy;
             g.FillRectangle(brush, Dimension);
-            _needsRender = true;
+            Invalidate();
         }
 
         /// <summary>
-        /// Fills the entire bitmap of the EffectLayer with a specified color.
+        /// Paints over the entire bitmap of the EffectLayer with a specified color.
         /// </summary>
         /// <param name="color">Color to be used during bitmap fill</param>
         /// <returns>Itself</returns>
         [Obsolete("Use with Brush argument")]
-        public EffectLayer Fill(Color color)
+        public EffectLayer FillOver(Color color)
         {
             using (var g = GetGraphics())
             {
-                //g.CompositingMode = CompositingMode.SourceCopy;
+                g.CompositingMode = CompositingMode.SourceOver;
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(new SolidBrush(color), Dimension);
-                _needsRender = true;
+                Invalidate();
             }
 
             return this;
         }
+
+        /// <summary>
+        /// Paints over the entire bitmap of the EffectLayer with a specified color.
+        /// </summary>
+        /// <param name="color">Color to be used during bitmap fill</param>
+        /// <returns>Itself</returns>
+        public void FillOver(Brush brush)
+        {
+            using var g = GetGraphics();
+            g.CompositingMode = CompositingMode.SourceOver;
+            g.SmoothingMode = SmoothingMode.None;
+            g.FillRectangle(brush, Dimension);
+            Invalidate();
+        }
         
         public void Clear()
         {
-            _keyBrushes.Clear();
             using var g = GetGraphics();
             g.CompositingMode = CompositingMode.SourceCopy;
             g.FillRectangle(ClearingBrush, Dimension);
-            _needsRender = true;
+            Invalidate();
         }
 
         /// <summary>
@@ -508,7 +521,7 @@ namespace Aurora.EffectsEngine
                 g.Transform = myMatrix;
                 g.CompositingMode = CompositingMode.SourceCopy;
                 g.FillRectangle(brush, rect);
-                _needsRender = true;
+                Invalidate();
             }
 
             return this;
@@ -578,7 +591,7 @@ namespace Aurora.EffectsEngine
                 render(gfx);
             }
 
-            _needsRender = true;
+            Invalidate();
         }
 
         /// <summary>
@@ -616,7 +629,7 @@ namespace Aurora.EffectsEngine
             SetOneKey(key, new SolidBrush(color));
         }
 
-        private readonly Dictionary<DeviceKeys, SolidBrush> _keyBrushes = new();
+        private readonly Dictionary<DeviceKeys, Color> _keyColors = new();
         private static readonly SolidBrush ClearingBrush = new(Color.Transparent);
         private Color _lastColor = Color.Empty;
 
@@ -629,11 +642,11 @@ namespace Aurora.EffectsEngine
         {
             if (brush is SolidBrush solidBrush)
             {
-                if (_keyBrushes.TryGetValue(key, out var currentBrush) && currentBrush.Color == solidBrush.Color)
+                if (_keyColors.TryGetValue(key, out var currentColor) && currentColor == solidBrush.Color)
                 {
                     return;
                 }
-                _keyBrushes[key] = solidBrush;
+                _keyColors[key] = solidBrush.Color;
             }
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
             _needsRender = true;
@@ -682,23 +695,22 @@ namespace Aurora.EffectsEngine
         /// <returns>Color of the Key</returns>
         public Color Get(DeviceKeys key)
         {
-            if (_keyBrushes.TryGetValue(key, out var brush))
+            if (_keyColors.TryGetValue(key, out var color))
             {
-                return brush.Color;
+                return color;
             }
             try
             {
-                BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
+                var keyMaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                if (keymaping.IsEmpty && key == DeviceKeys.Peripheral)
+                var keyColor = keyMaping.IsEmpty switch
                 {
-                    return _peripheral;
-                }
-
-                if (keymaping.IsEmpty)
-                    return Color.FromArgb(0, 0, 0);
-
-                return BitmapUtils.GetRegionColor(_colormap, keymaping.Rectangle);
+                    true when key == DeviceKeys.Peripheral => _peripheral,
+                    true => Color.Black,
+                    _ => BitmapUtils.GetRegionColor(_colormap, keyMaping.Rectangle)
+                };
+                _keyColors[key] = keyColor;
+                return keyColor;
             }
             catch (Exception exc)
             {
@@ -714,7 +726,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Graphics instance</returns>
         public Graphics GetGraphics()   //TODO deprecate
         {
-            _needsRender = true;
+            Invalidate();
             return Graphics.FromImage(_colormap);
         }
 
@@ -725,6 +737,11 @@ namespace Aurora.EffectsEngine
         public Bitmap GetBitmap()
         {
             return _colormap;
+        }
+
+        public void Add(EffectLayer other)
+        {
+            var _ = this + other;
         }
 
         /// <summary>
@@ -743,7 +760,7 @@ namespace Aurora.EffectsEngine
                 g.InterpolationMode = InterpolationMode.Low;
                 g.FillRectangle(rhs.TextureBrush, rhs.Dimension);
             }
-            lhs._needsRender = true;
+            lhs.Invalidate();
 
             lhs._peripheral = ColorUtils.AddColors(lhs._peripheral, rhs._peripheral);
             return lhs;
@@ -760,7 +777,7 @@ namespace Aurora.EffectsEngine
             if (!ColorUtils.NearlyEqual(layer._opacity,(float)value, 0.0001f))
             {
                 layer._opacity = (float) value;
-                layer._needsRender = true;
+                layer.Invalidate();
             }
             return layer;
         }
@@ -1008,8 +1025,14 @@ namespace Aurora.EffectsEngine
                 var rectRest = new RectangleF(xPos, yPos, width, height);
                 g.FillRectangle(new SolidBrush(backgroundColor), rectRest);
                 g.FillRectangle(new SolidBrush(foregroundColor), rect);
-                _needsRender = true;
+                Invalidate();
             }
+        }
+
+        private void Invalidate()
+        {
+            _needsRender = true;
+            _keyColors.Clear();
         }
 
         /// <summary>
@@ -1076,7 +1099,7 @@ namespace Aurora.EffectsEngine
                 brush.WrapMode = WrapMode.Tile;
                 g.FillRectangle(brush, rect);
             }
-            _needsRender = true;
+            Invalidate();
         }
 
         /// <summary>
@@ -1086,11 +1109,11 @@ namespace Aurora.EffectsEngine
         public void Exclude(KeySequence sequence)
         {
             //Create draw alpha mask
-            EffectLayer _alpha_mask = new EffectLayer(_name + " - Alpha Mask", Color.Transparent);
-            _alpha_mask.Set(sequence, Color.Black);
+            var alphaMask = new EffectLayer(_name + " - Alpha Mask", Color.Transparent);
+            alphaMask.Set(sequence, Color.Black);
 
             //Apply alpha mask
-            BitmapData srcData_alpha = _alpha_mask._colormap.LockBits(
+            BitmapData srcData_alpha = alphaMask._colormap.LockBits(
                 Dimension,
                 ImageLockMode.ReadWrite,
                 PixelFormat.Format32bppArgb);
@@ -1127,9 +1150,9 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            _alpha_mask._colormap.UnlockBits(srcData_alpha);
+            alphaMask._colormap.UnlockBits(srcData_alpha);
             _colormap.UnlockBits(srcData);
-            _needsRender = true;
+            Invalidate();
         }
 
         /// <summary>
@@ -1182,7 +1205,7 @@ namespace Aurora.EffectsEngine
 
             _alpha_mask._colormap.UnlockBits(srcData_alpha);
             _colormap.UnlockBits(srcData);
-            _needsRender = true;
+            Invalidate();
         }
 
         /// <summary>

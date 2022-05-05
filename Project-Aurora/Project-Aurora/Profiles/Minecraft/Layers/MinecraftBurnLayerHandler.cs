@@ -43,7 +43,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 return layer;
 
             // Set the background to red
-            layer.Fill(Color.Red);
+            layer.FillOver(Color.Red);
 
             // Add 3 particles every frame
             for (int i = 0; i < 3; i++)

@@ -30,7 +30,7 @@ namespace Aurora.Settings.Layers
         public Control_ScriptLayer(ScriptLayerHandler layerHandler) : this()
         {
             this.DataContext = layerHandler;
-            this.SetProfile(layerHandler.profileManager);
+            this.SetProfile(layerHandler.ProfileManager);
             this.UpdateScriptSettings();
         }
 

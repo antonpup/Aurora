@@ -59,7 +59,7 @@ namespace Aurora.Settings.Layers
             Color selected_color = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.CanvasBiggest);
 
             if (Properties.FillEntireKeyboard)
-                _gradientLayer.Fill(selected_color);
+                _gradientLayer.FillOver(selected_color);
             else
                 _gradientLayer.Set(Properties.Sequence, selected_color);
 

@@ -121,7 +121,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 if (showAnimation_Explosion)
                 {
                     if(Properties.Background)
-                        layer.Fill(Properties.PrimaryColor);
+                        layer.FillOver(Properties.PrimaryColor);
 
                     goal_explosion_mix = new AnimationMix(tracks);
 

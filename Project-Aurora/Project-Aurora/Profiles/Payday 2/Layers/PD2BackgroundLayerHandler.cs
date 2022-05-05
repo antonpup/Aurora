@@ -187,7 +187,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                         */
                     }
 
-                    bg_layer.Fill(bg_color);
+                    bg_layer.FillOver(bg_color);
 
                     if (Properties.PeripheralUse)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
@@ -224,14 +224,14 @@ namespace Aurora.Profiles.Payday_2.Layers
                     if (no_return_flashamount < 0.0f)
                         no_return_flashamount = 0.0f;
 
-                    bg_layer.Fill(no_return_color);
+                    bg_layer.FillOver(no_return_color);
 
                     if (Properties.PeripheralUse)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, no_return_color);
                 }
                 else
                 {
-                    bg_layer.Fill(bg_color);
+                    bg_layer.FillOver(bg_color);
 
                     if (Properties.PeripheralUse)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
