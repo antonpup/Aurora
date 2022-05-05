@@ -66,7 +66,7 @@ namespace Aurora.Settings.Layers
                     ((IValueOverridable)Handler.Properties).SetOverride(kvp.Key, kvp.Value.Evaluate(gs));
             }
 
-            EffectLayer effectLayer = ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : EffectLayer.EmptyLayer.Value;
+            EffectLayer effectLayer = ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : EffectLayer.EmptyLayer;
             timer.Stop();
             return effectLayer;
         }

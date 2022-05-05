@@ -14,7 +14,8 @@ namespace Aurora.EffectsEngine
     /// </summary>
     public class EffectLayer : IDisposable
     {
-        public static readonly Lazy<EffectLayer> EmptyLayer = new();
+        private static readonly Lazy<EffectLayer> _emptyLayerFactory = new();
+        public static EffectLayer EmptyLayer => _emptyLayerFactory.Value;
 
         private readonly string _name;
         private readonly Bitmap _colormap;
