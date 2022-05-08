@@ -20,17 +20,15 @@ namespace Aurora.Devices.YeeLight
 {
     public class YeeLightDevice : DefaultDevice
     {
-        private static readonly object syncLock = new object();
-
         public override string DeviceName => "YeeLight";
 
-        private const int lightListenPort = 55443;
-        private readonly Stopwatch updateDelayStopWatch = new Stopwatch();
-        private List<YeeLightAPI.YeeLightDevice> lights = new List<YeeLightAPI.YeeLightDevice>();
+        private const int LightListenPort = 55443;
+        private readonly Stopwatch _updateDelayStopWatch = new();
+        private readonly List<YeeLightAPI.YeeLightDevice> _lights = new();
 
         protected override string DeviceInfo => String.Join(
             ", ",
-            lights.Select(light => light.GetLightIPAddressAndPort().ipAddress + ":" + light.GetLightIPAddressAndPort().port + "w:" + whiteCounter + (light.IsMusicMode() ? "(m)" : ""))
+            _lights.Select(light => light.GetLightIPAddressAndPort().ipAddress + ":" + light.GetLightIPAddressAndPort().port + "w:" + _whiteCounter + (light.IsMusicMode() ? "(m)" : ""))
         );
 
         public override bool Initialize()
@@ -38,7 +36,7 @@ namespace Aurora.Devices.YeeLight
             if (IsInitialized) return IsInitialized;
             try
             {
-                lights.Clear();
+                _lights.Clear();
 
                 var ipListString = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP");
                 var lightIpList = new List<IPAddress>();
@@ -76,8 +74,8 @@ namespace Aurora.Devices.YeeLight
                     }
                 }
 
-                updateDelayStopWatch.Start();
-                IsInitialized = lights.All(x => x.IsConnected());
+                _updateDelayStopWatch.Start();
+                IsInitialized = _lights.All(x => x.IsConnected());
             }
             catch (Exception exc)
             {
@@ -92,23 +90,23 @@ namespace Aurora.Devices.YeeLight
 
         public override void Shutdown()
         {
-            foreach (var light in lights.Where(x => x.IsConnected()))
+            foreach (var light in _lights.Where(x => x.IsConnected()))
             {
                 light.CloseConnection();
             }
 
-            lights.Clear();
+            _lights.Clear();
 
             IsInitialized = false;
 
-            if (updateDelayStopWatch.IsRunning)
+            if (_updateDelayStopWatch.IsRunning)
             {
-                updateDelayStopWatch.Stop();
+                _updateDelayStopWatch.Stop();
             }
         }
 
-        private Color previousColor = Color.Empty;
-        private int whiteCounter = 10;
+        private Color _previousColor = Color.Empty;
+        private int _whiteCounter = 10;
         protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
@@ -119,27 +117,26 @@ namespace Aurora.Devices.YeeLight
                 Reset();
                 return TryUpdate(keyColors);
             }
-            return false;
         }
 
-        private bool TryUpdate(Dictionary<DeviceKeys, Color> keyColors)
+        private bool TryUpdate(IReadOnlyDictionary<DeviceKeys, Color> keyColors)
         {
             var sendDelay = Math.Max(5, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"));
-            if (updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
+            if (_updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
                 return false;
 
             var targetKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             if (!keyColors.TryGetValue(targetKey, out var targetColor))
                 return false;
-            if (previousColor.Equals(targetColor))
+            if (_previousColor.Equals(targetColor))
                 return ProceedSameColor(targetColor);
-            previousColor = targetColor;
+            _previousColor = targetColor;
 
-            if (isWhiteTone(targetColor))
+            if (IsWhiteTone(targetColor))
             {
                 return ProceedDifferentWhiteColor(targetColor);
             }
-            whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
+            _whiteCounter = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay");
             return ProceedColor(targetColor);
         }
 
@@ -156,7 +153,7 @@ namespace Aurora.Devices.YeeLight
 
         private bool ProceedSameColor(Color targetColor)
         {
-            if (isWhiteTone(targetColor))
+            if (IsWhiteTone(targetColor))
             {
                 return ProceedWhiteColor(targetColor);
             }
@@ -165,62 +162,62 @@ namespace Aurora.Devices.YeeLight
             {
                 return ProceedColor(targetColor);
             }
-            updateDelayStopWatch.Restart();
+            _updateDelayStopWatch.Restart();
             return true;
         }
 
         private bool ProceedWhiteColor(Color targetColor)
         {
-            if (whiteCounter == 0)
+            if (_whiteCounter == 0)
             {
                 if (ShouldSendKeepAlive())
                 {
-                    lights.ForEach(x =>
+                    _lights.ForEach(x =>
                     {
                         x.SetTemperature(6500);
                         x.SetBrightness(targetColor.R * 100 / 255);
                     });
                 }
-                updateDelayStopWatch.Restart();
+                _updateDelayStopWatch.Restart();
                 return true;
             }
-            if (whiteCounter == 1)
+            if (_whiteCounter == 1)
             {
-                lights.ForEach(x =>
+                _lights.ForEach(x =>
                 {
                     x.SetTemperature(6500);
                     x.SetBrightness(targetColor.R * 100 / 255);
                 });
             }
-            whiteCounter--;
-            updateDelayStopWatch.Restart();
+            _whiteCounter--;
+            _updateDelayStopWatch.Restart();
             return true;
         }
 
         private bool ProceedDifferentWhiteColor(Color targetColor)
         {
-            if (whiteCounter > 0)
+            if (_whiteCounter > 0)
             {
-                whiteCounter--;
+                _whiteCounter--;
                 return ProceedColor(targetColor);
             }
-            lights.ForEach(x =>
+            _lights.ForEach(x =>
             {
                 x.SetTemperature(6500);
                 x.SetBrightness(targetColor.R * 100 / 255);
             });
-            updateDelayStopWatch.Restart();
+            _updateDelayStopWatch.Restart();
             return true;
         }
 
         private bool ProceedColor(Color targetColor)
         {
-            lights.ForEach(x =>
+            _lights.ForEach(x =>
             {
                 x.SetColor(targetColor.R, targetColor.G, targetColor.B);
                 x.SetBrightness(Math.Max(targetColor.R, Math.Max(targetColor.G, Math.Max(targetColor.B, (short)1))) * 100 / 255);
             });
-            updateDelayStopWatch.Restart();
+            _updateDelayStopWatch.Restart();
             return true;
         }
 
@@ -228,33 +225,29 @@ namespace Aurora.Devices.YeeLight
         private int _keepAlive = KeepAliveCounter;
         private bool ShouldSendKeepAlive()
         {
-            if (_keepAlive-- == 0)
-            {
-                _keepAlive = KeepAliveCounter;
-                return true;
-            }
-
-            return false;
+            if (_keepAlive-- != 0) return false;
+            _keepAlive = KeepAliveCounter;
+            return true;
         }
 
-            private bool isWhiteTone(Color color)
+        private bool IsWhiteTone(Color color)
         {
             return color.R == color.G && color.G == color.B;
         }
 
-        private void ConnectNewDevice(IPAddress lightIP)
+        private void ConnectNewDevice(IPAddress lightIp)
         {
-            if (lights.Any(x => x.IsConnected() && x.GetLightIPAddressAndPort().ipAddress == lightIP))
+            if (_lights.Any(x => x.IsConnected() && Equals(x.GetLightIPAddressAndPort().ipAddress, lightIp)))
             {
                 return;
             }
 
             var light = new YeeLightAPI.YeeLightDevice();
-            light.SetLightIPAddressAndPort(lightIP, YeeLightAPI.YeeLightConstants.Constants.DefaultCommandPort);
+            light.SetLightIPAddressAndPort(lightIp, Constants.DefaultCommandPort);
 
             LightConnectAndEnableMusicMode(light);
 
-            lights.Add(light);
+            _lights.Add(light);
         }
 
         private int _connectionTries;
@@ -264,22 +257,30 @@ namespace Aurora.Devices.YeeLight
 
             using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0);
             var lightIp = light.GetLightIPAddressAndPort().ipAddress;
-            socket.Connect(lightIp, lightListenPort);
+            socket.Connect(lightIp, LightListenPort);
             var localIp = ((IPEndPoint)socket.LocalEndPoint).Address;
 
             light.Connect();
-            _connectionTries = 1000;
+            _connectionTries = 100;
             Thread.Sleep(500);
             while (!light.IsConnected() && --_connectionTries > 0)
             {
                 Thread.Sleep(500);
             }
-            light.SetMusicMode(localIp, (ushort)localMusicModeListenPort, true);
+
+            try
+            {
+                light.SetMusicMode(localIp, (ushort)localMusicModeListenPort, true);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
 
         private int GetFreeTCPPort()
         {
-            // When a TCPListener is created with 0 as port, the TCP/IP stack will asign it a free port
+            // When a TCPListener is created with 0 as port, the TCP/IP stack will assign it a free port
             var listener = new TcpListener(IPAddress.Loopback, 0); // Create a TcpListener on loopback with 0 as the port
             listener.Start();
             var freePort = ((IPEndPoint)listener.LocalEndpoint).Port;
