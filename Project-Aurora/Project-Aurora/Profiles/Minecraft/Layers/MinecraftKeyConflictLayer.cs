@@ -32,25 +32,26 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
 
     public class MinecraftKeyConflictLayerHandler : LayerHandler<MinecraftKeyConflictLayerProperties> {
+        private readonly EffectLayer _layer = new("Minecraft Key Conflict Layer");
+        private readonly SolidBrush _backgroundBrush = new(Color.Black);
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftKeyConflictLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate) {
-            EffectLayer layer = new EffectLayer("Minecraft Key Conflict Layer");
-            if (gamestate is GameState_Minecraft && (gamestate as GameState_Minecraft).Game.ControlsGuiOpen) {
-                layer.Fill(Color.Black); // Hide any other layers behind this one
-                // Set all keys in use by any binding to be the no-conflict colour
-                foreach (var kb in ((GameState_Minecraft)gamestate).Game.KeyBindings)
-                    if(kb!=null)
-                        layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
+            if (gamestate is not GameState_Minecraft minecraftState || !minecraftState.Game.ControlsGuiOpen)
+                return _layer;
+            _layer.Fill(_backgroundBrush); // Hide any other layers behind this one
+            // Set all keys in use by any binding to be the no-conflict colour
+            foreach (var kb in minecraftState.Game.KeyBindings)
+                if(kb!=null)
+                    _layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
 
-                // Override the keys for all conflicting keys
-                foreach (var kvp in CalculateConflicts((GameState_Minecraft)gamestate))
-                    layer.Set(kvp.Key, kvp.Value ? Properties.TertiaryColor : Properties.SecondaryColor);
-            }
-            return layer;
+            // Override the keys for all conflicting keys
+            foreach (var kvp in CalculateConflicts(minecraftState))
+                _layer.Set(kvp.Key, kvp.Value ? Properties.TertiaryColor : Properties.SecondaryColor);
+            return _layer;
         }
 
         /// <summary>

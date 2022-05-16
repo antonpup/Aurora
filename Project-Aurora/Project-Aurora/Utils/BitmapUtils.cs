@@ -16,66 +16,52 @@ namespace Aurora.Utils
         {
             try
             {
-                if (rectangle.IsEmpty || rectangle.Height == 0 || rectangle.Width == 0)
-                    return Color.FromArgb(0, 0, 0);
+                if (rectangle.IsEmpty)
+                    return Color.Black;
 
-                long Red = 0;
-                long Green = 0;
-                long Blue = 0;
-                long Alpha = 0;
+                                 //B, G, R, A
+                var color = new[] {0, 0, 0, 0}; //array because SIMD optimizations
 
-                BitmapData srcData = map.LockBits(
+                var srcData = map.LockBits(
                     rectangle,
                     ImageLockMode.ReadOnly,
                     PixelFormat.Format32bppArgb);
-
-                int stride = srcData.Stride;
-
-                IntPtr scan0 = srcData.Scan0;
+                var stride = srcData.Stride;
+                var scan0 = srcData.Scan0;
 
                 unsafe
                 {
-                    byte* p = (byte*)(void*)scan0;
+                    var p = (byte*)(void*)scan0;
 
-                    for (int y = 0; y < rectangle.Height; y++)
+                    for (var y = 0; y < rectangle.Height; y++)
                     {
                         var i = y * stride;
-                        for (int x = 0; x < rectangle.Width; x++)
+                        for (var x = 0; x < rectangle.Width; x++)
                         {
                             var j = i + x * 4;
-                            Blue += p[j];
-                            Green += p[j + 1];
-                            Red += p[j + 2];
-                            Alpha += p[j + 3];
+                            color[0] += p[j];
+                            color[1] += p[j + 1];
+                            color[2] += p[j + 2];
+                            color[3] += p[j + 3];
                         }
                     }
                 }
-
                 map.UnlockBits(srcData);
 
                 var area = rectangle.Width * rectangle.Height;
-                return Color.FromArgb((int)(Alpha / area), (int)(Red / area), (int)(Green / area), (int)(Blue / area));
+                return Color.FromArgb(
+                    color[0] / area |
+                    color[1] / area << 8 |
+                    color[2] / area << 16 |
+                    color[3] / area << 24
+                );
             }
             catch (Exception exc)
             {
                 Global.logger.Error("BitmapUtils.GetRegionColor() Exception: " + exc);
 
-                return Color.FromArgb(0, 0, 0);
+                return Color.Black;
             }
-        }
-
-        public static Color GetAverageColor(Image screenshot)
-        {
-            var scaled_down_image = new Bitmap(16, 16);
-
-            using (var graphics = Graphics.FromImage(scaled_down_image))
-                graphics.DrawImage(screenshot, 0, 0, 16, 16);
-
-            Color avg = Utils.ColorUtils.GetAverageColor(scaled_down_image);
-
-            scaled_down_image?.Dispose();
-
-            return avg;
         }
 
         /// <summary>
@@ -84,7 +70,8 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="b">Brightness (0..4)</param>
         /// <returns></returns>
-        public static float[][] GetBrightnessColorMatrix(float b) => new float[][] {
+        public static float[][] GetBrightnessColorMatrix(float b) => new[]
+        {
                 new float[] {b, 0, 0, 0, 0},//red
                 new float[] {0, b, 0, 0, 0},//green
                 new float[] {0, 0, b, 0, 0},//blue
@@ -199,48 +186,5 @@ namespace Aurora.Utils
             }
             return result;
         }
-
-        /// <summary>
-        /// Applies a color matrix to a givem Image
-        /// </summary>
-        /// <param name="img"></param>
-        /// <param name="mtx"></param>
-        /// <returns></returns>
-        public static void ApplyColorMatrix(this Image img, ColorMatrix mtx)
-        {
-            using (var att = new ImageAttributes())
-            {
-                att.SetColorMatrix(mtx);
-                using (var g = Graphics.FromImage(img))
-                {
-                    g.DrawImage(img,
-                                new Rectangle(0, 0, img.Width, img.Height),
-                                0,
-                                0,
-                                img.Width,
-                                img.Height,
-                                GraphicsUnit.Pixel,
-                                att);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adjusts the brightness of an image using a color matrix. brightness is a value between -1 and 1
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static void AdjustBrightness(this Image bmp, float b) =>
-            ApplyColorMatrix(bmp, new ColorMatrix(GetBrightnessColorMatrix(b)));
-
-        /// <summary>
-        /// Adjusts the saturation of an image using a color matrix. Uses a value between 0 (grayscale) and ~2
-        /// </summary>
-        /// <param name="bmp"></param>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static void AdjustSaturation(this Image bmp, float s) =>
-            ApplyColorMatrix(bmp, new ColorMatrix(GetSaturationColorMatrix(s)));
     }
 }

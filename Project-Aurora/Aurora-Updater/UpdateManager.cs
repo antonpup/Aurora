@@ -75,11 +75,11 @@ namespace Aurora_Updater
         private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
         public Release LatestRelease;
 
-        public UpdateManager(Version version)
+        public UpdateManager(Version version, string author, string repoName)
         {
             LoadSettings();
             PerformCleanup();
-            FetchData(version);
+            FetchData(version, author, repoName);
         }
 
         public void LoadSettings()
@@ -109,20 +109,23 @@ namespace Aurora_Updater
             return (int)((downloadProgess + extractProgess) / 2.0f * 100.0f);
         }
 
-        private bool FetchData(Version version)
+        private bool FetchData(Version version, string owner, string repositoryName)
         {
             try
             {
                 if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
-                    LatestRelease = gClient.Repository.Release.GetAll("antonpup", "Aurora", new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
+                    LatestRelease = gClient.Repository.Release.GetAll(owner, repositoryName, new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
                 else
-                    LatestRelease = gClient.Repository.Release.GetLatest("antonpup", "Aurora").Result;
+                    LatestRelease = gClient.Repository.Release.GetLatest(owner, repositoryName).Result;
 
                 //Console.WriteLine(reply);
             }
             catch (Exception exc)
             {
                 updateState = UpdateStatus.Error;
+                MessageBox.Show(
+                    $"Could not find update.\r\nError:\r\n{exc}",
+                    "Aurora Updater - Error");
                 return false;
             }
 
@@ -242,11 +245,11 @@ namespace Aurora_Updater
 
                     for (int i = 0; i < countOfEntries; i++)
                     {
-                        float percentage = ((float)i / (float)countOfEntries);
+                        float percentage = i / (float)countOfEntries;
 
                         var fileEntry = updateFile.Entries[i];
                         log.Enqueue(new LogEntry($"[{Math.Truncate(percentage * 100)}%] Updating: {fileEntry.FullName}"));
-                        this.extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
+                        extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
 
                         if (ignoreFiles.Contains(fileEntry.FullName))
                             continue;
@@ -256,6 +259,7 @@ namespace Aurora_Updater
                             var filePath = Path.Combine(Program.exePath, fileEntry.FullName);
                             if (File.Exists(filePath))
                                 File.Move(filePath, $"{filePath}.updateremove");
+                            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
                             fileEntry.ExtractToFile(filePath);
                         }
                         catch (IOException e)
@@ -264,7 +268,6 @@ namespace Aurora_Updater
 
                             MessageBox.Show($"{fileEntry.FullName} is inaccessible.\r\nPlease close Aurora.\r\n\r\n {e.Message}");
                             i--;
-                            continue;
                         }
                     }
 

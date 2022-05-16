@@ -35,58 +35,56 @@ namespace Aurora.Devices.YeeLight
 
         public override bool Initialize()
         {
-            if (!IsInitialized)
+            if (IsInitialized) return IsInitialized;
+            try
             {
-                try
+                lights.Clear();
+
+                var ipListString = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP");
+                var lightIpList = new List<IPAddress>();
+
+                //Auto discover a device if the IP is empty and auto-discovery is enabled
+                if (string.IsNullOrWhiteSpace(ipListString) && Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_discovery"))
                 {
-                    lights.Clear();
-
-                    var IPListString = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP");
-                    var lightIPList = new List<IPAddress>();
-
-                    //Auto discover a device if the IP is empty and auto-discovery is enabled
-                    if (string.IsNullOrWhiteSpace(IPListString) && Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_discovery"))
+                    var devices = DeviceLocator.DiscoverDevices(10000, 2);
+                    if (!devices.Any())
                     {
-                        var devices = DeviceLocator.DiscoverDevices(10000, 2);
-                        if (!devices.Any())
-                        {
-                            throw new Exception("Auto-discovery is enabled but no devices have been located.");
-                        }
-
-                        lightIPList.AddRange(devices.Select(v => v.GetLightIPAddressAndPort().ipAddress));
-                    }
-                    else
-                    {
-                        lightIPList = IPListString.Split(new[] { ',' }).Select(x => IPAddress.Parse(x.Replace(" ", ""))).ToList();
-                        if (lightIPList.Count == 0)
-                        {
-                            throw new Exception("Device IP list is empty.");
-                        }
+                        throw new Exception("Auto-discovery is enabled but no devices have been located.");
                     }
 
-                    for (int i = 0; i < lightIPList.Count; i++)
-                    {
-                        IPAddress ipaddr = lightIPList[i];
-                        try
-                        {
-                            ConnectNewDevice(ipaddr);
-                        }
-                        catch (Exception exc)
-                        {
-                            LogError($"Encountered an error while connecting to the {i}. light. Exception: {exc}");
-                        }
-                    }
-
-                    updateDelayStopWatch.Start();
-                    IsInitialized = lights.All(x => x.IsConnected());
+                    lightIpList.AddRange(devices.Select(v => v.GetLightIPAddressAndPort().ipAddress));
                 }
-                catch (Exception exc)
+                else
                 {
-                    LogError($"Encountered an error while initializing. Exception: {exc}");
-                    IsInitialized = false;
-
-                    return false;
+                    lightIpList = ipListString.Split(',').Select(x => IPAddress.Parse(x.Replace(" ", ""))).ToList();
+                    if (lightIpList.Count == 0)
+                    {
+                        throw new Exception("Device IP list is empty.");
+                    }
                 }
+
+                for (var i = 0; i < lightIpList.Count; i++)
+                {
+                    var ipaddr = lightIpList[i];
+                    try
+                    {
+                        ConnectNewDevice(ipaddr);
+                    }
+                    catch (Exception exc)
+                    {
+                        LogError($"Encountered an error while connecting to the {i}. light. Exception: {exc}");
+                    }
+                }
+
+                updateDelayStopWatch.Start();
+                IsInitialized = lights.All(x => x.IsConnected());
+            }
+            catch (Exception exc)
+            {
+                LogError($"Encountered an error while initializing. Exception: {exc}");
+                IsInitialized = false;
+
+                return false;
             }
 
             return IsInitialized;
@@ -259,30 +257,32 @@ namespace Aurora.Devices.YeeLight
             lights.Add(light);
         }
 
+        private int _connectionTries;
         private void LightConnectAndEnableMusicMode(YeeLightAPI.YeeLightDevice light)
         {
-            int localMusicModeListenPort = GetFreeTCPPort(); // This can be any free port
+            var localMusicModeListenPort = GetFreeTCPPort(); // This can be any free port
 
-            IPAddress localIP;
-            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0))
-            {
-                var lightIP = light.GetLightIPAddressAndPort().ipAddress;
-                socket.Connect(lightIP, lightListenPort);
-                localIP = ((IPEndPoint)socket.LocalEndPoint).Address;
-            }
+            using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0);
+            var lightIp = light.GetLightIPAddressAndPort().ipAddress;
+            socket.Connect(lightIp, lightListenPort);
+            var localIp = ((IPEndPoint)socket.LocalEndPoint).Address;
 
             light.Connect();
-            light.SetMusicMode(localIP, (ushort)localMusicModeListenPort, true);
+            _connectionTries = 1000;
+            Thread.Sleep(500);
+            while (!light.IsConnected() && --_connectionTries > 0)
+            {
+                Thread.Sleep(500);
+            }
+            light.SetMusicMode(localIp, (ushort)localMusicModeListenPort, true);
         }
 
         private int GetFreeTCPPort()
         {
-            int freePort;
-
             // When a TCPListener is created with 0 as port, the TCP/IP stack will asign it a free port
-            TcpListener listener = new TcpListener(IPAddress.Loopback, 0); // Create a TcpListener on loopback with 0 as the port
+            var listener = new TcpListener(IPAddress.Loopback, 0); // Create a TcpListener on loopback with 0 as the port
             listener.Start();
-            freePort = ((IPEndPoint)listener.LocalEndpoint).Port; // Gets the local port the TcpListener is listening on
+            var freePort = ((IPEndPoint)listener.LocalEndpoint).Port;
             listener.Stop();
             return freePort;
         }

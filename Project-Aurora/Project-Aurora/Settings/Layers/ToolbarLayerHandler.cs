@@ -40,7 +40,8 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public class ToolbarLayerHandler : LayerHandler<ToolbarLayerHandlerProperties> {
 
-        private DeviceKey activeKey = DeviceKeys.NONE;
+        private DeviceKey _activeKey = DeviceKeys.NONE;
+        private readonly EffectLayer _layer = new();
 
         public ToolbarLayerHandler() {
             // Listen for relevant events
@@ -60,10 +61,9 @@ namespace Aurora.Settings.Layers {
         }
         
         public override EffectLayer Render(IGameState _) {
-            EffectLayer layer = new EffectLayer();
             foreach (var key in Properties.Sequence.keys)
-                layer.Set(key, key == activeKey ? Properties.SecondaryColor : Properties.PrimaryColor);
-            return layer;
+                _layer.Set(key, key == _activeKey ? Properties.SecondaryColor : Properties.PrimaryColor);
+            return _layer;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Aurora.Settings.Layers {
         /// </summary>
         private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
             if (Properties.Sequence.keys.Contains(e.GetDeviceKey()))
-                activeKey = e.GetDeviceKey();
+                _activeKey = e.GetDeviceKey();
         }
 
         /// <summary>
@@ -80,13 +80,13 @@ namespace Aurora.Settings.Layers {
         private void InputEvents_Scroll(object sender, SharpDX.RawInput.MouseInputEventArgs e) {
             if (Properties.EnableScroll && Properties.Sequence.keys.Count > 1) {
                 // If there's no active key or the ks doesn't contain it (e.g. the sequence was just changed), make the first one active.
-                if (activeKey == DeviceKeys.NONE || !Properties.Sequence.keys.Contains(activeKey))
-                    activeKey = Properties.Sequence.keys[0];
+                if (_activeKey == DeviceKeys.NONE || !Properties.Sequence.keys.Contains(_activeKey))
+                    _activeKey = Properties.Sequence.keys[0];
 
                 // If there's an active key make scroll move up/down
                 else {
                     // Target index is the current index +/- 1 depending on the scroll value
-                    int idx = Properties.Sequence.keys.IndexOf(activeKey) + (e.WheelDelta > 0 ? -1 : 1);
+                    int idx = Properties.Sequence.keys.IndexOf(_activeKey) + (e.WheelDelta > 0 ? -1 : 1);
 
                     // If scroll loop is enabled, allow the index to wrap around from start to end or end to start.
                     if (Properties.ScrollLoop) {
@@ -99,7 +99,7 @@ namespace Aurora.Settings.Layers {
                         idx = Math.Max(Math.Min(idx, Properties.Sequence.keys.Count - 1), 0);
                     }
 
-                    activeKey = Properties.Sequence.keys[idx];
+                    _activeKey = Properties.Sequence.keys[idx];
                 }
             }
         }

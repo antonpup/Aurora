@@ -183,10 +183,10 @@ namespace Aurora.Settings.Layers
         //public Color PrimaryColor { get; set; }
 
         [JsonIgnore]
-        private EffectLayer _PreviousRender = new EffectLayer(); //Previous layer
+        private EffectLayer _previousRender = EffectLayer.EmptyLayer; //Previous layer
 
         [JsonIgnore]
-        private EffectLayer _PreviousSecondRender = new EffectLayer(); //Layer before previous
+        private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer; //Layer before previous
 
         public LayerHandler()
         {
@@ -202,7 +202,7 @@ namespace Aurora.Settings.Layers
 
         public virtual EffectLayer Render(IGameState gamestate)
         {
-            return new EffectLayer();
+            throw new NotImplementedException();
         }
 
         public virtual void SetGameState(IGameState gamestate)
@@ -212,28 +212,31 @@ namespace Aurora.Settings.Layers
 
         public EffectLayer PostRenderFX(EffectLayer rendered_layer)
         {
-            EffectLayer returnLayer = new EffectLayer(rendered_layer);
-
             if (EnableSmoothing)
             {
-                EffectLayer previousLayer = new EffectLayer(_PreviousRender);
-                EffectLayer previousSecondLayer = new EffectLayer(_PreviousSecondRender);
+                EffectLayer returnLayer = new EffectLayer(rendered_layer);
+                EffectLayer previousLayer = new EffectLayer(_previousRender);
+                EffectLayer previousSecondLayer = new EffectLayer(_previousSecondRender);
 
                 returnLayer = returnLayer + (previousLayer * 0.50) + (previousSecondLayer * 0.25);
 
                 //Update previous layers
-                _PreviousSecondRender = _PreviousRender;
-                _PreviousRender = rendered_layer;
+                _previousSecondRender = _previousRender;
+                _previousRender = rendered_layer;
+                
+                //Last PostFX is exclusion
+                if (EnableExclusionMask)
+                    returnLayer.Exclude(ExclusionMask);
+                return returnLayer;
             }
-
 
             //Last PostFX is exclusion
             if (EnableExclusionMask)
-                returnLayer.Exclude(ExclusionMask);
+                rendered_layer.Exclude(ExclusionMask);
 
-            returnLayer *= Properties.LayerOpacity;
+            rendered_layer *= Properties.LayerOpacity;
 
-            return returnLayer;
+            return rendered_layer;
         }
 
         public virtual void SetApplication(Application profile)

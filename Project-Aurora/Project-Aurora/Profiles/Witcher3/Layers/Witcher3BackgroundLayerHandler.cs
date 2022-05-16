@@ -95,7 +95,7 @@ namespace Aurora.Profiles.Witcher3.Layers
                         bg_color = Properties.DefaultColor;
                         break;
                 }
-                bg_layer.Fill(bg_color);
+                bg_layer.FillOver(bg_color);
             }
 
             return bg_layer;

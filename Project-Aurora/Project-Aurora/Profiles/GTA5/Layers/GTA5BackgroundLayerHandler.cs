@@ -148,7 +148,7 @@ namespace Aurora.Profiles.GTA5.Layers
                         break;
                 }
 
-                bg_layer.Fill(bg_color);
+                bg_layer.FillOver(bg_color);
             }
 
             return bg_layer;

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Aurora.Utils;
+using Microsoft.Scripting.Utils;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Models.Color;
 using OpenRGBDevice = OpenRGB.NET.Models.Device;
@@ -139,6 +140,31 @@ namespace Aurora.Devices.OpenRGB
                 Thread.Sleep(sleep);*/
 
             return true;
+        }
+
+        private void UpdateDevice(HelperOpenRGBDevice device, IReadOnlyDictionary<DeviceKeys, Color> keyColors)
+        {
+            for (var ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+            {
+                if (!keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor)) continue;
+                var deviceKey = device.Colors[ledIndex];
+                deviceKey.R = keyColor.R;
+                deviceKey.G = keyColor.G;
+                deviceKey.B = keyColor.B;
+            }
+        }
+
+        private void UpdateCalibratedDevice(HelperOpenRGBDevice device, IReadOnlyDictionary<DeviceKeys, Color> keyColors,
+            Color calibration)
+        {
+            for (var ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+            {
+                if (!keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor)) continue;
+                var deviceKey = device.Colors[ledIndex];
+                deviceKey.R = (byte) (keyColor.R * calibration.R / 255);
+                deviceKey.G = (byte) (keyColor.G * calibration.G / 255);
+                deviceKey.B = (byte) (keyColor.B * calibration.B / 255);
+            }
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)

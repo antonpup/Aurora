@@ -80,12 +80,17 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Error caught when updating startup task. Error: " + exc.ToString());
+                Global.logger.Error("Error caught when updating startup task. Error: " + exc);
             }
 
             string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
+            string o = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).CompanyName;
+            string r = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).ProductName;
 
-            this.lblVersion.Content = ((int.Parse(v[0].ToString()) > 0) ? "" : "beta ") + $"v{v}";
+            this.lblVersion.Content = (v[0].ToString().Length > 0 ? "" : "beta ") + $"{v} {o}/{r}";
+            this.LnkIssues.NavigateUri = new Uri($"https://github.com/{o}/{r}/issues/");
+            this.LnkRepository.NavigateUri = new Uri($"https://github.com/{o}/{r}");
+            this.LnkContributors.NavigateUri = new Uri($"https://github.com/{o}/{r}#contributors-");
 
             var rzVersion = RzHelper.GetSdkVersion();
             var rzSdkEnabled = RzHelper.IsSdkEnabled();

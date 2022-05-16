@@ -1295,7 +1295,13 @@ namespace Aurora.Devices
         /// Calculator Key
         /// </summary>
         [Description("Calculator")]
-        CALC = 216,
+        CALC = 216,      
+        
+        ///<summary>
+        /// Power Key
+        /// </summary>
+        [Description("Power")]
+        POWER = 217,
 
         /// <summary>
         /// Peripheral Light 1

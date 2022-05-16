@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.ServiceModel.PeerResolvers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -12,20 +13,32 @@ namespace Aurora.Settings.Layers
 {
     public class SolidColorLayerHandler : LayerHandler<LayerHandlerProperties>
     {
+        private readonly EffectLayer _solidcolorLayer = new("SolidColorLayer");
+        private SolidBrush _brush;
+        private KeySequence _propertiesSequence;
+
         public SolidColorLayerHandler()
         {
+            _brush = new SolidBrush(Properties.PrimaryColor);
+            Properties.PropertyChanged += Profile_PropertyChanged;
+        }
+
+        private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            _brush = new SolidBrush(Properties.PrimaryColor);
         }
 
         protected override UserControl CreateControl()
         {
             return new Control_SolidColorLayer(this);
         }
-
+        
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer solidcolor_layer = new EffectLayer();
-            solidcolor_layer.Set(Properties.Sequence, Properties.PrimaryColor);
-            return solidcolor_layer;
+            _brush.Color = Properties.PrimaryColor;
+            _propertiesSequence = Properties.Sequence;
+            _solidcolorLayer.Set(_propertiesSequence, _brush);
+            return _solidcolorLayer;
         }
     }
 }

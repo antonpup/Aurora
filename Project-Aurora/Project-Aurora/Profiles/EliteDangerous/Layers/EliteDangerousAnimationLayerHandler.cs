@@ -135,14 +135,14 @@ namespace Aurora.Profiles.EliteDangerous.Layers
         private void BgFadeIn(EffectLayer animation_layer)
         {
             layerFadeState = Math.Min(1, layerFadeState + 0.07f);
-            animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+            animation_layer.FillOver(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
         }
 
         private void BgFadeOut(EffectLayer animation_layer)
         {
             if (!(layerFadeState > 0)) return;
             layerFadeState = Math.Max(0, layerFadeState - 0.03f);
-            animation_layer.Fill(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
+            animation_layer.FillOver(ColorUtils.BlendColors(Color.Empty, Color.Black, layerFadeState));
         }
 
         public override EffectLayer Render(IGameState state)
@@ -269,21 +269,21 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             if (starClass == hyperspace_exit_star) return;
             
             hypespace_exit_mix = new AnimationMix();
-            float startingX = Effects.canvas_width_center - 10;
+            float startingX = Effects.CanvasWidthCenter - 10;
             Color hyperspaceExitColor = starColors.ContainsKey(starClass) ? starColors[starClass] : starColors[StarClass.K];
             
             AnimationTrack star_entry = new AnimationTrack("Hyperspace exit", 2.0f);
             star_entry.SetFrame(0.0f,
-                new AnimationFilledCircle(startingX, Effects.canvas_height_center, 0, hyperspaceExitColor, 1)
+                new AnimationFilledCircle(startingX, Effects.CanvasHeightCenter, 0, hyperspaceExitColor, 1)
             );
             star_entry.SetFrame(1.0f,
-                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, hyperspaceExitColor, 1)
+                new AnimationFilledCircle(startingX, Effects.CanvasHeightCenter, Effects.CanvasBiggest, hyperspaceExitColor, 1)
             );
             star_entry.SetFrame(1.2f,
-                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, hyperspaceExitColor, 1)
+                new AnimationFilledCircle(startingX, Effects.CanvasHeightCenter, Effects.CanvasBiggest, hyperspaceExitColor, 1)
             );
             star_entry.SetFrame(2f,
-                new AnimationFilledCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, Color.Empty, 1)
+                new AnimationFilledCircle(startingX, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.Empty, 1)
             );
             
             AnimationTrack star_entry_bg = new AnimationTrack("Hyperspace exit bg", 2f);
@@ -303,7 +303,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             Color pulseStartColor = Color.FromArgb(0, 126, 255);
             Color pulseEndColor = Color.FromArgb(200, 0, 126, 255);
 
-            float startingX = Effects.canvas_width_center - 10;
+            float startingX = Effects.CanvasWidthCenter - 10;
             int pulseStartWidth = 10;
             int pulseEndWidth = 2;
             
@@ -312,10 +312,10 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             
             AnimationTrack countdown_pulse = new AnimationTrack("Fsd countdown pulse " + index, pulseFrameDuration, index);
             countdown_pulse.SetFrame(0.0f,
-                new AnimationCircle(startingX, Effects.canvas_height_center, 0, pulseStartColor, pulseStartWidth)
+                new AnimationCircle(startingX, Effects.CanvasHeightCenter, 0, pulseStartColor, pulseStartWidth)
             );
             countdown_pulse.SetFrame(pulseDuration,
-                new AnimationCircle(startingX, Effects.canvas_height_center, Effects.canvas_biggest, pulseEndColor, pulseEndWidth)
+                new AnimationCircle(startingX, Effects.CanvasHeightCenter, Effects.CanvasBiggest, pulseEndColor, pulseEndWidth)
             );
 
             return countdown_pulse;

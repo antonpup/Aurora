@@ -612,7 +612,7 @@ namespace Aurora.Settings
                         double x = x_offset + cur_width;
                         double y = y_offset + cur_height;
 
-                        this.bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(x), PixelToByte(y), width_bit, height_bit);
+                        bitmap_map[key.tag] = new BitmapRectangle(PixelToByte(x), PixelToByte(y), width_bit, height_bit);
 
                         br_x = (x + width);
                         br_y = (y + height);
@@ -634,9 +634,8 @@ namespace Aurora.Settings
                 _bitmapMapInvalid = false;
                 //+1 for rounding error, where the bitmap rectangle B(X)+B(Width) > B(X+Width)
                 Global.effengine.SetCanvasSize(PixelToByte(virtualKeyboardGroup.Region.Width) + 1, PixelToByte(virtualKeyboardGroup.Region.Height) + 1);
-                //Global.effengine.SetBitmapping(this.bitmap_map);
+                //Global.effengine.SetBitmapping(bitmap_map);
             }
-
         }
 
         private void virtualkeyboard_key_selected(FrameworkElement key)

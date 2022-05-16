@@ -1,5 +1,6 @@
-﻿using Aurora.EffectsEngine;
-using System;
+﻿using System;
+using System.Collections;
+using Aurora.EffectsEngine;
 using System.Collections.Generic;
 using System.Linq;
 using Aurora.Devices;
@@ -11,13 +12,13 @@ namespace Aurora
 {
     public class BitmapRectangle
     {
-        public static BitmapRectangle emptyRectangle = new BitmapRectangle();
+        public static readonly BitmapRectangle EmptyRectangle = new();
 
-        private readonly bool _isvalid = false;
-        public bool IsValid { get { return _isvalid; } }
+        private readonly bool _isvalid;
+        public bool IsValid => _isvalid;
 
         private readonly Rectangle _rectangle;
-        public Rectangle Rectangle { get { return _rectangle; } }
+        public Rectangle Rectangle => _rectangle;
 
         public bool IsEmpty
         {
@@ -30,22 +31,15 @@ namespace Aurora
             }
         }
 
-        public int Bottom { get { return _rectangle.Bottom; } }
-        public int Top { get { return _rectangle.Top; } }
-        public int Left { get { return _rectangle.Left; } }
-        public int Right { get { return _rectangle.Right; } }
-        public int Height { get { return _rectangle.Height; } }
-        public int Width { get { return _rectangle.Width; } }
-        public int Area { get { return _rectangle.Width * _rectangle.Height; } }
+        public int Bottom => _rectangle.Bottom;
+        public int Top => _rectangle.Top;
+        public int Left => _rectangle.Left;
+        public int Right => _rectangle.Right;
+        public int Height => _rectangle.Height;
+        public int Width => _rectangle.Width;
 
         private PointF _center;
-        public PointF Center
-        {
-            get
-            {
-                return _center;
-            }
-        }
+        public PointF Center => _center;
 
         private BitmapRectangle()
         {
@@ -97,25 +91,38 @@ namespace Aurora
 
     public delegate void NewLayerRendered(Bitmap bitmap);
 
+    class EnumHashGetter: IEqualityComparer<Enum>
+    {
+        public static EnumHashGetter Instance = new();
+
+        private EnumHashGetter()
+        {
+        }
+
+        public bool Equals(Enum x, Enum y)
+        {
+            return object.Equals(x, y);
+        }
+
+        public int GetHashCode(Enum obj)
+        {
+            return Convert.ToInt32(obj);
+        }
+    }
+
     public class Effects
     {
-        private const int MAX_DEVICE_ID = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
-        
-        int filenamecount = 0;
-        public bool isrecording = false;
-        Bitmap previousframe = null;
-        long nextsecond = 0L;
-        long currentsecond = 0L;
-        int renderedframes = 0;
-        long render_time = 0L;
-        Timer recordTimer = new Timer(1000D / 15D); // 30fps
-        int pushedframes = 0;
-        Timer fpsDebugTimer = new Timer(1000D);
+        private const int MaxDeviceId = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
 
-        Bitmap _forcedFrame = null;
+        private int filenamecount;
+        private bool isrecording = false;
+        private Bitmap previousframe;
+        private long nextsecond;
+        private long currentsecond;
+        private long render_time = 0L;
+        private Timer recordTimer = new(1000D / 15D); // 30fps
 
-
-        private static object bitmap_lock = new object();
+        Bitmap _forcedFrame;
 
         public event NewLayerRendered NewLayerRender = delegate { };
 
@@ -127,77 +134,34 @@ namespace Aurora
         public static float grid_width = 1.0f;
         public static float grid_height = 1.0f;
 
-        public static float canvas_width_center
-        {
-            get
-            {
-                return canvas_width / 2.0f;
-            }
-        }
-
-        public static float canvas_height_center
-        {
-            get
-            {
-                return canvas_height / 2.0f;
-            }
-        }
-
-        public static float editor_to_canvas_width
-        {
-            get
-            {
-                if (grid_width == 0)
-                    return 0;
-                return canvas_width / grid_width;
-            }
-        }
-
-        public static float editor_to_canvas_height
-        {
-            get
-            {
-                if (grid_height == 0)
-                    return 0;
-                return canvas_height / grid_height;
-            }
-        }
-
-        public static int canvas_biggest
-        {
-            get
-            {
-                return Effects.canvas_width > Effects.canvas_height ? Effects.canvas_width : Effects.canvas_height;
-            }
-        }
+        public static float CanvasWidthCenter => canvas_width / 2.0f;
+        public static float CanvasHeightCenter => canvas_height / 2.0f;
+        public static float EditorToCanvasWidth => grid_width != 0 ? canvas_width / grid_width : 0;
+        public static float EditorToCanvasHeight => grid_height!= 0 ? canvas_height / grid_height : 0;
+        public static int CanvasBiggest => canvas_width > canvas_height ? canvas_width : canvas_height;
 
         /// <summary>
         /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
         /// </summary>
-        public static Aurora.Settings.FreeFormObject WholeCanvasFreeForm => new Settings.FreeFormObject(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
+        public static Settings.FreeFormObject WholeCanvasFreeForm => new(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
 
-        private static Dictionary<DeviceKey, BitmapRectangle> bitmap_map = new Dictionary<DeviceKey, BitmapRectangle>(MAX_DEVICE_ID, new DeviceKey.EqualityComparer());
+        private static Dictionary<DeviceKey, BitmapRectangle> _bitmapMap = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKey>);
 
-        private static Dictionary<DeviceKey, Color> keyColors = new Dictionary<DeviceKey, Color>(MAX_DEVICE_ID, new DeviceKey.EqualityComparer());
+        private static readonly Dictionary<DeviceKey, Color> keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKey>);
+
+        private Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
+        private EffectLayer _background => _effectLayerFactory.Value;
 
         public Effects()
         {
-            DeviceKey[] allKeys = bitmap_map.Keys.ToArray();
+            var allKeys = _bitmapMap.Keys.ToArray();
 
             foreach (var key in allKeys)
             {
-                keyColors.Add(key, Color.FromArgb(0, 0, 0));
+                keyColors.Add(key, Color.Black);
             }
 
             recordTimer.Elapsed += RecordTimer_Elapsed;
-
-            fpsDebugTimer.Elapsed += FpsDebugTimer_Elapsed;
-        }
-
-        private void FpsDebugTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("fps = " + pushedframes);
-            pushedframes = 0;
         }
 
         private void RecordTimer_Elapsed(object sender, ElapsedEventArgs e)
@@ -209,30 +173,15 @@ namespace Aurora
 
             if (previousframe != null)
             {
-                Bitmap tempbmp = new Bitmap(previousframe);
-
-                renderedframes++;
+                var tempbmp = new Bitmap(previousframe);
                 tempbmp.Save("renders\\" + (filenamecount++) + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             }
 
             if (currentsecond >= nextsecond)
             {
-                System.Diagnostics.Debug.WriteLine("fps = " + (double)renderedframes / ((double)(currentsecond - (nextsecond - 1000L)) / 1000D));
-
                 nextsecond = currentsecond + 1000L;
-                renderedframes = 0;
             }
 
-        }
-
-        public void ToggleRecord()
-        {
-            isrecording = !isrecording;
-
-            if (isrecording)
-                recordTimer.Start();
-            else
-                recordTimer.Stop();
         }
 
         public void ForceImageRender(Bitmap forcedframe)
@@ -249,142 +198,81 @@ namespace Aurora
 
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKey key)
         {
-            if (bitmap_map.ContainsKey(key))
-                return bitmap_map[bitmap_map.Keys.First(k => k == key)];
-
-            return BitmapRectangle.emptyRectangle;
+            return _bitmapMap.ContainsKey(key) ? _bitmapMap[key] : BitmapRectangle.EmptyRectangle;
         }
 
         public void SetBitmapping(Dictionary<DeviceKey, BitmapRectangle> bitmap_map)
         {
-            Effects.bitmap_map = bitmap_map;
+            _bitmapMap = bitmap_map;
         }
         
-        private readonly Dictionary<DeviceKey, Color> _keyColors = new Dictionary<DeviceKey, Color>(MAX_DEVICE_ID);
+        private readonly SolidBrush _keyboardDarknessBrush = new(Color.Empty);
+        private readonly SolidBrush _blackBrush = new(Color.Black);
         public void PushFrame(EffectFrame frame)
         {
-            lock (bitmap_lock)
+            //_background = new EffectLayer("Global Background", Color.Black);
+            _background.Fill(_blackBrush);
+
+            var overLayersArray = frame.GetOverlayLayers();
+            var layersArray = frame.GetLayers();
+
+            foreach (var layer in layersArray)
+                _background.Add(layer);
+            foreach (var layer in overLayersArray)
+                _background.Add(layer);
+
+            //Apply Brightness
+            var keyboardDarkness = 1.0f - Global.Configuration.KeyboardBrightness * Global.Configuration.GlobalBrightness;
+            _keyboardDarknessBrush.Color = Color.FromArgb((int) (255.0f * keyboardDarkness), Color.Black);
+            _background.FillOver(_keyboardDarknessBrush);
+
+            if (_forcedFrame != null)
             {
-                EffectLayer background = new EffectLayer("Global Background", Color.FromArgb(0, 0, 0));
+                using var g = _background.GetGraphics();
+                g.Clear(Color.Black);
 
-                EffectLayer[] over_layers_array = frame.GetOverlayLayers().ToArray();
-                EffectLayer[] layers_array = frame.GetLayers().ToArray();
+                g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
 
-                foreach (EffectLayer layer in layers_array)
-                    background += layer;
-
-                foreach (EffectLayer layer in over_layers_array)
-                    background += layer;
-
-                background.Fill(Color.FromArgb((int)(255.0f * (1.0f - Global.Configuration.KeyboardBrightness)), Color.Black));
-
-                //foreach (DeviceKeys key in possible_peripheral_keys)
-                //    background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, (1.0f - Global.Configuration.PeripheralBrightness)));
-
-
-                //if (Global.Configuration.UseVolumeAsBrightness)
-                    background *= Global.Configuration.GlobalBrightness;
-
-                if (_forcedFrame != null)
-                {
-                    using (Graphics g = background.GetGraphics())
-                    {
-                        g.Clear(Color.Black);
-
-                        g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
-
-                        _forcedFrame.Dispose();
-                        _forcedFrame = null;
-                    }
-                }
-
-                _keyColors.Clear();
-                DeviceKey[] allKeys = bitmap_map.Keys.ToArray();
-
-                foreach (var key in allKeys)
-                {
-                    _keyColors[key] = background.Get(key);
-                }
-
-                Effects.keyColors = _keyColors;
-
-                pushedframes++;
-
-                Dictionary<int, DeviceColorComposition> dcc = new Dictionary<int, DeviceColorComposition>();
-                foreach (var item in keyColors.Keys)
-                {
-                    if (item.DeviceId == null)
-                        continue;
-                    if(!dcc.ContainsKey(item.DeviceId.Value))
-                    {
-                        dcc[item.DeviceId.Value] = new DeviceColorComposition()
-                        {
-                            keyColors = new Dictionary<int, Color>(), //TODO test  =_keyColors
-                            keyBitmap = background.GetBitmap()
-                        };
-                    }
-                    dcc[item.DeviceId.Value].keyColors.Add(item.Tag, keyColors[item]);
-                }
-
-                //TODO
-                Global.dev_manager.UpdateDevices(dcc);
-
-                var hander = NewLayerRender;
-                if (hander != null)
-                    hander.Invoke(background.GetBitmap());
-
-                if (isrecording)
-                {
-
-                    EffectLayer pizelated_render = new EffectLayer();
-                    foreach (DeviceKey key in allKeys)
-                    {
-                        pizelated_render.Set(key, background.Get(key));
-                    }
-
-                    using (Bitmap map = pizelated_render.GetBitmap())
-                    {
-                        previousframe.Dispose();
-                        previousframe = new Bitmap(map);
-                    }
-                }
-
-                background.Dispose();
-                frame.Dispose();
+                _forcedFrame.Dispose();
+                _forcedFrame = null;
             }
+
+            var allKeys = _bitmapMap.Keys.ToArray();
+
+            foreach (var key in allKeys)
+                keyColors[key] = _background.Get(key);
+
+            var dcc = new DeviceColorComposition
+            {
+                keyColors = keyColors,
+                keyBitmap = _background.GetBitmap()
+            };
+            
+            Dictionary<int, DeviceColorComposition> dccMap = new Dictionary<int, DeviceColorComposition>();
+            foreach (var item in keyColors.Keys)
+            {
+                if (item.DeviceId == null)
+                    continue;
+                if(!dccMap.ContainsKey(item.DeviceId.Value))
+                {
+                    dccMap[item.DeviceId.Value] = new DeviceColorComposition()
+                    {
+                        keyColors = new Dictionary<int, Color>(), //TODO test  =_keyColors
+                        keyBitmap = background.GetBitmap()
+                    };
+                }
+                dccMap[item.DeviceId.Value].keyColors.Add(item.Tag, keyColors[item]);
+            }
+            Global.dev_manager.UpdateDevices(dcc);
+
+            frame.Dispose();
+            //_background.Dispose();
+            //_background = null;
         }
 
         public Dictionary<DeviceKey, Color> GetDevicesColor()
         {
-            return Effects.keyColors;
-        }
-
-        [System.Runtime.InteropServices.DllImport("msvcrt.dll")]
-        private static extern int memcmp(IntPtr b1, IntPtr b2, long count);
-
-        public static bool CompareMemCmp(Bitmap b1, Bitmap b2)
-        {
-            if ((b1 == null) != (b2 == null)) return false;
-            if (b1.Size != b2.Size) return false;
-
-            var bd1 = b1.LockBits(new Rectangle(new Point(0, 0), b1.Size), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            var bd2 = b2.LockBits(new Rectangle(new Point(0, 0), b2.Size), System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            try
-            {
-                IntPtr bd1scan0 = bd1.Scan0;
-                IntPtr bd2scan0 = bd2.Scan0;
-
-                int stride = bd1.Stride;
-                int len = stride * b1.Height;
-
-                return memcmp(bd1scan0, bd2scan0, len) == 0;
-            }
-            finally
-            {
-                b1.UnlockBits(bd1);
-                b2.UnlockBits(bd2);
-            }
+            return keyColors;
         }
     }
 }

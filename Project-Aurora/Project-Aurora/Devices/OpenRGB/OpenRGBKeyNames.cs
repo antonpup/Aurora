@@ -127,6 +127,8 @@ namespace Aurora.Devices.OpenRGB
             { "Key: Media Play"       , DK.MEDIA_PLAY             },
             { "Key: Media Play/Pause" , DK.MEDIA_PLAY_PAUSE       },
             { "Key: Media Mute"       , DK.VOLUME_MUTE            },
+            { "Key: Media Volume Down", DK.VOLUME_DOWN            },
+            { "Key: Media Volume Up"  , DK.VOLUME_UP              },
             { "Logo"                  , DK.LOGO                   },
             { "Key: Brightness"       , DK.BRIGHTNESS_SWITCH      },
             { "Key: M1"               , DK.G1                     },
@@ -205,6 +207,7 @@ namespace Aurora.Devices.OpenRGB
             { "RGB Strip 58"           , DK.ADDITIONALLIGHT58      },
             { "RGB Strip 59"           , DK.ADDITIONALLIGHT59      },
             { "RGB Strip 60"           , DK.ADDITIONALLIGHT60      },
+            { "Key: Calculator"        , DK.CALC                   },
         };
 
         public static readonly DK[] MousepadLights = new[]

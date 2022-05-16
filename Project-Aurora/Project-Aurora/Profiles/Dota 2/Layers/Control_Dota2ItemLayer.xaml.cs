@@ -54,12 +54,15 @@ namespace Aurora.Profiles.Dota_2.Layers
                 UIUtils.SetSingleKey(this.item_slot4_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 3);
                 UIUtils.SetSingleKey(this.item_slot5_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 4);
                 UIUtils.SetSingleKey(this.item_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 5);
-                UIUtils.SetSingleKey(this.stash_slot1_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 6);
-                UIUtils.SetSingleKey(this.stash_slot2_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 7);
-                UIUtils.SetSingleKey(this.stash_slot3_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 8);
-                UIUtils.SetSingleKey(this.stash_slot4_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 9);
-                UIUtils.SetSingleKey(this.stash_slot5_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 10);
-                UIUtils.SetSingleKey(this.stash_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 11);
+                UIUtils.SetSingleKey(this.item_slot7_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 6);
+                UIUtils.SetSingleKey(this.item_slot8_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 7);
+                UIUtils.SetSingleKey(this.item_slot9_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 8);
+                UIUtils.SetSingleKey(this.stash_slot1_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 9);
+                UIUtils.SetSingleKey(this.stash_slot2_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 10);
+                UIUtils.SetSingleKey(this.stash_slot3_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 11);
+                UIUtils.SetSingleKey(this.stash_slot4_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 12);
+                UIUtils.SetSingleKey(this.stash_slot5_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 13);
+                UIUtils.SetSingleKey(this.stash_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 14);
 
                 settingsset = true;
             }
@@ -226,6 +229,82 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
+
+        private void item_slot7_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RecordSingleKey("Dota 2 - Item Slot 7 Key", sender as TextBlock, item7_keys_callback);
+        }
+
+        private void item7_keys_callback(DeviceKeys[] resulting_keys)
+        {
+            Global.key_recorder.FinishedRecording -= item7_keys_callback;
+
+            Dispatcher.Invoke(() =>
+            {
+                item_slot7_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+
+                if (resulting_keys.Length > 0)
+                {
+                    if (IsLoaded)
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[6] = resulting_keys[0];
+
+                    UIUtils.SetSingleKey(this.item_slot7_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 6);
+                }
+            });
+
+            Global.key_recorder.Reset();
+        }
+
+        private void item_slot8_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RecordSingleKey("Dota 2 - Item Slot 8 Key", sender as TextBlock, item8_keys_callback);
+        }
+
+        private void item8_keys_callback(DeviceKeys[] resulting_keys)
+        {
+            Global.key_recorder.FinishedRecording -= item8_keys_callback;
+
+            Dispatcher.Invoke(() =>
+            {
+                item_slot8_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+
+                if (resulting_keys.Length > 0)
+                {
+                    if (IsLoaded)
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[7] = resulting_keys[0];
+
+                    UIUtils.SetSingleKey(this.item_slot8_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 7);
+                }
+            });
+
+            Global.key_recorder.Reset();
+        }
+
+        private void item_slot9_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RecordSingleKey("Dota 2 - Item Slot 9 Key", sender as TextBlock, item9_keys_callback);
+        }
+
+        private void item9_keys_callback(DeviceKeys[] resulting_keys)
+        {
+            Global.key_recorder.FinishedRecording -= item9_keys_callback;
+
+            Dispatcher.Invoke(() =>
+            {
+                item_slot9_textblock.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+
+                if (resulting_keys.Length > 0)
+                {
+                    if (IsLoaded)
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[8] = resulting_keys[0];
+
+                    UIUtils.SetSingleKey(this.item_slot9_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 8);
+                }
+            });
+
+            Global.key_recorder.Reset();
+        }
+
         private void stash_slot1_textblock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 1 Key", sender as TextBlock, stash1_keys_callback);
@@ -242,9 +321,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
-                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[6] = resulting_keys[0];
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[9] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.stash_slot1_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 6);
+                    UIUtils.SetSingleKey(this.stash_slot1_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 9);
                 }
             });
 
@@ -267,9 +346,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
-                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[7] = resulting_keys[0];
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[10] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.stash_slot2_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 7);
+                    UIUtils.SetSingleKey(this.stash_slot2_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 10);
                 }
             });
 
@@ -292,9 +371,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
-                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[8] = resulting_keys[0];
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[11] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.stash_slot3_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 8);
+                    UIUtils.SetSingleKey(this.stash_slot3_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 11);
                 }
             });
 
@@ -317,9 +396,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
-                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[9] = resulting_keys[0];
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[12] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.stash_slot4_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 9);
+                    UIUtils.SetSingleKey(this.stash_slot4_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 12);
                 }
             });
 
@@ -342,9 +421,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
-                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[10] = resulting_keys[0];
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[13] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.stash_slot5_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 10);
+                    UIUtils.SetSingleKey(this.stash_slot5_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 13);
                 }
             });
 
@@ -367,9 +446,9 @@ namespace Aurora.Profiles.Dota_2.Layers
                 if (resulting_keys.Length > 0)
                 {
                     if (IsLoaded)
-                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[11] = resulting_keys[0];
+                        (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys[14] = resulting_keys[0];
 
-                    UIUtils.SetSingleKey(this.stash_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 11);
+                    UIUtils.SetSingleKey(this.stash_slot6_textblock, (this.DataContext as Dota2ItemLayerHandler).Properties._ItemKeys, 14);
                 }
             });
 

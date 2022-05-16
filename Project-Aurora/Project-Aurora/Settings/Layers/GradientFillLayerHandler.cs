@@ -42,6 +42,8 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientFillLayerHandler : LayerHandler<GradientFillLayerHandlerProperties>
     {
+        readonly EffectLayer _gradientLayer = new("GradientFillLayer");
+        
         protected override UserControl CreateControl()
         {
             return new Control_GradientFillLayer(this);
@@ -49,21 +51,19 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer gradient_layer = new EffectLayer();
-
             //Get current color
             Properties.GradientConfig.shift_amount += ((Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f) * 5.0f * Properties.GradientConfig.speed;
-            Properties.GradientConfig.shift_amount = Properties.GradientConfig.shift_amount % Effects.canvas_biggest;
+            Properties.GradientConfig.shift_amount %= Effects.CanvasBiggest;
             Properties.GradientConfig.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
 
-            Color selected_color = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.canvas_biggest);
+            Color selected_color = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.CanvasBiggest);
 
             if (Properties.FillEntireKeyboard)
-                gradient_layer.Fill(selected_color);
+                _gradientLayer.FillOver(selected_color);
             else
-                gradient_layer.Set(Properties.Sequence, selected_color);
+                _gradientLayer.Set(Properties.Sequence, selected_color);
 
-            return gradient_layer;
+            return _gradientLayer;
         }
     }
 }

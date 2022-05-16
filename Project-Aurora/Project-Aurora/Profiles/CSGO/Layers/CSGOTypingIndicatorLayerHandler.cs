@@ -1,17 +1,13 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using System.Drawing;
+using System.Windows.Controls;
+using Aurora.Devices;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Aurora.Profiles.CSGO.Layers
 {
@@ -20,9 +16,10 @@ namespace Aurora.Profiles.CSGO.Layers
         public Color? _TypingKeysColor { get; set; }
 
         [JsonIgnore]
-        public Color TypingKeysColor { get { return Logic._TypingKeysColor ?? _TypingKeysColor ?? Color.Empty; } }
+        public Color TypingKeysColor => Logic._TypingKeysColor ?? _TypingKeysColor ?? Color.Empty;
 
-        public CSGOTypingIndicatorLayerHandlerProperties() : base() { }
+        public CSGOTypingIndicatorLayerHandlerProperties()
+        { }
 
         public CSGOTypingIndicatorLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
@@ -30,20 +27,22 @@ namespace Aurora.Profiles.CSGO.Layers
         {
             base.Default();
 
-            this._Sequence = new KeySequence(new DeviceKey[] { Devices.DeviceKeys.TILDE, Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR, Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT, Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS, Devices.DeviceKeys.BACKSPACE,
-                                                    Devices.DeviceKeys.TAB, Devices.DeviceKeys.Q, Devices.DeviceKeys.W, Devices.DeviceKeys.E, Devices.DeviceKeys.R, Devices.DeviceKeys.T, Devices.DeviceKeys.Y, Devices.DeviceKeys.U, Devices.DeviceKeys.I, Devices.DeviceKeys.O, Devices.DeviceKeys.P, Devices.DeviceKeys.CLOSE_BRACKET, Devices.DeviceKeys.OPEN_BRACKET, Devices.DeviceKeys.BACKSLASH,
-                                                    Devices.DeviceKeys.CAPS_LOCK, Devices.DeviceKeys.A, Devices.DeviceKeys.S, Devices.DeviceKeys.D, Devices.DeviceKeys.F, Devices.DeviceKeys.G, Devices.DeviceKeys.H, Devices.DeviceKeys.J, Devices.DeviceKeys.K, Devices.DeviceKeys.L, Devices.DeviceKeys.SEMICOLON, Devices.DeviceKeys.APOSTROPHE, Devices.DeviceKeys.HASHTAG, Devices.DeviceKeys.ENTER,
-                                                    Devices.DeviceKeys.LEFT_SHIFT, Devices.DeviceKeys.BACKSLASH_UK, Devices.DeviceKeys.Z, Devices.DeviceKeys.X, Devices.DeviceKeys.C, Devices.DeviceKeys.V, Devices.DeviceKeys.B, Devices.DeviceKeys.N, Devices.DeviceKeys.M, Devices.DeviceKeys.COMMA, Devices.DeviceKeys.PERIOD, Devices.DeviceKeys.FORWARD_SLASH, Devices.DeviceKeys.RIGHT_SHIFT,
-                                                    Devices.DeviceKeys.LEFT_CONTROL, Devices.DeviceKeys.LEFT_WINDOWS, Devices.DeviceKeys.LEFT_ALT, Devices.DeviceKeys.SPACE, Devices.DeviceKeys.RIGHT_ALT, Devices.DeviceKeys.RIGHT_WINDOWS, Devices.DeviceKeys.APPLICATION_SELECT, Devices.DeviceKeys.RIGHT_CONTROL,
-                                                    Devices.DeviceKeys.ARROW_UP, Devices.DeviceKeys.ARROW_LEFT, Devices.DeviceKeys.ARROW_DOWN, Devices.DeviceKeys.ARROW_RIGHT, Devices.DeviceKeys.ESC
+            _Sequence = new KeySequence(new DeviceKey[] { DeviceKeys.TILDE, DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR, DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT, DeviceKeys.NINE, DeviceKeys.ZERO, DeviceKeys.MINUS, DeviceKeys.EQUALS, DeviceKeys.BACKSPACE,
+                                                    DeviceKeys.TAB, DeviceKeys.Q, DeviceKeys.W, DeviceKeys.E, DeviceKeys.R, DeviceKeys.T, DeviceKeys.Y, DeviceKeys.U, DeviceKeys.I, DeviceKeys.O, DeviceKeys.P, DeviceKeys.CLOSE_BRACKET, DeviceKeys.OPEN_BRACKET, DeviceKeys.BACKSLASH,
+                                                    DeviceKeys.CAPS_LOCK, DeviceKeys.A, DeviceKeys.S, DeviceKeys.D, DeviceKeys.F, DeviceKeys.G, DeviceKeys.H, DeviceKeys.J, DeviceKeys.K, DeviceKeys.L, DeviceKeys.SEMICOLON, DeviceKeys.APOSTROPHE, DeviceKeys.HASHTAG, DeviceKeys.ENTER,
+                                                    DeviceKeys.LEFT_SHIFT, DeviceKeys.BACKSLASH_UK, DeviceKeys.Z, DeviceKeys.X, DeviceKeys.C, DeviceKeys.V, DeviceKeys.B, DeviceKeys.N, DeviceKeys.M, DeviceKeys.COMMA, DeviceKeys.PERIOD, DeviceKeys.FORWARD_SLASH, DeviceKeys.RIGHT_SHIFT,
+                                                    DeviceKeys.LEFT_CONTROL, DeviceKeys.LEFT_WINDOWS, DeviceKeys.LEFT_ALT, DeviceKeys.SPACE, DeviceKeys.RIGHT_ALT, DeviceKeys.RIGHT_WINDOWS, DeviceKeys.APPLICATION_SELECT, DeviceKeys.RIGHT_CONTROL,
+                                                    DeviceKeys.ARROW_UP, DeviceKeys.ARROW_LEFT, DeviceKeys.ARROW_DOWN, DeviceKeys.ARROW_RIGHT, DeviceKeys.ESC
                                                   });
-            this._TypingKeysColor = Color.FromArgb(0, 255, 0);
+            _TypingKeysColor = Color.FromArgb(0, 255, 0);
         }
     }
 
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class CSGOTypingIndicatorLayerHandler : LayerHandler<CSGOTypingIndicatorLayerHandlerProperties>
     {
+        private readonly EffectLayer _typingKeysLayer = new("CSGO - Typing Keys");
+
         protected override UserControl CreateControl()
         {
             return new Control_CSGOTypingIndicatorLayer(this);
@@ -51,18 +50,17 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer typing_keys_layer = new EffectLayer("CSGO - Typing Keys");
+            if (state is not GameState_CSGO csgostate) return _typingKeysLayer;
 
-            if (state is GameState_CSGO)
+            //Update Typing Keys
+            if (csgostate.Player.Activity == PlayerActivity.TextInput)
+                _typingKeysLayer.Set(Properties.Sequence, Properties.TypingKeysColor);
+            else
             {
-                GameState_CSGO csgostate = state as GameState_CSGO;
-
-                //Update Typing Keys
-                if (csgostate.Player.Activity == PlayerActivity.TextInput)
-                    typing_keys_layer.Set(Properties.Sequence, Properties.TypingKeysColor);
+                _typingKeysLayer.Set(Properties.Sequence, Color.Empty);
             }
 
-            return typing_keys_layer;
+            return _typingKeysLayer;
         }
 
         public override void SetApplication(Application profile)

@@ -5,13 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Profiles.Dota_2.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="Aurora.Profiles.Dota_2.Layers.Control_Dota2ItemLayer"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d" Loaded="UserControl_Loaded" Height="173.701">
     <Grid>
         <xctk:ColorPicker x:Name="ColorPicker_Item_Empty" Margin="91,0,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="152" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_Item_Empty_SelectedColorChanged" />
         <Label HorizontalAlignment="Left" Margin="0,3,0,0" Padding="0" Content="Item slot empty:" VerticalAlignment="Top"/>
         <xctk:ColorPicker x:Name="ColorPicker_Item_Cooldown" Margin="136,29,0,0" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Width="107" ColorMode="ColorCanvas" UsingAlphaChannel="True" SelectedColorChanged="ColorPicker_Item_Cooldown_SelectedColorChanged" />
         <Label HorizontalAlignment="Left" Margin="0,32,0,0" Padding="0" Content="Item on cooldown Color:" VerticalAlignment="Top"/>
-        <GroupBox Header="Inventory &amp; Stash Keys" HorizontalAlignment="Left" Margin="248,0,0,0" VerticalAlignment="Top" Height="102" Width="256" BorderBrush="DimGray">
+        <GroupBox Header="Inventory &amp; Stash Keys" HorizontalAlignment="Left" Margin="248,0,0,0" VerticalAlignment="Top" Height="166" Width="256" BorderBrush="DimGray" RenderTransformOrigin="0.5,0.5">
+            <GroupBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleX="-0.095"/>
+                    <RotateTransform/>
+                    <TranslateTransform X="-0.122"/>
+                </TransformGroup>
+            </GroupBox.RenderTransform>
             <Grid Margin="0,0,0,0">
                 <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="12,10,0,0" VerticalAlignment="Top" CornerRadius="5">
                     <TextBlock x:Name="item_slot1_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot1_textblock_MouseDown" FontSize="9"/>
@@ -30,6 +38,18 @@
                 </Border>
                 <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="86,47,0,0" VerticalAlignment="Top" CornerRadius="5" Grid.RowSpan="2">
                     <TextBlock x:Name="item_slot6_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot6_textblock_MouseDown" FontSize="9"/>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="12,94,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="item_slot7_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot7_textblock_MouseDown" FontSize="9"/>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="49,94,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="item_slot8_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot8_textblock_MouseDown" FontSize="9"/>
+                </Border>
+
+                <Border BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Left" Margin="86,94,0,0" VerticalAlignment="Top" CornerRadius="5">
+                    <TextBlock x:Name="item_slot9_textblock" TextWrapping="Wrap" Width="30" Height="30" FontWeight="Bold" TextAlignment="Center" Text="KEY" MouseDown="item_slot9_textblock_MouseDown" FontSize="9"/>
                 </Border>
 
 
@@ -62,6 +82,16 @@
                     </Label.RenderTransform>
                 </Label>
                 <Label Content="Stash" HorizontalAlignment="Left" Margin="108,31,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+                    <Label.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-90"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Label.RenderTransform>
+                </Label>
+                <Label Content="Backpack" HorizontalAlignment="Left" Margin="-27,97,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
                     <Label.RenderTransform>
                         <TransformGroup>
                             <ScaleTransform/>

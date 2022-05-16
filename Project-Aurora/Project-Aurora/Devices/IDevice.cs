@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
 using Aurora.Settings;
 
 namespace Aurora.Devices
@@ -12,7 +10,7 @@ namespace Aurora.Devices
     /// </summary>
     public class DeviceColorComposition
     {
-        public readonly object bitmapLock = new object();
+        public readonly object bitmapLock = new();
         public Dictionary<int, Color> keyColors;
         public Bitmap keyBitmap;
     }

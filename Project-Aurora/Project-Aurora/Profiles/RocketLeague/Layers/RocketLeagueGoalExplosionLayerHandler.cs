@@ -121,7 +121,7 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 if (showAnimation_Explosion)
                 {
                     if(Properties.Background)
-                        layer.Fill(Properties.PrimaryColor);
+                        layer.FillOver(Properties.PrimaryColor);
 
                     goal_explosion_mix = new AnimationMix(tracks);
 
@@ -155,8 +155,8 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 tracks[i].SetFrame(
                     0.0f, 
                     new AnimationCircle(
-                        (int)(Effects.canvas_width_center * 0.9),
-                        Effects.canvas_height_center,
+                        (int)(Effects.CanvasWidthCenter * 0.9),
+                        Effects.CanvasHeightCenter,
                         0, 
                         playerColor,
                         4)
@@ -165,9 +165,9 @@ namespace Aurora.Profiles.RocketLeague.Layers
                 tracks[i].SetFrame(
                     1.0f,
                     new AnimationCircle(
-                        (int)(Effects.canvas_width_center * 0.9),
-                        Effects.canvas_height_center, 
-                        Effects.canvas_biggest / 2.0f, 
+                        (int)(Effects.CanvasWidthCenter * 0.9),
+                        Effects.CanvasHeightCenter, 
+                        Effects.CanvasBiggest / 2.0f, 
                         playerColor,
                         4)
                 );

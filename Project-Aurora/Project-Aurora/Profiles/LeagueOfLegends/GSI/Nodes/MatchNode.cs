@@ -22,11 +22,13 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
 
         public int OceanDragonsKilled;
 
-        public int MountainDragonsKilled;
-
         public int CloudDragonsKilled;
 
         public int EarthDragonsKilled;
+
+        public int ChemtechDragonsKilled;
+
+        public int HextechDragonsKilled;
 
         public int ElderDragonsKilled;
 
@@ -48,6 +50,8 @@ namespace Aurora.Profiles.LeagueOfLegends.GSI.Nodes
         Infernal,
         Cloud,
         Mountain,
+        Chemtech,
+        Hextech,
         Ocean
     }
 

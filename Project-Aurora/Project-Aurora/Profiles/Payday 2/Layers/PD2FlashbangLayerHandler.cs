@@ -57,7 +57,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                 {
                     Color flash_color = Utils.ColorUtils.MultiplyColorByScalar(Properties.FlashbangColor, pd2state.LocalPlayer.FlashAmount);
 
-                    flashed_layer.Fill(flash_color);
+                    flashed_layer.FillOver(flash_color);
                 }
             }
 

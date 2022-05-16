@@ -2,19 +2,21 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using Aurora.Utils;
+using Newtonsoft.Json;
 
 namespace Aurora.EffectsEngine.Animations
 {
     public class AnimationMix
     {
         [Newtonsoft.Json.JsonProperty]
-        private readonly ConcurrentDictionary<string, AnimationTrack> _tracks = new ConcurrentDictionary<string, AnimationTrack>();
+        [JsonConverter(typeof(ConcurrentDictionaryJsonConverterAdapter<string, AnimationTrack>))]
+        private readonly ConcurrentDictionary<string, AnimationTrack> _tracks = new();
 
         /// <summary>
         /// When true, will remove Animation tracks that no longer have any animations.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty]
-        private bool _automatically_remove_complete = false;
+        [Newtonsoft.Json.JsonProperty] private bool _automatically_remove_complete;
 
         public AnimationMix()
         {
@@ -68,9 +70,8 @@ namespace Aurora.EffectsEngine.Animations
 
         public float GetDuration()
         {
-
             float current_duration, return_val = 0.0f;
-            
+
             foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
             {
                 current_duration = track.Value.GetShift() + track.Value.AnimationDuration;
@@ -107,26 +108,26 @@ namespace Aurora.EffectsEngine.Animations
 
         public void Draw(Graphics g, float time, PointF offset = default(PointF))
         {
-             foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
-             {
-                 if (track.Value.ContainsAnimationAt(time))
-                 {
-                     try
-                     {
-                        var frame = track.Value.GetFrame(time);
+            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
+            {
+                if (track.Value.ContainsAnimationAt(time))
+                {
+                    AnimationFrame frame = track.Value.GetFrame(time);
+                    try
+                    {
                         frame.SetOffset(offset);
                         frame.Draw(g);
-                     }
-                     catch (Exception exc)
-                     {
-                         System.Console.WriteLine("Animation mix draw error: " + exc.Message);
-                     }
-                 }
-                 else if(_automatically_remove_complete)
-                 {
-                     RemoveTrack(track.Key);
-                 }
-             }
+                    }
+                    catch (Exception exc)
+                    {
+                        System.Console.WriteLine("Animation mix draw error: " + exc.Message);
+                    }
+                }
+                else if (_automatically_remove_complete)
+                {
+                    RemoveTrack(track.Key);
+                }
+            }
         }
 
         public AnimationMix Clear()
@@ -141,13 +142,13 @@ namespace Aurora.EffectsEngine.Animations
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((AnimationMix)obj);
+            return Equals((AnimationMix) obj);
         }
 
         public bool Equals(AnimationMix p)
         {
             return _tracks.Equals(p._tracks) &&
-                _automatically_remove_complete == p._automatically_remove_complete;
+                   _automatically_remove_complete == p._automatically_remove_complete;
         }
 
         public override int GetHashCode()
@@ -165,6 +166,5 @@ namespace Aurora.EffectsEngine.Animations
         {
             return "AnimationMix: [ Count: " + _tracks.Count + " ]";
         }
-
     }
 }

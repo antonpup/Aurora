@@ -20,110 +20,111 @@ namespace Aurora.Profiles.Dota_2.Layers
         public Dota2HeroAbilityEffectsLayerHandlerProperties() : base() { }
 
         public Dota2HeroAbilityEffectsLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
-
-        public override void Default()
-        {
-            base.Default();
-        }
     }
 
     public class Dota2HeroAbilityEffectsLayerHandler : LayerHandler<Dota2HeroAbilityEffectsLayerHandlerProperties>
     {
-        enum Dota2AbilityEffects
+        private enum Dota2AbilityEffects
         {
             None,
-            abaddon_death_coil,
-            abaddon_borrowed_time,
-            alchemist_acid_spray,
-            ancient_apparition_ice_vortex,
-            ancient_apparition_ice_blast,
-            antimage_blink,
-            antimage_mana_void,
-            axe_berserkers_call,
-            beastmaster_primal_roar,
-            brewmaster_thunder_clap,
-            centaur_hoof_stomp,
-            chaos_knight_chaos_bolt,
-            crystal_maiden_crystal_nova,
-            doom_bringer_scorched_earth,
-            dragon_knight_breathe_fire,
-            earthshaker_fissure,
-            earthshaker_echo_slam,
-            elder_titan_earth_splitter,
+            AbaddonDeathCoil,
+            AbaddonBorrowedTime,
+            AlchemistAcidSpray,
+            AncientApparitionIceVortex,
+            AncientApparitionIceBlast,
+            AntimageBlink,
+            AntimageManaVoid,
+            AxeBerserkersCall,
+            BeastmasterPrimalRoar,
+            BrewmasterThunderClap,
+            CentaurHoofStomp,
+            ChaosKnightChaosBolt,
+            CrystalMaidenCrystalNova,
+            DoomBringerScorchedEarth,
+            DragonKnightBreatheFire,
+            EarthshakerFissure,
+            EarthshakerEchoSlam,
+            ElderTitanEarthSplitter,
 
-            kunkka_torrent,
-            kunkka_ghostship,
-            legion_commander_overwhelming_odds,
-            life_stealer_rage,
-            magnataur_shockwave,
-            omniknight_purification,
-            omniknight_repel,
-            sandking_epicenter,
-            slardar_slithereen_crush,
+            KunkkaTorrent,
+            KunkkaGhostship,
+            LegionCommanderOverwhelmingOdds,
+            LifeStealerRage,
+            MagnataurShockwave,
+            OmniknightPurification,
+            OmniknightRepel,
+            SandkingEpicenter,
+            SlardarSlithereenCrush,
 
-            lina_dragon_slave,
-            lina_light_strike_array,
-            lina_laguna_blade,
-            nevermore_shadowraze,
-            nevermore_requiem,
-            rattletrap_rocket_flare,
-            razor_plasma_field,
-            riki_smoke_screen,
-            zuus_arc_lightning,
-            zuus_lightning_bolt,
-            zuus_thundergods_wrath
+            LinaDragonSlave,
+            LinaLightStrikeArray,
+            LinaLagunaBlade,
+            NevermoreShadowraze,
+            NevermoreRequiem,
+            RattletrapRocketFlare,
+            RazorPlasmaField,
+            RikiSmokeScreen,
+            ZuusArcLightning,
+            ZuusLightningBolt,
+            ZuusThundergodsWrath
 
         }
 
-        private AnimationTrack razor_plasma_field_track;
-        private AnimationTrack crystal_maiden_crystal_nova_track;
-        private AnimationTrack riki_smoke_screen_track;
-        private AnimationTrack lina_dragon_slave_track;
-        private AnimationTrack lina_light_strike_array_track;
-        private AnimationTrack lina_laguna_blade_track;
-        private AnimationTrack abaddon_death_coil_track;
-        private AnimationTrack nevermore_shadowraze_track;
-        private AnimationTrack nevermore_requiem_track;
-        private AnimationTrack zuus_arc_lightning_track;
-        private AnimationTrack zuus_lightning_bolt_track;
-        private AnimationTrack zuus_lightning_bolt_shade_track;
-        private AnimationTrack antimage_blink_track;
-        private AnimationTrack antimage_mana_void_track;
-        private AnimationTrack antimage_mana_void_core_track;
-        private AnimationTrack ancient_apparition_ice_blast_track;
-        private AnimationTrack axe_berserkers_call_track;
-        private AnimationTrack beastmaster_primal_roar_track;
-        private AnimationTrack brewmaster_thunder_clap_track;
-        private AnimationTrack centaur_hoof_stomp_track;
-        private AnimationMix chaos_knight_chaos_bolt_mix;
-        private AnimationTrack rattletrap_rocket_flare_track;
-        private AnimationTrack dragon_knight_breathe_fire_track;
-        private AnimationTrack elder_titan_earth_splitter_track;
-        private AnimationMix kunkka_torrent_mix;
-        private AnimationTrack kunkka_ghostship_track;
-        private AnimationTrack legion_commander_overwhelming_odds_track;
-        private AnimationTrack life_stealer_rage_track;
-        private AnimationTrack magnataur_shockwave_track;
-        private AnimationTrack omniknight_purification_track;
-        private AnimationTrack omniknight_repel_track;
-        private AnimationMix sandking_epicenter_mix;
-        private AnimationTrack slardar_slithereen_crush_track;
+        private AnimationTrack _razorPlasmaFieldTrack;
+        private AnimationTrack _crystalMaidenCrystalNovaTrack;
+        private AnimationTrack _rikiSmokeScreenTrack;
+        private AnimationTrack _linaDragonSlaveTrack;
+        private AnimationTrack _linaLightStrikeArrayTrack;
+        private AnimationTrack _linaLagunaBladeTrack;
+        private AnimationTrack _abaddonDeathCoilTrack;
+        private AnimationTrack _nevermoreShadowrazeTrack;
+        private AnimationTrack _nevermoreRequiemTrack;
+        private AnimationTrack _zuusArcLightningTrack;
+        private AnimationTrack _zuusLightningBoltTrack;
+        private AnimationTrack _zuusLightningBoltShadeTrack;
+        private AnimationTrack _antimageBlinkTrack;
+        private AnimationTrack _antimageManaVoidTrack;
+        private AnimationTrack _antimageManaVoidCoreTrack;
+        private AnimationTrack _ancientApparitionIceBlastTrack;
+        private AnimationTrack _axeBerserkersCallTrack;
+        private AnimationTrack _beastmasterPrimalRoarTrack;
+        private AnimationTrack _brewmasterThunderClapTrack;
+        private AnimationTrack _centaurHoofStompTrack;
+        private AnimationMix _chaosKnightChaosBoltMix;
+        private AnimationTrack _rattletrapRocketFlareTrack;
+        private AnimationTrack _dragonKnightBreatheFireTrack;
+        private AnimationTrack _elderTitanEarthSplitterTrack;
+        private AnimationMix _kunkkaTorrentMix;
+        private AnimationTrack _kunkkaGhostshipTrack;
+        private AnimationTrack _legionCommanderOverwhelmingOddsTrack;
+        private AnimationTrack _lifeStealerRageTrack;
+        private AnimationTrack _magnataurShockwaveTrack;
+        private AnimationTrack _omniknightPurificationTrack;
+        private AnimationTrack _omniknightRepelTrack;
+        private AnimationMix _sandkingEpicenterMix;
+        private AnimationTrack _slardarSlithereenCrushTrack;
 
-        private long previoustime = 0;
-        private long currenttime = 0;
+        private long _previousTime;
+        private long _currentTime;
 
-        private float getDeltaTime()
+        private float GetDeltaTime()
         {
-            return (currenttime - previoustime) / 1000.0f;
+            return (_currentTime - _previousTime) / 1000.0f;
         }
 
-        private static float abiltiyeffect_keyframe = 0.0f;
-        private static Dota2AbilityEffects currentabilityeffect = Dota2AbilityEffects.None;
-        private static float abilityeffect_time = 0.0f;
+        private float _abilityEffectKeyframe;
+        private Dota2AbilityEffects _currentAbilityEffect = Dota2AbilityEffects.None;
+        private float _abilityEffectTime;
 
-        private Random randomizer = new Random();
+        private readonly Random _randomizer = new();
 
-        private static Abilities_Dota2 abilities;
+        private static Abilities_Dota2 _abilities;
+        private readonly EffectLayer _abilityEffectsLayer = new("Dota 2 - Ability Effects");
+
+        public Dota2HeroAbilityEffectsLayerHandler()
+        {
+            UpdateAnimations();
+        }
 
         protected override UserControl CreateControl()
         {
@@ -132,1358 +133,1243 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+            _previousTime = _currentTime;
+            _currentTime = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if (currenttime - previoustime > 300000 || (currenttime == 0 && previoustime == 0))
-                UpdateAnimations();
+            if (state is not GameState_Dota2 dota2State) return _abilityEffectsLayer;
 
-            EffectLayer ability_effects_layer = new EffectLayer("Dota 2 - Ability Effects");
-
-            if (state is GameState_Dota2)
+            //Preparations
+            if (_abilities != null && dota2State.Abilities.Count == _abilities.Count)
             {
-                GameState_Dota2 dota2state = state as GameState_Dota2;
-
-                //Preparations
-                if (abilities != null && dota2state.Abilities.Count == abilities.Count)
+                for (var abilityId = 0; abilityId < dota2State.Abilities.Count; abilityId++)
                 {
-                    for (int ability_id = 0; ability_id < dota2state.Abilities.Count; ability_id++)
+                    var ability = dota2State.Abilities[abilityId];
+
+                    if (ability.CanCast || !_abilities[abilityId].CanCast) continue;
+                    switch (ability.Name)
                     {
-                        Ability ability = dota2state.Abilities[ability_id];
-
-                        if (!ability.CanCast && abilities[ability_id].CanCast)
+                        //Casted ability
+                        case "razor_plasma_field":
+                            _currentAbilityEffect = Dota2AbilityEffects.RazorPlasmaField;
+                            _abilityEffectTime = 2.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "crystal_maiden_crystal_nova":
+                            _currentAbilityEffect = Dota2AbilityEffects.CrystalMaidenCrystalNova;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "riki_smoke_screen":
+                            _currentAbilityEffect = Dota2AbilityEffects.RikiSmokeScreen;
+                            _abilityEffectTime = 6.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "lina_dragon_slave":
+                            _currentAbilityEffect = Dota2AbilityEffects.LinaDragonSlave;
+                            _abilityEffectTime = 1.25f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "lina_light_strike_array":
+                            _currentAbilityEffect = Dota2AbilityEffects.LinaLightStrikeArray;
+                            _abilityEffectTime = 2.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "lina_laguna_blade":
                         {
-                            //Casted ability
-                            if (ability.Name.Equals("razor_plasma_field"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.razor_plasma_field;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("crystal_maiden_crystal_nova"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.crystal_maiden_crystal_nova;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("riki_smoke_screen"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.riki_smoke_screen;
-                                abilityeffect_time = 6.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("lina_dragon_slave"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.lina_dragon_slave;
-                                abilityeffect_time = 1.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("lina_light_strike_array"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.lina_light_strike_array;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("lina_laguna_blade"))
-                            {
-                                lina_laguna_blade_track = new AnimationTrack("Lina Laguna Blade", 0.5f);
+                            _linaLagunaBladeTrack = new AnimationTrack("Lina Laguna Blade", 0.5f);
 
-                                PointF laguna_point1 = new PointF(0, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF laguna_point2 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF laguna_point3 = new PointF(Effects.canvas_width_center + 6.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF laguna_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                            var lagunaPoint1 = new PointF(0, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint2 = new PointF(Effects.CanvasWidthCenter + 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint3 = new PointF(Effects.CanvasWidthCenter + 6.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint4 = new PointF(Effects.CanvasWidthCenter + 9.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
 
-                                lina_laguna_blade_track.SetFrame(0.0f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                        }
-                                        )
-                                    );
+                            _linaLagunaBladeTrack.SetFrame(0.0f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), lagunaPoint1, Color.FromArgb(255, 255, 255), 2),
+                                        new(lagunaPoint1, lagunaPoint2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
+                                        new(lagunaPoint2, lagunaPoint3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
+                                        new(lagunaPoint3, lagunaPoint4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
+                                    }
+                                )
+                            );
 
-                                lina_laguna_blade_track.SetFrame(0.45f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
-                                        }
-                                        )
-                                    );
+                            _linaLagunaBladeTrack.SetFrame(0.45f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), lagunaPoint1, Color.FromArgb(255, 255, 255), 2),
+                                        new(lagunaPoint1, lagunaPoint2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
+                                        new(lagunaPoint2, lagunaPoint3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
+                                        new(lagunaPoint3, lagunaPoint4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
+                                    }
+                                )
+                            );
 
-                                lina_laguna_blade_track.SetFrame(0.5f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), laguna_point1, Color.FromArgb(0, 255, 255, 255), 2),
-                                            new AnimationLine(laguna_point1, laguna_point2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
-                                            new AnimationLine(laguna_point2, laguna_point3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
-                                            new AnimationLine(laguna_point3, laguna_point4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
-                                        }
-                                        )
-                                    );
+                            _linaLagunaBladeTrack.SetFrame(0.5f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), lagunaPoint1, Color.FromArgb(0, 255, 255, 255), 2),
+                                        new(lagunaPoint1, lagunaPoint2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
+                                        new(lagunaPoint2, lagunaPoint3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
+                                        new(lagunaPoint3, lagunaPoint4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
+                                    }
+                                )
+                            );
 
-                                currentabilityeffect = Dota2AbilityEffects.lina_laguna_blade;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("abaddon_death_coil"))
-                            {
-                                abaddon_death_coil_track = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
+                            _currentAbilityEffect = Dota2AbilityEffects.LinaLagunaBlade;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        }
+                        case "abaddon_death_coil":
+                        {
+                            _abaddonDeathCoilTrack = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
 
-                                PointF death_coil_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF death_coil_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF death_coil_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF death_coil_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                            var deathCoilPoint1 = new PointF(Effects.CanvasWidthCenter - 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint2 = new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint3 = new PointF(Effects.CanvasWidthCenter + 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint4 = new PointF(Effects.CanvasWidthCenter + 9.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
 
-                                abaddon_death_coil_track.SetFrame(0.0f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
-                                            new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                        }
-                                        )
-                                    );
+                            _abaddonDeathCoilTrack.SetFrame(0.0f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), deathCoilPoint1, Color.FromArgb(0, 160, 210), 2),
+                                        new(deathCoilPoint1, deathCoilPoint2, Color.FromArgb(0, 160, 210), 3),
+                                        new(deathCoilPoint2, deathCoilPoint3, Color.FromArgb(0, 160, 210), 3),
+                                        new(deathCoilPoint3, deathCoilPoint4, Color.FromArgb(0, 160, 210), 5),
+                                    }
+                                )
+                            );
 
-                                abaddon_death_coil_track.SetFrame(0.45f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 160, 210), 2),
-                                            new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 160, 210), 5),
-                                        }
-                                        )
-                                    );
+                            _abaddonDeathCoilTrack.SetFrame(0.45f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), deathCoilPoint1, Color.FromArgb(0, 160, 210), 2),
+                                        new(deathCoilPoint1, deathCoilPoint2, Color.FromArgb(0, 160, 210), 3),
+                                        new(deathCoilPoint2, deathCoilPoint3, Color.FromArgb(0, 160, 210), 3),
+                                        new(deathCoilPoint3, deathCoilPoint4, Color.FromArgb(0, 160, 210), 5),
+                                    }
+                                )
+                            );
 
-                                abaddon_death_coil_track.SetFrame(0.5f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), death_coil_point1, Color.FromArgb(0, 0, 160, 210), 2),
-                                            new AnimationLine(death_coil_point1, death_coil_point2, Color.FromArgb(0, 0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point2, death_coil_point3, Color.FromArgb(0, 0, 160, 210), 3),
-                                            new AnimationLine(death_coil_point3, death_coil_point4, Color.FromArgb(0, 0, 160, 210), 5),
-                                        }
-                                        )
-                                    );
+                            _abaddonDeathCoilTrack.SetFrame(0.5f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), deathCoilPoint1, Color.FromArgb(0, 0, 160, 210), 2),
+                                        new(deathCoilPoint1, deathCoilPoint2, Color.FromArgb(0, 0, 160, 210), 3),
+                                        new(deathCoilPoint2, deathCoilPoint3, Color.FromArgb(0, 0, 160, 210), 3),
+                                        new(deathCoilPoint3, deathCoilPoint4, Color.FromArgb(0, 0, 160, 210), 5),
+                                    }
+                                )
+                            );
 
-                                currentabilityeffect = Dota2AbilityEffects.abaddon_death_coil;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("abaddon_borrowed_time"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.abaddon_borrowed_time;
+                            _currentAbilityEffect = Dota2AbilityEffects.AbaddonDeathCoil;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        }
+                        case "abaddon_borrowed_time":
+                        {
+                            _currentAbilityEffect = Dota2AbilityEffects.AbaddonBorrowedTime;
 
-                                if (ability.Level == 1)
-                                    abilityeffect_time = 4.0f;
-                                else if (ability.Level == 2)
-                                    abilityeffect_time = 5.0f;
-                                else if (ability.Level == 3)
-                                    abilityeffect_time = 6.0f;
-                                else
-                                    abilityeffect_time = 6.0f;
+                            _abilityEffectTime = ability.Level switch
+                            {
+                                1 => 4.0f,
+                                2 => 5.0f,
+                                3 => 6.0f,
+                                _ => 6.0f
+                            };
 
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("nevermore_shadowraze1") || ability.Name.Equals("nevermore_shadowraze2") || ability.Name.Equals("nevermore_shadowraze3"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.nevermore_shadowraze;
-                                abilityeffect_time = 0.7f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("nevermore_requiem"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.nevermore_requiem;
-                                abilityeffect_time = 2.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("zuus_arc_lightning"))
-                            {
-                                zuus_arc_lightning_track = new AnimationTrack("Zeus Arc Lightning", 0.5f);
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        }
+                        case "nevermore_shadowraze1":
+                        case "nevermore_shadowraze2":
+                        case "nevermore_shadowraze3":
+                            _currentAbilityEffect = Dota2AbilityEffects.NevermoreShadowraze;
+                            _abilityEffectTime = 0.7f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "nevermore_requiem":
+                            _currentAbilityEffect = Dota2AbilityEffects.NevermoreRequiem;
+                            _abilityEffectTime = 2.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "zuus_arc_lightning":
+                        {
+                            _zuusArcLightningTrack = new AnimationTrack("Zeus Arc Lightning", 0.5f);
 
-                                PointF zuus_lightning_point1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF zuus_lightning_point2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF zuus_lightning_point3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                                PointF zuus_lightning_point4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
+                            var zuusLightningPoint1 = new PointF(Effects.CanvasWidthCenter - 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint2 = new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint3 = new PointF(Effects.CanvasWidthCenter + 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint4 = new PointF(Effects.CanvasWidthCenter + 9.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
 
-                                zuus_arc_lightning_track.SetFrame(0.0f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
-                                            new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
-                                            new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5),
-                                        }
-                                        )
-                                    );
+                            _zuusArcLightningTrack.SetFrame(0.0f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), zuusLightningPoint1, Color.FromArgb(0, 205, 255), 2),
+                                        new(zuusLightningPoint1, zuusLightningPoint2, Color.FromArgb(0, 205, 255), 3),
+                                        new(zuusLightningPoint2, zuusLightningPoint3, Color.FromArgb(0, 205, 255) , 3),
+                                        new(zuusLightningPoint3, zuusLightningPoint4, Color.FromArgb(0, 205, 255), 5),
+                                    }
+                                )
+                            );
 
-                                zuus_arc_lightning_track.SetFrame(0.45f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 205, 255), 2),
-                                            new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 205, 255) , 3),
-                                            new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 205, 255), 5),
-                                        }
-                                        )
-                                    );
+                            _zuusArcLightningTrack.SetFrame(0.45f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), zuusLightningPoint1, Color.FromArgb(0, 205, 255), 2),
+                                        new(zuusLightningPoint1, zuusLightningPoint2, Color.FromArgb(0, 205, 255), 3),
+                                        new(zuusLightningPoint2, zuusLightningPoint3, Color.FromArgb(0, 205, 255) , 3),
+                                        new(zuusLightningPoint3, zuusLightningPoint4, Color.FromArgb(0, 205, 255), 5),
+                                    }
+                                )
+                            );
 
-                                zuus_arc_lightning_track.SetFrame(0.5f,
-                                    new AnimationLines(
-                                        new AnimationLine[] {
-                                            new AnimationLine(new PointF(0, Effects.canvas_height_center), zuus_lightning_point1, Color.FromArgb(0, 0, 205, 255), 2),
-                                            new AnimationLine(zuus_lightning_point1, zuus_lightning_point2, Color.FromArgb(0, 0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point2, zuus_lightning_point3, Color.FromArgb(0, 0, 205, 255), 3),
-                                            new AnimationLine(zuus_lightning_point3, zuus_lightning_point4, Color.FromArgb(0, 0, 205, 255), 5),
-                                        }
-                                        )
-                                    );
+                            _zuusArcLightningTrack.SetFrame(0.5f,
+                                new AnimationLines(
+                                    new AnimationLine[] {
+                                        new(new PointF(0, Effects.CanvasHeightCenter), zuusLightningPoint1, Color.FromArgb(0, 0, 205, 255), 2),
+                                        new(zuusLightningPoint1, zuusLightningPoint2, Color.FromArgb(0, 0, 205, 255), 3),
+                                        new(zuusLightningPoint2, zuusLightningPoint3, Color.FromArgb(0, 0, 205, 255), 3),
+                                        new(zuusLightningPoint3, zuusLightningPoint4, Color.FromArgb(0, 0, 205, 255), 5),
+                                    }
+                                )
+                            );
 
-                                currentabilityeffect = Dota2AbilityEffects.zuus_arc_lightning;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("zuus_lightning_bolt"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.zuus_lightning_bolt;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("zuus_thundergods_wrath"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.zuus_thundergods_wrath;
-                                abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("antimage_blink"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.antimage_blink;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("antimage_mana_void"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.antimage_mana_void;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("ancient_apparition_ice_vortex"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_vortex;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("ancient_apparition_ice_blast"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.ancient_apparition_ice_blast;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("alchemist_acid_spray"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.alchemist_acid_spray;
-                                abilityeffect_time = 16.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("axe_berserkers_call"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.axe_berserkers_call;
-                                abilityeffect_time = 0.7f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("beastmaster_primal_roar"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.beastmaster_primal_roar;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("brewmaster_thunder_clap"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.brewmaster_thunder_clap;
-                                abilityeffect_time = 1.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("centaur_hoof_stomp"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.centaur_hoof_stomp;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("chaos_knight_chaos_bolt"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.chaos_knight_chaos_bolt;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("rattletrap_rocket_flare"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.rattletrap_rocket_flare;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("doom_bringer_scorched_earth"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.doom_bringer_scorched_earth;
+                            _currentAbilityEffect = Dota2AbilityEffects.ZuusArcLightning;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        }
+                        case "zuus_lightning_bolt":
+                            _currentAbilityEffect = Dota2AbilityEffects.ZuusLightningBolt;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "zuus_thundergods_wrath":
+                            _currentAbilityEffect = Dota2AbilityEffects.ZuusThundergodsWrath;
+                            _abilityEffectTime = 0.25f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "antimage_blink":
+                            _currentAbilityEffect = Dota2AbilityEffects.AntimageBlink;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "antimage_mana_void":
+                            _currentAbilityEffect = Dota2AbilityEffects.AntimageManaVoid;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "ancient_apparition_ice_vortex":
+                            _currentAbilityEffect = Dota2AbilityEffects.AncientApparitionIceVortex;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "ancient_apparition_ice_blast":
+                            _currentAbilityEffect = Dota2AbilityEffects.AncientApparitionIceBlast;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "alchemist_acid_spray":
+                            _currentAbilityEffect = Dota2AbilityEffects.AlchemistAcidSpray;
+                            _abilityEffectTime = 16.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "axe_berserkers_call":
+                            _currentAbilityEffect = Dota2AbilityEffects.AxeBerserkersCall;
+                            _abilityEffectTime = 0.7f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "beastmaster_primal_roar":
+                            _currentAbilityEffect = Dota2AbilityEffects.BeastmasterPrimalRoar;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "brewmaster_thunder_clap":
+                            _currentAbilityEffect = Dota2AbilityEffects.BrewmasterThunderClap;
+                            _abilityEffectTime = 1.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "centaur_hoof_stomp":
+                            _currentAbilityEffect = Dota2AbilityEffects.CentaurHoofStomp;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "chaos_knight_chaos_bolt":
+                            _currentAbilityEffect = Dota2AbilityEffects.ChaosKnightChaosBolt;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "rattletrap_rocket_flare":
+                            _currentAbilityEffect = Dota2AbilityEffects.RattletrapRocketFlare;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "doom_bringer_scorched_earth":
+                        {
+                            _currentAbilityEffect = Dota2AbilityEffects.DoomBringerScorchedEarth;
 
-                                if (ability.Level == 2)
-                                    abilityeffect_time = 12.0f;
-                                else if (ability.Level == 3)
-                                    abilityeffect_time = 14.0f;
-                                else if (ability.Level == 4)
-                                    abilityeffect_time = 16.0f;
-                                else
-                                    abilityeffect_time = 10.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("dragon_knight_breathe_fire"))
+                            _abilityEffectTime = ability.Level switch
                             {
-                                currentabilityeffect = Dota2AbilityEffects.dragon_knight_breathe_fire;
-                                abilityeffect_time = 1.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("earthshaker_fissure"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.earthshaker_fissure;
-                                abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("earthshaker_echo_slam"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.earthshaker_echo_slam;
-                                abilityeffect_time = 0.25f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("elder_titan_earth_splitter"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.elder_titan_earth_splitter;
-                                abilityeffect_time = 4.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("kunkka_torrent"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.kunkka_torrent;
-                                abilityeffect_time = 4.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("kunkka_ghostship"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.kunkka_ghostship;
-                                abilityeffect_time = 2.7f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("legion_commander_overwhelming_odds"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.legion_commander_overwhelming_odds;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("life_stealer_rage"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.life_stealer_rage;
+                                2 => 12.0f,
+                                3 => 14.0f,
+                                4 => 16.0f,
+                                _ => 10.0f
+                            };
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        }
+                        case "dragon_knight_breathe_fire":
+                            _currentAbilityEffect = Dota2AbilityEffects.DragonKnightBreatheFire;
+                            _abilityEffectTime = 1.25f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "earthshaker_fissure":
+                            _currentAbilityEffect = Dota2AbilityEffects.EarthshakerFissure;
+                            _abilityEffectTime = 0.25f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "earthshaker_echo_slam":
+                            _currentAbilityEffect = Dota2AbilityEffects.EarthshakerEchoSlam;
+                            _abilityEffectTime = 0.25f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "elder_titan_earth_splitter":
+                            _currentAbilityEffect = Dota2AbilityEffects.ElderTitanEarthSplitter;
+                            _abilityEffectTime = 4.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "kunkka_torrent":
+                            _currentAbilityEffect = Dota2AbilityEffects.KunkkaTorrent;
+                            _abilityEffectTime = 4.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "kunkka_ghostship":
+                            _currentAbilityEffect = Dota2AbilityEffects.KunkkaGhostship;
+                            _abilityEffectTime = 2.7f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "legion_commander_overwhelming_odds":
+                            _currentAbilityEffect = Dota2AbilityEffects.LegionCommanderOverwhelmingOdds;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "life_stealer_rage":
+                        {
+                            _currentAbilityEffect = Dota2AbilityEffects.LifeStealerRage;
 
-                                if (ability.Level == 1)
-                                    abilityeffect_time = 3.0f;
-                                else if (ability.Level == 2)
-                                    abilityeffect_time = 4.0f;
-                                else if (ability.Level == 3)
-                                    abilityeffect_time = 5.0f;
-                                if (ability.Level == 4)
-                                    abilityeffect_time = 6.0f;
+                            _abilityEffectTime = ability.Level switch
+                            {
+                                1 => 3.0f,
+                                2 => 4.0f,
+                                3 => 5.0f,
+                                4 => 6.0f,
+                                _ => _abilityEffectTime
+                            };
 
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("magnataur_shockwave"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.magnataur_shockwave;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("omniknight_purification"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.omniknight_purification;
-                                abilityeffect_time = 1.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("omniknight_repel"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.omniknight_repel;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        }
+                        case "magnataur_shockwave":
+                            _currentAbilityEffect = Dota2AbilityEffects.MagnataurShockwave;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "omniknight_purification":
+                            _currentAbilityEffect = Dota2AbilityEffects.OmniknightPurification;
+                            _abilityEffectTime = 1.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "omniknight_repel":
+                            _currentAbilityEffect = Dota2AbilityEffects.OmniknightRepel;
 
-                                if (ability.Level == 1)
-                                    abilityeffect_time = 6.0f;
-                                else if (ability.Level == 2)
-                                    abilityeffect_time = 8.0f;
-                                else if (ability.Level == 3)
-                                    abilityeffect_time = 10.0f;
-                                if (ability.Level == 4)
-                                    abilityeffect_time = 12.0f;
+                            _abilityEffectTime = ability.Level switch
+                            {
+                                1 => 6.0f,
+                                2 => 8.0f,
+                                3 => 10.0f,
+                                4 => 12.0f,
+                                _ => _abilityEffectTime
+                            };
 
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("sandking_epicenter"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.sandking_epicenter;
-                                abilityeffect_time = 5.0f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else if (ability.Name.Equals("slardar_slithereen_crush"))
-                            {
-                                currentabilityeffect = Dota2AbilityEffects.slardar_slithereen_crush;
-                                abilityeffect_time = 0.5f;
-                                abiltiyeffect_keyframe = 0.0f;
-                            }
-                            else
-                            {
-                                if (Global.isDebug)
-                                    System.Diagnostics.Debug.WriteLine("Unknown Ability: " + ability.Name);
-                            }
-
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "sandking_epicenter":
+                            _currentAbilityEffect = Dota2AbilityEffects.SandkingEpicenter;
+                            _abilityEffectTime = 5.0f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        case "slardar_slithereen_crush":
+                            _currentAbilityEffect = Dota2AbilityEffects.SlardarSlithereenCrush;
+                            _abilityEffectTime = 0.5f;
+                            _abilityEffectKeyframe = 0.0f;
+                            break;
+                        default:
+                        {
+                            if (Global.isDebug)
+                                System.Diagnostics.Debug.WriteLine("Unknown Ability: " + ability.Name);
+                            break;
                         }
                     }
                 }
-
-                abilities = dota2state.Abilities;
-
-
-                //Begin rendering
-
-                if (abiltiyeffect_keyframe >= abilityeffect_time)
-                {
-                    currentabilityeffect = Dota2AbilityEffects.None;
-                    abiltiyeffect_keyframe = 0.0f;
-                }
-
-                float mid_x = Effects.canvas_width / 2.0f;
-                float mid_y = Effects.canvas_height / 2.0f;
-
-
-                if (currentabilityeffect == Dota2AbilityEffects.razor_plasma_field)
-                {
-                    razor_plasma_field_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.crystal_maiden_crystal_nova)
-                {
-                    crystal_maiden_crystal_nova_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.riki_smoke_screen)
-                {
-                    riki_smoke_screen_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.lina_dragon_slave)
-                {
-                    lina_dragon_slave_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.lina_light_strike_array)
-                {
-                    lina_light_strike_array_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.lina_laguna_blade)
-                {
-                    lina_laguna_blade_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-
-                    //Kept to remember the times without AnimationTracks. The pain was real.
-                    /*
-                    if (abiltiyeffect_keyframe == 0.0f)
-                    {
-                        laguna_point1 = new EffectPoint(mid_x, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                        laguna_point2 = new EffectPoint(mid_x + 3.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                        laguna_point3 = new EffectPoint(mid_x + 6.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                        laguna_point4 = new EffectPoint(mid_x + 9.0f, mid_y + ((randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)randomizer.NextDouble()));
-                    }
-
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
-
-                    ColorSpectrum lina_blade_spectrum_step1 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(255, 255, 255), alpha_percent)
-                        );
-                    ColorSpectrum lina_blade_spectrum_step2 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(255, 255, 255), alpha_percent),
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(170, 170, 255), alpha_percent)
-                        );
-                    ColorSpectrum lina_blade_spectrum_step3 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(170, 170, 255), alpha_percent),
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(85, 85, 255), alpha_percent)
-                        );
-                    ColorSpectrum lina_blade_spectrum_step4 = new ColorSpectrum(
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(85, 85, 255), alpha_percent),
-                        Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 0, 255), alpha_percent)
-                        );
-
-
-                    EffectFunction linefunc1 = new EffectLine(new EffectPoint(0, mid_y), laguna_point1, true);
-                    EffectColorFunction line1 = new EffectColorFunction(linefunc1, lina_blade_spectrum_step1, 2);
-                    ability_effects_layer.AddPostFunction(line1);
-
-                    EffectFunction linefunc2 = new EffectLine(laguna_point1, laguna_point2, true);
-                    EffectColorFunction line2 = new EffectColorFunction(linefunc2, lina_blade_spectrum_step2, 3);
-                    ability_effects_layer.AddPostFunction(line2);
-
-                    EffectFunction linefunc3 = new EffectLine(laguna_point2, laguna_point3, true);
-                    EffectColorFunction line3 = new EffectColorFunction(linefunc3, lina_blade_spectrum_step3, 3);
-                    ability_effects_layer.AddPostFunction(line3);
-
-                    EffectFunction linefunc4 = new EffectLine(laguna_point3, laguna_point4, true);
-                    EffectColorFunction line4 = new EffectColorFunction(linefunc4, lina_blade_spectrum_step4, 5);
-                    ability_effects_layer.AddPostFunction(line4);
-                    */
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.abaddon_death_coil)
-                {
-                    abaddon_death_coil_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.abaddon_borrowed_time)
-                {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
-
-                    float fluctuatiuons = (float)Math.Sin(((double)progress) * Math.PI * 1.0f) + 0.75f;
-
-                    Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), fluctuatiuons * alpha_percent);
-
-                    ability_effects_layer.Fill(color);
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.nevermore_shadowraze)
-                {
-                    nevermore_shadowraze_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.nevermore_requiem)
-                {
-                    nevermore_requiem_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.zuus_arc_lightning)
-                {
-                    zuus_arc_lightning_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.zuus_lightning_bolt)
-                {
-                    zuus_lightning_bolt_shade_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    zuus_lightning_bolt_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.zuus_thundergods_wrath)
-                {
-                    float x_offset = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (x_offset >= 0.85f ? 1.0f + (1.0f - (1.17f) * x_offset) : 1.0f);
-
-                    ability_effects_layer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alpha_percent));
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.antimage_blink)
-                {
-                    antimage_blink_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.antimage_mana_void)
-                {
-                    antimage_mana_void_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    antimage_mana_void_core_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.ancient_apparition_ice_vortex)
-                {
-                    float x_offset = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (x_offset >= 0.85f ? 1.0f + (1.0f - (1.17f) * x_offset) : 1.0f);
-
-                    ability_effects_layer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alpha_percent));
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.ancient_apparition_ice_blast)
-                {
-                    ancient_apparition_ice_blast_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.alchemist_acid_spray)
-                {
-                    float alpha_percent = (float)Math.Pow(Math.Sin(((double)abiltiyeffect_keyframe / (abilityeffect_time / 16)) * Math.PI), 2.0);
-
-                    ability_effects_layer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alpha_percent < 0.2f ? 0.2f : alpha_percent)));
-
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.axe_berserkers_call)
-                {
-                    axe_berserkers_call_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.beastmaster_primal_roar)
-                {
-                    beastmaster_primal_roar_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.brewmaster_thunder_clap)
-                {
-                    brewmaster_thunder_clap_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.centaur_hoof_stomp)
-                {
-                    centaur_hoof_stomp_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.chaos_knight_chaos_bolt)
-                {
-                    chaos_knight_chaos_bolt_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.rattletrap_rocket_flare)
-                {
-                    rattletrap_rocket_flare_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.doom_bringer_scorched_earth)
-                {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
-
-                    float fluctuatiuons = (float)Math.Sin(((double)progress) * Math.PI * 1.0f) + 0.75f;
-
-                    Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuatiuons * alpha_percent);
-
-                    ability_effects_layer.Fill(color);
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.dragon_knight_breathe_fire)
-                {
-                    dragon_knight_breathe_fire_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.earthshaker_fissure)
-                {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
-
-                    float fluctuatiuons = (float)Math.Sin(((double)progress) * Math.PI * 1.0f) + 0.75f;
-
-                    Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuatiuons * alpha_percent);
-
-                    ability_effects_layer.Fill(color);
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.earthshaker_echo_slam)
-                {
-                    float progress = (abiltiyeffect_keyframe += getDeltaTime()) / abilityeffect_time;
-
-                    float alpha_percent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
-
-                    float fluctuatiuons = (float)Math.Sin(((double)progress) * Math.PI * 1.0f) + 0.75f;
-
-                    Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuatiuons * alpha_percent);
-
-                    ability_effects_layer.Fill(color);
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.elder_titan_earth_splitter)
-                {
-                    elder_titan_earth_splitter_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.kunkka_torrent)
-                {
-                    kunkka_torrent_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.kunkka_ghostship)
-                {
-                    kunkka_ghostship_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.legion_commander_overwhelming_odds)
-                {
-                    legion_commander_overwhelming_odds_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.life_stealer_rage)
-                {
-                    life_stealer_rage_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.magnataur_shockwave)
-                {
-                    magnataur_shockwave_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.omniknight_purification)
-                {
-                    omniknight_purification_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.omniknight_repel)
-                {
-                    omniknight_repel_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.sandking_epicenter)
-                {
-                    sandking_epicenter_mix.Draw(ability_effects_layer.GetGraphics(), abiltiyeffect_keyframe);
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
-                else if (currentabilityeffect == Dota2AbilityEffects.slardar_slithereen_crush)
-                {
-                    slardar_slithereen_crush_track.GetFrame(abiltiyeffect_keyframe).Draw(ability_effects_layer.GetGraphics());
-                    abiltiyeffect_keyframe += getDeltaTime();
-                }
             }
 
-            return ability_effects_layer;
+            _abilities = dota2State.Abilities;
+
+            //Begin rendering
+
+            if (_currentAbilityEffect != null && _abilityEffectKeyframe >= _abilityEffectTime)
+            {
+                _currentAbilityEffect = Dota2AbilityEffects.None;
+                _abilityEffectKeyframe = 0.0f;
+                _abilityEffectsLayer.Clear();
+            }
+
+            _abilityEffectsLayer.Clear();
+            switch (_currentAbilityEffect)
+            {
+                case Dota2AbilityEffects.RazorPlasmaField:
+                    _razorPlasmaFieldTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.CrystalMaidenCrystalNova:
+                    _crystalMaidenCrystalNovaTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.RikiSmokeScreen:
+                    _rikiSmokeScreenTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.LinaDragonSlave:
+                    _linaDragonSlaveTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.LinaLightStrikeArray:
+                    _linaLightStrikeArrayTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.LinaLagunaBlade:
+                    _linaLagunaBladeTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.AbaddonDeathCoil:
+                    _abaddonDeathCoilTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.AbaddonBorrowedTime:
+                {
+                    var progress = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
+                    var alphaPercent = progress >= 0.90f ? 1.0f + (1.0f - 1.11f * progress) : 1.0f;
+                    var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
+
+                    var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), fluctuations * alphaPercent);
+
+                    _abilityEffectsLayer.FillOver(color);
+                    break;
+                }
+                case Dota2AbilityEffects.NevermoreShadowraze:
+                    _nevermoreShadowrazeTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.NevermoreRequiem:
+                    _nevermoreRequiemTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.ZuusArcLightning:
+                    _zuusArcLightningTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.ZuusLightningBolt:
+                    _zuusLightningBoltShadeTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _zuusLightningBoltTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.ZuusThundergodsWrath:
+                {
+                    var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
+                    var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
+
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
+                    break;
+                }
+                case Dota2AbilityEffects.AntimageBlink:
+                    _antimageBlinkTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.AntimageManaVoid:
+                    _antimageManaVoidTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _antimageManaVoidCoreTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.AncientApparitionIceVortex:
+                {
+                    var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
+                    var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
+
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
+                    break;
+                }
+                case Dota2AbilityEffects.AncientApparitionIceBlast:
+                    _ancientApparitionIceBlastTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.AlchemistAcidSpray:
+                {
+                    var alphaPercent = (float)Math.Pow(Math.Sin(((double)_abilityEffectKeyframe / (_abilityEffectTime / 16)) * Math.PI), 2.0);
+
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
+
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                }
+                case Dota2AbilityEffects.AxeBerserkersCall:
+                    _axeBerserkersCallTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.BeastmasterPrimalRoar:
+                    _beastmasterPrimalRoarTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.BrewmasterThunderClap:
+                    _brewmasterThunderClapTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.CentaurHoofStomp:
+                    _centaurHoofStompTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.ChaosKnightChaosBolt:
+                    _chaosKnightChaosBoltMix.Draw(_abilityEffectsLayer.GetGraphics(), _abilityEffectKeyframe);
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.RattletrapRocketFlare:
+                    _rattletrapRocketFlareTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.DoomBringerScorchedEarth:
+                {
+                    var progress = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
+                    var alphaPercent = progress >= 0.90f ? 1.0f + (1.0f - 1.11f * progress) : 1.0f;
+                    var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
+
+                    Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
+
+                    _abilityEffectsLayer.FillOver(color);
+                    break;
+                }
+                case Dota2AbilityEffects.DragonKnightBreatheFire:
+                    _dragonKnightBreatheFireTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.EarthshakerFissure:
+                {
+                    var progress = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
+                    var alphaPercent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
+                    var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
+
+                    var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
+
+                    _abilityEffectsLayer.FillOver(color);
+                    break;
+                }
+                case Dota2AbilityEffects.EarthshakerEchoSlam:
+                {
+                    var progress = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
+                    var alphaPercent = (progress >= 0.90f ? 1.0f + (1.0f - (1.11f) * progress) : 1.0f);
+                    var fluctuations = (float)Math.Sin(progress * Math.PI * 1.0f) + 0.75f;
+
+                    var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
+
+                    _abilityEffectsLayer.FillOver(color);
+                    break;
+                }
+                case Dota2AbilityEffects.ElderTitanEarthSplitter:
+                    _elderTitanEarthSplitterTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.KunkkaTorrent:
+                    _kunkkaTorrentMix.Draw(_abilityEffectsLayer.GetGraphics(), _abilityEffectKeyframe);
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.KunkkaGhostship:
+                    _kunkkaGhostshipTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.LegionCommanderOverwhelmingOdds:
+                    _legionCommanderOverwhelmingOddsTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.LifeStealerRage:
+                    _lifeStealerRageTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.MagnataurShockwave:
+                    _magnataurShockwaveTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.OmniknightPurification:
+                    _omniknightPurificationTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.OmniknightRepel:
+                    _omniknightRepelTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.SandkingEpicenter:
+                    _sandkingEpicenterMix.Draw(_abilityEffectsLayer.GetGraphics(), _abilityEffectKeyframe);
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+                case Dota2AbilityEffects.SlardarSlithereenCrush:
+                    _slardarSlithereenCrushTrack.GetFrame(_abilityEffectKeyframe).Draw(_abilityEffectsLayer.GetGraphics());
+                    _abilityEffectKeyframe += GetDeltaTime();
+                    break;
+            }
+
+            return _abilityEffectsLayer;
         }
 
         public override void SetApplication(Application profile)
         {
-            (Control as Control_Dota2HeroAbilityEffectsLayer).SetProfile(profile);
+            (Control as Control_Dota2HeroAbilityEffectsLayer)?.SetProfile(profile);
             base.SetApplication(profile);
         }
 
-        public void UpdateAnimations()
+        private void UpdateAnimations()
         {
-            razor_plasma_field_track = new AnimationTrack("Razor Plasma Field", 2.0f);
-            razor_plasma_field_track.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
+            _razorPlasmaFieldTrack = new AnimationTrack("Razor Plasma Field", 2.0f);
+            _razorPlasmaFieldTrack.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 200, 255), 3)
                 );
-            razor_plasma_field_track.SetFrame(1.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 200, 255), 3)
+            _razorPlasmaFieldTrack.SetFrame(1.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 200, 255), 3)
                 );
-            razor_plasma_field_track.SetFrame(2.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
-                );
-
-
-            crystal_maiden_crystal_nova_track = new AnimationTrack("CM Crystal Nova", 1.0f);
-            crystal_maiden_crystal_nova_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(0, 200, 255))
-                );
-            crystal_maiden_crystal_nova_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255))
-                );
-            crystal_maiden_crystal_nova_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 200, 255))
+            _razorPlasmaFieldTrack.SetFrame(2.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 200, 255), 3)
                 );
 
-            riki_smoke_screen_track = new AnimationTrack("Riki Smoke Screen", 6.5f);
-            riki_smoke_screen_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(163, 70, 255))
+
+            _crystalMaidenCrystalNovaTrack = new AnimationTrack("CM Crystal Nova", 1.0f);
+            _crystalMaidenCrystalNovaTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_height / 2.0f, Color.FromArgb(0, 200, 255))
                 );
-            riki_smoke_screen_track.SetFrame(5.525f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(163, 70, 255))
+            _crystalMaidenCrystalNovaTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255))
                 );
-            riki_smoke_screen_track.SetFrame(6.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 163, 70, 255))
+            _crystalMaidenCrystalNovaTrack.SetFrame(1.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 200, 255))
                 );
 
-            lina_dragon_slave_track = new AnimationTrack("Lina Dragon Slave", 1.25f);
-            lina_dragon_slave_track.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
+            _rikiSmokeScreenTrack = new AnimationTrack("Riki Smoke Screen", 6.5f);
+            _rikiSmokeScreenTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_height / 2.0f, Color.FromArgb(163, 70, 255))
                 );
-            lina_dragon_slave_track.SetFrame(0.9375f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
+            _rikiSmokeScreenTrack.SetFrame(5.525f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f / 2.0f, Color.FromArgb(163, 70, 255))
                 );
-            lina_dragon_slave_track.SetFrame(1.25f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
-                );
-
-            lina_light_strike_array_track = new AnimationTrack("Lina Light Strike", 2.0f);
-            lina_light_strike_array_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0))
-                );
-            lina_light_strike_array_track.SetFrame(0.49f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0))
-                );
-            lina_light_strike_array_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0))
-                );
-            lina_light_strike_array_track.SetFrame(1.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0))
-                );
-            lina_light_strike_array_track.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
+            _rikiSmokeScreenTrack.SetFrame(6.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 163, 70, 255))
                 );
 
-            nevermore_shadowraze_track = new AnimationTrack("Shadow Fiend Raze", 0.7f);
-            nevermore_shadowraze_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
+            _linaDragonSlaveTrack = new AnimationTrack("Lina Dragon Slave", 1.25f);
+            _linaDragonSlaveTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.10f, Color.FromArgb(255, 80, 0))
                 );
-            nevermore_shadowraze_track.SetFrame(0.595f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.075f / 2.0f, Color.FromArgb(255, 0, 0))
+            _linaDragonSlaveTrack.SetFrame(0.9375f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f, Color.FromArgb(255, 80, 0))
                 );
-            nevermore_shadowraze_track.SetFrame(0.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 0, 0))
-                );
-
-            nevermore_requiem_track = new AnimationTrack("Shadow Field Requiem", 2.0f);
-            nevermore_requiem_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 0, 0))
-                );
-            nevermore_requiem_track.SetFrame(1.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f / 2.0f, Color.FromArgb(255, 0, 0))
-                );
-            nevermore_requiem_track.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 0, 0))
+            _linaDragonSlaveTrack.SetFrame(1.25f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 80, 0))
                 );
 
-            zuus_lightning_bolt_track = new AnimationTrack("Zeus Lighting Bolt", 0.5f);
-            zuus_lightning_bolt_track.SetFrame(0.0f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
+            _linaLightStrikeArrayTrack = new AnimationTrack("Lina Light Strike", 2.0f);
+            _linaLightStrikeArrayTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 255, 80, 0))
                 );
-            zuus_lightning_bolt_track.SetFrame(0.425f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
+            _linaLightStrikeArrayTrack.SetFrame(0.49f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 255, 80, 0))
                 );
-            zuus_lightning_bolt_track.SetFrame(0.5f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 15)
+            _linaLightStrikeArrayTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0))
                 );
-
-            zuus_lightning_bolt_shade_track = new AnimationTrack("Zeus Lighting Bolt Shade", 0.5f);
-            zuus_lightning_bolt_shade_track.SetFrame(0.0f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
+            _linaLightStrikeArrayTrack.SetFrame(1.25f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0))
                 );
-            zuus_lightning_bolt_shade_track.SetFrame(0.425f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
-                );
-            zuus_lightning_bolt_shade_track.SetFrame(0.5f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20)
+            _linaLightStrikeArrayTrack.SetFrame(2.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
                 );
 
-            antimage_blink_track = new AnimationTrack("Anti-mage Blink", 0.5f);
-            antimage_blink_track.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3)
+            _nevermoreShadowrazeTrack = new AnimationTrack("Shadow Fiend Raze", 0.7f);
+            _nevermoreShadowrazeTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
-            antimage_blink_track.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3)
+            _nevermoreShadowrazeTrack.SetFrame(0.595f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.075f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
-
-            antimage_mana_void_track = new AnimationTrack("Anti-mage Void", 0.5f);
-            antimage_mana_void_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255))
-                );
-            antimage_mana_void_track.SetFrame(0.425f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(0, 0, 255))
-                );
-            antimage_mana_void_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 0, 255))
+            _nevermoreShadowrazeTrack.SetFrame(0.7f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 255, 0, 0))
                 );
 
-            antimage_mana_void_core_track = new AnimationTrack("Anti-mage Void Core", 0.5f);
-            antimage_mana_void_core_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255))
+            _nevermoreRequiemTrack = new AnimationTrack("Shadow Field Requiem", 2.0f);
+            _nevermoreRequiemTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 0, 0))
                 );
-            antimage_mana_void_core_track.SetFrame(0.425f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 255, 255))
+            _nevermoreRequiemTrack.SetFrame(1.7f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
-            antimage_mana_void_core_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
-                );
-
-            ancient_apparition_ice_blast_track = new AnimationTrack("AA Ice Blast", 1.0f);
-            ancient_apparition_ice_blast_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(200, 200, 255))
-                );
-            ancient_apparition_ice_blast_track.SetFrame(0.85f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(200, 200, 255))
-                );
-            ancient_apparition_ice_blast_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 200, 200, 255))
+            _nevermoreRequiemTrack.SetFrame(2.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 255, 0, 0))
                 );
 
-            axe_berserkers_call_track = new AnimationTrack("Axe Berserker", 0.7f);
-            axe_berserkers_call_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
+            _zuusLightningBoltTrack = new AnimationTrack("Zeus Lighting Bolt", 0.5f);
+            _zuusLightningBoltTrack.SetFrame(0.0f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
                 );
-            axe_berserkers_call_track.SetFrame(0.595f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(255, 50, 0))
+            _zuusLightningBoltTrack.SetFrame(0.425f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
                 );
-            axe_berserkers_call_track.SetFrame(0.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
-                );
-
-            beastmaster_primal_roar_track = new AnimationTrack("BM Primal Roar", 1.0f);
-            beastmaster_primal_roar_track.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, 0, Color.FromArgb(255, 200, 100))
-                );
-            beastmaster_primal_roar_track.SetFrame(0.75f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 200, 100))
-                );
-            beastmaster_primal_roar_track.SetFrame(1.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 200, 100))
+            _zuusLightningBoltTrack.SetFrame(0.5f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 15)
                 );
 
-            brewmaster_thunder_clap_track = new AnimationTrack("Brewmaster Thunder Clap", 1.5f);
-            brewmaster_thunder_clap_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(170, 90, 0))
+            _zuusLightningBoltShadeTrack = new AnimationTrack("Zeus Lighting Bolt Shade", 0.5f);
+            _zuusLightningBoltShadeTrack.SetFrame(0.0f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
                 );
-            brewmaster_thunder_clap_track.SetFrame(0.75f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(170, 90, 0))
+            _zuusLightningBoltShadeTrack.SetFrame(0.425f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
                 );
-            brewmaster_thunder_clap_track.SetFrame(1.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 170, 90, 0))
-                );
-
-            centaur_hoof_stomp_track = new AnimationTrack("Centaur Stomp", 1.0f);
-            centaur_hoof_stomp_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
-                );
-            centaur_hoof_stomp_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(255, 50, 0))
-                );
-            centaur_hoof_stomp_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
+            _zuusLightningBoltShadeTrack.SetFrame(0.5f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20)
                 );
 
-            chaos_knight_chaos_bolt_mix = new AnimationMix();
-
-            AnimationTrack chaos_knight_chaos_bolt_projectile_path = new AnimationTrack("Chaos Knight Bolt - Projectile Path", 0.5f);
-            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.0f,
-                new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(0, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3)
+            _antimageBlinkTrack = new AnimationTrack("Anti-mage Blink", 0.5f);
+            _antimageBlinkTrack.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(128, 0, 255), 3)
                 );
-            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.25f,
-                new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3)
-                );
-            chaos_knight_chaos_bolt_projectile_path.SetFrame(0.5f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(0, 255, 70, 0), 3)
-                );
-            chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile_path);
-
-            AnimationTrack chaos_knight_chaos_bolt_projectile = new AnimationTrack("Chaos Knight Bolt - Projectile", 0.25f, 0.25f);
-            chaos_knight_chaos_bolt_projectile.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(175, 0, 0))
-                );
-            chaos_knight_chaos_bolt_projectile.SetFrame(0.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 175, 0, 0))
-                );
-            chaos_knight_chaos_bolt_mix.AddTrack(chaos_knight_chaos_bolt_projectile);
-
-            rattletrap_rocket_flare_track = new AnimationTrack("Clockwork Rocket Flare", 0.5f);
-            rattletrap_rocket_flare_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 80, 0))
-                );
-            rattletrap_rocket_flare_track.SetFrame(0.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 80, 0))
-                );
-            rattletrap_rocket_flare_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 80, 0))
+            _antimageBlinkTrack.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(128, 0, 255), 3)
                 );
 
-            dragon_knight_breathe_fire_track = new AnimationTrack("Dragon Knight Breathe", 1.25f);
-            dragon_knight_breathe_fire_track.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
+            _antimageManaVoidTrack = new AnimationTrack("Anti-mage Void", 0.5f);
+            _antimageManaVoidTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.10f, Color.FromArgb(0, 0, 255))
                 );
-            dragon_knight_breathe_fire_track.SetFrame(0.9375f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
+            _antimageManaVoidTrack.SetFrame(0.425f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f, Color.FromArgb(0, 0, 255))
                 );
-            dragon_knight_breathe_fire_track.SetFrame(1.25f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
-                );
-
-            elder_titan_earth_splitter_track = new AnimationTrack("Elder Titan Earth Splitter", 1.0f, 3.0f);
-            elder_titan_earth_splitter_track.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220))
-                );
-            elder_titan_earth_splitter_track.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220))
+            _antimageManaVoidTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 0, 0, 255))
                 );
 
-            kunkka_torrent_mix = new AnimationMix();
-            AnimationTrack kunkka_torrent_bg_track = new AnimationTrack("Kunka Torrent BG", 4.0f);
-            kunkka_torrent_bg_track.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 0))
+            _antimageManaVoidCoreTrack = new AnimationTrack("Anti-mage Void Core", 0.5f);
+            _antimageManaVoidCoreTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 255, 255))
                 );
-            kunkka_torrent_bg_track.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
+            _antimageManaVoidCoreTrack.SetFrame(0.425f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.25f, Color.FromArgb(255, 255, 255))
                 );
-            kunkka_torrent_bg_track.SetFrame(3.6f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
-                );
-            kunkka_torrent_bg_track.SetFrame(4.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 60, 80))
+            _antimageManaVoidCoreTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
                 );
 
-            AnimationTrack kunkka_torrent_spash_track = new AnimationTrack("Kunka Torrent Splash", 2.4f, 1.6f);
-
-            kunkka_torrent_spash_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(0, 220, 245))
+            _ancientApparitionIceBlastTrack = new AnimationTrack("AA Ice Blast", 1.0f);
+            _ancientApparitionIceBlastTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(200, 200, 255))
                 );
-            kunkka_torrent_spash_track.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.83f / 2.0f, Color.FromArgb(0, 220, 245))
+            _ancientApparitionIceBlastTrack.SetFrame(0.85f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f, Color.FromArgb(200, 200, 255))
                 );
-            kunkka_torrent_spash_track.SetFrame(2.4f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
+            _ancientApparitionIceBlastTrack.SetFrame(1.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 200, 200, 255))
                 );
 
-            kunkka_torrent_mix.AddTrack(kunkka_torrent_bg_track);
-            kunkka_torrent_mix.AddTrack(kunkka_torrent_spash_track);
+            _axeBerserkersCallTrack = new AnimationTrack("Axe Berserker", 0.7f);
+            _axeBerserkersCallTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 50, 0))
+                );
+            _axeBerserkersCallTrack.SetFrame(0.595f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f, Color.FromArgb(255, 50, 0))
+                );
+            _axeBerserkersCallTrack.SetFrame(0.7f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 50, 0))
+                );
+
+            _beastmasterPrimalRoarTrack = new AnimationTrack("BM Primal Roar", 1.0f);
+            _beastmasterPrimalRoarTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 200, 100))
+                );
+            _beastmasterPrimalRoarTrack.SetFrame(0.75f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f, Color.FromArgb(255, 200, 100))
+                );
+            _beastmasterPrimalRoarTrack.SetFrame(1.0f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 200, 100))
+                );
+
+            _brewmasterThunderClapTrack = new AnimationTrack("Brewmaster Thunder Clap", 1.5f);
+            _brewmasterThunderClapTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(170, 90, 0))
+                );
+            _brewmasterThunderClapTrack.SetFrame(0.75f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(170, 90, 0))
+                );
+            _brewmasterThunderClapTrack.SetFrame(1.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 170, 90, 0))
+                );
+
+            _centaurHoofStompTrack = new AnimationTrack("Centaur Stomp", 1.0f);
+            _centaurHoofStompTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 50, 0))
+                );
+            _centaurHoofStompTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(255, 50, 0))
+                );
+            _centaurHoofStompTrack.SetFrame(1.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 50, 0))
+                );
+
+            _chaosKnightChaosBoltMix = new AnimationMix();
+
+            var chaosKnightChaosBoltProjectilePath = new AnimationTrack("Chaos Knight Bolt - Projectile Path", 0.5f);
+            chaosKnightChaosBoltProjectilePath.SetFrame(0.0f,
+                new AnimationLine(new PointF(0, Effects.CanvasHeightCenter), new PointF(0, Effects.CanvasHeightCenter), Color.FromArgb(255, 70, 0), 3)
+                );
+            chaosKnightChaosBoltProjectilePath.SetFrame(0.25f,
+                new AnimationLine(new PointF(0, Effects.CanvasHeightCenter), new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter), Color.FromArgb(255, 70, 0), 3)
+                );
+            chaosKnightChaosBoltProjectilePath.SetFrame(0.5f,
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter), new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter), Color.FromArgb(0, 255, 70, 0), 3)
+                );
+            _chaosKnightChaosBoltMix.AddTrack(chaosKnightChaosBoltProjectilePath);
+
+            var chaosKnightChaosBoltProjectile = new AnimationTrack("Chaos Knight Bolt - Projectile", 0.25f, 0.25f);
+            chaosKnightChaosBoltProjectile.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(175, 0, 0))
+                );
+            chaosKnightChaosBoltProjectile.SetFrame(0.25f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(0, 175, 0, 0))
+                );
+            _chaosKnightChaosBoltMix.AddTrack(chaosKnightChaosBoltProjectile);
+
+            _rattletrapRocketFlareTrack = new AnimationTrack("Clockwork Rocket Flare", 0.5f);
+            _rattletrapRocketFlareTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 80, 0))
+                );
+            _rattletrapRocketFlareTrack.SetFrame(0.25f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.25f, Color.FromArgb(255, 80, 0))
+                );
+            _rattletrapRocketFlareTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(0, 255, 80, 0))
+                );
+
+            _dragonKnightBreatheFireTrack = new AnimationTrack("Dragon Knight Breathe", 1.25f);
+            _dragonKnightBreatheFireTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.10f, Color.FromArgb(255, 80, 0))
+                );
+            _dragonKnightBreatheFireTrack.SetFrame(0.9375f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f, Color.FromArgb(255, 80, 0))
+                );
+            _dragonKnightBreatheFireTrack.SetFrame(1.25f,
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 80, 0))
+                );
+
+            _elderTitanEarthSplitterTrack = new AnimationTrack("Elder Titan Earth Splitter", 1.0f, 3.0f);
+            _elderTitanEarthSplitterTrack.SetFrame(0.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220))
+                );
+            _elderTitanEarthSplitterTrack.SetFrame(1.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220))
+                );
+
+            _kunkkaTorrentMix = new AnimationMix();
+            var kunkkaTorrentBgTrack = new AnimationTrack("Kunka Torrent BG", 4.0f);
+            kunkkaTorrentBgTrack.SetFrame(0.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 0))
+                );
+            kunkkaTorrentBgTrack.SetFrame(0.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
+                );
+            kunkkaTorrentBgTrack.SetFrame(3.6f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
+                );
+            kunkkaTorrentBgTrack.SetFrame(4.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 60, 80))
+                );
+
+            var kunkkaTorrentSpashTrack = new AnimationTrack("Kunka Torrent Splash", 2.4f, 1.6f);
+
+            kunkkaTorrentSpashTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.1f / 2.0f, Color.FromArgb(0, 220, 245))
+                );
+            kunkkaTorrentSpashTrack.SetFrame(2.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.83f / 2.0f, Color.FromArgb(0, 220, 245))
+                );
+            kunkkaTorrentSpashTrack.SetFrame(2.4f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
+                );
+
+            _kunkkaTorrentMix.AddTrack(kunkkaTorrentBgTrack);
+            _kunkkaTorrentMix.AddTrack(kunkkaTorrentSpashTrack);
 
 
-            kunkka_ghostship_track = new AnimationTrack("Kunka Ghostship", 2.7f);
+            _kunkkaGhostshipTrack = new AnimationTrack("Kunka Ghostship", 2.7f);
 
-            kunkka_ghostship_track.SetFrame(0.0f,
-                    new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
+            _kunkkaGhostshipTrack.SetFrame(0.0f,
+                    new AnimationFilledCircle(-(Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 220, 245))
                     );
-            kunkka_ghostship_track.SetFrame(2.3f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.85f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
+            _kunkkaGhostshipTrack.SetFrame(2.3f,
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f) * 0.85f, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 220, 245))
                 );
-            kunkka_ghostship_track.SetFrame(2.7f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
-                );
-
-            legion_commander_overwhelming_odds_track = new AnimationTrack("Legion Commander Overwhelming Odds", 1.0f);
-            legion_commander_overwhelming_odds_track.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
-                );
-            legion_commander_overwhelming_odds_track.SetFrame(0.3f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
-                );
-            legion_commander_overwhelming_odds_track.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
-                );
-            legion_commander_overwhelming_odds_track.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
+            _kunkkaGhostshipTrack.SetFrame(2.7f,
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
                 );
 
-            life_stealer_rage_track = new AnimationTrack("Life Stealer Rage", 6.0f);
-            life_stealer_rage_track.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+            _legionCommanderOverwhelmingOddsTrack = new AnimationTrack("Legion Commander Overwhelming Odds", 1.0f);
+            _legionCommanderOverwhelmingOddsTrack.SetFrame(0.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
                 );
-            life_stealer_rage_track.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+            _legionCommanderOverwhelmingOddsTrack.SetFrame(0.3f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
                 );
-            life_stealer_rage_track.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+            _legionCommanderOverwhelmingOddsTrack.SetFrame(0.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
                 );
-            life_stealer_rage_track.SetFrame(1.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(2.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(2.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(3.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(3.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(4.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(4.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(5.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(5.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
-                );
-            life_stealer_rage_track.SetFrame(6.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+            _legionCommanderOverwhelmingOddsTrack.SetFrame(1.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
                 );
 
-            magnataur_shockwave_track = new AnimationTrack("Magnataur Shockwave", 1.0f);
-            magnataur_shockwave_track.SetFrame(0.0f,
-                    new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
+            _lifeStealerRageTrack = new AnimationTrack("Life Stealer Rage", 6.0f);
+            _lifeStealerRageTrack.SetFrame(0.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(0.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(1.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(1.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(2.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(2.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(3.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(3.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(4.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(4.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(5.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(5.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                );
+            _lifeStealerRageTrack.SetFrame(6.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                );
+
+            _magnataurShockwaveTrack = new AnimationTrack("Magnataur Shockwave", 1.0f);
+            _magnataurShockwaveTrack.SetFrame(0.0f,
+                    new AnimationFilledCircle(-(Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 205, 255))
                     );
-            magnataur_shockwave_track.SetFrame(0.9f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
+            _magnataurShockwaveTrack.SetFrame(0.9f,
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f) * 0.9f, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 205, 255))
                 );
-            magnataur_shockwave_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
+            _magnataurShockwaveTrack.SetFrame(1.0f,
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
                 );
 
-            omniknight_purification_track = new AnimationTrack("Omniknight Purification", 1.0f);
-            omniknight_purification_track.SetFrame(0.0f,
-                    new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0))
+            _omniknightPurificationTrack = new AnimationTrack("Omniknight Purification", 1.0f);
+            _omniknightPurificationTrack.SetFrame(0.0f,
+                    new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0))
                     );
-            omniknight_purification_track.SetFrame(0.8f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0))
+            _omniknightPurificationTrack.SetFrame(0.8f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0))
                 );
-            omniknight_purification_track.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 160, 0))
-                );
-
-            omniknight_repel_track = new AnimationTrack("Omniknight Repel", 12.0f);
-            omniknight_repel_track.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(1.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(2.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(2.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(3.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(3.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(4.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(4.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(5.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(5.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(6.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(6.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(7.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(7.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(8.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(8.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(9.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(9.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(10.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(10.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(11.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
-                );
-            omniknight_repel_track.SetFrame(11.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
-                );
-            omniknight_repel_track.SetFrame(12.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+            _omniknightPurificationTrack.SetFrame(1.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 255, 160, 0))
                 );
 
-            sandking_epicenter_mix = new AnimationMix();
-            AnimationTrack sandking_epicenter_wave1 = new AnimationTrack("Sandsking Epicenter Wave1", 0.5f, 0.0f);
-            sandking_epicenter_wave1.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack = new AnimationTrack("Omniknight Repel", 12.0f);
+            _omniknightRepelTrack.SetFrame(0.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave1.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(0.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave2 = new AnimationTrack("Sandsking Epicenter Wave2", 0.5f, 0.16f);
-            sandking_epicenter_wave2.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(1.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave2.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(1.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave3 = new AnimationTrack("Sandsking Epicenter Wave3", 0.5f, 0.32f);
-            sandking_epicenter_wave3.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(2.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave3.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(2.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave4 = new AnimationTrack("Sandsking Epicenter Wave4", 0.5f, 0.48f);
-            sandking_epicenter_wave4.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(3.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave4.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(3.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave5 = new AnimationTrack("Sandsking Epicenter Wave5", 0.5f, 0.64f);
-            sandking_epicenter_wave5.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(4.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave5.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(4.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave6 = new AnimationTrack("Sandsking Epicenter Wave6", 0.5f, 0.8f);
-            sandking_epicenter_wave6.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(5.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave6.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(5.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave7 = new AnimationTrack("Sandsking Epicenter Wave7", 0.5f, 0.96f);
-            sandking_epicenter_wave7.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(6.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave7.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(6.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave8 = new AnimationTrack("Sandsking Epicenter Wave8", 0.5f, 1.12f);
-            sandking_epicenter_wave8.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(7.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave8.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(7.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave9 = new AnimationTrack("Sandsking Epicenter Wave9", 0.5f, 1.28f);
-            sandking_epicenter_wave9.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(8.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave9.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(8.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
-
-            AnimationTrack sandking_epicenter_wave10 = new AnimationTrack("Sandsking Epicenter Wave10", 0.5f, 1.44f);
-            sandking_epicenter_wave10.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(9.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
-            sandking_epicenter_wave10.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            _omniknightRepelTrack.SetFrame(9.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                );
+            _omniknightRepelTrack.SetFrame(10.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                );
+            _omniknightRepelTrack.SetFrame(10.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                );
+            _omniknightRepelTrack.SetFrame(11.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                );
+            _omniknightRepelTrack.SetFrame(11.5f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                );
+            _omniknightRepelTrack.SetFrame(12.0f,
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
 
-            AnimationTrack sandking_epicenter_wave11 = new AnimationTrack("Sandsking Epicenter Wave11", 0.5f, 1.6f);
-            sandking_epicenter_wave11.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            _sandkingEpicenterMix = new AnimationMix();
+            var sandkingEpicenterWave1 = new AnimationTrack("Sandsking Epicenter Wave1", 0.5f, 0.0f);
+            sandkingEpicenterWave1.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
-            sandking_epicenter_wave11.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
-                );
-            AnimationTrack sandking_epicenter_wave12 = new AnimationTrack("Sandsking Epicenter Wave12", 0.5f, 1.76f);
-            sandking_epicenter_wave12.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
-                );
-            sandking_epicenter_wave12.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            sandkingEpicenterWave1.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
-            AnimationTrack sandking_epicenter_wave13 = new AnimationTrack("Sandsking Epicenter Wave13", 0.5f, 1.92f);
-            sandking_epicenter_wave13.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            var sandkingEpicenterWave2 = new AnimationTrack("Sandsking Epicenter Wave2", 0.5f, 0.16f);
+            sandkingEpicenterWave2.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
-            sandking_epicenter_wave13.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
-                );
-
-            AnimationTrack sandking_epicenter_wave14 = new AnimationTrack("Sandsking Epicenter Wave14", 0.5f, 2.08f);
-            sandking_epicenter_wave14.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
-                );
-            sandking_epicenter_wave14.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            sandkingEpicenterWave2.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
-            AnimationTrack sandking_epicenter_wave15 = new AnimationTrack("Sandsking Epicenter Wave15", 0.5f, 2.24f);
-            sandking_epicenter_wave15.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            var sandkingEpicenterWave3 = new AnimationTrack("Sandsking Epicenter Wave3", 0.5f, 0.32f);
+            sandkingEpicenterWave3.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
-            sandking_epicenter_wave15.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
-                );
-
-            AnimationTrack sandking_epicenter_wave16 = new AnimationTrack("Sandsking Epicenter Wave16", 0.5f, 2.4f);
-            sandking_epicenter_wave16.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
-                );
-            sandking_epicenter_wave16.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            sandkingEpicenterWave3.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
-            AnimationTrack sandking_epicenter_wave17 = new AnimationTrack("Sandsking Epicenter Wave17", 0.5f, 2.56f);
-            sandking_epicenter_wave17.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            var sandkingEpicenterWave4 = new AnimationTrack("Sandsking Epicenter Wave4", 0.5f, 0.48f);
+            sandkingEpicenterWave4.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
-            sandking_epicenter_wave17.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
-                );
-
-            AnimationTrack sandking_epicenter_wave18 = new AnimationTrack("Sandsking Epicenter Wave18", 0.5f, 2.72f);
-            sandking_epicenter_wave18.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
-                );
-            sandking_epicenter_wave18.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            sandkingEpicenterWave4.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
-            AnimationTrack sandking_epicenter_wave19 = new AnimationTrack("Sandsking Epicenter Wave19", 0.5f, 2.88f);
-            sandking_epicenter_wave19.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+            var sandkingEpicenterWave5 = new AnimationTrack("Sandsking Epicenter Wave5", 0.5f, 0.64f);
+            sandkingEpicenterWave5.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
-            sandking_epicenter_wave19.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
-                );
-
-            AnimationTrack sandking_epicenter_wave20 = new AnimationTrack("Sandsking Epicenter Wave20", 0.5f, 3f);
-            sandking_epicenter_wave20.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
-                );
-            sandking_epicenter_wave20.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+            sandkingEpicenterWave5.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave1);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave2);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave3);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave4);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave5);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave6);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave7);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave8);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave9);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave10);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave11);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave12);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave13);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave14);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave15);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave16);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave17);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave18);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave19);
-            sandking_epicenter_mix.AddTrack(sandking_epicenter_wave20);
+            var sandkingEpicenterWave6 = new AnimationTrack("Sandsking Epicenter Wave6", 0.5f, 0.8f);
+            sandkingEpicenterWave6.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave6.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave7 = new AnimationTrack("Sandsking Epicenter Wave7", 0.5f, 0.96f);
+            sandkingEpicenterWave7.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave7.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave8 = new AnimationTrack("Sandsking Epicenter Wave8", 0.5f, 1.12f);
+            sandkingEpicenterWave8.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave8.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave9 = new AnimationTrack("Sandsking Epicenter Wave9", 0.5f, 1.28f);
+            sandkingEpicenterWave9.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave9.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave10 = new AnimationTrack("Sandsking Epicenter Wave10", 0.5f, 1.44f);
+            sandkingEpicenterWave10.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave10.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave11 = new AnimationTrack("Sandsking Epicenter Wave11", 0.5f, 1.6f);
+            sandkingEpicenterWave11.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave11.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+            var sandkingEpicenterWave12 = new AnimationTrack("Sandsking Epicenter Wave12", 0.5f, 1.76f);
+            sandkingEpicenterWave12.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave12.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave13 = new AnimationTrack("Sandsking Epicenter Wave13", 0.5f, 1.92f);
+            sandkingEpicenterWave13.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave13.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave14 = new AnimationTrack("Sandsking Epicenter Wave14", 0.5f, 2.08f);
+            sandkingEpicenterWave14.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave14.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave15 = new AnimationTrack("Sandsking Epicenter Wave15", 0.5f, 2.24f);
+            sandkingEpicenterWave15.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave15.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave16 = new AnimationTrack("Sandsking Epicenter Wave16", 0.5f, 2.4f);
+            sandkingEpicenterWave16.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave16.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave17 = new AnimationTrack("Sandsking Epicenter Wave17", 0.5f, 2.56f);
+            sandkingEpicenterWave17.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave17.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave18 = new AnimationTrack("Sandsking Epicenter Wave18", 0.5f, 2.72f);
+            sandkingEpicenterWave18.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave18.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave19 = new AnimationTrack("Sandsking Epicenter Wave19", 0.5f, 2.88f);
+            sandkingEpicenterWave19.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave19.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            var sandkingEpicenterWave20 = new AnimationTrack("Sandsking Epicenter Wave20", 0.5f, 3f);
+            sandkingEpicenterWave20.SetFrame(0.0f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
+                );
+            sandkingEpicenterWave20.SetFrame(0.5f,
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                );
+
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave1);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave2);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave3);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave4);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave5);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave6);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave7);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave8);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave9);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave10);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave11);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave12);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave13);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave14);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave15);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave16);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave17);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave18);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave19);
+            _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave20);
 
 
-            slardar_slithereen_crush_track = new AnimationTrack("Slardar SMASH!", 0.5f);
-            slardar_slithereen_crush_track.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 150, 255))
+            _slardarSlithereenCrushTrack = new AnimationTrack("Slardar SMASH!", 0.5f);
+            _slardarSlithereenCrushTrack.SetFrame(0.0f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 150, 255))
                 );
-            slardar_slithereen_crush_track.SetFrame(0.45f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, (Effects.canvas_biggest / 2.0f) * 0.9f, Color.FromArgb(0, 150, 255))
+            _slardarSlithereenCrushTrack.SetFrame(0.45f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, (Effects.CanvasBiggest / 2.0f) * 0.9f, Color.FromArgb(0, 150, 255))
                 );
-            slardar_slithereen_crush_track.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
+            _slardarSlithereenCrushTrack.SetFrame(0.5f,
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
                 );
 
         }

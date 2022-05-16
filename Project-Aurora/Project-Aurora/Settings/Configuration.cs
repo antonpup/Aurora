@@ -240,6 +240,8 @@ namespace Aurora.Settings
         //Roccat range is 600-699
         [Description("Roccat Ryos")]
         Roccat_Ryos = 600,
+        [Description("Roccat Vulcan TKL")]
+        Roccat_Vualcan_TKL = 601,
 
         //Steelseries range is 700-799
         [Description("SteelSeries Apex M800")]
@@ -309,7 +311,14 @@ namespace Aurora.Settings
         //HyperX range is 1400-1499
         [Description("HyperX Alloy Elite RGB")]
         HyperX_Alloy_Elite_RGB = 1400,
+        //Keychron q1 knob
+        [Description("Keychron q1 knob ansi 75%")]
+        Keychron_Q1_Knob_Ansi = 0107,
  
+        //MSI range is 1500-1599
+        [Description("MSI GP66 US")]
+        MSI_GP66_US = 1500,
+
     }
 
     public enum PreferredKeyboardLocalization
@@ -423,6 +432,9 @@ namespace Aurora.Settings
 
         [Description("Razer/Corsair Mousepad")]
         Generic_Mousepad = 1,
+        
+        [Description("2 Zone + Logo Mousepad")]
+        Two_Zone_Plus_Logo_Mousepad,
 
         //Steelseries range is 100-299
         [Description("SteelSeries - QcK Prism Mousepad")]
@@ -486,6 +498,15 @@ namespace Aurora.Settings
         public bool HighPriority { get; set; } = false;
         public BitmapAccuracy BitmapAccuracy { get; set; } = BitmapAccuracy.Okay;
         public bool EnableAudioCapture { get; set; } = false;
+
+
+        public int UpdateDelay { get; set; } = 30;
+
+        public double Fps
+        {
+            get => 1000d / UpdateDelay;
+        }
+
         [JsonProperty("updates_check_on_start_up")] public bool UpdatesCheckOnStartUp { get; set; } = true;
         [JsonProperty("start_silently")] public bool StartSilently { get; set; } = false;
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;

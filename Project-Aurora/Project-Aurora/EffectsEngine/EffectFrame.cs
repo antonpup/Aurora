@@ -8,16 +8,8 @@ namespace Aurora.EffectsEngine
     /// </summary>
     public class EffectFrame : IDisposable
     {
-        Queue<EffectLayer> over_layers = new Queue<EffectLayer>();
-        Queue<EffectLayer> layers = new Queue<EffectLayer>();
-
-        /// <summary>
-        /// A default constructor for EffectFrame class
-        /// </summary>
-        public EffectFrame()
-        {
-
-        }
+        readonly Queue<EffectLayer> over_layers = new();
+        readonly Queue<EffectLayer> layers = new();
 
         /// <summary>
         /// Adds layers into the frame
@@ -62,23 +54,17 @@ namespace Aurora.EffectsEngine
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (disposedValue) return;
+            if (disposing)
             {
-                if (disposing)
-                {
-                    foreach (IDisposable disposable in over_layers)
-                        disposable.Dispose();
-                    over_layers.Clear();
-                    foreach (IDisposable disposable in layers)
-                        disposable.Dispose();
-                    layers.Clear();
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
+                over_layers.Clear();
+                layers.Clear();
             }
+
+            // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+            // TODO: set large fields to null.
+
+            disposedValue = true;
         }
 
         // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.

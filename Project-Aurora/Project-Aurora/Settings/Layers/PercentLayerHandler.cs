@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Layers
 {
@@ -80,12 +81,22 @@ namespace Aurora.Settings.Layers
 
     public class PercentLayerHandler<TProperty> : LayerHandler<TProperty> where TProperty : PercentLayerHandlerProperties<TProperty>
     {
+        private readonly EffectLayer _effectLayer = new("PercentLayer");
+        private double _value;
+
         public override EffectLayer Render(IGameState state)
         {
-            double value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
-            double maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
+            var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
+            if (ColorUtils.NearlyEqual(_value, value, 0.001))
+            {
+                return _effectLayer;
+            }
+            _value = value;
+            
+            var maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 
-            return new EffectLayer().PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
+            _effectLayer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
+            return _effectLayer;
         }
 
         public override void SetApplication(Application profile)

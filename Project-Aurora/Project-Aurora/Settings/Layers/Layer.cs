@@ -66,7 +66,7 @@ namespace Aurora.Settings.Layers
                     ((IValueOverridable)Handler.Properties).SetOverride(kvp.Key, kvp.Value.Evaluate(gs));
             }
 
-            EffectLayer effectLayer = ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : new EffectLayer();
+            EffectLayer effectLayer = ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : EffectLayer.EmptyLayer;
             timer.Stop();
             return effectLayer;
         }
@@ -77,16 +77,16 @@ namespace Aurora.Settings.Layers
         }
 
         public object Clone() {
-            string str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder });
+            var str = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Utils.JSONUtils.SerializationBinder });
             return JsonConvert.DeserializeObject(
                 str,
-                this.GetType(),
-                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder }
-            );
+                GetType(),
+                new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Utils.JSONUtils.SerializationBinder }
+            )!;
         }
 
-        public void SetGameState(IGameState new_game_state) => Handler.SetGameState(new_game_state);
-        public void Dispose() => Handler.Dispose();
+        public void SetGameState(IGameState newGameState) => Handler.SetGameState(newGameState);
+        public void Dispose() => Handler?.Dispose();
     }
 
     /// <summary>

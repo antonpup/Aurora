@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Principal;
 using System.Windows.Forms;
 using System.Linq;
+using System.Reflection;
 using Version = SemVer.Version;
 
 namespace Aurora_Updater
@@ -82,10 +83,13 @@ namespace Aurora_Updater
                         MessageBoxButtons.OK);
                 return;
             }
-            versionMajor = new Version(_maj, true);
+            versionMajor = new Version(_maj.TrimStart('v') + ".0.0", true);
+            
+            string owner = FileVersionInfo.GetVersionInfo(auroraPath).CompanyName;
+            string repository = FileVersionInfo.GetVersionInfo(auroraPath).ProductName;
 
             //Initialize UpdateManager
-            StaticStorage.Manager = new UpdateManager(versionMajor);
+            StaticStorage.Manager = new UpdateManager(versionMajor, owner, repository);
 
             //Check if update retrieval was successful.
             if (StaticStorage.Manager.updateState == UpdateStatus.Error)
@@ -109,7 +113,7 @@ namespace Aurora_Updater
             }
             else
             {
-                Version latestV = new Version(StaticStorage.Manager.LatestRelease.TagName.TrimStart('v'), true);
+                Version latestV = new Version(StaticStorage.Manager.LatestRelease.TagName.TrimStart('v') + ".0.0", true);
 
                 if (latestV > versionMajor)
                 {

@@ -71,34 +71,35 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
     }
 
-    public class MinecraftHealthBarLayerHandler : LayerHandler<MinecraftHealthBarLayerHandlerProperties> {
+    public class MinecraftHealthBarLayerHandler : LayerHandler<MinecraftHealthBarLayerHandlerProperties>
+    {
+        private readonly EffectLayer _layer = new();
+        
         protected override UserControl CreateControl() {
             return new Control_MinecraftHealthBarLayer(this);
         }
 
         public override EffectLayer Render(IGameState gamestate) {
             // Ensure the gamestate is for Minecraft, and store a casted reference to it
-            if (!(gamestate is GameState_Minecraft)) return new EffectLayer();
-            GameState_Minecraft state = gamestate as GameState_Minecraft;
+            if (gamestate is not GameState_Minecraft minecraftState) return EffectLayer.EmptyLayer;
 
             // Choose the main healthbar's color depending on whether the player is withered/poisoned/regen/normal.
-            Color barColor = Properties.NormalHealthColor; // Default normal color
-            if (Properties.EnableWitherHealthColor && state.Player.PlayerEffects.HasWither) // Wither takes priority over others
+            var barColor = Properties.NormalHealthColor; // Default normal color
+            if (Properties.EnableWitherHealthColor && minecraftState.Player.PlayerEffects.HasWither) // Wither takes priority over others
                 barColor = Properties.WitherHealthColor;
-            else if (Properties.EnablePoisonHealthColor && state.Player.PlayerEffects.HasPoison) // Poison 2nd priority
+            else if (Properties.EnablePoisonHealthColor && minecraftState.Player.PlayerEffects.HasPoison) // Poison 2nd priority
                 barColor = Properties.PoisonHealthColor;
-            else if (Properties.EnableRegenerationHealthColor && state.Player.PlayerEffects.HasRegeneration) // Regen 3rd priority
+            else if (Properties.EnableRegenerationHealthColor && minecraftState.Player.PlayerEffects.HasRegeneration) // Regen 3rd priority
                 barColor = Properties.RegenerationHealthColor;
 
             // Render the main healthbar, with the color decided above.
-            EffectLayer layer = new EffectLayer()
-                .PercentEffect(barColor, Properties.BackgroundColor, Properties.Sequence, state.Player.Health, state.Player.HealthMax, Settings.PercentEffectType.Progressive);
+            _layer.PercentEffect(barColor, Properties.BackgroundColor, Properties.Sequence, minecraftState.Player.Health, minecraftState.Player.HealthMax);
 
             // If absorption is enabled, overlay the absorption display on the top of the original healthbar
             if (Properties.EnableAbsorptionHealthColor)
-                layer.PercentEffect(Properties.AbsorptionHealthColor, Properties.BackgroundColor, Properties.Sequence, state.Player.Absorption, state.Player.AbsorptionMax, Properties.GradualProgress ? Settings.PercentEffectType.Progressive_Gradual : Settings.PercentEffectType.Progressive);
+                _layer.PercentEffect(Properties.AbsorptionHealthColor, Properties.BackgroundColor, Properties.Sequence, minecraftState.Player.Absorption, minecraftState.Player.AbsorptionMax, Properties.GradualProgress ? Settings.PercentEffectType.Progressive_Gradual : Settings.PercentEffectType.Progressive);
 
-            return layer;
+            return _layer;
         }
     }
 }

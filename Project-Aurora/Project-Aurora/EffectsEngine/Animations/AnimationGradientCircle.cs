@@ -10,52 +10,52 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal EffectBrush _gradientBrush;
 
-        public EffectBrush GradientBrush { get { return _gradientBrush; } }
+        public EffectBrush GradientBrush => _gradientBrush;
 
-        public AnimationGradientCircle() : base()
+        public AnimationGradientCircle()
         {
         }
 
         public AnimationGradientCircle(Rectangle dimension, EffectBrush brush, int width = 1, float duration = 0.0f) : base(dimension, Color.Transparent, width, duration)
         {
-            _gradientBrush = brush;
+            _gradientBrush = new EffectBrush(brush);
+            _gradientBrush.start = new PointF(0.0f, 0.0f);
+            _gradientBrush.end = new PointF(1.0f, 1.0f);
+            _gradientBrush.center = new PointF(0.5f, 0.5f);
         }
 
         public AnimationGradientCircle(RectangleF dimension, EffectBrush brush, int width = 1, float duration = 0.0f) : base(dimension, Color.Transparent, width, duration)
         {
-            _gradientBrush = brush;
+            _gradientBrush = new EffectBrush(brush);
+            _gradientBrush.start = new PointF(0.0f, 0.0f);
+            _gradientBrush.end = new PointF(1.0f, 1.0f);
+            _gradientBrush.center = new PointF(0.5f, 0.5f);
         }
 
         public AnimationGradientCircle(PointF center, float radius, EffectBrush brush, int width = 1, float duration = 0.0f) : base(center, radius, Color.Transparent, width, duration)
         {
-            _gradientBrush = brush;
+            _gradientBrush = new EffectBrush(brush);
+            _gradientBrush.start = new PointF(0.0f, 0.0f);
+            _gradientBrush.end = new PointF(1.0f, 1.0f);
+            _gradientBrush.center = new PointF(0.5f, 0.5f);
         }
 
         public AnimationGradientCircle(float x, float y, float radius, EffectBrush brush, int width = 1, float duration = 0.0f) : base(x, y, radius, Color.Transparent, width, duration)
         {
-            _gradientBrush = brush;
+            _gradientBrush = new EffectBrush(brush);
+            _gradientBrush.start = new PointF(0.0f, 0.0f);
+            _gradientBrush.end = new PointF(1.0f, 1.0f);
+            _gradientBrush.center = new PointF(0.5f, 0.5f);
         }
 
         protected override void virtUpdate()
         {
             base.virtUpdate();
 
-            _center = new PointF(_center.X * Scale, _center.Y * Scale);
-        }
-
-        public override void Draw(Graphics g)
-        {
-            EffectBrush _newbrush = new EffectBrush(_gradientBrush);
-            _newbrush.start = new PointF(0.0f, 0.0f);
-            _newbrush.end = new PointF(1.0f, 1.0f);
-            _newbrush.center = new PointF(0.5f, 0.5f);
-
-            SortedDictionary<float, System.Drawing.Color> newColorGradients = new SortedDictionary<float, System.Drawing.Color>();
-            ColorSpectrum spectrum = _newbrush.GetColorSpectrum();
-            var colors = _newbrush.colorGradients;
+            SortedDictionary<float, Color> newColorGradients = new SortedDictionary<float, Color>();
+            ColorSpectrum spectrum = _gradientBrush.GetColorSpectrum();
 
             float _cutOffPoint = _width / _radius;
-
             if (_cutOffPoint < 1.0f)
             {
                 _cutOffPoint = 1.0f - _cutOffPoint;
@@ -66,7 +66,7 @@ namespace Aurora.EffectsEngine.Animations
                 newColorGradients.Add(_cutOffPoint - 0.0001f, Color.Transparent);
                 newColorGradients.Add(0.0f, Color.Transparent);
 
-                _newbrush.colorGradients = newColorGradients;
+                _gradientBrush.colorGradients = newColorGradients;
             }
             else if (_cutOffPoint > 1.0f)
             {
@@ -81,18 +81,30 @@ namespace Aurora.EffectsEngine.Animations
                 newColorGradients.Add(0.0f, spectrum.GetColorAt((1 - 1 / _cutOffPoint)));
             }
 
-            _newbrush.SetBrushType(EffectBrush.BrushType.Radial);
-            Brush brush = _newbrush.GetDrawingBrush();
+            _gradientBrush.SetBrushType(EffectBrush.BrushType.Radial);
+            _gradientBrush.center = _dimension.Location;
+            _brush = _gradientBrush.GetDrawingBrush();
+            (_brush as PathGradientBrush).TranslateTransform(
+                _dimension.X + _dimension.Width/2,
+                _dimension.Y + _dimension.Height/2
+                );
+            (_brush as PathGradientBrush).ScaleTransform(_dimension.Width, _dimension.Height);
+        }
 
-            if(brush is PathGradientBrush)
+        public override void Draw(Graphics g)
+        {
+            if (_invalidated)
             {
-                (brush as PathGradientBrush).TranslateTransform(_scaledDimension.X, _scaledDimension.Y);
-                (brush as PathGradientBrush).ScaleTransform(_scaledDimension.Width - (2.0f), _scaledDimension.Height - (2.0f));
+                virtUpdate();
+                _invalidated = false;
+            }
 
-                Matrix originalMatrix = g.Transform;
+            if(_brush is PathGradientBrush)
+            {
+
+                g.ResetTransform();
                 g.Transform = _transformationMatrix;
-                g.FillEllipse(brush, _scaledDimension);
-                g.Transform = originalMatrix;
+                g.FillEllipse(_brush, _dimension);
             }
         }
 
@@ -105,14 +117,14 @@ namespace Aurora.EffectsEngine.Animations
 
             amount = GetTransitionValue(amount);
 
-            RectangleF newrect = new RectangleF((float)CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
-                (float)CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
-                (float)CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
-                (float)CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
+            RectangleF newrect = new RectangleF(CalculateNewValue(_dimension.X, otherAnim._dimension.X, amount),
+                CalculateNewValue(_dimension.Y, otherAnim._dimension.Y, amount),
+                CalculateNewValue(_dimension.Width, otherAnim._dimension.Width, amount),
+                CalculateNewValue(_dimension.Height, otherAnim._dimension.Height, amount)
                 );
 
-            int newwidth = (int)CalculateNewValue(_width, otherAnim._width, amount);
-            float newAngle = (float)CalculateNewValue(_angle, otherAnim._angle, amount);
+            int newwidth = CalculateNewValue(_width, otherAnim._width, amount);
+            float newAngle = CalculateNewValue(_angle, otherAnim._angle, amount);
 
             return new AnimationGradientCircle(newrect, _gradientBrush.BlendEffectBrush((otherAnim as AnimationGradientCircle)._gradientBrush, amount), newwidth).SetAngle(newAngle);
         }

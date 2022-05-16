@@ -51,9 +51,9 @@ namespace Aurora.Settings
 
         public KeySequence(KeySequence otherKeysequence)
         {
-            this.keys = new List<DeviceKey>(otherKeysequence.keys);
+            keys = new List<DeviceKey>(otherKeysequence.keys);
             type = otherKeysequence.type;
-            this.freeform = otherKeysequence.freeform;
+            freeform = otherKeysequence.freeform;
         }
 
         public KeySequence(FreeFormObject freeform)
@@ -75,15 +75,15 @@ namespace Aurora.Settings
             switch (type)
             {
                 case KeySequenceType.FreeForm:
-                    return new RectangleF((this.freeform.X + Effects.grid_baseline_x) * Effects.editor_to_canvas_width, (this.freeform.Y + Effects.grid_baseline_y) * Effects.editor_to_canvas_height, this.freeform.Width * Effects.editor_to_canvas_width, this.freeform.Height * Effects.editor_to_canvas_height);
+                    return new RectangleF((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth, (freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight, freeform.Width * Effects.EditorToCanvasWidth, freeform.Height * Effects.EditorToCanvasHeight);
                 default:
 
-                    float left = 0.0f;
-                    float top = left;
-                    float right = top;
-                    float bottom = right;
+                    var left = 0.0f;
+                    var top = left;
+                    var right = top;
+                    var bottom = right;
 
-                    foreach(DeviceKey key in this.keys)
+                    foreach(DeviceKey key in keys)
                     {
                         BitmapRectangle keyMapping = Effects.GetBitmappingFromDeviceKey(key);
 
@@ -116,8 +116,7 @@ namespace Aurora.Settings
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((KeySequence)obj);
+            return obj.GetType() == GetType() && Equals((KeySequence)obj);
         }
 
         public bool Equals(KeySequence p)

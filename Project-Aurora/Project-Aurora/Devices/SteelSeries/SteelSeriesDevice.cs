@@ -21,6 +21,7 @@ namespace Aurora.Devices.SteelSeries
         G3 = 0xEB,
         G4 = 0xEC,
         G5 = 0xED,
+        MSI_FN = 0xF0,
     };
 
     class SteelSeriesDevice : IDevice
@@ -341,7 +342,10 @@ namespace Aurora.Devices.SteelSeries
                 case (DeviceKeys.LOGO):
                     return (byte)SteelSeriesKeyCodes.LOGO;
                 case (DeviceKeys.FN_Key):
-                    return (byte)SteelSeriesKeyCodes.SS_KEY;
+                    if (Global.Configuration.KeyboardBrand == Settings.PreferredKeyboard.MSI_GP66_US)
+                        return (byte)SteelSeriesKeyCodes.MSI_FN;
+                    else
+                        return (byte)SteelSeriesKeyCodes.SS_KEY;
                 case (DeviceKeys.G0):
                     return (byte)SteelSeriesKeyCodes.G0;
                 case (DeviceKeys.G1):
@@ -588,6 +592,8 @@ namespace Aurora.Devices.SteelSeries
                     return (byte)USBHIDCodes.NUM_ZERO;
                 case (DeviceKeys.NUM_PERIOD):
                     return (byte)USBHIDCodes.NUM_PERIOD;
+                case (DeviceKeys.POWER):
+                    return (byte)USBHIDCodes.POWER;
 
                 default:
                     return (byte)USBHIDCodes.ERROR;

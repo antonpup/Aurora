@@ -28,33 +28,38 @@ namespace Aurora.Settings.Layers {
 
     }
 
-    public class ToggleKeyLayerHandler : LayerHandler<ToggleKeyLayerHandlerProperties> {
+    public class ToggleKeyLayerHandler : LayerHandler<ToggleKeyLayerHandlerProperties>
+    {
+        private bool _state;
+        private readonly EffectLayer _layer = new("ToggleKeyLayer");
 
-        private bool state = false;
-     
-        public ToggleKeyLayerHandler() : base() {
+        public ToggleKeyLayerHandler()
+        {
             Global.InputEvents.KeyDown += InputEvents_KeyDown;
         }
 
-        public override void Dispose() {
+        public override void Dispose()
+        {
             base.Dispose();
             Global.InputEvents.KeyDown -= InputEvents_KeyDown;
-        }        
+        }
 
-        protected override System.Windows.Controls.UserControl CreateControl() {
+        protected override System.Windows.Controls.UserControl CreateControl()
+        {
             return new Control_ToggleKeyLayer(this);
         }
 
-        public override EffectLayer Render(IGameState gamestate) {
-            EffectLayer layer = new EffectLayer();
-            layer.Set(Properties.Sequence, state ? Properties.SecondaryColor : Properties.PrimaryColor);
-            return layer;
+        public override EffectLayer Render(IGameState gamestate)
+        {
+            _layer.Set(Properties.Sequence, _state ? Properties.SecondaryColor : Properties.PrimaryColor);
+            return _layer;
         }
 
-        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e)
+        {
             foreach (var kb in Properties.TriggerKeys)
                 if (kb.IsPressed())
-                    state = !state;
+                    _state = !_state;
         }
     }
 }
