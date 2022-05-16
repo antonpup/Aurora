@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Aurora.Utils;
 using Corsair.CUE.SDK;
 
@@ -10,7 +8,7 @@ namespace Aurora.Devices.Corsair
 {
     internal static class LedMaps
     {
-        internal static readonly Dictionary<CorsairLedId, DeviceKeys> KeyboardLedMap = new Dictionary<CorsairLedId, DeviceKeys>()
+        internal static readonly Dictionary<CorsairLedId, DeviceKeys> KeyboardLedMap = new()
         {
             [CorsairLedId.CLK_Escape]			=                                     DeviceKeys.ESC,					
             [CorsairLedId.CLK_F1]			=                                         DeviceKeys.F1,					
@@ -148,7 +146,7 @@ namespace Aurora.Devices.Corsair
             //[CorsairLedId.CLK_M1]			=                                         //DeviceKeys.M1,				
             //[CorsairLedId.CLK_M2]			=                                         //DeviceKeys.M2,				
             //[CorsairLedId.CLK_M3]			=                                         //DeviceKeys.M3,
-            [CorsairLedId.K_Logo]           =                                         DeviceKeys.LOGO,				
+            [CorsairLedId.CLK_Logo]           =                                         DeviceKeys.LOGO,				
             [CorsairLedId.CLK_G11]			=                                         DeviceKeys.G11,					
             [CorsairLedId.CLK_G12]			=                                         DeviceKeys.G12,					
             [CorsairLedId.CLK_G13]			=                                         DeviceKeys.G13,					

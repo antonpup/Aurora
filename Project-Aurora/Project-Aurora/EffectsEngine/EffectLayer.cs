@@ -660,12 +660,8 @@ namespace Aurora.EffectsEngine
             {
                 var keyMaping = Effects.GetBitmappingFromDeviceKey(key);
 
-                var keyColor = keyMaping.IsEmpty switch
-                {
-                    true when key == DeviceKeys.Peripheral => _peripheral,
-                    true => Color.Black,
-                    _ => BitmapUtils.GetRegionColor(_colormap, keyMaping.Rectangle)
-                };
+                var keyColor = keyMaping.IsEmpty ? Color.Black : BitmapUtils.GetRegionColor(_colormap, keyMaping.Rectangle);
+
                 _keyColors[key] = keyColor;
                 return keyColor;
             }

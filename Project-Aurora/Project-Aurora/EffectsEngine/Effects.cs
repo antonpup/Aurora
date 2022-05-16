@@ -150,7 +150,7 @@ namespace Aurora
         private static readonly Dictionary<DeviceKey, Color> keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKey>);
 
         private Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
-        private EffectLayer _background => _effectLayerFactory.Value;
+        private EffectLayer _background;// => _effectLayerFactory.Value;
 
         public Effects()
         {
@@ -210,7 +210,7 @@ namespace Aurora
         private readonly SolidBrush _blackBrush = new(Color.Black);
         public void PushFrame(EffectFrame frame)
         {
-            //_background = new EffectLayer("Global Background", Color.Black);
+            _background = new EffectLayer("Global Background", Color.Black);
             _background.Fill(_blackBrush);
 
             var overLayersArray = frame.GetOverlayLayers();
@@ -242,11 +242,11 @@ namespace Aurora
             foreach (var key in allKeys)
                 keyColors[key] = _background.Get(key);
 
-            var dcc = new DeviceColorComposition
-            {
-                keyColors = keyColors,
-                keyBitmap = _background.GetBitmap()
-            };
+            //var dcc = new DeviceColorComposition
+            //{
+            //    keyColors = keyColors.ToDictionary(pair => pair.Key.Tag, pair => pair.Value),
+            //    keyBitmap = _background.GetBitmap()
+            //};
             
             Dictionary<int, DeviceColorComposition> dccMap = new Dictionary<int, DeviceColorComposition>();
             foreach (var item in keyColors.Keys)
@@ -258,12 +258,12 @@ namespace Aurora
                     dccMap[item.DeviceId.Value] = new DeviceColorComposition()
                     {
                         keyColors = new Dictionary<int, Color>(), //TODO test  =_keyColors
-                        keyBitmap = background.GetBitmap()
+                        keyBitmap = _background.GetBitmap()
                     };
                 }
                 dccMap[item.DeviceId.Value].keyColors.Add(item.Tag, keyColors[item]);
             }
-            Global.dev_manager.UpdateDevices(dcc);
+            Global.dev_manager.UpdateDevices(dccMap);
 
             frame.Dispose();
             //_background.Dispose();

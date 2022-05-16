@@ -202,7 +202,7 @@ namespace Aurora.Settings.Layers
 
         public virtual EffectLayer Render(IGameState gamestate)
         {
-            throw new NotImplementedException();
+            return EffectLayer.EmptyLayer;
         }
 
         public virtual void SetGameState(IGameState gamestate)

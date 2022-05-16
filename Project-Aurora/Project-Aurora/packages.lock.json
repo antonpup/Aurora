@@ -13,9 +13,16 @@
       },
       "Colore": {
         "type": "Direct",
-        "requested": "[5.2.0, )",
-        "resolved": "5.2.0",
-        "contentHash": "bd7+CgSyiIX/oyBsjNpTBCzybLNG1cMHxqFFbSbfgntXrEa0wAc1/M0nSmw7J33b+KqqGrCQijhPEwp9fci5vA=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "vU2Gy6fjgnYMINx596pUZYTsJ9X0bilYv9jsvHIKhIyodmi//8Qzx7u9fj7f4vUn56uO+4lwB28/onLJDEOgkg==",
+        "dependencies": {
+          "JetBrains.Annotations": "2020.1.0",
+          "Microsoft.Net.Http": "2.2.29",
+          "Newtonsoft.Json": "12.0.3",
+          "System.Runtime.InteropServices.RuntimeInformation": "4.3.0",
+          "System.ValueTuple": "4.5.0"
+        }
       },
       "CorsairRGB.NET": {
         "type": "Direct",
@@ -31,6 +38,12 @@
         "dependencies": {
           "CS-Script.bin": "3.30.5.1"
         }
+      },
+      "CUESDK.NET": {
+        "type": "Direct",
+        "requested": "[3.0.361.2, )",
+        "resolved": "3.0.361.2",
+        "contentHash": "hho/w7dKahoOn/cT6qXqQMlAuth5mxLCqEEW6yh9RI0sX14gKF3vheL4ejMvhKQtY+sxvDxF8zHQRyprytdJIA=="
       },
       "FastMember": {
         "type": "Direct",
@@ -237,6 +250,24 @@
         "resolved": "2.1.0",
         "contentHash": "UTdxWvbgp2xzT1Ajaa2va+Qi3oNHJPasYmVhbKI2VVdu1VYP6yUG+RikhsHvpD7iM0S8e8UYb5Qm/LTWxx9QAA=="
       },
+      "JetBrains.Annotations": {
+        "type": "Transitive",
+        "resolved": "2020.1.0",
+        "contentHash": "kD9D2ey3DGeLbfIzS8PkwLFkcF5vCOLk2rdjgfSxTfpoyovl7gAyoS6yq6T77zo9QgJGaVJ7PO/cSgLopnKlzg=="
+      },
+      "Microsoft.Bcl": {
+        "type": "Transitive",
+        "resolved": "1.1.10",
+        "contentHash": "+tTqoh/M1pyL8El3qLy30EcwnAtyvFoDZJtdG9Cbg/WdFbh4N8kyrq198XHuEL7lnJbeD0DRO8jcX5IIOh05cQ==",
+        "dependencies": {
+          "Microsoft.Bcl.Build": "1.0.14"
+        }
+      },
+      "Microsoft.Bcl.Build": {
+        "type": "Transitive",
+        "resolved": "1.0.14",
+        "contentHash": "cDLKSvNvRa519hplsbSoYqO69TjdDIhfjtKUM0g20/nVROoWsGav9KCI9HtnGjLmdV1+TcUUDhbotcllibjPEA=="
+      },
       "Microsoft.CodeAnalysis.Analyzers": {
         "type": "Transitive",
         "resolved": "1.1.0",
@@ -330,6 +361,15 @@
           "System.Runtime.InteropServices": "4.3.0",
           "System.Threading": "4.3.0",
           "System.Threading.Tasks": "4.3.0"
+        }
+      },
+      "Microsoft.Net.Http": {
+        "type": "Transitive",
+        "resolved": "2.2.29",
+        "contentHash": "fc4CPEewJ30Xgal+fSq1lYIBt582A7eKlAL7O4HXiYAiTp2VTnA4osSvk7T2n8aS4xTCPVJusQk3yKLT0XSpkg==",
+        "dependencies": {
+          "Microsoft.Bcl": "1.1.10",
+          "Microsoft.Bcl.Build": "1.0.14"
         }
       },
       "Microsoft.Win32.Registry": {
@@ -525,6 +565,11 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Runtime.InteropServices.RuntimeInformation": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "cbz4YJMqRDR7oLeMRbdYv7mYzc++17lNhScCX0goO2XpGWdvAt60CGN+FHdePUEHCe/Jy9jUlvNAiNdM+7jsOw=="
+      },
       "System.Runtime.Numerics": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -636,6 +681,12 @@
       }
     },
     ".NETFramework,Version=v4.8/win7-x64": {
+      "CUESDK.NET": {
+        "type": "Direct",
+        "requested": "[3.0.361.2, )",
+        "resolved": "3.0.361.2",
+        "contentHash": "hho/w7dKahoOn/cT6qXqQMlAuth5mxLCqEEW6yh9RI0sX14gKF3vheL4ejMvhKQtY+sxvDxF8zHQRyprytdJIA=="
+      },
       "System.Management": {
         "type": "Direct",
         "requested": "[5.0.0, )",
@@ -660,6 +711,11 @@
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "YHndyoiV90iu4iKG115ibkhrG+S3jBm8Ap9OwoUAzO5oPDAWcr0SFwQFm0HjM8WkEZWo0zvLTyLmbvTkW1bXgg=="
+      },
+      "System.Runtime.InteropServices.RuntimeInformation": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "cbz4YJMqRDR7oLeMRbdYv7mYzc++17lNhScCX0goO2XpGWdvAt60CGN+FHdePUEHCe/Jy9jUlvNAiNdM+7jsOw=="
       },
       "System.Security.AccessControl": {
         "type": "Transitive",

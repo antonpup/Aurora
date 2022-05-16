@@ -897,9 +897,9 @@ namespace Aurora.Utils
             return _returnKeys.ToArray();
         }
 
-        public static DeviceKeys[] GetDeviceAllKeys()
+        public static DeviceKey[] GetDeviceAllKeys()
         {
-            return (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys));
+            return (DeviceKey[])Enum.GetValues(typeof(DeviceKey));
         }
 
         public static Keys GetStandardKey(Keys key)
