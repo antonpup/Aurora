@@ -293,7 +293,7 @@ namespace Aurora
                         keyBitmap = _background.GetBitmap()
                     };
                 }
-                dccMap[item.DeviceId.Value].keyColors.Add(item.Tag, keyColors[item]);
+                dccMap[item.DeviceId.Value].keyColors[item.Tag] = keyColors[item];
             }
             Global.dev_manager.UpdateDevices(dccMap);
 

@@ -70,7 +70,7 @@ namespace Aurora.Controls
         private static void SequencePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             var source = (KeySequence)sender;
-            if (e.NewValue is notSettings.KeySequence @new)
+            if (e.NewValue is not Settings.KeySequence @new)
             {
                 source.Sequence = new Settings.KeySequence();
                 return;

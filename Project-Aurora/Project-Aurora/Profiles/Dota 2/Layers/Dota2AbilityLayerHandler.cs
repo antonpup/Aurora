@@ -6,6 +6,7 @@ using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
+using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
 using Newtonsoft.Json;

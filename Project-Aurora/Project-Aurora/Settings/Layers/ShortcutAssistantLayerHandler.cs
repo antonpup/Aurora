@@ -175,7 +175,9 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            if (IsLayerActive() == false)
+
+            Keys[] heldKeys = Global.InputEvents.PressedKeys;
+            if (IsLayerActive() == false || heldKeys.Length == 0)
             {
                 if (!_clear)
                 {
@@ -187,8 +189,6 @@ namespace Aurora.Settings.Layers
             _clear = false;
 
             // The layer is active. At this point we have at least 1 key to highlight
-
-            Keys[] heldKeys = Global.InputEvents.PressedKeys;
             Keys[] heldKeysToHighlight = MatchHeldKeysToShortcutTree(heldKeys, Properties.ShortcutKeysTree); // This is also the path in shortcut tree
 
             Tree<Keys> currentShortcutNode = Properties.ShortcutKeysTree.GetNodeByPath(heldKeysToHighlight);
@@ -200,10 +200,9 @@ namespace Aurora.Settings.Layers
 
             // Convert to DeviceKeys
             DeviceKey[] selectedKeys = BuildSelectedKeys(currentShortcutNode, heldKeysToHighlight);
-            DeviceKey[] backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
 
             // Display keys
-            ApplyKeyColors(ref _scAssistantLayer, selectedKeys, backgroundKeys);
+            ApplyKeyColors(ref _scAssistantLayer, selectedKeys);
 
             return _scAssistantLayer;
         }
@@ -226,11 +225,13 @@ namespace Aurora.Settings.Layers
                         .Concat(KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
         }
 
-        protected void ApplyKeyColors(ref EffectLayer layer, DeviceKey[] selectedKeys, DeviceKey[] backgroundKeys)
+        private SolidBrush backgroundBrush = new(Color.Empty);
+        protected void ApplyKeyColors(ref EffectLayer layer, DeviceKey[] selectedKeys)
         {
-            if (backgroundKeys != null && Properties.DimBackground)
+            if (Properties.DimBackground)
             {
-                layer.Set(backgroundKeys, Properties.DimColor);
+                backgroundBrush.Color = Properties.DimColor;
+                layer.Fill(backgroundBrush);
             }
 
             if (selectedKeys != null)
