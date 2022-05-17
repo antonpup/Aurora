@@ -313,7 +313,7 @@ namespace Aurora.Settings.Layers
                             if (Properties.FlipVertically)
                             {
                                 m.Scale(1, -1, MatrixOrder.Prepend);
-                                m.Translate(0, -Effects.canvas_height, MatrixOrder.Prepend);
+                                m.Translate(0, -Effects.CanvasHeight, MatrixOrder.Prepend);
                             }
                         },
                         g =>
@@ -333,7 +333,7 @@ namespace Aurora.Settings.Layers
 
                             g.DrawImage(
                                 screen,
-                                new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height),
+                                new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight),
                                 cropRegion.X,
                                 cropRegion.Y,
                                 cropRegion.Width,
@@ -341,7 +341,7 @@ namespace Aurora.Settings.Layers
                                 GraphicsUnit.Pixel,
                                 att);
                         },
-                        new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height)
+                        new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight)
                     );
                     break;
 

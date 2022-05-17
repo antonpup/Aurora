@@ -74,7 +74,7 @@ namespace Aurora.Settings.Layers
                 {
                     using (Graphics g = temp_layer.GetGraphics())
                     {
-                        g.DrawImage(_loaded_image, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height), new RectangleF(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
+                        g.DrawImage(_loaded_image, new RectangleF(0, 0, Effects.CanvasWidth, Effects.CanvasHeight), new RectangleF(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
                     }
 
                     foreach (var key in Properties.Sequence.keys)

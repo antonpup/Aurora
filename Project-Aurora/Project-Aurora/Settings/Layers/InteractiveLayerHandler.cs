@@ -207,10 +207,10 @@ namespace Aurora.Settings.Layers
                         new AnimationCircle(origin, 0, primaryC, Properties.EffectWidth)
                     );
                     wave.SetFrame(0.80f,
-                        new AnimationCircle(origin, Effects.canvas_width * 0.80f, secondaryC, Properties.EffectWidth)
+                        new AnimationCircle(origin, Effects.CanvasWidth * 0.80f, secondaryC, Properties.EffectWidth)
                     );
                     wave.SetFrame(1.00f,
-                        new AnimationCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), Color.FromArgb(0, secondaryC), Properties.EffectWidth)
+                        new AnimationCircle(origin, Effects.CanvasWidth + (Properties.EffectWidth / 2), Color.FromArgb(0, secondaryC), Properties.EffectWidth)
                     );
                     animMix.AddTrack(wave);
                     break;
@@ -220,7 +220,7 @@ namespace Aurora.Settings.Layers
                     var rainbowWave = new AnimationTrack("Rainbow Wave", 1.0f);
 
                     rainbowWave.SetFrame(0.0f, new AnimationGradientCircle(origin, 0, new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
-                    rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
+                    rainbowWave.SetFrame(1.0f, new AnimationGradientCircle(origin, Effects.CanvasWidth + (Properties.EffectWidth / 2), new EffectBrush(new ColorSpectrum(ColorSpectrum.Rainbow).Flip()).SetBrushType(EffectBrush.BrushType.Radial), Properties.EffectWidth));
 
                     animMix.AddTrack(rainbowWave);
                     break;
@@ -232,10 +232,10 @@ namespace Aurora.Settings.Layers
                         new AnimationFilledCircle(origin, 0, primaryC, Properties.EffectWidth)
                     );
                     wave.SetFrame(0.80f,
-                        new AnimationFilledCircle(origin, Effects.canvas_width * 0.80f, secondaryC, Properties.EffectWidth)
+                        new AnimationFilledCircle(origin, Effects.CanvasWidth * 0.80f, secondaryC, Properties.EffectWidth)
                     );
                     wave.SetFrame(1.00f,
-                        new AnimationFilledCircle(origin, Effects.canvas_width + (Properties.EffectWidth / 2), Color.FromArgb(0, secondaryC), Properties.EffectWidth)
+                        new AnimationFilledCircle(origin, Effects.CanvasWidth + (Properties.EffectWidth / 2), Color.FromArgb(0, secondaryC), Properties.EffectWidth)
                     );
                     animMix.AddTrack(wave);
                     break;
@@ -262,24 +262,24 @@ namespace Aurora.Settings.Layers
                     arrow.SetFrame(0.33f,
                         new AnimationLines(
                             new[] {
-                                new AnimationLine(origin, new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), ColorUtils.BlendColors(primaryC, secondaryC, 0.33D), Properties.EffectWidth),
-                                new AnimationLine(origin, new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), ColorUtils.BlendColors(primaryC, secondaryC, 0.33D), Properties.EffectWidth)
+                                new AnimationLine(origin, new PointF(origin.X + Effects.CanvasWidth * 0.33f, origin.Y), ColorUtils.BlendColors(primaryC, secondaryC, 0.33D), Properties.EffectWidth),
+                                new AnimationLine(origin, new PointF(origin.X - Effects.CanvasWidth * 0.33f, origin.Y), ColorUtils.BlendColors(primaryC, secondaryC, 0.33D), Properties.EffectWidth)
                             }
                         )
                     );
                     arrow.SetFrame(0.66f,
                         new AnimationLines(
                             new[] {
-                                new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), secondaryC, Properties.EffectWidth),
-                                new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.33f, origin.Y), new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), secondaryC, Properties.EffectWidth)
+                                new AnimationLine(new PointF(origin.X + Effects.CanvasWidth * 0.33f, origin.Y), new PointF(origin.X + Effects.CanvasWidth * 0.66f, origin.Y), secondaryC, Properties.EffectWidth),
+                                new AnimationLine(new PointF(origin.X - Effects.CanvasWidth * 0.33f, origin.Y), new PointF(origin.X - Effects.CanvasWidth * 0.66f, origin.Y), secondaryC, Properties.EffectWidth)
                             }
                         )
                     );
                     arrow.SetFrame(1.0f,
                         new AnimationLines(
                             new[] {
-                                new AnimationLine(new PointF(origin.X + Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X + Effects.canvas_width, origin.Y), Color.FromArgb(0, secondaryC), Properties.EffectWidth),
-                                new AnimationLine(new PointF(origin.X - Effects.canvas_width * 0.66f, origin.Y), new PointF(origin.X - Effects.canvas_width, origin.Y), Color.FromArgb(0, secondaryC), Properties.EffectWidth)
+                                new AnimationLine(new PointF(origin.X + Effects.CanvasWidth * 0.66f, origin.Y), new PointF(origin.X + Effects.CanvasWidth, origin.Y), Color.FromArgb(0, secondaryC), Properties.EffectWidth),
+                                new AnimationLine(new PointF(origin.X - Effects.CanvasWidth * 0.66f, origin.Y), new PointF(origin.X - Effects.CanvasWidth, origin.Y), Color.FromArgb(0, secondaryC), Properties.EffectWidth)
                             }
                         )
                     );
@@ -315,7 +315,7 @@ namespace Aurora.Settings.Layers
                     {
                         case input_item.input_type.Spectrum:
                         {
-                            var transitionValue = input.progress / Effects.canvas_width;
+                            var transitionValue = input.progress / Effects.CanvasWidth;
 
                             if (transitionValue > 1.0f)
                                 continue;
@@ -327,7 +327,7 @@ namespace Aurora.Settings.Layers
                         }
                         case input_item.input_type.AnimationMix:
                         {
-                            var timeValue = input.progress / Effects.canvas_width;
+                            var timeValue = input.progress / Effects.CanvasWidth;
 
                             if (timeValue > 1.0f)
                                 continue;
@@ -347,7 +347,7 @@ namespace Aurora.Settings.Layers
             {
                 try
                 {
-                    if (_inputList[x].progress > Effects.canvas_width)
+                    if (_inputList[x].progress > Effects.CanvasWidth)
                         _inputList.RemoveAt(x);
                     else
                     {

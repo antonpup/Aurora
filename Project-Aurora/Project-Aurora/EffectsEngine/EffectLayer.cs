@@ -18,13 +18,13 @@ namespace Aurora.EffectsEngine
         public static EffectLayer EmptyLayer => _emptyLayerFactory.Value;
 
         private readonly string _name;
-        private readonly Bitmap _colormap;
+        private Bitmap _colormap;
         private float _opacity = 1;
 
         private TextureBrush _textureBrush;
         private bool _needsRender;
 
-        internal readonly Rectangle Dimension;
+        internal Rectangle Dimension;
 
         internal TextureBrush TextureBrush
         {
@@ -65,10 +65,10 @@ namespace Aurora.EffectsEngine
         public EffectLayer()
         {
             _name = "Unknown Layer";
-            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
+            Effects.CanvasChanged += Invalidate;
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-            Graphics.FromImage(_colormap);
             _peripheral = Color.Empty;
 
             FillOver(Color.Empty);
@@ -84,6 +84,7 @@ namespace Aurora.EffectsEngine
             var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
             var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
             _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
+            Effects.CanvasChanged += Invalidate;
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
@@ -99,7 +100,8 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name)
         {
             _name = name;
-            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
+            Effects.CanvasChanged += Invalidate;
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
@@ -116,7 +118,8 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name, Color color)
         {
             _name = name;
-            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
+            Effects.CanvasChanged += Invalidate;
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
@@ -136,7 +139,8 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effectConfig, RectangleF rect = new())
         {
             _name = name;
-            _colormap = new Bitmap(Effects.canvas_width, Effects.canvas_height);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
+            Effects.CanvasChanged += Invalidate;
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             Graphics.FromImage(_colormap);
@@ -274,7 +278,7 @@ namespace Aurora.EffectsEngine
                             }
                             else
                             {
-                                (brush as LinearGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effectConfig.gradient_size, Effects.canvas_height * 100 / effectConfig.gradient_size);
+                                (brush as LinearGradientBrush).ScaleTransform(Effects.CanvasHeight * 100 / effectConfig.gradient_size, Effects.CanvasHeight * 100 / effectConfig.gradient_size);
                             }
 
                             (brush as LinearGradientBrush).RotateTransform(effectConfig.angle);
@@ -287,8 +291,8 @@ namespace Aurora.EffectsEngine
                             {
                                 float percent = shift / Effects.CanvasBiggest;
 
-                                float x_offset = Effects.canvas_width / 2.0f * percent;
-                                float y_offset = Effects.canvas_height / 2.0f * percent;
+                                float x_offset = Effects.CanvasWidth / 2.0f * percent;
+                                float y_offset = Effects.CanvasHeight / 2.0f * percent;
 
 
                                 (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
@@ -303,7 +307,7 @@ namespace Aurora.EffectsEngine
                                 }
                                 else
                                 {
-                                    (brush as PathGradientBrush).ScaleTransform((Effects.canvas_height + x_offset) * 100 / effectConfig.gradient_size, (Effects.canvas_height + y_offset) * 100 / effectConfig.gradient_size);
+                                    (brush as PathGradientBrush).ScaleTransform((Effects.CanvasHeight + x_offset) * 100 / effectConfig.gradient_size, (Effects.CanvasHeight + y_offset) * 100 / effectConfig.gradient_size);
                                 }
                             }
                             else
@@ -315,7 +319,7 @@ namespace Aurora.EffectsEngine
                                 }
                                 else
                                 {
-                                    (brush as PathGradientBrush).ScaleTransform(Effects.canvas_height * 100 / effectConfig.gradient_size, Effects.canvas_height * 100 / effectConfig.gradient_size);
+                                    (brush as PathGradientBrush).ScaleTransform(Effects.CanvasHeight * 100 / effectConfig.gradient_size, Effects.CanvasHeight * 100 / effectConfig.gradient_size);
                                 }
                             }
 
@@ -338,6 +342,7 @@ namespace Aurora.EffectsEngine
             _textureBrush.Dispose();
             _textureBrush = null;
             _colormap.Dispose();
+            Effects.CanvasChanged -= Invalidate;
         }
 
         /// <summary>
@@ -616,7 +621,7 @@ namespace Aurora.EffectsEngine
         /// <param name="render">An action that receives a transformed graphics context and can render whatever it needs to.</param>
         public void DrawTransformed(KeySequence sequence, Action<Graphics> render)
         {
-            DrawTransformed(sequence, render, new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height));
+            DrawTransformed(sequence, render, new RectangleF(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
         }
 
         /// <summary>
@@ -673,8 +678,8 @@ namespace Aurora.EffectsEngine
             }
             else
             {
-                if (keymaping.Top < 0 || keymaping.Bottom > Effects.canvas_height ||
-                    keymaping.Left < 0 || keymaping.Right > Effects.canvas_width)
+                if (keymaping.Top < 0 || keymaping.Bottom > Effects.CanvasHeight ||
+                    keymaping.Left < 0 || keymaping.Right > Effects.CanvasWidth)
                 {
                     Global.logger.Warn("Coudln't set key color " + key);
                     return;
@@ -1031,6 +1036,15 @@ namespace Aurora.EffectsEngine
 
         private void Invalidate()
         {
+            _needsRender = true;
+            _keyColors.Clear();
+        }
+        private void Invalidate(object sender, object args)
+        {
+            _colormap.Dispose();
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
+            Dimension.Height = Effects.CanvasHeight;
+            Dimension.Width = Effects.CanvasWidth;
             _needsRender = true;
             _keyColors.Clear();
         }

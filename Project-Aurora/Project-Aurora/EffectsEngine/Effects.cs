@@ -90,6 +90,16 @@ namespace Aurora
 
     public delegate void NewLayerRendered(Bitmap bitmap);
 
+    public class CanvasChangedArgs
+    {
+        public EffectLayer EffectLayer { get; }
+
+        public CanvasChangedArgs(EffectLayer effectLayer)
+        {
+            EffectLayer = effectLayer;
+        }
+    }
+
     class EnumHashGetter: IEqualityComparer<Enum>
     {
         public static EnumHashGetter Instance = new();
@@ -185,19 +195,41 @@ namespace Aurora
         
         public event NewLayerRendered NewLayerRender = delegate { };
 
-        public static int canvas_width = 1;
-        public static int canvas_height = 1;
+        private static int _canvasWidth = 1;
+        public static int CanvasWidth
+        {
+            get => _canvasWidth;
+            private set
+            {
+                _canvasWidth = value;
+                CanvasChanged?.Invoke(null, null);
+            }
+        }
+        private static int _canvasHeight = 1;
+        public static int CanvasHeight
+        {
+            get => _canvasHeight;
+            private set
+            {
+                _canvasHeight = value;
+                CanvasChanged?.Invoke(null, null);
+            }
+        }
 
         public static float grid_baseline_x = 0.0f;
         public static float grid_baseline_y = 0.0f;
         public static float grid_width = 1.0f;
         public static float grid_height = 1.0f;
 
-        public static float CanvasWidthCenter => canvas_width / 2.0f;
-        public static float CanvasHeightCenter => canvas_height / 2.0f;
-        public static float EditorToCanvasWidth => canvas_width / grid_width;
-        public static float EditorToCanvasHeight => canvas_height / grid_height;
-        public static int CanvasBiggest => canvas_width > canvas_height ? canvas_width : canvas_height;
+        public static float CanvasWidthCenter => CanvasWidth / 2.0f;
+        public static float CanvasHeightCenter => CanvasHeight / 2.0f;
+        public static float EditorToCanvasWidth => CanvasWidth / grid_width;
+        public static float EditorToCanvasHeight => CanvasHeight / grid_height;
+        public static int CanvasBiggest => CanvasWidth > CanvasHeight ? CanvasWidth : CanvasHeight;
+
+        public static event SampleEventHandler CanvasChanged;
+
+        public delegate void SampleEventHandler(object sender, CanvasChangedArgs e);
 
         /// <summary>
         /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
@@ -251,8 +283,8 @@ namespace Aurora
 
         public void SetCanvasSize(int width, int height)
         {
-            canvas_width = width == 0 ? 1 : width;
-            canvas_height = height == 0 ? 1 : height;
+            CanvasWidth = width == 0 ? 1 : width;
+            CanvasHeight = height == 0 ? 1 : height;
         }
 
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)
@@ -304,7 +336,7 @@ namespace Aurora
                 using var g = _background.GetGraphics();
                 g.Clear(Color.Black);
 
-                g.DrawImage(_forcedFrame, 0, 0, canvas_width, canvas_height);
+                g.DrawImage(_forcedFrame, 0, 0, CanvasWidth, CanvasHeight);
 
                 _forcedFrame.Dispose();
                 _forcedFrame = null;

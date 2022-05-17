@@ -1,18 +1,9 @@
-﻿using Aurora.EffectsEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.EffectsEngine;
+using ColorBox;
 using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Settings.Layers
@@ -20,9 +11,9 @@ namespace Aurora.Settings.Layers
     /// <summary>
     /// Interaction logic for Control_GradientLayer.xaml
     /// </summary>
-    public partial class Control_GradientLayer : UserControl
+    public partial class Control_GradientLayer
     {
-        private bool settingsset = false;
+        private bool settingsset;
 
         public Control_GradientLayer()
         {
@@ -33,50 +24,50 @@ namespace Aurora.Settings.Layers
         {
             InitializeComponent();
 
-            this.DataContext = datacontext;
+            DataContext = datacontext;
         }
 
         public void SetSettings()
         {
-            if(this.DataContext is GradientLayerHandler && !settingsset)
+            if(DataContext is GradientLayerHandler && !settingsset)
             {
-                this.wave_size_slider.Value = (this.DataContext as GradientLayerHandler).Properties.GradientConfig.GradientSize;
-                this.wave_size_label.Text = (this.DataContext as GradientLayerHandler).Properties.GradientConfig.GradientSize + " %";
-                this.effect_speed_slider.Value = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Speed;
-                this.effect_speed_label.Text = "x " + (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Speed;
-                this.effect_angle.Text = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Angle.ToString();
-                this.effect_animation_type.SelectedValue = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationType;
-                this.effect_animation_reversed.IsChecked = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationReverse;
-                Brush brush = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
+                wave_size_slider.Value = (DataContext as GradientLayerHandler).Properties.GradientConfig.GradientSize;
+                wave_size_label.Text = (DataContext as GradientLayerHandler).Properties.GradientConfig.GradientSize + " %";
+                effect_speed_slider.Value = (DataContext as GradientLayerHandler).Properties._GradientConfig.Speed;
+                effect_speed_label.Text = "x " + (DataContext as GradientLayerHandler).Properties._GradientConfig.Speed;
+                effect_angle.Text = (DataContext as GradientLayerHandler).Properties._GradientConfig.Angle.ToString();
+                effect_animation_type.SelectedValue = (DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationType;
+                effect_animation_reversed.IsChecked = (DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationReverse;
+                Brush brush = (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
                 try
                 {
-                    this.gradient_editor.Brush = brush;
+                    gradient_editor.Brush = brush;
                 }
                 catch (Exception exc)
                 {
                     Global.logger.Error("Could not set brush, exception: " + exc);
                 }
 
-                this.KeySequence_keys.Sequence = (this.DataContext as GradientLayerHandler).Properties._Sequence;
+                KeySequence_keys.Sequence = (DataContext as GradientLayerHandler).Properties._Sequence;
 
                 settingsset = true;
             }
         }
 
-        private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
+        private void Gradient_editor_BrushChanged(object sender, BrushChangedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is ColorBox.ColorBox)
+                (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush((sender as ColorBox.ColorBox).Brush);
         }
 
         private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.Rainbow);
+            (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.Rainbow);
 
-            Brush brush = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
+            Brush brush = (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
             try
             {
-                this.gradient_editor.Brush = brush;
+                gradient_editor.Brush = brush;
             }
             catch (Exception exc)
             {
@@ -86,12 +77,12 @@ namespace Aurora.Settings.Layers
 
         private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
         {
-            (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.RainbowLoop);
+            (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.RainbowLoop);
 
-            Brush brush = (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
+            Brush brush = (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
             try
             {
-                this.gradient_editor.Brush = brush;
+                gradient_editor.Brush = brush;
             }
             catch (Exception exc)
             {
@@ -100,76 +91,92 @@ namespace Aurora.Settings.Layers
         }
         private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is Slider)
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Slider)
             {
-                (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Speed = (float)(sender as Slider).Value;
+                (DataContext as GradientLayerHandler).Properties._GradientConfig.Speed = (float)(sender as Slider).Value;
 
-                if (this.effect_speed_label is TextBlock)
-                    this.effect_speed_label.Text = "x " + (sender as Slider).Value;
+                if (effect_speed_label is TextBlock)
+                    effect_speed_label.Text = "x " + (sender as Slider).Value;
             }
         }
 
         private void wave_size_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is Slider)
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Slider)
             {
-                (this.DataContext as GradientLayerHandler).Properties.GradientConfig.GradientSize = (float)(sender as Slider).Value;
+                (DataContext as GradientLayerHandler).Properties.GradientConfig.GradientSize = (float)(sender as Slider).Value;
                 
-                if (this.wave_size_label is TextBlock)
+                if (wave_size_label is TextBlock)
                     
                 {
-                    this.wave_size_label.Text = (sender as Slider).Value + " %";
+                    wave_size_label.Text = (sender as Slider).Value + " %";
                     if ((sender as Slider).Value == 0)
                     {
-                        this.wave_size_label.Text = "Stop";
+                        wave_size_label.Text = "Stop";
                     }
                 }
+                TriggerPropertyChanged();
             }
         }
 
         private void effect_angle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is IntegerUpDown)
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is IntegerUpDown)
             {
                 float outval;
                 if (float.TryParse((sender as IntegerUpDown).Text, out outval))
                 {
                     (sender as IntegerUpDown).Background = new SolidColorBrush(Color.FromArgb(255, 24, 24, 24));
 
-                    (this.DataContext as GradientLayerHandler).Properties._GradientConfig.Angle = outval;
+                    (DataContext as GradientLayerHandler).Properties._GradientConfig.Angle = outval;
                 }
                 else
                 {
                     (sender as IntegerUpDown).Background = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
                     (sender as IntegerUpDown).ToolTip = "Entered value is not a number";
                 }
-
+                TriggerPropertyChanged();
             }
         }
 
         private void effect_animation_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is ComboBox)
-                (this.DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationType = (AnimationType)(sender as ComboBox).SelectedValue;
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is ComboBox comboBox)
+            {
+                (DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationType = (AnimationType)comboBox.SelectedValue;
+                TriggerPropertyChanged();
+            }
         }
 
         private void effect_animation_reversed_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is CheckBox)
-                (this.DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationReverse = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is CheckBox checkBox)
+            {
+                (DataContext as GradientLayerHandler).Properties._GradientConfig.AnimationReverse = checkBox.IsChecked.HasValue ? checkBox.IsChecked.Value : false;
+                TriggerPropertyChanged();
+            }
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientLayerHandler && sender is Aurora.Controls.KeySequence)
-                (this.DataContext as GradientLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Controls.KeySequence sequence)
+            {
+                (DataContext as GradientLayerHandler).Properties._Sequence = sequence.Sequence;
+                TriggerPropertyChanged();
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             SetSettings();
 
-            this.Loaded -= UserControl_Loaded;
+            Loaded -= UserControl_Loaded;
+        }
+
+        protected void TriggerPropertyChanged()
+        {
+            var layerHandler = (LayerHandler) DataContext;
+            layerHandler.Properties.OnPropertiesChanged(this);
         }
     }
 }

@@ -243,25 +243,25 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             
             hyperspace_mix = new AnimationMix();
             hyperspace_mix.AddTrack(GenerateHyperspaceStreak(0, 1.5f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 5, 0.1f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 12, 2.1f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 15, 2.7f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 20, 0.7f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 25, 2.4f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 30, 1.4f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 35, 0.3f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 40, 1.8f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 45, 1.0f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 50, 2.5f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 55, 1.5f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 60, 0.9f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 64, 2.3f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 68, 1.9f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 77, 0.0f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 82, 1.1f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 85, 1.3f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.canvas_width / 100 * 93, 2.1f, hyperspace_mix.GetTracks().Count));
-            hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.canvas_width, 0.4f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 5, 0.1f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 12, 2.1f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 15, 2.7f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 20, 0.7f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 25, 2.4f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 30, 1.4f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 35, 0.3f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 40, 1.8f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 45, 1.0f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 50, 2.5f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 55, 1.5f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 60, 0.9f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 64, 2.3f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 68, 1.9f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 77, 0.0f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 82, 1.1f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 85, 1.3f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak((float)Effects.CanvasWidth / 100 * 93, 2.1f, hyperspace_mix.GetTracks().Count));
+            hyperspace_mix.AddTrack(GenerateHyperspaceStreak(Effects.CanvasWidth, 0.4f, hyperspace_mix.GetTracks().Count));
         }
 
         private void RegenerateHyperspaceExitAnimation(StarClass starClass = StarClass.K)
@@ -331,7 +331,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             int streakWidth = 3;
 
             int startPosition = -40;
-            int endPosition = Effects.canvas_height + streakSize * 2;
+            int endPosition = Effects.CanvasHeight + streakSize * 2;
             
             AnimationTrack streak = new AnimationTrack("Hyperspace streak " + index, animationDuration, timeShift);
             streak.SetFrame(0.0f,

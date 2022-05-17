@@ -16,7 +16,8 @@ namespace Aurora.Settings.Layers {
 
     public class RadialLayerProperties : LayerHandlerProperties<RadialLayerProperties> {
 
-        private static readonly SegmentedRadialBrushFactory defaultFactory = new SegmentedRadialBrushFactory(new Utils.ColorStopCollection(new[] { Color.Red, Color.Orange, Color.Yellow, Color.Lime, Color.Cyan, Color.Blue, Color.Purple, Color.Red }));
+        private static readonly SegmentedRadialBrushFactory defaultFactory = new(new Utils.ColorStopCollection(
+            new[] { Color.Red, Color.Orange, Color.Yellow, Color.Lime, Color.Cyan, Color.Blue, Color.Purple, Color.Red }));
 
         public SegmentedRadialBrushFactory _Brush { get; set; }
         [JsonIgnore] public SegmentedRadialBrushFactory Brush => Logic._Brush ?? _Brush ?? defaultFactory;
@@ -37,23 +38,48 @@ namespace Aurora.Settings.Layers {
     }
 
     public class RadialLayerHandler : LayerHandler<RadialLayerProperties> {
-        private Stopwatch sw = new();
-        private float angle;
+        private readonly Stopwatch _sw = new();
+        private float _angle;
         private readonly EffectLayer _effectLayer = new("RadialLayer");
 
         protected override UserControl CreateControl() => new Control_RadialLayer(this);
 
+        public RadialLayerHandler()
+        {
+            Properties.PropertyChanged += PropertiesChanged;
+        }
+
+        private void PropertiesChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _effectLayer.Clear();
+        }
+
         public override EffectLayer Render(IGameState gamestate) {
             // Calculate delta time
-            var dt = sw.Elapsed.TotalSeconds;
-            sw.Restart();
+            var dt = _sw.Elapsed.TotalSeconds;
+            _sw.Restart();
 
             // Update angle
-            angle = (angle + (float)(dt * Properties.AnimationSpeed)) % 360;
+            _angle = (_angle + (float)(dt * Properties.AnimationSpeed)) % 360;
 
             var area = Properties.Sequence.GetAffectedRegion();
-            var brush = Properties.Brush.GetBrush(area, angle, true);
+            var brush = Properties.Brush.GetBrush(area, _angle);
             return _effectLayer.Set(Properties.Sequence, brush);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _effectLayer?.Dispose();
+                Properties.PropertyChanged -= PropertiesChanged;
+            }
+        }
+
+        public sealed override void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

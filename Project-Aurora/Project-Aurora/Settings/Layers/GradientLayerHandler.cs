@@ -4,6 +4,7 @@ using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -36,12 +37,22 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientLayerHandler : LayerHandler<GradientLayerHandlerProperties>
     {
+        private readonly EffectLayer _gradientLayer = new("GradientLayer");
+
+        public GradientLayerHandler()
+        {
+            Properties.PropertyChanged += PropertiesChanged;
+        }
+
+        private void PropertiesChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _gradientLayer.Clear();
+        }
+
         protected override UserControl CreateControl()
         {
             return new Control_GradientLayer(this);
         }
-
-        private readonly EffectLayer _gradientLayer = new("GradientLayer");
         public override EffectLayer Render(IGameState gamestate)
         {
             //If Wave Size 0 Gradiant Stop Moving Animation
@@ -69,7 +80,7 @@ namespace Aurora.Settings.Layers
                     Properties.Sequence,
                     g =>
                     {
-                        var rect = new RectangleF(0, 0, Effects.canvas_width, Effects.canvas_height);
+                        var rect = new RectangleF(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
                         using var tempLayerBitmap = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
                         g.FillRectangle(tempLayerBitmap.TextureBrush, tempLayerBitmap.Dimension);
                     }
@@ -80,6 +91,7 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
+            Properties.PropertyChanged -= PropertiesChanged;
             _gradientLayer.Dispose();
             base.Dispose();
         }
