@@ -17,7 +17,7 @@ namespace Aurora.Settings.Layers
 {
     public abstract class LayerHandlerProperties<TProperty> : IValueOverridable, INotifyPropertyChanged where TProperty : LayerHandlerProperties<TProperty>
     {
-        private static readonly Lazy<TypeAccessor> accessor = new Lazy<TypeAccessor>(() => TypeAccessor.Create(typeof(TProperty)));
+        private static readonly Lazy<TypeAccessor> Accessor = new(() => TypeAccessor.Create(typeof(TProperty)));
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -27,12 +27,12 @@ namespace Aurora.Settings.Layers
         [LogicOverridable("Primary Color")]
         public virtual Color? _PrimaryColor { get; set; }
         [JsonIgnore]
-        public virtual Color PrimaryColor { get { return Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty; } }
+        public virtual Color PrimaryColor => Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty;
 
         [LogicOverridable("Affected Keys")]
         public virtual KeySequence _Sequence { get; set; }
         [JsonIgnore]
-        public virtual KeySequence Sequence { get { return Logic._Sequence ?? _Sequence; } }
+        public virtual KeySequence Sequence => Logic._Sequence ?? _Sequence;
 
 
         #region Override Special Properties
@@ -60,13 +60,13 @@ namespace Aurora.Settings.Layers
 
         public LayerHandlerProperties()
         {
-            this.Default();
+            Default();
         }
 
         public LayerHandlerProperties(bool empty = false)
         {
             if (!empty)
-                this.Default();
+                Default();
         }
 
         public virtual void Default()
@@ -78,7 +78,7 @@ namespace Aurora.Settings.Layers
 
         public object GetOverride(string propertyName) {
             try {
-                return accessor.Value[Logic, propertyName];
+                return Accessor.Value[Logic, propertyName];
             } catch (ArgumentOutOfRangeException) {
                 return null;
             }
@@ -86,8 +86,13 @@ namespace Aurora.Settings.Layers
 
         public void SetOverride(string propertyName, object value) {
             try {
-                accessor.Value[Logic, propertyName] = value;
+                Accessor.Value[Logic, propertyName] = value;
             } catch (ArgumentOutOfRangeException) { }
+        }
+
+        public void OnPropertiesChanged(object sender)
+        {
+            PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(""));
         }
     }
 
@@ -96,7 +101,7 @@ namespace Aurora.Settings.Layers
         [LogicOverridable("Secondary Color")]
         public virtual Color? _SecondaryColor { get; set; }
         [JsonIgnore]
-        public virtual Color SecondaryColor { get { return Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty; } }
+        public virtual Color SecondaryColor => Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty;
 
         public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) { }
 
@@ -109,12 +114,13 @@ namespace Aurora.Settings.Layers
 
     public class LayerHandlerProperties : LayerHandlerProperties<LayerHandlerProperties>
     {
-        public LayerHandlerProperties() : base() { }
+        public LayerHandlerProperties()
+        { }
 
         public LayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
     }
 
-    public interface ILayerHandler : IDisposable
+    public interface ILayerHandler: IDisposable
     {
         UserControl Control { get; }
 
@@ -149,7 +155,7 @@ namespace Aurora.Settings.Layers
         protected UserControl _Control;
 
         [JsonIgnore]
-        public UserControl Control => _Control ?? (_Control = this.CreateControl());
+        public UserControl Control => _Control ??= CreateControl();
 
         public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
 
@@ -195,11 +201,6 @@ namespace Aurora.Settings.Layers
             _ExclusionMask = new KeySequence();
         }
 
-        public LayerHandler(LayerHandler other) : base()
-        {
-            Properties._Sequence = other.Properties._Sequence;
-        }
-
         public virtual EffectLayer Render(IGameState gamestate)
         {
             return EffectLayer.EmptyLayer;
@@ -218,7 +219,7 @@ namespace Aurora.Settings.Layers
                 EffectLayer previousLayer = new EffectLayer(_previousRender);
                 EffectLayer previousSecondLayer = new EffectLayer(_previousSecondRender);
 
-                returnLayer = returnLayer + (previousLayer * 0.50) + (previousSecondLayer * 0.25);
+                returnLayer = returnLayer + previousLayer * 0.50 + previousSecondLayer * 0.25;
 
                 //Update previous layers
                 _previousSecondRender = _previousRender;

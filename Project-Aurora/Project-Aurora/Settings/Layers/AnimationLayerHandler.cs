@@ -146,7 +146,7 @@ namespace Aurora.Settings.Layers
                 EffectLayer temp = new EffectLayer();
 
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
-                Rectangle destRect = new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height);
+                Rectangle destRect = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
                 PointF offset = Properties.KeyTriggerTranslate ? anim.offset : PointF.Empty;
 
                 // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
@@ -167,8 +167,8 @@ namespace Aurora.Settings.Layers
                     // and that's our new X offset.
                     // This probably makes no sense and I'll forget how it works immediately, but hopefully it helps a little in
                     // future if this code ever needs to be revised. It's embarassing how long it took to work this equation out.
-                    offset.X = (offset.X - affectedRegion.X) * (Effects.canvas_width / affectedRegion.Width);
-                    offset.Y = (offset.Y - affectedRegion.Y) * (Effects.canvas_height / affectedRegion.Height);
+                    offset.X = (offset.X - affectedRegion.X) * (Effects.CanvasWidth / affectedRegion.Width);
+                    offset.Y = (offset.Y - affectedRegion.Y) * (Effects.CanvasHeight / affectedRegion.Height);
                 }
 
                 // Draw the animation to a temporary canvas
@@ -177,7 +177,7 @@ namespace Aurora.Settings.Layers
                 
                 // Draw from this temp canvas to the actual layer, performing the scale down if it's needed.
                 using (Graphics g = animationLayer.GetGraphics())
-                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, Effects.canvas_width, Effects.canvas_height), GraphicsUnit.Pixel);
+                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight), GraphicsUnit.Pixel);
 
                 temp.Dispose();
             });

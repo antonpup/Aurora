@@ -132,7 +132,7 @@ namespace Aurora.Controls
                         _playbackTimer.Stop();
                     }
 
-                    Bitmap newBitmap = new Bitmap((int)(Effects.canvas_width * AnimationScale), (int)(Effects.canvas_height * AnimationScale));
+                    Bitmap newBitmap = new Bitmap((int)(Effects.CanvasWidth * AnimationScale), (int)(Effects.CanvasHeight * AnimationScale));
                     RenderedBitmap = newBitmap;
 
                     using (Graphics g = Graphics.FromImage(newBitmap))

@@ -45,12 +45,12 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
 
         private void CreateRainDrop() {
-            float randomX = (float)rnd.NextDouble() * Effects.canvas_width;
+            float randomX = (float)rnd.NextDouble() * Effects.CanvasWidth;
             raindrops.Add(new Droplet() {
                 mix = new AnimationMix(new[] {
                     new AnimationTrack("raindrop", 0)
                         .SetFrame(0, new AnimationFilledRectangle(randomX, 0, 3, 6, Properties.PrimaryColor))
-                        .SetFrame(1, new AnimationFilledRectangle(randomX + 5, Effects.canvas_height, 2, 4, Properties.PrimaryColor))
+                        .SetFrame(1, new AnimationFilledRectangle(randomX + 5, Effects.CanvasHeight, 2, 4, Properties.PrimaryColor))
                 }),
                 time = 0
             });

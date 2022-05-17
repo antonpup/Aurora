@@ -164,7 +164,7 @@ namespace Aurora.Profiles.Desktop
 
                         for (int x = 0; x < Global.Configuration.IdleAmount; x++)
                         {
-                            int width_start = randomizer.Next(Effects.canvas_width);
+                            int width_start = randomizer.Next(Effects.CanvasWidth);
                             float delay = randomizer.Next(550) / 100.0f;
                             int random_id = randomizer.Next(125536789);
 
@@ -172,15 +172,15 @@ namespace Aurora.Profiles.Desktop
                             AnimationTrack matrix_line =
                                 new AnimationTrack("Matrix Line (Head) " + random_id, 0.0f).SetFrame(
                                     0.0f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, -3, width_start, 0, Global.Configuration.IdleEffectPrimaryColor, 3)).SetFrame(
-                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.canvas_height, width_start, Effects.canvas_height + 3, Global.Configuration.IdleEffectPrimaryColor, 3)).SetShift(
+                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.CanvasHeight, width_start, Effects.CanvasHeight + 3, Global.Configuration.IdleEffectPrimaryColor, 3)).SetShift(
                                     (currenttime % 1000000L) / 1000.0f + delay
                                     );
 
                             AnimationTrack matrix_line_trail =
                                 new AnimationTrack("Matrix Line (Trail) " + random_id, 0.0f).SetFrame(
                                     0.0f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, -12, width_start, -3, darker_primary, 3)).SetFrame(
-                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.canvas_height - 12, width_start, Effects.canvas_height, darker_primary, 3)).SetFrame(
-                                    0.75f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.canvas_height, width_start, Effects.canvas_height, darker_primary, 3)).SetShift(
+                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.CanvasHeight - 12, width_start, Effects.CanvasHeight, darker_primary, 3)).SetFrame(
+                                    0.75f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.CanvasHeight, width_start, Effects.CanvasHeight, darker_primary, 3)).SetShift(
                                     (currenttime % 1000000L) / 1000.0f + delay
                                     );
 

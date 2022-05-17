@@ -3,7 +3,8 @@ using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers {
 
-    public partial class Control_RadialLayer : UserControl {
+    public partial class Control_RadialLayer
+    {
 
         private readonly RadialLayerHandler handler;
 

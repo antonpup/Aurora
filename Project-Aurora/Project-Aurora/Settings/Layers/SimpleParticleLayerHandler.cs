@@ -202,14 +202,14 @@ namespace Aurora.Settings.Layers {
             VelocityY = (float)((rnd.NextDouble() * (properties.MaxInitialVelocityY - properties.MinInitialVelocityY)) + properties.MinInitialVelocityY);
             PositionX
                 = properties.SpawnLocation == ParticleSpawnLocations.LeftEdge ? 0 // For left edge, X should start at 0
-                : properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.canvas_width // For right edge, X should start at maximum width
+                : properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.CanvasWidth // For right edge, X should start at maximum width
                 : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Left + (float)(rnd.NextDouble() * ar.Width)// For region, randomly choose X in region
-                : (float)(rnd.NextDouble() * Effects.canvas_width); // For top, bottom or random, randomly choose an X value
+                : (float)(rnd.NextDouble() * Effects.CanvasWidth); // For top, bottom or random, randomly choose an X value
             PositionY
                 = properties.SpawnLocation == ParticleSpawnLocations.TopEdge ? 0 // For top edge, Y should start at 0
-                : properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.canvas_height // For bottom edge, Y should start at maximum height
+                : properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.CanvasHeight // For bottom edge, Y should start at maximum height
                 : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
-                : (float)(rnd.NextDouble() * Effects.canvas_height); // For left, right or random, randomly choose a Y value
+                : (float)(rnd.NextDouble() * Effects.CanvasHeight); // For left, right or random, randomly choose a Y value
             Size = (float)(rnd.NextDouble() * (properties.MaxSize - properties.MinSize)) + properties.MinSize;
         }
 

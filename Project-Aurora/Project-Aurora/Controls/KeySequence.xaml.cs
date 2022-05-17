@@ -9,7 +9,7 @@ using System.Windows.Media;
 
 namespace Aurora.Controls
 {
-    public partial class KeySequence : UserControl
+    public partial class KeySequence
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(UserControl));
@@ -31,14 +31,8 @@ namespace Aurora.Controls
 
         public string RecordingTag
         {
-            get
-            {
-                return (string)GetValue(RecordingTagProperty);
-            }
-            set
-            {
-                SetValue(RecordingTagProperty, value);
-            }
+            get => (string)GetValue(RecordingTagProperty);
+            set => SetValue(RecordingTagProperty, value);
         }
 
         public List<Aurora.Settings.DeviceKey> List
@@ -58,10 +52,10 @@ namespace Aurora.Controls
                 {
                     Sequence.keys = value;
                 }
-                SequenceKeysChange?.Invoke(this, new EventArgs());
+                SequenceKeysChange?.Invoke(this, EventArgs.Empty);
             }
         }
-        private bool allowListRefresh = true;
+        private bool _allowListRefresh = true;
 
         #region Sequence Dependency Property
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
@@ -76,21 +70,21 @@ namespace Aurora.Controls
         private static void SequencePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             var source = (KeySequence)sender;
-            if (!(e.NewValue is Settings.KeySequence @new))
+            if (e.NewValue is notSettings.KeySequence @new)
             {
                 source.Sequence = new Settings.KeySequence();
                 return;
             }
 
             // If the old sequence is a region, remove that region from the editor
-            if (e.OldValue is Settings.KeySequence old && old.type == Settings.KeySequenceType.FreeForm)
+            if (e.OldValue is Settings.KeySequence {type: Settings.KeySequenceType.FreeForm} old)
                 LayerEditor.RemoveKeySequenceElement(old.freeform);
 
             // Handle the new sequence. If a region, this will add it to the editor
             source.sequence_updateToLayerEditor();
 
             // Manually update the keysequence list. Gross
-            if (source.allowListRefresh)
+            if (source._allowListRefresh)
             {
                 source.keys_keysequence.Items.Clear();
                 foreach (var key in @new.keys)
@@ -101,7 +95,7 @@ namespace Aurora.Controls
             source.sequence_freestyle_checkbox.IsChecked = @new.type == Settings.KeySequenceType.FreeForm;
 
             // Fire an event? Dunno if this is really neccessary but since it was already there I feel like I should keep it
-            source.SequenceUpdated?.Invoke(source, new EventArgs());
+            source.SequenceUpdated?.Invoke(source, EventArgs.Empty);
         }
         #endregion
 
@@ -166,9 +160,9 @@ namespace Aurora.Controls
         {
             if (Utils.UIUtils.ListBoxRemoveSelected(this.keys_keysequence))
             {
-                allowListRefresh = false;
+                _allowListRefresh = false;
                 List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
+                _allowListRefresh = true;
             }
         }
 
@@ -176,9 +170,9 @@ namespace Aurora.Controls
         {
             if (Utils.UIUtils.ListBoxMoveSelectedUp(this.keys_keysequence))
             {
-                allowListRefresh = false;
+                _allowListRefresh = false;
                 List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
+                _allowListRefresh = true;
             }
         }
 
@@ -186,9 +180,9 @@ namespace Aurora.Controls
         {
             if (Utils.UIUtils.ListBoxMoveSelectedDown(this.keys_keysequence))
             {
-                allowListRefresh = false;
+                _allowListRefresh = false;
                 List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
+                _allowListRefresh = true;
             }
         }
 
@@ -196,9 +190,9 @@ namespace Aurora.Controls
         {
             if (Utils.UIUtils.ListBoxReverseOrder(this.keys_keysequence))
             {
-                allowListRefresh = false;
+                _allowListRefresh = false;
                 List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-                allowListRefresh = true;
+                _allowListRefresh = true;
             }
 
         }
@@ -206,9 +200,9 @@ namespace Aurora.Controls
         private void sequence_record_keys_Click(object sender, RoutedEventArgs e)
         {
             RecordKeySequence(RecordingTag, (sender as Button), this.keys_keysequence);
-            allowListRefresh = false;
+            _allowListRefresh = false;
             List = Utils.UIUtils.SequenceToList(this.keys_keysequence.Items);
-            allowListRefresh = true;
+            _allowListRefresh = true;
         }
 
         private void RecordKeySequence(string whoisrecording, Button button, ListBox sequence_listbox)
@@ -257,14 +251,14 @@ namespace Aurora.Controls
             Settings.KeySequence seq = Sequence;
             if (seq != null && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
-                seq.type = ((sender as CheckBox).IsChecked.Value ? Settings.KeySequenceType.FreeForm : Settings.KeySequenceType.Sequence);
+                seq.type = (sender as CheckBox).IsChecked.Value ? Settings.KeySequenceType.FreeForm : Settings.KeySequenceType.Sequence;
                 Sequence = seq;
 
                 sequence_updateToLayerEditor();
             }
         }
 
-        public void sequence_updateToLayerEditor()
+        private void sequence_updateToLayerEditor()
         {
             if (Sequence != null && IsInitialized && IsVisible && IsEnabled)
             {
@@ -287,8 +281,7 @@ namespace Aurora.Controls
             {
                 Sequence.freeform = newfreeform;
 
-                if (SequenceUpdated != null)
-                    SequenceUpdated(this, new EventArgs());
+                SequenceUpdated?.Invoke(this, EventArgs.Empty);
             }
         }
 

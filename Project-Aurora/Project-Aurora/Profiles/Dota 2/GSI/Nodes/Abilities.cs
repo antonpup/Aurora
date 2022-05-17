@@ -10,7 +10,7 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
     /// </summary>
     public class Abilities_Dota2 : Node, IEnumerable<Ability>
     {
-        private List<Ability> abilities = new List<Ability>();
+        private List<Ability> abilities = new();
 
         /// <summary>
         /// The attributes a hero has to spend on abilities
@@ -22,11 +22,11 @@ namespace Aurora.Profiles.Dota_2.GSI.Nodes
         /// <summary>
         /// The number of abilities
         /// </summary>
-        public int Count { get { return abilities.Count; } }
+        public int Count => abilities.Count;
 
-        internal Abilities_Dota2(string json_data) : base(json_data)
+        internal Abilities_Dota2(string jsonData) : base(jsonData)
         {
-            json = json_data;
+            json = jsonData;
 
             List<string> abilities = _ParsedData.Properties().Select(p => p.Name).ToList();
             foreach (string ability_slot in abilities)

@@ -52,12 +52,12 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             //or if the color is adjusted in the UI
             //or if the canvas size changes due to the layout being changed
             if (currentChampion != lastChampion || currentColor != lastColor || 
-              lastWidth != Effects.canvas_width || lastHeight != Effects.canvas_height)
+              lastWidth != Effects.CanvasWidth || lastHeight != Effects.CanvasHeight)
             {
                 lastChampion = currentChampion;
                 lastColor = currentColor;
-                lastHeight = Effects.canvas_height;
-                lastWidth = Effects.canvas_width;
+                lastHeight = Effects.CanvasHeight;
+                lastWidth = Effects.CanvasWidth;
                 layer.FillOver(lastColor);
                 //then we fill the layer again
             }

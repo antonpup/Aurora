@@ -53,8 +53,8 @@ namespace Aurora.Settings
             imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
             /*imgBitmap.MinWidth = 0;
             imgBitmap.MinHeight = 0;*/
-            imgBitmap.MinWidth = Effects.canvas_width;
-            imgBitmap.MinHeight = Effects.canvas_height;
+            imgBitmap.MinWidth = Effects.CanvasWidth;
+            imgBitmap.MinHeight = Effects.CanvasHeight;
 
             this.Content = imgBitmap;
         }
