@@ -15,7 +15,7 @@ using System.ComponentModel;
 
 namespace Aurora.Settings.Layers
 {
-    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable, INotifyPropertyChanged where TProperty : LayerHandlerProperties<TProperty>
+    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable, INotifyPropertyChanged, IDisposable where TProperty : LayerHandlerProperties<TProperty>
     {
         private static readonly Lazy<TypeAccessor> Accessor = new(() => TypeAccessor.Create(typeof(TProperty)));
 
@@ -74,6 +74,7 @@ namespace Aurora.Settings.Layers
             Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true });
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Sequence = new KeySequence();
+            _Sequence.freeform.ValuesChanged += OnPropertiesChanged;
         }
 
         public object GetOverride(string propertyName) {
@@ -93,6 +94,11 @@ namespace Aurora.Settings.Layers
         public void OnPropertiesChanged(object sender)
         {
             PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(""));
+        }
+
+        public void Dispose()
+        {
+            _Sequence.freeform.ValuesChanged -= OnPropertiesChanged;
         }
     }
 

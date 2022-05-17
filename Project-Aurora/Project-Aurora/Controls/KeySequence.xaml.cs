@@ -100,17 +100,13 @@ namespace Aurora.Controls
 
         public bool FreestyleEnabled
         {
-            get
-            {
-                return (bool)GetValue(FreestyleEnabledProperty);
-            }
+            get => (bool)GetValue(FreestyleEnabledProperty);
             set
             {
                 SetValue(FreestyleEnabledProperty, value);
 
-                this.sequence_freestyle_checkbox.IsEnabled = value;
-                this.sequence_freestyle_checkbox.ToolTip = (value ? null : "Freestyle has been disabled.");
-                    
+                sequence_freestyle_checkbox.IsEnabled = value;
+                sequence_freestyle_checkbox.ToolTip = value ? null : "Freestyle has been disabled.";
             }
         }
 

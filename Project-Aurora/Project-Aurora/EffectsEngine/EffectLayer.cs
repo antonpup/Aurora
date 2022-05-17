@@ -475,6 +475,12 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer Set(KeySequence sequence, Brush brush)
         {
+            if (_previousSequenceType != sequence.type)
+            {
+                Clear();
+                _previousSequenceType = sequence.type;
+            }
+
             if (sequence.type == KeySequenceType.Sequence)
             {
                 foreach (var key in sequence.keys)
@@ -482,21 +488,16 @@ namespace Aurora.EffectsEngine
             }
             else
             {
-                if (brush is not SolidBrush solidBrush)
-                {
-                    if (sequence.freeform.Equals(_lastFreeform) && !_ksChanged)
-                    {
-                        return this;
-                    }
-                }
-                else
+                if (brush is SolidBrush solidBrush)
                 {
                     if (sequence.freeform.Equals(_lastFreeform) && !_ksChanged && _lastColor == solidBrush.Color)
                     {
                         return this;
                     }
+
                     _lastColor = solidBrush.Color;
                 }
+
                 Clear();
 
                 if (!sequence.freeform.Equals(_lastFreeform))
@@ -787,6 +788,8 @@ namespace Aurora.EffectsEngine
             return layer;
         }
 
+        private KeySequenceType _previousSequenceType;
+        
         /// <summary>
         /// Draws a percent effect on the layer bitmap using a KeySequence with solid colors.
         /// </summary>
@@ -794,17 +797,22 @@ namespace Aurora.EffectsEngine
         /// <param name="sequence">The sequence of keys that the percent effect will be drawn on</param>
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
-        /// <param name="flash_past"></param>
-        /// <param name="flash_reversed"></param>
-        /// <param name="blink_background"></param>
+        /// <param name="flashPast"></param>
+        /// <param name="flashReversed"></param>
+        /// <param name="blinkBackground"></param>
         public void PercentEffect(Color foregroundColor, Color backgroundColor, KeySequence sequence, double value,
             double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive,
-            double flash_past = 0.0, bool flash_reversed = false, bool blink_background = false)
+            double flashPast = 0.0, bool flashReversed = false, bool blinkBackground = false)
         {
+            if (_previousSequenceType != sequence.type)
+            {
+                Clear();
+                _previousSequenceType = sequence.type;
+            }
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flash_past, flash_reversed, blink_background);
+                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
             else
-                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flash_past, flash_reversed, blink_background);
+                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
         }
 
         /// <summary>
@@ -818,6 +826,11 @@ namespace Aurora.EffectsEngine
             PercentEffectType percentEffectType = PercentEffectType.Progressive, double flashPast = 0.0,
             bool flashReversed = false)
         {
+            if (_previousSequenceType != sequence.type)
+            {
+                Clear();
+                _previousSequenceType = sequence.type;
+            }
             if (sequence.type == KeySequenceType.Sequence)
                 PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flashPast, flashReversed);
             else
@@ -1015,6 +1028,7 @@ namespace Aurora.EffectsEngine
 
                 g.Transform = myMatrix;
                 g.FillRectangle(new SolidBrush(ColorUtils.BlendColors(backgroundColor, foregroundColor, progressTotal)), rect);
+                Invalidate();
             }
             else
             {
@@ -1045,8 +1059,7 @@ namespace Aurora.EffectsEngine
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             Dimension.Height = Effects.CanvasHeight;
             Dimension.Width = Effects.CanvasWidth;
-            _needsRender = true;
-            _keyColors.Clear();
+            Invalidate();
         }
 
         /// <summary>

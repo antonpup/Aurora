@@ -20,6 +20,7 @@ namespace Aurora.Settings.Layers {
 
         private void GradientPicker_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e) {
             handler.Properties.Brush.Colors = ColorStopCollection.FromMediaBrush(GradientPicker.Brush);
+            handler.Properties.OnPropertiesChanged(this);
         }
     }
 }
