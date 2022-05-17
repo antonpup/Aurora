@@ -175,7 +175,7 @@ namespace Aurora.Settings.Layers
 
         protected void TriggerPropertyChanged()
         {
-            var layerHandler = (LayerHandler) DataContext;
+            var layerHandler = (GradientLayerHandler) DataContext;
             layerHandler.Properties.OnPropertiesChanged(this);
         }
     }
