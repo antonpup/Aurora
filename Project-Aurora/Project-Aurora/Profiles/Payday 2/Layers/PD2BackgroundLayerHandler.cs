@@ -187,7 +187,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                         */
                     }
 
-                    bg_layer.Fill(bg_color);
+                    bg_layer.FillOver(bg_color);
 
                     if (Properties.PeripheralUse)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);
@@ -201,7 +201,7 @@ namespace Aurora.Profiles.Payday_2.Layers
                         ColorSpectrum suspicion_spec = new ColorSpectrum(Properties.LowSuspicionColor, Properties.HighSuspicionColor);
                         suspicion_spec.SetColorAt(0.5f, Properties.MediumSuspicionColor);
 
-                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.editor_to_canvas_width / Effects.canvas_width), 1.0f / (Effects.editor_to_canvas_height / Effects.canvas_height)));
+                        Settings.KeySequence suspicionSequence = new Settings.KeySequence(new Settings.FreeFormObject(0, 0, 1.0f / (Effects.EditorToCanvasWidth / Effects.canvas_width), 1.0f / (Effects.EditorToCanvasHeight / Effects.canvas_height)));
 
                         bg_layer.PercentEffect(suspicion_spec, suspicionSequence, percentSuspicious, 1.0D, Properties.SuspicionEffectType);
 
@@ -224,14 +224,14 @@ namespace Aurora.Profiles.Payday_2.Layers
                     if (no_return_flashamount < 0.0f)
                         no_return_flashamount = 0.0f;
 
-                    bg_layer.Fill(no_return_color);
+                    bg_layer.FillOver(no_return_color);
 
                     if (Properties.PeripheralUse)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, no_return_color);
                 }
                 else
                 {
-                    bg_layer.Fill(bg_color);
+                    bg_layer.FillOver(bg_color);
 
                     if (Properties.PeripheralUse)
                         bg_layer.Set(Devices.DeviceKeys.Peripheral, bg_color);

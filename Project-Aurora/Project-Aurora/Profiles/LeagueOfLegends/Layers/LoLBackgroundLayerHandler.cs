@@ -58,7 +58,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
                 lastColor = currentColor;
                 lastHeight = Effects.canvas_height;
                 lastWidth = Effects.canvas_width;
-                layer.Fill(lastColor);
+                layer.FillOver(lastColor);
                 //then we fill the layer again
             }
             //otherwise, we can just return the same layer as it's mostly static

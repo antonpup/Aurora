@@ -45,7 +45,7 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_Sequence")]
     public class ScriptLayerHandler : LayerHandler<ScriptLayerHandlerProperties>, INotifyPropertyChanged
     {
-        internal Application profileManager;
+        internal Application ProfileManager;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -56,40 +56,42 @@ namespace Aurora.Settings.Layers
         {
             EffectLayer layer = null;
 
-            if (this.IsScriptValid)
+            if (!IsScriptValid) return EffectLayer.EmptyLayer;
+            try
             {
-                try
+                var script = ProfileManager.EffectScripts[Properties.Script];
+                var scriptLayers = script.UpdateLights(Properties.ScriptProperties, gamestate);
+                switch (scriptLayers)
                 {
-                    IEffectScript script = this.profileManager.EffectScripts[this.Properties.Script];
-                    object script_layers = script.UpdateLights(Properties.ScriptProperties, gamestate);
-                    if (script_layers is EffectLayer)
-                        layer = (EffectLayer)script_layers;
-                    else if (script_layers is EffectLayer[])
+                    case EffectLayer layers:
+                        layer = layers;
+                        break;
+                    case EffectLayer[] effectLayers:
                     {
-                        EffectLayer[] layers = (EffectLayer[])script_layers;
-                        layer = layers.First();
-                        for (int i = 1; i < layers.Length; i++)
-                            layer = layer + layers[i];
+                        layer = effectLayers.First();
+                        for (var i = 1; i < effectLayers.Length; i++)
+                            layer += effectLayers[i];
                         //foreach (var layer in (script_layers as EffectLayer[]))
                         //  layers.Enqueue(layer);
+                        break;
                     }
-                    ScriptException = null;
                 }
-                catch(Exception exc)
-                {
-                    Global.logger.Error("Effect script with key {0} encountered an error. Exception: {1}", this.Properties.Script, exc);
-                    ScriptException = exc;
-                }
+                ScriptException = null;
+            }
+            catch(Exception exc)
+            {
+                Global.logger.Error($"Effect script with key {Properties.Script} encountered an error", exc);
+                ScriptException = exc;
             }
 
-            return layer ?? new EffectLayer();
+            return layer ?? EffectLayer.EmptyLayer;
         }
 
         public VariableRegistry GetScriptPropertyRegistry()
         {
             if (IsScriptValid)
             {
-                return (VariableRegistry)profileManager.EffectScripts[this.Properties._Script].Properties.Clone();
+                return (VariableRegistry)ProfileManager.EffectScripts[Properties._Script].Properties.Clone();
             }
 
             return null;
@@ -97,19 +99,19 @@ namespace Aurora.Settings.Layers
 
         public void OnScriptChanged()
         {
-            VariableRegistry varRegistry = GetScriptPropertyRegistry();
+            var varRegistry = GetScriptPropertyRegistry();
             if (varRegistry != null)
                 Properties.ScriptProperties.Combine(varRegistry, true);
         }
 
         [JsonIgnore]
-        public bool IsScriptValid { get { return profileManager?.EffectScripts?.ContainsKey(Properties.Script) ?? false; } }
+        public bool IsScriptValid => ProfileManager?.EffectScripts?.ContainsKey(Properties.Script) ?? false;
 
         public override void SetApplication(Application profile)
         {
-            profileManager = profile;
+            ProfileManager = profile;
             (_Control as Control_ScriptLayer)?.SetProfile(profile);
-            this.OnScriptChanged();
+            OnScriptChanged();
         }
 
         protected override UserControl CreateControl()

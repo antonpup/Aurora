@@ -436,10 +436,10 @@ namespace Aurora.Settings.Layers
         public bool PerformFft { get; set; }
 
         // This Complex is NAudio's own! 
-        private Complex[] fftBuffer;
-        private FftEventArgs fftArgs;
-        private int fftPos;
-        private int fftLength;
+        private readonly Complex[] _fftBuffer;
+        private readonly FftEventArgs _fftArgs;
+        private int _fftPos;
+        private readonly int _fftLength;
 
         public SampleAggregator(int fftLength)
         {
@@ -448,9 +448,9 @@ namespace Aurora.Settings.Layers
                 throw new ArgumentException("FFT Length must be a power of two");
             }
 
-            this.fftLength = fftLength;
-            fftBuffer = new Complex[fftLength];
-            fftArgs = new FftEventArgs(fftBuffer);
+            _fftLength = fftLength;
+            _fftBuffer = new Complex[fftLength];
+            _fftArgs = new FftEventArgs(_fftBuffer);
         }
 
         private bool IsPowerOfTwo(int x)
@@ -462,13 +462,13 @@ namespace Aurora.Settings.Layers
         {
             if (!PerformFft || FftCalculated == null) return;
             // Remember the window function! There are many others as well.
-            fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HannWindow(fftPos, fftLength));
-            fftBuffer[fftPos].Y = 0; // This is always zero with audio.
-            fftPos++;
-            if (fftPos < fftLength) return;
-            fftPos = 0;
+            _fftBuffer[_fftPos].X = (float)(value * FastFourierTransform.HannWindow(_fftPos, _fftLength));
+            _fftBuffer[_fftPos].Y = 0; // This is always zero with audio.
+            _fftPos++;
+            if (_fftPos < _fftLength) return;
+            _fftPos = 0;
             //FastFourierTransform.FFT(true, m, fftBuffer);
-            FftCalculated(this, fftArgs);
+            FftCalculated(this, _fftArgs);
         }
     }
 

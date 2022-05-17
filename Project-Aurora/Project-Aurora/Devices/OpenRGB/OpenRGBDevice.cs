@@ -41,7 +41,7 @@ namespace Aurora.Devices.OpenRGB
                 var devices = _openRgb.GetAllControllerData();
                 _devices = new List<HelperOpenRGBDevice>();
 
-                for (int i = 0; i < devices.Length; i++)
+                for (var i = 0; i < devices.Length; i++)
                 {
                     var device = devices[i];
                     var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
@@ -97,30 +97,11 @@ namespace Aurora.Devices.OpenRGB
                 {
                     var calibration =
                         Global.Configuration.VarRegistry.GetVariable<RealColor>(calibrationName).GetDrawingColor();
-                    for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
-                    {
-                        if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
-                        {
-                            device.Colors[ledIndex] = new OpenRGBColor(
-                                (byte) (keyColor.R * calibration.R/255), 
-                                (byte) (keyColor.G * calibration.G/255),  
-                                (byte) (keyColor.B * calibration.B/255)
-                                );
-                        }
-                    }
+                    UpdateCalibratedDevice(device, keyColors, calibration);
                 }
                 else
                 {
-                    for (int ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
-                    {
-                        if (keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor))
-                        {
-                            var deviceKey = device.Colors[ledIndex];
-                            deviceKey.R = keyColor.R;
-                            deviceKey.G = keyColor.G;
-                            deviceKey.B = keyColor.B;
-                        }
-                    }
+                    UpdateDevice(device, keyColors);
                 }
 
                 try
@@ -139,6 +120,31 @@ namespace Aurora.Devices.OpenRGB
                 Thread.Sleep(sleep);
 
             return true;
+        }
+
+        private void UpdateDevice(HelperOpenRGBDevice device, IReadOnlyDictionary<DeviceKeys, Color> keyColors)
+        {
+            for (var ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+            {
+                if (!keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor)) continue;
+                var deviceKey = device.Colors[ledIndex];
+                deviceKey.R = keyColor.R;
+                deviceKey.G = keyColor.G;
+                deviceKey.B = keyColor.B;
+            }
+        }
+
+        private void UpdateCalibratedDevice(HelperOpenRGBDevice device, IReadOnlyDictionary<DeviceKeys, Color> keyColors,
+            Color calibration)
+        {
+            for (var ledIndex = 0; ledIndex < device.Colors.Length; ledIndex++)
+            {
+                if (!keyColors.TryGetValue(device.Mapping[ledIndex], out var keyColor)) continue;
+                var deviceKey = device.Colors[ledIndex];
+                deviceKey.R = (byte) (keyColor.R * calibration.R / 255);
+                deviceKey.G = (byte) (keyColor.G * calibration.G / 255);
+                deviceKey.B = (byte) (keyColor.B * calibration.B / 255);
+            }
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)

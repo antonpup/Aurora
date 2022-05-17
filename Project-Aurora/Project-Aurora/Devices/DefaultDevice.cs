@@ -12,7 +12,7 @@ namespace Aurora.Devices
 {
     public abstract class DefaultDevice : IDevice
     {
-        private readonly Stopwatch watch = new Stopwatch();
+        private readonly Stopwatch watch = new();
         private long lastUpdateTime;
         private long updateTime;
 
@@ -41,20 +41,18 @@ namespace Aurora.Devices
 
         protected abstract bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
 
-        Stopwatch _tempStopWatch = new Stopwatch();
+        private readonly Stopwatch _tempStopWatch = new();
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             _tempStopWatch.Restart();
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            var updateResult = UpdateDevice(colorComposition.keyColors, e, forced);
 
-            if (update_result)
-            {
-                lastUpdateTime = watch.ElapsedMilliseconds;
-                updateTime = _tempStopWatch.ElapsedMilliseconds;
-                watch.Restart();
-            }
+            if (!updateResult) return updateResult;
+            lastUpdateTime = watch.ElapsedMilliseconds;
+            updateTime = _tempStopWatch.ElapsedMilliseconds;
+            watch.Restart();
 
-            return update_result;
+            return updateResult;
         }
 
         #region Variables

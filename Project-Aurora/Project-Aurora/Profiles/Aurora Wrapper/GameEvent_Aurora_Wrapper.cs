@@ -611,7 +611,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
 
         public void SetEffect(EffectLayer layer, long time)
         {
-            layer.Fill(GetCurrentColor(time));
+            layer.FillOver(GetCurrentColor(time));
         }
     }
 

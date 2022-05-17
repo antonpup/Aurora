@@ -60,7 +60,7 @@ namespace Aurora.Utils
             {
                 Global.logger.Error("BitmapUtils.GetRegionColor() Exception: " + exc);
 
-                return Color.FromArgb(0, 0, 0);
+                return Color.Black;
             }
         }
 

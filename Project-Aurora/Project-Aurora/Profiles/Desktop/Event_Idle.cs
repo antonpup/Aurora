@@ -51,7 +51,7 @@ namespace Aurora.Profiles.Desktop
                 case IdleEffects.Dim:
                     layer = new EffectLayer("Idle - Dim");
 
-                    layer.Fill(Color.FromArgb(125, 0, 0, 0));
+                    layer.FillOver(Color.FromArgb(125, 0, 0, 0));
 
                     layers.Enqueue(layer);
                     break;
@@ -59,11 +59,11 @@ namespace Aurora.Profiles.Desktop
                     layer = new EffectLayer("Idle - Color Breathing");
 
                     Color breathe_bg_color = Global.Configuration.IdleEffectSecondaryColor;
-                    layer.Fill(breathe_bg_color);
+                    layer.FillOver(breathe_bg_color);
 
                     float sine = (float)Math.Pow(Math.Sin((double)((currenttime % 10000L) / 10000.0f) * 2 * Math.PI * Global.Configuration.IdleSpeed), 2);
 
-                    layer.Fill(Color.FromArgb((byte)(sine * 255), Global.Configuration.IdleEffectPrimaryColor));
+                    layer.FillOver(Color.FromArgb((byte)(sine * 255), Global.Configuration.IdleEffectPrimaryColor));
 
                     layers.Enqueue(layer);
                     break;
@@ -94,7 +94,7 @@ namespace Aurora.Profiles.Desktop
                         nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
                     }
 
-                    layer.Fill(Global.Configuration.IdleEffectSecondaryColor);
+                    layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
 
                     Devices.DeviceKeys[] stars_keys = stars.Keys.ToArray();
 
@@ -123,7 +123,7 @@ namespace Aurora.Profiles.Desktop
                         nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
                     }
 
-                    layer.Fill(Global.Configuration.IdleEffectSecondaryColor);
+                    layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
 
                     Devices.DeviceKeys[] raindrops_keys = raindrops.Keys.ToArray();
 
@@ -134,7 +134,7 @@ namespace Aurora.Profiles.Desktop
                         PointF pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
 
                         float transition_value = 1.0f - raindrops[raindrop];
-                        float radius = transition_value * Effects.canvas_biggest;
+                        float radius = transition_value * Effects.CanvasBiggest;
 
                         using(Graphics g = layer.GetGraphics())
                             g.DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
@@ -151,7 +151,7 @@ namespace Aurora.Profiles.Desktop
                 case IdleEffects.Blackout:
                     layer = new EffectLayer("Idle - Blackout");
 
-                    layer.Fill(Color.Black);
+                    layer.FillOver(Color.Black);
 
                     layers.Enqueue(layer);
                     break;
@@ -191,7 +191,7 @@ namespace Aurora.Profiles.Desktop
                         nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
                     }
 
-                    layer.Fill(Global.Configuration.IdleEffectSecondaryColor);
+                    layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
 
                     using (Graphics g = layer.GetGraphics())
                     {
@@ -216,7 +216,7 @@ namespace Aurora.Profiles.Desktop
 
 						nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
 					}
-					layer.Fill(Global.Configuration.IdleEffectSecondaryColor);
+					layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
 
 					ColorSpectrum drop_spec2 = new ColorSpectrum(
 						Global.Configuration.IdleEffectPrimaryColor,
@@ -226,7 +226,7 @@ namespace Aurora.Profiles.Desktop
 					{
 						PointF pt = Effects.GetBitmappingFromDeviceKey(d).Center;
 						float transitionValue = 1.0f - raindrops[d];
-						float radius = transitionValue * Effects.canvas_biggest;
+						float radius = transitionValue * Effects.CanvasBiggest;
 						raindrops[d] -= getDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
 						return new Tuple<Devices.DeviceKeys, PointF, float, float>(d, pt, transitionValue, radius);
 

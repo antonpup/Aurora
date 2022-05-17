@@ -49,7 +49,7 @@ namespace Aurora.Profiles.EliteDangerous.Layers
             GameState_EliteDangerous gameState = state as GameState_EliteDangerous;
 
             Color combat_bg_color = gameState.Status.IsFlagSet(Flag.HUD_DISCOVERY_MODE) ? this.Properties.DiscoveryModeColor : this.Properties.CombatModeColor;
-            bg_layer.Fill(combat_bg_color);
+            bg_layer.FillOver(combat_bg_color);
 
             return bg_layer;
         }

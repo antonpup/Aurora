@@ -178,15 +178,15 @@ namespace Aurora.Profiles.Dota_2.Layers
                         {
                             _linaLagunaBladeTrack = new AnimationTrack("Lina Laguna Blade", 0.5f);
 
-                            var lagunaPoint1 = new PointF(0, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var lagunaPoint2 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var lagunaPoint3 = new PointF(Effects.canvas_width_center + 6.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var lagunaPoint4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint1 = new PointF(0, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint2 = new PointF(Effects.CanvasWidthCenter + 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint3 = new PointF(Effects.CanvasWidthCenter + 6.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var lagunaPoint4 = new PointF(Effects.CanvasWidthCenter + 9.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
 
                             _linaLagunaBladeTrack.SetFrame(0.0f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), lagunaPoint1, Color.FromArgb(255, 255, 255), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), lagunaPoint1, Color.FromArgb(255, 255, 255), 2),
                                         new(lagunaPoint1, lagunaPoint2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
                                         new(lagunaPoint2, lagunaPoint3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
                                         new(lagunaPoint3, lagunaPoint4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
@@ -197,7 +197,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             _linaLagunaBladeTrack.SetFrame(0.45f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), lagunaPoint1, Color.FromArgb(255, 255, 255), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), lagunaPoint1, Color.FromArgb(255, 255, 255), 2),
                                         new(lagunaPoint1, lagunaPoint2, Color.FromArgb(255, 255, 255), Color.FromArgb(170, 170, 255), 3),
                                         new(lagunaPoint2, lagunaPoint3, Color.FromArgb(170, 170, 255), Color.FromArgb(85, 85, 255), 3),
                                         new(lagunaPoint3, lagunaPoint4, Color.FromArgb(85, 85, 255), Color.FromArgb(0, 0, 255), 5),
@@ -208,7 +208,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             _linaLagunaBladeTrack.SetFrame(0.5f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), lagunaPoint1, Color.FromArgb(0, 255, 255, 255), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), lagunaPoint1, Color.FromArgb(0, 255, 255, 255), 2),
                                         new(lagunaPoint1, lagunaPoint2, Color.FromArgb(0, 255, 255, 255), Color.FromArgb(0, 170, 170, 255), 3),
                                         new(lagunaPoint2, lagunaPoint3, Color.FromArgb(0, 170, 170, 255), Color.FromArgb(0, 85, 85, 255), 3),
                                         new(lagunaPoint3, lagunaPoint4, Color.FromArgb(0, 85, 85, 255), Color.FromArgb(0, 0, 0, 255), 5),
@@ -225,15 +225,15 @@ namespace Aurora.Profiles.Dota_2.Layers
                         {
                             _abaddonDeathCoilTrack = new AnimationTrack("Abaddon Dealth Coil", 0.5f);
 
-                            var deathCoilPoint1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var deathCoilPoint2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var deathCoilPoint3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var deathCoilPoint4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint1 = new PointF(Effects.CanvasWidthCenter - 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint2 = new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint3 = new PointF(Effects.CanvasWidthCenter + 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var deathCoilPoint4 = new PointF(Effects.CanvasWidthCenter + 9.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
 
                             _abaddonDeathCoilTrack.SetFrame(0.0f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), deathCoilPoint1, Color.FromArgb(0, 160, 210), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), deathCoilPoint1, Color.FromArgb(0, 160, 210), 2),
                                         new(deathCoilPoint1, deathCoilPoint2, Color.FromArgb(0, 160, 210), 3),
                                         new(deathCoilPoint2, deathCoilPoint3, Color.FromArgb(0, 160, 210), 3),
                                         new(deathCoilPoint3, deathCoilPoint4, Color.FromArgb(0, 160, 210), 5),
@@ -244,7 +244,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             _abaddonDeathCoilTrack.SetFrame(0.45f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), deathCoilPoint1, Color.FromArgb(0, 160, 210), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), deathCoilPoint1, Color.FromArgb(0, 160, 210), 2),
                                         new(deathCoilPoint1, deathCoilPoint2, Color.FromArgb(0, 160, 210), 3),
                                         new(deathCoilPoint2, deathCoilPoint3, Color.FromArgb(0, 160, 210), 3),
                                         new(deathCoilPoint3, deathCoilPoint4, Color.FromArgb(0, 160, 210), 5),
@@ -255,7 +255,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             _abaddonDeathCoilTrack.SetFrame(0.5f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), deathCoilPoint1, Color.FromArgb(0, 0, 160, 210), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), deathCoilPoint1, Color.FromArgb(0, 0, 160, 210), 2),
                                         new(deathCoilPoint1, deathCoilPoint2, Color.FromArgb(0, 0, 160, 210), 3),
                                         new(deathCoilPoint2, deathCoilPoint3, Color.FromArgb(0, 0, 160, 210), 3),
                                         new(deathCoilPoint3, deathCoilPoint4, Color.FromArgb(0, 0, 160, 210), 5),
@@ -299,15 +299,15 @@ namespace Aurora.Profiles.Dota_2.Layers
                         {
                             _zuusArcLightningTrack = new AnimationTrack("Zeus Arc Lightning", 0.5f);
 
-                            var zuusLightningPoint1 = new PointF(Effects.canvas_width_center - 3.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var zuusLightningPoint2 = new PointF(Effects.canvas_width_center, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var zuusLightningPoint3 = new PointF(Effects.canvas_width_center + 3.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
-                            var zuusLightningPoint4 = new PointF(Effects.canvas_width_center + 9.0f, Effects.canvas_height_center + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint1 = new PointF(Effects.CanvasWidthCenter - 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint2 = new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint3 = new PointF(Effects.CanvasWidthCenter + 3.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
+                            var zuusLightningPoint4 = new PointF(Effects.CanvasWidthCenter + 9.0f, Effects.CanvasHeightCenter + ((_randomizer.Next() % 2 == 0 ? 1.0f : -1.0f) * 6.0f * (float)_randomizer.NextDouble()));
 
                             _zuusArcLightningTrack.SetFrame(0.0f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), zuusLightningPoint1, Color.FromArgb(0, 205, 255), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), zuusLightningPoint1, Color.FromArgb(0, 205, 255), 2),
                                         new(zuusLightningPoint1, zuusLightningPoint2, Color.FromArgb(0, 205, 255), 3),
                                         new(zuusLightningPoint2, zuusLightningPoint3, Color.FromArgb(0, 205, 255) , 3),
                                         new(zuusLightningPoint3, zuusLightningPoint4, Color.FromArgb(0, 205, 255), 5),
@@ -318,7 +318,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             _zuusArcLightningTrack.SetFrame(0.45f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), zuusLightningPoint1, Color.FromArgb(0, 205, 255), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), zuusLightningPoint1, Color.FromArgb(0, 205, 255), 2),
                                         new(zuusLightningPoint1, zuusLightningPoint2, Color.FromArgb(0, 205, 255), 3),
                                         new(zuusLightningPoint2, zuusLightningPoint3, Color.FromArgb(0, 205, 255) , 3),
                                         new(zuusLightningPoint3, zuusLightningPoint4, Color.FromArgb(0, 205, 255), 5),
@@ -329,7 +329,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                             _zuusArcLightningTrack.SetFrame(0.5f,
                                 new AnimationLines(
                                     new AnimationLine[] {
-                                        new(new PointF(0, Effects.canvas_height_center), zuusLightningPoint1, Color.FromArgb(0, 0, 205, 255), 2),
+                                        new(new PointF(0, Effects.CanvasHeightCenter), zuusLightningPoint1, Color.FromArgb(0, 0, 205, 255), 2),
                                         new(zuusLightningPoint1, zuusLightningPoint2, Color.FromArgb(0, 0, 205, 255), 3),
                                         new(zuusLightningPoint2, zuusLightningPoint3, Color.FromArgb(0, 0, 205, 255), 3),
                                         new(zuusLightningPoint3, zuusLightningPoint4, Color.FromArgb(0, 0, 205, 255), 5),
@@ -566,7 +566,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.NevermoreShadowraze:
@@ -591,7 +591,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
                     var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
 
-                    _abilityEffectsLayer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(0, 205, 255), alphaPercent));
                     break;
                 }
                 case Dota2AbilityEffects.AntimageBlink:
@@ -608,7 +608,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     var xOffset = (_abilityEffectKeyframe += GetDeltaTime()) / _abilityEffectTime;
                     var alphaPercent = (xOffset >= 0.85f ? 1.0f + (1.0f - (1.17f) * xOffset) : 1.0f);
 
-                    _abilityEffectsLayer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 200, 255), alphaPercent));
                     break;
                 }
                 case Dota2AbilityEffects.AncientApparitionIceBlast:
@@ -619,7 +619,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 {
                     var alphaPercent = (float)Math.Pow(Math.Sin(((double)_abilityEffectKeyframe / (_abilityEffectTime / 16)) * Math.PI), 2.0);
 
-                    _abilityEffectsLayer.Fill(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
+                    _abilityEffectsLayer.FillOver(Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(140, 160, 0), (alphaPercent < 0.2f ? 0.2f : alphaPercent)));
 
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
@@ -656,7 +656,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     Color color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.DragonKnightBreatheFire:
@@ -671,7 +671,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.EarthshakerEchoSlam:
@@ -682,7 +682,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
                     var color = Utils.ColorUtils.MultiplyColorByScalar(Color.FromArgb(200, 60, 0), fluctuations * alphaPercent);
 
-                    _abilityEffectsLayer.Fill(color);
+                    _abilityEffectsLayer.FillOver(color);
                     break;
                 }
                 case Dota2AbilityEffects.ElderTitanEarthSplitter:
@@ -740,273 +740,273 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             _razorPlasmaFieldTrack = new AnimationTrack("Razor Plasma Field", 2.0f);
             _razorPlasmaFieldTrack.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 200, 255), 3)
                 );
             _razorPlasmaFieldTrack.SetFrame(1.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 200, 255), 3)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 200, 255), 3)
                 );
             _razorPlasmaFieldTrack.SetFrame(2.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 200, 255), 3)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 200, 255), 3)
                 );
 
 
             _crystalMaidenCrystalNovaTrack = new AnimationTrack("CM Crystal Nova", 1.0f);
             _crystalMaidenCrystalNovaTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(0, 200, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_height / 2.0f, Color.FromArgb(0, 200, 255))
                 );
             _crystalMaidenCrystalNovaTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f / 2.0f, Color.FromArgb(0, 200, 255))
                 );
             _crystalMaidenCrystalNovaTrack.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 200, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 200, 255))
                 );
 
             _rikiSmokeScreenTrack = new AnimationTrack("Riki Smoke Screen", 6.5f);
             _rikiSmokeScreenTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_height / 2.0f, Color.FromArgb(163, 70, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_height / 2.0f, Color.FromArgb(163, 70, 255))
                 );
             _rikiSmokeScreenTrack.SetFrame(5.525f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f / 2.0f, Color.FromArgb(163, 70, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f / 2.0f, Color.FromArgb(163, 70, 255))
                 );
             _rikiSmokeScreenTrack.SetFrame(6.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 163, 70, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 163, 70, 255))
                 );
 
             _linaDragonSlaveTrack = new AnimationTrack("Lina Dragon Slave", 1.25f);
             _linaDragonSlaveTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.10f, Color.FromArgb(255, 80, 0))
                 );
             _linaDragonSlaveTrack.SetFrame(0.9375f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f, Color.FromArgb(255, 80, 0))
                 );
             _linaDragonSlaveTrack.SetFrame(1.25f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 80, 0))
                 );
 
             _linaLightStrikeArrayTrack = new AnimationTrack("Lina Light Strike", 2.0f);
             _linaLightStrikeArrayTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 255, 80, 0))
                 );
             _linaLightStrikeArrayTrack.SetFrame(0.49f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 255, 80, 0))
                 );
             _linaLightStrikeArrayTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.1f / 2.0f, Color.FromArgb(255, 80, 0))
                 );
             _linaLightStrikeArrayTrack.SetFrame(1.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f / 2.0f, Color.FromArgb(255, 80, 0))
                 );
             _linaLightStrikeArrayTrack.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 255, 80, 0))
                 );
 
             _nevermoreShadowrazeTrack = new AnimationTrack("Shadow Fiend Raze", 0.7f);
             _nevermoreShadowrazeTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
             _nevermoreShadowrazeTrack.SetFrame(0.595f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.075f / 2.0f, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.075f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
             _nevermoreShadowrazeTrack.SetFrame(0.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 255, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 255, 0, 0))
                 );
 
             _nevermoreRequiemTrack = new AnimationTrack("Shadow Field Requiem", 2.0f);
             _nevermoreRequiemTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 0, 0))
                 );
             _nevermoreRequiemTrack.SetFrame(1.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f / 2.0f, Color.FromArgb(255, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f / 2.0f, Color.FromArgb(255, 0, 0))
                 );
             _nevermoreRequiemTrack.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 255, 0, 0))
                 );
 
             _zuusLightningBoltTrack = new AnimationTrack("Zeus Lighting Bolt", 0.5f);
             _zuusLightningBoltTrack.SetFrame(0.0f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
                 );
             _zuusLightningBoltTrack.SetFrame(0.425f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 205, 255), 15)
                 );
             _zuusLightningBoltTrack.SetFrame(0.5f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 15)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 15)
                 );
 
             _zuusLightningBoltShadeTrack = new AnimationTrack("Zeus Lighting Bolt Shade", 0.5f);
             _zuusLightningBoltShadeTrack.SetFrame(0.0f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
                 );
             _zuusLightningBoltShadeTrack.SetFrame(0.425f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(180, 0, 205, 255), 20)
                 );
             _zuusLightningBoltShadeTrack.SetFrame(0.5f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, 0), new PointF(Effects.canvas_width_center, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, 0), new PointF(Effects.CanvasWidthCenter, Effects.canvas_height), Color.FromArgb(0, 0, 205, 255), 20)
                 );
 
             _antimageBlinkTrack = new AnimationTrack("Anti-mage Blink", 0.5f);
             _antimageBlinkTrack.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(128, 0, 255), 3)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(128, 0, 255), 3)
                 );
             _antimageBlinkTrack.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(128, 0, 255), 3)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(128, 0, 255), 3)
                 );
 
             _antimageManaVoidTrack = new AnimationTrack("Anti-mage Void", 0.5f);
             _antimageManaVoidTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(0, 0, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.10f, Color.FromArgb(0, 0, 255))
                 );
             _antimageManaVoidTrack.SetFrame(0.425f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(0, 0, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f, Color.FromArgb(0, 0, 255))
                 );
             _antimageManaVoidTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 0, 0, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 0, 0, 255))
                 );
 
             _antimageManaVoidCoreTrack = new AnimationTrack("Anti-mage Void Core", 0.5f);
             _antimageManaVoidCoreTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 255, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 255, 255))
                 );
             _antimageManaVoidCoreTrack.SetFrame(0.425f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 255, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.25f, Color.FromArgb(255, 255, 255))
                 );
             _antimageManaVoidCoreTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(0, 255, 255, 255))
                 );
 
             _ancientApparitionIceBlastTrack = new AnimationTrack("AA Ice Blast", 1.0f);
             _ancientApparitionIceBlastTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(200, 200, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(200, 200, 255))
                 );
             _ancientApparitionIceBlastTrack.SetFrame(0.85f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(200, 200, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f, Color.FromArgb(200, 200, 255))
                 );
             _ancientApparitionIceBlastTrack.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 200, 200, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 200, 200, 255))
                 );
 
             _axeBerserkersCallTrack = new AnimationTrack("Axe Berserker", 0.7f);
             _axeBerserkersCallTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 50, 0))
                 );
             _axeBerserkersCallTrack.SetFrame(0.595f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.85f, Color.FromArgb(255, 50, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.85f, Color.FromArgb(255, 50, 0))
                 );
             _axeBerserkersCallTrack.SetFrame(0.7f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 50, 0))
                 );
 
             _beastmasterPrimalRoarTrack = new AnimationTrack("BM Primal Roar", 1.0f);
             _beastmasterPrimalRoarTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, 0, Color.FromArgb(255, 200, 100))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 200, 100))
                 );
             _beastmasterPrimalRoarTrack.SetFrame(0.75f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 200, 100))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f, Color.FromArgb(255, 200, 100))
                 );
             _beastmasterPrimalRoarTrack.SetFrame(1.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 200, 100))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 200, 100))
                 );
 
             _brewmasterThunderClapTrack = new AnimationTrack("Brewmaster Thunder Clap", 1.5f);
             _brewmasterThunderClapTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(170, 90, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(170, 90, 0))
                 );
             _brewmasterThunderClapTrack.SetFrame(0.75f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(170, 90, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(170, 90, 0))
                 );
             _brewmasterThunderClapTrack.SetFrame(1.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 170, 90, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 170, 90, 0))
                 );
 
             _centaurHoofStompTrack = new AnimationTrack("Centaur Stomp", 1.0f);
             _centaurHoofStompTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 50, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 50, 0))
                 );
             _centaurHoofStompTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(255, 50, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(255, 50, 0))
                 );
             _centaurHoofStompTrack.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 50, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 50, 0))
                 );
 
             _chaosKnightChaosBoltMix = new AnimationMix();
 
             var chaosKnightChaosBoltProjectilePath = new AnimationTrack("Chaos Knight Bolt - Projectile Path", 0.5f);
             chaosKnightChaosBoltProjectilePath.SetFrame(0.0f,
-                new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(0, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3)
+                new AnimationLine(new PointF(0, Effects.CanvasHeightCenter), new PointF(0, Effects.CanvasHeightCenter), Color.FromArgb(255, 70, 0), 3)
                 );
             chaosKnightChaosBoltProjectilePath.SetFrame(0.25f,
-                new AnimationLine(new PointF(0, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(255, 70, 0), 3)
+                new AnimationLine(new PointF(0, Effects.CanvasHeightCenter), new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter), Color.FromArgb(255, 70, 0), 3)
                 );
             chaosKnightChaosBoltProjectilePath.SetFrame(0.5f,
-                new AnimationLine(new PointF(Effects.canvas_width_center, Effects.canvas_height_center), new PointF(Effects.canvas_width_center, Effects.canvas_height_center), Color.FromArgb(0, 255, 70, 0), 3)
+                new AnimationLine(new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter), new PointF(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter), Color.FromArgb(0, 255, 70, 0), 3)
                 );
             _chaosKnightChaosBoltMix.AddTrack(chaosKnightChaosBoltProjectilePath);
 
             var chaosKnightChaosBoltProjectile = new AnimationTrack("Chaos Knight Bolt - Projectile", 0.25f, 0.25f);
             chaosKnightChaosBoltProjectile.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(175, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(175, 0, 0))
                 );
             chaosKnightChaosBoltProjectile.SetFrame(0.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 175, 0, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(0, 175, 0, 0))
                 );
             _chaosKnightChaosBoltMix.AddTrack(chaosKnightChaosBoltProjectile);
 
             _rattletrapRocketFlareTrack = new AnimationTrack("Clockwork Rocket Flare", 0.5f);
             _rattletrapRocketFlareTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 80, 0))
                 );
             _rattletrapRocketFlareTrack.SetFrame(0.25f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.25f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.25f, Color.FromArgb(255, 80, 0))
                 );
             _rattletrapRocketFlareTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.5f, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.5f, Color.FromArgb(0, 255, 80, 0))
                 );
 
             _dragonKnightBreatheFireTrack = new AnimationTrack("Dragon Knight Breathe", 1.25f);
             _dragonKnightBreatheFireTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.10f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.10f, Color.FromArgb(255, 80, 0))
                 );
             _dragonKnightBreatheFireTrack.SetFrame(0.9375f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest * 0.75f, Color.FromArgb(255, 80, 0))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.75f, Color.FromArgb(255, 80, 0))
                 );
             _dragonKnightBreatheFireTrack.SetFrame(1.25f,
-                new AnimationFilledCircle(0, Effects.canvas_height_center, Effects.canvas_biggest, Color.FromArgb(0, 255, 80, 0))
+                new AnimationFilledCircle(0, Effects.CanvasHeightCenter, Effects.CanvasBiggest, Color.FromArgb(0, 255, 80, 0))
                 );
 
             _elderTitanEarthSplitterTrack = new AnimationTrack("Elder Titan Earth Splitter", 1.0f, 3.0f);
             _elderTitanEarthSplitterTrack.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 220))
                 );
             _elderTitanEarthSplitterTrack.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 255, 220))
                 );
 
             _kunkkaTorrentMix = new AnimationMix();
             var kunkkaTorrentBgTrack = new AnimationTrack("Kunka Torrent BG", 4.0f);
             kunkkaTorrentBgTrack.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 0))
                 );
             kunkkaTorrentBgTrack.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
                 );
             kunkkaTorrentBgTrack.SetFrame(3.6f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 60, 80))
                 );
             kunkkaTorrentBgTrack.SetFrame(4.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 60, 80))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 0, 60, 80))
                 );
 
             var kunkkaTorrentSpashTrack = new AnimationTrack("Kunka Torrent Splash", 2.4f, 1.6f);
 
             kunkkaTorrentSpashTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.1f / 2.0f, Color.FromArgb(0, 220, 245))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.1f / 2.0f, Color.FromArgb(0, 220, 245))
                 );
             kunkkaTorrentSpashTrack.SetFrame(2.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest * 0.83f / 2.0f, Color.FromArgb(0, 220, 245))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest * 0.83f / 2.0f, Color.FromArgb(0, 220, 245))
                 );
             kunkkaTorrentSpashTrack.SetFrame(2.4f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
                 );
 
             _kunkkaTorrentMix.AddTrack(kunkkaTorrentBgTrack);
@@ -1016,327 +1016,327 @@ namespace Aurora.Profiles.Dota_2.Layers
             _kunkkaGhostshipTrack = new AnimationTrack("Kunka Ghostship", 2.7f);
 
             _kunkkaGhostshipTrack.SetFrame(0.0f,
-                    new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
+                    new AnimationFilledCircle(-(Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 220, 245))
                     );
             _kunkkaGhostshipTrack.SetFrame(2.3f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.85f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f) * 0.85f, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 220, 245))
                 );
             _kunkkaGhostshipTrack.SetFrame(2.7f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 220, 245))
                 );
 
             _legionCommanderOverwhelmingOddsTrack = new AnimationTrack("Legion Commander Overwhelming Odds", 1.0f);
             _legionCommanderOverwhelmingOddsTrack.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
                 );
             _legionCommanderOverwhelmingOddsTrack.SetFrame(0.3f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
                 );
             _legionCommanderOverwhelmingOddsTrack.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 145, 0))
                 );
             _legionCommanderOverwhelmingOddsTrack.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(0, 255, 145, 0))
                 );
 
             _lifeStealerRageTrack = new AnimationTrack("Life Stealer Rage", 6.0f);
             _lifeStealerRageTrack.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(1.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(2.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(2.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(3.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(3.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(4.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(4.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(5.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(5.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(130, 0, 0))
                 );
             _lifeStealerRageTrack.SetFrame(6.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(175, 0, 0))
                 );
 
             _magnataurShockwaveTrack = new AnimationTrack("Magnataur Shockwave", 1.0f);
             _magnataurShockwaveTrack.SetFrame(0.0f,
-                    new AnimationFilledCircle(-(Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
+                    new AnimationFilledCircle(-(Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 205, 255))
                     );
             _magnataurShockwaveTrack.SetFrame(0.9f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f) * 0.9f, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 205, 255))
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f) * 0.9f, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 205, 255))
                 );
             _magnataurShockwaveTrack.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width + (Effects.canvas_biggest / 2.0f), Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
+                new AnimationFilledCircle(Effects.canvas_width + (Effects.CanvasBiggest / 2.0f), Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 205, 255))
                 );
 
             _omniknightPurificationTrack = new AnimationTrack("Omniknight Purification", 1.0f);
             _omniknightPurificationTrack.SetFrame(0.0f,
-                    new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0))
+                    new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0))
                     );
             _omniknightPurificationTrack.SetFrame(0.8f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0))
                 );
             _omniknightPurificationTrack.SetFrame(1.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 255, 160, 0))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 255, 160, 0))
                 );
 
             _omniknightRepelTrack = new AnimationTrack("Omniknight Repel", 12.0f);
             _omniknightRepelTrack.SetFrame(0.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(0.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(1.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(1.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(2.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(2.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(3.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(3.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(4.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(4.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(5.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(5.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(6.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(6.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(7.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(7.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(8.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(8.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(9.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(9.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(10.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(10.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(11.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
             _omniknightRepelTrack.SetFrame(11.5f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(150, 150, 255))
                 );
             _omniknightRepelTrack.SetFrame(12.0f,
-                new AnimationFilledRectangle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
+                new AnimationFilledRectangle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.canvas_width, Effects.canvas_height, Color.FromArgb(255, 255, 255))
                 );
 
             _sandkingEpicenterMix = new AnimationMix();
             var sandkingEpicenterWave1 = new AnimationTrack("Sandsking Epicenter Wave1", 0.5f, 0.0f);
             sandkingEpicenterWave1.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave1.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave2 = new AnimationTrack("Sandsking Epicenter Wave2", 0.5f, 0.16f);
             sandkingEpicenterWave2.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave2.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave3 = new AnimationTrack("Sandsking Epicenter Wave3", 0.5f, 0.32f);
             sandkingEpicenterWave3.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave3.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave4 = new AnimationTrack("Sandsking Epicenter Wave4", 0.5f, 0.48f);
             sandkingEpicenterWave4.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave4.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave5 = new AnimationTrack("Sandsking Epicenter Wave5", 0.5f, 0.64f);
             sandkingEpicenterWave5.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave5.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave6 = new AnimationTrack("Sandsking Epicenter Wave6", 0.5f, 0.8f);
             sandkingEpicenterWave6.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave6.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave7 = new AnimationTrack("Sandsking Epicenter Wave7", 0.5f, 0.96f);
             sandkingEpicenterWave7.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave7.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave8 = new AnimationTrack("Sandsking Epicenter Wave8", 0.5f, 1.12f);
             sandkingEpicenterWave8.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave8.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave9 = new AnimationTrack("Sandsking Epicenter Wave9", 0.5f, 1.28f);
             sandkingEpicenterWave9.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave9.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave10 = new AnimationTrack("Sandsking Epicenter Wave10", 0.5f, 1.44f);
             sandkingEpicenterWave10.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave10.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave11 = new AnimationTrack("Sandsking Epicenter Wave11", 0.5f, 1.6f);
             sandkingEpicenterWave11.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave11.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
             var sandkingEpicenterWave12 = new AnimationTrack("Sandsking Epicenter Wave12", 0.5f, 1.76f);
             sandkingEpicenterWave12.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave12.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave13 = new AnimationTrack("Sandsking Epicenter Wave13", 0.5f, 1.92f);
             sandkingEpicenterWave13.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave13.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave14 = new AnimationTrack("Sandsking Epicenter Wave14", 0.5f, 2.08f);
             sandkingEpicenterWave14.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave14.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave15 = new AnimationTrack("Sandsking Epicenter Wave15", 0.5f, 2.24f);
             sandkingEpicenterWave15.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave15.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave16 = new AnimationTrack("Sandsking Epicenter Wave16", 0.5f, 2.4f);
             sandkingEpicenterWave16.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave16.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave17 = new AnimationTrack("Sandsking Epicenter Wave17", 0.5f, 2.56f);
             sandkingEpicenterWave17.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave17.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave18 = new AnimationTrack("Sandsking Epicenter Wave18", 0.5f, 2.72f);
             sandkingEpicenterWave18.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave18.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave19 = new AnimationTrack("Sandsking Epicenter Wave19", 0.5f, 2.88f);
             sandkingEpicenterWave19.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave19.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             var sandkingEpicenterWave20 = new AnimationTrack("Sandsking Epicenter Wave20", 0.5f, 3f);
             sandkingEpicenterWave20.SetFrame(0.0f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(255, 160, 0), 4)
                 );
             sandkingEpicenterWave20.SetFrame(0.5f,
-                new AnimationCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
+                new AnimationCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(255, 160, 0), 4)
                 );
 
             _sandkingEpicenterMix.AddTrack(sandkingEpicenterWave1);
@@ -1363,13 +1363,13 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             _slardarSlithereenCrushTrack = new AnimationTrack("Slardar SMASH!", 0.5f);
             _slardarSlithereenCrushTrack.SetFrame(0.0f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, 0, Color.FromArgb(0, 150, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, 0, Color.FromArgb(0, 150, 255))
                 );
             _slardarSlithereenCrushTrack.SetFrame(0.45f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, (Effects.canvas_biggest / 2.0f) * 0.9f, Color.FromArgb(0, 150, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, (Effects.CanvasBiggest / 2.0f) * 0.9f, Color.FromArgb(0, 150, 255))
                 );
             _slardarSlithereenCrushTrack.SetFrame(0.5f,
-                new AnimationFilledCircle(Effects.canvas_width_center, Effects.canvas_height_center, Effects.canvas_biggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
+                new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
                 );
 
         }
