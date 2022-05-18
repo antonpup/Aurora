@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Windows;
 using Aurora.Devices;
 using Aurora.Settings;
 using Aurora.Utils;
+using Point = System.Drawing.Point;
 
 namespace Aurora.EffectsEngine
 {
@@ -14,8 +16,8 @@ namespace Aurora.EffectsEngine
     /// </summary>
     public class EffectLayer : IDisposable
     {
-        private static readonly Lazy<EffectLayer> _emptyLayerFactory = new();
-        public static EffectLayer EmptyLayer => _emptyLayerFactory.Value;
+        private static readonly Lazy<EffectLayer> EmptyLayerFactory = new();
+        public static EffectLayer EmptyLayer => EmptyLayerFactory.Value;
 
         private readonly string _name;
         private Bitmap _colormap;
@@ -46,7 +48,6 @@ namespace Aurora.EffectsEngine
 
                 return _textureBrush;
             }
-            
         }
 
         private Color _peripheral;
@@ -66,7 +67,7 @@ namespace Aurora.EffectsEngine
         {
             _name = "Unknown Layer";
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            Effects.CanvasChanged += Invalidate;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
             _peripheral = Color.Empty;
@@ -84,10 +85,9 @@ namespace Aurora.EffectsEngine
             var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
             var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
             _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
-            Effects.CanvasChanged += Invalidate;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-            Graphics.FromImage(_colormap);
             _peripheral = anotherLayer._peripheral;
 
             _needsRender = anotherLayer._needsRender;
@@ -101,10 +101,9 @@ namespace Aurora.EffectsEngine
         {
             _name = name;
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            Effects.CanvasChanged += Invalidate;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-            Graphics.FromImage(_colormap);
             _peripheral = Color.Empty;
 
             FillOver(Color.FromArgb(0, 1, 1, 1));
@@ -119,10 +118,9 @@ namespace Aurora.EffectsEngine
         {
             _name = name;
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            Effects.CanvasChanged += Invalidate;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-            Graphics.FromImage(_colormap);
             _peripheral = color;
 
             FillOver(color);
@@ -140,10 +138,9 @@ namespace Aurora.EffectsEngine
         {
             _name = name;
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            Effects.CanvasChanged += Invalidate;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
-            Graphics.FromImage(_colormap);
             _peripheral = new Color();
             Brush brush;
             var shift = 0.0f;
@@ -342,7 +339,7 @@ namespace Aurora.EffectsEngine
             _textureBrush.Dispose();
             _textureBrush = null;
             _colormap.Dispose();
-            Effects.CanvasChanged -= Invalidate;
+            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
         }
 
         /// <summary>
@@ -789,7 +786,7 @@ namespace Aurora.EffectsEngine
         }
 
         private KeySequenceType _previousSequenceType;
-        
+
         /// <summary>
         /// Draws a percent effect on the layer bitmap using a KeySequence with solid colors.
         /// </summary>
@@ -1053,9 +1050,9 @@ namespace Aurora.EffectsEngine
             _needsRender = true;
             _keyColors.Clear();
         }
-        private void Invalidate(object sender, object args)
+        private void InvalidateColorMap(object sender, EventArgs args)
         {
-            _colormap.Dispose();
+            _colormap?.Dispose();
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             Dimension.Height = Effects.CanvasHeight;
             Dimension.Width = Effects.CanvasWidth;

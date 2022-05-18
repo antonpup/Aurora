@@ -2,10 +2,13 @@
 using System.Collections;
 using Aurora.EffectsEngine;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
 using System.Timers;
+using System.Windows;
+using Aurora.Profiles;
 
 namespace Aurora
 {
@@ -90,7 +93,7 @@ namespace Aurora
 
     public delegate void NewLayerRendered(Bitmap bitmap);
 
-    public class CanvasChangedArgs
+    public class CanvasChangedArgs: EventArgs
     {
         public EffectLayer EffectLayer { get; }
 
@@ -194,6 +197,7 @@ namespace Aurora
         private Bitmap _forcedFrame;
         
         public event NewLayerRendered NewLayerRender = delegate { };
+        public static event EventHandler<CanvasChangedArgs> CanvasChanged;
 
         private static int _canvasWidth = 1;
         public static int CanvasWidth
@@ -226,10 +230,6 @@ namespace Aurora
         public static float EditorToCanvasWidth => CanvasWidth / grid_width;
         public static float EditorToCanvasHeight => CanvasHeight / grid_height;
         public static int CanvasBiggest => CanvasWidth > CanvasHeight ? CanvasWidth : CanvasHeight;
-
-        public static event SampleEventHandler CanvasChanged;
-
-        public delegate void SampleEventHandler(object sender, CanvasChangedArgs e);
 
         /// <summary>
         /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
