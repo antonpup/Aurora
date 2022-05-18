@@ -42,12 +42,5 @@ namespace Aurora.Profiles.Generic_Application
 
             frame.AddLayers(layers.ToArray());
         }
-
-        public void UpdateLights(EffectFrame frame, Application profile)
-        {
-            this.Application = profile;
-
-            UpdateLights(frame);
-        }
     }
 }

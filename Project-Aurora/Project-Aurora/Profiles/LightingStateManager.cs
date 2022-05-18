@@ -427,7 +427,6 @@ namespace Aurora.Profiles
 
         private void UpdateEvent(ILightEvent @event, EffectsEngine.EffectFrame frame)
         {
-            Stopwatch stopwatch = new Stopwatch();
             StartEvent(@event);
             @event.UpdateLights(frame);
         }
