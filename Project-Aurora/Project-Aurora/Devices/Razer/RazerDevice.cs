@@ -76,31 +76,6 @@ namespace Aurora.Devices.Razer
             }
         }
 
-        protected bool MouseTryGetGridCoords(DeviceKeys key, out int row, out int column)
-        {
-            if (RazerMappings.mouseDictionary.TryGetValue(key, out var razerKeyCode))
-            {
-                // According to SDK source code
-                // https://github.com/chroma-sdk/Colore/blob/ad27da8b5fda8d596ab6a9ddabf7f6a0ac4c8cfe/src/Corale.Colore/Razer/Mouse/Effects/CustomGrid.cs#L223
-                row = (int)razerKeyCode >> 8;
-                column = (int)razerKeyCode & 0xFF;
-                return true;
-            }
-
-            // There are more leds than the ones defined in Corale.Colore.Razer.Mouse.GridLed            
-            switch (key)
-            {
-                case DeviceKeys.PERIPHERAL_LIGHT20:
-                    row = 4;
-                    column = 3;
-                    return true;
-            }
-
-            row = -1;
-            column = -1;
-            return false;
-        }
-
         protected override bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
@@ -116,7 +91,7 @@ namespace Aurora.Devices.Razer
                 keypad.Set(ToColore(clr));
             }
 
-            foreach (var key in keyColors.ToList())
+            foreach (var key in keyColors)
             {
                 if (RazerMappings.keyboardDictionary.TryGetValue(key.Key, out var kbIndex))
                     keyboard[kbIndex] = ToColore(key.Value);
@@ -124,8 +99,8 @@ namespace Aurora.Devices.Razer
                 if (RazerMappings.mousepadDictionary.TryGetValue(key.Key, out var mousepadIndex))
                     mousepad[mousepadIndex] = ToColore(key.Value);
 
-                if (MouseTryGetGridCoords(key.Key, out var row, out var column))
-                    mouse[row, column] = ToColore(key.Value);
+                if (RazerMappings.mouseDictionary.TryGetValue(key.Key, out var mouseIndex))
+                    mouse[mouseIndex] = ToColore(key.Value);
             }
 
             if (!Global.Configuration.DevicesDisableKeyboard)
