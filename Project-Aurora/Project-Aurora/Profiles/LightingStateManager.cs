@@ -354,6 +354,7 @@ namespace Aurora.Profiles
         private bool locked = false;
         private void InitUpdate()
         {
+            watch.Start();
             updateTimer = new Timer(g =>
             {
                 TimerUpdate();
@@ -366,11 +367,9 @@ namespace Aurora.Profiles
             {
                 return;
             }
-
+            updateLock.WaitOne();
             locked = true;
 
-            updateLock.WaitOne();
-            watch.Start();
             if (Global.isDebug)
                 Update();
             else
@@ -382,10 +381,9 @@ namespace Aurora.Profiles
                 catch (Exception exc)
                 {
                     Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
-                    System.Windows.MessageBox.Show("Error while updating light effects: " + exc.Message);
+                    MessageBox.Show("Error while updating light effects: " + exc.Message);
                 }
             }
-            watch.Stop();
             currentTick += watch.ElapsedMilliseconds;
             updateTimer?.Change(Math.Max(Global.Configuration.UpdateDelay - watch.ElapsedMilliseconds, Global.Configuration.UpdateDelay), Timeout.Infinite);
             watch.Reset();
@@ -395,7 +393,7 @@ namespace Aurora.Profiles
 
         private void UpdateProcess()
         {
-            if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && currentTick >= nextProcessNameUpdate)
             {
                 processMonitor.GetActiveWindowsProcessname();
                 nextProcessNameUpdate = currentTick + 1000L;

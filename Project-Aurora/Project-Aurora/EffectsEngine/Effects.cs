@@ -22,16 +22,7 @@ namespace Aurora
         private readonly Rectangle _rectangle;
         public Rectangle Rectangle => _rectangle;
 
-        public bool IsEmpty
-        {
-            get
-            {
-                if (_rectangle.IsEmpty || _rectangle.Height == 0 || _rectangle.Width == 0 || !_isvalid)
-                    return true;
-
-                return false;
-            }
-        }
+        public bool IsEmpty => _rectangle.IsEmpty || !_isvalid;
 
         public int Bottom => _rectangle.Bottom;
         public int Top => _rectangle.Top;
@@ -73,8 +64,7 @@ namespace Aurora
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((BitmapRectangle)obj);
+            return obj.GetType() == GetType() && Equals((BitmapRectangle)obj);
         }
 
         public bool Equals(BitmapRectangle p)
@@ -125,14 +115,6 @@ namespace Aurora
     public class Effects
     {
         private const int MaxDeviceId = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
-
-        private int filenamecount;
-        private bool isrecording = false;
-        private Bitmap previousframe;
-        private long nextsecond;
-        private long currentsecond;
-        private long render_time = 0L;
-        private Timer recordTimer = new(1000D / 15D); // 30fps
 
         private static readonly DeviceKeys[] PossiblePeripheralKeys = {
                     DeviceKeys.Peripheral,
@@ -197,6 +179,8 @@ namespace Aurora
         private Bitmap _forcedFrame;
         
         public event NewLayerRendered NewLayerRender = delegate { };
+
+        // ReSharper disable once EventNeverSubscribedTo.Global
         public static event EventHandler<CanvasChangedArgs> CanvasChanged;
 
         private static int _canvasWidth = 1;
@@ -238,9 +222,9 @@ namespace Aurora
 
         private static Dictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
-        private static readonly Dictionary<DeviceKeys, Color> keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
+        private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
-        private Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
+        private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
         private EffectLayer _background => _effectLayerFactory.Value;
 
         public Effects()
@@ -249,36 +233,14 @@ namespace Aurora
 
             foreach (var key in allKeys)
             {
-                keyColors.Add(key, Color.Black);
+                _keyColors.Add(key, Color.Black);
             }
-
-            recordTimer.Elapsed += RecordTimer_Elapsed;
-        }
-
-        private void RecordTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (nextsecond == 0L)
-                nextsecond = currentsecond + 1000L;
-
-            currentsecond += (long)recordTimer.Interval;
-
-            if (previousframe != null)
-            {
-                var tempbmp = new Bitmap(previousframe);
-                tempbmp.Save("renders\\" + (filenamecount++) + ".bmp", System.Drawing.Imaging.ImageFormat.Bmp);
-            }
-
-            if (currentsecond >= nextsecond)
-            {
-                nextsecond = currentsecond + 1000L;
-            }
-
         }
 
         public void ForceImageRender(Bitmap forcedframe)
         {
-            if(forcedframe != null)
-                _forcedFrame = (Bitmap) forcedframe.Clone();
+            _forcedFrame?.Dispose();
+            _forcedFrame = (Bitmap) forcedframe?.Clone();
         }
 
         public void SetCanvasSize(int width, int height)
@@ -297,14 +259,12 @@ namespace Aurora
             _bitmapMap = bitmap_map;
         }
 
-
         private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(PossiblePeripheralKeys.Length, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
         private readonly SolidBrush _keyboardDarknessBrush = new(Color.Empty);
         private readonly SolidBrush _blackBrush = new(Color.Black);
         public void PushFrame(EffectFrame frame)
         {
-            //_background = new EffectLayer("Global Background", Color.Black);
             _background.Fill(_blackBrush);
 
             var overLayersArray = frame.GetOverlayLayers();
@@ -335,33 +295,29 @@ namespace Aurora
             {
                 using var g = _background.GetGraphics();
                 g.Clear(Color.Black);
-
                 g.DrawImage(_forcedFrame, 0, 0, CanvasWidth, CanvasHeight);
-
-                _forcedFrame.Dispose();
-                _forcedFrame = null;
             }
 
             var allKeys = _bitmapMap.Keys.ToArray();
 
             foreach (var key in allKeys)
-                keyColors[key] = _background.Get(key);
+                _keyColors[key] = _background.Get(key);
 
             var dcc = new DeviceColorComposition
             {
-                keyColors = keyColors,
+                keyColors = _keyColors,
                 keyBitmap = _background.GetBitmap()
             };
             Global.dev_manager.UpdateDevices(dcc);
 
+            NewLayerRender?.Invoke(_background.GetBitmap());
+
             frame.Dispose();
-            //_background.Dispose();
-            //_background = null;
         }
 
         public Dictionary<DeviceKeys, Color> GetKeyboardLights()
         {
-            return keyColors;
+            return _keyColors;
         }
     }
 }

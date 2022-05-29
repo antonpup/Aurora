@@ -38,6 +38,7 @@ namespace Aurora.Settings.Layers
     public class GradientLayerHandler : LayerHandler<GradientLayerHandlerProperties>
     {
         private readonly EffectLayer _gradientLayer = new("GradientLayer");
+        private EffectLayer _tempLayerBitmap;
 
         public GradientLayerHandler()
         {
@@ -66,13 +67,6 @@ namespace Aurora.Settings.Layers
 
                 _gradientLayer.Set(Properties.Sequence, selectedColor);
             }
-            else if (Properties.Sequence.type == KeySequenceType.Sequence)
-            {
-                using var tempLayer = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig);
-
-                foreach (var key in Properties.Sequence.keys)
-                    _gradientLayer.Set(key, tempLayer.Get(key));
-            }
             else
             {
                 _gradientLayer.Clear();
@@ -81,8 +75,9 @@ namespace Aurora.Settings.Layers
                     g =>
                     {
                         var rect = new RectangleF(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-                        using var tempLayerBitmap = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
-                        g.FillRectangle(tempLayerBitmap.TextureBrush, tempLayerBitmap.Dimension);
+                        _tempLayerBitmap?.Dispose();
+                        _tempLayerBitmap = new EffectLayer("Color Zone Effect", LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig, rect);
+                        g.FillRectangle(_tempLayerBitmap.TextureBrush, _tempLayerBitmap.Dimension);
                     }
                 );
             }

@@ -262,11 +262,10 @@ namespace Aurora.Devices.YeeLight
 
             light.Connect();
             _connectionTries = 100;
-            Thread.Sleep(500);
-            while (!light.IsConnected() && --_connectionTries > 0)
+            do
             {
                 Thread.Sleep(500);
-            }
+            } while (!light.IsConnected() && --_connectionTries > 0);
 
             try
             {

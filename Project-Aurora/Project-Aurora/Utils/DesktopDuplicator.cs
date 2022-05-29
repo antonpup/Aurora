@@ -24,18 +24,18 @@ namespace Aurora
 
         #endregion
 
-        public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle Rect)
+        public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle rect)
         {
             Global.logger.Info("Starting desktop duplicator");
-            _rect = Rect;
+            _rect = rect;
             _device = new Device(adapter);
             var textureDesc = new Texture2DDescription
             {
                 CpuAccessFlags = CpuAccessFlags.Read,
                 BindFlags = BindFlags.None,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = _rect.Width,
-                Height = _rect.Height,
+                Width = output.Description.DesktopBounds.Right - output.Description.DesktopBounds.Left,
+                Height = output.Description.DesktopBounds.Bottom - output.Description.DesktopBounds.Top,
                 OptionFlags = ResourceOptionFlags.None,
                 MipLevels = 1,
                 ArraySize = 1,
@@ -108,9 +108,13 @@ namespace Aurora
             var frame = new Bitmap(_rect.Width, _rect.Height, PixelFormat.Format32bppRgb);
             // Copy pixels from screen capture Texture to GDI bitmap
             var mapDest = frame.LockBits(new Rectangle(0, 0, _rect.Width, _rect.Height), ImageLockMode.WriteOnly, frame.PixelFormat);
-            for (int y = 0, sizeInBytesToCopy = _rect.Width * 4; y < _rect.Height; y++)
+            var screenY = _rect.Top;
+            var sizeInBytesToCopy = _rect.Width * 4;
+            for (var y = 0; screenY < _rect.Bottom; screenY++, y++)
             {
-                Utilities.CopyMemory(mapDest.Scan0 + y * mapDest.Stride, SourcePtr + y * SourceRowPitch, sizeInBytesToCopy);
+                var mapDestStride = mapDest.Scan0 + y * mapDest.Stride;
+                var sourceRowPitch = SourcePtr + screenY * SourceRowPitch + _rect.Left * 4;
+                Utilities.CopyMemory(mapDestStride, sourceRowPitch, sizeInBytesToCopy);
             }
             // Release source and dest locks
             frame.UnlockBits(mapDest);

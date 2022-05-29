@@ -295,7 +295,7 @@ namespace Aurora.Settings.Layers
         {
             _previousTime = _currentTime;
             _currentTime = Time.GetMillisecondsSinceEpoch();
-            foreach (var lengthPresses in _timeOfLastPress.ToList().Where(_keysToRemove))
+            foreach (var lengthPresses in _timeOfLastPress.Where(_keysToRemove))
             {
                 _timeOfLastPress.TryRemove(lengthPresses.Key, out _);
             }
@@ -314,6 +314,7 @@ namespace Aurora.Settings.Layers
                     switch (input.type)
                     {
                         case input_item.input_type.Spectrum:
+                        default:
                         {
                             var transitionValue = input.progress / Effects.CanvasWidth;
 
