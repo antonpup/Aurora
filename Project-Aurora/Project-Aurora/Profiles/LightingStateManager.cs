@@ -490,7 +490,10 @@ namespace Aurora.Profiles
             {
                 StopUnUpdatedEvents();
                 Global.dev_manager.ShutdownDevices();
-                Global.effengine.PushFrame(newFrame);
+                lock (Effects.CanvasChangedLock)
+                {
+                    Global.effengine.PushFrame(newFrame);
+                }
                 return;
             }
             Global.dev_manager.InitializeOnce();
@@ -513,8 +516,10 @@ namespace Aurora.Profiles
                 UpdateIdleEffects(newFrame);
             }
 
-
-            Global.effengine.PushFrame(newFrame);
+            lock (Effects.CanvasChangedLock)
+            {
+                Global.effengine.PushFrame(newFrame);
+            }
 
             StopUnUpdatedEvents();
             PostUpdate?.Invoke(this, null);

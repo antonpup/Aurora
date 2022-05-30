@@ -17,8 +17,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 using Timer = System.Timers.Timer;
@@ -128,20 +127,6 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Rectangle Coordinates => Logic._Coordinates ?? _Coordinates ?? Rectangle.Empty;
 
-        [JsonIgnore]
-        private AmbilightQualityChoice? _ambilightQuality;
-
-        [JsonProperty("_AmbilightQuality")]
-        public AmbilightQualityChoice AmbilightQuality
-        {
-            get => Logic._ambilightQuality ?? _ambilightQuality ?? AmbilightQualityChoice.Medium;
-            set
-            {
-                _ambilightQuality = value;
-                OnPropertiesChanged(this);
-            }
-        }
-
         public bool? _BrightenImage { get; set; }
 
         [JsonIgnore]
@@ -231,7 +216,6 @@ namespace Aurora.Settings.Layers
             _AmbilightCaptureType = AmbilightCaptureType.EntireMonitor;
             SpecificProcess = "";
             _Coordinates = new Rectangle(0, 0, 0, 0);
-            AmbilightQuality = AmbilightQualityChoice.Medium;
             _BrightenImage = false;
             BrightnessChange = 1.0f;
             _SaturateImage = false;
@@ -388,24 +372,13 @@ namespace Aurora.Settings.Layers
             if (bigScreen is null)
                 return;
 
-            var scale = GetScaleFromQuality(Properties.AmbilightQuality);
-
-            Bitmap smallScreen = new Bitmap(bigScreen.Width / scale, bigScreen.Height / scale); //TODO reuse
-
-            using (var graphics = Graphics.FromImage(smallScreen))
-            {
-                graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.InterpolationMode = InterpolationMode.Low;
-                graphics.DrawImage(bigScreen, 0, 0, bigScreen.Width / scale, bigScreen.Height / scale);
-            }
-
-            _screen = smallScreen;
+            _screen = bigScreen;
 
             var x = GraphicsUnit.Pixel;
             lock (_screen)
             {
-                _screenBrush = new TextureBrush(_screen, new Rectangle(0, 0, _screen.Width, _screen.Height), _imageAttributes);
-                _screenBrush.ScaleTransform(scale, scale);
+                _screenBrush?.Dispose();
+                _screenBrush = new TextureBrush(_screen, new Rectangle(0, 0, _cropRegion.Width, _cropRegion.Height), _imageAttributes);
             }
         }
 
@@ -427,8 +400,11 @@ namespace Aurora.Settings.Layers
             _imageAttributes.SetWrapMode(WrapMode.Clamp);
 
             UpdateSpecificProcessHandle(Properties.SpecificProcess);
-            
-            _ambilightLayer.Clear();
+
+            lock (_screen)
+            {
+                _ambilightLayer.Clear();
+            }
         }
 
         #region Helper Methods
@@ -478,14 +454,6 @@ namespace Aurora.Settings.Layers
 
             return crop.Width > 4 && crop.Height > 4;
         }
-
-        /// <summary>
-        /// Converts the AmbilightQuality Enum in an integer for the bitmap to be divided by.
-        /// Lower quality values result in a higher divisor, which results in a smaller bitmap
-        /// </summary>
-        /// <param name="quality"></param>
-        /// <returns></returns>
-        private static int GetScaleFromQuality(AmbilightQualityChoice quality) => (int)Math.Pow(2, 4 - (int)quality);
 
         /// <summary>
         /// Returns an interval in ms usign the AmbilightFpsChoice enum.
@@ -584,7 +552,7 @@ namespace Aurora.Settings.Layers
 
     internal class DXScreenCapture : IScreenCapture
     {
-        private static readonly object DeskDupLock = new();
+        private static readonly Semaphore Semaphore = new(3, 5);
         private Rectangle _currentBounds;
         private DesktopDuplicator _desktopDuplicator;
         private int _display;
@@ -592,23 +560,17 @@ namespace Aurora.Settings.Layers
         public Bitmap Capture(Rectangle desktopRegion)
         {
             SetTarget(desktopRegion);
-            if (_currentBounds.IsEmpty)
-                return null;
-            if (_desktopDuplicator is null)
-                return null;
-
             try
             {
-                lock (DeskDupLock)
+                Semaphore.WaitOne();
+                lock (_desktopDuplicator)
                 {
-                    var bigScreen = _desktopDuplicator.Capture(5000);
-                    return bigScreen;
+                    return _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(5000);
                 }
             }
-            catch (SharpDXException e)
+            finally
             {
-                Global.logger.Error("[Ambilight] Error capturing screen, restarting: : " + e);
-                return null;
+                Semaphore.Release();
             }
         }
 
@@ -638,18 +600,15 @@ namespace Aurora.Settings.Layers
                 Math.Min(desktopRegion.Height, desktopBounds.Bottom - desktopRegion.Top)
             );
             
-            if (screenWindowRectangle == _currentBounds)
+            if (screenWindowRectangle == _currentBounds && _desktopDuplicator != null)
             {
                 return;
             }
 
             _currentBounds = screenWindowRectangle;
 
-            lock (DeskDupLock)
-            {
-                _desktopDuplicator?.Dispose();
-                _desktopDuplicator = new DesktopDuplicator(currentAdapter, currentOutput, _currentBounds);
-            }
+            _desktopDuplicator?.Dispose();
+            _desktopDuplicator = new DesktopDuplicator(currentAdapter, currentOutput, _currentBounds);
         }
 
         public IEnumerable<string> GetDisplays() => GetAdapters().Select((s, index) =>
@@ -671,6 +630,10 @@ namespace Aurora.Settings.Layers
                    containingRactangle.Top <= rec.Y && containingRactangle.Bottom > rec.Y;
         }
 
-        public void Dispose() => _desktopDuplicator?.Dispose();
+        public void Dispose()
+        {
+            _desktopDuplicator?.Dispose();
+            _desktopDuplicator = null;
+        }
     }
 }

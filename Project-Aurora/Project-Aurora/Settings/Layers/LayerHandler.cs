@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
+using System.Windows;
+using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Settings.Layers
 {
@@ -257,6 +259,7 @@ namespace Aurora.Settings.Layers
             //ScriptProperties = new LayerHandlerProperties();
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", PropertiesChanged);
         }
 
         public virtual EffectLayer Render(IGameState gamestate)
@@ -313,9 +316,15 @@ namespace Aurora.Settings.Layers
             
         }
 
+        private void PropertiesChanged(object sender, CanvasChangedArgs e)
+        {
+            PropertiesChanged(sender, new PropertyChangedEventArgs(""));
+        }
+
         public virtual void Dispose()
         {
             Properties.PropertyChanged -= PropertiesChanged;
+            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", PropertiesChanged);
         }
     }
 

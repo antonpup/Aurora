@@ -182,6 +182,7 @@ namespace Aurora
 
         // ReSharper disable once EventNeverSubscribedTo.Global
         public static event EventHandler<CanvasChangedArgs> CanvasChanged;
+        public static object CanvasChangedLock = new();
 
         private static int _canvasWidth = 1;
         public static int CanvasWidth
@@ -189,8 +190,11 @@ namespace Aurora
             get => _canvasWidth;
             private set
             {
-                _canvasWidth = value;
-                CanvasChanged?.Invoke(null, null);
+                lock (CanvasChangedLock)
+                {
+                    _canvasWidth = value;
+                    CanvasChanged?.Invoke(null, null);
+                }
             }
         }
         private static int _canvasHeight = 1;
@@ -199,8 +203,11 @@ namespace Aurora
             get => _canvasHeight;
             private set
             {
-                _canvasHeight = value;
-                CanvasChanged?.Invoke(null, null);
+                lock (CanvasChangedLock)
+                {
+                    _canvasHeight = value;
+                    CanvasChanged?.Invoke(null, null);
+                }
             }
         }
 

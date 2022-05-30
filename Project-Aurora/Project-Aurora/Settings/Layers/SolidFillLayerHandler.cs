@@ -1,12 +1,7 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
@@ -34,7 +29,8 @@ namespace Aurora.Settings.Layers
     public class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerProperties>
     {
         private readonly EffectLayer _effectLayer = new();
-        private SolidBrush _solidBrush = new(Color.Transparent);
+        private readonly SolidBrush _solidBrush = new(Color.Transparent);
+        private bool _needsUpdate = true;
 
         protected override UserControl CreateControl()
         {
@@ -43,12 +39,15 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            if (_solidBrush.Color != Properties.PrimaryColor)
-            {
-                _solidBrush = new SolidBrush(Properties.PrimaryColor);
-                _effectLayer.Fill(_solidBrush);
-            }
             return _effectLayer;
+        }
+
+        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.PropertiesChanged(sender, args);
+            _solidBrush.Color = Properties.PrimaryColor;
+            _effectLayer.Fill(_solidBrush);
+            _effectLayer.Invalidate();
         }
     }
 }
