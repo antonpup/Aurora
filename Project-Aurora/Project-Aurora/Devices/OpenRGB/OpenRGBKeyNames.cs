@@ -65,6 +65,7 @@ namespace Aurora.Devices.OpenRGB
             { "Key: ,"                , DK.COMMA                  },
             { "Key: ."                , DK.PERIOD                 },
             { "Key: /"                , DK.FORWARD_SLASH          },
+            { "Key: / (ABNT)"         , DK.FORWARD_SLASH          },
             { "Key: Caps Lock"        , DK.CAPS_LOCK              },
             { "Key: F1"               , DK.F1                     },
             { "Key: F2"               , DK.F2                     },

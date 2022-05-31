@@ -319,7 +319,7 @@ namespace Aurora.EffectsEngine
 
         public void Dispose()
         {
-            _textureBrush.Dispose();
+            _textureBrush?.Dispose();
             _textureBrush = null;
             _colormap.Dispose();
             WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
