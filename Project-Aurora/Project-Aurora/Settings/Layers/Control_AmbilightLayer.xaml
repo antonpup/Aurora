@@ -35,13 +35,13 @@
 
 
             <Label Content="Capture Type" Grid.Row="0" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedValue="{Binding Properties._AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightCaptureType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties.AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightCaptureType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
 
             <Label Content="Effect Type" Grid.Row="1" VerticalAlignment="Center" Height="26" Margin="0,1" />
             <ComboBox SelectedValue="{Binding Properties._AmbilightType}" x:Name="EffectType" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
 
             <Label Content="Updates rate" Grid.Row="2" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedValue="{Binding Properties._AmbiLightUpdatesPerSecond}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightFpsChoice}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties.AmbiLightUpdatesPerSecond}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightFpsChoice}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
             <Image Grid.Row="2" Grid.Column="2" Margin="6" ToolTip="Higher update speeds will result in a&#x0a;smoother effect and increase CPU usage." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
             <Label Content="Process Name" Grid.Row="3" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=SpecificProcess}" Height="26" Margin="0,1" />
@@ -78,7 +78,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <!-- Since Properties._Coordinates is a Rect (which is a struct) we cannot directly bind to the properties, so these have to use ValueChanged event -->
+                <!-- Since Properties.Coordinates is a Rect (which is a struct) we cannot directly bind to the properties, so these have to use ValueChanged event -->
                 <Label Content="X:" Grid.Row="0" Grid.Column="0" />
                 <xctk:IntegerUpDown x:Name="XCoordinate" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ValueChanged="Coordinate_ValueChanged" />
                 <Label Content="Y:" Grid.Row="0" Grid.Column="2" />

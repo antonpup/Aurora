@@ -93,20 +93,38 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public AmbilightType AmbilightType => Logic._AmbilightType ?? _AmbilightType ?? AmbilightType.Default;
 
-        public AmbilightCaptureType? _AmbilightCaptureType { get; set; }
-
         [JsonIgnore]
-        public AmbilightCaptureType AmbilightCaptureType => Logic._AmbilightCaptureType ?? _AmbilightCaptureType ?? AmbilightCaptureType.EntireMonitor;
+        private AmbilightCaptureType? _ambilightCaptureType;
+
+        [JsonProperty("_AmbilightCaptureType")]
+        public AmbilightCaptureType AmbilightCaptureType
+        {
+            get => Logic._ambilightCaptureType ?? _ambilightCaptureType ?? AmbilightCaptureType.EntireMonitor;
+            set
+            {
+                _ambilightCaptureType = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public int? _AmbilightOutputId { get; set; }
 
         [JsonIgnore]
         public int AmbilightOutputId => Logic._AmbilightOutputId ?? _AmbilightOutputId ?? 0;
 
-        public AmbilightFpsChoice? _AmbiLightUpdatesPerSecond { get; set; }
-
         [JsonIgnore]
-        public AmbilightFpsChoice AmbiLightUpdatesPerSecond => Logic._AmbiLightUpdatesPerSecond ?? _AmbiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
+        private AmbilightFpsChoice? _ambiLightUpdatesPerSecond;
+
+        [JsonProperty("_AmbiLightUpdatesPerSecond")]
+        public AmbilightFpsChoice AmbiLightUpdatesPerSecond
+        {
+            get => Logic._ambiLightUpdatesPerSecond ?? _ambiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
+            set
+            {
+                _ambiLightUpdatesPerSecond = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         [JsonIgnore]
         private string _specificProcess;
@@ -114,7 +132,7 @@ namespace Aurora.Settings.Layers
         [JsonProperty("_SpecificProcess")]
         public string SpecificProcess
         {
-            get => Logic._specificProcess ?? _specificProcess ?? String.Empty;
+            get => Logic._specificProcess ?? _specificProcess ?? string.Empty;
             set
             {
                 _specificProcess = value;
@@ -122,10 +140,20 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        [LogicOverridable("Coordinates")] public Rectangle? _Coordinates { get; set; }
-
         [JsonIgnore]
-        public Rectangle Coordinates => Logic._Coordinates ?? _Coordinates ?? Rectangle.Empty;
+        private Rectangle? _coordinates;
+
+        [JsonProperty("_Coordinates")]
+        [LogicOverridable("Coordinates")] 
+        public Rectangle Coordinates
+        {
+            get => Logic._coordinates ?? _coordinates ?? Rectangle.Empty;
+            set
+            {
+                _coordinates = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public bool? _BrightenImage { get; set; }
 
@@ -211,11 +239,11 @@ namespace Aurora.Settings.Layers
         {
             base.Default();
             _AmbilightOutputId = 0;
-            _AmbiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
+            _ambiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
             _AmbilightType = AmbilightType.Default;
-            _AmbilightCaptureType = AmbilightCaptureType.EntireMonitor;
+            _ambilightCaptureType = AmbilightCaptureType.EntireMonitor;
             SpecificProcess = "";
-            _Coordinates = new Rectangle(0, 0, 0, 0);
+            _coordinates = new Rectangle(0, 0, 0, 0);
             _BrightenImage = false;
             BrightnessChange = 1.0f;
             _SaturateImage = false;
@@ -242,7 +270,7 @@ namespace Aurora.Settings.Layers
         private IntPtr _specificProcessHandle = IntPtr.Zero;
         private Rectangle _cropRegion = new(8, 8, 8, 8);
         private readonly EffectLayer _ambilightLayer = new("Ambilight Layer");
-        private readonly ImageAttributes _imageAttributes = new();
+        private ImageAttributes _imageAttributes = new();
 
         #region Bindings
         public IEnumerable<string> Displays => _screenCapture.GetDisplays();
@@ -297,11 +325,7 @@ namespace Aurora.Settings.Layers
             if (!_captureTimer.Enabled)
                 _captureTimer.Start();
 
-            var interval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
-            if (_captureTimer.Interval != interval)
-                _captureTimer.Interval = interval;
-
-            if (_screen is null)
+            if (_screen is null || _screenBrush is null)
                 return _ambilightLayer;
 
             var region = Properties.Sequence.GetAffectedRegion();
@@ -316,6 +340,7 @@ namespace Aurora.Settings.Layers
             {
                 default:
                 case AmbilightType.Default:
+                    lock (_screen)
                     _ambilightLayer.DrawTransformed(Properties.Sequence,
                         m =>
                         {
@@ -328,19 +353,14 @@ namespace Aurora.Settings.Layers
                         g =>
                         {
                             g.Clear(Color.Transparent);
-                            lock (_screen)
-                                g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
+                            g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
                         },
                         new Rectangle(0, 0, _cropRegion.Width, _cropRegion.Height)
                     );
                     break;
 
                 case AmbilightType.AverageColor:
-                    Color average;
-                    lock (_screen)
-                    {
-                        average = BitmapUtils.GetRegionColor(_screen, new Rectangle(0, 0, _screen.Width, _screen.Height));
-                    }
+                    Color average = BitmapUtils.GetRegionColor(_screen, new Rectangle(0, 0, _screen.Width, _screen.Height));
 
                     if (Properties.BrightenImage)
                         average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
@@ -365,27 +385,30 @@ namespace Aurora.Settings.Layers
 
         private void TakeScreenshot(object sender, ElapsedEventArgs e)
         {
-            if (Time.GetMillisecondsSinceEpoch() - _lastUseTime > 2000)
-                _captureTimer.Stop();
+            _captureTimer.Stop();
 
             var bigScreen = _screenCapture.Capture(_cropRegion);
             if (bigScreen is null)
                 return;
 
+            CreateScreenBrush(bigScreen, _cropRegion);
+        }
+
+        private void CreateScreenBrush(Bitmap bigScreen, Rectangle cropRegion)
+        {
             _screen = bigScreen;
 
             var x = GraphicsUnit.Pixel;
-            lock (_screen)
-            {
-                _screenBrush?.Dispose();
-                _screenBrush = new TextureBrush(_screen, new Rectangle(0, 0, _cropRegion.Width, _cropRegion.Height), _imageAttributes);
-            }
+            _screenBrush = new TextureBrush(bigScreen, new Rectangle(Point.Empty, cropRegion.Size), _imageAttributes);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
+
+            var interval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
+            _captureTimer.Interval = interval;
             
             Initialize();
 
@@ -396,15 +419,15 @@ namespace Aurora.Settings.Layers
                 mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetSaturationColorMatrix(Properties.SaturationChange));
             if (Properties.HueShiftImage)
                 mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetHueShiftColorMatrix(Properties.HueShiftAngle));
+            _imageAttributes = new ImageAttributes();
             _imageAttributes.SetColorMatrix(new ColorMatrix(mtx));
             _imageAttributes.SetWrapMode(WrapMode.Clamp);
 
             UpdateSpecificProcessHandle(Properties.SpecificProcess);
 
-            lock (_screen)
-            {
-                _ambilightLayer.Clear();
-            }
+            _ambilightLayer.Clear();
+            _screen = null;
+            _screenBrush = null;
         }
 
         #region Helper Methods
@@ -552,7 +575,7 @@ namespace Aurora.Settings.Layers
 
     internal class DXScreenCapture : IScreenCapture
     {
-        private static readonly Semaphore Semaphore = new(3, 5);
+        private static readonly Semaphore Semaphore = new(1, 1);
         private Rectangle _currentBounds;
         private DesktopDuplicator _desktopDuplicator;
         private int _display;
@@ -563,10 +586,7 @@ namespace Aurora.Settings.Layers
             try
             {
                 Semaphore.WaitOne();
-                lock (_desktopDuplicator)
-                {
-                    return _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(5000);
-                }
+                return _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(5000);
             }
             finally
             {
@@ -579,12 +599,21 @@ namespace Aurora.Settings.Layers
             var outputs = GetAdapters();
             Adapter1 currentAdapter = null;
             Output1 currentOutput = null;
-            foreach (var (adapter, output) in outputs)
+            if (desktopRegion.Left < 0 || desktopRegion.Top < 0)
             {
-                if (!RectangleContains(output.Description.DesktopBounds, desktopRegion)) continue;
-                currentAdapter = adapter;
-                currentOutput = output;
-                break;
+                (Adapter1 Adapter, Output1 Output) firstScreen = outputs.First();
+                currentAdapter = firstScreen.Adapter;
+                currentOutput = firstScreen.Output;
+            }
+            else
+            {
+                foreach (var (adapter, output) in outputs)
+                {
+                    if (!RectangleContains(output.Description.DesktopBounds, desktopRegion)) continue;
+                    currentAdapter = adapter;
+                    currentOutput = output;
+                    break;
+                }
             }
 
             if (currentAdapter == null)

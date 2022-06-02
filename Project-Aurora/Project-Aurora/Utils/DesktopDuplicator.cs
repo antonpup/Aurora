@@ -36,7 +36,7 @@ namespace Aurora
                 Format = Format.B8G8R8A8_UNorm,
                 Width = output.Description.DesktopBounds.Right - output.Description.DesktopBounds.Left,
                 Height = output.Description.DesktopBounds.Bottom - output.Description.DesktopBounds.Top,
-                OptionFlags = ResourceOptionFlags.None,
+                OptionFlags = ResourceOptionFlags.GdiCompatible,
                 MipLevels = 1,
                 ArraySize = 1,
                 SampleDescription = { Count = 1, Quality = 0 },
@@ -51,7 +51,7 @@ namespace Aurora
         {
             SharpDX.DXGI.Resource desktopResource;
             if (_deskDupl.IsDisposed || _device.IsDisposed) 
-                return null;
+                throw new ObjectDisposedException("DesktopDuplicator is disposed");
 
             try {
                 _deskDupl.AcquireNextFrame(timeout, out _, out desktopResource);
@@ -86,7 +86,7 @@ namespace Aurora
 
             bool disposed = ReleaseFrame();
             if (disposed)
-                return null;
+                throw new ObjectDisposedException("DesktopDuplicator is disposed2");
 
             var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
 
@@ -141,13 +141,9 @@ namespace Aurora
 
         public void Dispose()
         {
-            try
-            {
-                _deskDupl?.Dispose();
-                _desktopImageTexture?.Dispose();
-                _device?.Dispose();
-            }
-            catch { }
+            _device?.Dispose();
+            _deskDupl?.Dispose();
+            _desktopImageTexture?.Dispose();
         }
     }
 }

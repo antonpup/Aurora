@@ -583,6 +583,8 @@ namespace Aurora.EffectsEngine
                 configureMatrix(matrix);
 
                 // Apply the matrix transform to the graphics context and then render
+                gfx.ResetTransform();
+                gfx.ResetClip();
                 gfx.Transform = matrix;
                 render(gfx);
                 if (sequence.type == KeySequenceType.Sequence)
