@@ -601,14 +601,24 @@ namespace Aurora.EffectsEngine
 
         private static GraphicsPath GetExclusionPath(KeySequence sequence)
         {
-            var gp = new GraphicsPath();
-            gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
-            sequence.keys.ForEach(k =>
+            if (sequence.type == KeySequenceType.Sequence)
             {
-                var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
-                gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
-            });
-            return gp;
+                var gp = new GraphicsPath();
+                gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
+                sequence.keys.ForEach(k =>
+                {
+                    var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
+                    gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
+                });
+                return gp;
+            }
+            else
+            {
+                var gp = new GraphicsPath();
+                gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
+                gp.AddRectangle(sequence.GetAffectedRegion());
+                return gp;
+            }
         }
 
         /// <summary>
