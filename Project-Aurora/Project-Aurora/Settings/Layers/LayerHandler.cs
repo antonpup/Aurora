@@ -36,7 +36,7 @@ namespace Aurora.Settings.Layers
         }
 
         [JsonIgnore]
-        public Color PrimaryColor => Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty;
+        public Color PrimaryColor => Logic?._PrimaryColor ?? _PrimaryColor ?? Color.Empty;
 
         [JsonIgnore]
         private KeySequence _sequence;
