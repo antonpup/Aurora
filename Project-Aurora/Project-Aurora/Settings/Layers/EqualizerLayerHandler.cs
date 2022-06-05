@@ -251,6 +251,10 @@ namespace Aurora.Settings.Layers
                         {
                             bgEnabled = true;
                         }
+                        else
+                        {
+                            _equalizerLayer.Clear();
+                        }
                         break;
                     case EqualizerBackgroundMode.AlwaysOn:
                         bgEnabled = true;
