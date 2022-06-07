@@ -1,15 +1,10 @@
-﻿using Aurora.EffectsEngine;
+﻿using System.ComponentModel;
+using System.Windows.Controls;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using Aurora.Utils;
+using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers
 {
@@ -18,29 +13,29 @@ namespace Aurora.Settings.Layers
         [LogicOverridable("Percent Type")]
         public PercentEffectType? _PercentType { get; set; }
         [JsonIgnore]
-        public PercentEffectType PercentType { get { return Logic._PercentType ?? _PercentType ?? PercentEffectType.Progressive_Gradual; } }
+        public PercentEffectType PercentType => Logic._PercentType ?? _PercentType ?? PercentEffectType.Progressive_Gradual;
 
         [LogicOverridable("Blink Threshold")]
         public double? _BlinkThreshold { get; set; }
         [JsonIgnore]
-        public double BlinkThreshold { get { return Logic._BlinkThreshold ?? _BlinkThreshold ?? 0.0; } }
+        public double BlinkThreshold => Logic._BlinkThreshold ?? _BlinkThreshold ?? 0.0;
 
         public bool? _BlinkDirection { get; set; }
         [JsonIgnore]
-        public bool BlinkDirection { get { return Logic._BlinkDirection ?? _BlinkDirection ?? false; } }
+        public bool BlinkDirection => Logic._BlinkDirection ?? _BlinkDirection ?? false;
 
         [LogicOverridable("Blink Background")]
         public bool? _BlinkBackground { get; set; }
         [JsonIgnore]
-        public bool BlinkBackground { get { return Logic._BlinkBackground ?? _BlinkBackground ?? false; } }
+        public bool BlinkBackground => Logic._BlinkBackground ?? _BlinkBackground ?? false;
 
         public string _VariablePath { get; set; }
         [JsonIgnore]
-        public string VariablePath { get { return Logic._VariablePath ?? _VariablePath ?? string.Empty; } }
+        public string VariablePath => Logic._VariablePath ?? _VariablePath ?? string.Empty;
 
         public string _MaxVariablePath { get; set; }
         [JsonIgnore]
-        public string MaxVariablePath { get { return Logic._MaxVariablePath ?? _MaxVariablePath ?? string.Empty; } }
+        public string MaxVariablePath => Logic._MaxVariablePath ?? _MaxVariablePath ?? string.Empty;
 
 
         // These two properties work slightly differently to the others. These are special properties that allow for
@@ -57,24 +52,26 @@ namespace Aurora.Settings.Layers
         public double? _MaxValue { get; set; }
 
 
-        public PercentLayerHandlerProperties() : base() { }
+        public PercentLayerHandlerProperties()
+        { }
         public PercentLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
         public override void Default()
         {
             base.Default();
-            this._PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
-            this._SecondaryColor = Utils.ColorUtils.GenerateRandomColor();
-            this._PercentType = PercentEffectType.Progressive_Gradual;
-            this._BlinkThreshold = 0.0;
-            this._BlinkDirection = false;
-            this._BlinkBackground = false;
+            _PrimaryColor = ColorUtils.GenerateRandomColor();
+            _SecondaryColor = ColorUtils.GenerateRandomColor();
+            _PercentType = PercentEffectType.Progressive_Gradual;
+            _BlinkThreshold = 0.0;
+            _BlinkDirection = false;
+            _BlinkBackground = false;
         }
     }
 
     public class PercentLayerHandlerProperties : PercentLayerHandlerProperties<PercentLayerHandlerProperties>
     {
-        public PercentLayerHandlerProperties() : base() { }
+        public PercentLayerHandlerProperties()
+        { }
 
         public PercentLayerHandlerProperties(bool empty = false) : base(empty) { }
     }
@@ -111,6 +108,13 @@ namespace Aurora.Settings.Layers
             }
             (Control as Control_PercentLayer).SetProfile(profile);
             base.SetApplication(profile);
+        }
+
+        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.PropertiesChanged(sender, args);
+            
+            _effectLayer.Clear();
         }
     }
 
