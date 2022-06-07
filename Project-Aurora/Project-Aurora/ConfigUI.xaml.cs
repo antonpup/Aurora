@@ -15,11 +15,8 @@ using Aurora.Settings;
 using Aurora.Controls;
 using Aurora.Profiles.Generic_Application;
 using System.IO;
-using Aurora.Settings.Keycaps;
-using Aurora.Profiles;
 using Aurora.Settings.Layers;
 using Aurora.Profiles.Aurora_Wrapper;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using PropertyChanged;
@@ -27,30 +24,29 @@ using PropertyChanged;
 namespace Aurora
 {
     [DoNotNotify]
-    partial class ConfigUI : Window, INotifyPropertyChanged
+    partial class ConfigUI : INotifyPropertyChanged
     {
-        Control_Settings settingsControl = new Control_Settings();
-        Control_LayerControlPresenter layerPresenter = new Control_LayerControlPresenter();
-        Control_ProfileControlPresenter profilePresenter = new Control_ProfileControlPresenter();
+        Control_Settings settingsControl = new();
+        Control_LayerControlPresenter layerPresenter = new();
+        Control_ProfileControlPresenter profilePresenter = new();
 
-        EffectColor desktop_color_scheme = new EffectColor(0, 0, 0);
+        EffectColor desktop_color_scheme = new(0, 0, 0);
 
-        EffectColor transition_color = new EffectColor();
-        EffectColor current_color = new EffectColor();
+        EffectColor transition_color = new();
+        EffectColor current_color = new();
 
-        private float transitionamount = 0.0f;
+        private float transitionamount;
 
-        private FrameworkElement selected_item = null;
-        private FrameworkElement _selectedManager = null;
+        private FrameworkElement selected_item;
+        private FrameworkElement _selectedManager;
 
-        private bool settingsloaded = false;
-        private bool shownHiddenMessage = false;
+        private bool settingsloaded;
+        private bool shownHiddenMessage;
 
         private string saved_preview_key = "";
 
         private Timer virtual_keyboard_timer;
-        private Stopwatch recording_stopwatch = new Stopwatch();
-        private Grid virtial_kb = new Grid();
+        private Grid virtial_kb = new();
 
         private readonly double virtual_keyboard_width;
         private readonly double virtual_keyboard_height;
@@ -62,7 +58,7 @@ namespace Aurora
 
         public Profiles.Application FocusedApplication
         {
-            get { return (Profiles.Application)GetValue(FocusedApplicationProperty); }
+            get => (Profiles.Application)GetValue(FocusedApplicationProperty);
             set
             {
                 SetValue(FocusedApplicationProperty, value);
@@ -70,17 +66,15 @@ namespace Aurora
             }
         }
 
-        LayerEditor layer_editor = new LayerEditor();
-
-        private bool _ShowHidden = false;
+        private bool _ShowHidden;
 
         public bool ShowHidden
         {
-            get { return _ShowHidden; }
+            get => _ShowHidden;
             set
             {
                 _ShowHidden = value;
-                this.ShowHiddenChanged(value);
+                ShowHiddenChanged(value);
             }
         }
 
@@ -88,8 +82,8 @@ namespace Aurora
         {
             InitializeComponent();
 
-            virtual_keyboard_height = this.keyboard_grid.Height;
-            virtual_keyboard_width = this.keyboard_grid.Width;
+            virtual_keyboard_height = keyboard_grid.Height;
+            virtual_keyboard_width = keyboard_grid.Width;
 
             width = Width;
             height = Height;
@@ -100,22 +94,20 @@ namespace Aurora
 
             GenerateProfileStack();
             settingsControl.DataContext = this;
-
-            
         }
 
         internal void Display()
         {
             if (App.isSilent || Global.Configuration.StartSilently)
             {
-                this.Visibility = Visibility.Hidden;
-                this.WindowStyle = WindowStyle.None;
-                this.ShowInTaskbar = false;
+                Visibility = Visibility.Hidden;
+                WindowStyle = WindowStyle.None;
+                ShowInTaskbar = false;
                 Hide();
             }
             else
             {
-                this.Show();
+                Show();
             }
         }
 
@@ -123,22 +115,8 @@ namespace Aurora
         {
             profilePresenter.Profile = profile;
 
-            if (_selectedManager.Equals(this.ctrlProfileManager))
+            if (_selectedManager.Equals(ctrlProfileManager))
                 SelectedControl = profilePresenter;   
-        }
-
-        private void CtrlLayerManager_ProfileOverviewRequest(UserControl profile_control)
-        {
-            if (SelectedControl != profile_control)
-                SelectedControl = profile_control;
-        }
-
-        private void Layer_manager_NewLayer(Layer layer)
-        {
-            layerPresenter.Layer = layer;
-
-            if (_selectedManager.Equals(this.ctrlLayerManager))
-                SelectedControl = layerPresenter;
         }
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
@@ -150,10 +128,10 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
+            Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
+            Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
 
@@ -161,7 +139,7 @@ namespace Aurora
             keyboard_viewbox.MaxHeight = virtial_kb.Height + 50;
             keyboard_viewbox.UpdateLayout();
 
-            this.UpdateLayout();
+            UpdateLayout();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -171,13 +149,13 @@ namespace Aurora
             if (!settingsloaded)
             {
                 virtual_keyboard_timer = new Timer(8);
-                virtual_keyboard_timer.Elapsed += new ElapsedEventHandler(virtual_keyboard_timer_Tick);
+                virtual_keyboard_timer.Elapsed += virtual_keyboard_timer_Tick;
                 virtual_keyboard_timer.Start();
 
                 settingsloaded = true;
             }
 
-            this.keyboard_record_message.Visibility = Visibility.Hidden;
+            keyboard_record_message.Visibility = Visibility.Hidden;
 
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
@@ -189,10 +167,10 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            this.Width = width + (virtial_kb.Width - virtual_keyboard_width);
+            Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            this.Height = height + (virtial_kb.Height - virtual_keyboard_height);
+            Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
 
@@ -202,13 +180,13 @@ namespace Aurora
 
             UpdateManagerStackFocus(ctrlLayerManager);
 
-            this.UpdateLayout();
+            UpdateLayout();
 
-            foreach (Image child in this.profiles_stack.Children)
+            foreach (Image child in profiles_stack.Children)
             {
                 if (child.Visibility == Visibility.Visible)
                 {
-                    this.ProfileImage_MouseDown(child, null);
+                    ProfileImage_MouseDown(child, null);
                     break;
                 }
             }
@@ -258,10 +236,7 @@ namespace Aurora
                             keylights = Global.effengine.GetKeyboardLights();
                             Global.kbLayout.SetKeyboardColors(keylights);
 
-                            if (Global.key_recorder.IsRecording())
-                                this.keyboard_record_message.Visibility = Visibility.Visible;
-                            else
-                                this.keyboard_record_message.Visibility = Visibility.Hidden;
+                            keyboard_record_message.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
 
                         });
         }
@@ -280,9 +255,9 @@ namespace Aurora
 
         private void trayicon_menu_settings_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowInTaskbar = true;
-            this.WindowStyle = WindowStyle.SingleBorderWindow;
-            this.Show();
+            ShowInTaskbar = true;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            Show();
         }
 
         private void Window_Initialized(object sender, EventArgs e)
@@ -290,7 +265,7 @@ namespace Aurora
             
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (Global.Configuration.CloseMode == AppExitMode.Ask)
             {
@@ -326,7 +301,7 @@ namespace Aurora
 
         private void minimizeApp()
         {
-            this.FocusedApplication?.SaveAll();
+            FocusedApplication?.SaveAll();
 
             if (!shownHiddenMessage)
             {
@@ -360,13 +335,13 @@ namespace Aurora
 
         private Image profile_hidden;
 
-        private BitmapImage _visible = new BitmapImage(new Uri(@"Resources/Visible.png", UriKind.Relative));
-        private BitmapImage _not_visible = new BitmapImage(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
+        private BitmapImage _visible = new(new Uri(@"Resources/Visible.png", UriKind.Relative));
+        private BitmapImage _not_visible = new(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
         
         private void GenerateProfileStack(string focusedKey = null)
         {
             selected_item = null;
-            this.profiles_stack.Children.Clear();
+            profiles_stack.Children.Clear();
 
             /*Image profile_desktop = new Image
             {
@@ -428,7 +403,7 @@ namespace Aurora
                         profile_grid.Children.Add(profile_image);
                         profile_grid.Children.Add(profile_remove);
 
-                        this.profiles_stack.Children.Add(profile_grid);
+                        profiles_stack.Children.Add(profile_grid);
                     }
                     else
                     {
@@ -441,13 +416,13 @@ namespace Aurora
                             Visibility = application.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
                         };
                         profile_image.MouseDown += ProfileImage_MouseDown;
-                        this.profiles_stack.Children.Add(profile_image);
+                        profiles_stack.Children.Add(profile_image);
                     }
 
                     if (application.Config.ID.Equals(focusedKey))
                     {
-                        this.FocusedApplication = application;
-                        this.TransitionToProfile(profile_image);
+                        FocusedApplication = application;
+                        TransitionToProfile(profile_image);
                     }
                 }
             }
@@ -460,7 +435,7 @@ namespace Aurora
                 Margin = new Thickness(0, 5, 0, 0)
             };
             profile_add.MouseDown += AddProfile_MouseDown;
-            this.profiles_stack.Children.Add(profile_add);
+            profiles_stack.Children.Add(profile_add);
 
             //Show hidden profiles button
             profile_hidden = new Image
@@ -470,12 +445,12 @@ namespace Aurora
                 Margin = new Thickness(0, 5, 0, 0)
             };
             profile_hidden.MouseDown += HiddenProfile_MouseDown;
-            this.profiles_stack.Children.Add(profile_hidden);
+            profiles_stack.Children.Add(profile_hidden);
         }
 
         private void HiddenProfile_MouseDown(object sender, EventArgs e)
         {
-            this.ShowHidden = !this.ShowHidden;
+            ShowHidden = !ShowHidden;
         }
 
         protected void ShowHiddenChanged(bool value)
@@ -502,13 +477,13 @@ namespace Aurora
         private void mbtnHidden_Checked(object sender, RoutedEventArgs e)
         {
             MenuItem btn = sender as MenuItem;
-            Image img = this.cmenuProfiles.PlacementTarget as Image;
+            Image img = cmenuProfiles.PlacementTarget as Image;
 
             if (img != null)
             {
                 img.Opacity = btn.IsChecked ? 0.5 : 1;
 
-                if (!this.ShowHidden && btn.IsChecked)
+                if (!ShowHidden && btn.IsChecked)
                     img.Visibility = Visibility.Collapsed;
 
                 (img.Tag as Profiles.Application)?.SaveProfiles();
@@ -537,14 +512,6 @@ namespace Aurora
 
         }
 
-        private void ProfileImage_Edit_MouseUp(object sender, MouseEventArgs e)
-        {
-            Image img = sender as Image;
-            Profiles.Application profile = img.Tag as Profiles.Application;
-            profile.Settings.Hidden = !profile.Settings.Hidden;
-            img.Opacity = profile.Settings.Hidden ? 0.5 : 1;
-        }
-
         private void Profile_grid_MouseLeave(object sender, MouseEventArgs e)
         {
             if ((sender as Grid)?.Tag is Image)
@@ -559,7 +526,7 @@ namespace Aurora
 
         private void TransitionToProfile(Image source)
         {
-            this.FocusedApplication = source.Tag as Profiles.Application;
+            FocusedApplication = source.Tag as Profiles.Application;
             var bitmap = (BitmapSource)source.Source;
             var color = Utils.ColorUtils.GetAverageColor(bitmap);
 
@@ -577,11 +544,11 @@ namespace Aurora
             if (image != null && image.Tag != null && image.Tag is Profiles.Application)
             {
                 if (e == null || e.LeftButton == MouseButtonState.Pressed)
-                    this.TransitionToProfile(image);
+                    TransitionToProfile(image);
                 else if (e.RightButton == MouseButtonState.Pressed)
                 {
-                    this.cmenuProfiles.PlacementTarget = (Image)sender;
-                    this.cmenuProfiles.IsOpen = true;
+                    cmenuProfiles.PlacementTarget = (Image)sender;
+                    cmenuProfiles.IsOpen = true;
                 }
             }
         }
@@ -626,7 +593,7 @@ namespace Aurora
                         var idx = Math.Max(eventList.FindIndex(x => x.Key == name), 0);
                         Global.LightingStateManager.RemoveGenericProfile(name);
                         //ConfigManager.Save(Global.Configuration);
-                        this.GenerateProfileStack(eventList[idx].Key);
+                        GenerateProfileStack(eventList[idx].Key);
                     }
                 }
             }
@@ -674,7 +641,7 @@ namespace Aurora
 
         private void DesktopControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.FocusedApplication = null;
+            FocusedApplication = null;
             SelectedControl = settingsControl;
 
             current_color = desktop_color_scheme;
@@ -755,18 +722,18 @@ namespace Aurora
         public void ShowWindow()
         {
             Global.logger.Info("Show Window called");
-            this.Visibility = Visibility.Visible;
-            this.WindowStyle = WindowStyle.SingleBorderWindow;
-            this.ShowInTaskbar = true;
+            Visibility = Visibility.Visible;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            ShowInTaskbar = true;
             //this.Topmost = true;
-            this.Show();
-            this.Activate();
+            Show();
+            Activate();
         }
 
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            this.ShowInTaskbar = true;
-            this.ShowWindow();
+            ShowInTaskbar = true;
+            ShowWindow();
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -802,13 +769,13 @@ namespace Aurora
         private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!sender.Equals(_selectedManager))
-                SelectedControl = this.FocusedApplication.Profile.Layers.Count > 0 ? layerPresenter : this.FocusedApplication.Control;
+                SelectedControl = FocusedApplication.Profile.Layers.Count > 0 ? layerPresenter : FocusedApplication.Control;
             UpdateManagerStackFocus(sender);
         }
 
         private void ctrlOverlayLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
             if (!sender.Equals(_selectedManager))
-                SelectedControl = this.FocusedApplication.Profile.OverlayLayers.Count > 0 ? layerPresenter : this.FocusedApplication.Control;
+                SelectedControl = FocusedApplication.Profile.OverlayLayers.Count > 0 ? layerPresenter : FocusedApplication.Control;
             UpdateManagerStackFocus(sender);
         }
 
@@ -821,7 +788,7 @@ namespace Aurora
 
         private void brdOverview_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            this._selectedManager = SelectedControl = this.FocusedApplication.Control;
+            _selectedManager = SelectedControl = FocusedApplication.Control;
 
         }
 
