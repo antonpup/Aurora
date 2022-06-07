@@ -38,7 +38,7 @@
             <ComboBox SelectedValue="{Binding Properties.AmbilightCaptureType}" x:Name="CaptureType" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightCaptureType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
 
             <Label Content="Effect Type" Grid.Row="1" VerticalAlignment="Center" Height="26" Margin="0,1" />
-            <ComboBox SelectedValue="{Binding Properties._AmbilightType}" x:Name="EffectType" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
+            <ComboBox SelectedValue="{Binding Properties.AmbilightType}" x:Name="EffectType" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />
 
             <Label Content="Updates rate" Grid.Row="2" VerticalAlignment="Center" Height="26" Margin="0,1" />
             <ComboBox SelectedValue="{Binding Properties.AmbiLightUpdatesPerSecond}" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ItemsSource="{u:EnumToItemsSource {x:Type local:AmbilightFpsChoice}}" DisplayMemberPath="Text" SelectedValuePath="Value" Height="22" Margin="0,3" />

@@ -217,6 +217,7 @@ namespace Aurora.Settings.Layers
                 _properties.PropertyChanged -= PropertiesChanged;
                 _properties = value;
                 value.PropertyChanged += PropertiesChanged;
+                value.Sequence.freeform.ValuesChanged += PropertiesChanged;
                 value.OnPropertiesChanged(this);
             }
         }
@@ -319,6 +320,11 @@ namespace Aurora.Settings.Layers
         private void PropertiesChanged(object sender, CanvasChangedArgs e)
         {
             PropertiesChanged(sender, new PropertyChangedEventArgs(""));
+        }
+
+        private void PropertiesChanged(FreeFormObject newobject)
+        {
+            PropertiesChanged(this, new PropertyChangedEventArgs(""));
         }
 
         public virtual void Dispose()

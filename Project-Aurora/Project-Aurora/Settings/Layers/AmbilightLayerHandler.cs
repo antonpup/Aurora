@@ -88,10 +88,19 @@ namespace Aurora.Settings.Layers
 
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
     {
-        public AmbilightType? _AmbilightType { get; set; }
-
         [JsonIgnore]
-        public AmbilightType AmbilightType => Logic._AmbilightType ?? _AmbilightType ?? AmbilightType.Default;
+        private AmbilightType? _ambilightType;
+
+        [JsonProperty("_AmbilightType")]
+        public AmbilightType AmbilightType
+        {
+            get => Logic._ambilightType ?? _ambilightType ?? AmbilightType.Default;
+            set
+            {
+                _ambilightType = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         [JsonIgnore]
         private AmbilightCaptureType? _ambilightCaptureType;
@@ -240,18 +249,18 @@ namespace Aurora.Settings.Layers
             base.Default();
             _AmbilightOutputId = 0;
             _ambiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
-            _AmbilightType = AmbilightType.Default;
+            _ambilightType = AmbilightType.Default;
             _ambilightCaptureType = AmbilightCaptureType.EntireMonitor;
-            SpecificProcess = "";
+            _specificProcess = "";
             _coordinates = new Rectangle(0, 0, 0, 0);
             _BrightenImage = false;
-            BrightnessChange = 1.0f;
+            _brightnessChange = 1.0f;
             _SaturateImage = false;
-            SaturationChange = 1.0f;
+            _saturationChange = 1.0f;
             _FlipVertically = false;
-            ExperimentalMode = false;
+            _experimentalMode = false;
             _HueShiftImage = false;
-            HueShiftAngle = 0.0f;
+            _hueShiftAngle = 0.0f;
             _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
@@ -264,9 +273,7 @@ namespace Aurora.Settings.Layers
     {
         private IScreenCapture _screenCapture;
         private readonly Timer _captureTimer;
-        private Bitmap _screen;
-        private TextureBrush _screenBrush;
-        private long _lastUseTime;
+        private Brush _screenBrush;
         private IntPtr _specificProcessHandle = IntPtr.Zero;
         private Rectangle _cropRegion = new(8, 8, 8, 8);
         private readonly EffectLayer _ambilightLayer = new("Ambilight Layer");
@@ -315,8 +322,6 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            _lastUseTime = Time.GetMillisecondsSinceEpoch();
-
             //This is needed to prevent the layer from disappearing
             //for a frame when the user alt-tabs with the foregroundapp option selected
             if (TryGetCropRegion(out var newCropRegion))
@@ -325,7 +330,7 @@ namespace Aurora.Settings.Layers
             if (!_captureTimer.Enabled)
                 _captureTimer.Start();
 
-            if (_screen is null || _screenBrush is null)
+            if (_screenBrush is null)
                 return _ambilightLayer;
 
             var region = Properties.Sequence.GetAffectedRegion();
@@ -340,7 +345,7 @@ namespace Aurora.Settings.Layers
             {
                 default:
                 case AmbilightType.Default:
-                    lock (_screen)
+                    lock (_screenBrush)
                     _ambilightLayer.DrawTransformed(Properties.Sequence,
                         m =>
                         {
@@ -360,7 +365,15 @@ namespace Aurora.Settings.Layers
                     break;
 
                 case AmbilightType.AverageColor:
-                    Color average = BitmapUtils.GetRegionColor(_screen, new Rectangle(0, 0, _screen.Width, _screen.Height));
+                    var oneColorBitmap = new Bitmap(1, 1);
+                    using (var g = Graphics.FromImage(oneColorBitmap))
+                    {
+                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                        g.FillRectangle(_screenBrush, 0, 0, 1, 1);
+                    }
+                    
+                    Color average = oneColorBitmap.GetPixel(0, 0);
 
                     if (Properties.BrightenImage)
                         average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
@@ -396,10 +409,32 @@ namespace Aurora.Settings.Layers
 
         private void CreateScreenBrush(Bitmap bigScreen, Rectangle cropRegion)
         {
-            _screen = bigScreen;
+            switch (Properties.AmbilightType)
+            {
+                default:
+                case AmbilightType.Default:
+                    _screenBrush = new TextureBrush(bigScreen, new Rectangle(Point.Empty, cropRegion.Size), _imageAttributes);
+                    break;
+                case AmbilightType.AverageColor:
+                    var oneColorBitmap = new Bitmap(1, 1);
+                    using (var g = Graphics.FromImage(oneColorBitmap))
+                    {
+                        g.SmoothingMode = SmoothingMode.HighQuality;
+                        g.DrawImage(bigScreen, 0, 0, 1, 1);
+                    }
 
-            var x = GraphicsUnit.Pixel;
-            _screenBrush = new TextureBrush(bigScreen, new Rectangle(Point.Empty, cropRegion.Size), _imageAttributes);
+                    var average = oneColorBitmap.GetPixel(0, 0);
+
+                    if (Properties.BrightenImage)
+                        average = ColorUtils.ChangeBrightness(average, Properties.BrightnessChange);
+                    if (Properties.SaturateImage)
+                        average = ColorUtils.ChangeSaturation(average, Properties.SaturationChange);
+                    if (Properties.HueShiftImage)
+                        average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
+
+                    _screenBrush = new SolidBrush(average);
+                    break;
+            }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -426,7 +461,6 @@ namespace Aurora.Settings.Layers
             UpdateSpecificProcessHandle(Properties.SpecificProcess);
 
             _ambilightLayer.Clear();
-            _screen = null;
             _screenBrush = null;
         }
 

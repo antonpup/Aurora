@@ -806,7 +806,7 @@ namespace Aurora.EffectsEngine
                 _previousSequenceType = sequence.type;
             }
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
+                PercentEffect(foregroundColor, backgroundColor, sequence.keys, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
             else
                 PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
         }
@@ -838,7 +838,7 @@ namespace Aurora.EffectsEngine
         /// <param name="foregroundColor">The foreground color, used as a "Progress bar color"</param>
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
-        private void PercentEffect(Color foregroundColor, Color backgroundColor, DeviceKeys[] keys, double value,
+        private void PercentEffect(Color foregroundColor, Color backgroundColor, IReadOnlyList<DeviceKeys> keys, double value,
             double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flashPast = 0.0,
             bool flashReversed = false, bool blinkBackground = false)
         {
@@ -848,7 +848,7 @@ namespace Aurora.EffectsEngine
             else if (progressTotal > 1.0)
                 progressTotal = 1.0;
 
-            var progress = progressTotal * keys.Length;
+            var progress = progressTotal * keys.Count;
 
             if (flashPast > 0.0)
             {
@@ -862,17 +862,17 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            if (percentEffectType is PercentEffectType.Highest_Key or PercentEffectType.Highest_Key_Blend && keys.Length > 0)
+            if (percentEffectType is PercentEffectType.Highest_Key or PercentEffectType.Highest_Key_Blend && keys.Count > 0)
             {
-                var activeKey = (int)Math.Ceiling(value / (total / keys.Length)) - 1;
+                var activeKey = (int)Math.Ceiling(value / (total / keys.Count)) - 1;
                 var col = percentEffectType == PercentEffectType.Highest_Key ?
                     foregroundColor : ColorUtils.BlendColors(backgroundColor, foregroundColor, progressTotal);
-                SetOneKey(keys[Math.Min(Math.Max(activeKey, 0), keys.Length - 1)], col);
+                SetOneKey(keys[Math.Min(Math.Max(activeKey, 0), keys.Count - 1)], col);
 
             }
             else
             {
-                for (var i = 0; i < keys.Length; i++)
+                for (var i = 0; i < keys.Count; i++)
                 {
                     var currentKey = keys[i];
 
