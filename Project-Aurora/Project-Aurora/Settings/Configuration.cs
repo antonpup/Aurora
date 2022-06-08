@@ -210,6 +210,8 @@ namespace Aurora.Settings
         Corsair_K70MK2 = 206,
         [Description("Corsair - STRAFE MK2")]
         Corsair_STRAFE_MK2 = 207,
+        [Description("Corsair - K100")]
+        Corsair_K100 = 208,
 
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]

@@ -720,6 +720,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_strafe_mk2.json");
             else if (keyboard_preference == PreferredKeyboard.Corsair_K68)
                 layoutConfigPath = Path.Combine(layoutsPath, "corsair_k68.json");
+            else if (keyboard_preference == PreferredKeyboard.Corsair_K100)
+                layoutConfigPath = Path.Combine(layoutsPath, "corsair_k100.json");
             else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow)
                 layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow.json");
             else if (keyboard_preference == PreferredKeyboard.Razer_Blackwidow_X)
