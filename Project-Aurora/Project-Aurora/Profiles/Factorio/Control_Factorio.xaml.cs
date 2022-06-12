@@ -7,7 +7,7 @@ using System.Windows.Controls;
 namespace Aurora.Profiles.Factorio
 {
     /// <summary>
-    /// Interaction logic for Control_Overwatch.xaml
+    /// Interaction logic for Control_Factorio.xaml
     /// </summary>
     public partial class Control_Factorio : UserControl
     {
@@ -114,6 +114,12 @@ namespace Aurora.Profiles.Factorio
                 profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
+        }
+
+        private void go_to_steelseries_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = (ConfigUI)System.Windows.Application.Current.MainWindow;
+            mainWindow.GoToSteelSeriesPage();
         }
     }
 }
