@@ -319,10 +319,24 @@ namespace Aurora.EffectsEngine
 
         public void Dispose()
         {
-            _textureBrush?.Dispose();
-            _textureBrush = null;
-            _colormap.Dispose();
-            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _colormap?.Dispose();
+                _textureBrush?.Dispose();
+                _transformedDrawExcludeMap?.Dispose();
+                WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
+            }
+        }
+
+        ~EffectLayer()
+        {
+            Dispose(false);
         }
 
         /// <summary>
@@ -470,10 +484,10 @@ namespace Aurora.EffectsEngine
             {
                 if (!sequence.freeform.Equals(_lastFreeform))
                 {
-                    _lastFreeform.ValuesChanged -= FreeformOnValuesChanged;
+                    WeakEventManager<FreeFormObject, EventArgs>.RemoveHandler(_lastFreeform, "ValuesChanged", FreeformOnValuesChanged);
                     _lastFreeform = sequence.freeform;
-                    _lastFreeform.ValuesChanged += FreeformOnValuesChanged;
-                    FreeformOnValuesChanged(_lastFreeform);
+                    WeakEventManager<FreeFormObject, EventArgs>.AddHandler(_lastFreeform, "ValuesChanged", FreeformOnValuesChanged);
+                    FreeformOnValuesChanged(this, EventArgs.Empty);
                 }
 
                 if (_ksChanged)
@@ -514,7 +528,7 @@ namespace Aurora.EffectsEngine
             return this;
         }
 
-        private void FreeformOnValuesChanged(FreeFormObject newobject)
+        private void FreeformOnValuesChanged(object sender, EventArgs args)
         {
             _ksChanged = true;
             Clear();

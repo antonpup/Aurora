@@ -322,9 +322,9 @@ namespace Aurora.Settings.Layers
             PropertiesChanged(sender, new PropertyChangedEventArgs(""));
         }
 
-        private void PropertiesChanged(FreeFormObject newobject)
+        private void PropertiesChanged(object sender, FreeFormChangedArgs e)
         {
-            PropertiesChanged(this, new PropertyChangedEventArgs(""));
+            PropertiesChanged(sender, new PropertyChangedEventArgs(""));
         }
 
         public virtual void Dispose()

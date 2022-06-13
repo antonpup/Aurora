@@ -1,11 +1,17 @@
-﻿namespace Aurora.Settings
-{
-    /// <summary>
-    /// A delegate for a changed value
-    /// </summary>
-    /// <param name="newobject">The current instance of FreeFormObject</param>
-    public delegate void ValuesChangedEventHandler(FreeFormObject newobject);
+﻿using System;
 
+namespace Aurora.Settings
+{
+    public class FreeFormChangedArgs : EventArgs
+    {
+        public FreeFormObject FreeForm { get; }
+
+        public FreeFormChangedArgs(FreeFormObject freeFormObject)
+        {
+            FreeForm = freeFormObject;
+        }
+    }
+    
     /// <summary>
     /// A class representing a region within a bitmap.
     /// </summary>
@@ -21,7 +27,7 @@
             set
             {
                 _x = value;
-                ValuesChanged?.Invoke(this);
+                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
             }
         }
 
@@ -35,7 +41,7 @@
             set
             {
                 _y = value;
-                ValuesChanged?.Invoke(this);
+                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
             }
         }
 
@@ -49,7 +55,7 @@
             set
             {
                 _width = value;
-                ValuesChanged?.Invoke(this);
+                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
             }
         }
 
@@ -63,7 +69,7 @@
             set
             {
                 _height = value;
-                ValuesChanged?.Invoke(this);
+                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
             }
         }
 
@@ -77,14 +83,14 @@
             set
             {
                 _angle = value;
-                ValuesChanged?.Invoke(this);
+                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
             }
         }
 
         /// <summary>
         /// Event for when any value of this FreeFormObject changes.
         /// </summary>
-        public event ValuesChangedEventHandler ValuesChanged;
+        public event EventHandler<FreeFormChangedArgs> ValuesChanged;
 
         /// <summary>
         /// Creates a default instance of the FreeFormObject

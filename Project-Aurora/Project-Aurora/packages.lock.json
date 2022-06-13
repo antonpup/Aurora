@@ -633,6 +633,9 @@
       },
       "colorbox": {
         "type": "Project"
+      },
+      "sbaurorareactive": {
+        "type": "Project"
       }
     },
     ".NETFramework,Version=v4.8/win7-x64": {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Aurora.Settings;
 
 namespace Aurora.Controls
 {
@@ -264,11 +265,11 @@ namespace Aurora.Controls
             }
         }
 
-        private void freeform_updated(Settings.FreeFormObject newfreeform)
+        private void freeform_updated(object sender, FreeFormChangedArgs args)
         {
-            if(newfreeform != null)
+            if(args.FreeForm != null)
             {
-                Sequence.freeform = newfreeform;
+                Sequence.freeform = args.FreeForm;
 
                 SequenceUpdated?.Invoke(this, EventArgs.Empty);
             }
