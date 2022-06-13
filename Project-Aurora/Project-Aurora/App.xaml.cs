@@ -405,6 +405,7 @@ namespace Aurora
                 Global.logger.Info("Loading ConfigUI...");
 
                 MainWindow = new ConfigUI();
+                Global.LightingStateManager.InitUpdate();
                 ((ConfigUI)MainWindow).Display();
 
                 //Debug Windows on Startup

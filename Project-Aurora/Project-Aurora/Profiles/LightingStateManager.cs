@@ -133,8 +133,6 @@ namespace Aurora.Profiles
                 profile.Value.Initialize();
             }
 
-            this.InitUpdate();
-
             // Listen for profile keybind triggers
             Global.InputEvents.KeyDown += CheckProfileKeybinds;
 
@@ -352,7 +350,7 @@ namespace Aurora.Profiles
         
         private Semaphore updateLock = new Semaphore(1, 1);
         private bool locked = false;
-        private void InitUpdate()
+        public void InitUpdate()
         {
             watch.Start();
             updateTimer = new Timer(g =>
