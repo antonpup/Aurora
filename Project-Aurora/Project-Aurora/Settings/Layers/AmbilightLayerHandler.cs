@@ -416,14 +416,7 @@ namespace Aurora.Settings.Layers
                     _screenBrush = new TextureBrush(bigScreen, new Rectangle(Point.Empty, cropRegion.Size), _imageAttributes);
                     break;
                 case AmbilightType.AverageColor:
-                    var oneColorBitmap = new Bitmap(1, 1);
-                    using (var g = Graphics.FromImage(oneColorBitmap))
-                    {
-                        g.SmoothingMode = SmoothingMode.HighQuality;
-                        g.DrawImage(bigScreen, 0, 0, 1, 1);
-                    }
-
-                    var average = oneColorBitmap.GetPixel(0, 0);
+                    var average = BitmapUtils.GetRegionColor(bigScreen, new Rectangle(Point.Empty, cropRegion.Size));
 
                     if (Properties.BrightenImage)
                         average = ColorUtils.ChangeBrightness(average, Properties.BrightnessChange);
@@ -609,7 +602,7 @@ namespace Aurora.Settings.Layers
 
     internal class DXScreenCapture : IScreenCapture
     {
-        private static readonly Semaphore Semaphore = new(1, 1);
+        private static readonly Semaphore Semaphore = new(0, 4);
         private Rectangle _currentBounds;
         private DesktopDuplicator _desktopDuplicator;
         private int _display;
