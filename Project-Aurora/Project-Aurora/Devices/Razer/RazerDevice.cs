@@ -67,7 +67,6 @@ namespace Aurora.Devices.Razer
 
             try
             {
-                Chroma.Instance.SetAll(Color.Black);
                 Chroma.Instance.Uninitialize();
                 IsInitialized = false;
             }

@@ -390,6 +390,8 @@ namespace Aurora.Settings
         //Razer range is 300-399
         [Description("Razer - Mamba TE")]
         Razer_Mamba_TE = 300,
+        [Description("Razer - Naga Pro")]
+        Razer_naga_Pro = 301,
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]
