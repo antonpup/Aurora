@@ -22,7 +22,6 @@ namespace Aurora.Profiles {
         private readonly string processName;
         private readonly string processModule;
         private readonly bool needs64bitMemReader;
-        protected bool isInitialized = false;
 
         /// <summary>Main pointer data (parsed from the JSON file).</summary>
         protected TPointers pointers;
@@ -72,12 +71,8 @@ namespace Aurora.Profiles {
                     }
                 } catch (Exception exc) {
                     Global.logger.Error(exc.Message);
-                    isInitialized = false;
                 }
-
-                isInitialized = true;
             } else {
-                isInitialized = false;
             }
         }
 
@@ -87,11 +82,6 @@ namespace Aurora.Profiles {
         public override void ResetGameState() {
             _game_state = new TGameState();
         }
-
-        /// <summary>
-        /// Gets whether or not the application is enabled and if the memory reader has been initialised correctly.
-        /// </summary>
-        public new bool IsEnabled => Application.Settings.IsEnabled && isInitialized;
 
         /// <summary>
         /// Updates all the gamestate for this frame. Will search for the given process name and attempt to attach the memory reader.
