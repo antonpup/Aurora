@@ -19,7 +19,7 @@ namespace Aurora.Utils
                 return Color.Black;
 
             //B, G, R, A
-            var color = new[] {0, 0, 0, 0}; //array because SIMD optimizations
+            var color = new[] {0L, 0L, 0L, 0L}; //array because SIMD optimizations
 
             var srcData = map.LockBits(
                 rectangle,
@@ -49,10 +49,10 @@ namespace Aurora.Utils
 
             var area = rectangle.Width * rectangle.Height;
             return Color.FromArgb(
-                color[0] / area |
-                color[1] / area << 8 |
-                color[2] / area << 16 |
-                color[3] / area << 24
+                (int)(color[0] / area) |
+                (int)(color[1] / area << 8) |
+                (int)(color[2] / area << 16) |
+                (int)(color[3] / area << 24)
             );
         }
 
