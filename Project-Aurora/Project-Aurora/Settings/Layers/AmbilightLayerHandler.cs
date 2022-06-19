@@ -20,6 +20,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
+using Amib.Threading;
 using Timer = System.Timers.Timer;
 
 namespace Aurora.Settings.Layers
@@ -272,7 +273,11 @@ namespace Aurora.Settings.Layers
     public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
     {
         private IScreenCapture _screenCapture;
-        private readonly Timer _captureTimer;
+        
+        private readonly SmartThreadPool _captureWorker = new(1000, 1);
+        private TimeSpan _screenshotInterval;
+        private readonly WorkItemCallback _screenshotWork;
+        
         private Brush _screenBrush;
         private IntPtr _specificProcessHandle = IntPtr.Zero;
         private Rectangle _cropRegion = new(8, 8, 8, 8);
@@ -289,8 +294,7 @@ namespace Aurora.Settings.Layers
         public AmbilightLayerHandler()
         {
             Initialize();
-            _captureTimer = new Timer(GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond));
-            _captureTimer.Elapsed += TakeScreenshot;
+            _screenshotWork = TakeScreenshot;
         }
 
         private void Initialize()
@@ -327,8 +331,10 @@ namespace Aurora.Settings.Layers
             if (TryGetCropRegion(out var newCropRegion))
                 _cropRegion = newCropRegion;
 
-            if (!_captureTimer.Enabled)
-                _captureTimer.Start();
+            if (_captureWorker.WaitingCallbacks < 1)
+            {
+                _captureWorker.QueueWorkItem(_screenshotWork);
+            }
 
             if (_screenBrush is null)
                 return _ambilightLayer;
@@ -373,7 +379,7 @@ namespace Aurora.Settings.Layers
                         g.FillRectangle(_screenBrush, 0, 0, 1, 1);
                     }
                     
-                    Color average = oneColorBitmap.GetPixel(0, 0);
+                    var average = oneColorBitmap.GetPixel(0, 0);
 
                     if (Properties.BrightenImage)
                         average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
@@ -396,15 +402,38 @@ namespace Aurora.Settings.Layers
             return new Control_AmbilightLayer(this);
         }
 
-        private void TakeScreenshot(object sender, ElapsedEventArgs e)
+        private readonly Stopwatch _captureStopwatch = new();
+        private object TakeScreenshot(object sender)
         {
-            _captureTimer.Stop();
+            try
+            {
+                return TryTakeScreenshot();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
 
+        private object TryTakeScreenshot()
+        {
+            _captureStopwatch.Restart();
             var bigScreen = _screenCapture.Capture(_cropRegion);
+            WaitTimer(_captureStopwatch.Elapsed);
             if (bigScreen is null)
-                return;
+                return null;
 
             CreateScreenBrush(bigScreen, _cropRegion);
+            return null;
+        }
+
+        private void WaitTimer(TimeSpan elapsed)
+        {
+            if (_screenshotInterval > elapsed)
+                Thread.Sleep(_screenshotInterval - elapsed);
+            else
+                Thread.Sleep(_screenshotInterval);
         }
 
         private void CreateScreenBrush(Bitmap bigScreen, Rectangle cropRegion)
@@ -413,7 +442,7 @@ namespace Aurora.Settings.Layers
             {
                 default:
                 case AmbilightType.Default:
-                    _screenBrush = new TextureBrush(bigScreen, new Rectangle(Point.Empty, cropRegion.Size), _imageAttributes);
+                    _screenBrush = new TextureBrush(bigScreen, new Rectangle(0, 0, bigScreen.Width, bigScreen.Height), _imageAttributes);
                     break;
                 case AmbilightType.AverageColor:
                     var average = BitmapUtils.GetRegionColor(bigScreen, new Rectangle(Point.Empty, cropRegion.Size));
@@ -435,8 +464,7 @@ namespace Aurora.Settings.Layers
         {
             base.PropertiesChanged(sender, args);
 
-            var interval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
-            _captureTimer.Interval = interval;
+            _screenshotInterval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
             
             Initialize();
 
@@ -511,7 +539,7 @@ namespace Aurora.Settings.Layers
         /// </summary>
         /// <param name="fps"></param>
         /// <returns></returns>
-        private static int GetIntervalFromFps(AmbilightFpsChoice fps) => 1000 / (10 + 5 * (int)fps);
+        private static TimeSpan GetIntervalFromFps(AmbilightFpsChoice fps) => new(0, 0,0,  0, 1000 / (10 + 5 * (int)fps));
 
         /// <summary>
         /// Updates the handle of the window used to crop the screenshot
@@ -602,7 +630,7 @@ namespace Aurora.Settings.Layers
 
     internal class DXScreenCapture : IScreenCapture
     {
-        private static readonly Semaphore Semaphore = new(0, 4);
+        private static readonly Semaphore Semaphore = new(1, 1);
         private Rectangle _currentBounds;
         private DesktopDuplicator _desktopDuplicator;
         private int _display;
@@ -610,13 +638,10 @@ namespace Aurora.Settings.Layers
         public Bitmap Capture(Rectangle desktopRegion)
         {
             SetTarget(desktopRegion);
-            try
-            {
+            try{
                 Semaphore.WaitOne();
                 return _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(5000);
-            }
-            finally
-            {
+            }finally{
                 Semaphore.Release();
             }
         }
@@ -663,8 +688,16 @@ namespace Aurora.Settings.Layers
 
             _currentBounds = screenWindowRectangle;
 
-            _desktopDuplicator?.Dispose();
-            _desktopDuplicator = new DesktopDuplicator(currentAdapter, currentOutput, _currentBounds);
+            try
+            {
+                Semaphore.WaitOne();
+                _desktopDuplicator?.Dispose();
+                _desktopDuplicator = new DesktopDuplicator(currentAdapter, currentOutput, _currentBounds);
+            }
+            finally
+            {
+                Semaphore.Release();
+            }
         }
 
         public IEnumerable<string> GetDisplays() => GetAdapters().Select((s, index) =>
@@ -688,7 +721,15 @@ namespace Aurora.Settings.Layers
 
         public void Dispose()
         {
-            _desktopDuplicator?.Dispose();
+            try
+            {
+                Semaphore.WaitOne();
+                _desktopDuplicator?.Dispose();
+            }
+            finally
+            {
+                Semaphore.Release();
+            }
             _desktopDuplicator = null;
         }
     }

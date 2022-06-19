@@ -4,6 +4,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -14,15 +15,14 @@ namespace Aurora
 {
     public class DesktopDuplicator : IDisposable
     {
-        #region Fields
+        private static readonly IDictionary<Adapter1, OutputDuplication> Duplicators = new Dictionary<Adapter1, OutputDuplication>();
+
         private readonly Device _device;
         private readonly OutputDuplication _deskDupl;
 
         private readonly Texture2D _desktopImageTexture;
 
         private Rectangle _rect;
-
-        #endregion
 
         public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle rect)
         {
@@ -36,14 +36,19 @@ namespace Aurora
                 Format = Format.B8G8R8A8_UNorm,
                 Width = output.Description.DesktopBounds.Right - output.Description.DesktopBounds.Left,
                 Height = output.Description.DesktopBounds.Bottom - output.Description.DesktopBounds.Top,
-                OptionFlags = ResourceOptionFlags.GdiCompatible,
+                OptionFlags = ResourceOptionFlags.None,
                 MipLevels = 1,
                 ArraySize = 1,
                 SampleDescription = { Count = 1, Quality = 0 },
                 Usage = ResourceUsage.Staging
             };
 
-             _deskDupl = output.DuplicateOutput(_device);
+            if (!Duplicators.TryGetValue(adapter, out _deskDupl))
+            {
+                _deskDupl = output.DuplicateOutput(_device);
+                Duplicators.Add(adapter, _deskDupl);
+            }
+
             _desktopImageTexture = new Texture2D(_device, textureDesc);
         }
 
@@ -51,7 +56,7 @@ namespace Aurora
         {
             SharpDX.DXGI.Resource desktopResource;
             if (_deskDupl.IsDisposed || _device.IsDisposed) 
-                throw new ObjectDisposedException("DesktopDuplicator is disposed");
+                return null;
 
             try {
                 _deskDupl.AcquireNextFrame(timeout, out _, out desktopResource);
@@ -64,14 +69,12 @@ namespace Aurora
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessLost)
             {
                 // Can happen when going fullscreen / exiting fullscreen
-                Global.logger.Warn(e.Message);
-                throw e;
+                return null;
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessDenied)
             {
                 // Happens when locking PC
-                Global.logger.Debug(e.Message);
-                throw e;
+                return null;
             }
             catch (SharpDXException e) when (e.ResultCode.Failure)
             {
@@ -86,7 +89,7 @@ namespace Aurora
 
             bool disposed = ReleaseFrame();
             if (disposed)
-                throw new ObjectDisposedException("DesktopDuplicator is disposed2");
+                return null;
 
             var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
 
@@ -126,7 +129,7 @@ namespace Aurora
         {
             try
             {
-                _deskDupl?.ReleaseFrame();
+                _deskDupl.ReleaseFrame();
                 return _deskDupl.IsDisposed;
             }
             catch (SharpDXException e)
