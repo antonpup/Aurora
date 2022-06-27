@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
 using Aurora.EffectsEngine;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
-using System.Timers;
-using System.Windows;
-using Aurora.Profiles;
 
 namespace Aurora
 {
@@ -293,10 +288,10 @@ namespace Aurora
             _background.FillOver(_keyboardDarknessBrush);
 
             var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
-            foreach (var key in PossiblePeripheralKeys)
-            {
-                _background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, peripheralDarkness));
-            }
+            lock (_background.GetBitmap())
+                foreach (var key in PossiblePeripheralKeys)
+                    _background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, peripheralDarkness));
+            
 
             if (_forcedFrame != null)
             {
@@ -312,8 +307,8 @@ namespace Aurora
 
             var dcc = new DeviceColorComposition
             {
-                keyColors = _keyColors,
-                keyBitmap = _background.GetBitmap()
+                KeyColors = _keyColors,
+                KeyBitmap = _background.GetBitmap()
             };
             Global.dev_manager.UpdateDevices(dcc);
 

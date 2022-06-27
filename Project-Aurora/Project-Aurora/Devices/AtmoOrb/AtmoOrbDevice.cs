@@ -19,9 +19,9 @@ namespace Aurora.Devices.AtmoOrbDevice
         private IPEndPoint ipClientEndpoint;
         private bool isConnected;
         private bool isConnecting;
-        private Stopwatch sw = new Stopwatch();
+        private Stopwatch sw = new();
 
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+        private Stopwatch watch = new();
         private long lastUpdateTime = 0;
 
         private VariableRegistry default_registry = null;
@@ -58,16 +58,6 @@ namespace Aurora.Devices.AtmoOrbDevice
         }
 
         public bool IsInitialized => IsConnected();
-
-        public bool IsKeyboardConnected()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            throw new NotImplementedException();
-        }
 
         public bool Reconnect()
         {
@@ -159,16 +149,16 @@ namespace Aurora.Devices.AtmoOrbDevice
                 Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_send_delay"))
             {
                 Color averageColor;
-                lock (colorComposition.bitmapLock)
+                lock (colorComposition.KeyBitmap)
                 {
                     //Fix conflict with debug bitmap
-                    lock (colorComposition.keyBitmap)
+                    lock (colorComposition.KeyBitmap)
                     {
 
                         averageColor = Utils.BitmapUtils.GetRegionColor(
-                            colorComposition.keyBitmap,
-                            new Rectangle(0, 0, colorComposition.keyBitmap.Width,
-                                colorComposition.keyBitmap.Height)
+                            colorComposition.KeyBitmap,
+                            new Rectangle(0, 0, colorComposition.KeyBitmap.Width,
+                                colorComposition.KeyBitmap.Height)
                         );
                     }
                 }
@@ -183,11 +173,6 @@ namespace Aurora.Devices.AtmoOrbDevice
             lastUpdateTime = watch.ElapsedMilliseconds;
 
             return true;
-        }
-
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
-        {
-            throw new NotImplementedException();
         }
 
         public void SendColorsToOrb(byte red, byte green, byte blue, DoWorkEventArgs e = null)

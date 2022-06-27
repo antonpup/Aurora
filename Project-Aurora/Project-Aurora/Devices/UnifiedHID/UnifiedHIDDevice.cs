@@ -213,7 +213,7 @@ namespace Aurora.Devices.UnifiedHID
                 watch.Restart();
                 sleepWatch.Restart();
 
-                result = UpdateDevice(colorComposition.keyColors, e, forced);
+                result = UpdateDevice(colorComposition.KeyColors, e, forced);
 
                 watch.Stop();
                 lastUpdateTime = watch.ElapsedMilliseconds + sleep;

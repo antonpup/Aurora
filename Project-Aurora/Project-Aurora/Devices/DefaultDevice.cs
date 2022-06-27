@@ -45,7 +45,7 @@ namespace Aurora.Devices
         public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
         {
             _tempStopWatch.Restart();
-            var updateResult = UpdateDevice(colorComposition.keyColors, e, forced);
+            var updateResult = UpdateDevice(colorComposition.KeyColors, e, forced);
 
             if (!updateResult) return updateResult;
             lastUpdateTime = watch.ElapsedMilliseconds;

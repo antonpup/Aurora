@@ -211,7 +211,7 @@ namespace Aurora.Devices.SteelSeries
         {
             watch.Restart();
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

@@ -13,9 +13,8 @@ namespace Aurora.Devices
     /// </summary>
     public class DeviceColorComposition
     {
-        public readonly object bitmapLock = new();
-        public Dictionary<DeviceKeys, Color> keyColors;
-        public Bitmap keyBitmap;
+        public Dictionary<DeviceKeys, Color> KeyColors;
+        public Bitmap KeyBitmap;
     }
 
     /// <summary>

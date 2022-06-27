@@ -115,7 +115,7 @@ namespace Aurora.Devices.Asus
         {
             _tempStopWatch.Restart();
 
-            asusHandler.UpdateColors(colorComposition.keyColors);
+            asusHandler.UpdateColors(colorComposition.KeyColors);
 
             lastUpdateTime = watch.ElapsedMilliseconds;
             updateTime = _tempStopWatch.ElapsedMilliseconds;
