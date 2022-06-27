@@ -18,10 +18,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Timers;
+using System.Windows;
 using System.Windows.Forms;
 using Amib.Threading;
-using Timer = System.Timers.Timer;
+using Point = System.Drawing.Point;
+using Size = System.Drawing.Size;
 
 namespace Aurora.Settings.Layers
 {
@@ -68,23 +69,6 @@ namespace Aurora.Settings.Layers
         Highest,
     }
 
-    public enum AmbilightQualityChoice
-    {
-        [Description("Lowest")]
-        VeryLow = 0,
-
-        [Description("Low")]
-        Low,
-
-        [Description("Medium")]
-        Medium,
-
-        [Description("High")]
-        High,
-
-        [Description("Highest")]
-        Highest,
-    }
     #endregion
 
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
@@ -295,6 +279,7 @@ namespace Aurora.Settings.Layers
         {
             Initialize();
             _screenshotWork = TakeScreenshot;
+            RunningProcessMonitor.Instance.RunningProcessesChanged += ProcessesChanged; //TODO this is memory leak. WeakEventHandler doesnt work
         }
 
         private void Initialize()
@@ -485,6 +470,12 @@ namespace Aurora.Settings.Layers
             _screenBrush = null;
         }
 
+        private void ProcessesChanged(object sender, RunningProcessChanged args)
+        {
+            if (args.ProcessName.StartsWith(Properties.SpecificProcess))
+                UpdateSpecificProcessHandle(Properties.SpecificProcess);
+        }
+
         #region Helper Methods
         /// <summary>
         /// Gets the region to crop based on user preference and current display.
@@ -547,10 +538,12 @@ namespace Aurora.Settings.Layers
         /// <param name="process"></param>
         public void UpdateSpecificProcessHandle(string process)
         {
-            var a = Array.Find(Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process))
-                                               , p => p.MainWindowHandle != IntPtr.Zero);
+            var a = Array.Find(
+                Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process)),
+                p => p.MainWindowHandle != IntPtr.Zero
+                );
 
-            if (a != null && a.MainWindowHandle != IntPtr.Zero)
+            if (a != null)
             {
                 _specificProcessHandle = a.MainWindowHandle;
             }

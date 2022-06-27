@@ -83,7 +83,7 @@ namespace Aurora.Profiles
                 return true;
 
             processMonitor = ActiveProcessMonitor.Instance;
-            runningProcessMonitor = new RunningProcessMonitor();
+            runningProcessMonitor = RunningProcessMonitor.Instance;
             _isRunningProcess = name => runningProcessMonitor.IsProcessRunning(name);
             _isOverlayActiveProfile = evt =>
                 evt.IsOverlayEnabled &&
@@ -393,7 +393,7 @@ namespace Aurora.Profiles
         {
             if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && currentTick >= nextProcessNameUpdate)
             {
-                processMonitor.GetActiveWindowsProcessname();
+                processMonitor.GetActiveWindowsProcessName();
                 nextProcessNameUpdate = currentTick + 1000L;
             }
         }
@@ -549,8 +549,9 @@ namespace Aurora.Profiles
 
             return profile;
         }
+
         /// <summary>Gets the current application.</summary>
-        public ILightEvent GetCurrentProfile() => GetCurrentProfile(out bool _);
+        public ILightEvent GetCurrentProfile() => GetCurrentProfile(out var _);
         /// <summary>
         /// Returns a list of all profiles that should have their overlays active. This will include processes that running but not in the foreground.
         /// </summary>

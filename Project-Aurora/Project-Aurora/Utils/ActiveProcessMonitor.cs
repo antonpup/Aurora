@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Utils
 {
@@ -17,41 +14,40 @@ namespace Aurora.Utils
 
 	public sealed class ActiveProcessMonitor
 	{
-		private static readonly Lazy<ActiveProcessMonitor> singletonInstance = new Lazy<ActiveProcessMonitor>(() => new ActiveProcessMonitor());
+		private static readonly Lazy<ActiveProcessMonitor> SingletonInstance = new(() => new ActiveProcessMonitor());
 		
-		public static ActiveProcessMonitor Instance
-			=> singletonInstance.Value;
+		public static ActiveProcessMonitor Instance => SingletonInstance.Value;
 		
-		private const uint WINEVENT_OUTOFCONTEXT = 0;
-		private const uint EVENT_SYSTEM_FOREGROUND = 3;
-		private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
-		private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017;
-		delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
-		private string processPath = string.Empty;
-		public string ProcessPath { get { return processPath; } private set { processPath = value; ActiveProcessChanged?.Invoke(this, EventArgs.Empty); } }
-		public event EventHandler ActiveProcessChanged;
+		private const uint WinEventOutOfContext = 0;
+		private const uint EventSystemForeground = 3;
+		private const uint EventSystemMinimizeStart = 0x0016;
+		private const uint EventSystemMinimizeEnd = 0x0017;
+
+		private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+		private string _processPath = string.Empty;
+		public string ProcessPath {
+			get => _processPath;
+			private set
+			{
+				_processPath = value; ActiveProcessChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+		public static event EventHandler ActiveProcessChanged;
 
 		private WinEventDelegate dele;
 
 		private ActiveProcessMonitor()
 		{
-			try
-			{
-				dele = WinEventProc;
-				SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
-				SetWinEventHook(EVENT_SYSTEM_MINIMIZESTART, EVENT_SYSTEM_MINIMIZEEND, IntPtr.Zero, dele, 0, 0, WINEVENT_OUTOFCONTEXT);
-			}
-			catch (Exception exc)
-			{
-
-			}
+			dele = WinEventProc;
+			SetWinEventHook(EventSystemForeground, EventSystemForeground, IntPtr.Zero, dele, 0, 0, WinEventOutOfContext);
+			SetWinEventHook(EventSystemMinimizeStart, EventSystemMinimizeEnd, IntPtr.Zero, dele, 0, 0, WinEventOutOfContext);
 		}
 
-		public void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+		private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 		{
 			if (Global.Configuration.DetectionMode == Settings.ApplicationDetectionMode.WindowsEvents)
 			{
-				GetActiveWindowsProcessname();
+				GetActiveWindowsProcessName();
 			}
 		}
 
@@ -71,18 +67,12 @@ namespace Aurora.Utils
         [DllImport("user32.dll")]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-		[DllImport("Oleacc.dll")]
-		static extern IntPtr GetProcessHandleFromHwnd(IntPtr whandle);
-
-		[DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-		static extern uint GetModuleFileNameExW(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, [In] [MarshalAs(UnmanagedType.U4)] int nSize);
-
-		public void GetActiveWindowsProcessname()
+        public void GetActiveWindowsProcessName()
 		{
-			string active_process = getActiveWindowsProcessname();
+			string activeProcess = getActiveWindowsProcessname();
 
-			if (!String.IsNullOrWhiteSpace(active_process))
-				ProcessPath = active_process;
+			if (!String.IsNullOrWhiteSpace(activeProcess))
+				ProcessPath = activeProcess;
 		}
 
 		[Flags]
@@ -114,40 +104,32 @@ namespace Aurora.Utils
 
         public static TimeSpan GetTimeSinceLastInput() {
             var inf = new tagLASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<tagLASTINPUTINFO>() };
-            if (!GetLastInputInfo(ref inf)) return new TimeSpan(0);
-            return new TimeSpan(0, 0, 0, 0, Environment.TickCount - (int)inf.dwTime);
+            return !GetLastInputInfo(ref inf) ?
+	            new TimeSpan(0) :
+	            new TimeSpan(0, 0, 0, 0, Environment.TickCount - inf.dwTime);
         }
 
         private static string GetExecutablePath(Process Process)
 		{
-			//If running on Vista or later use the new function
-			if (Environment.OSVersion.Version.Major >= 6)
-			{
-				return GetExecutablePathAboveVista(Process.Id);
-			}
-
-			return Process.MainModule.FileName;
+			return GetExecutablePathAboveVista(Process.Id);
 		}
 
-		private static string GetExecutablePathAboveVista(int ProcessId)
+		private static string GetExecutablePathAboveVista(int processId)
 		{
 			var buffer = new StringBuilder(1024);
-			IntPtr hprocess = OpenProcess(ProcessAccessFlags.QueryLimitedInformation,
-				false, ProcessId);
-			if (hprocess != IntPtr.Zero)
+			var hprocess = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, processId);
+			if (hprocess == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastWin32Error());
+			try
 			{
-				try
+				var size = buffer.Capacity;
+				if (QueryFullProcessImageName(hprocess, 0, buffer, out size))
 				{
-					int size = buffer.Capacity;
-					if (QueryFullProcessImageName(hprocess, 0, buffer, out size))
-					{
-						return buffer.ToString();
-					}
+					return buffer.ToString();
 				}
-				finally
-				{
-					CloseHandle(hprocess);
-				}
+			}
+			finally
+			{
+				CloseHandle(hprocess);
 			}
 			throw new Win32Exception(Marshal.GetLastWin32Error());
 		}
@@ -175,37 +157,6 @@ namespace Aurora.Utils
 			{
 				Global.logger.Error("Exception in GetActiveWindowsProcessname" + exc);
 			}
-
-			/*try
-            {
-                IntPtr processhandle = IntPtr.Zero;
-                IntPtr zeroHandle = IntPtr.Zero;
-                if (windowHandle.Equals(IntPtr.Zero))
-                    windowHandle = GetForegroundWindow();
-                processhandle = GetProcessHandleFromHwnd(windowHandle);
-                
-                StringBuilder sb = new StringBuilder(4048);
-                uint error = GetModuleFileNameExW(processhandle, zeroHandle, sb, 4048);
-                string path = sb.ToString();
-                System.IO.Path.GetFileName(path);
-                if (!System.IO.File.Exists(path))
-                    throw new Exception($"Found file path does not exist! '{path}'");
-
-
-                return path;
-            }
-            catch (ArgumentException aex)
-            {
-                Global.logger.LogLine("Argument Exception: " + aex, Logging_Level.Error);
-                //if (Global.isDebug)
-                    //throw aex;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.LogLine("Exception in GetActiveWindowsProcessname" + exc, Logging_Level.Error);
-                //if (Global.isDebug)
-                    //throw exc;
-            }*/
 
 			return "";
 		}
