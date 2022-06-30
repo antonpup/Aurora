@@ -90,7 +90,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/xQwexx"><img src="https://avatars3.githubusercontent.com/u/17799600?v=4" width="100px;" alt=""/><br /><sub><b>Qwex</b></sub></a><br /><a href="https://github.com/Aurora-RGB/Aurora/commits?author=xQwexx" title="Code">💻</a></td>
-  </tr>
+    <td align="center"><a href="https://github.com/Predator4578"><img src="https://avatars.githubusercontent.com/Predator4578" width="100px;" alt=""/><br /><sub><b>Codename-Antares</b></sub></a><br /><a href="https://github.com/Predator4578/Aurora/tree/DeviceLayout" title="Code">💻</a></td>
+  </tr>  
 </table>
 
 <!-- markdownlint-enable -->

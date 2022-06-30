@@ -153,12 +153,12 @@
                             <ComboBox SelectedValue="{Binding VirtualkeyboardKeycapType}" ItemsSource="{u:EnumToItemsSource {x:Type local:KeycapType}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <ComboBox SelectedValue="{Binding BitmapAccuracy}" ItemsSource="{u:EnumToItemsSource {x:Type local:BitmapAccuracy}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
                         </StackPanel>
-                        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
-                            <CheckBox Content="Allow Aurora wrappers to take priority over desktop profile while active" IsChecked="{Binding AllowWrappersInBackground}" Grid.Row="1" Margin="0,1,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Margin="0,66,0,167" Grid.RowSpan="2">
+                            <CheckBox Content="Allow Aurora wrappers to take priority over desktop profile while active" IsChecked="{Binding AllowWrappersInBackground}" Margin="0,1,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" />
                             <CheckBox Content="Disable Keyboard Lighting" IsChecked="{Binding DevicesDisableKeyboard}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
                             <CheckBox Content="Disable Mouse Lighting" IsChecked="{Binding DevicesDisableMouse}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
                             <CheckBox Content="Disable Headset Lighting" IsChecked="{Binding DevicesDisableHeadset}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
-                            <Button Content="Configure Asus Peripheral Devices" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
+                            <Button Content="Configure Asus Peripheral Devices" HorizontalAlignment="Left" Margin="2,2,0,2" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
@@ -206,6 +206,11 @@
                         </GroupBox>
                     </StackPanel>
                 </Grid>
+                <StackPanel Grid.Column="0" Margin="7,207,0,20">
+                    <CheckBox Content="Disable OpenRGB Keyboard Lighting" IsChecked="{Binding DevicesDisableOpenRGBKeyboard}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                    <CheckBox Content="Disable OpenRGB Mouse Lighting" IsChecked="{Binding DevicesDisableOpenRGBMouse}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                    <CheckBox Content="Disable OpenRGB Headset Lighting" IsChecked="{Binding DevicesDisableOpenRGBHeadset}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                </StackPanel>
             </Grid>
         </TabItem>
         <TabItem Header="Device Manager">

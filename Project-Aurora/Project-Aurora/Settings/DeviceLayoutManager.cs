@@ -27,6 +27,8 @@ namespace Aurora.Settings
         ANSI,
         [Description("ISO")]
         ISO,
+        [Description("ISO - CANADA-FR")]
+        ISOCAFR,
         [Description("ABNT")]
         ABNT,
         [Description("JIS")]
@@ -565,6 +567,8 @@ namespace Aurora.Settings
                     return "ansi_layout";
                 case KeyboardPhysicalLayout.ISO:
                     return "iso_layout";
+                case KeyboardPhysicalLayout.ISOCAFR:
+                    return "isocafr_layout";
                 case KeyboardPhysicalLayout.ABNT:
                     return "abnt2_layout";
                 case KeyboardPhysicalLayout.JIS:
@@ -650,7 +654,8 @@ namespace Aurora.Settings
                     return KeyboardPhysicalLayout.ANSI;
                 default:
                     return KeyboardPhysicalLayout.ISO;
-
+                case ("ca-FR"):
+                    return KeyboardPhysicalLayout.ISOCAFR;
             }
         }
 

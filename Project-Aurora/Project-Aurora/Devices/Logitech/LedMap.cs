@@ -167,6 +167,14 @@ namespace Aurora.Devices.Logitech
             [DeviceKeys.PERIPHERAL_DPI] =  (DeviceType.Mouse, 0),
             [DeviceKeys.Peripheral_Logo] = (DeviceType.Mouse, 1),
             [DeviceKeys.Peripheral_ScrollWheel] = (DeviceType.Mouse, 2),
+            [DeviceKeys.MOUSEPADLIGHT1] = (DeviceType.Mousemat, 0),
+
+            [DeviceKeys.ADDITIONALLIGHT1] = (DeviceType.Speaker, 0),           //Remapped to match my Devicekeys Configuration , Needs to added Speaker Lights soon
+            [DeviceKeys.ADDITIONALLIGHT2] = (DeviceType.Speaker, 1),
+            [DeviceKeys.ADDITIONALLIGHT3] = (DeviceType.Speaker, 2),
+            [DeviceKeys.ADDITIONALLIGHT4] = (DeviceType.Speaker, 3),
+            [DeviceKeys.ADDITIONALLIGHT5] = (DeviceType.Headset, 0),              //Remapped to match my Devicekeys Configuration
+            [DeviceKeys.ADDITIONALLIGHT6] = (DeviceType.Headset, 1),              //Remapped to match my Devicekeys Configuration
         };
     }
 }
