@@ -1,29 +1,18 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.Linq;
-using System.ServiceModel.PeerResolvers;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Aurora.Settings.Layers
 {
     public class SolidColorLayerHandler : LayerHandler<LayerHandlerProperties>
     {
-        private readonly EffectLayer _solidcolorLayer = new("SolidColorLayer");
-        private SolidBrush _brush;
+        private readonly EffectLayer _solidColorLayer = new("SolidColorLayer");
+        private readonly SolidBrush _brush;
         private KeySequence _propertiesSequence;
 
         public SolidColorLayerHandler()
-        {
-            _brush = new SolidBrush(Properties.PrimaryColor);
-            Properties.PropertyChanged += Profile_PropertyChanged;
-        }
-
-        private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             _brush = new SolidBrush(Properties.PrimaryColor);
         }
@@ -35,10 +24,16 @@ namespace Aurora.Settings.Layers
         
         public override EffectLayer Render(IGameState gamestate)
         {
+            _solidColorLayer.Set(_propertiesSequence, _brush);
+            return _solidColorLayer;
+        }
+
+        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.PropertiesChanged(sender, args);
             _brush.Color = Properties.PrimaryColor;
             _propertiesSequence = Properties.Sequence;
-            _solidcolorLayer.Set(_propertiesSequence, _brush);
-            return _solidcolorLayer;
+            _solidColorLayer.Invalidate();
         }
     }
 }

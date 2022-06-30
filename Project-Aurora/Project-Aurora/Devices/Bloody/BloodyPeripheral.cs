@@ -11,14 +11,15 @@ namespace Aurora.Devices.Bloody
 {
     public sealed class BloodyPeripheral : IDisposable
     {
-        private static Dictionary<int, PeripheralType> deviceIds = new Dictionary<int, PeripheralType>()
+        private static readonly Dictionary<int, PeripheralType> DeviceIds = new()
         {
             [0x37EA] = PeripheralType.MOUSE,
             [0xFA60] = PeripheralType.MOUSEPAD,
+            [0x356E] = PeripheralType.MOUSEPAD,
         };
-        private static readonly byte[] ColorPacketHeader = new byte[8] { 0x07, 0x03, 0x06, 0x02, 0x00, 0x00, 0x00, 0x00 };
+        private static readonly byte[] ColorPacketHeader = { 0x07, 0x03, 0x06, 0x02, 0x00, 0x00, 0x00, 0x00 };
 
-        public PeripheralType PeripheralType { get { return _peripheralType; } }
+        public PeripheralType PeripheralType => _peripheralType;
 
         private const int VendorId = 0x09DA;
         private const uint LedUsagePage = 0x000C; //(ff52,0001,000C) //List of UsagePage+UsageID I found from Windows Device Manager(labed there as Uxxxx&&UPxxxx)
@@ -29,8 +30,6 @@ namespace Aurora.Devices.Bloody
         private readonly byte[] _keyColors = new byte[16 * 3];
 
         private readonly HidStream _ctrlStream;
-
-
 
         private BloodyPeripheral(HidStream ctrlStream, PeripheralType peripheralType)
         {
@@ -46,7 +45,7 @@ namespace Aurora.Devices.Bloody
         public static List<BloodyPeripheral> GetDevices()
         {
             List<BloodyPeripheral> devices = new List<BloodyPeripheral>();
-            foreach(int productId in deviceIds.Keys)
+            foreach(int productId in DeviceIds.Keys)
             {
                 var dev = Initialize(productId);
                 if (dev != null)
@@ -64,34 +63,31 @@ namespace Aurora.Devices.Bloody
             }
             try
             {
-                HidDevice ledDevice = GetFromUsages(devices, LedUsagePage, LedUsage);
+                GetFromUsages(devices, LedUsagePage, LedUsage);
                 HidDevice ctrlDevice = devices.First(d => d.GetMaxFeatureReportLength() > 50);
 
                 HidStream ctrlStream = null;
-                if (ctrlDevice?.TryOpen(out ctrlStream) ?? false)
+                if ((bool) ctrlDevice?.TryOpen(out ctrlStream))
                 {
                     PeripheralType type;
-                    deviceIds.TryGetValue(productId, out type);
+                    DeviceIds.TryGetValue(productId, out type);
                     BloodyPeripheral bp = new BloodyPeripheral(ctrlStream, type);
                     bp.SetDirect();
                     return bp;
                 }
-                else
-                {
-                    ctrlStream?.Close();
-                }
+                ctrlStream?.Close();
             }
             catch
             { }
             return null;
         }
 
-        public void SetDirect()
+        private void SetDirect()
         {
-            byte[] a = new byte[4] { 0x07, 0x03, 0x06, 0x01 };
-            byte[] b = new byte[9] { 0x07, 0x03, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+            byte[] a = { 0x07, 0x03, 0x06, 0x01 };
+            byte[] b = { 0x07, 0x03, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
 
-            byte[] packet = new byte[64];
+            var packet = new byte[64];
             try
             {
                 a.CopyTo(packet, 0);

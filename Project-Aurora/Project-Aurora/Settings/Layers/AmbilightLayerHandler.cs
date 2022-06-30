@@ -17,11 +17,12 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
+using System.Threading;
+using System.Windows;
 using System.Windows.Forms;
-using Timer = System.Timers.Timer;
+using Amib.Threading;
+using Point = System.Drawing.Point;
+using Size = System.Drawing.Size;
 
 namespace Aurora.Settings.Layers
 {
@@ -68,122 +69,184 @@ namespace Aurora.Settings.Layers
         Highest,
     }
 
-    public enum AmbilightQuality
-    {
-        [Description("Lowest")]
-        VeryLow = 0,
-
-        [Description("Low")]
-        Low,
-
-        [Description("Medium")]
-        Medium,
-
-        [Description("High")]
-        High,
-
-        [Description("Highest")]
-        Highest,
-    }
     #endregion
 
     public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<AmbilightLayerHandlerProperties>
     {
-        public AmbilightType? _AmbilightType { get; set; }
+        [JsonIgnore]
+        private AmbilightType? _ambilightType;
+
+        [JsonProperty("_AmbilightType")]
+        public AmbilightType AmbilightType
+        {
+            get => Logic._ambilightType ?? _ambilightType ?? AmbilightType.Default;
+            set
+            {
+                _ambilightType = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         [JsonIgnore]
-        public AmbilightType AmbilightType { get { return Logic._AmbilightType ?? _AmbilightType ?? AmbilightType.Default; } }
+        private AmbilightCaptureType? _ambilightCaptureType;
 
-        public AmbilightCaptureType? _AmbilightCaptureType { get; set; }
-
-        [JsonIgnore]
-        public AmbilightCaptureType AmbilightCaptureType { get { return Logic._AmbilightCaptureType ?? _AmbilightCaptureType ?? AmbilightCaptureType.EntireMonitor; } }
+        [JsonProperty("_AmbilightCaptureType")]
+        public AmbilightCaptureType AmbilightCaptureType
+        {
+            get => Logic._ambilightCaptureType ?? _ambilightCaptureType ?? AmbilightCaptureType.EntireMonitor;
+            set
+            {
+                _ambilightCaptureType = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public int? _AmbilightOutputId { get; set; }
 
         [JsonIgnore]
-        public int AmbilightOutputId { get { return Logic._AmbilightOutputId ?? _AmbilightOutputId ?? 0; } }
-
-        public AmbilightFpsChoice? _AmbiLightUpdatesPerSecond { get; set; }
+        public int AmbilightOutputId => Logic._AmbilightOutputId ?? _AmbilightOutputId ?? 0;
 
         [JsonIgnore]
-        public AmbilightFpsChoice AmbiLightUpdatesPerSecond => Logic._AmbiLightUpdatesPerSecond ?? _AmbiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
+        private AmbilightFpsChoice? _ambiLightUpdatesPerSecond;
 
-        public String _SpecificProcess { get; set; }
+        [JsonProperty("_AmbiLightUpdatesPerSecond")]
+        public AmbilightFpsChoice AmbiLightUpdatesPerSecond
+        {
+            get => Logic._ambiLightUpdatesPerSecond ?? _ambiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
+            set
+            {
+                _ambiLightUpdatesPerSecond = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         [JsonIgnore]
-        public String SpecificProcess { get { return Logic._SpecificProcess ?? _SpecificProcess ?? String.Empty; } }
-
-        [LogicOverridable("Coordinates")] public Rectangle? _Coordinates { get; set; }
+        private string _specificProcess;
+        
+        [JsonProperty("_SpecificProcess")]
+        public string SpecificProcess
+        {
+            get => Logic._specificProcess ?? _specificProcess ?? string.Empty;
+            set
+            {
+                _specificProcess = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         [JsonIgnore]
-        public Rectangle Coordinates { get { return Logic._Coordinates ?? _Coordinates ?? Rectangle.Empty; } }
+        private Rectangle? _coordinates;
 
-        public AmbilightQuality? _AmbilightQuality { get; set; }
-
-        [JsonIgnore]
-        public AmbilightQuality AmbilightQuality { get { return Logic._AmbilightQuality ?? _AmbilightQuality ?? AmbilightQuality.Medium; } }
+        [JsonProperty("_Coordinates")]
+        [LogicOverridable("Coordinates")] 
+        public Rectangle Coordinates
+        {
+            get => Logic._coordinates ?? _coordinates ?? Rectangle.Empty;
+            set
+            {
+                _coordinates = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public bool? _BrightenImage { get; set; }
 
         [JsonIgnore]
-        public bool BrightenImage { get { return Logic._BrightenImage ?? _BrightenImage ?? false; } }
+        public bool BrightenImage => Logic._BrightenImage ?? _BrightenImage ?? false;
 
-        public float? _BrightnessChange { get; set; }
         [JsonIgnore]
-        public float BrightnessChange => Logic._BrightnessChange ?? _BrightnessChange ?? 0.0f;
+        private float? _brightnessChange;
+
+        [JsonProperty("_BrightnessChange")]
+        public float BrightnessChange
+        {
+            get => Logic._brightnessChange ?? _brightnessChange ?? 0.0f;
+            set
+            {
+                _brightnessChange = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public bool? _SaturateImage { get; set; }
 
         [JsonIgnore]
-        public bool SaturateImage { get { return Logic._SaturateImage ?? _SaturateImage ?? false; } }
+        public bool SaturateImage => Logic._SaturateImage ?? _SaturateImage ?? false;
 
-        public float? _SaturationChange { get; set; }
         [JsonIgnore]
-        public float SaturationChange => Logic._SaturationChange ?? _SaturationChange ?? 0.0f;
+        private float? _saturationChange;
+
+        [JsonProperty("_SaturationChange")]
+        public float SaturationChange
+        {
+            get => Logic._saturationChange ?? _saturationChange ?? 0.0f;
+            set
+            {
+                _saturationChange = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public bool? _FlipVertically { get; set; }
 
         [JsonIgnore]
         public bool FlipVertically => Logic._FlipVertically ?? _FlipVertically ?? false;
 
-        public bool? _ExperimentalMode { get; set; }
-
         [JsonIgnore]
-        public bool ExperimentalMode => Logic._ExperimentalMode ?? _ExperimentalMode ?? false;
+        private bool? _experimentalMode;
+
+        [JsonProperty("_ExperimentalMode")]
+        public bool ExperimentalMode
+        {
+            get => Logic._experimentalMode ?? _experimentalMode ?? false;
+            set
+            {
+                _experimentalMode = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
         public bool? _HueShiftImage { get; set; }
 
         [JsonIgnore]
-        public bool HueShiftImage { get { return Logic._HueShiftImage ?? _HueShiftImage ?? false; } }
+        public bool HueShiftImage => Logic._HueShiftImage ?? _HueShiftImage ?? false;
 
-        public float? _HueShiftAngle { get; set; }
         [JsonIgnore]
-        public float HueShiftAngle => Logic._HueShiftAngle ?? _HueShiftAngle ?? 0.0f;
+        private float? _hueShiftAngle;
+        [JsonProperty("_HueShiftAngle")]
+        public float HueShiftAngle
+        {
+            get => Logic._hueShiftAngle ?? _hueShiftAngle ?? 0.0f;
+            set
+            {
+                _hueShiftAngle = value;
+                OnPropertiesChanged(this);
+            }
+        }
 
-        public AmbilightLayerHandlerProperties() : base() { }
+        public AmbilightLayerHandlerProperties()
+        { }
 
-        public AmbilightLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+        public AmbilightLayerHandlerProperties(bool assignDefault = false) : base(assignDefault) { }
 
         public override void Default()
         {
             base.Default();
-            this._AmbilightOutputId = 0;
-            this._AmbiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
-            this._AmbilightType = AmbilightType.Default;
-            this._AmbilightCaptureType = AmbilightCaptureType.EntireMonitor;
-            this._SpecificProcess = "";
-            this._Coordinates = new Rectangle(0, 0, 0, 0);
-            this._AmbilightQuality = AmbilightQuality.Medium;
-            this._BrightenImage = false;
-            this._BrightnessChange = 1.0f;
-            this._SaturateImage = false;
-            this._SaturationChange = 1.0f;
-            this._FlipVertically = false;
-            this._ExperimentalMode = false;
-            this._HueShiftImage = false;
-            this._HueShiftAngle = 0.0f;
-            this._Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
+            _AmbilightOutputId = 0;
+            _ambiLightUpdatesPerSecond = AmbilightFpsChoice.Medium;
+            _ambilightType = AmbilightType.Default;
+            _ambilightCaptureType = AmbilightCaptureType.EntireMonitor;
+            _specificProcess = "";
+            _coordinates = new Rectangle(0, 0, 0, 0);
+            _BrightenImage = false;
+            _brightnessChange = 1.0f;
+            _SaturateImage = false;
+            _saturationChange = 1.0f;
+            _FlipVertically = false;
+            _experimentalMode = false;
+            _HueShiftImage = false;
+            _hueShiftAngle = 0.0f;
+            _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
         }
     }
 
@@ -193,160 +256,115 @@ namespace Aurora.Settings.Layers
     [DoNotNotify]
     public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
     {
-        private IScreenCapture screenCapture;
-        private readonly Timer captureTimer;
-        private Bitmap screen;
-        private long last_use_time = 0;
-        private IntPtr specificProcessHandle = IntPtr.Zero;
-        private Rectangle cropRegion;
+        private IScreenCapture _screenCapture;
+        
+        private readonly SmartThreadPool _captureWorker = new(1000, 1);
+        private TimeSpan _screenshotInterval;
+        private readonly WorkItemCallback _screenshotWork;
+        
+        private Brush _screenBrush;
+        private IntPtr _specificProcessHandle = IntPtr.Zero;
+        private Rectangle _cropRegion = new(8, 8, 8, 8);
+        private readonly EffectLayer _ambilightLayer = new("Ambilight Layer");
+        private ImageAttributes _imageAttributes = new();
 
         #region Bindings
-        public IEnumerable<string> Displays => screenCapture.GetDisplays();
+        public IEnumerable<string> Displays => _screenCapture.GetDisplays();
 
-        public int OutputId
-        {
-            get => Properties.AmbilightOutputId;
-            set
-            {
-                if (Properties._AmbilightOutputId != value)
-                {
-                    Properties._AmbilightOutputId = value;
-                    InvokePropertyChanged(nameof(OutputId));
-                    Initialize();
-                }
-            }
-        }
+        public bool UseDx => Properties.ExperimentalMode;
 
-        public bool UseDX
-        {
-            get => Properties.ExperimentalMode;
-            set
-            {
-                if (Properties._ExperimentalMode != value)
-                {
-                    Properties._ExperimentalMode = value;
-                    InvokePropertyChanged(nameof(UseDX));
-                    Initialize();
-                }
-            }
-        }
         #endregion
 
         public AmbilightLayerHandler()
         {
             Initialize();
-            captureTimer = new Timer(GetIntervalFromFPS(Properties.AmbiLightUpdatesPerSecond));
-            captureTimer.Elapsed += TakeScreenshot;
+            _screenshotWork = TakeScreenshot;
+            RunningProcessMonitor.Instance.RunningProcessesChanged += ProcessesChanged; //TODO this is memory leak. WeakEventHandler doesnt work
         }
 
-        public void Initialize()
+        private void Initialize()
         {
             if (Properties.ExperimentalMode)
             {
-                screenCapture = new DXScreenCapture();
+                _screenCapture?.Dispose();
+                _screenCapture = new DXScreenCapture();
                 try
                 {
                     //this won't work on some systems
-                    screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                    //Console.WriteLine("Started experimental ambilight mode");
                     Global.logger.Info("Started experimental ambilight mode");
+                    InvokePropertyChanged(nameof(Displays));
+                    return;
                 }
                 catch (SharpDXException e)
                 {
-                    (screenCapture as DXScreenCapture)?.Dispose();
                     //Console.WriteLine("Error using experimental ambilight mode: " + e);
                     Global.logger.Error("Error using experimental ambilight mode: " + e);
-                    Properties._ExperimentalMode = false;
-                    InvokePropertyChanged(nameof(UseDX));
-
-                    screenCapture = new GDIScreenCapture();
-                    screenCapture.SetDisplay(Properties.AmbilightOutputId);
+                    Properties.ExperimentalMode = false;
+                    InvokePropertyChanged(nameof(UseDx));
                 }
             }
-            else
-            {
-                screenCapture = new GDIScreenCapture();
-                screenCapture.SetDisplay(Properties.AmbilightOutputId);
-                Global.logger.Info("Started regular ambilight mode");
-                //Console.WriteLine("Started regular ambilight mode");
-            }
-
-            cropRegion = screenCapture.CurrentScreenBounds;
+            _screenCapture?.Dispose();
+            _screenCapture = new GDIScreenCapture();
+            Global.logger.Info("Started regular ambilight mode");
             InvokePropertyChanged(nameof(Displays));
         }
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            var ambilight_layer = new EffectLayer();
-
-            last_use_time = Time.GetMillisecondsSinceEpoch();
-
-            if (!captureTimer.Enabled)
-                captureTimer.Start();
-
-            var interval = GetIntervalFromFPS(Properties.AmbiLightUpdatesPerSecond);
-            if (captureTimer.Interval != interval)
-                captureTimer.Interval = interval;
-
-            if (screen is null)
-                return ambilight_layer;
-
-            var region = Properties.Sequence.GetAffectedRegion();
-            if (region.Width == 0 || region.Height == 0)
-                return ambilight_layer;
-
             //This is needed to prevent the layer from disappearing
             //for a frame when the user alt-tabs with the foregroundapp option selected
             if (TryGetCropRegion(out var newCropRegion))
-                cropRegion = newCropRegion;
+                _cropRegion = newCropRegion;
+
+            if (_captureWorker.WaitingCallbacks < 1)
+            {
+                _captureWorker.QueueWorkItem(_screenshotWork);
+            }
+
+            if (_screenBrush is null)
+                return _ambilightLayer;
+
+            var region = Properties.Sequence.GetAffectedRegion();
+            if (region.IsEmpty)
+                return _ambilightLayer;
 
             //and because of that, this should never happen 
-            if (cropRegion.Width == 0 || cropRegion.Height == 0)
-                return ambilight_layer;
+            if (_cropRegion.IsEmpty)
+                return _ambilightLayer;
 
             switch (Properties.AmbilightType)
             {
+                default:
                 case AmbilightType.Default:
-                    ambilight_layer.DrawTransformed(Properties.Sequence,
+                    lock (_screenBrush)
+                    _ambilightLayer.DrawTransformed(Properties.Sequence,
                         m =>
                         {
                             if (Properties.FlipVertically)
                             {
                                 m.Scale(1, -1, MatrixOrder.Prepend);
-                                m.Translate(0, -Effects.CanvasHeight, MatrixOrder.Prepend);
+                                m.Translate(0, -_cropRegion.Height, MatrixOrder.Prepend);
                             }
                         },
                         g =>
                         {
-                            var mtx = BitmapUtils.GetEmptyColorMatrix();
-                            if (Properties.BrightenImage)
-                                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetBrightnessColorMatrix(Properties.BrightnessChange));
-
-                            if (Properties.SaturateImage)
-                                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetSaturationColorMatrix(Properties.SaturationChange));
-
-                            if (Properties.HueShiftImage)
-                                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetHueShiftColorMatrix(Properties.HueShiftAngle));
-
-                            var att = new ImageAttributes();
-                            att.SetColorMatrix(new ColorMatrix(mtx));
-
-                            g.DrawImage(
-                                screen,
-                                new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight),
-                                cropRegion.X,
-                                cropRegion.Y,
-                                cropRegion.Width,
-                                cropRegion.Height,
-                                GraphicsUnit.Pixel,
-                                att);
+                            g.Clear(Color.Transparent);
+                            g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
                         },
-                        new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight)
+                        new Rectangle(0, 0, _cropRegion.Width, _cropRegion.Height)
                     );
                     break;
 
                 case AmbilightType.AverageColor:
-                    var average = BitmapUtils.GetRegionColor(screen, cropRegion);
+                    var oneColorBitmap = new Bitmap(1, 1);
+                    using (var g = Graphics.FromImage(oneColorBitmap))
+                    {
+                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                        g.FillRectangle(_screenBrush, 0, 0, 1, 1);
+                    }
+                    
+                    var average = oneColorBitmap.GetPixel(0, 0);
 
                     if (Properties.BrightenImage)
                         average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
@@ -357,11 +375,11 @@ namespace Aurora.Settings.Layers
                     if (Properties.HueShiftImage)
                         average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
 
-                    ambilight_layer.Set(Properties.Sequence, average);
+                    _ambilightLayer.Set(Properties.Sequence, average);
                     break;
             }
 
-            return ambilight_layer;
+            return _ambilightLayer;
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()
@@ -369,25 +387,93 @@ namespace Aurora.Settings.Layers
             return new Control_AmbilightLayer(this);
         }
 
-        private void TakeScreenshot(object sender, ElapsedEventArgs e)
+        private readonly Stopwatch _captureStopwatch = new();
+        private object TakeScreenshot(object sender)
         {
-            if (Time.GetMillisecondsSinceEpoch() - last_use_time > 2000)
-                captureTimer.Stop();
+            try
+            {
+                return TryTakeScreenshot();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
 
-            var bigScreen = screenCapture.Capture();
+        private object TryTakeScreenshot()
+        {
+            _captureStopwatch.Restart();
+            var bigScreen = _screenCapture.Capture(_cropRegion);
+            WaitTimer(_captureStopwatch.Elapsed);
             if (bigScreen is null)
-                return;
+                return null;
 
-            var scale = GetScaleFromQuality(Properties.AmbilightQuality);
+            CreateScreenBrush(bigScreen, _cropRegion);
+            return null;
+        }
 
-            Bitmap smallScreen = new Bitmap(bigScreen.Width / scale, bigScreen.Height / scale);
+        private void WaitTimer(TimeSpan elapsed)
+        {
+            if (_screenshotInterval > elapsed)
+                Thread.Sleep(_screenshotInterval - elapsed);
+            else
+                Thread.Sleep(_screenshotInterval);
+        }
 
-            using (var graphics = Graphics.FromImage(smallScreen))
-                graphics.DrawImage(bigScreen, 0, 0, bigScreen.Width / scale, bigScreen.Height / scale);
+        private void CreateScreenBrush(Bitmap bigScreen, Rectangle cropRegion)
+        {
+            switch (Properties.AmbilightType)
+            {
+                default:
+                case AmbilightType.Default:
+                    _screenBrush = new TextureBrush(bigScreen, new Rectangle(0, 0, bigScreen.Width, bigScreen.Height), _imageAttributes);
+                    break;
+                case AmbilightType.AverageColor:
+                    var average = BitmapUtils.GetRegionColor(bigScreen, new Rectangle(Point.Empty, cropRegion.Size));
 
-            bigScreen?.Dispose();
+                    if (Properties.BrightenImage)
+                        average = ColorUtils.ChangeBrightness(average, Properties.BrightnessChange);
+                    if (Properties.SaturateImage)
+                        average = ColorUtils.ChangeSaturation(average, Properties.SaturationChange);
+                    if (Properties.HueShiftImage)
+                        average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
 
-            screen = smallScreen;
+                    _screenBrush = new SolidBrush(average);
+                    break;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.PropertiesChanged(sender, args);
+
+            _screenshotInterval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
+            
+            Initialize();
+
+            var mtx = BitmapUtils.GetEmptyColorMatrix();
+            if (Properties.BrightenImage)
+                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetBrightnessColorMatrix(Properties.BrightnessChange));
+            if (Properties.SaturateImage)
+                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetSaturationColorMatrix(Properties.SaturationChange));
+            if (Properties.HueShiftImage)
+                mtx = BitmapUtils.ColorMatrixMultiply(mtx, BitmapUtils.GetHueShiftColorMatrix(Properties.HueShiftAngle));
+            _imageAttributes = new ImageAttributes();
+            _imageAttributes.SetColorMatrix(new ColorMatrix(mtx));
+            _imageAttributes.SetWrapMode(WrapMode.Clamp);
+
+            UpdateSpecificProcessHandle(Properties.SpecificProcess);
+
+            _ambilightLayer.Clear();
+            _screenBrush = null;
+        }
+
+        private void ProcessesChanged(object sender, RunningProcessChanged args)
+        {
+            if (args.ProcessName.StartsWith(Properties.SpecificProcess))
+                UpdateSpecificProcessHandle(Properties.SpecificProcess);
         }
 
         #region Helper Methods
@@ -404,16 +490,13 @@ namespace Aurora.Settings.Layers
             {
                 case AmbilightCaptureType.EntireMonitor:
                     //we're using the whole screen, so we don't crop at all
-                    crop = new Rectangle(Point.Empty, screen.Size);
+                    crop = Screen.AllScreens[Properties.AmbilightOutputId].Bounds;
                     break;
                 case AmbilightCaptureType.SpecificProcess:
                 case AmbilightCaptureType.ForegroundApp:
-                    IntPtr handle;
-
-                    if (Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp)
-                        handle = User32.GetForegroundWindow();
-                    else
-                        handle = specificProcessHandle;
+                default:
+                    var handle = Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp ?
+                        User32.GetForegroundWindow() : _specificProcessHandle;
 
                     if (handle == IntPtr.Zero)
                         return false;//happens when alt tabbing
@@ -421,49 +504,25 @@ namespace Aurora.Settings.Layers
                     var appRect = new User32.Rect();
                     User32.GetWindowRect(handle, ref appRect);
 
-                    var appDisplay = Screen.FromHandle(handle).Bounds;
-
-                    screenCapture.SwitchDisplay(appDisplay);
-
-                    crop = GetResized(new Rectangle(
-                            appRect.Left - appDisplay.Left,
-                            appRect.Top - appDisplay.Top,
-                            appRect.Right - appRect.Left,
-                            appRect.Bottom - appRect.Top));
+                    crop = new Rectangle(
+                        appRect.Left,
+                        appRect.Top,
+                        appRect.Right - appRect.Left,
+                        appRect.Bottom - appRect.Top);
 
                     break;
                 case AmbilightCaptureType.Coordinates:
-                    screenCapture.SwitchDisplay(Screen.FromRectangle(Properties.Coordinates).Bounds);
-
-                    crop = GetResized(new Rectangle(
-                            Properties.Coordinates.Left - screenCapture.CurrentScreenBounds.Left,
-                            Properties.Coordinates.Top - screenCapture.CurrentScreenBounds.Top,
-                            Properties.Coordinates.Width,
-                            Properties.Coordinates.Height));
+                    var screenBounds = Screen.AllScreens[Properties.AmbilightOutputId].Bounds;
+                    crop = new Rectangle(
+                        Properties.Coordinates.Left - screenBounds.Left,
+                        Properties.Coordinates.Top - screenBounds.Top,
+                        Properties.Coordinates.Width,
+                        Properties.Coordinates.Height);
                     break;
             }
 
-            return crop.Width != 0 && crop.Height != 0;
+            return crop.Width > 4 && crop.Height > 4;
         }
-
-        /// <summary>
-        /// Resizes a given screen region for the position to coincide with the (also resized) screenshot
-        /// </summary>
-        /// <param name="r"></param>
-        /// <returns></returns>
-        private Rectangle GetResized(Rectangle r)
-        {
-            var scale = GetScaleFromQuality(Properties.AmbilightQuality);
-            return new Rectangle(r.X / scale, r.Y / scale, r.Width / scale, r.Height / scale);
-        }
-
-        /// <summary>
-        /// Converts the AmbilightQuality Enum in an integer for the bitmap to be divided by.
-        /// Lower quality values result in a higher divisor, which results in a smaller bitmap
-        /// </summary>
-        /// <param name="quality"></param>
-        /// <returns></returns>
-        private static int GetScaleFromQuality(AmbilightQuality quality) => (int)Math.Pow(2, 4 - (int)quality);
 
         /// <summary>
         /// Returns an interval in ms usign the AmbilightFpsChoice enum.
@@ -471,7 +530,7 @@ namespace Aurora.Settings.Layers
         /// </summary>
         /// <param name="fps"></param>
         /// <returns></returns>
-        private static int GetIntervalFromFPS(AmbilightFpsChoice fps) => 1000 / (10 + 5 * (int)fps);
+        private static TimeSpan GetIntervalFromFps(AmbilightFpsChoice fps) => new(0, 0,0,  0, 1000 / (10 + 5 * (int)fps));
 
         /// <summary>
         /// Updates the handle of the window used to crop the screenshot
@@ -479,12 +538,14 @@ namespace Aurora.Settings.Layers
         /// <param name="process"></param>
         public void UpdateSpecificProcessHandle(string process)
         {
-            var a = Array.Find(Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process))
-                                               , p => p.MainWindowHandle != IntPtr.Zero);
+            var a = Array.Find(
+                Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process)),
+                p => p.MainWindowHandle != IntPtr.Zero
+                );
 
-            if (a != null && a.MainWindowHandle != IntPtr.Zero)
+            if (a != null)
             {
-                specificProcessHandle = a.MainWindowHandle;
+                _specificProcessHandle = a.MainWindowHandle;
             }
         }
         #endregion
@@ -504,165 +565,135 @@ namespace Aurora.Settings.Layers
             [DllImport("user32.dll")]
             public static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
 
-            [System.Runtime.InteropServices.DllImport("user32.dll")]
+            [DllImport("user32.dll")]
             public static extern IntPtr GetForegroundWindow();
         }
         #endregion
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
-        protected void InvokePropertyChanged([CallerMemberName] string propertyName = null) =>
+
+        private void InvokePropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         #endregion
     }
 
-    internal interface IScreenCapture
+    internal interface IScreenCapture : IDisposable
     {
-        /// <summary>
-        /// Represents the bounds of the screen currently being captured.
-        /// </summary>
-        Rectangle CurrentScreenBounds { get; set; }
-
-        /// <summary>
-        /// Initializes an IScreenCapture taking the displayID
-        /// </summary>
-        /// <param name="screen"></param>
-        void SetDisplay(int screen);
-
-        /// <summary>
-        /// Using the target coordinates, switches to capture the correct display if needed
-        /// </summary>
-        /// <param name="target"></param>
-        void SwitchDisplay(Rectangle target);
-
         /// <summary>
         /// Captures a screenshot of the full screen, returning a full resolution bitmap
         /// </summary>
         /// <returns></returns>
-        Bitmap Capture();
+        Bitmap Capture(Rectangle desktopRegion);
 
         IEnumerable<string> GetDisplays();
     }
 
     internal class GDIScreenCapture : IScreenCapture
     {
-        public Rectangle CurrentScreenBounds { get; set; }
+        private Bitmap _targetBitmap = new(8, 8);
+        private Size _targetSize = new(8, 8);
 
-        public void SetDisplay(int screen)
+        public Bitmap Capture(Rectangle desktopRegion)
         {
-            var outputs = Screen.AllScreens;
+            if (_targetSize != desktopRegion.Size)
+            {
+                _targetBitmap.Dispose();
+                _targetBitmap = new Bitmap(desktopRegion.Width, desktopRegion.Height);
+                _targetSize = desktopRegion.Size;
+            }
+            using (var g = Graphics.FromImage(_targetBitmap))
+            {
+                g.CompositingMode = CompositingMode.SourceCopy;
+                g.CopyFromScreen(desktopRegion.X, desktopRegion.Y, 0, 0, desktopRegion.Size);
+            }
 
-            if (screen > (outputs.Length - 1) || screen < 0)
-                screen = 0;
-
-            CurrentScreenBounds = outputs.ElementAtOrDefault(screen).Bounds;
-        }
-
-        public Bitmap Capture()
-        {
-            if (CurrentScreenBounds.Width == 0 || CurrentScreenBounds.Height == 0)
-                return null;
-
-            var bigScreen = new Bitmap(CurrentScreenBounds.Width, CurrentScreenBounds.Height);
-
-            using (var g = Graphics.FromImage(bigScreen))
-                g.CopyFromScreen(CurrentScreenBounds.X, CurrentScreenBounds.Y, 0, 0, CurrentScreenBounds.Size);
-
-            return bigScreen;
-        }
-
-        public void SwitchDisplay(Rectangle target)
-        {
-            if (CurrentScreenBounds == target)
-                return;
-
-            int targetDisplay = Array.FindIndex(Screen.AllScreens, d => d.Bounds == target);
-            if (targetDisplay == -1)
-                return;
-
-            SetDisplay(targetDisplay);
+            return _targetBitmap;
         }
 
         public IEnumerable<string> GetDisplays() =>
             Screen.AllScreens.Select((s, index) =>
                 $"Display {index + 1}: X:{s.Bounds.X}, Y:{s.Bounds.Y}, W:{s.Bounds.Width}, H:{s.Bounds.Height}");
+
+        public void Dispose()
+        {
+            _targetBitmap?.Dispose();
+        }
     }
 
     internal class DXScreenCapture : IScreenCapture
     {
-        public Rectangle CurrentScreenBounds { get; set; }
-        private DesktopDuplicator desktopDuplicator;
-        private bool processing = false;
-        private int display;
-        private static readonly object deskDupLock = new object();
+        private static readonly Semaphore Semaphore = new(1, 1);
+        private Rectangle _currentBounds;
+        private DesktopDuplicator _desktopDuplicator;
+        private int _display;
 
-        public Bitmap Capture()
+        public Bitmap Capture(Rectangle desktopRegion)
         {
-            if (CurrentScreenBounds.Width == 0 || CurrentScreenBounds.Height == 0)
-                return null;
-            if (desktopDuplicator is null)
-                return null;
-            if (processing)
-                return null;
+            SetTarget(desktopRegion);
+            try{
+                Semaphore.WaitOne();
+                return _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(5000);
+            }finally{
+                Semaphore.Release();
+            }
+        }
 
-            var bigScreen = new Bitmap(CurrentScreenBounds.Width, CurrentScreenBounds.Height);
+        private void SetTarget(Rectangle desktopRegion)
+        {
+            var outputs = GetAdapters();
+            Adapter1 currentAdapter = null;
+            Output1 currentOutput = null;
+            if (desktopRegion.Left < 0 || desktopRegion.Top < 0)
+            {
+                (Adapter1 Adapter, Output1 Output) firstScreen = outputs.First();
+                currentAdapter = firstScreen.Adapter;
+                currentOutput = firstScreen.Output;
+            }
+            else
+            {
+                foreach (var (adapter, output) in outputs)
+                {
+                    if (!RectangleContains(output.Description.DesktopBounds, desktopRegion)) continue;
+                    currentAdapter = adapter;
+                    currentOutput = output;
+                    break;
+                }
+            }
+
+            if (currentAdapter == null)
+            {
+                return;
+            }
+
+            var desktopBounds = currentOutput.Description.DesktopBounds;
+            var screenWindowRectangle = new Rectangle(
+                Math.Max(0, desktopRegion.Left - desktopBounds.Left),
+                Math.Max(0, desktopRegion.Top - desktopBounds.Top),
+                Math.Min(desktopRegion.Width, desktopBounds.Right - desktopRegion.Left),
+                Math.Min(desktopRegion.Height, desktopBounds.Bottom - desktopRegion.Top)
+            );
+            
+            if (screenWindowRectangle == _currentBounds && _desktopDuplicator != null)
+            {
+                return;
+            }
+
+            _currentBounds = screenWindowRectangle;
 
             try
             {
-                processing = true;
-                lock (deskDupLock)
-                    bigScreen = desktopDuplicator.Capture(5000);
-                processing = false;
+                Semaphore.WaitOne();
+                _desktopDuplicator?.Dispose();
+                _desktopDuplicator = new DesktopDuplicator(currentAdapter, currentOutput, _currentBounds);
             }
-            catch (SharpDXException e)
+            finally
             {
-                Global.logger.Error("[Ambilight] Error capturing screen, restarting: : " + e);
-                processing = false;
-                SetDisplay(display);
-            }
-
-            if (bigScreen is null)
-                processing = false;
-
-            return bigScreen;
-        }
-
-        public void SwitchDisplay(Rectangle target)
-        {
-            if (CurrentScreenBounds == target)
-                return;
-
-            var screens = GetAdapters().ToArray();
-            var targetDisplay = Array.FindIndex(screens, d => RectangleEquals(d.Output.Description.DesktopBounds, target));
-            if (targetDisplay == -1)
-                return;
-
-            SetDisplay(targetDisplay);
-        }
-
-        public void SetDisplay(int screen)
-        {
-            desktopDuplicator?.Dispose();
-
-            var outputs = GetAdapters();
-            if (screen > (outputs.Count() - 1) || screen < 0)
-                screen = 0;
-            display = screen;
-            var output = outputs.ElementAt(screen);
-            var desktopbounds = output.Output.Description.DesktopBounds;
-            CurrentScreenBounds = new Rectangle(desktopbounds.Left,
-                                                desktopbounds.Top,
-                                                desktopbounds.Right - desktopbounds.Left,
-                                                desktopbounds.Bottom - desktopbounds.Top);
-
-            lock (deskDupLock)
-            {
-                while (processing) { }
-                desktopDuplicator = new DesktopDuplicator(output.Adapter, output.Output, CurrentScreenBounds);
+                Semaphore.Release();
             }
         }
 
-        public IEnumerable<string> GetDisplays() => GetAdapters().Select(((Adapter1 Adapter, Output1 Output) s, int index) =>
+        public IEnumerable<string> GetDisplays() => GetAdapters().Select((s, index) =>
         {
             var b = s.Output.Description.DesktopBounds;
 
@@ -671,15 +702,28 @@ namespace Aurora.Settings.Layers
 
         private static IEnumerable<(Adapter1 Adapter, Output1 Output)> GetAdapters()
         {
-            using (var fac = new Factory1())
-                return fac.Adapters1.SelectMany(M => M.Outputs.Select(N => (M, N.QueryInterface<Output1>())));
+            using var fac = new Factory1();
+            return fac.Adapters1.SelectMany(m => m.Outputs.Select(n => (M: m, n.QueryInterface<Output1>())));
         }
 
-        private static bool RectangleEquals(RawRectangle raw, Rectangle rec)
+        private static bool RectangleContains(RawRectangle containingRactangle, Rectangle rec)
         {
-            return (raw.Left == rec.Left) && (raw.Top == rec.Top) && (raw.Right == rec.Right) && (raw.Bottom == rec.Bottom);
+            return containingRactangle.Left <= rec.X && containingRactangle.Right > rec.X &&
+                   containingRactangle.Top <= rec.Y && containingRactangle.Bottom > rec.Y;
         }
 
-        public void Dispose() => desktopDuplicator?.Dispose();
+        public void Dispose()
+        {
+            try
+            {
+                Semaphore.WaitOne();
+                _desktopDuplicator?.Dispose();
+            }
+            finally
+            {
+                Semaphore.Release();
+            }
+            _desktopDuplicator = null;
+        }
     }
 }

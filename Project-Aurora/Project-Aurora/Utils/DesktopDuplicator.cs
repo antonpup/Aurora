@@ -4,6 +4,7 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -14,7 +15,8 @@ namespace Aurora
 {
     public class DesktopDuplicator : IDisposable
     {
-        #region Fields
+        private static readonly IDictionary<Adapter1, OutputDuplication> Duplicators = new Dictionary<Adapter1, OutputDuplication>();
+
         private readonly Device _device;
         private readonly OutputDuplication _deskDupl;
 
@@ -22,20 +24,18 @@ namespace Aurora
 
         private Rectangle _rect;
 
-        #endregion
-
-        public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle Rect)
+        public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle rect)
         {
             Global.logger.Info("Starting desktop duplicator");
-            _rect = Rect;
+            _rect = rect;
             _device = new Device(adapter);
             var textureDesc = new Texture2DDescription
             {
                 CpuAccessFlags = CpuAccessFlags.Read,
                 BindFlags = BindFlags.None,
                 Format = Format.B8G8R8A8_UNorm,
-                Width = _rect.Width,
-                Height = _rect.Height,
+                Width = output.Description.DesktopBounds.Right - output.Description.DesktopBounds.Left,
+                Height = output.Description.DesktopBounds.Bottom - output.Description.DesktopBounds.Top,
                 OptionFlags = ResourceOptionFlags.None,
                 MipLevels = 1,
                 ArraySize = 1,
@@ -43,7 +43,12 @@ namespace Aurora
                 Usage = ResourceUsage.Staging
             };
 
-             _deskDupl = output.DuplicateOutput(_device);
+            if (!Duplicators.TryGetValue(adapter, out _deskDupl))
+            {
+                _deskDupl = output.DuplicateOutput(_device);
+                Duplicators.Add(adapter, _deskDupl);
+            }
+
             _desktopImageTexture = new Texture2D(_device, textureDesc);
         }
 
@@ -54,7 +59,7 @@ namespace Aurora
                 return null;
 
             try {
-                _deskDupl.AcquireNextFrame(timeout, out OutputDuplicateFrameInformation _frameInfo, out desktopResource);
+                _deskDupl.AcquireNextFrame(timeout, out _, out desktopResource);
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
             {
@@ -64,14 +69,12 @@ namespace Aurora
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessLost)
             {
                 // Can happen when going fullscreen / exiting fullscreen
-                Global.logger.Warn(e.Message);
-                throw e;
+                return null;
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessDenied)
             {
                 // Happens when locking PC
-                Global.logger.Debug(e.Message);
-                throw e;
+                return null;
             }
             catch (SharpDXException e) when (e.ResultCode.Failure)
             {
@@ -108,9 +111,13 @@ namespace Aurora
             var frame = new Bitmap(_rect.Width, _rect.Height, PixelFormat.Format32bppRgb);
             // Copy pixels from screen capture Texture to GDI bitmap
             var mapDest = frame.LockBits(new Rectangle(0, 0, _rect.Width, _rect.Height), ImageLockMode.WriteOnly, frame.PixelFormat);
-            for (int y = 0, sizeInBytesToCopy = _rect.Width * 4; y < _rect.Height; y++)
+            var screenY = _rect.Top;
+            var sizeInBytesToCopy = _rect.Width * 4;
+            for (var y = 0; screenY < _rect.Bottom; screenY++, y++)
             {
-                Utilities.CopyMemory(mapDest.Scan0 + y * mapDest.Stride, SourcePtr + y * SourceRowPitch, sizeInBytesToCopy);
+                var mapDestStride = mapDest.Scan0 + y * mapDest.Stride;
+                var sourceRowPitch = SourcePtr + screenY * SourceRowPitch + _rect.Left * 4;
+                Utilities.CopyMemory(mapDestStride, sourceRowPitch, sizeInBytesToCopy);
             }
             // Release source and dest locks
             frame.UnlockBits(mapDest);
@@ -122,7 +129,7 @@ namespace Aurora
         {
             try
             {
-                _deskDupl?.ReleaseFrame();
+                _deskDupl.ReleaseFrame();
                 return _deskDupl.IsDisposed;
             }
             catch (SharpDXException e)
@@ -137,13 +144,9 @@ namespace Aurora
 
         public void Dispose()
         {
-            try
-            {
-                _deskDupl?.Dispose();
-                _desktopImageTexture?.Dispose();
-                _device?.Dispose();
-            }
-            catch { }
+            _device?.Dispose();
+            _deskDupl?.Dispose();
+            _desktopImageTexture?.Dispose();
         }
     }
 }

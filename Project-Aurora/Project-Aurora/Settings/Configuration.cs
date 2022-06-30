@@ -210,6 +210,8 @@ namespace Aurora.Settings
         Corsair_K70MK2 = 206,
         [Description("Corsair - STRAFE MK2")]
         Corsair_STRAFE_MK2 = 207,
+        [Description("Corsair - K100")]
+        Corsair_K100 = 208,
 
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
@@ -390,6 +392,8 @@ namespace Aurora.Settings
         //Razer range is 300-399
         [Description("Razer - Mamba TE")]
         Razer_Mamba_TE = 300,
+        [Description("Razer - Naga Pro")]
+        Razer_naga_Pro = 301,
 
         //Clevo range is 400-499
         [Description("Clevo - Touchpad")]

@@ -1,9 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
 
 namespace Aurora.Utils {
+
+    public class RunningProcessChanged: EventArgs
+    {
+        public string ProcessName { get; }
+
+        public RunningProcessChanged(string processName)
+        {
+            ProcessName = processName;
+        }
+    }
 
     /// <summary>
     /// Class that monitors running processes using the <see cref="ManagementEventWatcher"/> to update when new processes are started
@@ -13,6 +24,11 @@ namespace Aurora.Utils {
     /// profile switching - only the overlay toggling.
     /// </summary>
     public class RunningProcessMonitor {
+        private static readonly Lazy<RunningProcessMonitor> SingletonInstance = new(() => new RunningProcessMonitor());
+        public static RunningProcessMonitor Instance => SingletonInstance.Value;
+        
+        // ReSharper disable once EventNeverSubscribedTo.Global
+        public event EventHandler<RunningProcessChanged> RunningProcessesChanged;
 
         /// <summary>A list of all currently running processes (and how many instances are running).</summary>
         /// <remarks>The reason for the count is so that if two processes of the same file are running and one is closed, we can know
@@ -23,7 +39,7 @@ namespace Aurora.Utils {
         /// Creates a new instance of the <see cref="RunningProcessMonitor"/>, which performs an initial scan of running
         /// processes and then sets up the watchers with their relevant commands.
         /// </summary>
-        public RunningProcessMonitor() {
+        private RunningProcessMonitor() {
             // Fetch all processes running now
             runningProcesses = Process.GetProcesses()
                 .Select(p => {
@@ -40,6 +56,7 @@ namespace Aurora.Utils {
                 var name = e.NewEvent.Properties["ProcessName"].Value.ToString().ToLower();
                 // Set the dictionary to be the existing value + 1 or simply 1 if it doesn't exist already.
                 runningProcesses[name] = runningProcesses.TryGetValue(name, out int i) ? i + 1 : 1;
+                RunningProcessesChanged?.Invoke(sender, new RunningProcessChanged(name));
             };
             startWatcher.Start();
 
@@ -55,6 +72,7 @@ namespace Aurora.Utils {
                     else // Else, simply decrement the process count number
                         runningProcesses[name]--;
                 }
+                RunningProcessesChanged?.Invoke(sender, new RunningProcessChanged(name));
             };
             stopWatcher.Start();
         }

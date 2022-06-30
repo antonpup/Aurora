@@ -405,6 +405,7 @@ namespace Aurora
                 Global.logger.Info("Loading ConfigUI...");
 
                 MainWindow = new ConfigUI();
+                Global.LightingStateManager.InitUpdate();
                 ((ConfigUI)MainWindow).Display();
 
                 Global.logger.Info("Loading Device Layouts");
@@ -533,7 +534,7 @@ namespace Aurora
 
         private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            Exception exc = (Exception)e.Exception;
+            Exception exc = e.Exception;
             Global.logger.Fatal("Fatal Exception caught : " + exc, exc);
             LogManager.Flush();
             if (!Global.isDebug)

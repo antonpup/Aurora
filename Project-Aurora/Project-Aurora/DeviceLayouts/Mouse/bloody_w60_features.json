@@ -19,9 +19,9 @@
 		{
 			"visualName": "Scroll Wheel",
 			"tag": 161,
-			"margin_left": 81.0,
+			"margin_left": 79.0,
 			"margin_top": -204.0,
-			"width": 4.0,
+			"width": 8.0,
 			"height": 20.0,
 			"image": "bloody_w60_Scroll_Led.png",
 			"enabled": true,

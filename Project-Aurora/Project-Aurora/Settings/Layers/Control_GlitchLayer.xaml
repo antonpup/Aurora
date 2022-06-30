@@ -8,10 +8,10 @@
              mc:Ignorable="d">
     <Grid>
         <TextBlock Text="Update Interval:" Margin="0,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <xctk:DoubleUpDown Value="{Binding Properties._UpdateInterval}" Minimum="0.01" Maximum="120" Increment="0.1" Margin="90,0,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:DoubleUpDown Value="{Binding Properties.UpdateInterval}" Minimum="0.01" Maximum="120" Increment="0.1" Margin="90,0,0,0" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <TextBlock Text="seconds" Margin="145,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.6,0.542"/>
 
-        <CheckBox Content="Allow Transparency" IsChecked="{Binding Properties._AllowTransparency}" Margin="0,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Allow Transparency" IsChecked="{Binding Properties.AllowTransparency}" Margin="0,25,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Controls:KeySequence Sequence="{Binding Properties._Sequence}" RecordingTag="PercentLayer" Title="Affected Keys" Margin="193,0,0,0" Width="230" HorizontalAlignment="Left" />
     </Grid>

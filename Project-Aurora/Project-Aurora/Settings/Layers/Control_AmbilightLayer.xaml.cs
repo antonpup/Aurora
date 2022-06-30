@@ -26,14 +26,14 @@ namespace Aurora.Settings.Layers
 
         public void SetSettings()
         {
-            if (this.DataContext is AmbilightLayerHandler && !settingsset)
+            if (DataContext is AmbilightLayerHandler && !settingsset)
             {
-                this.affectedKeys.Sequence = (this.DataContext as AmbilightLayerHandler).Properties._Sequence;
-                var properties = (this.DataContext as AmbilightLayerHandler).Properties;
-                this.XCoordinate.Value = properties._Coordinates.Value.Left;
-                this.YCoordinate.Value = properties._Coordinates.Value.Top;
-                this.HeightCoordinate.Value = properties._Coordinates.Value.Height;
-                this.WidthCoordinate.Value = properties._Coordinates.Value.Width;
+                affectedKeys.Sequence = (DataContext as AmbilightLayerHandler).Properties._Sequence;
+                var properties = (DataContext as AmbilightLayerHandler).Properties;
+                XCoordinate.Value = properties.Coordinates.Left;
+                YCoordinate.Value = properties.Coordinates.Top;
+                HeightCoordinate.Value = properties.Coordinates.Height;
+                WidthCoordinate.Value = properties.Coordinates.Width;
                 settingsset = true;
             }
         }
@@ -49,7 +49,7 @@ namespace Aurora.Settings.Layers
             if (!settingsset)
                 return;
 
-            (DataContext as AmbilightLayerHandler).Properties._Coordinates = new System.Drawing.Rectangle(
+            (DataContext as AmbilightLayerHandler).Properties.Coordinates = new System.Drawing.Rectangle(
                 XCoordinate.Value ?? 0, 
                 YCoordinate.Value ?? 0,
                 WidthCoordinate.Value ?? 0,

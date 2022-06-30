@@ -374,7 +374,7 @@ namespace Aurora.Devices.Roccat
 
             if (e.Cancel) return false;
 
-            bool update_result = UpdateDevice(colorComposition.keyColors, e, forced);
+            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
 
             watch.Stop();
             lastUpdateTime = watch.ElapsedMilliseconds;

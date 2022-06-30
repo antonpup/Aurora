@@ -57,58 +57,45 @@ namespace Aurora.EffectsEngine
         public EffectLayer()
         {
             _name = "Unknown Layer";
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
 
             FillOver(Color.Empty);
         }
 
-        /// <summary>
-        ///  A copy constructor, Creates a new instance of the EffectLayer class from another EffectLayer instance.
-        /// </summary>
-        /// <param name="anotherLayer">EffectLayer instance to copy data from</param>
         public EffectLayer(EffectLayer anotherLayer)
         {
             _name = anotherLayer._name;
             var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
             var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
-            _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
             WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
             _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
+            Dimension = anotherLayer.Dimension;
 
             _needsRender = anotherLayer._needsRender;
         }
 
-        /// <summary>
-        /// Creates a new instance of the EffectLayer class with a specified layer name.
-        /// </summary>
-        /// <param name="name">A layer name</param>
         public EffectLayer(string name)
         {
             _name = name;
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
+            Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
 
             FillOver(Color.FromArgb(0, 1, 1, 1));
         }
 
-        /// <summary>
-        /// Creates a new instance of the EffectLayer class with a specified layer name. And fills the layer bitmap with a specified color.
-        /// </summary>
-        /// <param name="name">A layer name</param>
-        /// <param name="color">A color to fill the bitmap with</param>
         public EffectLayer(string name, Color color)
         {
             _name = name;
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
+            Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
 
             FillOver(color);
         }
@@ -117,17 +104,16 @@ namespace Aurora.EffectsEngine
         /// Creates a new instance of the EffectLayer class with a specified layer name. And applies a LayerEffect onto this EffectLayer instance.
         /// Using the parameters from LayerEffectConfig and a specified region in RectangleF
         /// </summary>
-        /// <param name="name">A layer name</param>
         /// <param name="effect">An enum specifying which LayerEffect to apply</param>
         /// <param name="effectConfig">Configurations for the LayerEffect</param>
         /// <param name="rect">A rectangle specifying what region to apply effects in</param>
         public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effectConfig, RectangleF rect = new())
         {
             _name = name;
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, _colormap.Width, _colormap.Height);
+            Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
             Brush brush;
             var shift = 0.0f;
 
@@ -322,10 +308,24 @@ namespace Aurora.EffectsEngine
 
         public void Dispose()
         {
-            _textureBrush.Dispose();
-            _textureBrush = null;
-            _colormap.Dispose();
-            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _colormap?.Dispose();
+                _textureBrush?.Dispose();
+                _transformedDrawExcludeMap?.Dispose();
+                WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
+            }
+        }
+
+        ~EffectLayer()
+        {
+            Dispose(false);
         }
 
         /// <summary>
@@ -383,14 +383,14 @@ namespace Aurora.EffectsEngine
         [Obsolete("Use with Brush argument")]
         public EffectLayer FillOver(Color color)
         {
-            using (var g = GetGraphics())
+            using (var g = Graphics.FromImage(_colormap))
             {
                 g.CompositingMode = CompositingMode.SourceOver;
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(new SolidBrush(color), Dimension);
-                Invalidate();
             }
 
+            Invalidate();
             return this;
         }
 
@@ -401,7 +401,7 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public void FillOver(Brush brush)
         {
-            using var g = GetGraphics();
+            using var g = Graphics.FromImage(_colormap);
             g.CompositingMode = CompositingMode.SourceOver;
             g.SmoothingMode = SmoothingMode.None;
             g.FillRectangle(brush, Dimension);
@@ -410,7 +410,7 @@ namespace Aurora.EffectsEngine
         
         public void Clear()
         {
-            using var g = GetGraphics();
+            using var g = Graphics.FromImage(_colormap);
             g.CompositingMode = CompositingMode.SourceCopy;
             g.FillRectangle(ClearingBrush, Dimension);
             Invalidate();
@@ -425,7 +425,6 @@ namespace Aurora.EffectsEngine
         public EffectLayer Set(DeviceKey key, Color color)
         {
             SetOneKey(key, color);
-
             return this;
         }
 
@@ -462,6 +461,7 @@ namespace Aurora.EffectsEngine
             {
                 Clear();
                 _previousSequenceType = sequence.type;
+                _ksChanged = true;
             }
 
             if (sequence.type == KeySequenceType.Sequence)
@@ -471,25 +471,27 @@ namespace Aurora.EffectsEngine
             }
             else
             {
-                if (brush is SolidBrush solidBrush)
+                if (!sequence.freeform.Equals(_lastFreeform))
                 {
-                    if (sequence.freeform.Equals(_lastFreeform) && !_ksChanged && _lastColor == solidBrush.Color)
+                    WeakEventManager<FreeFormObject, EventArgs>.RemoveHandler(_lastFreeform, "ValuesChanged", FreeformOnValuesChanged);
+                    _lastFreeform = sequence.freeform;
+                    WeakEventManager<FreeFormObject, EventArgs>.AddHandler(_lastFreeform, "ValuesChanged", FreeformOnValuesChanged);
+                    FreeformOnValuesChanged(this, EventArgs.Empty);
+                }
+
+                if (_ksChanged)
+                {
+                    Clear();
+                    _ksChanged = false;
+                }
+                else if (brush is SolidBrush solidBrush)
+                {
+                    if (sequence.freeform.Equals(_lastFreeform) && _lastColor == solidBrush.Color)
                     {
                         return this;
                     }
-
                     _lastColor = solidBrush.Color;
                 }
-
-                Clear();
-
-                if (!sequence.freeform.Equals(_lastFreeform))
-                {
-                    _lastFreeform.ValuesChanged -= FreeformOnValuesChanged;
-                    _lastFreeform = sequence.freeform;
-                    sequence.freeform.ValuesChanged += FreeformOnValuesChanged;
-                }
-                _ksChanged = false;
 
                 using var g = Graphics.FromImage(_colormap);
                 var xPos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
@@ -500,12 +502,11 @@ namespace Aurora.EffectsEngine
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
 
-                var rect = new RectangleF(xPos, yPos, width, height);
+                var rect = new RectangleF(xPos, yPos, width, height);   //TODO dependant property? parameter?
 
                 var rotatePoint = new PointF(xPos + width / 2.0f, yPos + height / 2.0f);
-
                 var myMatrix = new Matrix();
-                myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);
+                myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);    //TODO dependant property? parameter?
 
                 g.Transform = myMatrix;
                 g.CompositingMode = CompositingMode.SourceCopy;
@@ -516,10 +517,13 @@ namespace Aurora.EffectsEngine
             return this;
         }
 
-        private void FreeformOnValuesChanged(FreeFormObject newobject)
+        private void FreeformOnValuesChanged(object sender, EventArgs args)
         {
             _ksChanged = true;
+            Clear();
         }
+
+        private Bitmap _transformedDrawExcludeMap;
 
         /// <summary>
         /// Allows drawing some arbitrary content to the sequence bounds, including translation, scaling and rotation.<para/>
@@ -548,7 +552,8 @@ namespace Aurora.EffectsEngine
             var matrix = new Matrix();
 
             // The bounds represent the target position of the render part
-            // Note that we round the X and Y off to properly imitate the above `Set(KeySequence, Color)` method. Unsure exactly why this is done, but it _is_ done to replicate behaviour properly.
+            // Note that we round the X and Y off to properly imitate the above `Set(KeySequence, Color)` method.
+            // Unsure exactly why this is done, but it _is_ done to replicate behaviour properly.
             //  Also unsure why the X and Y are rounded using math.Round but Width and Height are just truncated using an int cast??
             var boundsRaw = sequence.GetAffectedRegion();
             var bounds = new RectangleF((int)Math.Round(boundsRaw.X), (int)Math.Round(boundsRaw.Y), (int)boundsRaw.Width, (int)boundsRaw.Height);
@@ -560,14 +565,19 @@ namespace Aurora.EffectsEngine
                 float sx = bounds.Width / sourceRegion.Width, sy = bounds.Height / sourceRegion.Height;
 
                 // Perform this scale first
-                // Note: that if the scale is zero, when setting the graphics transform to the matrix, it throws an error, so we must have NON-ZERO values
-                // Note 2: Also tried using float.Epsilon but this also caused the exception, so a somewhat small number will have to suffice. Not noticed any visual issues with 0.001f.
+                // Note: that if the scale is zero, when setting the graphics transform to the matrix,
+                // it throws an error, so we must have NON-ZERO values
+                // Note 2: Also tried using float.Epsilon but this also caused the exception,
+                // so a somewhat small number will have to suffice. Not noticed any visual issues with 0.001f.
                 matrix.Scale(sx == 0 ? .001f : sx, sy == 0 ? .001f : sy, MatrixOrder.Append);
 
-                // Second, for freeform objects, apply the rotation. This needs to be done AFTER the scaling, else the scaling is applied to the rotated object, which skews it
+                // Second, for freeform objects, apply the rotation. This needs to be done AFTER the scaling,
+                // else the scaling is applied to the rotated object, which skews it
                 // We rotate around the central point of the source region, but we need to take the scaling of the dimensions into account
                 if (sequence.type == KeySequenceType.FreeForm)
-                    matrix.RotateAt(sequence.freeform.Angle, new PointF((sourceRegion.Left + sourceRegion.Width / 2f) * sx, (sourceRegion.Top + sourceRegion.Height / 2f) * sy), MatrixOrder.Append);
+                    matrix.RotateAt(
+                        sequence.freeform.Angle,
+                        new PointF((sourceRegion.Left + sourceRegion.Width / 2f) * sx, (sourceRegion.Top + sourceRegion.Height / 2f) * sy), MatrixOrder.Append);
 
                 // Third, we can translate the matrix from the source to the target location.
                 matrix.Translate(bounds.X - sourceRegion.Left, bounds.Y - sourceRegion.Top, MatrixOrder.Append);
@@ -576,11 +586,44 @@ namespace Aurora.EffectsEngine
                 configureMatrix(matrix);
 
                 // Apply the matrix transform to the graphics context and then render
+                gfx.ResetTransform();
+                gfx.ResetClip();
                 gfx.Transform = matrix;
                 render(gfx);
+                if (sequence.type == KeySequenceType.Sequence)
+                {
+                    var gp = GetExclusionPath(sequence);
+                    gfx.ResetTransform();
+                    gfx.ResetClip();
+                    gfx.SetClip(gp);
+                    gfx.CompositingMode = CompositingMode.SourceOver;
+                    gfx.Clear(Color.Transparent);
+                }
             }
 
             Invalidate();
+        }
+
+        private static GraphicsPath GetExclusionPath(KeySequence sequence)
+        {
+            if (sequence.type == KeySequenceType.Sequence)
+            {
+                var gp = new GraphicsPath();
+                gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
+                sequence.keys.ForEach(k =>
+                {
+                    var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
+                    gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
+                });
+                return gp;
+            }
+            else
+            {
+                var gp = new GraphicsPath();
+                gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
+                gp.AddRectangle(sequence.GetAffectedRegion());
+                return gp;
+            }
         }
 
         /// <summary>
@@ -640,11 +683,12 @@ namespace Aurora.EffectsEngine
             if (keymaping.Top < 0 || keymaping.Bottom > Effects.CanvasHeight ||
                 keymaping.Left < 0 || keymaping.Right > Effects.CanvasWidth)
             {
-                Global.logger.Warn("Coudln't set key color " + key.ToString());
+                Global.logger.Warn("Coudln't set key color " + key);
                 return;
             }
 
             using Graphics g = Graphics.FromImage(_colormap);
+            g.CompositingMode = CompositingMode.SourceCopy;
             g.FillRectangle(brush, keymaping.Rectangle);
             _needsRender = true;
         }
@@ -652,45 +696,26 @@ namespace Aurora.EffectsEngine
         /// <summary>
         /// Retrieves a color of the specified DeviceKeys key from the bitmap
         /// </summary>
-        /// <param name="key">Key</param>
-        /// <returns>Color of the Key</returns>
         public Color Get(DeviceKey key)
         {
             if (_keyColors.TryGetValue(key, out var color))
             {
                 return color;
             }
-            try
-            {
-                var keyMaping = Effects.GetBitmappingFromDeviceKey(key);
+            var keyMapping = Effects.GetBitmappingFromDeviceKey(key);
 
-                var keyColor = keyMaping.IsEmpty ? Color.Black : BitmapUtils.GetRegionColor(_colormap, keyMaping.Rectangle);
+            var keyColor = keyMapping.IsEmpty ? Color.Black : BitmapUtils.GetRegionColor(_colormap, keyMapping.Rectangle);
 
-                _keyColors[key] = keyColor;
-                return keyColor;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("EffectLayer.Get() Exception: " + exc);
-
-                return Color.FromArgb(0, 0, 0);
-            }
+            _keyColors[key] = keyColor;
+            return keyColor;
         }
 
-        /// <summary>
-        /// Get an instance of Drawing.Graphics, to allow drawing on the bitmap.
-        /// </summary>
-        /// <returns>Graphics instance</returns>
         public Graphics GetGraphics()   //TODO deprecate
         {
             Invalidate();
             return Graphics.FromImage(_colormap);
         }
 
-        /// <summary>
-        /// Get the current layer bitmap.
-        /// </summary>
-        /// <returns>Layer Bitmap</returns>
         public Bitmap GetBitmap()
         {
             return _colormap;
@@ -744,12 +769,8 @@ namespace Aurora.EffectsEngine
         /// Draws a percent effect on the layer bitmap using a KeySequence with solid colors.
         /// </summary>
         /// <param name="foregroundColor">The foreground color, used as a "Progress bar color"</param>
-        /// <param name="sequence">The sequence of keys that the percent effect will be drawn on</param>
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
-        /// <param name="flashPast"></param>
-        /// <param name="flashReversed"></param>
-        /// <param name="blinkBackground"></param>
         public void PercentEffect(Color foregroundColor, Color backgroundColor, KeySequence sequence, double value,
             double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive,
             double flashPast = 0.0, bool flashReversed = false, bool blinkBackground = false)
@@ -760,7 +781,7 @@ namespace Aurora.EffectsEngine
                 _previousSequenceType = sequence.type;
             }
             if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys.ToArray(), value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
+                PercentEffect(foregroundColor, backgroundColor, sequence.keys, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
             else
                 PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
         }
@@ -769,7 +790,6 @@ namespace Aurora.EffectsEngine
         /// Draws a percent effect on the layer bitmap using a KeySequence and a ColorSpectrum.
         /// </summary>
         /// <param name="spectrum">The ColorSpectrum to be used as a "Progress bar"</param>
-        /// <param name="sequence">The sequence of keys that the percent effect will be drawn on</param>
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         public void PercentEffect(ColorSpectrum spectrum, KeySequence sequence, double value, double total = 1.0D,
@@ -791,10 +811,9 @@ namespace Aurora.EffectsEngine
         /// Draws a percent effect on the layer bitmap using an array of DeviceKeys keys and solid colors.
         /// </summary>
         /// <param name="foregroundColor">The foreground color, used as a "Progress bar color"</param>
-        /// <param name="keys">The array of keys that the percent effect will be drawn on</param>
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
-        private void PercentEffect(Color foregroundColor, Color backgroundColor, DeviceKey[] keys, double value,
+        private void PercentEffect(Color foregroundColor, Color backgroundColor, IReadOnlyList<DeviceKey> keys, double value,
             double total, PercentEffectType percentEffectType = PercentEffectType.Progressive, double flashPast = 0.0,
             bool flashReversed = false, bool blinkBackground = false)
         {
@@ -804,29 +823,31 @@ namespace Aurora.EffectsEngine
             else if (progressTotal > 1.0)
                 progressTotal = 1.0;
 
-            var progress = progressTotal * keys.Length;
+            var progress = progressTotal * keys.Count;
 
             if (flashPast > 0.0)
             {
                 if ((flashReversed && progressTotal >= flashPast) || (!flashReversed && progressTotal <= flashPast))
                 {
+                    var percent = Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI);
                     if (blinkBackground)
-                        backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI));
+                        backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, percent);
                     else
-                        foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI));
+                        foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, percent);
                 }
             }
 
-            if (percentEffectType is PercentEffectType.Highest_Key or PercentEffectType.Highest_Key_Blend && keys.Length > 0)
+            if (percentEffectType is PercentEffectType.Highest_Key or PercentEffectType.Highest_Key_Blend && keys.Count > 0)
             {
-                var activeKey = (int)Math.Ceiling(value / (total / keys.Length)) - 1;
-                var col = percentEffectType == PercentEffectType.Highest_Key ? foregroundColor : ColorUtils.BlendColors(backgroundColor, foregroundColor, progressTotal);
-                SetOneKey(keys[Math.Min(Math.Max(activeKey, 0), keys.Length - 1)], col);
+                var activeKey = (int)Math.Ceiling(value / (total / keys.Count)) - 1;
+                var col = percentEffectType == PercentEffectType.Highest_Key ?
+                    foregroundColor : ColorUtils.BlendColors(backgroundColor, foregroundColor, progressTotal);
+                SetOneKey(keys[Math.Min(Math.Max(activeKey, 0), keys.Count - 1)], col);
 
             }
             else
             {
-                for (var i = 0; i < keys.Length; i++)
+                for (var i = 0; i < keys.Count; i++)
                 {
                     var currentKey = keys[i];
 
@@ -858,7 +879,6 @@ namespace Aurora.EffectsEngine
         /// Draws a percent effect on the layer bitmap using DeviceKeys keys and a ColorSpectrum.
         /// </summary>
         /// <param name="spectrum">The ColorSpectrum to be used as a "Progress bar"</param>
-        /// <param name="keys">The array of keys that the percent effect will be drawn on</param>
         /// <param name="value">The current progress value</param>
         /// <param name="total">The maxiumum progress value</param>
         private void PercentEffect(ColorSpectrum spectrum, DeviceKey[] keys, double value, double total,
@@ -942,19 +962,17 @@ namespace Aurora.EffectsEngine
                     break;
             }
 
-            if (flashPast > 0.0)
+            if (flashPast > 0.0 && ((flashReversed && progressTotal >= flashPast) || (!flashReversed && progressTotal <= flashPast)))
             {
-                if ((flashReversed && progressTotal >= flashPast) || (!flashReversed && progressTotal <= flashPast))
+                var percent = Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI);
+                switch (blinkBackground)
                 {
-                    switch (blinkBackground)
-                    {
-                        case false:
-                            foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI));
-                            break;
-                        case true:
-                            backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI));
-                            break;
-                    }
+                    case false:
+                        foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, percent);
+                        break;
+                    case true:
+                        backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, percent);
+                        break;
                 }
             }
 
@@ -998,7 +1016,7 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        private void Invalidate()
+        public void Invalidate()
         {
             _needsRender = true;
             _keyColors.Clear();
@@ -1007,6 +1025,7 @@ namespace Aurora.EffectsEngine
         {
             _colormap?.Dispose();
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
+            _ksChanged = true;
             Dimension.Height = Effects.CanvasHeight;
             Dimension.Width = Effects.CanvasWidth;
             Invalidate();
@@ -1023,11 +1042,7 @@ namespace Aurora.EffectsEngine
             PercentEffectType percentEffectType = PercentEffectType.Progressive, double flashPast = 0.0,
             bool flashReversed = false)
         {
-            var progressTotal = value / total;
-            if (progressTotal < 0.0)
-                progressTotal = 0.0;
-            else if (progressTotal > 1.0)
-                progressTotal = 1.0;
+            var progressTotal = MathUtils.Clamp(value / total, 0, 1);
 
             var flashAmount = 1.0;
 
@@ -1073,11 +1088,10 @@ namespace Aurora.EffectsEngine
 
                 g.Transform = myMatrix;
                 var brush = spectrum.ToLinearGradient(width, 0, xPos, 0, flashAmount);
-					brush.WrapMode = WrapMode.Tile;
-                    g.FillRectangle(brush, rect);
-                }
-
-                Invalidate();
+                brush.WrapMode = WrapMode.Tile;
+                g.FillRectangle(brush, rect);
+            }
+            Invalidate();
         }
 
         /// <summary>
@@ -1086,113 +1100,31 @@ namespace Aurora.EffectsEngine
         /// <param name="sequence">The mask to be applied</param>
         public void Exclude(KeySequence sequence)
         {
-            //Create draw alpha mask
-            var alphaMask = new EffectLayer(_name + " - Alpha Mask", Color.Transparent);
-            alphaMask.Set(sequence, Color.Black);
-
-            //Apply alpha mask
-            BitmapData srcData_alpha = alphaMask._colormap.LockBits(
-                Dimension,
-                ImageLockMode.ReadWrite,
-                PixelFormat.Format32bppArgb);
-
-            int alpha_mask_stride = srcData_alpha.Stride;
-            IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
-
-            
-            BitmapData srcData = _colormap.LockBits(
-                Dimension,
-                ImageLockMode.ReadWrite,
-                PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            int width = Dimension.Width;
-            int height = Dimension.Height;
-
-            unsafe
+            var gp = new GraphicsPath();
+            sequence.keys.ForEach(k =>
             {
-                byte* p_alpha = (byte*)(void*)alpha_mask_Scan0;
-                byte* p = (byte*)(void*)Scan0;
+                var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
+                gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
+            });
 
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        byte mask_alpha = p_alpha[y * alpha_mask_stride + x * 4 + 3];
-                        if (mask_alpha != 0)
-                            p[y * stride + x * 4 + 3] = (byte)(255 - mask_alpha);
-                    }
-                }
-            }
-
-            alphaMask._colormap.UnlockBits(srcData_alpha);
-            _colormap.UnlockBits(srcData);
+            using var g = Graphics.FromImage(_colormap);
+            g.SetClip(gp);
+            g.Clear(Color.Transparent);
             Invalidate();
         }
 
         /// <summary>
         /// Inlcudes provided sequence from the layer (Applies a mask)
         /// </summary>
-        /// <param name="sequence">The mask to be applied</param>
         public void OnlyInclude(KeySequence sequence)
         {
-            //Create draw alpha mask
-            EffectLayer _alpha_mask = new EffectLayer(_name + " - Alpha Mask", Color.Transparent);
-            _alpha_mask.Set(sequence, Color.Black);
-
-            //Apply alpha mask
-            BitmapData srcData_alpha = _alpha_mask._colormap.LockBits(
-                Dimension,
-                ImageLockMode.ReadWrite,
-                PixelFormat.Format32bppArgb);
-
-            int alpha_mask_stride = srcData_alpha.Stride;
-            IntPtr alpha_mask_Scan0 = srcData_alpha.Scan0;
-
-
-            BitmapData srcData = _colormap.LockBits(
-                Dimension,
-                ImageLockMode.ReadWrite,
-                PixelFormat.Format32bppArgb);
-
-            int stride = srcData.Stride;
-
-            IntPtr Scan0 = srcData.Scan0;
-
-            int width = Dimension.Width;
-            int height = Dimension.Height;
-
-            unsafe
-            {
-                byte* p_alpha = (byte*)(void*)alpha_mask_Scan0;
-                byte* p = (byte*)(void*)Scan0;
-
-                for (int y = 0; y < height; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        byte mask_alpha = p_alpha[y * alpha_mask_stride + x * 4 + 3];
-
-                        p[y * stride + x * 4 + 3] = (byte)(mask_alpha * (p[y * stride + x * 4 + 3] / 255.0f));
-                    }
-                }
-            }
-
-            _alpha_mask._colormap.UnlockBits(srcData_alpha);
-            _colormap.UnlockBits(srcData);
+            var exclusionPath = GetExclusionPath(sequence);
+            using var g = Graphics.FromImage(_colormap);
+            g.SetClip(exclusionPath);
+            g.Clear(Color.Transparent);
             Invalidate();
         }
 
-        /// <summary>
-        /// Returns the layer name
-        /// </summary>
-        /// <returns>Layer name</returns>
-        public override string ToString()
-        {
-            return _name;
-        }
+        public override string ToString() => _name;
     }
 }

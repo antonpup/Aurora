@@ -68,18 +68,16 @@ namespace Aurora.Settings
                     {
                         lock (bitmap)
                         {
-                            using (MemoryStream memory = new MemoryStream())
-                            {
-                                bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                                memory.Position = 0;
-                                BitmapImage bitmapimage = new BitmapImage();
-                                bitmapimage.BeginInit();
-                                bitmapimage.StreamSource = memory;
-                                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                                bitmapimage.EndInit();
+                            using MemoryStream memory = new MemoryStream();
+                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                            memory.Position = 0;
+                            BitmapImage bitmapimage = new BitmapImage();
+                            bitmapimage.BeginInit();
+                            bitmapimage.StreamSource = memory;
+                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                            bitmapimage.EndInit();
 
-                                imgBitmap.Source = bitmapimage;
-                            }
+                            imgBitmap.Source = bitmapimage;
                         }
                     });
             }
@@ -104,7 +102,7 @@ namespace Aurora.Settings
 
             //Set the winBitmapView instance to null if it got closed
             if (winBitmapView!= null && winBitmapView.Equals(this))
-            winBitmapView = null;
+                winBitmapView = null;
         }
     }
 }

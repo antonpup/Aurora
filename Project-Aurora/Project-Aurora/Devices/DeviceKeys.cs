@@ -1600,6 +1600,84 @@ namespace Aurora.Devices
         ADDITIONALLIGHT60 = 277,
 
         /// <summary>
+        /// Left Part of Logo
+        /// </summary>
+        [Description("Left Part of Logo")]
+        LOGOLEFT = 278,
+
+        /// <summary>
+        /// Middle Part of Logo
+        /// </summary>
+        [Description("Middle Part of Logo")]
+        LOGOMIDDLE = 279,
+
+        /// <summary>
+        /// Right Part of Logo
+        /// </summary>
+        [Description("Right Part of Logo")]
+        LOGORIGHT = 280,
+
+        /// <summary>
+        /// Wheel Center
+        /// </summary>
+        [Description("Wheel Center")]
+        WHEELCENTER = 281,
+
+        /// <summary>
+        /// Wheel 1
+        /// </summary>
+        [Description("Wheel 1")]
+        WHEEL1 = 282,
+
+        /// <summary>
+        /// Wheel 2
+        /// </summary>
+        [Description("Wheel 2")]
+        WHEEL2 = 283,
+
+        /// <summary>
+        /// Wheel 3
+        /// </summary>
+        [Description("Wheel 3")]
+        WHEEL3 = 284,
+
+        /// <summary>
+        /// Wheel4
+        /// </summary>
+        [Description("Wheel 4")]
+        WHEEL4 = 285,
+
+        /// <summary>
+        /// Wheel 5
+        /// </summary>
+        [Description("Wheel 5")]
+        WHEEL5 = 286,
+
+        /// <summary>
+        /// Wheel 6
+        /// </summary>
+        [Description("Wheel 6")]
+        WHEEL6 = 287,
+
+        /// <summary>
+        /// Wheel 7
+        /// </summary>
+        [Description("Wheel 7")]
+        WHEEL7 = 288,
+
+        /// <summary>
+        /// Wheel 8
+        /// </summary>
+        [Description("Wheel 8")]
+        WHEEL8 = 289,
+
+        /// <summary>
+        /// Profile Switch
+        /// </summary>
+        [Description("Profile Switch")]
+        PROFILESWITCH = 290,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

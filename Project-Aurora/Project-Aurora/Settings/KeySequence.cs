@@ -107,7 +107,7 @@ namespace Aurora.Settings
                         }
                     }
 
-                    return new RectangleF(left, top, (right - left), (bottom - top));
+                    return new RectangleF(left, top, right - left, bottom - top);
             }
 
         }

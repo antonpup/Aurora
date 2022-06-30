@@ -1,17 +1,14 @@
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using Aurora.Settings.Overrides.Logic;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
+using System.Windows;
+using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Settings.Layers
 {
@@ -24,15 +21,39 @@ namespace Aurora.Settings.Layers
         [GameStateIgnore, JsonIgnore]
         public TProperty Logic { get; set; }
 
-        [LogicOverridable("Primary Color")]
-        public virtual Color? _PrimaryColor { get; set; }
         [JsonIgnore]
-        public virtual Color PrimaryColor => Logic._PrimaryColor ?? _PrimaryColor ?? Color.Empty;
+        private Color? _primaryColor;
+
+        [LogicOverridable("Primary Color")]
+        public Color? _PrimaryColor
+        {
+            get => _primaryColor;
+            set
+            {
+                _primaryColor = value;
+                PropertyChanged?.Invoke(null, new PropertyChangedEventArgs(""));
+            }
+        }
+
+        [JsonIgnore]
+        public Color PrimaryColor => Logic?._PrimaryColor ?? _PrimaryColor ?? Color.Empty;
+
+        [JsonIgnore]
+        private KeySequence _sequence;
 
         [LogicOverridable("Affected Keys")]
-        public virtual KeySequence _Sequence { get; set; }
+        public virtual KeySequence _Sequence
+        {
+            get => _sequence;
+            set
+            {
+                _sequence = value;
+                PropertyChanged?.Invoke(null, new PropertyChangedEventArgs(""));
+            }
+        }
+
         [JsonIgnore]
-        public virtual KeySequence Sequence => Logic._Sequence ?? _Sequence;
+        public KeySequence Sequence => Logic._Sequence ?? _Sequence;
 
 
         #region Override Special Properties
@@ -72,6 +93,7 @@ namespace Aurora.Settings.Layers
         public virtual void Default()
         {
             Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true });
+            Logic.PropertyChanged += OnPropertiesChanged;
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             _Sequence = new KeySequence();
             _Sequence.freeform.ValuesChanged += OnPropertiesChanged;
@@ -86,9 +108,21 @@ namespace Aurora.Settings.Layers
         }
 
         public void SetOverride(string propertyName, object value) {
+            if (Accessor.Value[Logic, propertyName] == value)
+            {
+                return;
+            }
             try {
-                Accessor.Value[Logic, propertyName] = value;
+                if (value == null || !value.Equals(Accessor.Value[Logic, propertyName]))
+                {
+                    Accessor.Value[Logic, propertyName] = value;
+                }
             } catch (ArgumentOutOfRangeException) { }
+        }
+
+        public void OnPropertiesChanged(object sender, object args = null)
+        {
+            PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(""));
         }
 
         public void OnPropertiesChanged(object sender)
@@ -104,10 +138,21 @@ namespace Aurora.Settings.Layers
 
     public class LayerHandlerProperties2Color<TProperty> : LayerHandlerProperties<TProperty> where TProperty : LayerHandlerProperties2Color<TProperty>
     {
+        private Color? _secondaryColor;
+
         [LogicOverridable("Secondary Color")]
-        public virtual Color? _SecondaryColor { get; set; }
+        public Color? _SecondaryColor
+        {
+            get => _secondaryColor;
+            set
+            {
+                _secondaryColor = value;
+                OnPropertiesChanged(null);
+            }
+        }
+
         [JsonIgnore]
-        public virtual Color SecondaryColor => Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty;
+        public Color SecondaryColor => Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty;
 
         public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) { }
 
@@ -163,7 +208,19 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public UserControl Control => _Control ??= CreateControl();
 
-        public TProperty Properties { get; set; } = Activator.CreateInstance<TProperty>();
+        private TProperty _properties = Activator.CreateInstance<TProperty>();
+        public TProperty Properties
+        {
+            get => _properties;
+            set
+            {
+                _properties.PropertyChanged -= PropertiesChanged;
+                _properties = value;
+                value.PropertyChanged += PropertiesChanged;
+                value.Sequence.freeform.ValuesChanged += PropertiesChanged;
+                value.OnPropertiesChanged(this);
+            }
+        }
 
         object ILayerHandler.Properties {
             get => Properties;
@@ -192,8 +249,6 @@ namespace Aurora.Settings.Layers
             set => Properties._LayerOpacity = value;
         }
 
-        //public Color PrimaryColor { get; set; }
-
         [JsonIgnore]
         private EffectLayer _previousRender = EffectLayer.EmptyLayer; //Previous layer
 
@@ -202,9 +257,10 @@ namespace Aurora.Settings.Layers
 
         public LayerHandler()
         {
-            //Properties = new LayerHandlerProperties();
             //ScriptProperties = new LayerHandlerProperties();
             _ExclusionMask = new KeySequence();
+            Properties.PropertyChanged += PropertiesChanged;
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", PropertiesChanged);
         }
 
         public virtual EffectLayer Render(IGameState gamestate)
@@ -255,10 +311,26 @@ namespace Aurora.Settings.Layers
         {
             return new Control_DefaultLayer();
         }
+        
+        protected virtual void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        {
+            
+        }
+
+        private void PropertiesChanged(object sender, CanvasChangedArgs e)
+        {
+            PropertiesChanged(sender, new PropertyChangedEventArgs(""));
+        }
+
+        private void PropertiesChanged(object sender, FreeFormChangedArgs e)
+        {
+            PropertiesChanged(sender, new PropertyChangedEventArgs(""));
+        }
 
         public virtual void Dispose()
         {
-
+            Properties.PropertyChanged -= PropertiesChanged;
+            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", PropertiesChanged);
         }
     }
 

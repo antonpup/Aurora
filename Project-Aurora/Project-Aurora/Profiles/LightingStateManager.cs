@@ -83,7 +83,7 @@ namespace Aurora.Profiles
                 return true;
 
             processMonitor = ActiveProcessMonitor.Instance;
-            runningProcessMonitor = new RunningProcessMonitor();
+            runningProcessMonitor = RunningProcessMonitor.Instance;
             _isRunningProcess = name => runningProcessMonitor.IsProcessRunning(name);
             _isOverlayActiveProfile = evt =>
                 evt.IsOverlayEnabled &&
@@ -132,8 +132,6 @@ namespace Aurora.Profiles
             {
                 profile.Value.Initialize();
             }
-
-            this.InitUpdate();
 
             // Listen for profile keybind triggers
             Global.InputEvents.KeyDown += CheckProfileKeybinds;
@@ -352,8 +350,9 @@ namespace Aurora.Profiles
         
         private Semaphore updateLock = new Semaphore(1, 1);
         private bool locked = false;
-        private void InitUpdate()
+        public void InitUpdate()
         {
+            watch.Start();
             updateTimer = new Timer(g =>
             {
                 TimerUpdate();
@@ -366,11 +365,9 @@ namespace Aurora.Profiles
             {
                 return;
             }
-
+            updateLock.WaitOne();
             locked = true;
 
-            updateLock.WaitOne();
-            watch.Start();
             if (Global.isDebug)
                 Update();
             else
@@ -382,10 +379,9 @@ namespace Aurora.Profiles
                 catch (Exception exc)
                 {
                     Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
-                    System.Windows.MessageBox.Show("Error while updating light effects: " + exc.Message);
+                    MessageBox.Show("Error while updating light effects: " + exc.Message);
                 }
             }
-            watch.Stop();
             currentTick += watch.ElapsedMilliseconds;
             updateTimer?.Change(Math.Max(Global.Configuration.UpdateDelay - watch.ElapsedMilliseconds, Global.Configuration.UpdateDelay), Timeout.Infinite);
             watch.Reset();
@@ -395,9 +391,9 @@ namespace Aurora.Profiles
 
         private void UpdateProcess()
         {
-            if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && (currentTick >= nextProcessNameUpdate))
+            if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && currentTick >= nextProcessNameUpdate)
             {
-                processMonitor.GetActiveWindowsProcessname();
+                processMonitor.GetActiveWindowsProcessName();
                 nextProcessNameUpdate = currentTick + 1000L;
             }
         }
@@ -492,7 +488,10 @@ namespace Aurora.Profiles
             {
                 StopUnUpdatedEvents();
                 Global.dev_manager.ShutdownDevices();
-                Global.effengine.PushFrame(newFrame);
+                lock (Effects.CanvasChangedLock)
+                {
+                    Global.effengine.PushFrame(newFrame);
+                }
                 return;
             }
             Global.dev_manager.InitializeOnce();
@@ -515,8 +514,10 @@ namespace Aurora.Profiles
                 UpdateIdleEffects(newFrame);
             }
 
-
-            Global.effengine.PushFrame(newFrame);
+            lock (Effects.CanvasChangedLock)
+            {
+                Global.effengine.PushFrame(newFrame);
+            }
 
             StopUnUpdatedEvents();
             PostUpdate?.Invoke(this, null);
@@ -548,8 +549,9 @@ namespace Aurora.Profiles
 
             return profile;
         }
+
         /// <summary>Gets the current application.</summary>
-        public ILightEvent GetCurrentProfile() => GetCurrentProfile(out bool _);
+        public ILightEvent GetCurrentProfile() => GetCurrentProfile(out var _);
         /// <summary>
         /// Returns a list of all profiles that should have their overlays active. This will include processes that running but not in the foreground.
         /// </summary>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
@@ -14,54 +15,45 @@ namespace Aurora.Utils
 
         public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
         {
-            try
+            if (rectangle.IsEmpty)
+                return Color.Black;
+
+            //B, G, R, A
+            var color = new[] {0L, 0L, 0L, 0L}; //array because SIMD optimizations
+
+            var srcData = map.LockBits(
+                rectangle,
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
+            var stride = srcData.Stride;
+            var scan0 = srcData.Scan0;
+
+            unsafe
             {
-                if (rectangle.IsEmpty)
-                    return Color.Black;
+                var p = (byte*)(void*)scan0;
 
-                                 //B, G, R, A
-                var color = new[] {0, 0, 0, 0}; //array because SIMD optimizations
-
-                var srcData = map.LockBits(
-                    rectangle,
-                    ImageLockMode.ReadOnly,
-                    PixelFormat.Format32bppArgb);
-                var stride = srcData.Stride;
-                var scan0 = srcData.Scan0;
-
-                unsafe
+                for (var y = 0; y < rectangle.Height; y++)
                 {
-                    var p = (byte*)(void*)scan0;
-
-                    for (var y = 0; y < rectangle.Height; y++)
+                    var i = y * stride;
+                    for (var x = 0; x < rectangle.Width; x++)
                     {
-                        var i = y * stride;
-                        for (var x = 0; x < rectangle.Width; x++)
-                        {
-                            var j = i + x * 4;
-                            color[0] += p[j];
-                            color[1] += p[j + 1];
-                            color[2] += p[j + 2];
-                            color[3] += p[j + 3];
-                        }
+                        var j = i + x * 4;
+                        color[0] += p[j];
+                        color[1] += p[j + 1];
+                        color[2] += p[j + 2];
+                        color[3] += p[j + 3];
                     }
                 }
-                map.UnlockBits(srcData);
-
-                var area = rectangle.Width * rectangle.Height;
-                return Color.FromArgb(
-                    color[0] / area |
-                    color[1] / area << 8 |
-                    color[2] / area << 16 |
-                    color[3] / area << 24
-                );
             }
-            catch (Exception exc)
-            {
-                Global.logger.Error("BitmapUtils.GetRegionColor() Exception: " + exc);
+            map.UnlockBits(srcData);
 
-                return Color.Black;
-            }
+            var area = rectangle.Width * rectangle.Height;
+            return Color.FromArgb(
+                (int)(color[0] / area) |
+                (int)(color[1] / area << 8) |
+                (int)(color[2] / area << 16) |
+                (int)(color[3] / area << 24)
+            );
         }
 
         /// <summary>
@@ -141,7 +133,7 @@ namespace Aurora.Utils
         /// Returns an identity matrix 5x5. Useful to perform operations on, which will then be applied at once to an image
         /// </summary>
         /// <returns></returns>
-        public static float[][] GetEmptyColorMatrix() => new float[][] {
+        public static float[][] GetEmptyColorMatrix() => new [] {
                 new float[] {1, 0, 0, 0, 0},//red
                 new float[] {0, 1, 0, 0, 0},//green
                 new float[] {0, 0, 1, 0, 0},//blue
