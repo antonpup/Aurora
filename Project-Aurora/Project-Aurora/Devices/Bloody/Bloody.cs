@@ -48,7 +48,7 @@ namespace Aurora.Devices.Bloody
         }
 
         protected override bool UpdateDevice(Dictionary<int, Color> keyColors, DoWorkEventArgs e, bool forced = false) {
-            deviceUpdated(this, keyColors);
+            deviceUpdated?.Invoke(this, keyColors);
             return true;
         }
 
