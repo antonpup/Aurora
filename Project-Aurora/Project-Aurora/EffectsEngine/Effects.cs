@@ -175,8 +175,7 @@ namespace Aurora
 
         private readonly Dictionary<DeviceKey, Color> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKey>);
 
-        private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
-        private EffectLayer _background;// => _effectLayerFactory.Value;
+        private EffectLayer _background = new("Global Background", Color.Black);
 
         public Effects()
         {
@@ -260,7 +259,7 @@ namespace Aurora
                         KeyBitmap = _background.GetBitmap()
                     };
                 }
-                dccMap[item.DeviceId.Value].KeyColors[item.Tag] = keyColors[item];
+                dccMap[item.DeviceId.Value].KeyColors[item.Tag] = _keyColors[item];
             }
             Global.dev_manager.UpdateDevices(dccMap);
 

@@ -132,7 +132,7 @@ namespace Aurora.Devices.Corsair
         protected override bool UpdateDeviceImpl(DeviceColorComposition composition)
         {
             List<CorsairLedColor> colors = new List<CorsairLedColor>();
-            foreach (var (key, clr) in composition.keyColors)
+            foreach (var (key, clr) in composition.KeyColors)
             {
                 if (KeyMapping.TryGetValue(key, out var ledid))
                 {

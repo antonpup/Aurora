@@ -104,7 +104,7 @@ namespace Aurora.Devices.OpenRGB
 
             for (int ledIdx = 0; ledIdx < Device.Leds.Length; ledIdx++)
             {
-                if (composition.keyColors.TryGetValue(KeyMapping[ledIdx].Tag, out var keyColor))
+                if (composition.KeyColors.TryGetValue(KeyMapping[ledIdx].Tag, out var keyColor))
                 {
                     var deviceKey = DeviceColors[ledIdx];
                     deviceKey.R = keyColor.R;
