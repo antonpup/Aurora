@@ -173,9 +173,14 @@ namespace Aurora.Devices.OpenRGB
 
         internal void ProcessMappings(bool usePeriphLogo)
         {
-            for (int ledIndex = 0; ledIndex < OrgbDevice.Leds.Length; ledIndex++)
+            for (var ledIndex = 0; ledIndex < OrgbDevice.Leds.Length; ledIndex++)
             {
-                if (OpenRGBKeyNames.KeyNames.TryGetValue(OrgbDevice.Leds[ledIndex].Name, out var devKey))
+                var orgbKeyName = OrgbDevice.Leds[ledIndex].Name;
+                if (OrgbDevice.Type == OpenRGBDeviceType.Mouse && orgbKeyName.Equals("Logo"))
+                {
+                    Mapping[ledIndex] = DeviceKeys.Peripheral_Logo;
+                }
+                else if (OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName, out var devKey))
                 {
                     Mapping[ledIndex] = devKey;
                 }

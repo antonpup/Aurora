@@ -111,6 +111,9 @@
     <None Update="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="kb_layouts\Extra Features\generic_openrgb_mouse.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

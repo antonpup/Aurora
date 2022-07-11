@@ -888,70 +888,35 @@ namespace Aurora.Settings
                         break;
                 }
 
-                string mouse_feature_path = "";
-
-                switch (mouse_preference)
+                var mouseFeaturePath = mouse_preference switch
                 {
-                    case PreferredMouse.Generic_Peripheral:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json");
-                        break;
-                    case PreferredMouse.Logitech_G900:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json");
-                        break;
-                    case PreferredMouse.Logitech_G502:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json");
-                        break;
-                    case PreferredMouse.Corsair_Sabre:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json");
-                        break;
-                    case PreferredMouse.Corsair_M65:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_m65_features.json");
-                        break;
-                    case PreferredMouse.Corsair_Katar:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json");
-                        break;
-                    case PreferredMouse.Clevo_Touchpad:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json");
-                        break;
-                    case PreferredMouse.Roccat_Kone_Pure:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "roccat_kone_pure_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_Rival_300:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json");
-                        break;
-                    case PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json");
-                        break;
-                    case PreferredMouse.Asus_Pugio:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json");
-                        break;
-                    case PreferredMouse.Bloody_W60:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "bloody_w60_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Photon:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Outpost_Plus_Photon:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Vector:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_features.json");
-                        break;
-                    case PreferredMouse.OMEN_Vector_Essentials:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json");
-                        break;
-                    case PreferredMouse.Razer_Mamba_TE:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_mamba_te_features.json");
-                        break;
-                    case PreferredMouse.Razer_naga_Pro:
-                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "razer_naga_pro_features.json");
-                        break;
-                }
+                    PreferredMouse.Generic_Peripheral => Path.Combine(layoutsPath, "Extra Features", "generic_peripheral.json"),
+                    PreferredMouse.Generic_Openrgb_Mouse => Path.Combine(layoutsPath, "Extra Features", "generic_openrgb_mouse.json"),
+                    PreferredMouse.Logitech_G900 => Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json"),
+                    PreferredMouse.Logitech_G502 => Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json"),
+                    PreferredMouse.Corsair_Sabre => Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json"),
+                    PreferredMouse.Corsair_M65 => Path.Combine(layoutsPath, "Extra Features", "corsair_m65_features.json"),
+                    PreferredMouse.Corsair_Katar => Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json"),
+                    PreferredMouse.Clevo_Touchpad => Path.Combine(layoutsPath, "Extra Features", "clevo_touchpad_features.json"),
+                    PreferredMouse.Roccat_Kone_Pure => Path.Combine(layoutsPath, "Extra Features", "roccat_kone_pure_features.json"),
+                    PreferredMouse.SteelSeries_Rival_300 => Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_features.json"),
+                    PreferredMouse.SteelSeries_Rival_300_HP_OMEN_Edition => Path.Combine(layoutsPath, "Extra Features", "steelseries_rival_300_hp_omen_edition_features.json"),
+                    PreferredMouse.Asus_Pugio => Path.Combine(layoutsPath, "Extra Features", "asus_pugio_features.json"),
+                    PreferredMouse.Bloody_W60 => Path.Combine(layoutsPath, "Extra Features", "bloody_w60_features.json"),
+                    PreferredMouse.OMEN_Photon => Path.Combine(layoutsPath, "Extra Features", "omen_photon_features.json"),
+                    PreferredMouse.OMEN_Outpost_Plus_Photon => Path.Combine(layoutsPath, "Extra Features", "omen_outpost_plus_photon_features.json"),
+                    PreferredMouse.OMEN_Vector => Path.Combine(layoutsPath, "Extra Features", "omen_vector_features.json"),
+                    PreferredMouse.OMEN_Vector_Essentials => Path.Combine(layoutsPath, "Extra Features", "omen_vector_essentials_features.json"),
+                    PreferredMouse.Razer_Mamba_TE => Path.Combine(layoutsPath, "Extra Features", "razer_mamba_te_features.json"),
+                    PreferredMouse.Razer_naga_Pro => Path.Combine(layoutsPath, "Extra Features", "razer_naga_pro_features.json"),
+                    _ => ""
+                };
 
-                if (!string.IsNullOrWhiteSpace(mouse_feature_path))
+                if (!string.IsNullOrWhiteSpace(mouseFeaturePath))
                 {
-                    string feature_content = File.ReadAllText(mouse_feature_path, Encoding.UTF8);
-                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+                    string feature_content = File.ReadAllText(mouseFeaturePath, Encoding.UTF8);
+                    VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(feature_content,
+                        new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
 
                     if (mouse_orientation == MouseOrientationType.LeftHanded)
                     {
