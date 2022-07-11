@@ -113,7 +113,7 @@ namespace Aurora.Profiles.CSGO.Layers
             
             if (csgostate.Player.State.RoundKills == 0 || roundClearPhase || respawned)
             {
-                for (var i = 0; i < roundKills.Capacity; i++)
+                for (var i = 0; i < roundKills.Count; i++)
                 {
                     roundKills[i] = RoundKillType.None;
                 }
