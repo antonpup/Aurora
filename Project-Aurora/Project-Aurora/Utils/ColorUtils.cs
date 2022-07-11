@@ -35,7 +35,7 @@ namespace Aurora.Utils
     /// </summary>
     public static class ColorUtils
     {
-        private static Random randomizer = new Random();
+        private static readonly Random Randomizer = new();
 
         /// <summary>
         /// Converts from System.Windows.Media.Color to System.Drawing.Color
@@ -168,7 +168,7 @@ namespace Aurora.Utils
         /// <returns>A random color</returns>
         public static DrawingColor GenerateRandomColor()
         {
-            return DrawingColor.FromArgb(randomizer.Next(255), randomizer.Next(255), randomizer.Next(255));
+            return DrawingColor.FromArgb(Randomizer.Next(255), Randomizer.Next(255), Randomizer.Next(255));
         }
 
         /// <summary>

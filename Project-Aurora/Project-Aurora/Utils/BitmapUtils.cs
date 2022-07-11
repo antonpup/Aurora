@@ -1,12 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Utils
 {
@@ -47,12 +41,15 @@ namespace Aurora.Utils
             }
             map.UnlockBits(srcData);
 
+            //each color value is rounded to the nearest integer
+            //because for bytes each increment is significant
+            //https://stackoverflow.com/a/17974/13320838
             var area = rectangle.Width * rectangle.Height;
             return Color.FromArgb(
-                (int)(color[0] / area) |
-                (int)(color[1] / area << 8) |
-                (int)(color[2] / area << 16) |
-                (int)(color[3] / area << 24)
+                (int)((color[0] - 1) / area + 1) |
+                (int)((color[1] - 1) / area + 1 << 8) |
+                (int)((color[2] - 1) / area + 1 << 16) |
+                (int)((color[3] - 1) / area + 1 << 24)
             );
         }
 
