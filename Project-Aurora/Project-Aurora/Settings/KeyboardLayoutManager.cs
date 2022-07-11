@@ -894,6 +894,7 @@ namespace Aurora.Settings
                     PreferredMouse.Generic_Openrgb_Mouse => Path.Combine(layoutsPath, "Extra Features", "generic_openrgb_mouse.json"),
                     PreferredMouse.Logitech_G900 => Path.Combine(layoutsPath, "Extra Features", "logitech_g900_features.json"),
                     PreferredMouse.Logitech_G502 => Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json"),
+                    PreferredMouse.Logitech_G102 => Path.Combine(layoutsPath, "Extra Features", "logitech_g102_features.json");
                     PreferredMouse.Corsair_Sabre => Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json"),
                     PreferredMouse.Corsair_M65 => Path.Combine(layoutsPath, "Extra Features", "corsair_m65_features.json"),
                     PreferredMouse.Corsair_Katar => Path.Combine(layoutsPath, "Extra Features", "corsair_katar_features.json"),
