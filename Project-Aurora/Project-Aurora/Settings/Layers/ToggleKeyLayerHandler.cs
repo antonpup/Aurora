@@ -24,7 +24,7 @@ namespace Aurora.Settings.Layers {
 
     public class ToggleKeyLayerHandler : LayerHandler<ToggleKeyLayerHandlerProperties>
     {
-        private bool _state;
+        private bool _state = true;
         private readonly EffectLayer _layer = new("ToggleKeyLayer");
         private readonly SolidBrush _primaryBrush;
         private readonly SolidBrush _secondaryBrush;
