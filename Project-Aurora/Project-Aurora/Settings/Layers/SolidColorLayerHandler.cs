@@ -10,7 +10,7 @@ namespace Aurora.Settings.Layers
     {
         private readonly EffectLayer _solidColorLayer = new("SolidColorLayer");
         private readonly SolidBrush _brush;
-        private KeySequence _propertiesSequence;
+        private KeySequence _propertiesSequence = new();
 
         public SolidColorLayerHandler()
         {
