@@ -176,6 +176,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\*.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G102_logo.png" />
+    <None Remove="kb_layouts\Extra Features\images\Logi_G102_outline.png" />
     <Resource Include="Resources\aurora_icon.ico" />
 
     <Resource Include="Resources\Win32\Aurora-LightFXWrapper.dll" />

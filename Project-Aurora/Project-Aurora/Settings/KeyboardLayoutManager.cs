@@ -901,6 +901,9 @@ namespace Aurora.Settings
                     case PreferredMouse.Logitech_G502:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g502_features.json");
                         break;
+                    case PreferredMouse.Logitech_G102:
+                        mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "logitech_g102_features.json");
+                        break;
                     case PreferredMouse.Corsair_Sabre:
                         mouse_feature_path = Path.Combine(layoutsPath, "Extra Features", "corsair_sabre_features.json");
                         break;

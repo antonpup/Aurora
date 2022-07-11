@@ -116,9 +116,18 @@ namespace Aurora.Devices.Logitech
 
             if (!Global.Configuration.DevicesDisableMouse)
             {
-                for (int i = 0; i < 2; i++)
+                if (Global.Configuration.MousePreference == PreferredMouse.Logitech_G102)
                 {
-                    LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Mouse, i, mouse[i]);
+                    LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB);
+                    LogitechGSDK.LogiLedSetLighting(mouse[0]); //I'll have it fall back to the old ways with no zones bc zones don't work on G102
+                    LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL);
+                }
+                else
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Mouse, i, mouse[i]);
+                    }
                 }
 
                 LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Mousemat, 0, mousepad);
