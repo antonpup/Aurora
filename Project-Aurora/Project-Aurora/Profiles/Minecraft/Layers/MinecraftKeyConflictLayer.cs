@@ -2,7 +2,6 @@
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Minecraft.GSI;
 using Aurora.Settings.Layers;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls;
@@ -34,14 +33,24 @@ namespace Aurora.Profiles.Minecraft.Layers {
     public class MinecraftKeyConflictLayerHandler : LayerHandler<MinecraftKeyConflictLayerProperties> {
         private readonly EffectLayer _layer = new("Minecraft Key Conflict Layer");
         private readonly SolidBrush _backgroundBrush = new(Color.Black);
+        private bool _clear = true;
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftKeyConflictLayer(this);
         }
 
-        public override EffectLayer Render(IGameState gamestate) {
-            if (gamestate is not GameState_Minecraft minecraftState || !minecraftState.Game.ControlsGuiOpen)
+        public override EffectLayer Render(IGameState gameState) {
+            if (gameState is not GameState_Minecraft minecraftState || !minecraftState.Game.ControlsGuiOpen)
+            {
+                if (!_clear)
+                {
+                    _layer.Clear();
+                    _clear = true;
+                }
                 return _layer;
+            }
+            _clear = false;
+
             _layer.Fill(_backgroundBrush); // Hide any other layers behind this one
             // Set all keys in use by any binding to be the no-conflict colour
             foreach (var kb in minecraftState.Game.KeyBindings)
