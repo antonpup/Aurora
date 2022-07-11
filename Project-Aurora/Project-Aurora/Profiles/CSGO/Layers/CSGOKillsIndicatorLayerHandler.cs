@@ -50,7 +50,19 @@ namespace Aurora.Profiles.CSGO.Layers
             Headshot
         }
 
-        private List<RoundKillType> roundKills = new();
+        private List<RoundKillType> roundKills = new()
+        {
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+            RoundKillType.None,
+        };
         private int _lastCountedKill;
         private readonly EffectLayer _killsIndicatorLayer = new("CSGO - Kills Indicator");
 
@@ -65,20 +77,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
             if (_lastCountedKill != csgostate.Player.State.RoundKills)
             {
-                if (csgostate.Player.State.RoundKills == 0 ||
-                    (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined) ||
-                    (csgostate.Player.State.Health == 100 && ((csgostate.Previously.Player.State.Health > -1 && csgostate.Previously.Player.State.Health < 100) || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined)) && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
-                   )
-                    roundKills.Clear();
-                if (csgostate.Previously.Player.State.RoundKills != -1 && csgostate.Player.State.RoundKills != -1 && csgostate.Previously.Player.State.RoundKills < csgostate.Player.State.RoundKills && csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
-                {
-                    if (csgostate.Previously.Player.State.RoundKillHS != -1 && csgostate.Player.State.RoundKillHS != -1 && csgostate.Previously.Player.State.RoundKillHS < csgostate.Player.State.RoundKillHS)
-                        roundKills.Add(RoundKillType.Headshot);
-                    else
-                        roundKills.Add(RoundKillType.Regular);
-                }
-
-                _lastCountedKill = csgostate.Player.State.RoundKills;
+                CalculateKills(csgostate);
             }
 
             if (!csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID)) return _killsIndicatorLayer;
@@ -102,6 +101,38 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             return _killsIndicatorLayer;
+        }
+
+        private void CalculateKills(GameState_CSGO csgostate)
+        {
+            var roundClearPhase = csgostate.Round.WinTeam == RoundWinTeam.Undefined &&
+                                  csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined;
+            var respawned = csgostate.Player.State.Health == 100 &&
+                            csgostate.Previously.Player.State.Health is > -1 and < 100 &&
+                            csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID);
+            
+            if (csgostate.Player.State.RoundKills == 0 || roundClearPhase || respawned)
+            {
+                for (var i = 0; i < roundKills.Capacity; i++)
+                {
+                    roundKills[i] = RoundKillType.None;
+                }
+            }
+
+            if (csgostate.Previously.Player.State.RoundKills != -1 && csgostate.Player.State.RoundKills != -1 &&
+                csgostate.Previously.Player.State.RoundKills < csgostate.Player.State.RoundKills &&
+                csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
+            {
+                var index = csgostate.Player.State.RoundKills - 1;
+                if (csgostate.Previously.Player.State.RoundKillHS != -1 && csgostate.Player.State.RoundKillHS != -1 &&
+                    csgostate.Previously.Player.State.RoundKillHS < csgostate.Player.State.RoundKillHS)
+                    
+                    roundKills[index] = RoundKillType.Headshot;
+                else
+                    roundKills[index] = RoundKillType.Regular;
+            }
+
+            _lastCountedKill = csgostate.Player.State.RoundKills;
         }
 
         public override void SetApplication(Application profile)
