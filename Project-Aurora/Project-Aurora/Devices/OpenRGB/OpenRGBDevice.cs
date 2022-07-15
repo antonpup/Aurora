@@ -176,11 +176,13 @@ namespace Aurora.Devices.OpenRGB
             for (var ledIndex = 0; ledIndex < OrgbDevice.Leds.Length; ledIndex++)
             {
                 var orgbKeyName = OrgbDevice.Leds[ledIndex].Name;
-                if (OrgbDevice.Type == OpenRGBDeviceType.Mouse && orgbKeyName.Equals("Logo"))
+                if (OrgbDevice.Type == OpenRGBDeviceType.Mouse && (orgbKeyName.Equals("Logo") || orgbKeyName.Equals("Logo LED")))
                 {
                     Mapping[ledIndex] = DeviceKeys.Peripheral_Logo;
                 }
-                else if (OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName, out var devKey))
+                else if (OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName, out var devKey) ||
+                         OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName.Replace(" LED", ""), out devKey)
+                        )
                 {
                     Mapping[ledIndex] = devKey;
                 }
