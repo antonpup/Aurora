@@ -100,6 +100,23 @@ namespace Aurora.Devices.Bloody
             [DeviceKeys.ARROW_RIGHT] = Key.ARROW_RIGHT,
             [DeviceKeys.ADDITIONALLIGHT1] = Key.LEFT_BAR,
             [DeviceKeys.ADDITIONALLIGHT2] = Key.RIGHT_BAR,
+            [DeviceKeys.NUM_LOCK] = Key.NUM_LOCK,
+            [DeviceKeys.NUM_SLASH] = Key.NUM_SLASH,
+            [DeviceKeys.NUM_ASTERISK] = Key.NUM_ASTERISK,
+            [DeviceKeys.NUM_MINUS] = Key.NUM_MINUS,
+            [DeviceKeys.NUM_SEVEN] = Key.NUM_SEVEN,
+            [DeviceKeys.NUM_EIGHT] = Key.NUM_EIGHT,
+            [DeviceKeys.NUM_NINE] = Key.NUM_NINE,
+            [DeviceKeys.NUM_PLUS] = Key.NUM_PLUS,
+            [DeviceKeys.NUM_FOUR] = Key.NUM_FOUR,
+            [DeviceKeys.NUM_FIVE] = Key.NUM_FIVE,
+            [DeviceKeys.NUM_SIX] = Key.NUM_SIX,
+            [DeviceKeys.NUM_ONE] = Key.NUM_ONE,
+            [DeviceKeys.NUM_TWO] = Key.NUM_TWO,
+            [DeviceKeys.NUM_THREE] = Key.NUM_THREE,
+            [DeviceKeys.NUM_ENTER] = Key.NUM_ENTER,
+            [DeviceKeys.NUM_ZERO] = Key.NUM_ZERO,
+            [DeviceKeys.NUM_PERIOD] = Key.NUM_PERIOD,
         };
         public static Dictionary<BloodyPeripheralLed, DeviceKeys> MouseLightMap = new Dictionary<BloodyPeripheralLed, DeviceKeys>()
         {

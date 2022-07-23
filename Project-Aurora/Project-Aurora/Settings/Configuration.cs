@@ -321,6 +321,11 @@ namespace Aurora.Settings
         [Description("MSI GP66 US")]
         MSI_GP66_US = 1500,
 
+        //Bloody range is 1600-1699
+        [Description("Bloody full")]
+        Bloody_full = 1600,
+
+
     }
 
     public enum PreferredKeyboardLocalization

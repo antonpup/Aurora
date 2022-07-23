@@ -770,6 +770,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "wooting_two.json");
             else if (keyboard_preference == PreferredKeyboard.MSI_GP66_US)
                 layoutConfigPath = Path.Combine(layoutsPath, "msi_gp66_us.json");
+            else if (keyboard_preference == PreferredKeyboard.Bloody_full)
+                layoutConfigPath = Path.Combine(layoutsPath, "bloody_full.json");
 
             else if (keyboard_preference == PreferredKeyboard.Uniwill2ND_35X_1)
                 layoutConfigPath = Path.Combine(layoutsPath, "Uniwill2ND_35X_1.json");
