@@ -511,40 +511,51 @@ namespace Aurora.Settings
 
         public int UpdateDelay { get; set; } = 30;
 
-        public double Fps
-        {
-            get => 1000d / UpdateDelay;
-        }
+        public double Fps => 1000d / UpdateDelay;
 
         [JsonProperty("updates_check_on_start_up")] public bool UpdatesCheckOnStartUp { get; set; } = true;
-        [JsonProperty("start_silently")] public bool StartSilently { get; set; } = false;
+        [JsonProperty("start_silently")] public bool StartSilently { get; set; }
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
         [JsonProperty("mouse_orientation")] public MouseOrientationType MouseOrientation { get; set; } = MouseOrientationType.RightHanded;
-        [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
+        [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.GenericLaptopNumpad;
         [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
-        [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.None;
+        [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.Generic_Peripheral;
         [JsonProperty("mousepad_preference")] public PreferredMousepad MousepadPreference { get; set; } = PreferredMousepad.None;
         [JsonProperty("virtualkeyboard_keycap_type")] public KeycapType VirtualkeyboardKeycapType { get; set; } = KeycapType.Default;
         [JsonProperty("detection_mode")] public ApplicationDetectionMode DetectionMode { get; set; } = ApplicationDetectionMode.WindowsEvents;
-        [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; } = false;
-        [JsonProperty("devices_disable_mouse")] public bool DevicesDisableMouse { get; set; } = false;
-        [JsonProperty("devices_disable_headset")] public bool DevicesDisableHeadset { get; set; } = false;
-        [JsonProperty("unified_hid_disabled")] public bool UnifiedHidDisabled { get; set; } = false;
+        [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; }
+        [JsonProperty("devices_disable_mouse")] public bool DevicesDisableMouse { get; set; }
+        [JsonProperty("devices_disable_headset")] public bool DevicesDisableHeadset { get; set; }
+        [JsonProperty("unified_hid_disabled")] public bool UnifiedHidDisabled { get; set; } = true;
         public bool OverlaysInPreview { get; set; } = true;
 
-        public ObservableCollection<string> ExcludedPrograms { get; set; } = new ObservableCollection<string>();
-        public HashSet<string> excluded_programs { set => ExcludedPrograms = new ObservableCollection<string>(value); } // Write-only compatibility property to set the ExcludedPrograms observable collection.
+        public ObservableCollection<string> ExcludedPrograms { get; set; } = new();
 
-        public ObservableCollection<Type> DevicesDisabled { get; set; } = new ObservableCollection<Type>();
-        public HashSet<Type> devices_disabled { set => DevicesDisabled = new ObservableCollection<Type>(value);  } // Write-only compatibility property to set the DevicesDisabled observable collection.
+        public ObservableCollection<Type> DevicesDisabled { get; set; } = new()
+        {
+            typeof(Devices.Asus.AsusDevice),
+            typeof(Devices.AtmoOrbDevice.AtmoOrbDevice),
+            typeof(Devices.Clevo.ClevoDevice),
+            typeof(Devices.Drevo.DrevoDevice),
+            typeof(Devices.Ducky.DuckyDevice),
+            typeof(Devices.Roccat.RoccatDevice),
+            typeof(Devices.Omen.OmenDevices),
+            typeof(Devices.Dualshock.DualshockDevice),
+            typeof(Devices.Creative.SoundBlasterXDevice),
+            typeof(Devices.UnifiedHID.UnifiedHIDDevice),
+            typeof(Devices.Uniwill.UniwillDevice),
+            typeof(Devices.Vulcan.VulcanDevice),
+            typeof(Devices.Wooting.WootingDevice),
+            typeof(Devices.YeeLight.YeeLightDevice),
+        };
 
         //Blackout and Night theme
-        [JsonProperty("time_based_dimming_enabled")] public bool TimeBasedDimmingEnabled { get; set; } = false;
-        [JsonProperty("time_based_dimming_affect_games")] public bool TimeBasedDimmingAffectGames { get; set; } = false;
+        [JsonProperty("time_based_dimming_enabled")] public bool TimeBasedDimmingEnabled { get; set; }
+        [JsonProperty("time_based_dimming_affect_games")] public bool TimeBasedDimmingAffectGames { get; set; }
         [JsonProperty("time_based_dimming_start_hour")] public int TimeBasedDimmingStartHour { get; set; } = 21;
-        [JsonProperty("time_based_dimming_start_minute")] public int TimeBasedDimmingStartMinute { get; set; } = 0;
+        [JsonProperty("time_based_dimming_start_minute")] public int TimeBasedDimmingStartMinute { get; set; }
         [JsonProperty("time_based_dimming_end_hour")] public int TimeBasedDimmingEndHour { get; set; } = 8;
-        [JsonProperty("time_based_dimming_end_minute")] public int TimeBasedDimmingEndMinute { get; set; } = 0;
+        [JsonProperty("time_based_dimming_end_minute")] public int TimeBasedDimmingEndMinute { get; set; }
 
         [JsonProperty("nighttime_enabled")] public bool NighttimeEnabled { get; set; } = false;
         [JsonProperty("nighttime_start_hour")] public int NighttimeStartHour { get; set; } = 20;
