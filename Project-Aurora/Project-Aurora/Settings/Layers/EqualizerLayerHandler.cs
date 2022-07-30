@@ -270,11 +270,11 @@ namespace Aurora.Settings.Layers
                 _equalizerLayer.DrawTransformed(Properties.Sequence, g => {
                     // Here we draw the equalizer relative to our source rectangle and the DrawTransformed method handles sizing and positioning it correctly for us
 
+                    g.CompositingMode = CompositingMode.SourceCopy;
                     // Draw a rectangle background over the entire source rect if bg is enabled
                     if (bgEnabled)
                         g.FillRectangle(new SolidBrush(Properties.DimColor), SourceRect);
 
-                    g.CompositingMode = CompositingMode.SourceCopy;
                     
                     var waveStepAmount = localFft.Length / (int)SourceRect.Width;
 
