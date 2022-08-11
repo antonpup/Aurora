@@ -46,10 +46,10 @@ namespace Aurora.Utils
             //https://stackoverflow.com/a/17974/13320838
             var area = rectangle.Width * rectangle.Height;
             return Color.FromArgb(
-                (int)((color[0] - 1) / area + 1) |
-                (int)((color[1] - 1) / area + 1 << 8) |
-                (int)((color[2] - 1) / area + 1 << 16) |
-                (int)((color[3] - 1) / area + 1 << 24)
+                (int)(color[0] / area) |
+                (int)(color[1] / area << 8) |
+                (int)(color[2] / area << 16) |
+                (int)(color[3] / area << 24)
             );
         }
 
