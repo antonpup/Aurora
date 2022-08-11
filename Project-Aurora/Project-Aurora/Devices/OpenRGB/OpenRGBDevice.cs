@@ -227,7 +227,7 @@ namespace Aurora.Devices.OpenRGB
             variableRegistry.Register($"{DeviceName}_ip", "127.0.0.1", "IP Address");
             variableRegistry.Register($"{DeviceName}_port", 6742, "Port", 1024, 65535);
             variableRegistry.Register($"{DeviceName}_use_periph_logo", true, "Use peripheral logo for unknown leds");
-            variableRegistry.Register($"{DeviceName}_connect_sleep_time", 0, "Connection timeout seconds");
+            variableRegistry.Register($"{DeviceName}_connect_sleep_time", 5, "Connection timeout seconds");
         }
     }
 
