@@ -1,6 +1,6 @@
 {
   "projectName": "Aurora",
-  "projectOwner": "antonpup",
+  "projectOwner": "Aurora-RGB",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
@@ -62,6 +62,19 @@
         "question",
         "maintenance",
         "projectManagement",
+        "review",
+        "doc"
+      ]
+    },
+    {
+      "login": "Aytackydln",
+      "name": "Aytaç Kayadelen",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/11393706?v=4",
+      "profile": "https://github.com/Aytackydln",
+      "contributions": [
+        "code",
+        "question",
+        "maintenance",
         "review",
         "doc"
       ]
@@ -178,7 +191,8 @@
       "avatar_url": "https://avatars3.githubusercontent.com/u/13398380?v=4",
       "profile": "https://github.com/th3an7",
       "contributions": [
-        "question"
+        "question",
+        "code"
       ]
     },
     {
@@ -231,6 +245,60 @@
       "name": "Qwex",
       "avatar_url": "https://avatars3.githubusercontent.com/u/17799600?v=4",
       "profile": "https://github.com/xQwexx",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "rkkoszewski",
+      "name": "Robert Koszewski",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2161487?v=4",
+      "profile": "https://github.com/rkkoszewski",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "MERR0N",
+      "name": "MERRON",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/1478272?v=4",
+      "profile": "https://github.com/MERR0N",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Crapy",
+      "name": "Crapy",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/95396554?v=4",
+      "profile": "https://github.com/Crapy",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "tirrorex",
+      "name": "Thibaut Noah",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8297740?v=4",
+      "profile": "https://github.com/tirrorex",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "dmaniaa",
+      "name": "Daniel Mania",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5054694?v=4",
+      "profile": "https://github.com/dmaniaa",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "ematt",
+      "name": "Vlad Tuhut",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/8307412?v=4",
+      "profile": "https://github.com/ematt",
       "contributions": [
         "code"
       ]
