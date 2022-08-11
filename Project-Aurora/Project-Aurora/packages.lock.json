@@ -122,12 +122,6 @@
         "resolved": "0.50.0",
         "contentHash": "J5vqespSvjxIAAtjG1Tc6ghBqyfRgDJtKnk/ifi4N0hD/f3JbPwyEDRT+Eelu/bS4C4M6mu5gt1WJqar+fByzg=="
       },
-      "OpenRGB.NET": {
-        "type": "Direct",
-        "requested": "[1.7.0, )",
-        "resolved": "1.7.0",
-        "contentHash": "12pMEUaeoG8mN707QRO9hdT529+UnqUpwMW1H/gDTMsJrerhJve6Yt5Dnheu1isQB4PWP1wu3IDVbHCchznkiw=="
-      },
       "PropertyChanged.Fody": {
         "type": "Direct",
         "requested": "[3.3.3, )",
@@ -632,9 +626,6 @@
         }
       },
       "colorbox": {
-        "type": "Project"
-      },
-      "sbaurorareactive": {
         "type": "Project"
       }
     },

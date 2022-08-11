@@ -39,8 +39,7 @@ namespace Aurora.Devices
         {
             lock(actionLock)
             {
-                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs,
-                currentComp.Item2);
+                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
             }
         }
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
