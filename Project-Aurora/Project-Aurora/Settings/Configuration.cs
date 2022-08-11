@@ -184,7 +184,7 @@ namespace Aurora.Settings
         Logitech_G810 = 102,
         [Description("Logitech - GPRO")]
         Logitech_GPRO = 103,
-        [Description("Logitech - G213")]
+        [Description("Logitech - G213 (OpenRGB)")]
         Logitech_G213 = 104,
 		[Description("Logitech - G815")]
         Logitech_G815 = 105,
