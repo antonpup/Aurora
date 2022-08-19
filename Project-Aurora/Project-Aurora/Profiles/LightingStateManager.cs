@@ -41,20 +41,20 @@ namespace Aurora.Profiles
 
     public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
     {
-        public Dictionary<string, ILightEvent> Events { get; private set; } = new Dictionary<string, ILightEvent> { { "desktop", new Desktop.Desktop() } };
+        public Dictionary<string, ILightEvent> Events { get; } = new() { { "desktop", new Desktop.Desktop() } };
 
-        public Desktop.Desktop DesktopProfile { get { return (Desktop.Desktop)Events["desktop"]; } }
+        public Desktop.Desktop DesktopProfile => (Desktop.Desktop)Events["desktop"];
 
-        private List<ILightEvent> StartedEvents = new List<ILightEvent>();
-        private List<ILightEvent> UpdatedEvents = new List<ILightEvent>();
+        private List<ILightEvent> StartedEvents = new();
+        private List<ILightEvent> UpdatedEvents = new();
 
-        private Dictionary<string, string> EventProcesses { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> EventProcesses { get; } = new();
 
-        private Dictionary<string, string> EventTitles { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> EventTitles { get; } = new();
 
-        private Dictionary<string, string> EventAppIDs { get; set; } = new Dictionary<string, string>();
+        private Dictionary<string, string> EventAppIDs { get; } = new();
 
-        public Dictionary<Type, LayerHandlerMeta> LayerHandlers { get; private set; } = new Dictionary<Type, LayerHandlerMeta>();
+        public Dictionary<Type, LayerHandlerMeta> LayerHandlers { get; } = new();
 
         public string AdditionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
 

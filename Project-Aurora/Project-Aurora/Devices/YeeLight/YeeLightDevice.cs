@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Aurora.Profiles;
 using YeeLightAPI.YeeLightDeviceLocator;
 using YeeLightAPI.YeeLightConstants;
 using YeeLightAPI.YeeLightExceptions;
@@ -132,7 +133,7 @@ namespace Aurora.Devices.YeeLight
                 return ProceedSameColor(targetColor);
             _previousColor = targetColor;
 
-            if (IsWhiteTone(targetColor))
+            if (IsWhiteTone(targetColor)) // && Global.LightingStateManager.GetCurrentProfile() == Global.LightingStateManager.DesktopProfile
             {
                 return ProceedDifferentWhiteColor(targetColor);
             }

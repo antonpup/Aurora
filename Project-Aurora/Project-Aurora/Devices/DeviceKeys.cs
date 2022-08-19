@@ -1427,7 +1427,7 @@ namespace Aurora.Devices
         /// Peripheral DPI
         /// </summary>
         [Description("PERIPHERAL_DPI")]
-        PERIPHERAL_DPI = 237,
+        PERIPHERAL_DPI = 237, 
 
         /// <summary>
         /// Additional Light 33
