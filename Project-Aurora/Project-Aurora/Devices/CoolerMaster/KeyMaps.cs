@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using DK = Aurora.Devices.DeviceKeys;
 
 namespace Aurora.Devices.CoolerMaster
 {
     public static class KeyMaps
     {
-        public static readonly Dictionary<DK, (int row, int column)> GenericFullSize = new Dictionary<DK, (int row, int column)>()
+        public static readonly Dictionary<DK, (int row, int column)> GenericFullSize = new()
         {
             [DK.ESC] = (0, 0),
             [DK.F1] = (0, 1),
@@ -31,6 +27,43 @@ namespace Aurora.Devices.CoolerMaster
             [DK.Profile_Key2] = (0, 19),
             [DK.Profile_Key3] = (0, 20),
             [DK.Profile_Key4] = (0, 21),
+            [DK.ADDITIONALLIGHT1] = (0, 22),
+            [DK.ADDITIONALLIGHT2] = (1, 22),
+            [DK.ADDITIONALLIGHT3] = (2, 22),
+            [DK.ADDITIONALLIGHT4] = (3, 22),
+            [DK.ADDITIONALLIGHT5] = (6, 0),
+            [DK.ADDITIONALLIGHT6] = (6, 1),
+            [DK.ADDITIONALLIGHT7] = (6, 2),
+            [DK.ADDITIONALLIGHT8] = (6, 3),
+            [DK.ADDITIONALLIGHT9] = (6, 4),
+            [DK.ADDITIONALLIGHT10] = (6, 5),
+            [DK.ADDITIONALLIGHT11] = (6, 6),
+            [DK.ADDITIONALLIGHT12] = (6, 7),
+            [DK.ADDITIONALLIGHT13] = (6, 8),
+            [DK.ADDITIONALLIGHT14] = (6, 9),
+            [DK.ADDITIONALLIGHT15] = (6, 10),
+            [DK.ADDITIONALLIGHT16] = (6, 11),
+            [DK.ADDITIONALLIGHT17] = (6, 12),
+            [DK.ADDITIONALLIGHT18] = (6, 13),
+            [DK.ADDITIONALLIGHT19] = (6, 14),
+            [DK.ADDITIONALLIGHT20] = (6, 15),
+            
+            [DK.ADDITIONALLIGHT21] = (0, 23),
+            [DK.ADDITIONALLIGHT22] = (1, 23),
+            [DK.ADDITIONALLIGHT23] = (2, 23),
+            [DK.ADDITIONALLIGHT24] = (3, 23),
+            
+            
+            [DK.ADDITIONALLIGHT25] = (6, 19),
+            [DK.ADDITIONALLIGHT26] = (6, 20),
+            [DK.ADDITIONALLIGHT27] = (6, 21),
+            [DK.ADDITIONALLIGHT28] = (6, 22),
+            [DK.ADDITIONALLIGHT29] = (6, 23),
+            
+            [DK.ADDITIONALLIGHT27] = (0, 19),
+            [DK.ADDITIONALLIGHT28] = (0, 20),
+            [DK.ADDITIONALLIGHT29] = (0, 21),
+
             [DK.TILDE] = (1, 0),
             [DK.ONE] = (1, 1),
             [DK.TWO] = (1, 2),
@@ -123,7 +156,7 @@ namespace Aurora.Devices.CoolerMaster
             [DK.NUM_ZEROZERO] = (5, 19),
             [DK.NUM_PERIOD] = (5, 20)
         };
-        public static readonly Dictionary<DK, (int row, int column)> GenericNavless = new Dictionary<DK, (int row, int column)>
+        public static readonly Dictionary<DK, (int row, int column)> GenericNavless = new()
         {
             [DK.ESC] = (0, 0),
             [DK.F1] = (0, 1),
@@ -227,7 +260,7 @@ namespace Aurora.Devices.CoolerMaster
             [DK.NUM_ZEROZERO] = (5, 16),
             [DK.NUM_PERIOD] = (5, 17)
         };
-        public static readonly Dictionary<DK, (int row, int column)> MK750 = new Dictionary<DK, (int row, int column)>
+        public static readonly Dictionary<DK, (int row, int column)> MK750 = new()
         {
             [DK.ESC] = (0, 0),
             [DK.F1] = (0, 1),
@@ -366,7 +399,7 @@ namespace Aurora.Devices.CoolerMaster
             [DK.ADDITIONALLIGHT21] = (6, 16),
             [DK.ADDITIONALLIGHT22] = (6, 17)
         };
-        public static readonly Dictionary<DK, (int row, int column)> MK730 = new Dictionary<DK, (int row, int column)>
+        public static readonly Dictionary<DK, (int row, int column)> MK730 = new()
         {
             [DK.ESC] = (0, 0),
             [DK.F1] = (0, 1),
@@ -501,7 +534,7 @@ namespace Aurora.Devices.CoolerMaster
             [DK.ADDITIONALLIGHT17] = (6, 12),
         };
 
-        public static readonly Dictionary<DK, (int row, int column)> SK650 = new Dictionary<DK, (int row, int column)>
+        public static readonly Dictionary<DK, (int row, int column)> SK650 = new()
         {
             [DK.ESC] = (0,0),
             [DK.F1] = (0, 1),
@@ -669,7 +702,7 @@ namespace Aurora.Devices.CoolerMaster
         };
 
 
-        public static readonly Dictionary<Native.DEVICE_INDEX, Dictionary<DK, (int row, int column)>> LayoutMapping = new Dictionary<Native.DEVICE_INDEX, Dictionary<DK, (int row, int column)>>
+        public static readonly Dictionary<Native.DEVICE_INDEX, Dictionary<DK, (int row, int column)>> LayoutMapping = new()
         {
             //fullsize standard layouts
             [Native.DEVICE_INDEX.MKeys_L]       = GenericFullSize,
@@ -686,31 +719,31 @@ namespace Aurora.Devices.CoolerMaster
             [Native.DEVICE_INDEX.SK650]         = SK650,
 
             //TODO
-            [Native.DEVICE_INDEX.MMouse_L] = new Dictionary<DK, (int row, int column)>()
+            [Native.DEVICE_INDEX.MMouse_L] = new Dictionary<DK, (int row, int column)>
             {
                 [DK.Peripheral] = (0, 0),
                 [DK.Peripheral_FrontLight] = (0, 1),
                 [DK.Peripheral_Logo] = (0, 2),
                 [DK.Peripheral_ScrollWheel] = (0, 3)
             },
-            [Native.DEVICE_INDEX.MMouse_S] = new Dictionary<DK, (int row, int column)>()
+            [Native.DEVICE_INDEX.MMouse_S] = new Dictionary<DK, (int row, int column)>
             {
                 [DK.Peripheral_Logo] = (0, 0),
                 [DK.Peripheral_ScrollWheel] = (0, 1)
             },
-            [Native.DEVICE_INDEX.MM520] = new Dictionary<DK, (int row, int column)>()
+            [Native.DEVICE_INDEX.MM520] = new Dictionary<DK, (int row, int column)>
             {
                 [DK.Peripheral_Logo] = (0, 0),
                 [DK.Peripheral_ScrollWheel] = (0, 1),
                 [DK.Peripheral_FrontLight] = (0, 2),
             },
-            [Native.DEVICE_INDEX.MM530] = new Dictionary<DK, (int row, int column)>()
+            [Native.DEVICE_INDEX.MM530] = new Dictionary<DK, (int row, int column)>
             {
                 [DK.Peripheral_Logo] = (0, 0),
                 [DK.Peripheral_ScrollWheel] = (0, 1),
                 [DK.Peripheral_FrontLight] = (0, 2),
             },
-            [Native.DEVICE_INDEX.MM830] = new Dictionary<DK, (int row, int column)>()
+            [Native.DEVICE_INDEX.MM830] = new Dictionary<DK, (int row, int column)>
             {
                 //[DK.A] = (0, 0),
                 //[DK.A] = (0, 1),
