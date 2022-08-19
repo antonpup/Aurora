@@ -256,7 +256,8 @@ namespace Aurora.Devices.OpenRGB
                     Mapping[ledIndex] = DeviceKeys.Peripheral_Logo;
                 }
                 else if (OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName, out var devKey) ||
-                         OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName.Replace(" LED", ""), out devKey)
+                         OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName.Replace(" LED", ""), out devKey) ||
+                         OpenRGBKeyNames.KeyNames.TryGetValue("Key: " + orgbKeyName, out devKey)
                         )
                 {
                     Mapping[ledIndex] = devKey;
