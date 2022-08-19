@@ -15,7 +15,8 @@
       "margin_left_bits": -4,
       "margin_top_bits": 3,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "z_index": -1
     },
     {
       "visualName": "Middle Zone",
@@ -30,7 +31,8 @@
       "margin_left_bits": -4,
       "margin_top_bits": 12,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "z_index": -1
     },
     {
       "visualName": "Right Zone",
@@ -45,7 +47,8 @@
       "margin_left_bits": -4,
       "margin_top_bits": 6,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "z_index": -1
     },
     {
       "visualName": "Arrows and Home Zone",
@@ -60,7 +63,8 @@
       "margin_left_bits": -4,
       "margin_top_bits": 9,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "z_index": -1
     },
     {
       "visualName": "Numpad Zone",
@@ -75,7 +79,8 @@
       "margin_left_bits": -4,
       "margin_top_bits": 9,
       "enabled": true,
-      "absolute_location": true
+      "absolute_location": true,
+      "z_index": -1
     }
   ]
 }

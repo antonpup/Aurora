@@ -29,6 +29,7 @@ namespace Aurora.Settings
         public bool? enabled = true;
         public bool? absolute_location = false;
         public String image = "";
+        public int z_index = 0;
 
         public KeyboardKey()
         {
@@ -730,6 +731,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "razer_blackwidow_te.json");
             else if (keyboard_preference == PreferredKeyboard.Razer_Blade)
                 layoutConfigPath = Path.Combine(layoutsPath, "razer_blade.json");
+            else if (keyboard_preference == PreferredKeyboard.Clevo_3_Zone)
+                layoutConfigPath = Path.Combine(layoutsPath, "clevo_3_zone.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_L)
                 layoutConfigPath = Path.Combine(layoutsPath, "masterkeys_pro_l.json");
             else if (keyboard_preference == PreferredKeyboard.Masterkeys_Pro_S)
@@ -764,6 +767,8 @@ namespace Aurora.Settings
                 layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop.json");
             else if (keyboard_preference == PreferredKeyboard.GenericLaptopNumpad)
                 layoutConfigPath = Path.Combine(layoutsPath, "generic_laptop_numpad.json");
+            else if (keyboard_preference == PreferredKeyboard.Debug)
+                layoutConfigPath = Path.Combine(layoutsPath, "additional_lights.json");
             else if (keyboard_preference == PreferredKeyboard.Drevo_BladeMaster)
                 layoutConfigPath = Path.Combine(layoutsPath, "drevo_blademaster.json");
             else if (keyboard_preference == PreferredKeyboard.Wooting_Two)
@@ -1272,7 +1277,7 @@ namespace Aurora.Settings
 
             string images_path = Path.Combine(layoutsPath, "Extra Features", "images");
 
-            foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys)
+            foreach (KeyboardKey key in virtualKeyboardGroup.grouped_keys.OrderBy(a => a.z_index))
             {
                 double keyMargin_Left = key.margin_left.Value;
                 double keyMargin_Top = key.margin_top.Value;
@@ -1308,7 +1313,7 @@ namespace Aurora.Settings
                             break;
                     }
                 }
-
+                
                 new_virtual_keyboard.Children.Add(keycap);
 
                 if (key.tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.tag) && keycap is IKeycap && !abstractKeycaps)

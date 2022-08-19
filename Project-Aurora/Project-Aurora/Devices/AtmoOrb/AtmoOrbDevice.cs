@@ -22,9 +22,9 @@ namespace Aurora.Devices.AtmoOrbDevice
         private Stopwatch sw = new();
 
         private Stopwatch watch = new();
-        private long lastUpdateTime = 0;
+        private long lastUpdateTime;
 
-        private VariableRegistry default_registry = null;
+        private VariableRegistry default_registry;
 
         public string DeviceDetails => IsInitialized
             ? "Initialized"
@@ -148,20 +148,7 @@ namespace Aurora.Devices.AtmoOrbDevice
             if (sw.ElapsedMilliseconds >
                 Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_send_delay"))
             {
-                Color averageColor;
-                lock (colorComposition.KeyBitmap)
-                {
-                    //Fix conflict with debug bitmap
-                    lock (colorComposition.KeyBitmap)
-                    {
-
-                        averageColor = Utils.BitmapUtils.GetRegionColor(
-                            colorComposition.KeyBitmap,
-                            new Rectangle(0, 0, colorComposition.KeyBitmap.Width,
-                                colorComposition.KeyBitmap.Height)
-                        );
-                    }
-                }
+                Color averageColor = colorComposition.KeyColors[DeviceKeys.ADDITIONALLIGHT1];   //TODO add 1 zone kb
 
                 SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
                 sw.Restart();

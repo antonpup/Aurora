@@ -11,10 +11,9 @@ namespace Aurora.Devices
     /// <summary>
     /// Struct representing color settings being sent to devices
     /// </summary>
-    public class DeviceColorComposition
+    public struct DeviceColorComposition
     {
         public Dictionary<DeviceKeys, Color> KeyColors;
-        public Bitmap KeyBitmap;
     }
 
     /// <summary>

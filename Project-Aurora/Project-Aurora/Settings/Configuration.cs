@@ -161,6 +161,10 @@ namespace Aurora.Settings
 
         [Description("Generic Laptop (Numpad)")]
         GenericLaptopNumpad = 2,
+
+        [Description("Additional Lights (Debug)")]
+        Debug = 3,
+
         /*
         [Description("Logitech")]
         Logitech = 1,
@@ -224,6 +228,8 @@ namespace Aurora.Settings
         Razer_Blade = 303,
 
         //Clevo range is 400-499
+        [Description("Clevo 3 Zone Keyboard")]
+        Clevo_3_Zone = 400,
 
         //Cooler Master range is 500-599
         [Description("Cooler Master - Masterkeys Pro L")]

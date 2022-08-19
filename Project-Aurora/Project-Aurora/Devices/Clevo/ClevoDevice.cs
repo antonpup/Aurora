@@ -150,20 +150,7 @@ namespace Aurora.Devices.Clevo
                     // Clevo 3 region keyboard
 
                     // Left Side (From ESC to Half Spacebar)
-                    BitmapRectangle keymapEsc = Effects.GetBitmappingFromDeviceKey(DeviceKeys.ESC);
-                    BitmapRectangle keymapSpace = Effects.GetBitmappingFromDeviceKey(DeviceKeys.SPACE);
-                    PointF spacebarCenter = keymapSpace.Center; // Key Center
-
-                    int spacebarX = (int)spacebarCenter.X - keymapEsc.Left;
-                    int height = (int)spacebarCenter.Y - keymapEsc.Top;
-
-                    Rectangle regionLeft =
-                        new Rectangle(keymapEsc.Left, keymapEsc.Top, spacebarX, height);
-
-                    Color regionLeftColor;
-
-                    lock (colorComposition.KeyBitmap)
-                        regionLeftColor = BitmapUtils.GetRegionColor(colorComposition.KeyBitmap, regionLeft);
+                    Color regionLeftColor = keyColors[DeviceKeys.ADDITIONALLIGHT1];
 
                     if (!_colorKbLeft.Equals(regionLeftColor))
                     {
@@ -174,15 +161,7 @@ namespace Aurora.Devices.Clevo
                     if (e.Cancel) return false;
 
                     // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
-                    BitmapRectangle keymapF11 = Effects.GetBitmappingFromDeviceKey(DeviceKeys.F11);
-
-                    var f11XWidth = Convert.ToInt32(keymapF11.Center.X - spacebarX);
-
-                    var regionCenter = new Rectangle(spacebarX, keymapEsc.Top, f11XWidth, height);
-
-                    Color regionCenterColor;
-                    lock (colorComposition.KeyBitmap)
-                        regionCenterColor = BitmapUtils.GetRegionColor(colorComposition.KeyBitmap, regionCenter);
+                    Color regionCenterColor = keyColors[DeviceKeys.ADDITIONALLIGHT2];
 
                     if (!_colorKbCenter.Equals(regionCenterColor))
                     {
@@ -193,13 +172,7 @@ namespace Aurora.Devices.Clevo
                     if (e.Cancel) return false;
 
                     // Right Side
-                    BitmapRectangle keymapNumenter = Effects.GetBitmappingFromDeviceKey(DeviceKeys.NUM_ENTER);
-                    Rectangle regionRight = new Rectangle(Convert.ToInt32(keymapF11.Center.X),
-                        keymapEsc.Top, Convert.ToInt32(keymapNumenter.Center.X - keymapF11.Center.X), height);
-
-                    Color regionRightColor;
-                    lock (colorComposition.KeyBitmap)
-                        regionRightColor = BitmapUtils.GetRegionColor(colorComposition.KeyBitmap, regionRight);
+                    Color regionRightColor = keyColors[DeviceKeys.ADDITIONALLIGHT3];
 
                     if (!_colorKbRight.Equals(regionRightColor))
                     {

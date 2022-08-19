@@ -308,7 +308,6 @@ namespace Aurora
             var dcc = new DeviceColorComposition
             {
                 KeyColors = _keyColors,
-                KeyBitmap = _background.GetBitmap()
             };
             Global.dev_manager.UpdateDevices(dcc);
 
