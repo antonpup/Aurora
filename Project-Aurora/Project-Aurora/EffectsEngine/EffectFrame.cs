@@ -32,6 +32,15 @@ namespace Aurora.EffectsEngine
         }
 
         /// <summary>
+        /// Add overlay layer into the frame
+        /// </summary>
+        /// <param name="effectLayers">Array of layers to be added</param>
+        public void AddOverlayLayer(EffectLayer effectLayer)
+        {
+            over_layers.Enqueue(effectLayer);
+        }
+
+        /// <summary>
         /// Gets the queue of layers
         /// </summary>
         /// <returns>Queue of layers</returns>

@@ -260,7 +260,7 @@ namespace Aurora.Utils
     /// </remarks>
     public class ColorStopCollection : IEnumerable<KeyValuePair<float, D.Color>> {
 
-        private readonly SortedList<float, D.Color> stops = new SortedList<float, D.Color>();
+        private readonly SortedList<float, D.Color> _stops = new();
 
         /// <summary>
         /// Creates an empty ColorStopCollection.
@@ -290,11 +290,6 @@ namespace Aurora.Utils
         }
 
         /// <summary>
-        /// The number of stops in this stop collection.
-        /// </summary>
-        public int StopCount => stops.Count;
-
-        /// <summary>
         /// Gets or sets the color at the specified offset.
         /// When setting a value, a new color stop will be created at the given offset if one does not already exist.
         /// </summary>
@@ -311,28 +306,28 @@ namespace Aurora.Utils
         /// </summary>
         public D.Color GetColorAt(float offset) {
             // If there are no stops, return a transparent color
-            if (stops.Count == 0)
+            if (_stops.Count == 0)
                 return D.Color.Transparent;
 
             offset = Math.Max(Math.Min(offset, 1), 0);
 
             // First, check if the target offset is at a stop. If so, return the value of that stop.
-            if (stops.ContainsKey(offset))
-                return stops[offset];
-
+            if (_stops.ContainsKey(offset))
+                return _stops[offset];
+            
             // Next, check to see if the target offset is before the first stop or after the last, if so, return that stop.
-            if (offset < stops.First().Key)
-                return stops.First().Value;
-            if (offset > stops.Last().Key)
-                return stops.Last().Value;
+            if (offset < _stops.Keys[0])
+                return _stops.First().Value;
+            if (offset > _stops.Keys[_stops.Keys.Count - 1])
+                return _stops.Last().Value;
 
             // At this point, offset is determined to be between two stops, so find which two and then interpolate them.
-            for (var i = 1; i < stops.Count; i++) {
-                if (offset > stops.Keys[i - 1] && offset < stops.Keys[i])
+            for (var i = 1; i < _stops.Count; i++) {
+                if (offset > _stops.Keys[i - 1] && offset < _stops.Keys[i])
                     return ColorUtils.BlendColors(
-                        stops.Values[i - 1],
-                        stops.Values[i],
-                        (offset - stops.Keys[i - 1]) / (stops.Keys[i] - stops.Keys[i - 1])
+                        _stops.Values[i - 1],
+                        _stops.Values[i],
+                        (offset - _stops.Keys[i - 1]) / (_stops.Keys[i] - _stops.Keys[i - 1])
                     );
             }
 
@@ -344,10 +339,10 @@ namespace Aurora.Utils
         /// Sets the color at the specified offset to the given value.
         /// If an offset does not exist at this point, one will be created.
         /// </summary>
-        public void SetColorAt(float offset, D.Color color) {
-            if (offset < 0 || offset > 1)
+        private void SetColorAt(float offset, D.Color color) {
+            if (offset is < 0 or > 1)
                 throw new ArgumentOutOfRangeException(nameof(offset), $"Gradient stop at offset {offset} is out of range. Value must be between 0 and 1 (inclusive).");
-            stops[offset] = color;
+            _stops[offset] = color;
         }
 
         /// <summary>
@@ -355,12 +350,12 @@ namespace Aurora.Utils
         /// </summary>
         public M.LinearGradientBrush ToMediaBrush() {
             M.GradientStopCollection gsc;
-            if (stops.Count == 0)
+            if (_stops.Count == 0)
                 gsc = new M.GradientStopCollection(new[] { new M.GradientStop(M.Colors.Transparent, 0), new M.GradientStop(M.Colors.Transparent, 1) });
-            else if (stops.Count == 1)
-                gsc = new M.GradientStopCollection(new[] { new M.GradientStop(stops.Values[0].ToMediaColor(), 0), new M.GradientStop(stops.Values[0].ToMediaColor(), 1) });
+            else if (_stops.Count == 1)
+                gsc = new M.GradientStopCollection(new[] { new M.GradientStop(_stops.Values[0].ToMediaColor(), 0), new M.GradientStop(_stops.Values[0].ToMediaColor(), 1) });
             else
-                gsc = new M.GradientStopCollection(stops.Select(s => new M.GradientStop(s.Value.ToMediaColor(), s.Key)));
+                gsc = new M.GradientStopCollection(_stops.Select(s => new M.GradientStop(s.Value.ToMediaColor(), s.Key)));
             return new M.LinearGradientBrush(gsc);
         }
 
@@ -378,14 +373,14 @@ namespace Aurora.Utils
         /// <summary>
         /// Determines if this color stop collection contains the same stops as another collection.
         /// </summary>
-        public bool StopsEqual(ColorStopCollection other) => Enumerable.SequenceEqual(stops, other.stops);
+        public bool StopsEqual(ColorStopCollection other) => Enumerable.SequenceEqual(_stops, other._stops);
 
         #region IEnumerable
         /// <summary>Alias for <see cref="SetColorAt(float, D.Color)"/> to allow for list constructor syntax.</summary>
         public void Add(float offset, D.Color color) => SetColorAt(offset, color);
 
-        public IEnumerator<KeyValuePair<float, D.Color>> GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)stops).GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)stops).GetEnumerator();
+        public IEnumerator<KeyValuePair<float, D.Color>> GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)_stops).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<KeyValuePair<float, D.Color>>)_stops).GetEnumerator();
         #endregion
     }
 

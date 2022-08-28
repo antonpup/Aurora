@@ -22,7 +22,7 @@ namespace Aurora.Settings.Layers {
         protected override void SpawnParticles(double dt) {
             foreach (var key in awaitingKeys) {
                 Properties._Sequence = new KeySequence(new[] { key });
-                var count = rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount);
+                var count = Rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount);
                 for (var i = 0; i < count; i++)
                     SpawnParticle();
             }

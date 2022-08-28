@@ -268,6 +268,8 @@ namespace Aurora.Settings.Layers
         private readonly EffectLayer _ambilightLayer = new("Ambilight Layer");
         private ImageAttributes _imageAttributes = new();
 
+        private bool _invalidated; //properties changed
+
         #region Bindings
         public IEnumerable<string> Displays => _screenCapture.GetDisplays();
 
@@ -311,6 +313,13 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
+            if (_invalidated)
+            {
+                _ambilightLayer.Clear();
+                _screenBrush = null;
+                _invalidated = false;
+            }
+            
             //This is needed to prevent the layer from disappearing
             //for a frame when the user alt-tabs with the foregroundapp option selected
             if (TryGetCropRegion(out var newCropRegion))
@@ -444,7 +453,6 @@ namespace Aurora.Settings.Layers
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
@@ -466,8 +474,7 @@ namespace Aurora.Settings.Layers
 
             UpdateSpecificProcessHandle(Properties.SpecificProcess);
 
-            _ambilightLayer.Clear();
-            _screenBrush = null;
+            _invalidated = true;
         }
 
         private void ProcessesChanged(object sender, RunningProcessChanged args)

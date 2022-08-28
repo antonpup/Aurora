@@ -158,20 +158,21 @@ namespace Aurora.Settings.Layers {
     [LogicOverrideIgnoreProperty(nameof(LayerHandlerProperties._PrimaryColor))]
     public class SimpleParticleLayerHandler : ParticleLayerHandlerBase<SimpleParticle, SimpleParticleLayerProperties> {
 
-        private double nextSpawnInterval = 0; // How many seconds until next set of particle spawns
+        private double _nextSpawnInterval; // How many seconds until next set of particle spawns
         
         protected override UserControl CreateControl() => new Control_ParticleLayer(this);
 
-        protected override void SpawnParticles(double dt) {
-            if (Properties.SpawningEnabled) {
-                nextSpawnInterval -= dt;
-                if (nextSpawnInterval < 0) {
-                    var count = rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1);
-                    for (var i = 0; i < count; i++)
-                        SpawnParticle();
-                    nextSpawnInterval = RandomBetween(Properties.MinSpawnTime, Properties.MaxSpawnTime);
-                }
-            }
+        protected override void SpawnParticles(double dt)
+        {
+            if (!Properties.SpawningEnabled) return;
+            _nextSpawnInterval -= dt;
+
+            if (!(_nextSpawnInterval < 0)) return;
+
+            var count = Rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1);
+            for (var i = 0; i < count; i++)
+                SpawnParticle();
+            _nextSpawnInterval = RandomBetween(Properties.MinSpawnTime, Properties.MaxSpawnTime);
         }
     }
 
@@ -182,35 +183,46 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     public class SimpleParticle : IParticle<SimpleParticleLayerProperties> {
 
-        private static readonly Random rnd = new Random();
+        private static readonly Random Rnd = new();
+        
+        private PointF _position;
 
-        public float PositionX { get; set; }
-        public float PositionY { get; set; }
-        public float VelocityX { get; set; }
-        public float VelocityY { get; set; }
-        public float Size { get; set; }
-        public double Lifetime { get; set; }
-        public double MaxLifetime { get; set; }
+        private float PositionX
+        {
+            get => _position.X;
+            set => _position.X = value;
+        }
+
+        private float PositionY
+        {
+            get => _position.Y;
+            set => _position.Y = value;
+        }
+        private float VelocityX { get; set; }
+        private float VelocityY { get; set; }
+        private float Size { get; set; }
+        private double Lifetime { get; set; }
+        private double MaxLifetime { get; }
 
         /// <summary>
         /// When the particle is created, randomise it's position and velocity according to the properties and canvas size.
         /// </summary>
         public SimpleParticle(SimpleParticleLayerProperties properties) {
             var ar = properties.Sequence.GetAffectedRegion();
-            MaxLifetime = (float)((rnd.NextDouble() * (properties.MaxLifetime - properties.MinLifetime)) + properties.MinLifetime);
-            VelocityX = (float)((rnd.NextDouble() * (properties.MaxInitialVelocityX - properties.MinInitialVelocityX)) + properties.MinInitialVelocityX);
-            VelocityY = (float)((rnd.NextDouble() * (properties.MaxInitialVelocityY - properties.MinInitialVelocityY)) + properties.MinInitialVelocityY);
+            MaxLifetime = (float)(Rnd.NextDouble() * (properties.MaxLifetime - properties.MinLifetime) + properties.MinLifetime);
+            VelocityX = (float)(Rnd.NextDouble() * (properties.MaxInitialVelocityX - properties.MinInitialVelocityX) + properties.MinInitialVelocityX);
+            VelocityY = (float)(Rnd.NextDouble() * (properties.MaxInitialVelocityY - properties.MinInitialVelocityY) + properties.MinInitialVelocityY);
             PositionX
                 = properties.SpawnLocation == ParticleSpawnLocations.LeftEdge ? 0 // For left edge, X should start at 0
                 : properties.SpawnLocation == ParticleSpawnLocations.RightEdge ? Effects.CanvasWidth // For right edge, X should start at maximum width
-                : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Left + (float)(rnd.NextDouble() * ar.Width)// For region, randomly choose X in region
-                : (float)(rnd.NextDouble() * Effects.CanvasWidth); // For top, bottom or random, randomly choose an X value
+                : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Left + (float)(Rnd.NextDouble() * ar.Width)// For region, randomly choose X in region
+                : (float)(Rnd.NextDouble() * Effects.CanvasWidth); // For top, bottom or random, randomly choose an X value
             PositionY
                 = properties.SpawnLocation == ParticleSpawnLocations.TopEdge ? 0 // For top edge, Y should start at 0
                 : properties.SpawnLocation == ParticleSpawnLocations.BottomEdge ? Effects.CanvasHeight // For bottom edge, Y should start at maximum height
-                : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
-                : (float)(rnd.NextDouble() * Effects.CanvasHeight); // For left, right or random, randomly choose a Y value
-            Size = (float)(rnd.NextDouble() * (properties.MaxSize - properties.MinSize)) + properties.MinSize;
+                : properties.SpawnLocation == ParticleSpawnLocations.Region ? ar.Top + (float)(Rnd.NextDouble() * ar.Height)// For region, randomly choose Y in region
+                : (float)(Rnd.NextDouble() * Effects.CanvasHeight); // For left, right or random, randomly choose a Y value
+            Size = (float)(Rnd.NextDouble() * (properties.MaxSize - properties.MinSize)) + properties.MinSize;
         }
 
         /// <summary>
@@ -218,9 +230,14 @@ namespace Aurora.Settings.Layers {
         /// </summary>
         public bool IsAlive(SimpleParticleLayerProperties properties, IGameState gameState) => Lifetime < MaxLifetime;
 
+        private readonly SolidBrush _solidBrush = new(Color.Transparent);
         public void Render(Graphics gfx, SimpleParticleLayerProperties properties, IGameState gameState) {
+            var color = properties.ParticleColorStops.GetColorAt((float)(Lifetime / MaxLifetime));
+            _solidBrush.Color = color;
+            
             var s2 = Size / 2;
-            gfx.FillEllipse(new SolidBrush(properties.ParticleColorStops.GetColorAt((float)(Lifetime / MaxLifetime))), new RectangleF(PositionX - s2, PositionY - s2, Size, Size));
+            var rectangleF = new RectangleF(PositionX - s2, PositionY - s2, Size, Size);
+            gfx.FillEllipse(_solidBrush, rectangleF);
         }
 
         /// <summary>
@@ -231,7 +248,8 @@ namespace Aurora.Settings.Layers {
             VelocityX += (float)(properties.AccelerationX * deltaTime);
             VelocityY += (float)(properties.AccelerationY * deltaTime);
             VelocityX *= (float)Math.Pow(1 - properties.DragX, deltaTime); // By powering the drag to the deltaTime, we ensure that the results are fairly consistent over different time deltas.
-            VelocityY *= (float)Math.Pow(1 - properties.DragY, deltaTime); // Doing it once over a second won't be 100% the same as doing it twice over a second if acceleration is present, but it should be close enough that it won't be noticed under most cicrumstances
+            VelocityY *= (float)Math.Pow(1 - properties.DragY, deltaTime); // Doing it once over a second won't be 100% the same as doing it twice over a second if acceleration is present,
+                                                                           // but it should be close enough that it won't be noticed under most cicrumstances
             PositionX += VelocityX;
             PositionY += VelocityY;
             Size += (float)(properties.DeltaSize * deltaTime);

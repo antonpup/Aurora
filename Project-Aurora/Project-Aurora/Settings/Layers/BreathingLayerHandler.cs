@@ -43,8 +43,7 @@ namespace Aurora.Settings.Layers
 
     public class BreathingLayerHandler : LayerHandler<BreathingLayerHandlerProperties>
     {
-        EffectLayer breathing_layer = new("Breathing Layer");
-        private float _currentSine;
+        private readonly EffectLayer _breathingLayer = new("Breathing Layer");
 
         private Color _currentPrimaryColor = Color.Transparent;
         private Color _currentSecondaryColor = Color.Transparent;
@@ -56,21 +55,21 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            _currentSine = (float)Math.Pow(Math.Sin((double)((Time.GetMillisecondsSinceEpoch() % 10000L) / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2);
+            var currentSine = (float)Math.Pow(Math.Sin((double)(Time.GetMillisecondsSinceEpoch() % 10000L / 10000.0f) * 2 * Math.PI * Properties.EffectSpeed), 2);
 
-            if (_currentSine <= 0.0025f * Properties.EffectSpeed && Properties.RandomSecondaryColor)
+            if (currentSine <= 0.0025f * Properties.EffectSpeed && Properties.RandomSecondaryColor)
                 _currentSecondaryColor = ColorUtils.GenerateRandomColor();
             else if(!Properties.RandomSecondaryColor)
                 _currentSecondaryColor = Properties.SecondaryColor;
 
-            if (_currentSine >= 1.0f - (0.0025f * Properties.EffectSpeed) && Properties.RandomPrimaryColor)
+            if (currentSine >= 1.0f - 0.0025f * Properties.EffectSpeed && Properties.RandomPrimaryColor)
                 _currentPrimaryColor = ColorUtils.GenerateRandomColor();
             else if (!Properties.RandomPrimaryColor)
                 _currentPrimaryColor = Properties.PrimaryColor;
 
-            breathing_layer.Set(Properties.Sequence, ColorUtils.BlendColors(_currentPrimaryColor, _currentSecondaryColor, _currentSine));
+            _breathingLayer.Set(Properties.Sequence, ColorUtils.BlendColors(_currentPrimaryColor, _currentSecondaryColor, currentSine));
 
-            return breathing_layer;
+            return _breathingLayer;
         }
     }
 }

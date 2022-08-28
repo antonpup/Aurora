@@ -92,9 +92,17 @@ namespace Aurora.Settings.Layers
 
         public virtual void Default()
         {
+            if (Logic != null)
+            {
+                Logic.PropertyChanged -= OnPropertiesChanged;
+            }
             Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true });
             Logic.PropertyChanged += OnPropertiesChanged;
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+            if (_Sequence != null)
+            {
+                _Sequence.freeform.ValuesChanged -= OnPropertiesChanged;
+            }
             _Sequence = new KeySequence();
             _Sequence.freeform.ValuesChanged += OnPropertiesChanged;
         }
@@ -214,6 +222,7 @@ namespace Aurora.Settings.Layers
             get => _properties;
             set
             {
+                _properties.Sequence.freeform.ValuesChanged -= PropertiesChanged;
                 _properties.PropertyChanged -= PropertiesChanged;
                 _properties = value;
                 value.PropertyChanged += PropertiesChanged;

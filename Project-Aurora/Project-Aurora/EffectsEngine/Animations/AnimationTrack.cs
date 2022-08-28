@@ -96,9 +96,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             time = NormalizeTime(time);
 
-            if (time > _animationDuration || _animations.Count == 0)
-                return false;
-            return true;
+            return !(time > _animationDuration) && _animations.Count != 0;
         }
 
         public AnimationTrack SetFrame(float time, AnimationFrame animframe)

@@ -1,240 +1,245 @@
-﻿using Aurora.EffectsEngine;
-using Aurora.EffectsEngine.Animations;
-using Aurora.Settings;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using Aurora.Devices;
+using Aurora.EffectsEngine;
+using Aurora.EffectsEngine.Animations;
+using Aurora.Settings;
+using Aurora.Utils;
 
 namespace Aurora.Profiles.Desktop
 {
     public class Event_Idle : LightEvent
     {
-        private long previoustime = 0;
-        private long currenttime = 0;
+	    private readonly EffectLayer _layer = new("IDLE");
 
-        private Random randomizer;
+        private long _previousTime;
+        private long _currentTime;
 
-        private LayerEffectConfig effect_cfg = new LayerEffectConfig();
+        private readonly Random _randomizer;
 
-        private Devices.DeviceKeys[] allKeys = Enum.GetValues(typeof(Devices.DeviceKeys)).Cast<Devices.DeviceKeys>().ToArray();
-        private Dictionary<Devices.DeviceKeys, float> stars = new Dictionary<Devices.DeviceKeys, float>();
-        private Dictionary<Devices.DeviceKeys, float> raindrops = new Dictionary<Devices.DeviceKeys, float>();
-        private AnimationMix matrix_lines = new AnimationMix().SetAutoRemove(true); //This will be an infinite Mix
-        long nextstarset = 0L;
+        private readonly LayerEffectConfig _effectCfg = new();
 
-        private float getDeltaTime()
-        {
-            return (currenttime - previoustime) / 1000.0f;
-        }
+        private readonly DeviceKeys[] _allKeys = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>().ToArray();
+        
+        private readonly Brush _dimBrush = new SolidBrush(Color.FromArgb(125, 0, 0, 0));
+        
+        private readonly SolidBrush _idEffectSecondaryColorBrush = new(Color.White);
+        
+        private readonly Dictionary<DeviceKeys, float> _stars = new();
+        private long _nextStarSet;
+        
+        private readonly Dictionary<DeviceKeys, float> _raindrops = new();
+        private ColorSpectrum _dropSpec = new(Global.Configuration.IdleEffectPrimaryColor, Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
+        private ColorSpectrum _dropSpec2 = new(Global.Configuration.IdleEffectPrimaryColor, Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
+        
+        private readonly AnimationMix _matrixLines = new AnimationMix().SetAutoRemove(true); //This will be an infinite Mix
 
         public Event_Idle()
         {
-            randomizer = new Random();
+	        _randomizer = new Random();
 
-            previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+	        _previousTime = _currentTime;
+	        _currentTime = Time.GetMillisecondsSinceEpoch();
+	        
+	        Global.Configuration.PropertyChanged += IdleTypeChanged;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+	        if (disposing)
+	        {
+		        Global.Configuration.PropertyChanged -= IdleTypeChanged;
+	        }
+        }
+
+        public sealed override void Dispose()
+        {
+	        Dispose(true);
+	        GC.SuppressFinalize(this);
+        }
+
+        private bool _invalidated;
+        private void IdleTypeChanged(object sender, PropertyChangedEventArgs e)
+        {
+	        _dropSpec = new ColorSpectrum(Global.Configuration.IdleEffectPrimaryColor, Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
+	        _dropSpec2 = new ColorSpectrum(Global.Configuration.IdleEffectPrimaryColor, Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
+	        _invalidated = true;
+        }
+
+
+        private float GetDeltaTime()
+        {
+            return (_currentTime - _previousTime) / 1000.0f;
         }
         
         public override void UpdateLights(EffectFrame frame)
         {
-            previoustime = currenttime;
-            currenttime = Utils.Time.GetMillisecondsSinceEpoch();
+	        if (_invalidated)
+	        {
+		        _layer.Fill(Brushes.Transparent);
+		        _invalidated = false;
+	        }
+	        
+            _previousTime = _currentTime;
+            _currentTime = Time.GetMillisecondsSinceEpoch();
 
-            Queue<EffectLayer> layers = new Queue<EffectLayer>();
-            EffectLayer layer;
-
-            effect_cfg.speed = Global.Configuration.IdleSpeed;
-
+            _effectCfg.speed = Global.Configuration.IdleSpeed;
+            _idEffectSecondaryColorBrush.Color = Global.Configuration.IdleEffectSecondaryColor;
             switch (Global.Configuration.IdleType)
             {
                 case IdleEffects.Dim:
-                    layer = new EffectLayer("Idle - Dim");
-
-                    layer.FillOver(Color.FromArgb(125, 0, 0, 0));
-
-                    layers.Enqueue(layer);
+                    _layer.Fill(_dimBrush);
                     break;
                 case IdleEffects.ColorBreathing:
-                    layer = new EffectLayer("Idle - Color Breathing");
+                    _layer.Fill(_idEffectSecondaryColorBrush);
 
-                    Color breathe_bg_color = Global.Configuration.IdleEffectSecondaryColor;
-                    layer.FillOver(breathe_bg_color);
+                    var sine = (float)Math.Pow(Math.Sin((double)(_currentTime % 10000L / 10000.0f) * 2 * Math.PI * Global.Configuration.IdleSpeed), 2);
 
-                    float sine = (float)Math.Pow(Math.Sin((double)((currenttime % 10000L) / 10000.0f) * 2 * Math.PI * Global.Configuration.IdleSpeed), 2);
-
-                    layer.FillOver(Color.FromArgb((byte)(sine * 255), Global.Configuration.IdleEffectPrimaryColor));
-
-                    layers.Enqueue(layer);
+                    _layer.FillOver(Color.FromArgb((byte)(sine * 255), Global.Configuration.IdleEffectPrimaryColor));
                     break;
                 case IdleEffects.RainbowShift_Horizontal:
-                    layer = new EffectLayer("Idle - Rainbow Shift (Horizontal)", LayerEffects.RainbowShift_Horizontal, effect_cfg);
-
-                    layers.Enqueue(layer);
+                    _layer.DrawGradient(LayerEffects.RainbowShift_Horizontal, _effectCfg);
                     break;
                 case IdleEffects.RainbowShift_Vertical:
-                    layer = new EffectLayer("Idle - Rainbow Shift (Vertical)", LayerEffects.RainbowShift_Vertical, effect_cfg);
-
-                    layers.Enqueue(layer);
+	                _layer.DrawGradient(LayerEffects.RainbowShift_Vertical, _effectCfg);
                     break;
                 case IdleEffects.StarFall:
-                    layer = new EffectLayer("Idle - Starfall");
-
-                    if (nextstarset < currenttime)
+                    if (_nextStarSet < _currentTime)
                     {
-                        for (int x = 0; x < Global.Configuration.IdleAmount; x++)
+                        for (var x = 0; x < Global.Configuration.IdleAmount; x++)
                         {
-                            Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
-                            if (stars.ContainsKey(star))
-                                stars[star] = 1.0f;
+                            var star = _allKeys[_randomizer.Next(_allKeys.Length)];
+                            if (_stars.ContainsKey(star))
+                                _stars[star] = 1.0f;
                             else
-                                stars.Add(star, 1.0f);
+                                _stars.Add(star, 1.0f);
                         }
 
-                        nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
+                        _nextStarSet = _currentTime + (long)(1000L * Global.Configuration.IdleFrequency);
                     }
 
-                    layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
+                    _layer.Fill(_idEffectSecondaryColorBrush);
 
-                    Devices.DeviceKeys[] stars_keys = stars.Keys.ToArray();
+                    var starsKeys = _stars.Keys.ToArray();
 
-                    foreach (Devices.DeviceKeys star in stars_keys)
+                    foreach (var star in starsKeys)
                     {
-                        layer.Set(star, Utils.ColorUtils.MultiplyColorByScalar(Global.Configuration.IdleEffectPrimaryColor, stars[star]));
-                        stars[star] -= getDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
+                        _layer.Set(star, ColorUtils.BlendColors(Color.Black, Global.Configuration.IdleEffectPrimaryColor, _stars[star]));
+                        _stars[star] -= GetDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
                     }
-
-                    layers.Enqueue(layer);
                     break;
                 case IdleEffects.RainFall:
-                    layer = new EffectLayer("Idle - Rainfall");
-
-                    if (nextstarset < currenttime)
+                    if (_nextStarSet < _currentTime)
                     {
-                        for (int x = 0; x < Global.Configuration.IdleAmount; x++)
+                        for (var x = 0; x < Global.Configuration.IdleAmount; x++)
                         {
-                            Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
-                            if (raindrops.ContainsKey(star))
-                                raindrops[star] = 1.0f;
+                            var star = _allKeys[_randomizer.Next(_allKeys.Length)];
+                            if (_raindrops.ContainsKey(star))
+                                _raindrops[star] = 1.0f;
                             else
-                                raindrops.Add(star, 1.0f);
+                                _raindrops.Add(star, 1.0f);
                         }
 
-                        nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
+                        _nextStarSet = _currentTime + (long)(1000L * Global.Configuration.IdleFrequency);
                     }
 
-                    layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
+                    _layer.Fill(_idEffectSecondaryColorBrush);
 
-                    Devices.DeviceKeys[] raindrops_keys = raindrops.Keys.ToArray();
+                    var raindropsKeys = _raindrops.Keys.ToArray();
 
-                    ColorSpectrum drop_spec = new ColorSpectrum(Global.Configuration.IdleEffectPrimaryColor, Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
-
-                    foreach (Devices.DeviceKeys raindrop in raindrops_keys)
+                    foreach (var raindrop in raindropsKeys)
                     {
-                        PointF pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
+                        var pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
 
-                        float transition_value = 1.0f - raindrops[raindrop];
-                        float radius = transition_value * Effects.CanvasBiggest;
+                        var transitionValue = 1.0f - _raindrops[raindrop];
+                        var radius = transitionValue * Effects.CanvasBiggest;
 
-                        using(Graphics g = layer.GetGraphics())
-                            g.DrawEllipse(new Pen(drop_spec.GetColorAt(transition_value), 2),
+                        using(var g = _layer.GetGraphics())
+                            g.DrawEllipse(new Pen(_dropSpec.GetColorAt(transitionValue), 2),
                                 pt.X - radius,
                                 pt.Y - radius,
                                 2 * radius,
                                 2 * radius);
 
-                        raindrops[raindrop] -= getDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
+                        _raindrops[raindrop] -= GetDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
                     }
-
-                    layers.Enqueue(layer);
                     break;
                 case IdleEffects.Blackout:
-                    layer = new EffectLayer("Idle - Blackout");
-
-                    layer.FillOver(Color.Black);
-
-                    layers.Enqueue(layer);
+                    _layer.Fill(Brushes.Black);
                     break;
                 case IdleEffects.Matrix:
-                    layer = new EffectLayer("Idle - Matrix");
-
-                    if (nextstarset < currenttime)
+                    if (_nextStarSet < _currentTime)
                     {
-                        Color darker_primary = Utils.ColorUtils.MultiplyColorByScalar(Global.Configuration.IdleEffectPrimaryColor, 0.50);
+                        var darkerPrimary = ColorUtils.MultiplyColorByScalar(Global.Configuration.IdleEffectPrimaryColor, 0.50);
 
-                        for (int x = 0; x < Global.Configuration.IdleAmount; x++)
+                        for (var x = 0; x < Global.Configuration.IdleAmount; x++)
                         {
-                            int width_start = randomizer.Next(Effects.CanvasWidth);
-                            float delay = randomizer.Next(550) / 100.0f;
-                            int random_id = randomizer.Next(125536789);
+                            var widthStart = _randomizer.Next(Effects.CanvasWidth);
+                            var delay = _randomizer.Next(550) / 100.0f;
+                            var randomId = _randomizer.Next(125536789);
 
                             //Create animation
-                            AnimationTrack matrix_line =
-                                new AnimationTrack("Matrix Line (Head) " + random_id, 0.0f).SetFrame(
-                                    0.0f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, -3, width_start, 0, Global.Configuration.IdleEffectPrimaryColor, 3)).SetFrame(
-                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.CanvasHeight, width_start, Effects.CanvasHeight + 3, Global.Configuration.IdleEffectPrimaryColor, 3)).SetShift(
-                                    (currenttime % 1000000L) / 1000.0f + delay
+                            var matrixLine =
+                                new AnimationTrack("Matrix Line (Head) " + randomId, 0.0f).SetFrame(
+                                    0.0f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(widthStart, -3, widthStart, 0, Global.Configuration.IdleEffectPrimaryColor, 3)).SetFrame(
+                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(widthStart, Effects.CanvasHeight, widthStart, Effects.CanvasHeight + 3, Global.Configuration.IdleEffectPrimaryColor, 3)).SetShift(
+                                    _currentTime % 1000000L / 1000.0f + delay
                                     );
 
-                            AnimationTrack matrix_line_trail =
-                                new AnimationTrack("Matrix Line (Trail) " + random_id, 0.0f).SetFrame(
-                                    0.0f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, -12, width_start, -3, darker_primary, 3)).SetFrame(
-                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.CanvasHeight - 12, width_start, Effects.CanvasHeight, darker_primary, 3)).SetFrame(
-                                    0.75f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(width_start, Effects.CanvasHeight, width_start, Effects.CanvasHeight, darker_primary, 3)).SetShift(
-                                    (currenttime % 1000000L) / 1000.0f + delay
+                            var matrixLineTrail =
+                                new AnimationTrack("Matrix Line (Trail) " + randomId, 0.0f).SetFrame(
+                                    0.0f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(widthStart, -12, widthStart, -3, darkerPrimary, 3)).SetFrame(
+                                    0.5f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(widthStart, Effects.CanvasHeight - 12, widthStart, Effects.CanvasHeight, darkerPrimary, 3)).SetFrame(
+                                    0.75f * 1.0f / (0.05f * Global.Configuration.IdleSpeed), new AnimationLine(widthStart, Effects.CanvasHeight, widthStart, Effects.CanvasHeight, darkerPrimary, 3)).SetShift(
+                                    _currentTime % 1000000L / 1000.0f + delay
                                     );
 
-                            matrix_lines.AddTrack(matrix_line);
-                            matrix_lines.AddTrack(matrix_line_trail);
+                            _matrixLines.AddTrack(matrixLine);
+                            _matrixLines.AddTrack(matrixLineTrail);
                         }
 
-                        nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
+                        _nextStarSet = _currentTime + (long)(1000L * Global.Configuration.IdleFrequency);
                     }
 
-                    layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
+                    _layer.Fill(_idEffectSecondaryColorBrush);
 
-                    using (Graphics g = layer.GetGraphics())
+                    using (var g = _layer.GetGraphics())
                     {
-                        matrix_lines.Draw(g, (currenttime % 1000000L) / 1000.0f);
+                        _matrixLines.Draw(g, (_currentTime % 1000000L) / 1000.0f);
                     }
-
-                    layers.Enqueue(layer);
                     break;
                 case IdleEffects.RainFallSmooth:
-					layer = new EffectLayer("Idle - RainfallSmooth");
-
-					if (nextstarset < currenttime)
+					if (_nextStarSet < _currentTime)
 					{
-						for (int x = 0; x < Global.Configuration.IdleAmount; x++)
+						for (var x = 0; x < Global.Configuration.IdleAmount; x++)
 						{
-							Devices.DeviceKeys star = allKeys[randomizer.Next(allKeys.Length)];
-							if (raindrops.ContainsKey(star))
-								raindrops[star] = 1.0f;
+							var star = _allKeys[_randomizer.Next(_allKeys.Length)];
+							if (_raindrops.ContainsKey(star))
+								_raindrops[star] = 1.0f;
 							else
-								raindrops.Add(star, 1.0f);
+								_raindrops.Add(star, 1.0f);
 						}
 
-						nextstarset = currenttime + (long)(1000L * Global.Configuration.IdleFrequency);
+						_nextStarSet = _currentTime + (long)(1000L * Global.Configuration.IdleFrequency);
 					}
-					layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
+					_layer.FillOver(Global.Configuration.IdleEffectSecondaryColor);
 
-					ColorSpectrum drop_spec2 = new ColorSpectrum(
-						Global.Configuration.IdleEffectPrimaryColor,
-						Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
-
-					var drops = raindrops.Keys.ToArray().Select(d =>
+					var drops = _raindrops.Keys.ToArray().Select(d =>
 					{
-						PointF pt = Effects.GetBitmappingFromDeviceKey(d).Center;
-						float transitionValue = 1.0f - raindrops[d];
-						float radius = transitionValue * Effects.CanvasBiggest;
-						raindrops[d] -= getDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
-						return new Tuple<Devices.DeviceKeys, PointF, float, float>(d, pt, transitionValue, radius);
+						var pt = Effects.GetBitmappingFromDeviceKey(d).Center;
+						var transitionValue = 1.0f - _raindrops[d];
+						var radius = transitionValue * Effects.CanvasBiggest;
+						_raindrops[d] -= GetDeltaTime() * 0.05f * Global.Configuration.IdleSpeed;
+						return new Tuple<DeviceKeys, PointF, float, float>(d, pt, transitionValue, radius);
 
 					}).Where(d => d.Item3 <= 1.5).ToArray();
 
-					float circleHalfThickness = 1f;
+					var circleHalfThickness = 1f;
 
-					foreach (var key in allKeys)
+					foreach (var key in _allKeys)
 					{
 						var keyInfo = Effects.GetBitmappingFromDeviceKey(key);
 
@@ -267,30 +272,22 @@ namespace Aurora.Profiles.Desktop
 
 							if (percent > 0)
 							{
-								layer.Set(key, (Color)EffectColor.BlendColors(
-									new EffectColor(layer.Get(key)),
-									new EffectColor(drop_spec2.GetColorAt(raindrop.Item3)), percent));
+								_layer.Set(key, (Color)EffectColor.BlendColors(
+									new EffectColor(_layer.Get(key)),
+									new EffectColor(_dropSpec2.GetColorAt(raindrop.Item3)), percent));
 							}
 						}
 					}
-					layers.Enqueue(layer);
 					break;
-                default:
-                    break;
             }
 
-            frame.AddOverlayLayers(layers.ToArray());
+            frame.AddOverlayLayer(_layer);
         }
 
-        public override void SetGameState(IGameState new_game_state)
+        public override void SetGameState(IGameState newGameState)
         {
             //This event does not take a game state
             //UpdateLights(frame);
-        }
-
-        public new bool IsEnabled
-        {
-            get { return true; }
         }
     }
 }

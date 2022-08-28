@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using static System.Linq.Expressions.Expression;
@@ -32,7 +34,6 @@ namespace Aurora.Settings.Layers {
         }
     }
 
-
     /// <summary>
     /// The base particle layer handler which manages and renders a collection of particles.<para/>
     /// The behaviour of the particle is determined by the particle implementation.
@@ -43,34 +44,37 @@ namespace Aurora.Settings.Layers {
         where TParticle : IParticle<TProperties>
         where TProperties : ParticleLayerPropertiesBase<TProperties> {
 
-        // Lazy-instantiated lambda that creates a new particle (since using Activator.CreateInstance can be slow)
-        private static readonly Lazy<Func<TProperties, TParticle>> spawnLambda = new Lazy<Func<TProperties, TParticle>>(() => {
-            var ctor = typeof(TParticle).GetConstructor(new[] { typeof(TProperties) });
-            var tpropParam = Parameter(typeof(TProperties));
-            return Lambda<Func<TProperties, TParticle>>(
-                New(ctor, tpropParam),
-                tpropParam
-            ).Compile();
-        });
+        private static readonly Func<TProperties, TParticle> SpawnLambda;
 
-        protected static readonly Random rnd = new Random();
-        protected readonly Stopwatch stopwatch = new Stopwatch(); // Stopwatch to determine time difference since last render
-        protected readonly List<TParticle> particles = new List<TParticle>(); // All the currently active "alive" particles
+        protected static readonly Random Rnd = new();
+        private readonly Stopwatch _stopwatch = new(); // Stopwatch to determine time difference since last render
+        private readonly List<TParticle> _particles = new(); // All the currently active "alive" particles
 
         public event EventHandler<Bitmap> LayerRender; // Fires whenever the layer is rendered
 
+        static ParticleLayerHandlerBase()
+        {
+            var particleCtor = typeof(TParticle).GetConstructor(new[] {typeof(TProperties)});
+            var tpropParam = Parameter(typeof(TProperties));
+            SpawnLambda = Lambda<Func<TProperties, TParticle>>(
+                New(particleCtor, tpropParam),
+                tpropParam
+            ).Compile();
+        }
+
         protected override abstract UserControl CreateControl();
 
+        private readonly EffectLayer _layer = new();
         public override EffectLayer Render(IGameState gameState) {
-            var layer = new EffectLayer();
 
             // Get elapsed time since last render
-            var dt = stopwatch.ElapsedMilliseconds / 1000d;
-            stopwatch.Restart();
+            var dt = _stopwatch.ElapsedMilliseconds / 1000d;
+            _stopwatch.Restart();
 
             // Update and render all particles
-            using (var gfx = layer.GetGraphics()) {
-                foreach (var particle in particles) {
+            using (var gfx = _layer.GetGraphics()) {
+                _layer.Clear();
+                foreach (var particle in _particles) {
                     particle.Update(dt, Properties, gameState);
                     if (particle.IsAlive(Properties, gameState))
                         particle.Render(gfx, Properties, gameState);
@@ -81,12 +85,12 @@ namespace Aurora.Settings.Layers {
             SpawnParticles(dt);
 
             // Remove any particles that have expired
-            particles.RemoveAll(p => !p.IsAlive(Properties, gameState));
+            _particles.RemoveAll(p => !p.IsAlive(Properties, gameState));
 
             // Call the render event
-            LayerRender?.Invoke(this, layer.GetBitmap());
+            LayerRender?.Invoke(this, _layer.GetBitmap());
 
-            return layer;
+            return _layer;
         }
 
         /// <summary>
@@ -99,12 +103,12 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Creates a new particle and returns it. By default, calls a constructor on <typeparamref name="TParticle"/> with a single <typeparamref name="TParticle"/> parameter.
         /// </summary>
-        protected virtual void SpawnParticle() => particles.Add(spawnLambda.Value(Properties));
+        protected virtual void SpawnParticle() => _particles.Add(SpawnLambda(Properties));
 
         /// <summary>
         /// Picks a random floating point number between the two given numbers.
         /// </summary>
-        protected static float RandomBetween(float a, float b) => (float)((rnd.NextDouble() * (b - a)) + a);
+        protected static float RandomBetween(float a, float b) => (float)(Rnd.NextDouble() * (b - a) + a);
     }
 
 

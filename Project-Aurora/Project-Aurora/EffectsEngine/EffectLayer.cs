@@ -117,15 +117,10 @@ namespace Aurora.EffectsEngine
         /// <param name="effect">An enum specifying which LayerEffect to apply</param>
         /// <param name="effectConfig">Configurations for the LayerEffect</param>
         /// <param name="rect">A rectangle specifying what region to apply effects in</param>
-        public EffectLayer(string name, LayerEffects effect, LayerEffectConfig effectConfig, RectangleF rect = new())
+        public void DrawGradient(LayerEffects effect, LayerEffectConfig effectConfig, RectangleF rect = new())
         {
-            _name = name;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-            _peripheral = new Color();
-            Brush brush;
+            Clear();
+            LinearGradientBrush brush;
             var shift = 0.0f;
 
             switch (effect)
@@ -135,7 +130,7 @@ namespace Aurora.EffectsEngine
                     break;
                 case LayerEffects.ColorBreathing:
                     FillOver(effectConfig.primary);
-                    float sine = (float)Math.Pow(Math.Sin((double)(Time.GetMillisecondsSinceEpoch() % 10000L / 10000.0f) * 2 * Math.PI * effectConfig.speed), 2);
+                    var sine = (float)Math.Pow(Math.Sin((double)(Time.GetMillisecondsSinceEpoch() % 10000L / 10000.0f) * 2 * Math.PI * effectConfig.speed), 2);
                     FillOver(Color.FromArgb((byte)(sine * 255), effectConfig.secondary));
                     break;
                 case LayerEffects.RainbowShift_Horizontal:
@@ -149,8 +144,8 @@ namespace Aurora.EffectsEngine
                         shift *= -1.0f;
 
                     brush = CreateRainbowBrush();
-                    (brush as LinearGradientBrush).RotateTransform(0.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                    brush.RotateTransform(0.0f);
+                    brush.TranslateTransform(shift, shift);
 
                     Fill(brush);
 
@@ -167,8 +162,8 @@ namespace Aurora.EffectsEngine
                         shift *= -1.0f;
 
                     brush = CreateRainbowBrush();
-                    (brush as LinearGradientBrush).RotateTransform(90.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                    brush.RotateTransform(90.0f);
+                    brush.TranslateTransform(shift, shift);
 
                     Fill(brush);
 
@@ -185,8 +180,8 @@ namespace Aurora.EffectsEngine
                         shift *= -1.0f;
 
                     brush = CreateRainbowBrush();
-                    (brush as LinearGradientBrush).RotateTransform(45.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                    brush.RotateTransform(45.0f);
+                    brush.TranslateTransform(shift, shift);
 
                     Fill(brush);
 
@@ -203,8 +198,8 @@ namespace Aurora.EffectsEngine
                         shift *= -1.0f;
 
                     brush = CreateRainbowBrush();
-                    (brush as LinearGradientBrush).RotateTransform(-45.0f);
-                    (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                    brush.RotateTransform(-45.0f);
+                    brush.TranslateTransform(shift, shift);
 
                     Fill(brush);
 
@@ -222,14 +217,15 @@ namespace Aurora.EffectsEngine
                         shift *= -1.0f;
 
                     brush = CreateRainbowBrush();
-                    (brush as LinearGradientBrush).RotateTransform(effectConfig.angle);
-                    (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                    brush.RotateTransform(effectConfig.angle);
+                    brush.TranslateTransform(shift, shift);
 
                     Fill(brush);
 
                     effectConfig.last_effect_call = Time.GetMillisecondsSinceEpoch();
                     break;
                 case LayerEffects.GradientShift_Custom_Angle:
+                {
                     effectConfig.shift_amount += (Time.GetMillisecondsSinceEpoch() - effectConfig.last_effect_call) / 1000.0f * 0.067f * effectConfig.speed;
                     effectConfig.shift_amount %= Effects.CanvasBiggest;
 
@@ -246,23 +242,23 @@ namespace Aurora.EffectsEngine
                     if (effectConfig.animation_reverse)
                         shift *= -1.0f;
 
-                    brush = effectConfig.brush.GetDrawingBrush();
+                    brush = (LinearGradientBrush) effectConfig.brush.GetDrawingBrush();
                     switch (effectConfig.brush.type)
                     {
                         case EffectBrush.BrushType.Linear:
                         {
                             if (!rect.IsEmpty)
                             {
-                                (brush as LinearGradientBrush).TranslateTransform(rect.X, rect.Y);
-                                (brush as LinearGradientBrush).ScaleTransform(rect.Width * 100 / effectConfig.gradient_size, rect.Height * 100 / effectConfig.gradient_size);
+                                brush.TranslateTransform(rect.X, rect.Y);
+                                brush.ScaleTransform(rect.Width * 100 / effectConfig.gradient_size, rect.Height * 100 / effectConfig.gradient_size);
                             }
                             else
                             {
-                                (brush as LinearGradientBrush).ScaleTransform(Effects.CanvasHeight * 100 / effectConfig.gradient_size, Effects.CanvasHeight * 100 / effectConfig.gradient_size);
+                                brush.ScaleTransform(Effects.CanvasHeight * 100 / effectConfig.gradient_size, Effects.CanvasHeight * 100 / effectConfig.gradient_size);
                             }
 
-                            (brush as LinearGradientBrush).RotateTransform(effectConfig.angle);
-                            (brush as LinearGradientBrush).TranslateTransform(shift, shift);
+                            brush.RotateTransform(effectConfig.angle);
+                            brush.TranslateTransform(shift, shift);
                             break;
                         }
                         case EffectBrush.BrushType.Radial:
@@ -270,40 +266,39 @@ namespace Aurora.EffectsEngine
                             if (effectConfig.animation_type == AnimationType.Zoom_in || effectConfig.animation_type == AnimationType.Zoom_out)
                             {
                                 float percent = shift / Effects.CanvasBiggest;
+                                float xOffset = Effects.CanvasWidth / 2.0f * percent;
+                                float yOffset = Effects.CanvasHeight / 2.0f * percent;
 
-                                float x_offset = Effects.CanvasWidth / 2.0f * percent;
-                                float y_offset = Effects.CanvasHeight / 2.0f * percent;
 
-
-                                (brush as PathGradientBrush).WrapMode = WrapMode.Clamp;
+                                brush.WrapMode = WrapMode.Clamp;
 
                                 if (!rect.IsEmpty)
                                 {
-                                    x_offset = rect.Width / 2.0f * percent;
-                                    y_offset = rect.Height / 2.0f * percent;
+                                    xOffset = rect.Width / 2.0f * percent;
+                                    yOffset = rect.Height / 2.0f * percent;
 
-                                    (brush as PathGradientBrush).TranslateTransform(rect.X + x_offset, rect.Y + y_offset);
-                                    (brush as PathGradientBrush).ScaleTransform((rect.Width - 2.0f * x_offset) * 100 / effectConfig.gradient_size, (rect.Height - 2.0f * y_offset) * 100 / effectConfig.gradient_size);
+                                    brush.TranslateTransform(rect.X + xOffset, rect.Y + yOffset);
+                                    brush.ScaleTransform((rect.Width - 2.0f * xOffset) * 100 / effectConfig.gradient_size, (rect.Height - 2.0f * yOffset) * 100 / effectConfig.gradient_size);
                                 }
                                 else
                                 {
-                                    (brush as PathGradientBrush).ScaleTransform((Effects.CanvasHeight + x_offset) * 100 / effectConfig.gradient_size, (Effects.CanvasHeight + y_offset) * 100 / effectConfig.gradient_size);
+                                    brush.ScaleTransform((Effects.CanvasHeight + xOffset) * 100 / effectConfig.gradient_size, (Effects.CanvasHeight + yOffset) * 100 / effectConfig.gradient_size);
                                 }
                             }
                             else
                             {
                                 if (!rect.IsEmpty)
                                 {
-                                    (brush as PathGradientBrush).TranslateTransform(rect.X, rect.Y);
-                                    (brush as PathGradientBrush).ScaleTransform(rect.Width * 100 / effectConfig.gradient_size, rect.Height * 100 / effectConfig.gradient_size);
+                                    brush.TranslateTransform(rect.X, rect.Y);
+                                    brush.ScaleTransform(rect.Width * 100 / effectConfig.gradient_size, rect.Height * 100 / effectConfig.gradient_size);
                                 }
                                 else
                                 {
-                                    (brush as PathGradientBrush).ScaleTransform(Effects.CanvasHeight * 100 / effectConfig.gradient_size, Effects.CanvasHeight * 100 / effectConfig.gradient_size);
+                                    brush.ScaleTransform(Effects.CanvasHeight * 100 / effectConfig.gradient_size, Effects.CanvasHeight * 100 / effectConfig.gradient_size);
                                 }
                             }
 
-                            (brush as PathGradientBrush).RotateTransform(effectConfig.angle);
+                            brush.RotateTransform(effectConfig.angle);
 
                             //(brush as PathGradientBrush).TranslateTransform(x_shift, y_shift);
                             break;
@@ -314,6 +309,7 @@ namespace Aurora.EffectsEngine
 
                     effectConfig.last_effect_call = Time.GetMillisecondsSinceEpoch();
                     break;
+                }
             }
         }
 

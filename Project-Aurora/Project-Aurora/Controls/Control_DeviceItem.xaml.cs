@@ -66,7 +66,7 @@ namespace Aurora.Controls
         {
             if (sender is Button)
             {
-                lock (Device.actionLock)
+                lock (Device.ActionLock)
                 {
                     if (Device.Device.IsInitialized)
                         Device.Device.Shutdown();
@@ -85,7 +85,7 @@ namespace Aurora.Controls
             else
             {
                 Global.Configuration.DevicesDisabled.Add(Device.Device.GetType());
-                lock (Device.actionLock)
+                lock (Device.ActionLock)
                 {
                     if (Device.Device.IsInitialized)
                         Device.Device.Shutdown();
