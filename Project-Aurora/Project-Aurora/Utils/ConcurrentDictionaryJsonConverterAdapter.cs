@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -18,14 +19,14 @@ namespace Aurora.Utils
         {
             var map = new ConcurrentDictionary<K, V>();
             
-            JObject item = serializer.Deserialize<JObject>(reader);
-            foreach (JProperty prop in item.Children<JProperty>())
+            var item = serializer.Deserialize<JObject>(reader);
+            foreach (var prop in item.Children<JProperty>())
             {
                 if (prop.Name.Equals("$type"))
                 {
                     continue;
                 }
-                map.TryAdd((K)Convert.ChangeType(prop.Name, typeof(K)), serializer.Deserialize<V>(prop.Value.CreateReader()));
+                map.TryAdd((K)Convert.ChangeType(prop.Name, typeof(K), CultureInfo.InvariantCulture), serializer.Deserialize<V>(prop.Value.CreateReader()));
             }
             return map;
         }
