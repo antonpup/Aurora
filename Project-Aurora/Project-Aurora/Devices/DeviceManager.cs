@@ -22,7 +22,7 @@ namespace Aurora.Devices
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
-        public readonly object actionLock = new();
+        public readonly object ActionLock = new();
         private readonly Action _updateAction;
 
         public DeviceContainer(IDevice device)
@@ -31,13 +31,13 @@ namespace Aurora.Devices
             var args = new DoWorkEventArgs(null);
             _updateAction = () =>
             {
-                WorkerOnDoWork(this, args);
+                WorkerOnDoWork(args);
             };
         }
 
-        private void WorkerOnDoWork(object sender, DoWorkEventArgs doWorkEventArgs)
+        private void WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
         {
-            lock(actionLock)
+            lock(ActionLock)
             {
                 Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
             }
@@ -45,7 +45,7 @@ namespace Aurora.Devices
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (_worker.WaitingCallbacks < 1)
+            if (_worker.WaitingCallbacks < 2)
             {
                 _worker.QueueWorkItem(_updateAction);
             }
@@ -239,7 +239,7 @@ namespace Aurora.Devices
                 {
                     if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                         continue;
-                    lock (dc.actionLock)
+                    lock (dc.ActionLock)
                         dc.Device.Initialize();
                 }
                 RetryAttempts--;
@@ -267,7 +267,7 @@ namespace Aurora.Devices
                 if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
                     continue;
 
-                lock (dc.actionLock)
+                lock (dc.ActionLock)
                 {
                     if (!dc.Device.Initialize())
                         devicesToRetry++;
@@ -293,7 +293,7 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.actionLock)
+                lock (dc.ActionLock)
                 {
                     dc.Device.Shutdown();
                 }
@@ -305,7 +305,7 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.actionLock)
+                lock (dc.ActionLock)
                 {
                     dc.Device.Reset();
                 }

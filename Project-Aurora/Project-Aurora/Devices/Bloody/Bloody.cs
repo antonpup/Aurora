@@ -16,6 +16,7 @@ namespace Aurora.Devices.Bloody
     {
         public override string DeviceName => "Bloody";
         protected override string DeviceInfo => IsInitialized ? GetDeviceNames() : base.DeviceInfo;
+        private readonly Stopwatch _updateDelayStopWatch = new();
 
         private BloodyKeyboard keyboard;
         private List<BloodyPeripheral> peripherals;
@@ -32,6 +33,7 @@ namespace Aurora.Devices.Bloody
 
             peripherals = BloodyPeripheral.GetDevices();
             deviceUpdated += UpdatePeripherals;
+            _updateDelayStopWatch.Start();
 
             return IsInitialized = (keyboard != null) || (peripherals.Any());
         }
@@ -43,13 +45,24 @@ namespace Aurora.Devices.Bloody
 
             peripherals.ForEach(p => p.Disconnect());
             deviceUpdated -= UpdatePeripherals;
+            _updateDelayStopWatch.Stop();
 
             IsInitialized = false;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false) {
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        {
+            var sendDelay = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay");
+            if (_updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
+                return false;
+
             deviceUpdated(this, keyColors);
+            _updateDelayStopWatch.Restart();
             return true;
+        }
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
+        {
+            variableRegistry.Register($"{DeviceName}_send_delay", 32, "Send delay (ms)");
         }
 
         private void UpdateKeyboard(object sender, Dictionary<DeviceKeys, Color> keyColors)
