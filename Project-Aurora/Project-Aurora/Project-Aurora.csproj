@@ -72,6 +72,7 @@
     <PackageReference Include="Colore" Version="5.2.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="3.30.5.1" />
+    <PackageReference Include="Dubya.WindowsMediaController" Version="2.2.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.5.1" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
     <PackageReference Include="hidlibrary" Version="3.3.40" />

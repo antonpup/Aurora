@@ -156,6 +156,11 @@ namespace Aurora.Profiles {
         public BatteryNode Battery => _battery ?? (_battery = new BatteryNode());
         #endregion
 
+        #region Media Properties
+        private static MediaNode _media;
+        public MediaNode Media => _media ?? (_media = new MediaNode());
+        #endregion
+
         /// <summary>
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
@@ -241,5 +246,13 @@ namespace Aurora.Profiles {
         public bool PluggedIn => SystemInformation.PowerStatus.PowerLineStatus != PowerLineStatus.Offline; //If it is unknown I assume it is plugedIn
         public float LifePercent => SystemInformation.PowerStatus.BatteryLifePercent;
         public int SecondsRemaining => SystemInformation.PowerStatus.BatteryLifeRemaining;
+    }
+
+    public class MediaNode : Node
+    {
+        public bool MediaPlaying => MediaMonitor.MediaPlaying;
+        public bool HasMedia => MediaMonitor.HasMedia;
+        public bool HasNextMedia => MediaMonitor.HasNextMedia;
+        public bool HasPreviousMedia => MediaMonitor.HasPreviousMedia;
     }
 }

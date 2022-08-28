@@ -32,6 +32,15 @@
           "CS-Script.bin": "3.30.5.1"
         }
       },
+      "Dubya.WindowsMediaController": {
+        "type": "Direct",
+        "requested": "[2.2.0, )",
+        "resolved": "2.2.0",
+        "contentHash": "HIpcZTSLRxofjNV9HKI9uCmrmS3YiC0UbpFoUluGnezPSsJWhdAauOlZBFAFpaez+8sq11JzU5vuyl5KyvWrUg==",
+        "dependencies": {
+          "Microsoft.Windows.SDK.Contracts": "10.0.22000.196"
+        }
+      },
       "FastMember": {
         "type": "Direct",
         "requested": "[1.5.0, )",
@@ -335,6 +344,16 @@
           "System.Security.Principal.Windows": "4.7.0"
         }
       },
+      "Microsoft.Windows.SDK.Contracts": {
+        "type": "Transitive",
+        "resolved": "10.0.22000.196",
+        "contentHash": "PsZ40Oj4Y4XUjmHo++aJxZZHRo6CUx6t+xoDwQS/pMPzU9DPvQQ0yCMfar1BsGVF4gJUqzh+U29qF0bEdCruAQ==",
+        "dependencies": {
+          "System.Runtime.InteropServices.WindowsRuntime": "4.3.0",
+          "System.Runtime.WindowsRuntime": "4.6.0",
+          "System.Runtime.WindowsRuntime.UI.Xaml": "4.6.0"
+        }
+      },
       "NAudio.Asio": {
         "type": "Transitive",
         "resolved": "2.0.0",
@@ -519,10 +538,28 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.Runtime.InteropServices.WindowsRuntime": {
+        "type": "Transitive",
+        "resolved": "4.3.0",
+        "contentHash": "J4GUi3xZQLUBasNwZnjrffN8i5wpHrBtZoLG+OhRyGo/+YunMRWWtwoMDlUAIdmX0uRfpHIBDSV6zyr3yf00TA=="
+      },
       "System.Runtime.Numerics": {
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "yMH+MfdzHjy17l2KESnPiF2dwq7T+xLnSJar7slyimAkUh/gTrS9/UQOtv7xarskJ2/XDSNvfLGOBQPjL7PaHQ=="
+      },
+      "System.Runtime.WindowsRuntime": {
+        "type": "Transitive",
+        "resolved": "4.6.0",
+        "contentHash": "IWrs1TmbxP65ZZjIglNyvDkFNoV5q2Pofg5WO7I8RKQOpLdFprQSh3xesOoClBqR4JHr4nEB1Xk1MqLPW1jPuQ=="
+      },
+      "System.Runtime.WindowsRuntime.UI.Xaml": {
+        "type": "Transitive",
+        "resolved": "4.6.0",
+        "contentHash": "r4tNw5v5kqRJ9HikWpcyNf3suGw7DjX93svj9iBjtdeLqL8jt9Z+7f+s4wrKZJr84u8IMsrIjt8K6jYvkRqMSg==",
+        "dependencies": {
+          "System.Runtime.WindowsRuntime": "4.6.0"
+        }
       },
       "System.Security.AccessControl": {
         "type": "Transitive",
