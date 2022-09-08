@@ -9,14 +9,8 @@ using Microsoft.Win32;
 
 namespace Aurora.Devices.Clevo
 {
-    class ClevoDevice : IDevice
+    class ClevoDevice : DefaultDevice
     {
-        // Generic Variables
-        private bool _isInitialized;
-
-        private readonly Stopwatch _watch = new();
-        private long _lastUpdateTime;
-
         // Settings
         // TODO: Theese settings could be implemented with posibility of configuration from the Aurora GUI (Or external JSON, INI, Settings, etc)
         private bool _useGlobalPeriphericColors = false;
@@ -40,15 +34,11 @@ namespace Aurora.Devices.Clevo
         // Session Switch Handler
         private SessionSwitchEventHandler _sseh;
 
-        public string DeviceName => "Clevo Keyboard";
+        public override string DeviceName => "Clevo Keyboard";
 
-        public string DeviceDetails => IsInitialized
-            ? "Initialized"
-            : "Not Initialized";
-
-        public bool Initialize()
+        public override bool Initialize()
         {
-            if (_isInitialized) return _isInitialized;
+            if (IsInitialized) return IsInitialized;
             try
             {
                 // Initialize Clevo WMI Interface Connection
@@ -65,7 +55,7 @@ namespace Aurora.Devices.Clevo
                 }
 
                 // Mark Initialized = TRUE
-                _isInitialized = true;
+                IsInitialized = true;
                 return true;
             }
             catch (Exception ex)
@@ -74,7 +64,7 @@ namespace Aurora.Devices.Clevo
             }
 
             // Mark Initialized = FALSE
-            _isInitialized = false;
+            IsInitialized = false;
             return false;
 
         }
@@ -88,7 +78,7 @@ namespace Aurora.Devices.Clevo
             }
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             if (!IsInitialized) return;
             // Release Clevo Connection
@@ -101,21 +91,17 @@ namespace Aurora.Devices.Clevo
             _sseh = null;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             if (IsInitialized)
                 _clevo.ResetKBLEDColors();
         }
 
-        public bool IsInitialized => _isInitialized;
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
-            _watch.Restart();
             bool updateResult;
 
-            Dictionary<DeviceKeys, Color> keyColors = colorComposition.KeyColors;
             if (e.Cancel) return false;
             try
             {
@@ -191,9 +177,6 @@ namespace Aurora.Devices.Clevo
                 updateResult = false;
             }
 
-            _watch.Stop();
-            _lastUpdateTime = _watch.ElapsedMilliseconds;
-
             return updateResult;
         }
 
@@ -223,9 +206,5 @@ namespace Aurora.Devices.Clevo
             }
             _colorUpdated = false;
         }
-
-        public string DeviceUpdatePerformance => (_isInitialized ? _lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables => new();
     }
 }

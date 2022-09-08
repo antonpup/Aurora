@@ -51,12 +51,12 @@ namespace Aurora.Profiles.TModLoader
 
         private void GoToTModLoaderPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://tmodloader.net/");
+            Process.Start("explorer", @"https://tmodloader.net/");
         }
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://github.com/diogotr7/AuroraGSI-Terraria/releases");
+            Process.Start("explorer", @"https://github.com/diogotr7/AuroraGSI-Terraria/releases");
         }
     }
 }

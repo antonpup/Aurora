@@ -50,12 +50,12 @@ namespace Aurora.Profiles.StardewValley {
 
         private void GoToSMAPIPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/stardewvalley/mods/2400");
+            Process.Start("explorer", @"https://www.nexusmods.com/stardewvalley/mods/2400");
         }
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/stardewvalley/mods/6088");
+            Process.Start("explorer", @"https://www.nexusmods.com/stardewvalley/mods/6088");
         }
     }
 }

@@ -1,29 +1,24 @@
-﻿using Aurora.Settings;
-using Aurora.Controls;
-using System;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Navigation;
 
 namespace Aurora.Profiles.Desktop
 {
     /// <summary>
     /// Interaction logic for Control_Desktop.xaml
     /// </summary>
-    public partial class Control_Desktop : UserControl
+    public partial class Control_Desktop
     {
-        private Application profile_manager;
+        private readonly Application _profileManager;
 
         public Control_Desktop(Application profile)
         {
             InitializeComponent();
 
-            profile_manager = profile;
+            _profileManager = profile;
 
             SetSettings();
 
-            profile_manager.ProfileChanged += Desktop_profile_ProfileChanged;
+            _profileManager.ProfileChanged += Desktop_profile_ProfileChanged;
         }
 
         private void Desktop_profile_ProfileChanged(object sender, EventArgs e)
@@ -33,7 +28,7 @@ namespace Aurora.Profiles.Desktop
 
         private void SetSettings()
         {
-            this.profile_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            profile_enabled.IsChecked = _profileManager.Settings.IsEnabled;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -48,17 +43,9 @@ namespace Aurora.Profiles.Desktop
         {
             if (IsLoaded)
             {
-                profile_manager.Settings.IsEnabled = (this.profile_enabled.IsChecked.HasValue) ? this.profile_enabled.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
+                _profileManager.Settings.IsEnabled = profile_enabled.IsChecked ?? false;
+                _profileManager.SaveProfiles();
             }
-        }
-
-        //// Misc
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
         }
     }
 }

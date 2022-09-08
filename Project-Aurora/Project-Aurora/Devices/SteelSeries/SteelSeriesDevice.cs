@@ -24,67 +24,62 @@ namespace Aurora.Devices.SteelSeries
         MSI_FN = 0xF0,
     };
 
-    class SteelSeriesDevice : IDevice
+    class SteelSeriesDevice : DefaultDevice
     {
-        private String devicename = "SteelSeries";
-        private bool isInitialized = false;
-
         private GameSenseSDK gameSenseSDK = new GameSenseSDK();
 
         private bool keyboard_updated = false;
         private bool peripheral_updated = false;
 
         private readonly object action_lock = new object();
-
-        private Stopwatch watch = new Stopwatch();
+        
         private Stopwatch keepaliveTimer = new Stopwatch();
-        private long lastUpdateTime = 0;
 
         //Previous data
         private Color previous_peripheral_Color = Color.Black;
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             lock (action_lock)
             {
-                if (!isInitialized)
+                if (!IsInitialized)
                 {
                     try
                     {
                         gameSenseSDK.init("PROJECTAURORA", "Project Aurora", 7);
-                        isInitialized = true;
+                        IsInitialized = true;
                         return true;
                     }
                     catch (Exception ex)
                     {
                         Global.logger.Error("SteelSeries GameSense SDK could not be initialized: " + ex);
 
-                        isInitialized = false;
+                        IsInitialized = false;
                         return false;
                     }
                 }
 
-                return isInitialized;
+                return IsInitialized;
             }
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (action_lock)
             {
                 try
                 {
-                    if (isInitialized)
+                    if (IsInitialized)
                     {
                         this.Reset();
                         //GameSenseSDK.sendStop(); doesn't work atm so just wait for timeout=15sec
-                        isInitialized = false;
+                        IsInitialized = false;
                     }
                 }
                 catch (Exception ex)
                 {
                     Global.logger.Error("There was an error shutting down SteelSeries GameSense SDK: " + ex);
-                    isInitialized = false;
+                    IsInitialized = false;
                 }
 
                 if (keepaliveTimer.IsRunning)
@@ -92,11 +87,7 @@ namespace Aurora.Devices.SteelSeries
             }
         }
 
-        public string DeviceDetails => IsInitialized
-            ? "Initialized"
-            : "Not Initialized";
-
-        public string DeviceName => devicename;
+        public override string DeviceName => "SteelSeries";
 
         public void Reset()
         {
@@ -117,9 +108,7 @@ namespace Aurora.Devices.SteelSeries
             throw new NotImplementedException();
         }
 
-        public bool IsInitialized => this.isInitialized;
-
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -206,32 +195,6 @@ namespace Aurora.Devices.SteelSeries
                 return false;
             }
         }
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
-        }
-
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
-        }
-
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         private void SendColorToPeripheral(Color color, GameSensePayloadPeripheryColorEventJSON payload, bool forced = false)
         {

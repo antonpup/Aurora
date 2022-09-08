@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.AtmoOrbDevice
 {
-    public class AtmoOrbDevice : IDevice
+    public class AtmoOrbDevice : DefaultDevice
     {
         private string devicename = "AtmoOrb";
         private Socket socket;
@@ -21,18 +21,15 @@ namespace Aurora.Devices.AtmoOrbDevice
         private bool isConnecting;
         private Stopwatch sw = new();
 
-        private Stopwatch watch = new();
-        private long lastUpdateTime;
-
         private VariableRegistry default_registry;
 
         public string DeviceDetails => IsInitialized
             ? "Initialized"
             : "Not Initialized";
 
-        public string DeviceName => devicename;
+        public override string DeviceName => devicename;
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (!isConnected)
             {
@@ -79,7 +76,7 @@ namespace Aurora.Devices.AtmoOrbDevice
             Reconnect();
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             if (socket != null)
             {
@@ -127,11 +124,9 @@ namespace Aurora.Devices.AtmoOrbDevice
             }
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
-
-            watch.Restart();
 
             // Connect if needed
             if (!isConnected)
@@ -148,16 +143,13 @@ namespace Aurora.Devices.AtmoOrbDevice
             if (sw.ElapsedMilliseconds >
                 Global.Configuration.VarRegistry.GetVariable<int>($"{devicename}_send_delay"))
             {
-                Color averageColor = colorComposition.KeyColors[DeviceKeys.ADDITIONALLIGHT1];   //TODO add 1 zone kb
+                Color averageColor = keyColors[DeviceKeys.ADDITIONALLIGHT1];   //TODO add 1 zone kb
 
                 SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
                 sw.Restart();
             }
 
             if (e.Cancel) return false;
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
 
             return true;
         }
@@ -226,22 +218,12 @@ namespace Aurora.Devices.AtmoOrbDevice
             }
         }
 
-        public string DeviceUpdatePerformance => (IsConnected() ? lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
-            get
-            {
-                if (default_registry == null)
-                {
-                    default_registry = new VariableRegistry();
-                    default_registry.Register($"{devicename}_use_smoothing", true, "Use Smoothing");
-                    default_registry.Register($"{devicename}_send_delay", 50, "Send delay (ms)");
-                    default_registry.Register($"{devicename}_orb_ids", "1", "Orb IDs", null, null, "For multiple IDs separate with comma");
-                }
-
-                return default_registry;
-            }
+            default_registry = new VariableRegistry();
+            default_registry.Register($"{devicename}_use_smoothing", true, "Use Smoothing");
+            default_registry.Register($"{devicename}_send_delay", 50, "Send delay (ms)");
+            default_registry.Register($"{devicename}_orb_ids", "1", "Orb IDs", null, null, "For multiple IDs separate with comma");
         }
     }
 }

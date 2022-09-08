@@ -37,12 +37,14 @@ namespace Aurora.Devices
         /// </summary>
         /// <returns>Details about device's update performance</returns>
         string DeviceUpdatePerformance { get; }
+        
+        Task InitializeTask { get; set; }
 
         /// <summary>
         /// Gets the initialization status of this device instance.
         /// </summary>
         /// <returns>A boolean value representing the initialization status of this device</returns>
-        bool IsInitialized { get; }
+        bool IsInitialized => InitializeTask.IsCompletedSuccessfully;
 
         /// <summary>
         /// Gets registered variables by this device.

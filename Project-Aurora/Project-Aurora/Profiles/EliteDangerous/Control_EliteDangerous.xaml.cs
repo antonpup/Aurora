@@ -8,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Navigation;
 using Aurora.Devices;
 using Aurora.Settings;
 using Xceed.Wpf.Toolkit;
@@ -61,12 +60,6 @@ namespace Aurora.Profiles.EliteDangerous
                 profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
-        }
-
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
         }
     }
 }

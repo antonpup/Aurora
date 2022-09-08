@@ -45,11 +45,11 @@ namespace Aurora.Utils
             //because for bytes each increment is significant
             //https://stackoverflow.com/a/17974/13320838
             var area = rectangle.Width * rectangle.Height;
-            return Color.FromArgb(
-                (int)(color[0] / area) |
-                (int)(color[1] / area << 8) |
-                (int)(color[2] / area << 16) |
-                (int)(color[3] / area << 24)
+            return ColorUtils.FastColor(
+                (byte) (color[0] / area),
+                (byte) (color[1] / area),
+                (byte) (color[2] / area),
+                (byte) (color[3] / area)
             );
         }
 

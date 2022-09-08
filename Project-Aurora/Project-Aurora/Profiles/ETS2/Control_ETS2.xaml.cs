@@ -94,7 +94,7 @@ namespace Aurora.Profiles.ETS2 {
         }
 
         private void visit_ets2ts_button_Click(object sender, RoutedEventArgs e) {
-            System.Diagnostics.Process.Start("https://github.com/Funbit/ets2-telemetry-server");
+            System.Diagnostics.Process.Start("explorer", "https://github.com/Funbit/ets2-telemetry-server");
         }
 
 

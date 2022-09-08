@@ -1,15 +1,12 @@
-﻿using Aurora.Profiles;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
 using System.Net;
-using System.Security.Principal;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using Aurora.Profiles;
+using Application = System.Windows.Application;
 
 namespace Aurora
 {
@@ -19,23 +16,16 @@ namespace Aurora
 
     public class NetworkListener
     {
-        private bool isRunning = false;
-        private bool wrapper_connected = false;
-        private string wrapped_process = "";
-        private int connection_port;
-        private HttpListener net_Listener;
-        private AutoResetEvent waitForConnection = new AutoResetEvent(false);
-        private IGameState currentGameState;
+        private bool _isRunning;
+        private HttpListener _netListener;
+        private IGameState _currentGameState;
 
         public IGameState CurrentGameState
         {
-            get
-            {
-                return currentGameState;
-            }
+            get => _currentGameState;
             private set
             {
-                currentGameState = value;
+                _currentGameState = value;
                 NewGameState?.Invoke(CurrentGameState);
             }
         }
@@ -43,12 +33,7 @@ namespace Aurora
         /// <summary>
         /// Gets the port that is being listened
         /// </summary>
-        public int Port { get { return connection_port; } }
-
-        /// <summary>
-        /// Returns whether or not the listener is running
-        /// </summary>
-        public bool Running { get { return isRunning; } }
+        public int Port { get; }
 
         /// <summary>
         ///  Event for handing a newly received game state
@@ -57,40 +42,37 @@ namespace Aurora
 
         public event WrapperConnectionClosedHandler WrapperConnectionClosed = delegate { };
 
-        public event CommandRecievedHandler CommandRecieved = delegate { };
+        public event CommandRecievedHandler CommandReceived = delegate { };
 
         /// <summary>
         /// Returns whether or not the wrapper is connected through IPC
         /// </summary>
-        public bool IsWrapperConnected { get { return wrapper_connected; } }
+        public bool IsWrapperConnected { get; private set; }
 
         /// <summary>
         /// Returns the process of the wrapped connection
         /// </summary>
-        public string WrappedProcess { get { return wrapped_process; } }
+        public string WrappedProcess { get; private set; } = "";
+        
 
-        private Thread ListenerThread;
-        private Thread ServerThread;
-        private Thread CommandThread;
+        private NamedPipeServerStream _ipcPipeStream;
+        private NamedPipeServerStream _ipcCommandPipeStream;
 
-        private NamedPipeServerStream IPCpipeStream;
-        private NamedPipeServerStream IPCCommandpipeStream;
-
-        public NetworkListener()
+        private NetworkListener()
         {
-            CommandRecieved += NetworkListener_CommandRecieved;
+            CommandReceived += NetworkListener_CommandReceived;
         }
 
         /// <summary>
         /// A GameStateListener that listens for connections on http://localhost:port/
         /// </summary>
-        /// <param name="Port"></param>
-        public NetworkListener(int Port) : this()
+        /// <param name="port"></param>
+        public NetworkListener(int port) : this()
         {
-            connection_port = Port;
-            net_Listener = new HttpListener();
-            net_Listener.Prefixes.Add("http://127.0.0.1:" + Port + "/");
-            net_Listener.Prefixes.Add("http://localhost:" + Port + "/");
+            Port = port;
+            _netListener = new HttpListener();
+            _netListener.Prefixes.Add("http://127.0.0.1:" + port + "/");
+            _netListener.Prefixes.Add("http://localhost:" + port + "/");
         }
 
         /// <summary>
@@ -102,16 +84,16 @@ namespace Aurora
             if (!URI.EndsWith("/"))
                 URI += "/";
 
-            Regex URIPattern = new Regex("^https?:\\/\\/.+:([0-9]*)\\/$", RegexOptions.IgnoreCase);
-            Match PortMatch = URIPattern.Match(URI);
+            var uriPattern = new Regex("^https?:\\/\\/.+:([0-9]*)\\/$", RegexOptions.IgnoreCase);
+            var portMatch = uriPattern.Match(URI);
 
-            if (!PortMatch.Success)
+            if (!portMatch.Success)
                 throw new ArgumentException("Not a valid URI: " + URI);
 
-            connection_port = Convert.ToInt32(PortMatch.Groups[1].Value);
+            Port = Convert.ToInt32(portMatch.Groups[1].Value);
 
-            net_Listener = new HttpListener();
-            net_Listener.Prefixes.Add(URI);
+            _netListener = new HttpListener();
+            _netListener.Prefixes.Add(URI);
 
         }
 
@@ -120,264 +102,184 @@ namespace Aurora
         /// </summary>
         public bool Start()
         {
-            if (!isRunning)
+            if (_isRunning) return false;
+
+            try
             {
-                ListenerThread = new Thread(new ThreadStart(Run));
-                ListenerThread.IsBackground = true;
-                try
-                {
-                    net_Listener.Start();
-                }
-                catch (HttpListenerException exc)
-                {
-                    if (exc.ErrorCode == 5)//Access Denied
-                        System.Windows.MessageBox.Show($"Access error during start of network listener.\r\n\r\nTo fix this issue, please run the following commands as admin in Command Prompt:\r\n   netsh http add urlacl url=http://localhost:{Port}/ user=Everyone listen=yes\r\nand\r\n   netsh http add urlacl url=http://127.0.0.1:{Port}/ user=Everyone listen=yes", "Aurora - Error");
-
-                    Global.logger.Error(exc.ToString());
-
-                    return false;
-                }
-                isRunning = true;
-                ListenerThread.Start();
-
-                ServerThread = new Thread(IPCServerThread);
-                ServerThread.IsBackground = true;
-                ServerThread.Start();
-                CommandThread = new Thread(AuroraCommandsServerIPC);
-                CommandThread.IsBackground = true;
-                CommandThread.Start();
-                return true;
+                _netListener.Start();
             }
+            catch (HttpListenerException exc)
+            {
+                if (exc.ErrorCode == 5)//Access Denied
+                    MessageBox.Show("Access error during start of network listener.\r\n\r\n" +
+                                    "To fix this issue, please run the following commands as admin in Command Prompt:\r\n" +
+                                    $"   netsh http add urlacl url=http://localhost:{Port}/ user=Everyone listen=yes\r\nand\r\n" +
+                                    $"   netsh http add urlacl url=http://127.0.0.1:{Port}/ user=Everyone listen=yes", 
+                        "Aurora - Error");
 
-            return false;
+                Global.logger.Error(exc.ToString());
+
+                return false;
+            }
+            _isRunning = true;
+
+            BeginRun();
+            BeginIpcServer();
+            BeginAuroraCommandsServerIpcTask();
+            return true;
+
         }
 
         /// <summary>
         /// Stops listening for GameState requests
         /// </summary>
-        public void Stop()
+        public async Task Stop()
         {
-            isRunning = false;
+            _isRunning = false;
 
-            if (ListenerThread != null)
-            {
-                ListenerThread.Abort();
-                ListenerThread = null;
-            }
+            _netListener?.Close();
+            _netListener = null;
 
-            if (ServerThread != null)
-            {
-                ServerThread.Abort();
-                ServerThread = null;
-            }
-                
+            _ipcPipeStream.Close();
+            await _ipcPipeStream.DisposeAsync();
 
-            if (CommandThread != null)
+            _ipcCommandPipeStream.Close();
+            if (_ipcCommandPipeStream != null)
             {
-                CommandThread.Abort();
-                CommandThread = null;
-            }
-
-            if(IPCpipeStream != null)
-            {
-                if(IPCpipeStream.IsConnected)
-                    IPCpipeStream.Disconnect();
-                IPCpipeStream.Dispose();
-                IPCpipeStream = null;
-            }
-
-            if (IPCCommandpipeStream != null)
-            {
-                if (IPCCommandpipeStream.IsConnected)
-                    IPCCommandpipeStream.Disconnect();
-                IPCCommandpipeStream.Dispose();
-                IPCCommandpipeStream = null;
+                if (_ipcCommandPipeStream.IsConnected)
+                    _ipcCommandPipeStream.Disconnect();
+                await _ipcCommandPipeStream.DisposeAsync();
             }
         }
 
-        private void Run()
+        private void BeginRun()
         {
-            while (isRunning)
-            {
-                net_Listener.BeginGetContext(ReceiveGameState, net_Listener);
-                waitForConnection.WaitOne();
-                waitForConnection.Reset();
-            }
-            net_Listener.Stop();
+            _netListener.BeginGetContext(ReceiveGameState, _netListener);
         }
 
         private void ReceiveGameState(IAsyncResult result)
         {
-            HttpListenerContext context = net_Listener.EndGetContext(result);
-            HttpListenerRequest request = context.Request;
-            string JSON;
-
-            waitForConnection.Set();
-
-            using (Stream inputStream = request.InputStream)
+            if (_netListener == null || !_isRunning)
             {
-                using (StreamReader sr = new StreamReader(inputStream))
-                    JSON = sr.ReadToEnd();
+                return;
             }
 
-            using (HttpListenerResponse response = context.Response)
+            try
             {
-                response.StatusCode = (int)HttpStatusCode.OK;
-                response.StatusDescription = "OK";
-                response.ContentType = "text/html";
-                response.ContentLength64 = 0;
-                response.Close();
+                var context = _netListener.EndGetContext(result);
+                var request = context.Request;
+                string json;
+
+                using (var inputStream = request.InputStream)
+                {
+                    using (var sr = new StreamReader(inputStream))
+                        json = sr.ReadToEnd();
+                }
+
+                using (HttpListenerResponse response = context.Response)
+                {
+                    response.StatusCode = (int) HttpStatusCode.OK;
+                    response.StatusDescription = "OK";
+                    response.ContentType = "text/html";
+                    response.ContentLength64 = 0;
+                    response.Close();
+                }
+
+                CurrentGameState = new EmptyGameState(json);
             }
-            CurrentGameState = new EmptyGameState(JSON);
+            catch (Exception e)
+            {
+                Global.logger.Error(e, "[NetworkListener] ReceiveGameState error:");
+            }
+            _netListener.BeginGetContext(ReceiveGameState, _netListener);
         }
 
-        private void HandleNewIPCGameState(string gs_data)
+        private void HandleNewIpcGameState(string gsData)
         {
-            //Global.logger.LogLine("Received gs!");
-            //Global.logger.LogLine(gs_data);
-
-            var task = new System.Threading.Tasks.Task(() =>
+            Task.Run(() =>
                 {
-                    GameState_Wrapper new_state = new GameState_Wrapper(gs_data); //GameState_Wrapper 
+                    var newState = new GameState_Wrapper(gsData); //GameState_Wrapper 
 
-                    wrapper_connected = true;
-                    wrapped_process = new_state.Provider.Name.ToLowerInvariant();
-
-                    //if (new_state.Provider.Name.ToLowerInvariant().Equals("gta5.exe"))
-                    //CurrentGameState = new Profiles.GTA5.GSI.GameState_GTA5(gs_data);
-                    //else
-                    CurrentGameState = new_state;
+                    IsWrapperConnected = true;
+                    WrappedProcess = newState.Provider.Name.ToLowerInvariant();
+                    CurrentGameState = newState;
                 }
             );
-            task.Start();
         }
 
-        private void IPCServerThread()
+        private void BeginIpcServer()
         {
-            PipeSecurity pipeSa = new PipeSecurity();
-            pipeSa.SetAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
-                            PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
-            while (isRunning)
+            _ipcPipeStream = new NamedPipeServerStream(
+                "Aurora\\server",
+                PipeDirection.In,
+                NamedPipeServerStream.MaxAllowedServerInstances,
+                PipeTransmissionMode.Message,
+                PipeOptions.None,
+                5 * 1024,
+                5 * 1024
+            );
+            
+            IsWrapperConnected = false;
+            WrappedProcess = "";
+            Global.logger.Info("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
+
+            _ipcPipeStream?.BeginWaitForConnection(_ =>
             {
-                try
+                Global.logger.Info("[IPCServer] Pipe connection established");
+
+                using var sr = new StreamReader(_ipcPipeStream);
+                while (sr.ReadLine() is { } temp)
                 {
-                    using (IPCpipeStream = new NamedPipeServerStream(
-                    "Aurora\\server",
-                    PipeDirection.In,
-                    NamedPipeServerStream.MaxAllowedServerInstances,
-                    PipeTransmissionMode.Message,
-                    PipeOptions.None,
-                    5 * 1024,
-                    5 * 1024,
-                    pipeSa,
-                    HandleInheritability.None
-                    ))
+                    try
                     {
-                        wrapper_connected = false;
-                        wrapped_process = "";
-                        Global.logger.Info("[IPCServer] Pipe created {0}", IPCpipeStream?.GetHashCode());
-
-                        IPCpipeStream?.WaitForConnection();
-                        Global.logger.Info("[IPCServer] Pipe connection established");
-
-                        using (StreamReader sr = new StreamReader(IPCpipeStream))
-                        {
-                            string temp;
-                            while ((temp = sr.ReadLine()) != null)
-                            {
-                                //Global.logger.LogLine(String.Format("{0}: {1}", DateTime.Now, temp));
-                                try
-                                {
-                                    //Begin handling the game state outside this loop
-                                    HandleNewIPCGameState(temp);
-                                }
-                                catch(Exception exc)
-                                {
-                                    Global.logger.Error("[IPCServer] HandleNewIPCGameState Exception, " + exc);
-                                    //if (Global.isDebug)
-                                        Global.logger.Info("Recieved data that caused error:\n\r"+temp);
-                                }
-
-                                //var task = new System.Threading.Tasks.Task(() => HandleNewIPCGameState(temp));
-                                //task.Start();
-                            }
-                        }
+                        HandleNewIpcGameState(temp);
+                    }
+                    catch (Exception exc)
+                    {
+                        Global.logger.Error("[IPCServer] HandleNewIPCGameState Exception, " + exc);
+                        Global.logger.Info("Recieved data that caused error:\n\r" + temp);
                     }
 
-                    WrapperConnectionClosed?.Invoke(wrapped_process);
-
-                    wrapper_connected = false;
-                    wrapped_process = "";
-                    Global.logger.Info("[IPCServer] Pipe connection lost");
                 }
-                catch (Exception exc)
-                {
-                    IPCpipeStream?.Close();
-                    IPCpipeStream?.Dispose();
-
-                    WrapperConnectionClosed?.Invoke(wrapped_process);
-
-                    wrapper_connected = false;
-                    wrapped_process = "";
-                    Global.logger.Info("[IPCServer] Named Pipe Exception, " + exc);
-                }
-            }
+            }, null);
         }
 
-        private void AuroraCommandsServerIPC()
+        private void BeginAuroraCommandsServerIpcTask()
         {
-            PipeSecurity pipeSa = new PipeSecurity();
-            pipeSa.SetAccessRule(new PipeAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null),
-                            PipeAccessRights.ReadWrite, System.Security.AccessControl.AccessControlType.Allow));
-            while (isRunning)
+            _ipcCommandPipeStream = new NamedPipeServerStream(
+                "Aurora\\interface",
+                PipeDirection.In,
+                NamedPipeServerStream.MaxAllowedServerInstances,
+                PipeTransmissionMode.Message,
+                PipeOptions.None,
+                5 * 1024,
+                5 * 1024
+            );
+            Global.logger.Info("[AuroraCommandsServerIPC] Pipe created {}", _ipcCommandPipeStream?.GetHashCode() ?? -1);
+
+            void AsyncCallback(IAsyncResult ar)
             {
-                try
+                Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");
+
+                using var sr = new StreamReader(_ipcCommandPipeStream);
+                string temp;
+                while ((temp = sr.ReadLine()) != null)
                 {
-                    using (IPCCommandpipeStream = new NamedPipeServerStream(
-                    "Aurora\\interface",
-                    PipeDirection.In,
-                    NamedPipeServerStream.MaxAllowedServerInstances,
-                    PipeTransmissionMode.Message,
-                    PipeOptions.None,
-                    5 * 1024,
-                    5 * 1024,
-                    pipeSa,
-                    HandleInheritability.None
-                    ))
-                    {
-                        Global.logger.Info("[AuroraCommandsServerIPC] Pipe created {0}", IPCCommandpipeStream?.GetHashCode());
-
-                        IPCCommandpipeStream?.WaitForConnection();
-                        Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");
-
-                        using (StreamReader sr = new StreamReader(IPCCommandpipeStream))
-                        {
-                            string temp;
-                            while ((temp = sr.ReadLine()) != null)
-                            {
-                                Global.logger.Info("[AuroraCommandsServerIPC] Recieved command: " + temp);
-                                string[] split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
-                                CommandRecieved.Invoke(split[0], split.Length > 1 ? split[1] : "");
-                            }
-                        }
-                    }
-
-                    Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection lost");
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Info("[AuroraCommandsServerIPC] Named Pipe Exception, " + exc, Logging_Level.Error);
+                    Global.logger.Info("[AuroraCommandsServerIPC] Recieved command: " + temp);
+                    var split = temp.Contains(':') ? temp.Split(':') : new[] { temp };
+                    CommandReceived.Invoke(split[0], split.Length > 1 ? split[1] : "");
                 }
             }
+            _ipcCommandPipeStream?.BeginWaitForConnection(AsyncCallback, null);
         }
 
-        private void NetworkListener_CommandRecieved(string command, string args)
+        private void NetworkListener_CommandReceived(string command, string args)
         {
             switch (command)
             {
                 case "restore":
                     Global.logger.Info("Initiating command restore");
-                    System.Windows.Application.Current.Dispatcher.Invoke(() => ((ConfigUI)System.Windows.Application.Current.MainWindow).ShowWindow());
+                    Application.Current.Dispatcher.Invoke(() => ((ConfigUI)Application.Current.MainWindow).ShowWindow());
                     break;
             }
         }

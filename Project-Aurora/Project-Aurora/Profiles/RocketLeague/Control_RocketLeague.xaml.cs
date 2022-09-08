@@ -71,17 +71,17 @@ namespace Aurora.Profiles.RocketLeague
 
         private void Button_DownloadBakkesMod(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://bakkesmod.com/index.php");
+            Process.Start("explorer", @"https://bakkesmod.com/index.php");
         }
 
         private void Button_BakkesPluginsLink(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://bakkesplugins.com/plugins/view/53");
+            Process.Start("explorer", @"https://bakkesplugins.com/plugins/view/53");
         }
 
         private void Button_InstallPluginURI(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"bakkesmod://install/53");
+            Process.Start("explorer", @"bakkesmod://install/53");
         }
 
         private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)

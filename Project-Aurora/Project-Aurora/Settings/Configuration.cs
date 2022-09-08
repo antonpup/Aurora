@@ -6,15 +6,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using Aurora.Profiles;
-using Aurora.Profiles.Generic_Application;
-using Newtonsoft.Json.Serialization;
 using Aurora.Utils;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 using Aurora.Settings.Overrides.Logic;
-using System.Collections.Specialized;
-using LibreHardwareMonitor.Hardware;
 using static Aurora.Utils.HardwareMonitor;
 
 namespace Aurora.Settings
@@ -544,10 +539,10 @@ namespace Aurora.Settings
             typeof(Devices.Clevo.ClevoDevice),
             typeof(Devices.Drevo.DrevoDevice),
             typeof(Devices.Ducky.DuckyDevice),
+            typeof(Devices.Razer.RazerDevice),
             typeof(Devices.Roccat.RoccatDevice),
             typeof(Devices.Omen.OmenDevices),
             typeof(Devices.Dualshock.DualshockDevice),
-            typeof(Devices.Creative.SoundBlasterXDevice),
             typeof(Devices.UnifiedHID.UnifiedHIDDevice),
             typeof(Devices.Uniwill.UniwillDevice),
             typeof(Devices.Vulcan.VulcanDevice),
@@ -651,7 +646,8 @@ namespace Aurora.Settings
             if (!File.Exists(configPath))
                 config = CreateDefaultConfigurationFile();
             else {
-                string content = File.ReadAllText(configPath, Encoding.UTF8);
+                var content = File.ReadAllText(configPath, Encoding.UTF8)
+                    .Replace("\"Aurora.Devices.Creative.SoundBlasterXDevice, Aurora, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",", "");
                 config = string.IsNullOrWhiteSpace(content)
                     ? CreateDefaultConfigurationFile()
                     : JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });

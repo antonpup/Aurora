@@ -231,17 +231,22 @@ namespace Aurora.Utils
 
         public static void ToHsv(DrawingColor color, out double hue, out double saturation, out double value)
         {
-            var max = Math.Max(color.R, Math.Max(color.G, color.B));
-            var min = Math.Min(color.R, Math.Min(color.G, color.B));
+            ToHsv((color.R, color.G, color.B), out hue, out saturation, out value);
+        }
+
+        public static void ToHsv((byte r, byte g, byte b) color, out double hue, out double saturation, out double value)
+        {
+            var max = Math.Max(color.r, Math.Max(color.g, color.b));
+            var min = Math.Min(color.r, Math.Min(color.g, color.b));
 
             var delta = max - min;
 
             hue = 0d;
             if (delta != 0)
             {
-                if (color.R == max) hue = (color.G - color.B) / (double)delta;
-                else if (color.G == max) hue = 2d + (color.B - color.R) / (double)delta;
-                else if (color.B == max) hue = 4d + (color.R - color.G) / (double)delta;
+                if (color.r == max) hue = (color.g - color.b) / (double)delta;
+                else if (color.g == max) hue = 2d + (color.b - color.r) / (double)delta;
+                else if (color.b == max) hue = 4d + (color.r - color.g) / (double)delta;
             }
 
             hue *= 60;
@@ -276,6 +281,31 @@ namespace Aurora.Utils
             }
         }
 
+        public static (byte r, byte g, byte b) FromHsvSimple(double hue, double saturation, double value)
+        {
+            saturation = Math.Max(Math.Min(saturation, 1), 0);
+            value = Math.Max(Math.Min(value, 1), 0);
+
+            var hi = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            var f = hue / 60 - Math.Floor(hue / 60);
+
+            value *= 255;
+            var v = (byte)(value);
+            var p = (byte)(value * (1 - saturation));
+            var q = (byte)(value * (1 - f * saturation));
+            var t = (byte)(value * (1 - (1 - f) * saturation));
+
+            return hi switch
+            {
+                0 => (v, t, p),
+                1 => (q, v, p),
+                2 => (p, v, t),
+                3 => (p, q, v),
+                4 => (t, p, v),
+                _ => (v, p, q)
+            };
+        }
+
         /// <summary>
         /// Changes the hue of <paramref name="color"/>
         /// </summary>
@@ -295,6 +325,20 @@ namespace Aurora.Utils
             while (hue < 0) hue += 360;
 
             return FromHsv(hue, saturation, value);
+        }
+        public static (byte r, byte g, byte b) ChangeHue((byte r, byte g, byte b) color, double offset)
+        {
+            if (offset == 0)
+                return color;
+
+            ToHsv(color, out var hue, out var saturation, out var value);
+
+            hue += offset;
+
+            while (hue > 360) hue -= 360;
+            while (hue < 0) hue += 360;
+
+            return FromHsvSimple(hue, saturation, value);
         }
 
         /// <summary>
@@ -316,6 +360,15 @@ namespace Aurora.Utils
             ChangeHsvComponent(ref value, strength);
             return FromHsv(hue, saturation, value);
         }
+        public static (byte r, byte g, byte b) ChangeBrightness((byte r, byte g, byte b) color, double strength)
+        {
+            if (strength == 0)
+                return color;
+
+            ToHsv(color, out var hue, out var saturation, out var value);
+            ChangeHsvComponent(ref value, strength);
+            return FromHsvSimple(hue, saturation, value);
+        }
 
         /// <summary>
         /// Changes the saturation of <paramref name="color"/>
@@ -335,6 +388,15 @@ namespace Aurora.Utils
             ToHsv(color, out var hue, out var saturation, out var value);
             ChangeHsvComponent(ref saturation, strength);
             return FromHsv(hue, saturation, value);
+        }
+        public static (byte r, byte g, byte b) ChangeSaturation((byte r, byte g, byte b) color, double strength)
+        {
+            if (strength == 0)
+                return color;
+
+            ToHsv(color, out var hue, out var saturation, out var value);
+            ChangeHsvComponent(ref saturation, strength);
+            return FromHsvSimple(hue, saturation, value);
         }
 
         private static void ChangeHsvComponent(ref double component, double strength)
@@ -401,6 +463,18 @@ namespace Aurora.Utils
                 return diff < (epsilon * MinNormal);
             } // use relative error
             return diff / (absA + absB) < epsilon;
+        }
+
+        public static DrawingColor FastColor(byte r, byte g, byte b)
+        {
+            return FastColor(255, r, g, b);
+        }
+
+        public static DrawingColor FastColor(byte a, byte r, byte g, byte b)
+        {
+            return DrawingColor.FromArgb(
+                a | (r << 8) | (g << 16) | (b << 24)
+            );
         }
     }
 

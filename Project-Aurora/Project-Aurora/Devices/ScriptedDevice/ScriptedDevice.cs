@@ -9,7 +9,7 @@ using Microsoft.Win32.TaskScheduler;
 
 namespace Aurora.Devices.ScriptedDevice
 {
-    public class ScriptedDevice : IDevice
+    public class ScriptedDevice : DefaultDevice
     {
         private bool crashed = false;
         private readonly dynamic script = null;
@@ -55,9 +55,9 @@ namespace Aurora.Devices.ScriptedDevice
             }
         }
 
-        public string DeviceName => devicename;
+        public override string DeviceName => devicename;
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (!isInitialized)
             {
@@ -78,28 +78,6 @@ namespace Aurora.Devices.ScriptedDevice
             return isInitialized && !crashed;
         }
 
-        public bool IsConnected()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsInitialized => isInitialized && !crashed;
-
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized && !crashed;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized && !crashed;
-        }
-
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Reset()
         {
             if (isInitialized)
@@ -117,7 +95,7 @@ namespace Aurora.Devices.ScriptedDevice
             }
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             if (isInitialized)
             {
@@ -136,7 +114,7 @@ namespace Aurora.Devices.ScriptedDevice
             }
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (isInitialized)
             {
@@ -158,31 +136,6 @@ namespace Aurora.Devices.ScriptedDevice
             else
             {
                 return false;
-            }
-        }
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
-        }
-
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables
-        {
-            get
-            {
-                if (script.GetType().GetMethod("GetRegisteredVariables") != null)
-                    return script.GetRegisteredVariables();
-                else
-                    return new VariableRegistry();
             }
         }
     }

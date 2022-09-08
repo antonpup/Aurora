@@ -17,11 +17,11 @@ namespace Aurora.Devices.CoolerMaster
     {
         public override string DeviceName => "CoolerMaster";
 
-        private readonly List<(Native.DEVICE_INDEX Device, Native.COLOR_MATRIX Matrix)> InitializedDevices = new List<(Native.DEVICE_INDEX, Native.COLOR_MATRIX)>();
+        private readonly List<(Native.DEVICE_INDEX Device, Native.COLOR_MATRIX Matrix)> _initializedDevices = new();
 
-        protected override string DeviceInfo => string.Join(", ", InitializedDevices.Select(d => Enum.GetName(typeof(Native.DEVICE_INDEX), d.Device)));
+        protected override string DeviceInfo => string.Join(", ", _initializedDevices.Select(d => Enum.GetName(typeof(Native.DEVICE_INDEX), d.Device)));
 
-        private bool loggedLayout;
+        private bool _loggedLayout;
 
         public override bool Initialize()
         {
@@ -34,11 +34,11 @@ namespace Aurora.Devices.CoolerMaster
             {
                 if (Native.IsDevicePlug(device) && Native.EnableLedControl(true, device))
                 {
-                    InitializedDevices.Add((device, Native.COLOR_MATRIX.Create()));
+                    _initializedDevices.Add((device, Native.COLOR_MATRIX.Create()));
                 }
             }
 
-            return IsInitialized = InitializedDevices.Any();
+            return IsInitialized = _initializedDevices.Any();
         }
 
         public override void Shutdown()
@@ -46,17 +46,17 @@ namespace Aurora.Devices.CoolerMaster
             if (!IsInitialized)
                 return;
 
-            foreach (var (dev, _) in InitializedDevices)
+            foreach (var (dev, _) in _initializedDevices)
                 Native.EnableLedControl(false, dev);
 
-            InitializedDevices.Clear();
+            _initializedDevices.Clear();
 
             IsInitialized = false;
         }
 
         protected override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            foreach (var (dev, colors) in InitializedDevices)
+            foreach (var (dev, colors) in _initializedDevices)
             {
                 if (Native.Mice.Contains(dev) && Global.Configuration.DevicesDisableMouse)
                     continue;
@@ -66,10 +66,10 @@ namespace Aurora.Devices.CoolerMaster
                 if (!KeyMaps.LayoutMapping.TryGetValue(dev, out var dict))
                 {
                     dict = KeyMaps.GenericFullSize;
-                    if (!loggedLayout)
+                    if (!_loggedLayout)
                     {
                         LogError($"Could not find layout for device {Enum.GetName(typeof(Native.DEVICE_INDEX), dev)}, using generic.");
-                        loggedLayout = true;
+                        _loggedLayout = true;
                     }
                 }
 

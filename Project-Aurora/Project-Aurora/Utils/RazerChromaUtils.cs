@@ -1,15 +1,12 @@
 ﻿using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
-using RazerSdkWrapper.Utils;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using RazerSdkHelper;
 
 namespace Aurora.Utils
 {
@@ -35,6 +32,7 @@ namespace Aurora.Utils
                 {
                     FileName = filename,
                     WorkingDirectory = path,
+                    UseShellExecute = true,
                     Arguments = $"/S _?={path}",
                     ErrorDialog = true
                 };
@@ -139,6 +137,7 @@ namespace Aurora.Utils
             {
                 FileName = Path.GetFileName(installerPath),
                 WorkingDirectory = Path.GetDirectoryName(installerPath),
+                UseShellExecute = true,
                 Arguments = "/S",
                 ErrorDialog = true
             };

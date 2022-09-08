@@ -44,7 +44,7 @@ namespace Aurora_Updater
             if(sender is LinkLabel)
             {
                 (sender as LinkLabel).LinkVisited = true;
-                System.Diagnostics.Process.Start("https://github.com/Aurora-RGB/Aurora/releases");
+                System.Diagnostics.Process.Start("explorer", "https://github.com/Aurora-RGB/Aurora/releases");
             }
         }
 

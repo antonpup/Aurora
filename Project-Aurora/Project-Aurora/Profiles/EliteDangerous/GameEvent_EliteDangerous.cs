@@ -4,17 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Timers;
 using System.Xml;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
 using Aurora.Profiles.EliteDangerous.Journal;
-using Aurora.Profiles.EliteDangerous.Journal.Events;
-using Aurora.Utils;
-using CSScriptLibrary;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Aurora.Profiles.EliteDangerous
 {

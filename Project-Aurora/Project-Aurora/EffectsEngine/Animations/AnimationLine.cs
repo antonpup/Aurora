@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Aurora.Utils;
-using CSScriptLibrary;
 
 namespace Aurora.EffectsEngine.Animations
 {

@@ -5,17 +5,11 @@ using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
-using RazerSdkWrapper;
-using RazerSdkWrapper.Data;
-using RazerSdkWrapper.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using RazerSdkHelper;
 
 namespace Aurora.Settings.Layers
 {
@@ -63,100 +57,17 @@ namespace Aurora.Settings.Layers
     [LayerHandlerMeta(Name = "Razer Chroma", IsDefault = true)]
     public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     {
-        private readonly Color[] _keyboardColors;
-        private readonly Color[] _mousepadColors;
-        private Color _mouseColor;
-        private string _currentAppExecutable;
-        private bool _isDumping;
         private readonly EffectLayer _layer = new("Chroma Layer");
-
-        public RazerLayerHandler()
-        {
-            _keyboardColors = new Color[22 * 6];
-            _mousepadColors = new Color[16];
-
-            if (Global.razerSdkManager != null)
-            {
-                Global.razerSdkManager.DataUpdated += OnDataUpdated;
-
-                var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
-                appList.Update();
-                _currentAppExecutable = appList.CurrentAppExecutable;
-            }
-        }
 
         protected override UserControl CreateControl()
         {
             return new Control_RazerLayer(this);
         }
 
-        private void OnDataUpdated(object s, EventArgs e)
-        {
-            if (s is not AbstractDataProvider provider)
-                return;
-
-            provider.Update();
-
-            if (_isDumping)
-                DumpData(provider);
-
-            if (provider is RzKeyboardDataProvider keyboard)
-            {
-                for (var i = 0; i < keyboard.Grids[0].Height * keyboard.Grids[0].Width; i++)
-                    _keyboardColors[i] = keyboard.GetZoneColor(i);
-            }
-            else if (provider is RzMouseDataProvider mouse)
-            {
-                _mouseColor = mouse.GetZoneColor(55);
-            }
-            else if (provider is RzMousepadDataProvider mousePad)
-            {
-                for (var i = 0; i < mousePad.Grids[0].Height * mousePad.Grids[0].Width; i++)
-                    _mousepadColors[i] = mousePad.GetZoneColor(i);
-            }
-            else if (provider is RzAppListDataProvider appList)
-            {
-                _currentAppExecutable = appList.CurrentAppExecutable;
-            }
-        }
-
-        public bool StartDumpingData()
-        {
-            var root = Global.LogsDirectory;
-            if (!Directory.Exists(root))
-                return false;
-
-            var path = $@"{root}\RazerLayer";
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-
-            foreach (var file in Directory.EnumerateFiles(path, "*.bin", SearchOption.TopDirectoryOnly))
-                File.Delete(file);
-
-            Global.logger.Info("RazerLayerHandler started dumping data");
-            _isDumping = true;
-            return true;
-        }
-
-        public void StopDumpingData()
-        {
-            Global.logger.Info("RazerLayerHandler stopped dumping data");
-            _isDumping = false;
-        }
-
-        public void DumpData(AbstractDataProvider provider)
-        {
-            var path = Path.Combine(Global.LogsDirectory, "RazerLayer");
-            var filename = $"{provider.GetType().Name}_{Environment.TickCount}.bin";
-            using var file = File.Open($@"{path}\{filename}", FileMode.Create);
-            var data = provider.Read();
-            file.Write(data, 0, data.Length);
-        }
-
         private bool _empty = true;
         public override EffectLayer Render(IGameState gamestate)
         {
-            if (!IsCurrentAppValid())
+            if (!RzHelper.IsCurrentAppValid())
             {
                 if (_empty) return _layer;
                 _layer.Clear();
@@ -164,6 +75,7 @@ namespace Aurora.Settings.Layers
                 return _layer;
             }
             _empty = false;
+            RzHelper.UpdateIfStale();
 
             foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
             {
@@ -183,29 +95,29 @@ namespace Aurora.Settings.Layers
 
         private bool TryGetColor(DeviceKeys key, out Color color)
         {
-            color = Color.Transparent;
+            (byte r, byte g, byte b) rColor = (0, 0, 0);
             if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
-                color = _keyboardColors[position[1] + position[0] * 22];
+                rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
             else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
-                color = _mousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
+                rColor = RzHelper.MousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
             else if (key == DeviceKeys.Peripheral)
-                color = _mouseColor;
+                rColor = RzHelper.MouseColor;
             else
+            {
+                color = Color.Transparent;
                 return false;
+            }
 
             if (Properties.ColorPostProcessEnabled)
-                color = PostProcessColor(color);
+                rColor = PostProcessColor(rColor);
+            color = FastTransform(rColor);
 
             return true;
         }
 
-        private bool IsCurrentAppValid() 
-            => !string.IsNullOrEmpty(_currentAppExecutable)
-            && string.Compare(_currentAppExecutable, "Aurora.exe", StringComparison.OrdinalIgnoreCase) != 0;
-
-        private Color PostProcessColor(Color color)
+        private (byte r, byte g, byte b) PostProcessColor((byte r, byte g, byte b) color)
         {
-            if (color.R == 0 && color.G == 0 && color.B == 0)
+            if (color.r == 0 && color.g == 0 && color.b == 0)
                 return color;
 
             if (Properties.BrightnessChange != 0)
@@ -218,12 +130,9 @@ namespace Aurora.Settings.Layers
             return color;
         }
 
-        public override void Dispose()
+        private Color FastTransform((byte r, byte g, byte b) color)
         {
-            if(Global.razerSdkManager != null)
-                Global.razerSdkManager.DataUpdated -= OnDataUpdated;
-
-            base.Dispose();
+            return ColorUtils.FastColor(color.r, color.g, color.b);
         }
     }
 }

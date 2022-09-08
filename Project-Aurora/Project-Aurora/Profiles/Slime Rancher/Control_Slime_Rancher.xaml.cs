@@ -57,12 +57,12 @@ namespace Aurora.Profiles.Slime_Rancher
 
         private void GoToSRMLPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/slimerancher/mods/2");
+            Process.Start("explorer", @"https://www.nexusmods.com/slimerancher/mods/2");
         }
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/slimerancher/mods/18");
+            Process.Start("explorer", @"https://www.nexusmods.com/slimerancher/mods/18");
         }
 
         #endregion

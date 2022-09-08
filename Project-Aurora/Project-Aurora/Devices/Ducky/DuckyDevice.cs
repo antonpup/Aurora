@@ -13,12 +13,8 @@ using System.Threading;
 
 namespace Aurora.Devices.Ducky
 {
-    class DuckyDevice : IDevice
+    class DuckyDevice : DefaultDevice
     {
-        private static string deviceName = "Ducky";
-        private bool isInitialized = false;
-        private long lastUpdateTime = 0;
-        private readonly Stopwatch watch = new Stopwatch();
         private Color processedColor;
         private (int PacketNum, int OffsetNum) currentKeyOffset;
         private Stopwatch packetDelay = new Stopwatch(); //Stopwatch used for timer resolution, System.Timer.Timer resolution is ~15ms, Stopwatch in HiRes mode is 10,000,000 per ms.
@@ -30,17 +26,9 @@ namespace Aurora.Devices.Ducky
         byte[] colourMessage = new byte[640], prevColourMessage = new byte[640];
         byte[] colourHeader = { 0x56, 0x83, 0x00 };
 
-        public VariableRegistry RegisteredVariables => new VariableRegistry();
+        public override string DeviceName => "Ducky";
 
-        public string DeviceName => deviceName;
-
-        public string DeviceDetails => IsInitialized
-            ? "Initialized"
-            : "Not Initialized";
-
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
-
-        public bool Initialize()
+        public override bool Initialize()
         {
             //Sets the initialize colour change packet
             DuckyRGBMappings.DuckyStartingPacket.CopyTo(colourMessage, Packet(0) + 1);
@@ -62,29 +50,29 @@ namespace Aurora.Devices.Ducky
                 {
                     try
                     {
-                        isInitialized = duckyKeyboard.TryOpen(out packetStream);
+                        IsInitialized = duckyKeyboard.TryOpen(out packetStream);
                         //This line initializes the keyboard in to letting the LEDs be controlled over USB HID.
                         packetStream.Write(DuckyRGBMappings.DuckyTakeover);
                         progress = -1;
                     }
                     catch
                     {
-                        isInitialized = false;
+                        IsInitialized = false;
                     }
                     break;
                 }
                 else
                 {
-                    isInitialized = false;
+                    IsInitialized = false;
                 }
             }
 
-            return isInitialized;
+            return IsInitialized;
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
-            if (!isInitialized)
+            if (!IsInitialized)
                 return;
 
             //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
@@ -98,38 +86,16 @@ namespace Aurora.Devices.Ducky
             packetStream?.Dispose();
             packetStream?.Close();
             progress = -2;
-            isInitialized = false;
+            IsInitialized = false;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             Shutdown();
             Initialize();
         }
 
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsInitialized => isInitialized;
-
-        public bool IsConnected()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             foreach (KeyValuePair<DeviceKeys, Color> kc in keyColors)
             {
@@ -215,18 +181,6 @@ namespace Aurora.Devices.Ducky
                 return updateSuccess;
             }
             return true;
-        }
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
         }
 
         private int Packet(int packetNum) => packetNum * 64;

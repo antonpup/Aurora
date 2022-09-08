@@ -1,136 +1,134 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using Xceed.Wpf.Toolkit;
-using Aurora.Profiles.Desktop;
-using Microsoft.Win32;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Win32.TaskScheduler;
-using System.Windows.Data;
-using RazerSdkWrapper.Utils;
-using System.Net;
-using RazerSdkWrapper.Data;
 using System.Windows.Threading;
 using Aurora.Devices.Asus.Config;
 using Aurora.Utils;
-using System.Globalization;
+using Microsoft.Win32;
+using Microsoft.Win32.TaskScheduler;
+using RazerSdkHelper;
+using RazerSdkWrapper.Data;
+using Xceed.Wpf.Toolkit;
+using Action = System.Action;
+using Application = System.Windows.Application;
+using Button = System.Windows.Controls.Button;
+using CheckBox = System.Windows.Controls.CheckBox;
+using MessageBox = System.Windows.MessageBox;
+using Task = System.Threading.Tasks.Task;
 
 namespace Aurora.Settings
 {
     /// <summary>
     /// Interaction logic for Control_Settings.xaml
     /// </summary>
-    public partial class Control_Settings : UserControl
+    public partial class Control_Settings
     {
-        private RegistryKey runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-        private const string StartupTaskID = "AuroraStartup";
+        private readonly RegistryKey _runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private const string StartupTaskId = "AuroraStartup";
 
         public Control_Settings()
         {
             InitializeComponent();
 
-            this.tabMain.DataContext = Global.Configuration;
+            tabMain.DataContext = Global.Configuration;
 
-            if (runRegistryPath.GetValue("Aurora") != null)
-                runRegistryPath.DeleteValue("Aurora");
+            if (_runRegistryPath.GetValue("Aurora") != null)
+                _runRegistryPath.DeleteValue("Aurora");
 
             try
             {
-                using (TaskService service = new TaskService())
+                using var service = new TaskService();
+                var task = service.FindTask(StartupTaskId);
+                var exePath = Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
+                
+                TaskDefinition taskDefinition = task != null ? task.Definition : service.NewTask();
+                
+                //Update path of startup task
+                taskDefinition.RegistrationInfo.Description = "Start Aurora on Startup";
+                taskDefinition.Actions.Clear();
+                taskDefinition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
+                if (task != null)
                 {
-                    Microsoft.Win32.TaskScheduler.Task task = service.FindTask(StartupTaskID);
-                    if (task != null)
-                    {
-                        TaskDefinition definition = task.Definition;
-                        //Update path of startup task
-                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                        definition.Actions.Clear();
-                        definition.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
-                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, definition);
-                        RunAtWinStartup.IsChecked = task.Enabled;
-                        startDelayAmount.Value = task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger ? (int)trigger.Delay.TotalSeconds : 0;
-                    }
-                    else
-                    {
-                        TaskDefinition td = service.NewTask();
-                        td.RegistrationInfo.Description = "Start Aurora on Startup";
-
-                        td.Triggers.Add(new LogonTrigger { Enabled = true });
-
-                        string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
-                        td.Actions.Add(new ExecAction(exePath, "-silent", Path.GetDirectoryName(exePath)));
-
-                        td.Principal.RunLevel = TaskRunLevel.Highest;
-                        td.Settings.DisallowStartIfOnBatteries = false;
-                        td.Settings.DisallowStartOnRemoteAppSession = false;
-                        td.Settings.ExecutionTimeLimit = TimeSpan.Zero;
-
-                        service.RootFolder.RegisterTaskDefinition(StartupTaskID, td);
-                        RunAtWinStartup.IsChecked = true;
-                    }
+                    startDelayAmount.Value = task.Definition.Triggers.FirstOrDefault(t =>
+                        t.TriggerType == TaskTriggerType.Logon
+                    ) is LogonTrigger trigger
+                        ? (int) trigger.Delay.TotalSeconds
+                        : 0;
                 }
+                else
+                {
+                    taskDefinition.Triggers.Add(new LogonTrigger { Enabled = true });
+
+                    taskDefinition.Principal.RunLevel = TaskRunLevel.Highest;
+                    taskDefinition.Settings.DisallowStartIfOnBatteries = false;
+                    taskDefinition.Settings.DisallowStartOnRemoteAppSession = false;
+                    taskDefinition.Settings.ExecutionTimeLimit = TimeSpan.Zero;
+                }
+                task = service.RootFolder.RegisterTaskDefinition(StartupTaskId, taskDefinition);
+                RunAtWinStartup.IsChecked = task.Enabled;
             }
             catch (Exception exc)
             {
                 Global.logger.Error("Error caught when updating startup task. Error: " + exc);
             }
 
-            string v = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion;
-            string o = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).CompanyName;
-            string r = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).ProductName;
+            string v = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
+            string o = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).CompanyName;
+            string r = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductName;
 
-            this.lblVersion.Content = (v[0].ToString().Length > 0 ? "" : "beta ") + $"{v} {o}/{r}";
-            this.LnkIssues.NavigateUri = new Uri($"https://github.com/{o}/{r}/issues/");
-            this.LnkRepository.NavigateUri = new Uri($"https://github.com/{o}/{r}");
-            this.LnkContributors.NavigateUri = new Uri($"https://github.com/{o}/{r}#contributors-");
+            lblVersion.Content = (v[0].ToString().Length > 0 ? "" : "beta ") + $"{v} {o}/{r}";
+            LnkIssues.NavigateUri = new Uri($"https://github.com/{o}/{r}/issues/");
+            LnkRepository.NavigateUri = new Uri($"https://github.com/{o}/{r}");
+            LnkContributors.NavigateUri = new Uri($"https://github.com/{o}/{r}#contributors-");
 
             var rzVersion = RzHelper.GetSdkVersion();
             var rzSdkEnabled = RzHelper.IsSdkEnabled();
 
-            this.razer_wrapper_installed_version_label.Content = rzVersion.ToString();
-            this.razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(RzHelper.IsSdkVersionSupported(rzVersion) ? Colors.LightGreen : Colors.PaleVioletRed);
-            this.razer_wrapper_supported_versions_label.Content = $"[{RzHelper.SupportedFromVersion}-{RzHelper.SupportedToVersion}]";
+            razer_wrapper_installed_version_label.Content = rzVersion.ToString();
+            razer_wrapper_installed_version_label.Foreground = new SolidColorBrush(RzHelper.IsSdkVersionSupported(rzVersion) ? Colors.LightGreen : Colors.PaleVioletRed);
+            razer_wrapper_supported_versions_label.Content = $"[{RzHelper.SupportedFromVersion}-{RzHelper.SupportedToVersion}]";
 
             if (rzVersion == new RzSdkVersion())
-                this.razer_wrapper_uninstall_button.Visibility = Visibility.Hidden;
+                razer_wrapper_uninstall_button.Visibility = Visibility.Hidden;
 
-            this.razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
-            this.razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.PaleVioletRed);
+            razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
+            razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.DarkGray);
 
             if (Global.razerSdkManager != null)
             {
-                this.razer_wrapper_connection_status_label.Content = "Success";
-                this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.LightGreen);
+                razer_wrapper_connection_status_label.Content = "Success";
+                razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.LightGreen);
 
                 {
                     var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
                     appList.Update();
-                    this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable ?? "None"} [{appList.CurrentAppPid}]";
+                    razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable ?? "None"} [{appList.CurrentAppPid}]";
                 }
 
-                Global.razerSdkManager.DataUpdated += (s, _) =>
-                {
-                    if (!(s is RzAppListDataProvider appList))
-                        return;
-
-                    appList.Update();
-                    Global.logger.Debug("RazerManager current app: {0} [{1}]", appList.CurrentAppExecutable ?? "None", appList.CurrentAppPid);
-                    Dispatcher.BeginInvoke(DispatcherPriority.Background, (System.Action)(() => this.razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]"));
-                };
+                Global.razerSdkManager.DataUpdated += HandleChromaAppChange;
             }
             else
             {
-                this.razer_wrapper_connection_status_label.Content = "Failure";
-                this.razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                razer_wrapper_connection_status_label.Content = "Failure";
+                razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
             }
+        }
+
+        private void HandleChromaAppChange(object s, EventArgs _)
+        {
+            if (s is not RzAppListDataProvider appList) return;
+
+            appList.Update();
+            Global.logger.Debug("RazerManager current app: {0} [{1}]", appList.CurrentAppExecutable ?? "None", appList.CurrentAppPid);
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, 
+                (Action) (() => razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]"));
         }
 
         /// <summary>The excluded program the user has selected in the excluded list.</summary>
@@ -138,19 +136,22 @@ namespace Aurora.Settings
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.ctrlPluginManager.Host = Global.PluginManager;
+            ctrlPluginManager.Host = Global.PluginManager;
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 
         private void ExcludedAdd_Click(object sender, RoutedEventArgs e)
         {
             Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
-            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName) && !Global.Configuration.ExcludedPrograms.Contains(dialog.ChosenExecutableName))
+            if (dialog.ShowDialog() == true &&
+                !string.IsNullOrWhiteSpace(dialog.ChosenExecutableName) &&
+                !Global.Configuration.ExcludedPrograms.Contains(dialog.ChosenExecutableName)
+                )
                 Global.Configuration.ExcludedPrograms.Add(dialog.ChosenExecutableName);
         }
 
@@ -169,7 +170,7 @@ namespace Aurora.Settings
                     using (TaskService ts = new TaskService())
                     {
                         //Find existing task
-                        var task = ts.FindTask(StartupTaskID);
+                        var task = ts.FindTask(StartupTaskId);
                         task.Enabled = (sender as CheckBox).IsChecked.Value;
                     }
                 }
@@ -181,32 +182,27 @@ namespace Aurora.Settings
 
         }
 
-        private void devices_retry_Click(object sender, RoutedEventArgs e)
-        {
-            Global.dev_manager.InitializeDevices();
-        }
-
         private void updates_check_Click(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
-                string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
+                string updaterPath = Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
-                if (File.Exists(updater_path))
+                if (File.Exists(updaterPath))
                 {
                     ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = updater_path;
+                    startInfo.FileName = updaterPath;
                     Process.Start(startInfo);
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show("Updater is missing!");
+                    MessageBox.Show("Updater is missing!");
                 }
             }
         }
 
         private void LoadBrandDefault(object sender, SelectionChangedEventArgs e) => Global.kbLayout.LoadBrandDefault();
-        private void ResetDevices(object sender, RoutedEventArgs e) => Global.dev_manager.ResetDevices();
+        private async void ResetDevices(object sender, RoutedEventArgs e) => await Global.dev_manager.ResetDevices();
 
         private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
         {
@@ -223,12 +219,12 @@ namespace Aurora.Settings
                 => Application.Current.Dispatcher.Invoke(() => razer_wrapper_install_button.Content = s);
 
             void ShowMessageBox(string message, string title, MessageBoxImage image = MessageBoxImage.Exclamation)
-                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, image));
+                => Application.Current.Dispatcher.Invoke(() => MessageBox.Show(message, title, MessageBoxButton.OK, image));
 
             razer_wrapper_install_button.IsEnabled = false;
             razer_wrapper_uninstall_button.IsEnabled = false;
 
-            System.Threading.Tasks.Task.Run(async () =>
+            Task.Run(async () =>
             {
                 SetButtonContent("Uninstalling");
                 var uninstallSuccess = await RazerChromaUtils.UninstallAsync()
@@ -239,7 +235,8 @@ namespace Aurora.Settings
                         HandleExceptions(t.Exception);
                         return false;
                     }
-                    else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
+
+                    if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
                     {
                         ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.", "Restart required!");
                         return false;
@@ -302,12 +299,12 @@ namespace Aurora.Settings
                 => Application.Current.Dispatcher.Invoke(() => razer_wrapper_uninstall_button.Content = s);
 
             void ShowMessageBox(string message, string title, MessageBoxImage image = MessageBoxImage.Exclamation)
-                => Application.Current.Dispatcher.Invoke(() => System.Windows.MessageBox.Show(message, title, MessageBoxButton.OK, image));
+                => Application.Current.Dispatcher.Invoke(() => MessageBox.Show(message, title, MessageBoxButton.OK, image));
 
             razer_wrapper_install_button.IsEnabled = false;
             razer_wrapper_uninstall_button.IsEnabled = false;
 
-            System.Threading.Tasks.Task.Run(async () =>
+            Task.Run(async () =>
             {
                 SetButtonContent("Uninstalling");
                 await RazerChromaUtils.UninstallAsync()
@@ -338,7 +335,7 @@ namespace Aurora.Settings
             catch (Exception exc)
             {
                 Global.logger.Error("Exception during Logitech Wrapper install. Exception: " + exc);
-                System.Windows.MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
+                MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
             }
         }
 
@@ -346,28 +343,28 @@ namespace Aurora.Settings
         {
             try
             {
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                var dialog = new FolderBrowserDialog();
+                DialogResult result = dialog.ShowDialog();
 
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == DialogResult.OK)
                 {
-                    using (BinaryWriter razer_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "RzChromaSDK.dll"), FileMode.Create)))
+                    using (BinaryWriter razer_wrapper_86 = new BinaryWriter(new FileStream(Path.Combine(dialog.SelectedPath, "RzChromaSDK.dll"), FileMode.Create)))
                     {
                         razer_wrapper_86.Write(Properties.Resources.Aurora_RazerLEDWrapper86);
                     }
 
-                    using (BinaryWriter razer_wrapper_64 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "RzChromaSDK64.dll"), FileMode.Create)))
+                    using (BinaryWriter razer_wrapper_64 = new BinaryWriter(new FileStream(Path.Combine(dialog.SelectedPath, "RzChromaSDK64.dll"), FileMode.Create)))
                     {
                         razer_wrapper_64.Write(Properties.Resources.Aurora_RazerLEDWrapper64);
                     }
 
-                    System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer applied to\r\n" + dialog.SelectedPath);
+                    MessageBox.Show("Aurora Wrapper Patch for Razer applied to\r\n" + dialog.SelectedPath);
                 }
             }
             catch (Exception exc)
             {
                 Global.logger.Error("Exception during Razer Wrapper install. Exception: " + exc);
-                System.Windows.MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
+                MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
             }
         }
 
@@ -375,23 +372,23 @@ namespace Aurora.Settings
         {
             try
             {
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                var dialog = new FolderBrowserDialog();
+                DialogResult result = dialog.ShowDialog();
 
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == DialogResult.OK)
                 {
-                    using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
+                    using (BinaryWriter lightfx_wrapper_86 = new BinaryWriter(new FileStream(Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
                     {
                         lightfx_wrapper_86.Write(Properties.Resources.Aurora_LightFXWrapper86);
                     }
 
-                    System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) applied to\r\n" + dialog.SelectedPath);
+                    MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) applied to\r\n" + dialog.SelectedPath);
                 }
             }
             catch (Exception exc)
             {
                 Global.logger.Error("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc);
-                System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
+                MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
 
@@ -399,23 +396,23 @@ namespace Aurora.Settings
         {
             try
             {
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                var dialog = new FolderBrowserDialog();
+                DialogResult result = dialog.ShowDialog();
 
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == DialogResult.OK)
                 {
-                    using (BinaryWriter lightfx_wrapper_64 = new BinaryWriter(new FileStream(System.IO.Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
+                    using (BinaryWriter lightfx_wrapper_64 = new BinaryWriter(new FileStream(Path.Combine(dialog.SelectedPath, "LightFX.dll"), FileMode.Create)))
                     {
                         lightfx_wrapper_64.Write(Properties.Resources.Aurora_LightFXWrapper64);
                     }
 
-                    System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) applied to\r\n" + dialog.SelectedPath);
+                    MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) applied to\r\n" + dialog.SelectedPath);
                 }
             }
             catch (Exception exc)
             {
                 Global.logger.Error("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc);
-                System.Windows.MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
+                MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
             }
         }
 
@@ -428,7 +425,7 @@ namespace Aurora.Settings
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button)
-                System.Diagnostics.Process.Start(System.IO.Path.Combine(Global.LogsDirectory));
+                Process.Start("explorer", Path.Combine(Global.LogsDirectory));
         }
 
         private void HighPriorityCheckbox_Checked(object sender, RoutedEventArgs e)
@@ -443,7 +440,7 @@ namespace Aurora.Settings
         private void StartDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             using TaskService service = new TaskService();
-            var task = service.FindTask(StartupTaskID);
+            var task = service.FindTask(StartupTaskId);
             if (task != null && task.Definition.Triggers.FirstOrDefault(t => t.TriggerType == TaskTriggerType.Logon) is LogonTrigger trigger)
             {
                 trigger.Delay = new TimeSpan(0, 0, ((IntegerUpDown)sender).Value ?? 0);
@@ -454,9 +451,9 @@ namespace Aurora.Settings
         private void btnDumpSensors_Click(object sender, RoutedEventArgs e)
         {
             if (HardwareMonitor.TryDump())
-                System.Windows.MessageBox.Show("Successfully wrote sensor info to logs folder");
+                MessageBox.Show("Successfully wrote sensor info to logs folder");
             else
-                System.Windows.MessageBox.Show("Error dumping file. Consult log for details.");
+                MessageBox.Show("Error dumping file. Consult log for details.");
         }
     }
 }

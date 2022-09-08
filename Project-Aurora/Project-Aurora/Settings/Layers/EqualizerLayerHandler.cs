@@ -5,7 +5,6 @@ using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using NAudio.Dsp;
 using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,13 +13,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.ServiceModel.Configuration;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Interop;
-using System.Windows.Media.Imaging;
 
 namespace Aurora.Settings.Layers
 {

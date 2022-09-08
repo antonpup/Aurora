@@ -101,7 +101,7 @@ namespace Aurora.Profiles.Witcher3
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            System.Diagnostics.Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 

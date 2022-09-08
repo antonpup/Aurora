@@ -49,7 +49,7 @@ namespace Aurora.Profiles.Payday_2
 
         private void get_hook_button_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"http://paydaymods.com/download/"));
+            System.Diagnostics.Process.Start("explorer", @"http://paydaymods.com/download/");
         }
 
         private void install_mod_button_Click(object sender, RoutedEventArgs e)
@@ -168,7 +168,7 @@ namespace Aurora.Profiles.Payday_2
 
         private void get_lib_button_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(@"https://github.com/simon-wh/PAYDAY-2-BeardLib"));
+            System.Diagnostics.Process.Start("explorer", @"https://github.com/simon-wh/PAYDAY-2-BeardLib");
         }
     }
 }

@@ -1,16 +1,14 @@
-﻿using CSScriptLibrary;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Amib.Threading;
+using CSScriptLib;
 
 namespace Aurora.Devices
 {
@@ -28,6 +26,7 @@ namespace Aurora.Devices
         public DeviceContainer(IDevice device)
         {
             Device = device;
+            _worker.Name = device.DeviceName + " Thread Pool";
             var args = new DoWorkEventArgs(null);
             _updateAction = () =>
             {
@@ -35,8 +34,13 @@ namespace Aurora.Devices
             };
         }
 
-        private void WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
+        private async void WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
         {
+            if (Device.InitializeTask == null)
+            {
+                return;
+            }
+            await Device.InitializeTask;
             lock(ActionLock)
             {
                 Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
@@ -45,7 +49,7 @@ namespace Aurora.Devices
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (_worker.WaitingCallbacks < 2)
+            if (_worker.WaitingCallbacks < 1)
             {
                 _worker.QueueWorkItem(_updateAction);
             }
@@ -54,7 +58,6 @@ namespace Aurora.Devices
 
     public class DeviceManager
     {
-        private const int RETRY_INTERVAL = 2000;
         private const int RETRY_ATTEMPTS = 6;
         private bool _InitializeOnceAllowed;
         private bool suspended;
@@ -124,7 +127,7 @@ namespace Aurora.Devices
 
                             break;
                         case ".cs":
-                            System.Reflection.Assembly script_assembly = CSScript.LoadFile(device_script);
+                            System.Reflection.Assembly script_assembly = CSScript.Evaluator.CompileCode(device_script);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {
                                 dynamic script = Activator.CreateInstance(typ);
@@ -231,22 +234,6 @@ namespace Aurora.Devices
             }
         }
 
-        private void RetryAll()
-        {
-            while (RetryAttempts > 0)
-            {
-                foreach (var dc in DeviceContainers)
-                {
-                    if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
-                        continue;
-                    lock (dc.ActionLock)
-                        dc.Device.Initialize();
-                }
-                RetryAttempts--;
-                Thread.Sleep(RETRY_INTERVAL);
-            }
-        }
-
         public void InitializeOnce()
         {
             if (!InitializedDeviceContainers.Any() && _InitializeOnceAllowed)
@@ -260,33 +247,26 @@ namespace Aurora.Devices
             if (suspended)
                 return;
 
-            int devicesToRetry = 0;
-
-            foreach (var dc in DeviceContainers)
+            var devices = DeviceContainers
+                .Select(dc => dc.Device)
+                .Where(device => !device.IsInitialized && !Global.Configuration.DevicesDisabled.Contains(device.GetType()));
+            foreach (var device in devices)
             {
-                if (dc.Device.IsInitialized || Global.Configuration.DevicesDisabled.Contains(dc.Device.GetType()))
-                    continue;
-
-                lock (dc.ActionLock)
+                device.InitializeTask = Task.Run(device.Initialize);
+                device.InitializeTask.ContinueWith(task =>
                 {
-                    if (!dc.Device.Initialize())
-                        devicesToRetry++;
-                }
-
-                var s = $"[Device][{dc.Device.DeviceName}] ";
-
-                if (dc.Device.IsInitialized)
-                    s += "Initialized Successfully.";
-                else
-                    s += "Failed to initialize.";
-
-                Global.logger.Info(s);
+                    if (task.IsCompletedSuccessfully)
+                    {
+                        Global.logger.Info($"[Device][{device.DeviceName}] Initialized Successfully.");
+                    }
+                    else
+                    {
+                        Global.logger.Info($"[Device][{device.DeviceName}] Failed to initialize.");
+                    }
+                });
             }
 
-            if (devicesToRetry > 0)
-                Task.Run(RetryAll);
-
-            _InitializeOnceAllowed = InitializedDeviceContainers.Any();
+            _InitializeOnceAllowed = false;
         }
 
         public void ShutdownDevices()
@@ -295,21 +275,32 @@ namespace Aurora.Devices
             {
                 lock (dc.ActionLock)
                 {
-                    dc.Device.Shutdown();
+                    DisableDevice(dc.Device);
                 }
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
         }
 
-        public void ResetDevices()
+        public Task ResetDevices()
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.ActionLock)
-                {
-                    dc.Device.Reset();
-                }
+                dc.Device.InitializeTask = Task.Run(dc.Device.Reset);
             }
+            
+            return Task.WhenAll(InitializedDeviceContainers.Select(container => container.Device.InitializeTask));
+        }
+
+        public Task EnableDevice(IDevice device)
+        {
+            device.InitializeTask = Task.Run(device.Initialize);
+            return device.InitializeTask;
+        }
+
+        public void DisableDevice(IDevice device)
+        {
+            device.InitializeTask = null;
+            device.Shutdown();
         }
 
         public void UpdateDevices(DeviceColorComposition composition, bool forced = false)

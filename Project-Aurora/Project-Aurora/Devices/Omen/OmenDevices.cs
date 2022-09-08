@@ -10,26 +10,20 @@ using Aurora.Settings;
 
 namespace Aurora.Devices.Omen
 {
-    public class OmenDevices : IDevice
+    public class OmenDevices : DefaultDevice
     {
         bool kbConnected = false;
         bool peripheralConnected = false;
 
         List<IOmenDevice> devices;
 
-        private bool isInitialized = false;
-        private readonly string devicename = "OMEN";
+        public override string DeviceName => "OMEN";
 
-        private readonly System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        private long lastUpdateTime = 0;
-
-        public string DeviceName => devicename;
-
-        public string DeviceDetails
+        public override string DeviceDetails
         {
             get
             {
-                if (isInitialized)
+                if (IsInitialized)
                 {
                     string result = "";
                     foreach (var dev in devices)
@@ -49,18 +43,16 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
-
         public VariableRegistry RegisteredVariables => new VariableRegistry();
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
             Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
 
             lock (this)
             {
-                if (!isInitialized)
+                if (!IsInitialized)
                 {
                     devices = new List<IOmenDevice>();
                     IOmenDevice dev;
@@ -94,36 +86,10 @@ namespace Aurora.Devices.Omen
                         peripheralConnected = true;
                     }
 
-                    isInitialized = (devices.Count != 0);
+                    IsInitialized = (devices.Count != 0);
                 }
             }
-            return isInitialized;
-        }
-
-        public bool IsConnected()
-        {
-            return IsInitialized&& (devices != null && devices.Count != 0);
-        }
-
-        public bool IsInitialized => isInitialized;
-
-        public bool IsKeyboardConnected()
-        {
-            return kbConnected;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return peripheralConnected;
-        }
-
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
+            return IsInitialized;
         }
 
         private void DeviceChangedHandler(object sender)
@@ -133,13 +99,13 @@ namespace Aurora.Devices.Omen
             Initialize();
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             lock (this)
             {
                 try
                 {
-                    if (isInitialized)
+                    if (IsInitialized)
                     {
                         Reset();
 
@@ -157,15 +123,15 @@ namespace Aurora.Devices.Omen
                     Global.logger.Error("OMEN device, Exception during Shutdown. Message: " + e);
                 }
 
-                isInitialized = false;
+                IsInitialized = false;
             }
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             try
             {
-                if (e.Cancel || !isInitialized) return false;
+                if (e.Cancel || !IsInitialized) return false;
 
                 foreach (var dev in devices)
                 {
@@ -178,20 +144,6 @@ namespace Aurora.Devices.Omen
             }
 
             return true;
-        }
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            Global.logger.Info($"OMEN device, Update cost {lastUpdateTime} ms ");
-
-            return update_result;
         }
     }
 }

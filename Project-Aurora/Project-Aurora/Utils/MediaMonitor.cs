@@ -14,63 +14,71 @@ namespace Aurora.Utils
         
         private static readonly MediaManager MediaManager = new();
 
-        private static readonly List<string> MediaSessions = new();
+        private static readonly HashSet<MediaManager.MediaSession> MediaSessions = new(new MediaSessionComparer());
 
         static MediaMonitor()
         {
             MediaManager.OnAnySessionOpened += MediaManager_OnSessionOpened;
-            MediaManager.OnAnySessionClosed += MediaManager_OnAnySessionClosed;
             MediaManager.OnAnyPlaybackStateChanged += MediaManager_OnAnyPlaybackStateChanged;
+            MediaManager.OnAnySessionClosed += MediaManager_OnAnySessionClosed;
 
             MediaManager.Start();
             
             HasMedia = MediaManager.CurrentMediaSessions.Count > 0;
+            if (!HasMedia) return;
 
-            if (MediaManager.CurrentMediaSessions.Count == 0) return;
+            foreach (var (_, mediaSession) in MediaManager.CurrentMediaSessions)
+            {
+                MediaSessions.Add(mediaSession);
+            }
+
             UpdateButtons();
         }
 
-        private static void MediaManager_OnSessionOpened(MediaManager.MediaSession mediasession)
+        private static void MediaManager_OnSessionOpened(MediaManager.MediaSession mediaSession)
         {
             HasMedia = true;
-            
-            MediaSessions.Add(mediasession.Id);
-
-            mediasession.OnSessionClosed += MediaManager_OnAnySessionClosed;
+            MediaSessions.Add(mediaSession);
+            UpdateButtons();
         }
 
-        private static void MediaManager_OnAnySessionClosed(MediaManager.MediaSession mediasession)
+        private static void MediaManager_OnAnySessionClosed(MediaManager.MediaSession mediaSession)
         {
-            mediasession.OnSessionClosed -= MediaManager_OnAnySessionClosed;
-            MediaSessions.Remove(mediasession.Id);
+            mediaSession.OnPlaybackStateChanged -= MediaManager_OnAnyPlaybackStateChanged;
+            MediaSessions.Remove(mediaSession);
 
-            if (MediaSessions.Count == 0)
-            {
-                HasMedia = false;
-                MediaPlaying = false;
-                HasNextMedia = false;
-                HasPreviousMedia = false;
-            }
-            else
-            {
-                UpdateButtons();
-            }
+            UpdateButtons();
         }
 
-        private static void MediaManager_OnAnyPlaybackStateChanged(MediaManager.MediaSession mediasession, GlobalSystemMediaTransportControlsSessionPlaybackInfo playbackinfo)
+        private static void MediaManager_OnAnyPlaybackStateChanged(MediaManager.MediaSession mediaSession,
+            GlobalSystemMediaTransportControlsSessionPlaybackInfo playbackInfo)
         {
             UpdateButtons();
         }
 
         private static void UpdateButtons()
         {
-            HasNextMedia = MediaManager.CurrentMediaSessions.Any(
-                    pair => pair.Value.ControlSession.GetPlaybackInfo().Controls.IsNextEnabled);
-            HasPreviousMedia = MediaManager.CurrentMediaSessions.Any(pair =>
-                    pair.Value.ControlSession.GetPlaybackInfo().Controls.IsPreviousEnabled);
+            HasMedia = MediaSessions.Count > 0;
+            HasNextMedia = MediaSessions.Any(
+                    value => value.ControlSession.GetPlaybackInfo().Controls.IsNextEnabled);
+            HasPreviousMedia = MediaSessions.Any(value =>
+                value.ControlSession.GetPlaybackInfo().Controls.IsPreviousEnabled);
             MediaPlaying = MediaManager.CurrentMediaSessions.Any(pair =>
                 pair.Value.ControlSession.GetPlaybackInfo().PlaybackStatus ==
                 GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing);
+        }
+    }
+
+    internal class MediaSessionComparer : IEqualityComparer<MediaManager.MediaSession>
+    {
+        public bool Equals(MediaManager.MediaSession x, MediaManager.MediaSession y)
+        {
+            return x?.Id == y?.Id;
+        }
+
+        public int GetHashCode(MediaManager.MediaSession obj)
+        {
+            return obj.Id.GetHashCode();
         }
     }
 }

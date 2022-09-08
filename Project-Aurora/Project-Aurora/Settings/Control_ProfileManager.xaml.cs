@@ -143,7 +143,7 @@ namespace Aurora.Settings
         {
             if (FocusedApplication != null)
             {
-                System.Diagnostics.Process.Start(FocusedApplication.GetProfileFolderPath());
+                System.Diagnostics.Process.Start("explorer", FocusedApplication.GetProfileFolderPath());
             }
         }
 
@@ -181,7 +181,7 @@ namespace Aurora.Settings
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            System.Diagnostics.Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 

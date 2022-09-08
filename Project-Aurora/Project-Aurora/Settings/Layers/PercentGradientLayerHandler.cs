@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.ComponentModel;
+using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
@@ -28,15 +29,28 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     [LayerHandlerMeta(Name = "Percent (Gradient)", IsDefault = true)]
     public class PercentGradientLayerHandler : PercentLayerHandler<PercentGradientLayerHandlerProperties>
-    { 
+    {
+        private readonly EffectLayer _effectLayer = new();
+        private bool _invalidated;
+        
         protected override UserControl CreateControl()
         {
             return new Control_PercentGradientLayer(this);
         }
 
-        private readonly EffectLayer _effectLayer = new();
+        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        {
+            base.PropertiesChanged(sender, args);
+            _invalidated = true;
+        }
         public override EffectLayer Render(IGameState state)
         {
+            if (_invalidated)
+            {
+                _effectLayer.Clear();
+            }
+            _invalidated = false;
+            
             var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
             var maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 

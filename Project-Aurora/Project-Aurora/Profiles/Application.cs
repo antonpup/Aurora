@@ -1,6 +1,4 @@
 ﻿using Aurora.EffectsEngine;
-using Aurora.Profiles;
-using CSScriptLibrary;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,11 +11,12 @@ using System.Linq;
 using Aurora.Settings.Layers;
 using System.Reflection;
 using System.Windows.Media.Imaging;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Serialization;
 using System.Collections.ObjectModel;
 using Aurora.Settings;
 using System.ComponentModel;
+using Aurora.Scripts.VoronScripts;
+using CSScriptLib;
 
 namespace Aurora.Profiles
 {
@@ -472,6 +471,10 @@ namespace Aurora.Profiles
                 return;
 
             this.EffectScripts.Clear();
+            var voronsScriptPerf = new PerformanceEffect();
+            var voronsScriptPing = new PingEffect();
+            RegisterEffect(voronsScriptPerf.ID, voronsScriptPerf);
+            RegisterEffect(voronsScriptPing.ID, voronsScriptPing);
 
             string scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory);
             if (!Directory.Exists(scripts_path))
@@ -511,7 +514,7 @@ namespace Aurora.Profiles
 
                             break;
                         case ".cs":
-                            Assembly script_assembly = CSScript.LoadFile(script);
+                            Assembly script_assembly = CSScript.RoslynEvaluator.CompileCode(File.ReadAllText(script));
                             Type effectType = typeof(IEffectScript);
                             foreach (Type typ in script_assembly.ExportedTypes)
                             {

@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Aurora.EffectsEngine;
 using Aurora.Settings;
 using Aurora.Controls;
@@ -242,11 +241,6 @@ namespace Aurora
         }
 
         ////Misc
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
-        }
 
         private void trayicon_menu_quit_Click(object sender, RoutedEventArgs e)
         {

@@ -20,13 +20,23 @@ namespace Aurora.Devices
 
         protected virtual string DeviceInfo => "";
 
-        public string DeviceDetails => IsInitialized
+        public virtual string DeviceDetails => IsInitialized
             ? $"Initialized{(string.IsNullOrWhiteSpace(DeviceInfo) ? "" : ": " + DeviceInfo)}"
             : "Not Initialized";
 
         public string DeviceUpdatePerformance => IsInitialized
             ? lastUpdateTime + "(" + updateTime + ")" + " ms"
             : "";
+
+        public Task InitializeTask
+        {
+            get => _initializeTask;
+            set
+            {
+                _initializeTask?.Wait();
+                _initializeTask = value;
+            }
+        }
 
         public virtual bool IsInitialized { get; protected set; }
 
@@ -57,6 +67,8 @@ namespace Aurora.Devices
 
         #region Variables
         private VariableRegistry variableRegistry;
+        private Task _initializeTask;
+
         public VariableRegistry RegisteredVariables
         {
             get

@@ -1,27 +1,29 @@
-using Aurora.Devices;
-using Aurora.Profiles;
-using Aurora.Settings;
-using IronPython.Hosting;
-using Microsoft.Scripting.Hosting;
-using Microsoft.Win32;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
-using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using SharpDX.RawInput;
+using System.Windows.Threading;
+using Aurora.Devices;
+using Aurora.Profiles;
+using Aurora.Settings;
+using Aurora.Utils;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
+using Microsoft.Win32;
 using NLog;
-using System.Reflection;
-using System.Text;
+using RazerSdkHelper;
 using RazerSdkWrapper;
-using RazerSdkWrapper.Utils;
 using RazerSdkWrapper.Data;
+using MessageBox = System.Windows.MessageBox;
 
 namespace Aurora
 {
@@ -36,7 +38,7 @@ namespace Aurora
         /// <summary>
         /// A boolean indicating if Aurora was started with Debug parameter
         /// </summary>
-        public static bool isDebug = false;
+        public static bool isDebug;
 
         private static string _ExecutingDirectory = "";
         private static string _AppDataDirectory = "";
@@ -50,7 +52,7 @@ namespace Aurora
             get
             {
                 if (string.IsNullOrWhiteSpace(_ExecutingDirectory))
-                    _ExecutingDirectory = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                    _ExecutingDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
                 return _ExecutingDirectory;
             }
@@ -121,14 +123,7 @@ namespace Aurora
         public static KeyRecorder key_recorder;
         public static RzSdkManager razerSdkManager;
 
-        /// <summary>
-        /// Currently held down modifer key
-        /// </summary>
-        public static Keys held_modified = Keys.None;
-
         public static object Clipboard { get; set; }
-
-        public static long StartTime;
 
         public static void Initialize()
         {
@@ -139,15 +134,15 @@ namespace Aurora
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : System.Windows.Application
+    public partial class App
     {
-        private static readonly Mutex mutex = new Mutex(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
+        private static readonly Mutex mutex = new(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
         private static InputInterceptor InputInterceptor;
 
-        public static bool isSilent = false;
-        private static bool isDelayed = false;
-        private static int delayTime = 5000;
-        private static bool ignore_update = false;
+        public static bool isSilent;
+        private static bool _isDelayed;
+        private static int _delayTime = 5000;
+        private static bool _ignoreUpdate;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -168,7 +163,7 @@ namespace Aurora
 
                 try
                 {
-                    var win_reg = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+                    var win_reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
                     string productName = (string)win_reg.GetValue("ProductName");
 
                     systeminfo_sb.AppendFormat("Operation System: {0}\r\n", productName);
@@ -186,23 +181,20 @@ namespace Aurora
                 systeminfo_sb.AppendFormat("Executing Directory: {0}\r\n", Global.ExecutingDirectory);
                 systeminfo_sb.AppendFormat("Launch Directory: {0}\r\n", Directory.GetCurrentDirectory());
                 systeminfo_sb.AppendFormat("Processor Count: {0}\r\n", Environment.ProcessorCount);
-                //systeminfo_sb.AppendFormat("User DomainName: {0}\r\n", Environment.UserDomainName);
-                //systeminfo_sb.AppendFormat("User Name: {0}\r\n", Environment.UserName);
 
                 systeminfo_sb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);
                 systeminfo_sb.AppendFormat("Environment Version: {0}\r\n", Environment.Version);
 
-                System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
-                System.Security.Principal.WindowsPrincipal principal = new System.Security.Principal.WindowsPrincipal(identity);
-                systeminfo_sb.AppendFormat("Is Elevated: {0}\r\n", principal.IsInRole(System.Security.Principal.WindowsBuiltInRole.Administrator));
-                systeminfo_sb.AppendFormat("Aurora Assembly Version: {0}\r\n", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
-                systeminfo_sb.AppendFormat("Aurora File Version: {0}\r\n", System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location).FileVersion);
+                WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                systeminfo_sb.Append($"Is Elevated: {principal.IsInRole(WindowsBuiltInRole.Administrator)}\r\n");
+                systeminfo_sb.Append($"Aurora Assembly Version: {Assembly.GetExecutingAssembly().GetName().Version}\r\n");
+                systeminfo_sb.Append($"Aurora File Version: {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}\r\n");
 
                 systeminfo_sb.Append("========================================\r\n");
-
                 Global.logger.Info(systeminfo_sb.ToString());
 
-                string arg = "";
+                string arg;
 
                 for (int arg_i = 0; arg_i < e.Args.Length; arg_i++)
                 {
@@ -210,30 +202,30 @@ namespace Aurora
 
                     switch (arg)
                     {
-                        case ("-debug"):
+                        case "-debug":
                             Global.isDebug = true;
                             Global.logger.Info("Program started in debug mode.");
                             break;
-                        case ("-silent"):
+                        case "-silent":
                             isSilent = true;
                             Global.logger.Info("Program started with '-silent' parameter");
                             break;
-                        case ("-ignore_update"):
-                            ignore_update = true;
+                        case "-ignore_update":
+                            _ignoreUpdate = true;
                             Global.logger.Info("Program started with '-ignore_update' parameter");
                             break;
-                        case ("-delay"):
-                            isDelayed = true;
+                        case "-delay":
+                            _isDelayed = true;
 
-                            if (arg_i + 1 < e.Args.Length && int.TryParse(e.Args[arg_i + 1], out delayTime))
+                            if (arg_i + 1 < e.Args.Length && int.TryParse(e.Args[arg_i + 1], out _delayTime))
                                 arg_i++;
                             else
-                                delayTime = 5000;
+                                _delayTime = 5000;
 
-                            Global.logger.Info("Program started with '-delay' parameter with delay of " + delayTime + " ms");
+                            Global.logger.Info("Program started with '-delay' parameter with delay of " + _delayTime + " ms");
 
                             break;
-                        case ("-install_logitech"):
+                        case "-install_logitech":
                             Global.logger.Info("Program started with '-install_logitech' parameter");
 
                             try
@@ -242,7 +234,7 @@ namespace Aurora
                             }
                             catch (Exception exc)
                             {
-                                System.Windows.MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
+                                MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
                             }
 
                             Environment.Exit(0);
@@ -254,18 +246,11 @@ namespace Aurora
                 if (!Global.isDebug)
                     currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-                if (isDelayed)
-                    System.Threading.Thread.Sleep((int)delayTime);
+                if (_isDelayed)
+                    Thread.Sleep(_delayTime);
 
-                this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                ShutdownMode = ShutdownMode.OnExplicitShutdown;
                 //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-
-                if (Environment.Is64BitProcess)
-                    currentDomain.AppendPrivatePath("x64");
-                else
-                    currentDomain.AppendPrivatePath("x86");
-
-                Global.StartTime = Utils.Time.GetMillisecondsSinceEpoch();
 
                 Global.dev_manager = new DeviceManager();
                 Global.effengine = new Effects();
@@ -279,7 +264,7 @@ namespace Aurora
                 catch (Exception exc)
                 {
                     Global.logger.Error("Exception during ConfigManager.Load(). Error: " + exc);
-                    System.Windows.MessageBox.Show("Exception during ConfigManager.Load().Error: " + exc.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
+                    MessageBox.Show("Exception during ConfigManager.Load().Error: " + exc.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
 
                     Global.Configuration = new Configuration();
                 }
@@ -290,16 +275,16 @@ namespace Aurora
 
                 Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
 
-                if (Global.Configuration.UpdatesCheckOnStartUp && !ignore_update)
+                if (Global.Configuration.UpdatesCheckOnStartUp && !_ignoreUpdate)
                 {
-                    string updater_path = System.IO.Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
+                    string updaterPath = Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
-                    if (File.Exists(updater_path))
+                    if (File.Exists(updaterPath))
                     {
                         try
                         {
                             ProcessStartInfo updaterProc = new ProcessStartInfo();
-                            updaterProc.FileName = updater_path;
+                            updaterProc.FileName = updaterPath;
                             updaterProc.Arguments = "-silent";
                             Process.Start(updaterProc);
                         }
@@ -322,7 +307,7 @@ namespace Aurora
                 Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
                 SetupVolumeAsBrightness(Global.Configuration,
                     new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
-                Utils.DesktopUtils.StartSessionWatch();
+                DesktopUtils.StartSessionWatch();
 
                 Global.key_recorder = new KeyRecorder(Global.InputEvents);
 
@@ -331,13 +316,19 @@ namespace Aurora
                 {
                     try
                     {
-                        Global.razerSdkManager = new RzSdkManager()
+                        Global.razerSdkManager = new RzSdkManager
                         {
                             KeyboardEnabled = true,
                             MouseEnabled = true,
                             MousepadEnabled = true,
                             AppListEnabled = true,
                         };
+
+                        Global.razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
+
+                        var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
+                        appList.Update();
+                        RzHelper.CurrentAppExecutable = appList.CurrentAppExecutable;
 
                         Global.logger.Info("RazerSdkManager loaded successfully!");
                     }
@@ -358,7 +349,7 @@ namespace Aurora
                 if (Global.Configuration.GetPointerUpdates)
                 {
                     Global.logger.Info("Fetching latest pointers");
-                    Task.Run(() => Utils.PointerUpdateUtils.FetchDevPointers("master"));
+                    Task.Run(() => PointerUpdateUtils.FetchDevPointers("master"));
                 }
 
                 Global.logger.Info("Loading Device Manager");
@@ -377,28 +368,28 @@ namespace Aurora
                 try
                 {
                     Global.net_listener = new NetworkListener(9088);
-                    Global.net_listener.NewGameState += new NewGameStateHandler(Global.LightingStateManager.GameStateUpdate);
-                    Global.net_listener.WrapperConnectionClosed += new WrapperConnectionClosedHandler(Global.LightingStateManager.ResetGameState);
+                    Global.net_listener.NewGameState += Global.LightingStateManager.GameStateUpdate;
+                    Global.net_listener.WrapperConnectionClosed += Global.LightingStateManager.ResetGameState;
                 }
                 catch (Exception exc)
                 {
                     Global.logger.Error("GameStateListener Exception, " + exc);
-                    System.Windows.MessageBox.Show("GameStateListener Exception.\r\n" + exc);
+                    MessageBox.Show("GameStateListener Exception.\r\n" + exc);
                     Environment.Exit(0);
                 }
 
                 if (!Global.net_listener.Start())
                 {
                     Global.logger.Error("GameStateListener could not start");
-                    System.Windows.MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
+                    MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
                     Environment.Exit(0);
                 }
 
                 Global.logger.Info("Listening for game integration calls...");
 
                 Global.logger.Info("Loading ResourceDictionaries...");
-                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
-                this.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
+                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml", UriKind.Relative) });
+                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative) });
                 Global.logger.Info("Loaded ResourceDictionaries");
 
 
@@ -422,14 +413,14 @@ namespace Aurora
                     client.Connect(30);
                     if (!client.IsConnected)
                         throw new Exception();
-                    byte[] command = System.Text.Encoding.ASCII.GetBytes("restore");
+                    byte[] command = Encoding.ASCII.GetBytes("restore");
                     client.Write(command, 0, command.Length);
                     client.Close();
                 }
                 catch
                 {
                     //Global.logger.LogLine("Aurora is already running.", Logging_Level.Error);
-                    System.Windows.MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                    MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
                 }
             }
         }
@@ -484,12 +475,13 @@ namespace Aurora
             Global.key_recorder?.Dispose();
             Global.InputEvents?.Dispose();
             Global.LightingStateManager?.Dispose();
-            Global.net_listener?.Stop();
+            Global.net_listener?.Stop().Wait();
             Global.dev_manager?.ShutdownDevices();
 
             try
             {
                 Global.razerSdkManager?.Dispose();
+                Global.razerSdkManager = null;
             }
             catch (Exception exc)
             {
@@ -511,26 +503,38 @@ namespace Aurora
                 Global.logger.Error("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
             }
 
-            LogManager.Shutdown();
+            //LogManager.Shutdown();
             Environment.Exit(0);
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception exc = (Exception)e.ExceptionObject;
-            Global.logger.Fatal("Fatal Exception caught : " + exc, exc);
+            Global.logger.Fatal(exc, "Fatal Exception caught : ");
+
+            if (Current == null)
+            {
+                return;
+            }
+
+            if (exc is SEHException sehException)
+            {
+                if (sehException.CanResume())
+                {
+                    return;
+                }
+            }
+            
             Global.logger.Fatal(String.Format("Runtime terminating: {0}", e.IsTerminating));
             LogManager.Flush();
-            
-            if (Global.Configuration.CloseProgramOnException)
-            {
-                System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
-                //Perform exit operations
-                System.Windows.Application.Current.Shutdown();
-            }
+
+            if (!Global.Configuration.CloseProgramOnException) return;
+            MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+            //Perform exit operations
+            Current?.Shutdown();
         }
 
-        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             Exception exc = e.Exception;
             Global.logger.Fatal("Fatal Exception caught : " + exc, exc);
@@ -541,9 +545,9 @@ namespace Aurora
                 throw exc;
             if (Global.Configuration.CloseProgramOnException)
             {
-                System.Windows.MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+                MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
                 //Perform exit operations
-                System.Windows.Application.Current.Shutdown();
+                Current?.Shutdown();
             }
         }
 
@@ -558,12 +562,12 @@ namespace Aurora
             if (!isElevated)
             {
                 Global.logger.Error("Program does not have admin rights");
-                System.Windows.MessageBox.Show("Program does not have admin rights");
+                MessageBox.Show("Program does not have admin rights");
                 Environment.Exit(1);
             }
 
             //Patch 32-bit
-            string logitech_path = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);//null gets the default value
+            string logitech_path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);//null gets the default value
             if (logitech_path == null || logitech_path == @"C:\Program Files\LGHUB\sdk_legacy_led_x86.dll")
             {
                 logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
@@ -596,11 +600,11 @@ namespace Aurora
 
             using (BinaryWriter logitech_wrapper_86 = new BinaryWriter(new FileStream(logitech_path, FileMode.Create, FileAccess.Write)))
             {
-                logitech_wrapper_86.Write(global::Aurora.Properties.Resources.Aurora_LogiLEDWrapper86);
+                logitech_wrapper_86.Write(Aurora.Properties.Resources.Aurora_LogiLEDWrapper86);
             }
 
             //Patch 64-bit
-            string logitech_path_64 = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);
+            string logitech_path_64 = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", null, null);
             if (logitech_path_64 == null || logitech_path_64 == @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
             {
                 logitech_path_64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
@@ -630,11 +634,11 @@ namespace Aurora
 
             using (BinaryWriter logitech_wrapper_64 = new BinaryWriter(new FileStream(logitech_path_64, FileMode.Create, FileAccess.Write)))
             {
-                logitech_wrapper_64.Write(global::Aurora.Properties.Resources.Aurora_LogiLEDWrapper64);
+                logitech_wrapper_64.Write(Aurora.Properties.Resources.Aurora_LogiLEDWrapper64);
             }
 
             Global.logger.Info("Logitech LED SDK patched successfully");
-            System.Windows.MessageBox.Show("Logitech LED SDK patched successfully");
+            MessageBox.Show("Logitech LED SDK patched successfully");
 
             //Environment.Exit(0);
         }

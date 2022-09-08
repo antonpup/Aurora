@@ -78,7 +78,9 @@ namespace Aurora_Updater
             {
                 if (!isSilent)
                     MessageBox.Show(
-                        "Application launched incorrectly, no version was specified.\r\nPlease use Aurora if you want to check for updates.\r\nOptions -> \"Updates\" \"Check for Updates\"",
+                        "Application launched incorrectly, no version was specified.\r\n" +
+                        "Please use Aurora if you want to check for updates.\r\n" +
+                        "Options -> \"Updates\" \"Check for Updates\"",
                         "Aurora Updater",
                         MessageBoxButtons.OK);
                 return;
@@ -142,7 +144,7 @@ namespace Aurora_Updater
                             try
                             {
                                 ProcessStartInfo updaterProc = new ProcessStartInfo();
-                                updaterProc.FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
+                                updaterProc.FileName = Process.GetCurrentProcess().MainModule.FileName;
                                 updaterProc.Arguments = passedArgs + " -update_major";
                                 updaterProc.Verb = "runas";
                                 Process.Start(updaterProc);
@@ -168,84 +170,6 @@ namespace Aurora_Updater
                             "Aurora Updater",
                             MessageBoxButtons.OK);
                 }
-
-                /*string _min = "";
-
-                if (File.Exists(Path.Combine(exePath, "ver_minor.txt")))
-                    _min = File.ReadAllText(Path.Combine(exePath, "ver_minor.txt"));
-
-                if (!String.IsNullOrWhiteSpace(_min))
-                {
-                    versionMinor = new UpdateVersion(_min);
-
-                    if (!(StaticStorage.Manager.response.Minor.Version <= versionMinor))
-                    {
-                        if (isSilentMinor)
-                            StaticStorage.Manager.RetrieveUpdate(UpdateType.Minor);
-                        else
-                        {
-                            UpdateInfoForm userResult = new UpdateInfoForm()
-                            {
-                                changelog = StaticStorage.Manager.response.Minor.Changelog,
-                                updateDescription = StaticStorage.Manager.response.Minor.Description,
-                                updateVersion = StaticStorage.Manager.response.Minor.Version.ToString(),
-                                currentVersion = versionMinor.ToString(),
-                                updateSize = StaticStorage.Manager.response.Minor.FileSize,
-                                preRelease = StaticStorage.Manager.response.Minor.PreRelease
-                            };
-
-                            userResult.ShowDialog();
-
-                            if (userResult.DialogResult == DialogResult.Yes)
-                            {
-                                if (isElevated)
-                                {
-                                    updateForm = new MainForm(UpdateType.Minor);
-                                    updateForm.ShowDialog();
-                                }
-                                else
-                                {
-                                    //Request user to grant admin rights
-                                    try
-                                    {
-                                        ProcessStartInfo updaterProc = new ProcessStartInfo();
-                                        updaterProc.FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
-                                        updaterProc.Arguments = passedArgs + " -update_minor";
-                                        updaterProc.Verb = "runas";
-                                        Process.Start(updaterProc);
-
-                                        return; //Exit, no further action required
-                                    }
-                                    catch (Exception exc)
-                                    {
-                                        MessageBox.Show(
-                                            $"Could not start Aurora Updater. Error:\r\n{exc}",
-                                            "Aurora Updater - Error",
-                                            MessageBoxButtons.OK,
-                                            MessageBoxIcon.Error);
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        if (!isSilent && !isSilentMinor)
-                            MessageBox.Show(
-                                "You have latest Minor version of Aurora installed.",
-                                "Aurora Updater",
-                                MessageBoxButtons.OK);
-                    }
-                }
-                else
-                {
-                    if (!isSilent)
-                        MessageBox.Show(
-                            "Application launched incorrectly, no version was specified.\r\nPlease use Aurora if you want to check for updates.\r\nOptions -> \"Updates\" \"Check for Updates\"",
-                            "Aurora Updater",
-                            MessageBoxButtons.OK);
-                }*/
             }
         }
     }

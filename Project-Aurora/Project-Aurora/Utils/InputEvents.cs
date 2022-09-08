@@ -42,18 +42,13 @@ namespace Aurora
         /// </summary>
         public event EventHandler<MouseInputEventArgs> Scroll;
 
-        private readonly List<Keys> pressedKeySequence = new List<Keys>();
+        private readonly List<Keys> pressedKeySequence = new();
 
-        private readonly List<MouseButtons> pressedMouseButtons = new List<MouseButtons>();
+        private readonly List<MouseButtons> pressedMouseButtons = new();
 
-        public Keys[] PressedKeys
-        {
-            get { return pressedKeySequence.ToArray(); }
-        }
+        public Keys[] PressedKeys => pressedKeySequence.ToArray();
 
-        public MouseButtons[] PressedButtons {
-            get { return pressedMouseButtons.ToArray(); }
-        }
+        public MouseButtons[] PressedButtons => pressedMouseButtons.ToArray();
 
         public bool Shift => new[] {Keys.ShiftKey, Keys.RShiftKey, Keys.LShiftKey}
             .Any(PressedKeys.Contains);

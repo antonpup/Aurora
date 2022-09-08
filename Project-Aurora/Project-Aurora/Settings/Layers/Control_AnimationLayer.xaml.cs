@@ -1,22 +1,12 @@
-﻿using Aurora.Controls;
-using Aurora.Settings.Overrides.Logic;
+﻿using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Aurora.Settings.Layers
 {
@@ -238,7 +228,7 @@ namespace Aurora.Settings.Layers
 
         private void btnInfo_Click(object sender, RoutedEventArgs e) {
             // Open the online documentation for the Animation Trigger properties
-            Process.Start(new ProcessStartInfo(@"https://aurora-rgb.github.io/Docs/advanced-topics/animation-editor/"));
+            Process.Start("explorer", @"https://aurora-rgb.github.io/Docs/advanced-topics/animation-editor/");
         }
 
         private void whileKeyHeldTerminate_Checked(object sender, RoutedEventArgs e) {

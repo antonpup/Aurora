@@ -13,10 +13,8 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices.UnifiedHID
 {
-    public class UnifiedHIDDevice : IDevice
+    public class UnifiedHIDDevice : DefaultDevice
     {
-        private VariableRegistry variableRegistry = null;
-        private Stopwatch watch = new Stopwatch();
         private Stopwatch sleepWatch = new Stopwatch();
         private long lastUpdateTime = 0;
         private long lastSleepUpdateTime = 0;
@@ -24,7 +22,7 @@ namespace Aurora.Devices.UnifiedHID
         List<UnifiedBase> allDevices = new List<UnifiedBase>();
         List<UnifiedBase> connectedDevices = new List<UnifiedBase>();
 
-        public string DeviceName => "UnifiedHID";
+        public override string DeviceName => "UnifiedHID";
         protected string DeviceInfo => string.Join(", ", connectedDevices.Select(hd => hd.PrettyName));
 
         public string DeviceDetails => IsInitialized
@@ -37,24 +35,18 @@ namespace Aurora.Devices.UnifiedHID
 
         public bool IsInitialized => connectedDevices.Count != 0;
 
-        public VariableRegistry RegisteredVariables
+        protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
-            get
-            {
-                if (variableRegistry == null)
-                {
-                    variableRegistry = new VariableRegistry();
+            variableRegistry = new VariableRegistry();
 
-                    variableRegistry.Register($"{DeviceName}_update_interval", 0, "Update interval", null, 0);
-                    variableRegistry.Register($"{DeviceName}_enable_shutdown_color", false, "Enable shutdown color");
-                    variableRegistry.Register($"{DeviceName}_shutdown_color", new Utils.RealColor(Color.FromArgb(255, 255, 255, 255)), "Shutdown color");
+            variableRegistry.Register($"{DeviceName}_update_interval", 0, "Update interval", null, 0);
+            variableRegistry.Register($"{DeviceName}_enable_shutdown_color", false, "Enable shutdown color");
+            variableRegistry.Register($"{DeviceName}_shutdown_color", new RealColor(Color.FromArgb(255, 255, 255, 255)), "Shutdown color");
 
-                    foreach (UnifiedBase device in allDevices)
-                        variableRegistry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {DeviceName}");
-                }
+            foreach (UnifiedBase device in allDevices)
+                variableRegistry.Register($"UnifiedHID_{device.GetType().Name}_enable", false, 
+                    $"Enable {(string.IsNullOrEmpty(device.PrettyName) ? device.GetType().Name : device.PrettyName)} in {DeviceName}");
 
-                return variableRegistry;
-            }
         }
 
         public UnifiedHIDDevice()
@@ -88,7 +80,7 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public bool Initialize()
+        public override bool Initialize()
         {
             if (!IsInitialized)
             {
@@ -115,7 +107,7 @@ namespace Aurora.Devices.UnifiedHID
             return IsInitialized;
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             try
             {
@@ -144,14 +136,28 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public void Reset()
+        public override void Reset()
         {
             Shutdown();
             Initialize();
         }
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_update_interval");
+            sleepWatch.Stop();
+            lastSleepUpdateTime = sleepWatch.ElapsedMilliseconds;
+            if (lastSleepUpdateTime > sleep)
+            {
+                sleepWatch.Restart();
+            }
+            else
+            {
+                // Resume stopWatch
+                sleepWatch.Start();
+                return false;
+            }
+
             try
             {
                 Dictionary<UnifiedBase, bool> results = new Dictionary<UnifiedBase, bool>(connectedDevices.Count);
@@ -198,34 +204,6 @@ namespace Aurora.Devices.UnifiedHID
                 Global.logger.Error("[UnifiedHID] error when updating device: " + ex);
                 return false;
             }
-        }
-
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_update_interval");
-            bool result = false;
-
-            sleepWatch.Stop();
-            lastSleepUpdateTime = sleepWatch.ElapsedMilliseconds;
-
-            if (lastSleepUpdateTime > sleep)
-            {
-                watch.Restart();
-                sleepWatch.Restart();
-
-                result = UpdateDevice(colorComposition.KeyColors, e, forced);
-
-                watch.Stop();
-                lastUpdateTime = watch.ElapsedMilliseconds + sleep;
-            }
-            else
-            {
-                // Resume stopWatch
-                sleepWatch.Start();
-            }
-
-
-            return result;
         }
     }
 }

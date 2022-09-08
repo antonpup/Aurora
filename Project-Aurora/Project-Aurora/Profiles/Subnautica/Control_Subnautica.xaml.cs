@@ -55,12 +55,12 @@ namespace Aurora.Profiles.Subnautica {
 
         private void GoToQModManagerPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/subnautica/mods/16/");
+            Process.Start("explorer", @"https://www.nexusmods.com/subnautica/mods/16/");
         }
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start(@"https://www.nexusmods.com/subnautica/mods/171");
+            Process.Start("explorer", @"https://www.nexusmods.com/subnautica/mods/171");
         }
 
         #endregion

@@ -1,8 +1,6 @@
 ﻿using Aurora.Utils;
 using FastMember;
-using Mono.CSharp;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,10 +12,10 @@ namespace Aurora.Profiles {
     public sealed class GameStateParameterLookup {
 
         // List of types that are permitted to be recursively searched
-        private static readonly Type[] recursiveWhiteList = new[] { typeof(Node), typeof(GameState), typeof(IEnumerable<Node>) };
+        private static readonly Type[] RecursiveWhiteList = { typeof(Node), typeof(GameState), typeof(IEnumerable<Node>) };
 
         // Internal parameter store. Key = full path, Value = meta
-        private readonly Dictionary<string, GameStateParameterLookupEntry> lookup = new Dictionary<string, GameStateParameterLookupEntry>();
+        private readonly Dictionary<string, GameStateParameterLookupEntry> _lookup = new();
 
         /// <summary>
         /// Creates a new <see cref="GameStateParameterLookup"/> by inspecting all properties on the given type.
@@ -28,12 +26,12 @@ namespace Aurora.Profiles {
             void Visit(string path, string name, Type type) {
                 // If this is a variable that can be handled (such as a number or bool), add it to the lookup
                 if (GSIPropertyTypeConverter.TypeToPropertyType(type) != GSIPropertyType.None)
-                    lookup.Add(path, GameStateParameterLookupEntry.Property(name, path, type));
+                    _lookup.Add(path, GameStateParameterLookupEntry.Property(name, path, type));
 
-                else if (recursiveWhiteList.Any(t => t.IsAssignableFrom(type))) {
+                else if (RecursiveWhiteList.Any(t => t.IsAssignableFrom(type))) {
                     // Else if this not a handlable property, check if it's a node or list of nodes and if so make a folder and visit it's children
                     if (path != "") // If it's the root folder, don't add it
-                        lookup.Add(path, GameStateParameterLookupEntry.Folder(name, path));
+                        _lookup.Add(path, GameStateParameterLookupEntry.Folder(name, path));
 
                     var accessor = TypeAccessor.Create(type);
                     if (!accessor.GetMembersSupported) return;
@@ -62,7 +60,7 @@ namespace Aurora.Profiles {
         /// Attempts to get the definition for the folder or property at the given path.
         /// </summary>
         public GameStateParameterLookupEntry this[string path] =>
-            lookup.TryGetValue(path, out var entry) ? entry : null;
+            _lookup.TryGetValue(path, out var entry) ? entry : null;
 
         /// <summary>
         /// Gets all the direct/first-level children of the folder at the given path.<br/>
@@ -71,7 +69,7 @@ namespace Aurora.Profiles {
         /// <param name="path">Only children that are within the folder at the given path will be returned.</param>
         /// <param name="type">If not <see cref="GSIPropertyType.None"/>, only children of this type and only folders that contain atleast one property of this type will be returned.</param>
         public IEnumerable<GameStateParameterLookupEntry> Children(string path = "", GSIPropertyType type = GSIPropertyType.None) =>
-            from kvp in lookup
+            from kvp in _lookup
             where GetFolderOf(kvp.Key) == path // only include anything in this folder
             where type == GSIPropertyType.None // if type is none, don't worry about type filtering
                || (kvp.Value.IsFolder && AllChildren(kvp.Key).Any(c => c.Type == type)) // return a folder if it contains atleast one child of type
@@ -81,7 +79,7 @@ namespace Aurora.Profiles {
         /// <summary>Returns a list of all children of the given path, REGARDLESS of depth.</summary>
         private IEnumerable<GameStateParameterLookupEntry> AllChildren(string path) {
             if (!path.EndsWith("/")) path += '/';
-            return from kvp in lookup where kvp.Key.StartsWith(path) select kvp.Value;
+            return from kvp in _lookup where kvp.Key.StartsWith(path) select kvp.Value;
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace Aurora.Profiles {
         /// </summary>
         /// <param name="type">The result will only be true if the parameter type is of this type. If None is passed, any parameter type is allowed.</param>
         public bool IsValidParameter(string path, GSIPropertyType type = GSIPropertyType.None) =>
-            lookup.TryGetValue(path, out var entry) && !entry.IsFolder && (type == GSIPropertyType.None || entry.Type == type);
+            _lookup.TryGetValue(path, out var entry) && !entry.IsFolder && (type == GSIPropertyType.None || entry.Type == type);
 
         /// <summary>
         /// Returns the folder that the given path is in.

@@ -52,19 +52,19 @@ namespace Aurora.Profiles.Minecraft {
         }
 
         private void GoToForgePage_Click(object sender, RoutedEventArgs e) {
-            Process.Start(@"https://files.minecraftforge.net/");
+            Process.Start("explorer", @"https://files.minecraftforge.net/");
         }
 
         private void GoToReleasesPage_Click(object sender, RoutedEventArgs e) {
-            Process.Start(@"https://gitlab.com/aurora-gsi-minecraft");
+            Process.Start("explorer", @"https://gitlab.com/aurora-gsi-minecraft");
         }
 
         private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e) {
-            Process.Start(((sender as Button).DataContext as ModDetails).Link);
+            Process.Start("explorer", ((sender as Button).DataContext as ModDetails).Link);
         }
 
         private void GoToFabricDownloadPage(object sender, RoutedEventArgs e) {
-            Process.Start(@"https://fabricmc.net/");
+            Process.Start("explorer", @"https://fabricmc.net/");
         }
 
         private async void PopulateModList() {

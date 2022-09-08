@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using Aurora.Devices;
-using CSScriptLibrary;
 using Microsoft.Scripting.Utils;
 
 namespace Aurora.Profiles.EliteDangerous.GSI.Nodes

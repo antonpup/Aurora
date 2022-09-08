@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Input;
 using Aurora.Devices;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Utils;
-using CSScriptLibrary;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {

@@ -17,7 +17,7 @@ namespace Aurora.Profiles.Osu {
         /// Listener for a HyperLink to open the Uri it has specified.
         /// </summary>
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 
@@ -25,7 +25,7 @@ namespace Aurora.Profiles.Osu {
         /// Opens the OsuSync release page.
         /// </summary>
         private void OpenOsuSyncRepo_Click(object sender, System.Windows.RoutedEventArgs e) {
-            Process.Start(new ProcessStartInfo(@"https://github.com/OsuSync/Sync/releases"));
+            Process.Start("explorer", @"https://github.com/OsuSync/Sync/releases");
         }
 
         /// <summary>

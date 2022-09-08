@@ -1,26 +1,25 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <Platforms>AnyCPU;x64</Platforms>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
+    <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <WarningLevel>0</WarningLevel>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aurora</RootNamespace>
     <AssemblyName>Aurora</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>9</LangVersion>
+    <LangVersion>10</LangVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>$(SolutionDir)..\Build\$(Configuration)</OutputPath>
     <ApplicationIcon>Resources\aurora_icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
@@ -71,40 +70,36 @@
 	<PackageReference Include="Bloody.NET" Version="1.0.4" />
     <PackageReference Include="Colore" Version="5.2.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
-    <PackageReference Include="CS-Script" Version="3.30.5.1" />
+    <PackageReference Include="CS-Script" Version="4.4.6" />
     <PackageReference Include="Dubya.WindowsMediaController" Version="2.2.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
-    <PackageReference Include="Fody" Version="6.5.1" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.6.3" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
     <PackageReference Include="hidlibrary" Version="3.3.40" />
     <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
-    <PackageReference Include="IronPython" Version="2.7.11" />
-    <PackageReference Include="JsonSubTypes" Version="1.8.0" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.8.9" />
+    <PackageReference Include="IronPython" Version="2.7.12" />
+    <PackageReference Include="JsonSubTypes" Version="1.9.0" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.0" />
     <PackageReference Include="MouseKeyHook" Version="5.6.0" />
-    <PackageReference Include="NAudio" Version="2.0.1" />
+    <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NLog" Version="4.7.10" />
-    <PackageReference Include="Octokit" Version="0.50.0" />
+    <PackageReference Include="Octokit" Version="2.0.1" />
    <!-- <PackageReference Include="OpenRGB.NET" Version="1.7.0" /> -->
-    <PackageReference Include="PropertyChanged.Fody" Version="3.3.3" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.0.1" />
+    <PackageReference Include="PropertyChanged.Fody" Version="4.0.1" />
+    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
-    <PackageReference Include="SignedBuild-Hardcodet.NotifyIcon.Wpf" Version="1.0.5" />
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
-    <PackageReference Include="System.Console" Version="4.3.1" />
-    <PackageReference Include="System.Management" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
-    <PackageReference Include="TaskScheduler" Version="2.8.18" />
+    <PackageReference Include="TaskScheduler" Version="2.10.1" />
     <PackageReference Include="Vulcan.NET" Version="2.2.0" />
     <PackageReference Include="Wooting.NET" Version="1.2.0" />
     <PackageReference Include="Xceed.Wpf.Toolkit" Version="2.9.15603.14400" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SBAuroraR.NET\SBAuroraReactive\SBAuroraReactive.vcxproj">
-      <Private>false</Private>
-    </ProjectReference>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj" />
   </ItemGroup>
 

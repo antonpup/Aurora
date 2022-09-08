@@ -46,7 +46,7 @@ namespace Aurora.Controls
             InitializeComponent();
 
             Timer update_controls_timer = new Timer(1000); //Update every second
-            update_controls_timer.Elapsed += Update_controls_timer_Elapsed;
+            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(update_controls_timer, "Elapsed", Update_controls_timer_Elapsed);
             update_controls_timer.Start();
         }
 
@@ -69,12 +69,19 @@ namespace Aurora.Controls
                 lock (Device.ActionLock)
                 {
                     if (Device.Device.IsInitialized)
-                        Device.Device.Shutdown();
-                    else
-                        Device.Device.Initialize();
-                }
+                    {
+                        Global.dev_manager.DisableDevice(Device.Device);
 
-                UpdateControls();
+                        UpdateControls();
+                    }
+                    else
+                    {
+                        var enableTask = Global.dev_manager.EnableDevice(Device.Device);
+                        UpdateControls();
+                        btnStart.IsEnabled = false;
+                        enableTask.ContinueWith(_ => UpdateControls());
+                    }
+                }
             }
         }
 
@@ -102,10 +109,21 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.IsInitialized)
+            if (Device.Device.InitializeTask is {IsCompleted: false})
+            {
+                btnStart.Content = "Working...";
+                btnStart.IsEnabled = false;
+            }
+            else if (Device.Device.IsInitialized)
+            {
                 btnStart.Content = "Stop";
+                btnStart.IsEnabled = true;
+            }
             else
+            {
                 btnStart.Content = "Start";
+                btnStart.IsEnabled = true;
+            }
 
             deviceName.Text = Device.Device.DeviceName;
             deviceDetails.Text = Device.Device.DeviceDetails;

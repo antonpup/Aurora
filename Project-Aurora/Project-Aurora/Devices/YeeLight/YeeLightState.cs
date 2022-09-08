@@ -7,10 +7,12 @@ namespace Aurora.Devices.YeeLight
 {
     public interface IYeeLightState
     {
+        void InitState();
+        
         IYeeLightState Update(Color color);
     }
 
-    public static class YeeLightStateBuilder
+    internal static class YeeLightStateBuilder
     {
         public static IYeeLightState Build(List<YeeLightAPI.YeeLightDevice> devices, int whiteCounter)
         {
@@ -24,39 +26,36 @@ namespace Aurora.Devices.YeeLight
             whiteState.OffState = offState;
             offState.ColorState = colorState;
 
-            return colorState;
+            return offState;
         }
     }
     
-    public class YeeLightStateOff : IYeeLightState
+    class YeeLightStateOff : IYeeLightState
     {
         public IYeeLightState ColorState;
 
         private readonly List<YeeLightAPI.YeeLightDevice> _lights;
-        
-        private bool _isOff;
 
         public YeeLightStateOff(List<YeeLightAPI.YeeLightDevice> lights)
         {
             _lights = lights;
         }
 
+        public void InitState()
+        {
+            TurnOff();
+        }
+
         public IYeeLightState Update(Color color)
         {
-            if (!_isOff)
-            {
-                _isOff = true;
-                TurnOff();
-            }
-            
             if (Utils.IsBlack(color))
             {
                 return this;
             }
 
-            var newState = ColorState.Update(color);
             TurnOn();
-            _isOff = false;
+            ColorState.InitState();
+            var newState = ColorState.Update(color);
             return newState;
         }
         
@@ -71,7 +70,7 @@ namespace Aurora.Devices.YeeLight
         }
     }
     
-    public class YeeLightStateColor : IYeeLightState
+    class YeeLightStateColor : IYeeLightState
     {
         public IYeeLightState WhiteState;
         public IYeeLightState OffState;
@@ -79,6 +78,7 @@ namespace Aurora.Devices.YeeLight
         private readonly List<YeeLightAPI.YeeLightDevice> _lights;
         private readonly int _whiteCounterStart;
 
+        private int _previousBrightness;
         private Color _previousColor;
         private int _whiteCounter;
 
@@ -88,16 +88,22 @@ namespace Aurora.Devices.YeeLight
             _whiteCounterStart = whiteCounterStart;
         }
 
+        public void InitState()
+        {
+        }
+
         public IYeeLightState Update(Color color)
         {
             if (Utils.IsWhiteTone(color)) // && Global.LightingStateManager.GetCurrentProfile() == Global.LightingStateManager.DesktopProfile
             {
                 if (Utils.IsBlack(color))
                 {
+                    OffState.InitState();
                     return OffState.Update(color);
                 }
                 if (_whiteCounter-- <= 0)
                 {
+                    WhiteState.InitState();
                     return WhiteState.Update(color);
                 }
             }
@@ -129,12 +135,15 @@ namespace Aurora.Devices.YeeLight
             _lights.ForEach(x =>
             {
                 x.SetColor(color.R, color.G, color.B);
-                x.SetBrightness(Math.Max(color.R, Math.Max(color.G, Math.Max(color.B, (short) 1))) * 100 / 255);
+                var brightness = Math.Max(color.R, Math.Max(color.G, Math.Max(color.B, (short) 1))) * 100 / 255;
+                if (_previousBrightness == brightness) return;
+                _previousBrightness = brightness;
+                x.SetBrightness(brightness);
             });
         }
     }
     
-    public class YeeLightStateWhite : IYeeLightState
+    class YeeLightStateWhite : IYeeLightState
     {
         public IYeeLightState ColorState;
         public IYeeLightState OffState;
@@ -148,15 +157,25 @@ namespace Aurora.Devices.YeeLight
             _lights = lights;
         }
 
+        public void InitState()
+        {
+            _lights.ForEach(x =>
+            {
+                x.SetTemperature(6500);
+            });
+        }
+
         public IYeeLightState Update(Color color)
         {
             if (!Utils.IsWhiteTone(color))
             {
+                ColorState.InitState();
                 return ColorState.Update(color);
             }
             
             if (Utils.IsBlack(color))
             {
+                OffState.InitState();
                 return OffState.Update(color);
             }
             
@@ -180,13 +199,12 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                x.SetTemperature(6500);
                 x.SetBrightness(color.R * 100 / 255);
             });
         }
     }
 
-    internal static class Utils
+    static class Utils
     {
         internal static bool IsWhiteTone(Color color)
         {

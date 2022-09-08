@@ -21,14 +21,9 @@ namespace Aurora.Devices.Uniwill
         CONTROLCENTER = 2
     }
 
-    public class UniwillDevice : IDevice
+    public class UniwillDevice : DefaultDevice
     {
-        // Generic Variables
         private string devicename = "Uniwill";
-        private bool isInitialized = false;
-
-        private Stopwatch watch = new Stopwatch();
-        private long lastUpdateTime = 0;
 
         System.Timers.Timer regTimer;
         const string Root = "HKEY_LOCAL_MACHINE";
@@ -109,21 +104,21 @@ namespace Aurora.Devices.Uniwill
                 else
                 {
                     bRefreshOnce = true;
-                    isInitialized = false;
+                    IsInitialized = false;
                     Shutdown();
                 }
             }
         }
 
-        public string DeviceName => devicename;
+        public override string DeviceName => devicename;
 
         public string DeviceDetails => IsInitialized
             ? "Initialized"
             : "Not Initialized";
 
-        public bool Initialize()
+        public override bool Initialize()
         {
-            if (!isInitialized && CheckGCPower())
+            if (!IsInitialized && CheckGCPower())
             {
                 try
                 {
@@ -133,12 +128,12 @@ namespace Aurora.Devices.Uniwill
                     if (keyboard != null)
                     {
                         bRefreshOnce = true;
-                        isInitialized = true;
+                        IsInitialized = true;
                         //SetBrightness();
                         return true;
                     }
 
-                    isInitialized = false;
+                    IsInitialized = false;
                     return false;
                 }
                 catch
@@ -146,14 +141,14 @@ namespace Aurora.Devices.Uniwill
                     Global.logger.Error("Uniwill device error!");
                 }
                 // Mark Initialized = FALSE
-                isInitialized = false;
+                IsInitialized = false;
                 return false;
             }
 
-            return isInitialized;
+            return IsInitialized;
         }
 
-        public void Shutdown()
+        public override void Shutdown()
         {
             if (this.IsInitialized)
             {
@@ -163,7 +158,7 @@ namespace Aurora.Devices.Uniwill
                 }
 
                 bRefreshOnce = true;
-                isInitialized = false;
+                IsInitialized = false;
 
             }
         }
@@ -178,25 +173,13 @@ namespace Aurora.Devices.Uniwill
                 }
 
                 bRefreshOnce = true;
-                isInitialized = false;
+                IsInitialized = false;
             }
-        }
-
-        public bool Reconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsInitialized => isInitialized;
-
-        public bool IsConnected()
-        {
-            return isInitialized;
         }
 
         bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
 
-        public bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -210,39 +193,12 @@ namespace Aurora.Devices.Uniwill
             return ret;
         }
 
-        public bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
-        {
-            watch.Restart();
-
-            bool update_result = UpdateDevice(colorComposition.KeyColors, e, forced);
-
-            watch.Stop();
-            lastUpdateTime = watch.ElapsedMilliseconds;
-
-            return update_result;
-        }
-
         private KeyValuePair<DeviceKeys, Color> AdjustBrightness(KeyValuePair<DeviceKeys, Color> kc)
         {
             var newEntry = new KeyValuePair<DeviceKeys, Color>(kc.Key, Color.FromArgb(255, Utils.ColorUtils.MultiplyColorByScalar(kc.Value, (kc.Value.A / 255.0D) * brightness)));
             kc = newEntry;
             return kc;
         }
-
-        // Device Status Methods
-        public bool IsKeyboardConnected()
-        {
-            return isInitialized;
-        }
-
-        public bool IsPeripheralConnected()
-        {
-            return isInitialized;
-        }
-
-        public string DeviceUpdatePerformance => (isInitialized ? lastUpdateTime + " ms" : "");
-
-        public VariableRegistry RegisteredVariables => new VariableRegistry();
 
         private static string UniwillEnumDescriptionResolver(Enum @enum) {
             try {

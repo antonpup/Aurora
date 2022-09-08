@@ -59,7 +59,7 @@ namespace Aurora
                 return null;
 
             try {
-                _deskDupl.AcquireNextFrame(timeout, out _, out desktopResource);
+                _deskDupl.TryAcquireNextFrame(timeout, out _, out desktopResource);
             }
             catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
             {
