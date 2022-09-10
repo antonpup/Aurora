@@ -1,12 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using YeeLightAPI.YeeLightConstants;
 
 namespace Aurora.Devices.YeeLight
 {
     public interface IYeeLightState
     {
+        private static Task<bool> _stateTask = Task.Run(() => true);
+
+        protected static Task<bool> StateTask
+        {
+            set
+            {
+                _stateTask.Wait();
+                _stateTask = value;
+            }
+        }
+        
         void InitState();
         
         IYeeLightState Update(Color color);
@@ -134,11 +146,14 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                x.SetColor(color.R, color.G, color.B);
+                IYeeLightState.StateTask = x.SetColorAsync(color.R, color.G, color.B,
+                    10,
+                    Constants.EffectParamValues.SMOOTH
+                    );
                 var brightness = Math.Max(color.R, Math.Max(color.G, Math.Max(color.B, (short) 1))) * 100 / 255;
                 if (_previousBrightness == brightness) return;
                 _previousBrightness = brightness;
-                x.SetBrightness(brightness);
+                x.SetBrightnessAsync(brightness);
             });
         }
     }
@@ -161,7 +176,7 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                x.SetTemperature(6500);
+                IYeeLightState.StateTask = x.SetColorTemperatureAsync(6500);
             });
         }
 
@@ -199,7 +214,7 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                x.SetBrightness(color.R * 100 / 255);
+                IYeeLightState.StateTask = x.SetBrightnessAsync(color.R * 100 / 255);
             });
         }
     }
