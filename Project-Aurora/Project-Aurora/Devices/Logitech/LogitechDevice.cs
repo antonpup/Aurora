@@ -19,8 +19,8 @@ namespace Aurora.Devices.Logitech
         private readonly byte[] logitechBitmap = new byte[LogitechGSDK.LOGI_LED_BITMAP_SIZE];
         private Color speakers;
         private Color mousepad;
-        private readonly Color[] mouse = new Color[2];
-        private readonly Color[] headset = new Color[2];
+        private readonly Color[] mouse = new Color[3];
+        private readonly Color[] headset = new Color[3];
         private DeviceKeys genericKey;
 
         public override bool Initialize()
@@ -144,7 +144,6 @@ namespace Aurora.Devices.Logitech
                     LogitechGSDK.LogiLedSetLightingForTargetZone(DeviceType.Speaker, i, speakers);
                 }
             }
-
             if (!Global.Configuration.DevicesDisableKeyboard)
             {
                 IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
