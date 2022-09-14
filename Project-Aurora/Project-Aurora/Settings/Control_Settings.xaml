@@ -174,25 +174,31 @@
                 </Grid>
 
                 <Grid Grid.Column="1" Margin="0,7,7,7">
-                    <StackPanel Orientation="Vertical">
-                        <GroupBox Margin="0,10,0,0" Header="Chroma">
-                            <Grid HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <DockPanel>
+                        <GroupBox DockPanel.Dock="Top" Height="Auto" Margin="0,10,0,0" Header="Chroma" VerticalAlignment="Stretch">
+                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="120"/>
-                                    <ColumnDefinition Width="100"/>
-                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10*"/>
+                                    <ColumnDefinition Width="20*"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Row="0" Grid.Column="0" Content="Supported Versions:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
                                 <Label x:Name="razer_wrapper_supported_versions_label" Grid.Row="0" Grid.Column="1" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
                                 <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
                                 <Button x:Name="razer_wrapper_uninstall_button" Grid.Row="0" Grid.Column="2" Content="Uninstall" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Click="razer_wrapper_uninstall_button_Click"/>
+                                
+                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="razer_wrapper_disable_device_control_button" HorizontalAlignment="Right"
+                                        Content="Disable Device Control" Width="160"
+                                        ToolTipService.InitialShowDelay="0"
+                                        ToolTip="Disabling device control will stop ChromaSDK from controlling Razer Devices.&#x0a; After this you have to control them with OpenRGB. To enable it back reinstall ChromaSDK"
+                                        Margin="0 0 0 0" VerticalAlignment="Center" Click="razer_wrapper_disable_device_control_button_Click"/>
 
                                 <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
                                 <Label x:Name="razer_wrapper_installed_version_label" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
@@ -205,7 +211,7 @@
                                 <Label x:Name="razer_wrapper_current_application_label" Grid.Row="3" Grid.Column="2" Width="300" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Wrappers">
+                        <GroupBox DockPanel.Dock="Bottom" Header="Wrappers" VerticalAlignment="Bottom">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock TextWrapping="Wrap" Margin="4" Text="Wrappers are not needed for Aurora to connect to your RGB devices. Only use these if you know what you're doing, otherwise you could cause issues in games or other applications! Read the wiki for more information."/>
                                 <Button Content="Patch for LightFX (32 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_32_Click"/>
@@ -214,7 +220,7 @@
                                 <Button Content="Patch for Razer (Legacy, deprecated)" Margin="4" Width="200" Click="wrapper_install_razer_Click"/>
                             </StackPanel>
                         </GroupBox>
-                    </StackPanel>
+                    </DockPanel>
                 </Grid>
             </Grid>
         </TabItem>

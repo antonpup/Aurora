@@ -118,6 +118,7 @@ namespace Aurora.Settings
             {
                 razer_wrapper_connection_status_label.Content = "Failure";
                 razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                razer_wrapper_disable_device_control_button.IsEnabled = false;
             }
         }
 
@@ -324,6 +325,11 @@ namespace Aurora.Settings
                 })
                 .ConfigureAwait(false);
             });
+        }
+
+        private async void razer_wrapper_disable_device_control_button_Click(object sender, RoutedEventArgs e)
+        {
+            await RazerChromaUtils.DisableDeviceControlAsync();
         }
 
         private void wrapper_install_logitech_Click(object sender, RoutedEventArgs e)

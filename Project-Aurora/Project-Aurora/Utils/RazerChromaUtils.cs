@@ -1,9 +1,11 @@
-﻿using Microsoft.Win32;
+﻿using System.Collections.Generic;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Xml;
 using RazerSdkHelper;
@@ -42,41 +44,39 @@ namespace Aurora.Utils
                 return process.ExitCode;
             }
 
-            using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+            using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            var key = hklm.OpenSubKey(@"Software\Razer\Synapse3\PID0302MW");
+            if (key != null)
             {
-                var key = hklm.OpenSubKey(@"Software\Razer\Synapse3\PID0302MW");
-                if (key != null)
-                {
-                    var filepath = (string)key.GetValue("UninstallPath", null);
+                var filepath = (string)key.GetValue("UninstallPath", null);
 
-                    var exitcode = DoUninstall(filepath);
-                    if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
-                        return exitcode;
-                }
-
-                key = hklm.OpenSubKey(@"Software\Razer\Synapse3\RazerChromaBroadcaster");
-                if (key != null)
-                {
-                    var filepath = (string)key.GetValue("UninstallerPath", null);
-
-                    var exitcode = DoUninstall(filepath);
-                    if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
-                        return exitcode;
-                }
-
-                key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                if (key != null)
-                {
-                    var path = (string)key.GetValue("UninstallPath", null);
-                    var filename = (string)key.GetValue("UninstallFilename", null);
-
-                    var exitcode = DoUninstall($@"{path}\{filename}");
-                    if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
-                        return exitcode;
-                }
-
-                return (int)RazerChromaInstallerExitCode.Success;
+                var exitcode = DoUninstall(filepath);
+                if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
+                    return exitcode;
             }
+
+            key = hklm.OpenSubKey(@"Software\Razer\Synapse3\RazerChromaBroadcaster");
+            if (key != null)
+            {
+                var filepath = (string)key.GetValue("UninstallerPath", null);
+
+                var exitcode = DoUninstall(filepath);
+                if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
+                    return exitcode;
+            }
+
+            key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
+            if (key != null)
+            {
+                var path = (string)key.GetValue("UninstallPath", null);
+                var filename = (string)key.GetValue("UninstallFilename", null);
+
+                var exitcode = DoUninstall($@"{path}\{filename}");
+                if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
+                    return exitcode;
+            }
+
+            return (int)RazerChromaInstallerExitCode.Success;
         });
 
         public static Task<string> GetDownloadUrlAsync() => Task.Run(() =>
@@ -146,5 +146,59 @@ namespace Aurora.Utils
             process.WaitForExit(120000);
             return process.ExitCode;
         });
+
+        public static async Task<bool> DisableDeviceControlAsync()
+        {
+            const string file = @"<?xml version=""1.0"" encoding=""utf-8""?>" +
+                                "\n<devices>" +
+                                "\n</devices>";
+            
+            List<Task> tasks = new();
+            var chromaPath = GetChromaPath();
+            if (chromaPath != null)
+            {
+                tasks.Add(File.WriteAllTextAsync(chromaPath + "\\Devices.xml", file));
+            }
+
+            var chromaPath64 = GetChromaPath64();
+            if (chromaPath64 != null)
+            {
+                tasks.Add(File.WriteAllTextAsync(chromaPath64 + "\\Devices.xml", file));
+            }
+
+            await Task.WhenAll(tasks.ToArray());
+            
+            RestartChromaService();
+            return tasks.Count > 0;
+        }
+
+        private static void RestartChromaService()
+        {
+            using var service = new ServiceController("Razer Chroma SDK Service");
+            if (service.Status != ServiceControllerStatus.Running)
+            {
+                service.Stop(true);
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+
+            service.Start();
+            service.WaitForStatus(ServiceControllerStatus.Running);
+        }
+
+        private static string GetChromaPath()
+        {
+            using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
+            var path = (string) key?.GetValue("InstallPath", null);
+            return path;
+        }
+
+        private static string GetChromaPath64()
+        {
+            using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
+            var path = (string) key?.GetValue("InstallPath64", null);
+            return path;
+        }
     }
 }
