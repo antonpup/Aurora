@@ -15,7 +15,10 @@ namespace Aurora.Settings.Layers
 {
     public class RazerLayerHandlerProperties : LayerHandlerProperties<RazerLayerHandlerProperties>
     {
-        // Color Enhancing
+        
+        [LogicOverridable("Enable Transparency")] public bool? _TransparencyEnabled { get; set; }
+        [JsonIgnore] public bool TransparencyEnabled => Logic._TransparencyEnabled ?? true;
+
         public bool? _ColorPostProcessEnabled { get; set; }
         [JsonIgnore]
         public bool ColorPostProcessEnabled => Logic._ColorPostProcessEnabled ?? _ColorPostProcessEnabled ?? false;
@@ -132,7 +135,9 @@ namespace Aurora.Settings.Layers
 
         private Color FastTransform((byte r, byte g, byte b) color)
         {
-            return ColorUtils.FastColor(color.r, color.g, color.b);
+            return Properties.TransparencyEnabled ?
+                ColorUtils.FastColorTransparent(color.r, color.g, color.b) :
+                ColorUtils.FastColor(color.r, color.g, color.b);
         }
     }
 }

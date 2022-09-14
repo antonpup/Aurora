@@ -467,13 +467,18 @@ namespace Aurora.Utils
 
         public static DrawingColor FastColor(byte r, byte g, byte b)
         {
-            return FastColor(255, r, g, b);
+            return FastColor(b, g, r, 255);
         }
 
-        public static DrawingColor FastColor(byte a, byte r, byte g, byte b)
+        public static DrawingColor FastColorTransparent(byte r, byte g, byte b)
+        {
+            return FastColor(b, g, r, Math.Max(b, Math.Max(g, r)));
+        }
+
+        public static DrawingColor FastColor(byte b, byte g, byte r, byte a)
         {
             return DrawingColor.FromArgb(
-                a | (r << 8) | (g << 16) | (b << 24)
+                b | (g << 8) | (r << 16) | (a << 24)
             );
         }
     }

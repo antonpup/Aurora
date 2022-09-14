@@ -46,10 +46,10 @@ namespace Aurora.Utils
             //https://stackoverflow.com/a/17974/13320838
             var area = rectangle.Width * rectangle.Height;
             return ColorUtils.FastColor(
-                (byte) (color[0] / area),
-                (byte) (color[1] / area),
-                (byte) (color[2] / area),
-                (byte) (color[3] / area)
+                (byte) (color[0] / area),   //B
+                (byte) (color[1] / area),   //G
+                (byte) (color[2] / area),   //R
+                (byte) (color[3] / area)    //A
             );
         }
 
