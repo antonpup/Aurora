@@ -147,13 +147,13 @@ namespace Aurora.Devices.YeeLight
             _lights.ForEach(x =>
             {
                 IYeeLightState.StateTask = x.SetColorAsync(color.R, color.G, color.B,
-                    10,
+                    14,
                     Constants.EffectParamValues.SMOOTH
                     );
                 var brightness = Math.Max(color.R, Math.Max(color.G, Math.Max(color.B, (short) 1))) * 100 / 255;
                 if (_previousBrightness == brightness) return;
                 _previousBrightness = brightness;
-                x.SetBrightnessAsync(brightness);
+                IYeeLightState.StateTask = x.SetBrightnessAsync(brightness);
             });
         }
     }
