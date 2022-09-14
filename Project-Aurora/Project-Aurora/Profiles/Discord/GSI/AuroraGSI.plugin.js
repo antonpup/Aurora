@@ -26,82 +26,86 @@ you sure it's even installed?", 0, "Can't install myself", 0x10);
 @else@*/
 
 function getModule (props) {
-return BdApi.findModuleByProps.apply(null, props);
+  return BdApi.findModuleByProps.apply(null, props);
 }
 
 
 module.exports = class AuroraGSI {
-    getName () {
-        return 'AuroraGSI';
-    }
+  getName () {
+    return 'AuroraGSI';
+  }
 
-    getDescription () {
-        return 'Sends information to Aurora about users connecting to/disconnecting from, mute/deafen status';
-    }
+  getDescription () {
+    return 'Sends information to Aurora about users connecting to/disconnecting from, mute/deafen status';
+  }
 
-    getVersion () {
-        return '2.4.1';
-    }
+  getVersion () {
+    return '2.4.2';
+  }
 
-    getAuthor () {
-        return 'Popato & DrMeteor';
-    }
+  getAuthor () {
+    return 'Popato & DrMeteor';
+  }
 
-    getChanges () {
-        return {
-        '1.0.0' :
-                    `
+  getChanges () {
+    return {
+      '1.0.0' :
+          `
                         Initial version.
                     `,
-        '1.0.1' :
-                    `
+      '1.0.1' :
+          `
                         Added conditions for only reacting to local user.
                     `,
-        '1.0.2' :
-                    `
+      '1.0.2' :
+          `
                         Removed isBeingCalled.
                         Removed redundant loop.
                     `,
-        '1.0.3' :
-                    `
+      '1.0.3' :
+          `
                         Updated the CDN for the library.
                     `,
-        '1.1' :
-                    `
+      '1.1' :
+          `
                         Made the state only be sent if it changed.
                     `,
-        '2.0' :
-                    `
+      '2.0' :
+          `
                         Version bump to stop the update prompt derping.
                     `,
-        '2.1.0':
-                    `
+      '2.1.0':
+          `
                         Allow to track mute/deafen statuses outside voice channels.
                         Fix unread status for Enhanced Discord users.
                         Actually fix self-updating loop
                     `,
-        '2.1.1':
-                    `
+      '2.1.1':
+          `
                         Fix "being_called" boolean so it's now usable (triggers when user calls and getting called in DMs)
                     `,
-        '2.2.0':
-                    `
+      '2.2.0':
+          `
                         Rewrite a bunch of stuff
                     `,
-        '2.3.0':
-                    `
+      '2.3.0':
+          `
                         Rewrite some more stuff
                     `,
-        '2.4.0':
-                    `
+      '2.4.0':
+          `
                         Rewrite some more stuff
                     `,
-		    '2.4.1':
-                    `
+      '2.4.1':
+          `
                         Fix stuff for Canary
+                    `,
+      '2.4.2':
+          `
+                        Fix user online status
                     `
-        };
-    }
+    };
+  }
 
   constructor () {
     this.sendJsonToAurora = global._.debounce(this.sendJsonToAurora, 100);
@@ -120,7 +124,7 @@ module.exports = class AuroraGSI {
   }
 
   getLocalStatus () {
-    return getModule([ 'guildPositions' ]).status;
+    return getModule([ 'getStatus', 'getState' ], false).getStatus(this.getCurrentUser().id);
   }
 
   load () {}// legacy
@@ -166,18 +170,18 @@ module.exports = class AuroraGSI {
     this.channels = getModule([ 'getChannelId' ], false);
     this.FluxDispatcher = getModule([ 'subscribe', 'dispatch' ], false);
     const { getUser } = getModule([ 'getUser' ], false),
-      voice = getModule([ 'isMute', 'isDeaf', 'isSelfMute', 'isSelfDeaf' ], false),
-      { getCalls } = getModule([ 'getCalls' ], false),
-      { getMutableGuildStates: getUnreadGuilds } = getModule([ 'getMutableGuildStates' ], false),
-      { getTotalMentionCount } = getModule([ 'getTotalMentionCount' ], false),
-      isMute = voice.isMute.bind(voice),
-      isDeaf = voice.isDeaf.bind(voice),
-      isSelfMute = voice.isSelfMute.bind(voice),
-      isSelfDeaf = voice.isSelfDeaf.bind(voice);
-      /*
-       * { getChannel } = getModule([ 'getChannel' ], false), // we dont use this yet
-       * const { getVoiceStates } = getModule([ 'getVoiceState' ], false),
-       */
+        voice = getModule([ 'isMute', 'isDeaf', 'isSelfMute', 'isSelfDeaf' ], false),
+        { getCalls } = getModule([ 'getCalls' ], false),
+        { getMutableGuildStates: getUnreadGuilds } = getModule([ 'getMutableGuildStates' ], false),
+        { getTotalMentionCount } = getModule([ 'getTotalMentionCount' ], false),
+        isMute = voice.isMute.bind(voice),
+        isDeaf = voice.isDeaf.bind(voice),
+        isSelfMute = voice.isSelfMute.bind(voice),
+        isSelfDeaf = voice.isSelfDeaf.bind(voice);
+    /*
+     * { getChannel } = getModule([ 'getChannel' ], false), // we dont use this yet
+     * const { getVoiceStates } = getModule([ 'getVoiceState' ], false),
+     */
     this.handler = (props) => {
       // eslint-disable-next-line consistent-this
       const localUser = this.getCurrentUser();
