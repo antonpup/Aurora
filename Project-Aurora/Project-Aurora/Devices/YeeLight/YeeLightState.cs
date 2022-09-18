@@ -17,6 +17,7 @@ namespace Aurora.Devices.YeeLight
                 _stateTask.Wait();
                 _stateTask = value;
             }
+            get => _stateTask;
         }
         
         void InitState();
@@ -71,13 +72,15 @@ namespace Aurora.Devices.YeeLight
             return newState;
         }
         
-        private void TurnOff()
+        private async void TurnOff()
         {
+            await IYeeLightState.StateTask;
             _lights.ForEach(device => device.SetPower(Constants.PowerStateParamValues.OFF));
         }
         
-        private void TurnOn()
+        private async void TurnOn()
         {
+            await IYeeLightState.StateTask;
             _lights.ForEach(device => device.SetPower(Constants.PowerStateParamValues.ON));
         }
     }
