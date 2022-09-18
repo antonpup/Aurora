@@ -11,7 +11,7 @@ namespace RazerSdkHelper
         
         public static readonly (byte r, byte g, byte b)[] KeyboardColors = new (byte r, byte g, byte b)[22 * 6];
         public static readonly (byte r, byte g, byte b)[] MousepadColors = new (byte r, byte g, byte b)[16];
-        public static (byte r, byte g, byte b) MouseColor;
+        public static (byte r, byte g, byte b)[] MouseColors = new (byte r, byte g, byte b)[9 * 7];
         public static string CurrentAppExecutable;
         
         private static readonly Stopwatch UpdateStopwatch = new();
@@ -102,7 +102,8 @@ namespace RazerSdkHelper
                     break;
                 }
                 case RzMouseDataProvider mouse:
-                    MouseColor = mouse.GetZoneColor(55);
+                    for (var i = 0; i < mouse.Grids[0].Height * mouse.Grids[0].Width; i++)
+                        MouseColors[i] = mouse.GetZoneColor(i);
                     break;
                 case RzMousepadDataProvider mousePad:
                 {

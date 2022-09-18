@@ -103,8 +103,10 @@ namespace Aurora.Settings.Layers
                 rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
             else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                 rColor = RzHelper.MousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
+            else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
+                rColor = RzHelper.KeyboardColors[position[1] + position[0] * 7];
             else if (key == DeviceKeys.Peripheral)
-                rColor = RzHelper.MouseColor;
+                rColor = RzHelper.MouseColors[1];
             else
             {
                 color = Color.Transparent;

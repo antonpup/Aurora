@@ -204,5 +204,27 @@ namespace Aurora.Devices.Razer
             {DeviceKeys.ARROW_DOWN,           new[]{5, 14} },
             {DeviceKeys.ARROW_RIGHT,          new[]{5, 15} }
         };
+
+        public static readonly Dictionary<DeviceKeys, int[]> Mouse = new()
+        {
+            {DeviceKeys.Peripheral_ScrollWheel,       new[]{2, 3} },
+            {DeviceKeys.Peripheral_Logo,              new[]{7, 3} },
+            {DeviceKeys.Peripheral,                   new[]{7, 3} },
+            {DeviceKeys.Peripheral_FrontLight,        new[]{4, 3} },
+            {DeviceKeys.PERIPHERAL_LIGHT1,            new[]{1, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT2,            new[]{2, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT3,            new[]{3, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT4,            new[]{4, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT5,            new[]{5, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT6,            new[]{6, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT7,            new[]{7, 0} },
+            {DeviceKeys.PERIPHERAL_LIGHT8,            new[]{1, 6} },
+            {DeviceKeys.PERIPHERAL_LIGHT9,            new[]{2, 6} },
+            {DeviceKeys.PERIPHERAL_LIGHT10,           new[]{3, 6} },
+            {DeviceKeys.PERIPHERAL_LIGHT11,           new[]{4, 6} },
+            {DeviceKeys.PERIPHERAL_LIGHT12,           new[]{5, 6} },
+            {DeviceKeys.PERIPHERAL_LIGHT13,           new[]{6, 6} },
+            {DeviceKeys.PERIPHERAL_LIGHT14,           new[]{7, 6} },
+        };
     }
 }
