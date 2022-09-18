@@ -24,27 +24,27 @@ namespace Aurora.Settings.Layers
         public AnimationMix _AnimationMix { get; set; }
 
         [JsonIgnore]
-        public AnimationMix AnimationMix { get { return Logic._AnimationMix ?? _AnimationMix; } }
+        public AnimationMix AnimationMix => Logic._AnimationMix ?? _AnimationMix;
 
         public bool? _forceKeySequence { get; set; }
 
         [JsonIgnore]
-        public bool ForceKeySequence { get { return Logic._forceKeySequence ?? _forceKeySequence ?? false; } }
+        public bool ForceKeySequence => Logic._forceKeySequence ?? _forceKeySequence ?? false;
 
         public bool? _scaleToKeySequenceBounds { get; set; }
 
         [JsonIgnore]
-        public bool ScaleToKeySequenceBounds { get { return Logic._scaleToKeySequenceBounds ?? _scaleToKeySequenceBounds ?? false; } }
+        public bool ScaleToKeySequenceBounds => Logic._scaleToKeySequenceBounds ?? _scaleToKeySequenceBounds ?? false;
 
         public float? _AnimationDuration { get; set; }
 
         [JsonIgnore]
-        public float AnimationDuration { get { return Logic._AnimationDuration ?? _AnimationDuration ?? 0.0f; } }
+        public float AnimationDuration => Logic._AnimationDuration ?? _AnimationDuration ?? 0.0f;
 
         public int? _AnimationRepeat { get; set; }
 
         [JsonIgnore]
-        public int AnimationRepeat { get { return Logic._AnimationRepeat ?? _AnimationRepeat ?? 0; } }
+        public int AnimationRepeat => Logic._AnimationRepeat ?? _AnimationRepeat ?? 0;
 
         [JsonIgnore]
         public AnimationTriggerMode TriggerMode => Logic._TriggerMode ?? _TriggerMode ?? AnimationTriggerMode.AlwaysOn;
@@ -67,7 +67,7 @@ namespace Aurora.Settings.Layers
         public bool? _TriggerAnyKey { get; set; }
 
         [JsonIgnore]
-        public KeySequence TriggerKeySequence => Logic._TriggerKeySequence ?? _TriggerKeySequence ?? new KeySequence { };
+        public KeySequence TriggerKeySequence => Logic._TriggerKeySequence ?? _TriggerKeySequence ?? new KeySequence();
         public KeySequence _TriggerKeySequence { get; set; }
 
         [JsonIgnore]
@@ -83,18 +83,18 @@ namespace Aurora.Settings.Layers
 
         public override void Default() {
             base.Default();
-            this._AnimationMix = new AnimationMix();
-            this._forceKeySequence = false;
-            this._scaleToKeySequenceBounds = false;
-            this._AnimationDuration = 1;
-            this._AnimationRepeat = 0;
-            this._TriggerMode = AnimationTriggerMode.AlwaysOn;
-            this._StackMode = AnimationStackMode.Ignore;
-            this._TriggerPath = "";
-            this._TriggerKeySequence = new KeySequence();
-            this._TriggerAnyKey = false;
-            this._KeyTriggerTranslate = false;
-            this._WhileKeyHeldTerminateRunning = false;
+            _AnimationMix = new AnimationMix();
+            _forceKeySequence = false;
+            _scaleToKeySequenceBounds = false;
+            _AnimationDuration = 1;
+            _AnimationRepeat = 0;
+            _TriggerMode = AnimationTriggerMode.AlwaysOn;
+            _StackMode = AnimationStackMode.Ignore;
+            _TriggerPath = "";
+            _TriggerKeySequence = new KeySequence();
+            _TriggerAnyKey = false;
+            _KeyTriggerTranslate = false;
+            _WhileKeyHeldTerminateRunning = false;
         }
     }
 
@@ -102,14 +102,14 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class AnimationLayerHandler : LayerHandler<AnimationLayerHandlerProperties> {
 
-        private List<RunningAnimation> runningAnimations = new List<RunningAnimation>();
-        private Stopwatch _animTimeStopwatch = new Stopwatch();
-        private bool _alwaysOnHasPlayed = false; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
+        private readonly List<RunningAnimation> _runningAnimations = new();
+        private readonly Stopwatch _animTimeStopwatch = new();
+        private bool _alwaysOnHasPlayed; // A dedicated variable has to be used to make 'Always On' work with the repeat count since the logic has changed
         private double _previousTriggerDoubleValue; // Used for tracking when a numeric gamestate value changes
         private bool _previousTriggerBoolValue; // Used for tracking when a boolean gamestate value changes
-        private HashSet<DeviceKeys> _pressedKeys = new HashSet<DeviceKeys>(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
+        private readonly HashSet<DeviceKeys> _pressedKeys = new(); // A list of pressed keys. Used to ensure that the key down event only fires for each key when it first goes down, not as it's held
 
-        public AnimationLayerHandler() {
+        public AnimationLayerHandler(): base("Animation Later") {
             // Listen for key events for the key-based triggers
             Global.InputEvents.KeyDown += InputEvents_KeyDown;
             Global.InputEvents.KeyUp += InputEvents_KeyUp;
@@ -119,15 +119,16 @@ namespace Aurora.Settings.Layers
             return new Control_AnimationLayer(this);
         }
 
-        public override EffectLayer Render(IGameState gamestate) {
-            EffectLayer animationLayer = new EffectLayer();
+        public override EffectLayer Render(IGameState gamestate)
+        {
+            var frameAnimations = new List<RunningAnimation>(_runningAnimations);
 
             // Calculate elapsed time since last Render call
-            long dt = _animTimeStopwatch.ElapsedMilliseconds;
+            var dt = _animTimeStopwatch.ElapsedMilliseconds;
             _animTimeStopwatch.Restart();
 
             // Update all running animations.
-            runningAnimations.ForEach(anim => {
+            frameAnimations.ForEach(anim => {
                 anim.currentTime += dt / 1000f;
                 if (Properties.AnimationRepeat > 0)
                     anim.playTimes += (int)(anim.currentTime / Properties.AnimationDuration);
@@ -136,25 +137,23 @@ namespace Aurora.Settings.Layers
 
             // Remove any animations that have completed their play times
             if (Properties.AnimationRepeat > 0)
-                runningAnimations.RemoveAll(ra => ra.playTimes >= Properties.AnimationRepeat);
+            {
+                frameAnimations.RemoveAll(ra => ra.playTimes >= Properties.AnimationRepeat);
+                _runningAnimations.RemoveAll(ra => ra.playTimes >= Properties.AnimationRepeat);
+            }
 
             // Check to see if the gamestate will cause any animations to trigger
             CheckTriggers(gamestate);
 
+            EffectLayer.Clear();
             // Render each playing animation.
-            runningAnimations.ForEach(anim => {
-                EffectLayer temp = new EffectLayer();
-
+            frameAnimations.ForEach(anim => {
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
-                Rectangle destRect = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
                 PointF offset = Properties.KeyTriggerTranslate ? anim.offset : PointF.Empty;
 
                 // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
                 RectangleF affectedRegion = Properties.Sequence.GetAffectedRegion();
                 if (Properties.ScaleToKeySequenceBounds && !affectedRegion.IsEmpty) {
-                    // The dest rect should simply be the bounding region of the affected keys
-                    destRect = Rectangle.Truncate(affectedRegion);
-
                     // If we are scaling to key sequence bounds, we need to adapt the offset of the pressed key so that it
                     // remains where it is after the bound - scaling operation.
                     // Let's consider only 1 dimension (X) for now since it makes it easier to think about. The scaling process
@@ -172,20 +171,14 @@ namespace Aurora.Settings.Layers
                 }
 
                 // Draw the animation to a temporary canvas
-                using (Graphics g = temp.GetGraphics())
-                    Properties.AnimationMix.Draw(g, anim.currentTime, offset);
-                
-                // Draw from this temp canvas to the actual layer, performing the scale down if it's needed.
-                using (Graphics g = animationLayer.GetGraphics())
-                    g.DrawImage(temp.GetBitmap(), destRect, new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight), GraphicsUnit.Pixel);
-
-                temp.Dispose();
+                using Graphics g = EffectLayer.GetGraphics();
+                Properties.AnimationMix.Draw(g, anim.currentTime, offset);
             });
 
             if (Properties.ForceKeySequence)
-                animationLayer.OnlyInclude(Properties.Sequence);
+                EffectLayer.OnlyInclude(Properties.Sequence);
 
-            return animationLayer;
+            return EffectLayer;
         }
 
         /// <summary>
@@ -208,7 +201,7 @@ namespace Aurora.Settings.Layers
             } else if (Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) {
                 // If we are in "while held down" mode, check to see if any of the keys pressed do not currently
                 // have an animation with them as the assigned key. If not, create trigger it
-                foreach (var key in _pressedKeys.Where(k => !runningAnimations.Any(a => a.assignedKey == k)))
+                foreach (var key in _pressedKeys.Where(k => !_runningAnimations.Any(a => a.assignedKey == k)))
                     StartAnimation(key);
 
             // Handling for numeric value change based triggers
@@ -258,7 +251,7 @@ namespace Aurora.Settings.Layers
                         break;
                     case AnimationTriggerMode.WhileTrue:
                     case AnimationTriggerMode.WhileEvaluatableTrue:
-                        if (resolvedTriggerValue && runningAnimations.Count == 0)
+                        if (resolvedTriggerValue && _runningAnimations.Count == 0)
                             StartAnimation();
                         break;
                 }
@@ -272,15 +265,15 @@ namespace Aurora.Settings.Layers
         /// <param name="targetKey">The key to center the animation around.</param>
         private void StartAnimation(DeviceKeys targetKey = default(DeviceKeys)) {
             RunningAnimation anim = null; // Store a reference to the new animation (or the restarted one)
-            if (runningAnimations.Count == 0)
+            if (_runningAnimations.Count == 0)
                 // If there are no running animations, we will always start a new one
-                runningAnimations.Add(anim = new RunningAnimation());
+                _runningAnimations.Add(anim = new RunningAnimation());
 
             else if (Properties.TriggerMode != AnimationTriggerMode.AlwaysOn) // Ignore stack/reset when animation is always on
                 // If there are already running animations, exactly what happens depends on StackMode
                 switch (Properties.StackMode) {
-                    case AnimationStackMode.Reset: anim = runningAnimations[0].Reset(); break;
-                    case AnimationStackMode.Stack: runningAnimations.Add(anim = new RunningAnimation()); break;
+                    case AnimationStackMode.Reset: anim = _runningAnimations[0].Reset(); break;
+                    case AnimationStackMode.Stack: _runningAnimations.Add(anim = new RunningAnimation()); break;
                 }
 
             // If a new animation has been started or an existing one restarted, and we are translating based on key press
@@ -336,7 +329,7 @@ namespace Aurora.Settings.Layers
             // If we are in "while key held" mode and the user wishes to immediately terminate animations for a key when that key
             // is released (instead of letting the animation finish first), remove any animations assigned to the given key.
             if ((Properties.TriggerMode == AnimationTriggerMode.OnKeyPress || Properties.TriggerMode == AnimationTriggerMode.WhileKeyHeld) && Properties.WhileKeyHeldTerminateRunning)
-                runningAnimations.RemoveAll(anim => anim.assignedKey == e.GetDeviceKey());
+                _runningAnimations.RemoveAll(anim => anim.assignedKey == e.GetDeviceKey());
         }
 
         /// <summary>
