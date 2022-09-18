@@ -1,16 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net6.0-windows10.0.22000": {
-      "Bloody.NET": {
-        "type": "Direct",
-        "requested": "[1.0.4, )",
-        "resolved": "1.0.4",
-        "contentHash": "TpiOHrhFpNeYADlA4MQIOebVyjSJau7XGHGIpm2PT0byMK9nkQkPEF+ogRZqVt7TnpwKwd2CrTcy8qCKcE7G2g==",
-        "dependencies": {
-          "HidSharp": "2.1.0"
-        }
-      },
+    "net6.0-windows10.0.17763": {
       "Colore": {
         "type": "Direct",
         "requested": "[5.2.0, )",
@@ -34,12 +25,6 @@
           "Microsoft.Extensions.DependencyModel": "6.0.0",
           "System.Runtime.Loader": "4.3.0"
         }
-      },
-      "Dubya.WindowsMediaController": {
-        "type": "Direct",
-        "requested": "[2.2.0, )",
-        "resolved": "2.2.0",
-        "contentHash": "HIpcZTSLRxofjNV9HKI9uCmrmS3YiC0UbpFoUluGnezPSsJWhdAauOlZBFAFpaez+8sq11JzU5vuyl5KyvWrUg=="
       },
       "FastMember": {
         "type": "Direct",
