@@ -78,22 +78,25 @@ namespace Aurora.Settings.Layers
 
     public class PercentLayerHandler<TProperty> : LayerHandler<TProperty> where TProperty : PercentLayerHandlerProperties<TProperty>
     {
-        private readonly EffectLayer _effectLayer = new("PercentLayer");
         private double _value;
+
+        public PercentLayerHandler() : base("PercentLayer")
+        {
+        }
 
         public override EffectLayer Render(IGameState state)
         {
             var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
-            if (ColorUtils.NearlyEqual(_value, value, 0.001))
+            if (ColorUtils.NearlyEqual(_value, value, 0.0001))
             {
-                return _effectLayer;
+                return EffectLayer;
             }
             _value = value;
             
             var maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 
-            _effectLayer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
-            return _effectLayer;
+            EffectLayer.PercentEffect(Properties.PrimaryColor, Properties.SecondaryColor, Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection, Properties.BlinkBackground);
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)
@@ -114,7 +117,7 @@ namespace Aurora.Settings.Layers
         {
             base.PropertiesChanged(sender, args);
             
-            _effectLayer.Clear();
+            EffectLayer.Clear();
         }
     }
 

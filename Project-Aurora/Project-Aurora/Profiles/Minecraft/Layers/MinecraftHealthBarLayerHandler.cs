@@ -73,8 +73,10 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
     public class MinecraftHealthBarLayerHandler : LayerHandler<MinecraftHealthBarLayerHandlerProperties>
     {
-        private readonly EffectLayer _layer = new();
-        
+        public MinecraftHealthBarLayerHandler() : base("Minecraft Health Bar Layer")
+        {
+        }
+
         protected override UserControl CreateControl() {
             return new Control_MinecraftHealthBarLayer(this);
         }
@@ -93,13 +95,13 @@ namespace Aurora.Profiles.Minecraft.Layers {
                 barColor = Properties.RegenerationHealthColor;
 
             // Render the main healthbar, with the color decided above.
-            _layer.PercentEffect(barColor, Properties.BackgroundColor, Properties.Sequence, minecraftState.Player.Health, minecraftState.Player.HealthMax);
+            EffectLayer.PercentEffect(barColor, Properties.BackgroundColor, Properties.Sequence, minecraftState.Player.Health, minecraftState.Player.HealthMax);
 
             // If absorption is enabled, overlay the absorption display on the top of the original healthbar
             if (Properties.EnableAbsorptionHealthColor)
-                _layer.PercentEffect(Properties.AbsorptionHealthColor, Properties.BackgroundColor, Properties.Sequence, minecraftState.Player.Absorption, minecraftState.Player.AbsorptionMax, Properties.GradualProgress ? Settings.PercentEffectType.Progressive_Gradual : Settings.PercentEffectType.Progressive);
+                EffectLayer.PercentEffect(Properties.AbsorptionHealthColor, Properties.BackgroundColor, Properties.Sequence, minecraftState.Player.Absorption, minecraftState.Player.AbsorptionMax, Properties.GradualProgress ? Settings.PercentEffectType.Progressive_Gradual : Settings.PercentEffectType.Progressive);
 
-            return _layer;
+            return EffectLayer;
         }
     }
 }

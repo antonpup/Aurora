@@ -25,11 +25,11 @@ namespace Aurora.Settings.Layers {
     public class ToggleKeyLayerHandler : LayerHandler<ToggleKeyLayerHandlerProperties>
     {
         private bool _state = true;
-        private readonly EffectLayer _layer = new("ToggleKeyLayer");
         private readonly SolidBrush _primaryBrush;
         private readonly SolidBrush _secondaryBrush;
+        private bool _invalidated;
 
-        public ToggleKeyLayerHandler()
+        public ToggleKeyLayerHandler(): base("ToggleKeyLayer")
         {
             _primaryBrush = new SolidBrush(Properties.PrimaryColor);
             _secondaryBrush = new SolidBrush(Properties.SecondaryColor);
@@ -49,8 +49,13 @@ namespace Aurora.Settings.Layers {
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            _layer.Set(Properties.Sequence, _state ? _primaryBrush : _secondaryBrush);
-            return _layer;
+            if (_invalidated)
+            {
+                EffectLayer.Clear();
+                _invalidated = false;
+            }
+            EffectLayer.Set(Properties.Sequence, _state ? _primaryBrush : _secondaryBrush);
+            return EffectLayer;
         }
 
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
@@ -58,6 +63,7 @@ namespace Aurora.Settings.Layers {
             base.PropertiesChanged(sender, args);
             _primaryBrush.Color = Properties.PrimaryColor;
             _secondaryBrush.Color = Properties.SecondaryColor;
+            _invalidated = true;
         }
 
         private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e)

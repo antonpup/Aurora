@@ -42,8 +42,10 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientFillLayerHandler : LayerHandler<GradientFillLayerHandlerProperties>
     {
-        readonly EffectLayer _gradientLayer = new("GradientFillLayer");
-        
+        public GradientFillLayerHandler(string name) : base("GradientFillLayer")
+        {
+        }
+
         protected override UserControl CreateControl()
         {
             return new Control_GradientFillLayer(this);
@@ -59,11 +61,11 @@ namespace Aurora.Settings.Layers
             Color selected_color = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.CanvasBiggest);
 
             if (Properties.FillEntireKeyboard)
-                _gradientLayer.FillOver(selected_color);
+                EffectLayer.FillOver(selected_color);
             else
-                _gradientLayer.Set(Properties.Sequence, selected_color);
+                EffectLayer.Set(Properties.Sequence, selected_color);
 
-            return _gradientLayer;
+            return EffectLayer;
         }
     }
 }

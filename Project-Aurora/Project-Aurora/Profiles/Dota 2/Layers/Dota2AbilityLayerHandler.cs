@@ -52,44 +52,38 @@ namespace Aurora.Profiles.Dota_2.Layers
         }
 
         private readonly List<string> _ignoredAbilities = new() { "seasonal", "high_five" };
-        private readonly EffectLayer _abilitiesLayer = new("Dota 2 - Abilities");
+
+        public Dota2AbilityLayerHandler(): base("Dota 2 - Abilities")
+        {
+        }
 
         private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_Dota2 dota2State) return _abilitiesLayer;
-            if (dota2State.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME ||
-                dota2State.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
+            if (state is not GameState_Dota2 dota2State) return EffectLayer.EmptyLayer;
+            if (dota2State.Map.GameState != DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME &&
+                dota2State.Map.GameState != DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
+                return EffectLayer.EmptyLayer;
+            for (var index = 0; index < dota2State.Abilities.Count; index++)
             {
-                for (var index = 0; index < dota2State.Abilities.Count; index++)
-                {
-                    var ability = dota2State.Abilities[index];
-                    if (_ignoredAbilities.Any(ignoredAbilityName => ability.Name.Contains(ignoredAbilityName)))
-                        continue;
+                var ability = dota2State.Abilities[index];
+                if (_ignoredAbilities.Any(ignoredAbilityName => ability.Name.Contains(ignoredAbilityName)))
+                    continue;
 
-                    _empty = false;
+                _empty = false;
 
-                    if (index >= Properties.AbilityKeys.Count) continue;
-                    var key = Properties.AbilityKeys[index];
+                if (index >= Properties.AbilityKeys.Count) continue;
+                var key = Properties.AbilityKeys[index];
 
-                    if (ability.CanCast && ability.Cooldown == 0 && ability.Level > 0)
-                        _abilitiesLayer.Set(key, Properties.CanCastAbilityColor);
-                    else if (ability.Cooldown <= 5 && ability.Level > 0)
-                        _abilitiesLayer.Set(key, ColorUtils.BlendColors(Properties.CanCastAbilityColor, Properties.CanNotCastAbilityColor, ability.Cooldown / 5.0));
-                    else
-                        _abilitiesLayer.Set(key, Properties.CanNotCastAbilityColor);
-                }
+                if (ability.CanCast && ability.Cooldown == 0 && ability.Level > 0)
+                    EffectLayer.Set(key, Properties.CanCastAbilityColor);
+                else if (ability.Cooldown <= 5 && ability.Level > 0)
+                    EffectLayer.Set(key, ColorUtils.BlendColors(Properties.CanCastAbilityColor, Properties.CanNotCastAbilityColor, ability.Cooldown / 5.0));
+                else
+                    EffectLayer.Set(key, Properties.CanNotCastAbilityColor);
             }
-            else
-            {
-                if (!_empty)
-                {
-                    _abilitiesLayer.Clear();
-                    _empty = true;
-                }
-            }
+            return EffectLayer;
 
-            return _abilitiesLayer;
         }
 
         public override void SetApplication(Application profile)

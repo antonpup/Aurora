@@ -41,7 +41,10 @@ namespace Aurora.Profiles.CSGO.Layers
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class CSGOTypingIndicatorLayerHandler : LayerHandler<CSGOTypingIndicatorLayerHandlerProperties>
     {
-        private readonly EffectLayer _typingKeysLayer = new("CSGO - Typing Keys");
+
+        public CSGOTypingIndicatorLayerHandler(): base("CSGO - Typing Keys")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -50,17 +53,13 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_CSGO csgostate) return _typingKeysLayer;
+            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
+            if (csgostate.Player.Activity != PlayerActivity.TextInput) return EffectLayer.EmptyLayer;
 
             //Update Typing Keys
-            if (csgostate.Player.Activity == PlayerActivity.TextInput)
-                _typingKeysLayer.Set(Properties.Sequence, Properties.TypingKeysColor);
-            else
-            {
-                _typingKeysLayer.Set(Properties.Sequence, Color.Empty);
-            }
+            EffectLayer.Set(Properties.Sequence, Properties.TypingKeysColor);
+            return EffectLayer;
 
-            return _typingKeysLayer;
         }
 
         public override void SetApplication(Application profile)

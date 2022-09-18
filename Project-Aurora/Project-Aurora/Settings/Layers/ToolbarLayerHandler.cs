@@ -41,9 +41,8 @@ namespace Aurora.Settings.Layers {
     public class ToolbarLayerHandler : LayerHandler<ToolbarLayerHandlerProperties> {
 
         private DeviceKeys _activeKey = DeviceKeys.NONE;
-        private readonly EffectLayer _layer = new();
 
-        public ToolbarLayerHandler() {
+        public ToolbarLayerHandler(): base("Toolbar Layer") {
             // Listen for relevant events
             Global.InputEvents.KeyDown += InputEvents_KeyDown;
             Global.InputEvents.Scroll += InputEvents_Scroll;
@@ -63,8 +62,8 @@ namespace Aurora.Settings.Layers {
         
         public override EffectLayer Render(IGameState _) {
             foreach (var key in Properties.Sequence.keys)
-                _layer.Set(key, key == _activeKey ? Properties.SecondaryColor : Properties.PrimaryColor);
-            return _layer;
+                EffectLayer.Set(key, key == _activeKey ? Properties.SecondaryColor : Properties.PrimaryColor);
+            return EffectLayer;
         }
 
         /// <summary>

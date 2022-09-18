@@ -58,12 +58,15 @@ namespace Aurora.Profiles.CSGO.Layers
 
     public class CSGOBombLayerHandler : LayerHandler<CSGOBombLayerHandlerProperties>
     {
-        private static Stopwatch bombtimer = new();
-        private static bool bombflash;
-        private static int bombflashcount;
-        private static long bombflashtime;
-        private static long bombflashedat;
-        private readonly EffectLayer _bombEffectLayer = new("CSGO - Bomb Effect");
+        private static readonly Stopwatch Bombtimer = new();
+        private static bool _bombFlash;
+        private static int _bombFlashCount;
+        private static long _bombFlashTime;
+        private static long _bombFlashEdat;
+
+        public CSGOBombLayerHandler(): base("CSGO - Bomb Effect")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -73,62 +76,56 @@ namespace Aurora.Profiles.CSGO.Layers
         private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_CSGO csgostate) return _bombEffectLayer;
+            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
 
             if (csgostate.Round.Bomb != BombState.Planted)
             {
-                if (!_empty)
-                {
-                    bombtimer.Stop();
-                    _bombEffectLayer.Clear();
-                    _empty = true;
-                }
-                return _bombEffectLayer;
+                return EffectLayer.EmptyLayer;
             }
             _empty = false;
 
-            if (!bombtimer.IsRunning)
+            if (!Bombtimer.IsRunning)
             {
-                bombtimer.Restart();
-                bombflashcount = 0;
-                bombflashtime = 0;
-                bombflashedat = 0;
+                Bombtimer.Restart();
+                _bombFlashCount = 0;
+                _bombFlashTime = 0;
+                _bombFlashEdat = 0;
             }
 
             double bombflashamount = 1.0;
             bool isCritical = false;
 
-            if (bombtimer.ElapsedMilliseconds < 38000)
+            if (Bombtimer.ElapsedMilliseconds < 38000)
             {
-                if (bombtimer.ElapsedMilliseconds >= bombflashtime)
+                if (Bombtimer.ElapsedMilliseconds >= _bombFlashTime)
                 {
-                    bombflash = true;
-                    bombflashedat = bombtimer.ElapsedMilliseconds;
-                    bombflashtime = bombtimer.ElapsedMilliseconds + (1000 - (bombflashcount++ * 13));
+                    _bombFlash = true;
+                    _bombFlashEdat = Bombtimer.ElapsedMilliseconds;
+                    _bombFlashTime = Bombtimer.ElapsedMilliseconds + (1000 - (_bombFlashCount++ * 13));
                 }
 
-                if (bombtimer.ElapsedMilliseconds < bombflashedat || bombtimer.ElapsedMilliseconds > bombflashedat + 220)
+                if (Bombtimer.ElapsedMilliseconds < _bombFlashEdat || Bombtimer.ElapsedMilliseconds > _bombFlashEdat + 220)
                     bombflashamount = 0.0;
                 else
-                    bombflashamount = Math.Pow(Math.Sin((bombtimer.ElapsedMilliseconds - bombflashedat) / 80.0 + 0.25), 2.0);
+                    bombflashamount = Math.Pow(Math.Sin((Bombtimer.ElapsedMilliseconds - _bombFlashEdat) / 80.0 + 0.25), 2.0);
             }
-            else if (bombtimer.ElapsedMilliseconds >= 38000)
+            else if (Bombtimer.ElapsedMilliseconds >= 38000)
             {
                 isCritical = true;
-                bombflashamount = bombtimer.ElapsedMilliseconds / 40000.0;
+                bombflashamount = Bombtimer.ElapsedMilliseconds / 40000.0;
             }
-            else if (bombtimer.ElapsedMilliseconds >= 45000)
+            else if (Bombtimer.ElapsedMilliseconds >= 45000)
             {
-                bombtimer.Stop();
+                Bombtimer.Stop();
                 csgostate.Round.Bomb = BombState.Undefined;
             }
 
             if (!isCritical)
             {
-                if (bombflashamount <= 0.05 && bombflash)
-                    bombflash = false;
+                if (bombflashamount <= 0.05 && _bombFlash)
+                    _bombFlash = false;
 
-                if (!bombflash)
+                if (!_bombFlash)
                     bombflashamount = 0.0;
             }
 
@@ -148,12 +145,12 @@ namespace Aurora.Profiles.CSGO.Layers
                 bombcolor = Color.Empty;
             }
 
-            _bombEffectLayer.Set(Properties.Sequence, bombcolor);
+            EffectLayer.Set(Properties.Sequence, bombcolor);
 
             if (Properties.PeripheralUse)
-                _bombEffectLayer.Set(DeviceKeys.Peripheral, bombcolor);
+                EffectLayer.Set(DeviceKeys.Peripheral, bombcolor);
 
-            return _bombEffectLayer;
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)

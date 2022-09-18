@@ -44,8 +44,6 @@ namespace Aurora.Profiles.CSGO.Layers
 
     public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHandlerProperties>
     {
-        private readonly EffectLayer _effectLayer = new("CSGO - Winning Team Effect");
-        
         private readonly AnimationTrack[] _tracks =
         {
             new("Winning Team Track 0", 1.0f),
@@ -64,9 +62,9 @@ namespace Aurora.Profiles.CSGO.Layers
 
         private bool _showAnimation;
 
-        private SolidBrush _solidBrush = new(Color.Empty);
+        private readonly SolidBrush _solidBrush = new(Color.Empty);
 
-        public CSGOWinningTeamLayerHandler()
+        public CSGOWinningTeamLayerHandler(): base("CSGO - Winning Team Effect")
         {
             _animationMix = new AnimationMix(_tracks);
             SetTracks();
@@ -77,21 +75,17 @@ namespace Aurora.Profiles.CSGO.Layers
             return new Control_CSGOWinningTeamLayer(this);
         }
 
-        private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
             _previoustime = _currenttime;
             _currenttime = Utils.Time.GetMillisecondsSinceEpoch();
 
-            if (state is not GameState_CSGO csgostate) return _effectLayer;
+            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
 
             // Block animations after end of round
             if (csgostate.Map.Phase == MapPhase.Undefined || csgostate.Round.Phase != RoundPhase.Over)
             {
-                if (_empty) return _effectLayer;
-                _effectLayer.Clear();
-                _empty = true;
-                return _effectLayer;
+                return EffectLayer.EmptyLayer;
             }
 
             _solidBrush.Color = Color.White;
@@ -130,18 +124,17 @@ namespace Aurora.Profiles.CSGO.Layers
                 _showAnimation = true;
             }
 
-            if (!_showAnimation) return _effectLayer;
+            if (!_showAnimation) return EffectLayer;
 
-            _empty = false;
-            _effectLayer.Fill(_solidBrush);
-            _animationMix.Draw(_effectLayer.GetGraphics(), _winningTeamEffectKeyframe);
+            EffectLayer.Fill(_solidBrush);
+            _animationMix.Draw(EffectLayer.GetGraphics(), _winningTeamEffectKeyframe);
             _winningTeamEffectKeyframe += (_currenttime - _previoustime) / 1000.0f;
 
-            if (!(_winningTeamEffectKeyframe >= WinningTeamEffectAnimationTime)) return _effectLayer;
+            if (!(_winningTeamEffectKeyframe >= WinningTeamEffectAnimationTime)) return EffectLayer;
             _showAnimation = false;
             _winningTeamEffectKeyframe = 0;
 
-            return _effectLayer;
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)

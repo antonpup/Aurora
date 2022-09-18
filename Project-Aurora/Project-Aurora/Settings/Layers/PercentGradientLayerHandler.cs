@@ -30,7 +30,6 @@ namespace Aurora.Settings.Layers
     [LayerHandlerMeta(Name = "Percent (Gradient)", IsDefault = true)]
     public class PercentGradientLayerHandler : PercentLayerHandler<PercentGradientLayerHandlerProperties>
     {
-        private readonly EffectLayer _effectLayer = new();
         private bool _invalidated;
         
         protected override UserControl CreateControl()
@@ -47,15 +46,15 @@ namespace Aurora.Settings.Layers
         {
             if (_invalidated)
             {
-                _effectLayer.Clear();
+                EffectLayer.Clear();
             }
             _invalidated = false;
             
             var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
             var maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);
 
-            _effectLayer.PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
-            return _effectLayer;
+            EffectLayer.PercentEffect(Properties.Gradient.GetColorSpectrum(), Properties.Sequence, value, maxvalue, Properties.PercentType, Properties.BlinkThreshold, Properties.BlinkDirection);
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)
@@ -74,7 +73,7 @@ namespace Aurora.Settings.Layers
 
         public override void Dispose()
         {
-            _effectLayer.Dispose();
+            EffectLayer.Dispose();
             base.Dispose();
         }
     }

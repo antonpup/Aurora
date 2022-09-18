@@ -70,8 +70,11 @@ namespace Aurora.Profiles.CSGO.Layers
         private bool _isDimming;
         private double _dimValue = 100.0;
         private long _dimBgAt = 15;
-        private readonly EffectLayer _bgLayer = new("CSGO - Background");
-        private SolidBrush _solidBrush = new(Color.Empty);
+        private readonly SolidBrush _solidBrush = new(Color.Empty);
+
+        public CSGOBackgroundLayerHandler(): base("CSGO - Background")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -80,7 +83,7 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_CSGO csgostate) return _bgLayer;
+            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
 
             var inGame = csgostate.Previously.Player.State.Health is > -1 and < 100
                          || (csgostate.Round.WinTeam == RoundWinTeam.Undefined && csgostate.Previously.Round.WinTeam != RoundWinTeam.Undefined);
@@ -112,11 +115,11 @@ namespace Aurora.Profiles.CSGO.Layers
                 }
             }
 
-            if (_solidBrush.Color == bgColor) return _bgLayer;
+            if (_solidBrush.Color == bgColor) return EffectLayer;
             _solidBrush.Color = bgColor;
-            _bgLayer.Fill(_solidBrush);
+            EffectLayer.Fill(_solidBrush);
 
-            return _bgLayer;
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)

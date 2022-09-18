@@ -67,7 +67,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
     public class Dota2ItemLayerHandler : LayerHandler<Dota2ItemLayerHandlerProperties>
     {
-        private static Dictionary<string, Color> item_colors = new Dictionary<string, Color>()
+        private static readonly Dictionary<string, Color> ItemColors = new()
         {
             { "empty", Color.FromArgb(0, 0, 0, 0) },
             { "item_aegis", Color.FromArgb(255, 240, 200) },
@@ -326,7 +326,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             { "item_greevil_whistle", Color.FromArgb(62, 121, 100) }
         };
 
-        private static Dictionary<string, Color> bottle_rune_colors = new Dictionary<string, Color>()
+        private static readonly Dictionary<string, Color> BottleRuneColors = new()
         {
             { "empty", Color.FromArgb(35, 155, 185) },
             { "arcane", Color.FromArgb(244, 92, 246) },
@@ -338,99 +338,92 @@ namespace Aurora.Profiles.Dota_2.Layers
             { "regen", Color.FromArgb(146, 85, 183) }
         };
 
-        private readonly EffectLayer _itemsLayer = new("Dota 2 - Items");
+        public Dota2ItemLayerHandler(): base("Dota 2 - Items")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
             return new Control_Dota2ItemLayer(this);
         }
 
-        private bool _empty = true;
         public override EffectLayer Render(IGameState state)
         {
-            if (state is GameState_Dota2)
+            if (state is not GameState_Dota2 dota2State) return EffectLayer;
+
+            if (dota2State.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME ||
+                dota2State.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
             {
-                GameState_Dota2 dota2state = state as GameState_Dota2;
-
-                if (dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_PRE_GAME ||
-                    dota2state.Map.GameState == DOTA_GameState.DOTA_GAMERULES_STATE_GAME_IN_PROGRESS)
+                for (int index = 0; index < dota2State.Items.InventoryCount; index++)
                 {
-                    _empty = false;
-                    for (int index = 0; index < dota2state.Items.InventoryCount; index++)
-                    {
-                        Item item = dota2state.Items.GetInventoryAt(index);
-                        Devices.DeviceKeys key = Properties.ItemKeys[index];
+                    Item item = dota2State.Items.GetInventoryAt(index);
+                    Devices.DeviceKeys key = Properties.ItemKeys[index];
 
-                        if (item.Name.Equals("empty"))
-                            _itemsLayer.Set(key, Properties.EmptyItemColor);
-                        else
+                    if (item.Name.Equals("empty"))
+                        EffectLayer.Set(key, Properties.EmptyItemColor);
+                    else
+                    {
+                        if (Properties.UseItemColors && ItemColors.ContainsKey(item.Name))
                         {
-                            if (Properties.UseItemColors && item_colors.ContainsKey(item.Name))
-                            {
-                                if (!String.IsNullOrWhiteSpace(item.ContainsRune))
-                                    _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(item_colors[item.Name], bottle_rune_colors[item.ContainsRune], 0.8));
-                                else
-                                    _itemsLayer.Set(key, item_colors[item.Name]);
-                            }
+                            if (!String.IsNullOrWhiteSpace(item.ContainsRune))
+                                EffectLayer.Set(key, Utils.ColorUtils.BlendColors(ItemColors[item.Name], BottleRuneColors[item.ContainsRune], 0.8));
                             else
-                                _itemsLayer.Set(key, Properties.ItemsColor);
-
-                            //Cooldown
-                            if (item.Cooldown > 5)
-                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, 1.0));
-                            else if (item.Cooldown > 0 && item.Cooldown <= 5)
-                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
-
-                            //Charges
-                            if (item.Charges == 0)
-                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
-                        }
-                    }
-
-                    for (int index = 0; index < dota2state.Items.StashCount; index++)
-                    {
-                        Item item = dota2state.Items.GetStashAt(index);
-                        Devices.DeviceKeys key = Properties.ItemKeys[9 + index];
-
-                        if (item.Name.Equals("empty"))
-                        {
-                            _itemsLayer.Set(key, Properties.EmptyItemColor);
+                                EffectLayer.Set(key, ItemColors[item.Name]);
                         }
                         else
-                        {
-                            if (Properties.UseItemColors && item_colors.ContainsKey(item.Name))
-                            {
-                                if (!String.IsNullOrWhiteSpace(item.ContainsRune))
-                                    _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(item_colors[item.Name], bottle_rune_colors[item.ContainsRune], 0.8));
-                                else
-                                    _itemsLayer.Set(key, item_colors[item.Name]);
-                            }
-                            else
-                                _itemsLayer.Set(key, Properties.ItemsColor);
+                            EffectLayer.Set(key, Properties.ItemsColor);
 
-                            //Cooldown
-                            if (item.Cooldown > 5)
-                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, 1.0));
-                            else if (item.Cooldown > 0 && item.Cooldown <= 5)
-                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
+                        //Cooldown
+                        if (item.Cooldown > 5)
+                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, 1.0));
+                        else if (item.Cooldown > 0 && item.Cooldown <= 5)
+                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
 
-                            //Charges
-                            if (item.Charges == 0)
-                                _itemsLayer.Set(key, Utils.ColorUtils.BlendColors(_itemsLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
-                        }
+                        //Charges
+                        if (item.Charges == 0)
+                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
                     }
                 }
-                else
+
+                for (int index = 0; index < dota2State.Items.StashCount; index++)
                 {
-                    if (!_empty)
+                    Item item = dota2State.Items.GetStashAt(index);
+                    Devices.DeviceKeys key = Properties.ItemKeys[9 + index];
+
+                    if (item.Name.Equals("empty"))
                     {
-                        _itemsLayer.Clear();
-                        _empty = true;
+                        EffectLayer.Set(key, Properties.EmptyItemColor);
+                    }
+                    else
+                    {
+                        if (Properties.UseItemColors && ItemColors.ContainsKey(item.Name))
+                        {
+                            if (!String.IsNullOrWhiteSpace(item.ContainsRune))
+                                EffectLayer.Set(key, Utils.ColorUtils.BlendColors(ItemColors[item.Name], BottleRuneColors[item.ContainsRune], 0.8));
+                            else
+                                EffectLayer.Set(key, ItemColors[item.Name]);
+                        }
+                        else
+                            EffectLayer.Set(key, Properties.ItemsColor);
+
+                        //Cooldown
+                        if (item.Cooldown > 5)
+                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, 1.0));
+                        else if (item.Cooldown > 0 && item.Cooldown <= 5)
+                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemCooldownColor, item.Cooldown / 5.0));
+
+                        //Charges
+                        if (item.Charges == 0)
+                            EffectLayer.Set(key, Utils.ColorUtils.BlendColors(EffectLayer.Get(key), Properties.ItemNoChargersColor, 0.7));
                     }
                 }
             }
+            else
+            {
+                return EffectLayer.EmptyLayer;
+            }
 
-            return _itemsLayer;
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)

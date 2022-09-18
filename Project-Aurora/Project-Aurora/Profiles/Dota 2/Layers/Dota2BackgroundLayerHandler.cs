@@ -63,7 +63,10 @@ namespace Aurora.Profiles.Dota_2.Layers
         private bool isDimming;
         private double dim_value = 1.0;
         private int dim_bg_at = 15;
-        private readonly EffectLayer _bgLayer = new("Dota 2 - Background");
+
+        public Dota2BackgroundLayerHandler(): base("Dota 2 - Background")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -73,55 +76,44 @@ namespace Aurora.Profiles.Dota_2.Layers
         private SolidBrush _currentColor = new(Color.Empty);
         public override EffectLayer Render(IGameState state)
         {
-            if (state is GameState_Dota2)
-            {
-                GameState_Dota2 dota2state = state as GameState_Dota2;
+            if (state is not GameState_Dota2 dota2State) return EffectLayer.EmptyLayer;
 
-                if (dota2state.Previously.Hero.HealthPercent == 0 && dota2state.Hero.HealthPercent == 100 && !dota2state.Previously.Hero.IsAlive && dota2state.Hero.IsAlive)
+            if (dota2State.Previously.Hero.HealthPercent == 0 && dota2State.Hero.HealthPercent == 100 && !dota2State.Previously.Hero.IsAlive && dota2State.Hero.IsAlive)
+            {
+                isDimming = false;
+                dim_bg_at = dota2State.Map.GameTime + (int)Properties.DimDelay;
+                dim_value = 1.0;
+            }
+
+            Color bgColor = dota2State.Player.Team switch
+            {
+                PlayerTeam.Dire => Properties.DireColor,
+                PlayerTeam.Radiant => Properties.RadiantColor,
+                _ => Properties.DefaultColor
+            };
+
+            if (dota2State.Player.Team == PlayerTeam.Dire || dota2State.Player.Team == PlayerTeam.Radiant)
+            {
+                if (dim_bg_at <= dota2State.Map.GameTime || !dota2State.Hero.IsAlive)
+                {
+                    isDimming = true;
+                    bgColor = Utils.ColorUtils.MultiplyColorByScalar(bgColor, GetDimmingValue());
+                }
+                else
                 {
                     isDimming = false;
-                    dim_bg_at = dota2state.Map.GameTime + (int)Properties.DimDelay;
                     dim_value = 1.0;
-                }
-
-
-                Color bg_color = Properties.DefaultColor;
-
-                switch (dota2state.Player.Team)
-                {
-                    case PlayerTeam.Dire:
-                        bg_color = Properties.DireColor;
-                        break;
-                    case PlayerTeam.Radiant:
-                        bg_color = Properties.RadiantColor;
-                        break;
-                    default:
-                        break;
-                }
-
-                if (dota2state.Player.Team == PlayerTeam.Dire || dota2state.Player.Team == PlayerTeam.Radiant)
-                {
-                    if (dim_bg_at <= dota2state.Map.GameTime || !dota2state.Hero.IsAlive)
-                    {
-                        isDimming = true;
-                        bg_color = Utils.ColorUtils.MultiplyColorByScalar(bg_color, getDimmingValue());
-                    }
-                    else
-                    {
-                        isDimming = false;
-                        dim_value = 1.0;
-                    }
-                }
-
-                if (_currentColor.Color != bg_color)
-                {
-                    _currentColor = new SolidBrush(bg_color);
-                    _bgLayer.Clear();
-                    _bgLayer.Fill(_currentColor);
                 }
             }
 
-            return _bgLayer;
+            if (_currentColor.Color != bgColor)
+            {
+                _currentColor = new SolidBrush(bgColor);
+                EffectLayer.Clear();
+                EffectLayer.Fill(_currentColor);
+            }
+
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)
@@ -130,15 +122,15 @@ namespace Aurora.Profiles.Dota_2.Layers
             base.SetApplication(profile);
         }
 
-        private double getDimmingValue()
+        private double GetDimmingValue()
         {
             if (isDimming && Properties.DimEnabled)
             {
                 dim_value -= 0.02;
                 return dim_value = (dim_value < 0.0 ? 0.0 : dim_value);
             }
-            else
-                return dim_value = 1.0;
+
+            return dim_value = 1.0;
         }
     }
 }

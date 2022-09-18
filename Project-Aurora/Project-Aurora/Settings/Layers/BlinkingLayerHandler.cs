@@ -49,6 +49,10 @@ namespace Aurora.Settings.Layers
         private Color current_primary_color = Color.Transparent;
         private Color current_secondary_color = Color.Transparent;
 
+        public BlinkingLayerHandler() : base("Blinking Layer")
+        {
+        }
+
         protected override UserControl CreateControl()
         {
             return new Control_BlinkingLayer(this);
@@ -68,10 +72,10 @@ namespace Aurora.Settings.Layers
             else if (!Properties.RandomPrimaryColor)
                 current_primary_color = Properties.PrimaryColor;
 
-            EffectLayer breathing_layer = new EffectLayer();
-            breathing_layer.Set(Properties.Sequence, Utils.ColorUtils.BlendColors(current_primary_color, current_secondary_color, current_sine));
+            EffectLayer.Clear();
+            EffectLayer.Set(Properties.Sequence, Utils.ColorUtils.BlendColors(current_primary_color, current_secondary_color, current_sine));
 
-            return breathing_layer;
+            return EffectLayer;
         }
     }
 }

@@ -54,8 +54,11 @@ namespace Aurora.Profiles.Dota_2.Layers
 
     public class Dota2RespawnLayerHandler : LayerHandler<Dota2RespawnLayerHandlerProperties>
     {
-        private readonly EffectLayer _respawnLayer = new("Dota 2 - Respawn");
         private readonly SolidBrush _solidBrush = new(Color.Empty);
+
+        public Dota2RespawnLayerHandler(): base("Dota 2 - Respawn")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -65,39 +68,27 @@ namespace Aurora.Profiles.Dota_2.Layers
         private bool _empty;
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_Dota2 dota2State) return _respawnLayer;
+            if (state is not GameState_Dota2 dota2State) return EffectLayer.EmptyLayer;
 
-            if (dota2State.Player.Team != PlayerTeam.Undefined && dota2State.Player.Team != PlayerTeam.None && !dota2State.Hero.IsAlive)
-            {
-                var percent = dota2State.Hero.SecondsToRespawn > 5 ? 0.0 : 1.0 - dota2State.Hero.SecondsToRespawn / 5.0;
-                if (percent > 0)
-                {
-                    _empty = false;
-                    _solidBrush.Color = Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent);
-                    _respawnLayer.Fill(_solidBrush);
+            if (dota2State.Player.Team is PlayerTeam.Undefined or PlayerTeam.None ||
+                dota2State.Hero.IsAlive) return EffectLayer.EmptyLayer;
+            var percent = dota2State.Hero.SecondsToRespawn > 5 ? 0.0 : 1.0 - dota2State.Hero.SecondsToRespawn / 5.0;
+            if (!(percent > 0)) return EffectLayer.EmptyLayer;
 
-                    _respawnLayer.PercentEffect(
-                        Properties.RespawningColor,
-                        Properties.RespawnColor,
-                        Properties.Sequence,
-                        percent,
-                        1.0,
-                        PercentEffectType.AllAtOnce);
-                }
-                else
-                {
-                    _respawnLayer.Clear();
-                    _empty = true;
-                }
-            }
-            else
-            {
-                if (_empty) return _respawnLayer;
-                _respawnLayer.Clear();
-                _empty = true;
-            }
+            _empty = false;
+            _solidBrush.Color = Utils.ColorUtils.BlendColors(Color.Transparent, Properties.BackgroundColor, percent);
+            EffectLayer.Fill(_solidBrush);
 
-            return _respawnLayer;
+            EffectLayer.PercentEffect(
+                Properties.RespawningColor,
+                Properties.RespawnColor,
+                Properties.Sequence,
+                percent,
+                1.0,
+                PercentEffectType.AllAtOnce);
+                    
+            return EffectLayer;
+
         }
 
         public override void SetApplication(Application profile)

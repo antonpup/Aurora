@@ -43,12 +43,15 @@ namespace Aurora.Profiles.CSGO.Layers
 
     public class CSGODeathLayerHandler : LayerHandler<CSGODeathLayerHandlerProperties>
     {
-        private readonly EffectLayer _effectLayer = new("CSGO - Death Effect");
         private bool _isDead;
         private int _fadeAlpha = 255;
         private long _lastTimeMillis;
-        private SolidBrush _solidBrush = new(Color.Empty);
-        
+        private readonly SolidBrush _solidBrush = new(Color.Empty);
+
+        public CSGODeathLayerHandler(): base("CSGO - Death Effect")
+        {
+        }
+
         protected override UserControl CreateControl()
         {
             return new Control_CSGODeathLayer(this);
@@ -56,11 +59,11 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_CSGO gameState) return _effectLayer;
+            if (state is not GameState_CSGO gameState) return EffectLayer.EmptyLayer;
             var deathColor = Properties.DeathColor;
 
             // Confirm if CS:GO Player is correct
-            if (!gameState.Provider.SteamID.Equals(gameState.Player.SteamID)) return _effectLayer;
+            if (!gameState.Provider.SteamID.Equals(gameState.Player.SteamID)) return EffectLayer.EmptyLayer;
 
             // Are they dead?
             if (!_isDead && gameState.Player.State.Health <= 0 && gameState.Previously.Player.State.Health > 0)
@@ -72,22 +75,21 @@ namespace Aurora.Profiles.CSGO.Layers
 
             if (!_isDead)
             {
-                return _effectLayer;
+                return EffectLayer.EmptyLayer;
             }
 
             // If so...
             var fadeAlpha = GetFadeAlpha();
-            _solidBrush.Color = Color.FromArgb(fadeAlpha, deathColor.R, deathColor.G, deathColor.B);
 
             if (fadeAlpha == 0)
             {
                 _isDead = false;
-                _effectLayer.Clear();
-                return _effectLayer;
+                return EffectLayer.EmptyLayer;
             }
 
-            _effectLayer.Fill(_solidBrush);
-            return _effectLayer;
+            _solidBrush.Color = Color.FromArgb(fadeAlpha, deathColor.R, deathColor.G, deathColor.B);
+            EffectLayer.Fill(_solidBrush);
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)

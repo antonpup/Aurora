@@ -121,9 +121,12 @@ namespace Aurora.Settings.Layers
 
     public class ShortcutAssistantLayerHandler : LayerHandler<ShortcutAssistantLayerHandlerProperties>
     {
-        private EffectLayer _scAssistantLayer = new("Shortcut Assistant");
         private bool _clear = true;
-        
+
+        public ShortcutAssistantLayerHandler() : base("Shortcut Assistant")
+        {
+        }
+
         protected override System.Windows.Controls.UserControl CreateControl()
         {
             return new Control_ShortcutAssistantLayer(this);
@@ -179,10 +182,10 @@ namespace Aurora.Settings.Layers
             {
                 if (!_clear)
                 {
-                    _scAssistantLayer.Clear();
+                    EffectLayer.Clear();
                     _clear = true;
                 }
-                return _scAssistantLayer;
+                return EffectLayer;
             }
             _clear = false;
 
@@ -203,9 +206,9 @@ namespace Aurora.Settings.Layers
             Devices.DeviceKeys[] backgroundKeys = KeyUtils.GetDeviceAllKeys().Except(selectedKeys).ToArray();
 
             // Display keys
-            ApplyKeyColors(ref _scAssistantLayer, selectedKeys, backgroundKeys);
+            ApplyKeyColors(EffectLayer, selectedKeys, backgroundKeys);
 
-            return _scAssistantLayer;
+            return EffectLayer;
         }
 
         protected Devices.DeviceKeys[] BuildSelectedKeys(Tree<Keys> currentShortcutNode, Keys[] previousShortcutKeys)
@@ -226,7 +229,7 @@ namespace Aurora.Settings.Layers
                         .Concat(Utils.KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
         }
 
-        protected void ApplyKeyColors(ref EffectLayer layer, Devices.DeviceKeys[] selectedKeys, Devices.DeviceKeys[] backgroundKeys)
+        protected void ApplyKeyColors(EffectLayer layer, Devices.DeviceKeys[] selectedKeys, Devices.DeviceKeys[] backgroundKeys)
         {
             if (backgroundKeys != null && Properties.DimBackground)
             {

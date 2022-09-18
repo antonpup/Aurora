@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
 using System.Windows;
+using Windows.Foundation.Metadata;
 using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Settings.Layers
@@ -264,9 +265,17 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer; //Layer before previous
 
-        public LayerHandler()
+        [JsonIgnore]
+        private Lazy<EffectLayer> _effectLayer;
+
+        protected EffectLayer EffectLayer => _effectLayer.Value;
+
+        protected LayerHandler(): this("Unoptimized Layer"){}
+
+        protected LayerHandler(string name)
         {
             //ScriptProperties = new LayerHandlerProperties();
+            _effectLayer = new(() => new EffectLayer(name));
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
             WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", PropertiesChanged);
@@ -346,7 +355,9 @@ namespace Aurora.Settings.Layers
     [LayerHandlerMeta(Exclude = true)]
     public class LayerHandler : LayerHandler<LayerHandlerProperties>
     {
-
+        public LayerHandler(string name) : base(name)
+        {
+        }
     }
 
 

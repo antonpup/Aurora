@@ -8,11 +8,10 @@ namespace Aurora.Settings.Layers
 {
     public class SolidColorLayerHandler : LayerHandler<LayerHandlerProperties>
     {
-        private readonly EffectLayer _solidColorLayer = new("SolidColorLayer");
         private readonly SolidBrush _brush;
         private KeySequence _propertiesSequence = new();
 
-        public SolidColorLayerHandler()
+        public SolidColorLayerHandler(): base("SolidColorLayer")
         {
             _brush = new SolidBrush(Properties.PrimaryColor);
         }
@@ -24,8 +23,8 @@ namespace Aurora.Settings.Layers
         
         public override EffectLayer Render(IGameState gamestate)
         {
-            _solidColorLayer.Set(_propertiesSequence, _brush);
-            return _solidColorLayer;
+            EffectLayer.Set(_propertiesSequence, _brush);
+            return EffectLayer;
         }
 
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
@@ -33,7 +32,7 @@ namespace Aurora.Settings.Layers
             base.PropertiesChanged(sender, args);
             _brush.Color = Properties.PrimaryColor;
             _propertiesSequence = Properties.Sequence;
-            _solidColorLayer.Invalidate();
+            EffectLayer.Invalidate();
         }
     }
 }

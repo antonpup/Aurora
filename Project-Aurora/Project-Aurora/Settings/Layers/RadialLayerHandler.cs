@@ -40,21 +40,27 @@ namespace Aurora.Settings.Layers {
     public class RadialLayerHandler : LayerHandler<RadialLayerProperties> {
         private readonly Stopwatch _sw = new();
         private float _angle;
-        private readonly EffectLayer _effectLayer = new("RadialLayer");
+        private bool invalidated;
 
         protected override UserControl CreateControl() => new Control_RadialLayer(this);
 
-        public RadialLayerHandler()
+        public RadialLayerHandler(): base("RadialLayer")
         {
             Properties.PropertyChanged += PropertiesChanged;
         }
 
         private void PropertiesChanged(object sender, PropertyChangedEventArgs e)
         {
-            _effectLayer.Clear();
+            invalidated = true;
         }
 
         public override EffectLayer Render(IGameState gamestate) {
+            if (invalidated)
+            {
+                EffectLayer.Clear();
+                invalidated = false;
+            }
+            
             // Calculate delta time
             var dt = _sw.Elapsed.TotalSeconds;
             _sw.Restart();
@@ -64,14 +70,14 @@ namespace Aurora.Settings.Layers {
 
             var area = Properties.Sequence.GetAffectedRegion();
             var brush = Properties.Brush.GetBrush(area, _angle);
-            return _effectLayer.Set(Properties.Sequence, brush);
+            return EffectLayer.Set(Properties.Sequence, brush);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _effectLayer?.Dispose();
+                EffectLayer?.Dispose();
                 Properties.PropertyChanged -= PropertiesChanged;
             }
         }

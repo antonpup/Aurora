@@ -15,8 +15,12 @@ namespace Aurora.Profiles.Minecraft.Layers {
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class MinecraftBurnLayerHandler : LayerHandler<LayerHandlerProperties> {
 
-        private List<FireParticle> particles = new List<FireParticle>();
-        private Random rnd = new Random();
+        private List<FireParticle> particles = new();
+        private Random rnd = new();
+
+        public MinecraftBurnLayerHandler() : base("Minecraft Burning Layer")
+        {
+        }
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftBurnLayer();
@@ -36,14 +40,12 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
 
         public override EffectLayer Render(IGameState gamestate) {
-            EffectLayer layer = new EffectLayer("Minecraft Burning Layer");
-
             // Render nothing if invalid gamestate or player isn't on fire
-            if (!(gamestate is GameState_Minecraft) || !(gamestate as GameState_Minecraft).Player.IsBurning)
-                return layer;
+            if (gamestate is not GameState_Minecraft minecraft || !minecraft.Player.IsBurning)
+                return EffectLayer.EmptyLayer;
 
             // Set the background to red
-            layer.FillOver(Color.Red);
+            EffectLayer.FillOver(Brushes.Red);
 
             // Add 3 particles every frame
             for (int i = 0; i < 3; i++)
@@ -51,14 +53,14 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
             // Render all particles
             foreach (var particle in particles) {
-                particle.mix.Draw(layer.GetGraphics(), particle.time);
+                particle.mix.Draw(EffectLayer.GetGraphics(), particle.time);
                 particle.time += .1f;
             }
 
             // Remove any expired particles
             particles.RemoveAll(particle => particle.time >= 1);
 
-            return layer;
+            return EffectLayer;
         }
     }
 

@@ -37,17 +37,17 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientLayerHandler : LayerHandler<GradientLayerHandlerProperties>
     {
-        private readonly EffectLayer _gradientLayer = new("GradientLayer");
         private readonly EffectLayer _tempLayerBitmap = new("GradientLayer - Colors");
+        private bool invalidated;
 
-        public GradientLayerHandler()
+        public GradientLayerHandler(): base("GradientLayer")
         {
             Properties.PropertyChanged += PropertiesChanged;
         }
 
         private void PropertiesChanged(object sender, PropertyChangedEventArgs e)
         {
-            _gradientLayer.Clear();
+            invalidated = true;
         }
 
         protected override UserControl CreateControl()
@@ -56,6 +56,11 @@ namespace Aurora.Settings.Layers
         }
         public override EffectLayer Render(IGameState gamestate)
         {
+            if (invalidated)
+            {
+                EffectLayer.Clear();
+                invalidated = false;
+            }
             //If Wave Size 0 Gradiant Stop Moving Animation
             if (Properties.GradientConfig.gradient_size == 0)
             {
@@ -65,13 +70,13 @@ namespace Aurora.Settings.Layers
 
                 Color selectedColor = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.CanvasBiggest);
 
-                _gradientLayer.Set(Properties.Sequence, selectedColor);
+                EffectLayer.Set(Properties.Sequence, selectedColor);
             }
             else
             {
                 _tempLayerBitmap.DrawGradient(LayerEffects.GradientShift_Custom_Angle, Properties.GradientConfig);
-                _gradientLayer.Clear();
-                _gradientLayer.DrawTransformed(
+                EffectLayer.Clear();
+                EffectLayer.DrawTransformed(
                     Properties.Sequence,
                     g =>
                     {
@@ -79,13 +84,13 @@ namespace Aurora.Settings.Layers
                     }
                 );
             }
-            return _gradientLayer;
+            return EffectLayer;
         }
 
         public override void Dispose()
         {
             Properties.PropertyChanged -= PropertiesChanged;
-            _gradientLayer.Dispose();
+            EffectLayer.Dispose();
             base.Dispose();
         }
     }

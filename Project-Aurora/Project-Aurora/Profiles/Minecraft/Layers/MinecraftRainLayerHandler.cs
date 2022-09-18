@@ -36,9 +36,13 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
     public class MinecraftRainLayerHandler : LayerHandler<MinecraftRainLayerHandlerProperties> {
 
-        private List<Droplet> raindrops = new List<Droplet>();
-        private Random rnd = new Random();
-        private int frame = 0;
+        private List<Droplet> raindrops = new();
+        private Random rnd = new();
+        private int frame;
+
+        public MinecraftRainLayerHandler() : base("Minecraft Rain Layer")
+        {
+        }
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftRainLayer(this);
@@ -57,9 +61,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
         }
 
         public override EffectLayer Render(IGameState gamestate) {
-            EffectLayer layer = new EffectLayer("Minecraft Rain Layer");
-
-            if (!(gamestate is GameState_Minecraft)) return layer;
+            if (!(gamestate is GameState_Minecraft)) return EffectLayer.EmptyLayer;
 
             // Add more droplets based on the intensity
             float strength = (gamestate as GameState_Minecraft).World.RainStrength;
@@ -75,14 +77,14 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
             // Render all droplets
             foreach (var droplet in raindrops) {
-                droplet.mix.Draw(layer.GetGraphics(), droplet.time);
+                droplet.mix.Draw(EffectLayer.GetGraphics(), droplet.time);
                 droplet.time += .1f;
             }
 
             // Remove any expired droplets
             raindrops.RemoveAll(droplet => droplet.time >= 1);
 
-            return layer;
+            return EffectLayer;
         }
     }
 

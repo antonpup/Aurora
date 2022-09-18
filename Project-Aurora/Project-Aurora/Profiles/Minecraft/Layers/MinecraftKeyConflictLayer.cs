@@ -31,9 +31,11 @@ namespace Aurora.Profiles.Minecraft.Layers {
 
 
     public class MinecraftKeyConflictLayerHandler : LayerHandler<MinecraftKeyConflictLayerProperties> {
-        private readonly EffectLayer _layer = new("Minecraft Key Conflict Layer");
         private readonly SolidBrush _backgroundBrush = new(Color.Black);
-        private bool _clear = true;
+
+        public MinecraftKeyConflictLayerHandler() : base("Minecraft Key Conflict Layer")
+        {
+        }
 
         protected override UserControl CreateControl() {
             return new Control_MinecraftKeyConflictLayer(this);
@@ -42,25 +44,19 @@ namespace Aurora.Profiles.Minecraft.Layers {
         public override EffectLayer Render(IGameState gameState) {
             if (gameState is not GameState_Minecraft minecraftState || !minecraftState.Game.ControlsGuiOpen)
             {
-                if (!_clear)
-                {
-                    _layer.Clear();
-                    _clear = true;
-                }
-                return _layer;
+                return EffectLayer.EmptyLayer;
             }
-            _clear = false;
 
-            _layer.Fill(_backgroundBrush); // Hide any other layers behind this one
+            EffectLayer.Fill(_backgroundBrush); // Hide any other layers behind this one
             // Set all keys in use by any binding to be the no-conflict colour
             foreach (var kb in minecraftState.Game.KeyBindings)
                 if(kb!=null)
-                    _layer.Set(kb.AffectedKeys, Properties.PrimaryColor);
+                    EffectLayer.Set(kb.AffectedKeys, Properties.PrimaryColor);
 
             // Override the keys for all conflicting keys
             foreach (var kvp in CalculateConflicts(minecraftState))
-                _layer.Set(kvp.Key, kvp.Value ? Properties.TertiaryColor : Properties.SecondaryColor);
-            return _layer;
+                EffectLayer.Set(kvp.Key, kvp.Value ? Properties.TertiaryColor : Properties.SecondaryColor);
+            return EffectLayer;
         }
 
         /// <summary>

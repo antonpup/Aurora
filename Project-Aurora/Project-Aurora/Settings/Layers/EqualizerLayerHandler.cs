@@ -174,9 +174,7 @@ namespace Aurora.Settings.Layers
         private float[] _previousFreqResults;
 
         private bool _first = true;
-
-        private readonly EffectLayer _equalizerLayer = new("EqualizerLayer");
-        public EqualizerLayerHandler()
+        public EqualizerLayerHandler(): base("EqualizerLayer")
         {
             _ffts = new Complex[FftLength];
             _fftsPrev = new Complex[FftLength];
@@ -213,7 +211,7 @@ namespace Aurora.Settings.Layers
 
 
                 if (_deviceProxy is null)
-                    return _equalizerLayer;
+                    return EffectLayer;
 
                 // Update device ID. If it has changed, it will re-assign itself to the new device
                 DeviceProxy.DeviceId = Properties.DeviceId;
@@ -246,7 +244,7 @@ namespace Aurora.Settings.Layers
                         }
                         else
                         {
-                            _equalizerLayer.Clear();
+                            EffectLayer.Clear();
                         }
                         break;
                     case EqualizerBackgroundMode.AlwaysOn:
@@ -254,13 +252,13 @@ namespace Aurora.Settings.Layers
                         break;
                     case EqualizerBackgroundMode.Disabled:
                     default:
-                        _equalizerLayer.Clear();
+                        EffectLayer.Clear();
                         break;
                 }
 
 
                 // Use the new transform render method to draw the equalizer layer
-                _equalizerLayer.DrawTransformed(Properties.Sequence, g => {
+                EffectLayer.DrawTransformed(Properties.Sequence, g => {
                     // Here we draw the equalizer relative to our source rectangle and the DrawTransformed method handles sizing and positioning it correctly for us
 
                     g.CompositingMode = CompositingMode.SourceCopy;
@@ -346,8 +344,8 @@ namespace Aurora.Settings.Layers
                     }
                 }, SourceRect);
 
-                NewLayerRender?.Invoke(_equalizerLayer.GetBitmap());
-                return _equalizerLayer;
+                NewLayerRender?.Invoke(EffectLayer.GetBitmap());
+                return EffectLayer;
             }
             catch (Exception exc)
             {

@@ -43,10 +43,12 @@ namespace Aurora.Settings.Layers
 
     public class BreathingLayerHandler : LayerHandler<BreathingLayerHandlerProperties>
     {
-        private readonly EffectLayer _breathingLayer = new("Breathing Layer");
-
         private Color _currentPrimaryColor = Color.Transparent;
         private Color _currentSecondaryColor = Color.Transparent;
+
+        public BreathingLayerHandler() : base("Breathing Layer")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -67,9 +69,9 @@ namespace Aurora.Settings.Layers
             else if (!Properties.RandomPrimaryColor)
                 _currentPrimaryColor = Properties.PrimaryColor;
 
-            _breathingLayer.Set(Properties.Sequence, ColorUtils.BlendColors(_currentPrimaryColor, _currentSecondaryColor, currentSine));
+            EffectLayer.Set(Properties.Sequence, ColorUtils.BlendColors(_currentPrimaryColor, _currentSecondaryColor, currentSine));
 
-            return _breathingLayer;
+            return EffectLayer;
         }
     }
 }

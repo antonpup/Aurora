@@ -38,7 +38,9 @@ namespace Aurora.Settings.Layers
     [Obsolete("This layer is obselete and has been replaced by the Overrides system.")]
     public class LockColourLayerHandler : LayerHandler<LockColourLayerHandlerProperties>
     {
-        private readonly EffectLayer _effectLayer = new("LockColourLayer - Deprecated");
+        public LockColourLayerHandler() : base("LockColourLayer - Deprecated")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -53,14 +55,14 @@ namespace Aurora.Settings.Layers
             {
                 clr = Properties.PrimaryColor;
 
-                if (!Properties.Pulse) return _effectLayer.Set(Properties.Sequence, clr);
+                if (!Properties.Pulse) return EffectLayer.Set(Properties.Sequence, clr);
                 var d = Math.Pow(Math.Sin(Time.GetMillisecondsSinceEpoch() % 1500L / 1500.0D * Math.PI), 2);
                 clr = ColorUtils.MultiplyColorByScalar(clr, d);
             }
             else
                 clr = Properties.SecondaryColor;
 
-            return _effectLayer.Set(Properties.Sequence, clr);
+            return EffectLayer.Set(Properties.Sequence, clr);
         }
     }
 }

@@ -112,8 +112,6 @@ namespace Aurora.Settings.Layers
 
     public class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandlerProperties>
     {
-
-        private readonly EffectLayer _interactiveLayer = new("Interactive Effects");
         private readonly Func<KeyValuePair<DeviceKeys, long>, bool> _keysToRemove;
         private readonly List<input_item> _inputList = new();
         
@@ -123,7 +121,7 @@ namespace Aurora.Settings.Layers
 
         private input_item _holdKeyInputItem;
 
-        public InteractiveLayerHandler()
+        public InteractiveLayerHandler(): base("Interactive Effects")
         {
             Global.InputEvents.KeyDown += InputEventsKeyDown;
             Global.InputEvents.KeyUp += InputEventsKeyUp;
@@ -302,7 +300,7 @@ namespace Aurora.Settings.Layers
 
             if (_inputList.Count > 0)
             {
-                _interactiveLayer.Clear();
+                EffectLayer.Clear();
             }
             foreach (var input in _inputList.ToArray())
             {
@@ -323,7 +321,7 @@ namespace Aurora.Settings.Layers
 
                             var color = input.spectrum.GetColorAt(transitionValue);
 
-                            _interactiveLayer.Set(input.key, color);
+                            EffectLayer.Set(input.key, color);
                             break;
                         }
                         case input_item.input_type.AnimationMix:
@@ -333,7 +331,7 @@ namespace Aurora.Settings.Layers
                             if (timeValue > 1.0f)
                                 continue;
 
-                            input.animation.Draw(_interactiveLayer.GetGraphics(), timeValue);
+                            input.animation.Draw(EffectLayer.GetGraphics(), timeValue);
                             break;
                         }
                     }
@@ -363,12 +361,12 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-            return _interactiveLayer;
+            return EffectLayer;
         }
 
         public override void Dispose()
         {
-            _interactiveLayer.Dispose();
+            EffectLayer.Dispose();
             base.Dispose();
         }
     }

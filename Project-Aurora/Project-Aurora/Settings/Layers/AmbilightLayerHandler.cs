@@ -265,7 +265,6 @@ namespace Aurora.Settings.Layers
         private Brush _screenBrush;
         private IntPtr _specificProcessHandle = IntPtr.Zero;
         private Rectangle _cropRegion = new(8, 8, 8, 8);
-        private readonly EffectLayer _ambilightLayer = new("Ambilight Layer");
         private ImageAttributes _imageAttributes = new();
 
         private bool _invalidated; //properties changed
@@ -277,7 +276,7 @@ namespace Aurora.Settings.Layers
 
         #endregion
 
-        public AmbilightLayerHandler()
+        public AmbilightLayerHandler() : base("Ambilight Layer")
         {
             Initialize();
             _screenshotWork = TakeScreenshot;
@@ -315,7 +314,7 @@ namespace Aurora.Settings.Layers
         {
             if (_invalidated)
             {
-                _ambilightLayer.Clear();
+                EffectLayer.Clear();
                 _screenBrush = null;
                 _invalidated = false;
             }
@@ -331,22 +330,22 @@ namespace Aurora.Settings.Layers
             }
 
             if (_screenBrush is null)
-                return _ambilightLayer;
+                return EffectLayer;
 
             var region = Properties.Sequence.GetAffectedRegion();
             if (region.IsEmpty)
-                return _ambilightLayer;
+                return EffectLayer;
 
             //and because of that, this should never happen 
             if (_cropRegion.IsEmpty)
-                return _ambilightLayer;
+                return EffectLayer;
 
             switch (Properties.AmbilightType)
             {
                 default:
                 case AmbilightType.Default:
                     lock (_screenBrush)
-                    _ambilightLayer.DrawTransformed(Properties.Sequence,
+                        EffectLayer.DrawTransformed(Properties.Sequence,
                         m =>
                         {
                             if (Properties.FlipVertically)
@@ -384,11 +383,11 @@ namespace Aurora.Settings.Layers
                     if (Properties.HueShiftImage)
                         average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
 
-                    _ambilightLayer.Set(Properties.Sequence, average);
+                    EffectLayer.Set(Properties.Sequence, average);
                     break;
             }
 
-            return _ambilightLayer;
+            return EffectLayer;
         }
 
         protected override System.Windows.Controls.UserControl CreateControl()

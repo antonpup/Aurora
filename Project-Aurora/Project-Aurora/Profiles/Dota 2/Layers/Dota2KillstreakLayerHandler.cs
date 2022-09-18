@@ -98,13 +98,16 @@ namespace Aurora.Profiles.Dota_2.Layers
     {
         private const long KsDuration = 4000;
 
-        private readonly EffectLayer _killstreakLayer = new("Dota 2 - Killstreak");
         private readonly SolidBrush _solidBrush = new(Color.Empty);
 
         private bool _isPlayingKillStreakAnimation;
         private double _ksBlendAmount;
         private long _ksEndTime;
         private int _currentKillCount;
+
+        public Dota2KillstreakLayerHandler(): base("Dota 2 - Killstreak")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -119,7 +122,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                 _isPlayingKillStreakAnimation = false;
             }
 
-            if (state is not GameState_Dota2 dota2State) return _killstreakLayer;
+            if (state is not GameState_Dota2 dota2State) return EffectLayer.EmptyLayer;
             if(_currentKillCount < dota2State.Player.Kills)
             {    //player got a kill
                 _isPlayingKillStreakAnimation = true;
@@ -131,20 +134,19 @@ namespace Aurora.Profiles.Dota_2.Layers
             var ksEffectValue = GetKsEffectValue();
             if (ksEffectValue <= 0 && !_empty)
             {
-                _killstreakLayer.Clear();
-                _empty = true;
+                return EffectLayer.EmptyLayer;
             }
 
-            if (dota2State.Player.KillStreak < 2) return _killstreakLayer;
+            if (dota2State.Player.KillStreak < 2) return EffectLayer.EmptyLayer;
             var ksColor = GetKillStreakColor(dota2State.Player.KillStreak);
 
-            if (!(ksEffectValue > 0)) return _killstreakLayer;
-            _killstreakLayer.Clear();
+            if (!(ksEffectValue > 0)) return EffectLayer.EmptyLayer;
+            EffectLayer.Clear();
             _solidBrush.Color = Utils.ColorUtils.BlendColors(Color.Transparent, ksColor, ksEffectValue);
-            _killstreakLayer.Fill(_solidBrush);
+            EffectLayer.Fill(_solidBrush);
             _empty = false;
 
-            return _killstreakLayer;
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)

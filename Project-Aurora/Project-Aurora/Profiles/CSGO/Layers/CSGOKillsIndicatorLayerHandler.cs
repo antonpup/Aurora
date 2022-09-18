@@ -64,7 +64,10 @@ namespace Aurora.Profiles.CSGO.Layers
             RoundKillType.None,
         };
         private int _lastCountedKill;
-        private readonly EffectLayer _killsIndicatorLayer = new("CSGO - Kills Indicator");
+
+        public CSGOKillIndicatorLayerHandler(): base("CSGO - Kills Indicator")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -73,14 +76,14 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_CSGO csgostate) return _killsIndicatorLayer;
+            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
 
             if (_lastCountedKill != csgostate.Player.State.RoundKills)
             {
                 CalculateKills(csgostate);
             }
 
-            if (!csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID)) return _killsIndicatorLayer;
+            if (!csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID)) return EffectLayer.EmptyLayer;
             for (var pos = 0; pos < Properties.Sequence.keys.Count; pos++)
             {
                 if (pos < roundKills.Count)
@@ -88,19 +91,19 @@ namespace Aurora.Profiles.CSGO.Layers
                     switch (roundKills[pos])
                     {
                         case RoundKillType.Regular:
-                            _killsIndicatorLayer.Set(Properties.Sequence.keys[pos], Properties.RegularKillColor);
+                            EffectLayer.Set(Properties.Sequence.keys[pos], Properties.RegularKillColor);
                             break;
                         case RoundKillType.Headshot:
-                            _killsIndicatorLayer.Set(Properties.Sequence.keys[pos], Properties.HeadshotKillColor);
+                            EffectLayer.Set(Properties.Sequence.keys[pos], Properties.HeadshotKillColor);
                             break;
                         case RoundKillType.None:
-                            _killsIndicatorLayer.Set(Properties.Sequence.keys[pos], Color.Empty);
+                            EffectLayer.Set(Properties.Sequence.keys[pos], Color.Empty);
                             break;
                     }
                 }
             }
 
-            return _killsIndicatorLayer;
+            return EffectLayer;
         }
 
         private void CalculateKills(GameState_CSGO csgostate)

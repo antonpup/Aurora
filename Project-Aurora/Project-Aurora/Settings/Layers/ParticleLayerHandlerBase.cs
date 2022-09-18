@@ -62,9 +62,12 @@ namespace Aurora.Settings.Layers {
             ).Compile();
         }
 
+        protected ParticleLayerHandlerBase() : base("Particle Layer")
+        {
+        }
+
         protected override abstract UserControl CreateControl();
 
-        private readonly EffectLayer _layer = new();
         public override EffectLayer Render(IGameState gameState) {
 
             // Get elapsed time since last render
@@ -72,8 +75,8 @@ namespace Aurora.Settings.Layers {
             _stopwatch.Restart();
 
             // Update and render all particles
-            using (var gfx = _layer.GetGraphics()) {
-                _layer.Clear();
+            using (var gfx = EffectLayer.GetGraphics()) {
+                EffectLayer.Clear();
                 foreach (var particle in _particles) {
                     particle.Update(dt, Properties, gameState);
                     if (particle.IsAlive(Properties, gameState))
@@ -88,9 +91,9 @@ namespace Aurora.Settings.Layers {
             _particles.RemoveAll(p => !p.IsAlive(Properties, gameState));
 
             // Call the render event
-            LayerRender?.Invoke(this, _layer.GetBitmap());
+            LayerRender?.Invoke(this, EffectLayer.GetBitmap());
 
-            return _layer;
+            return EffectLayer;
         }
 
         /// <summary>

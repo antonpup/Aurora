@@ -28,9 +28,12 @@ namespace Aurora.Settings.Layers
     [Overrides.LogicOverrideIgnoreProperty("_Sequence")]
     public class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerProperties>
     {
-        private readonly EffectLayer _effectLayer = new();
         private readonly SolidBrush _solidBrush = new(Color.Transparent);
         private bool _needsUpdate = true;
+
+        public SolidFillLayerHandler() : base("Solid Fill Layer")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -39,15 +42,15 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            return _effectLayer;
+            return EffectLayer;
         }
 
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _solidBrush.Color = Properties.PrimaryColor;
-            _effectLayer.Fill(_solidBrush);
-            _effectLayer.Invalidate();
+            EffectLayer.Fill(_solidBrush);
+            EffectLayer.Invalidate();
         }
     }
 }

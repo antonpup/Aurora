@@ -60,7 +60,9 @@ namespace Aurora.Settings.Layers
     [LayerHandlerMeta(Name = "Razer Chroma", IsDefault = true)]
     public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
     {
-        private readonly EffectLayer _layer = new("Chroma Layer");
+        public RazerLayerHandler() : base("Chroma Layer")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -72,10 +74,7 @@ namespace Aurora.Settings.Layers
         {
             if (!RzHelper.IsCurrentAppValid())
             {
-                if (_empty) return _layer;
-                _layer.Clear();
-                _empty = true;
-                return _layer;
+                return EffectLayer.EmptyLayer;
             }
             _empty = false;
             RzHelper.UpdateIfStale();
@@ -85,15 +84,15 @@ namespace Aurora.Settings.Layers
                 if (!TryGetColor(key, out var color))
                     continue;
                 
-                _layer.Set(key, color);
+                EffectLayer.Set(key, color);
             }
 
-            if (Properties.KeyCloneMap == null) return _layer;
+            if (Properties.KeyCloneMap == null) return EffectLayer;
             foreach (var target in Properties.KeyCloneMap)
                 if(TryGetColor(target.Value, out var clr))
-                    _layer.Set(target.Key, clr);
+                    EffectLayer.Set(target.Key, clr);
 
-            return _layer;
+            return EffectLayer;
         }
 
         private bool TryGetColor(DeviceKeys key, out Color color)

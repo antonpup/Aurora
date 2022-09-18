@@ -33,12 +33,14 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
     [LayerHandlerMeta(Name = "League of Legends Background")]
     public class LoLBackgroundLayerHandler : LayerHandler<LoLBackgroundLayerHandlerProperties>
     {
-
-        private readonly EffectLayer layer = new EffectLayer();
         private Champion lastChampion = Champion.None;
         private Color lastColor = Color.Transparent;
         private int lastWidth;
         private int lastHeight;
+
+        public LoLBackgroundLayerHandler(): base("Lol Background Layer")
+        {
+        }
 
         public override EffectLayer Render(IGameState gamestate)
         {
@@ -58,11 +60,11 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
                 lastColor = currentColor;
                 lastHeight = Effects.CanvasHeight;
                 lastWidth = Effects.CanvasWidth;
-                layer.FillOver(lastColor);
+                EffectLayer.FillOver(lastColor);
                 //then we fill the layer again
             }
             //otherwise, we can just return the same layer as it's mostly static
-            return layer;
+            return EffectLayer;
         }
 
         protected override UserControl CreateControl()

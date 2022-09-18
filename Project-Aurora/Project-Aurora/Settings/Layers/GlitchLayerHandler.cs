@@ -72,12 +72,15 @@ namespace Aurora.Settings.Layers
 
         private long _previousTime;
         private long _currentTime;
-        private readonly EffectLayer _glitchLayer = new();
+
+        public GlitchLayerHandler() : base("Glitch Layer")
+        {
+        }
 
         public override EffectLayer Render(IGameState state)
         {
             _currentTime = Time.GetMillisecondsSinceEpoch();
-            if (!(_previousTime + Properties.UpdateInterval * 1000L <= _currentTime)) return _glitchLayer;
+            if (!(_previousTime + Properties.UpdateInterval * 1000L <= _currentTime)) return EffectLayer;
             _previousTime = _currentTime;
 
             var keys = Properties.Sequence.type == KeySequenceType.FreeForm ? Enum.GetValues(typeof(DeviceKeys)) : Properties.Sequence.keys.ToArray();
@@ -93,10 +96,10 @@ namespace Aurora.Settings.Layers
 
             foreach (var kvp in _glitchColors)
             {
-                _glitchLayer.Set(kvp.Key, kvp.Value);
+                EffectLayer.Set(kvp.Key, kvp.Value);
             }
-            _glitchLayer.OnlyInclude(Properties.Sequence);
-            return _glitchLayer;
+            EffectLayer.OnlyInclude(Properties.Sequence);
+            return EffectLayer;
 
         }
 
@@ -104,7 +107,7 @@ namespace Aurora.Settings.Layers
         {
             base.PropertiesChanged(sender, args);
             _glitchColors.Clear();
-            _glitchLayer.Clear();
+            EffectLayer.Clear();
         }
     }
 

@@ -38,8 +38,11 @@ namespace Aurora.Profiles.CSGO.Layers
     public class CSGOBurningLayerHandler : LayerHandler<CSGOBurningLayerHandlerProperties>
     {
         private Random randomizer = new();
-        private readonly EffectLayer _burningLayer = new("CSGO - Burning");
         private SolidBrush _solidBrush = new(Color.Empty);
+
+        public CSGOBurningLayerHandler(): base("CSGO - Burning")
+        {
+        }
 
         protected override UserControl CreateControl()
         {
@@ -48,16 +51,16 @@ namespace Aurora.Profiles.CSGO.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            if (state is not GameState_CSGO csgostate) return _burningLayer;
+            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
 
             //Update Burning
 
-            if (csgostate.Player.State.Burning <= 0) return _burningLayer;
-            var burncolor = Properties.BurningColor;
+            if (csgostate.Player.State.Burning <= 0) return EffectLayer.EmptyLayer;
+            var burnColor = Properties.BurningColor;
 
             if (Properties.Animated)
             {
-                var redAdjusted = (int)(burncolor.R + (Math.Cos((Time.GetMillisecondsSinceEpoch() + randomizer.Next(75)) / 75.0) * 0.15 * 255));
+                var redAdjusted = (int)(burnColor.R + (Math.Cos((Time.GetMillisecondsSinceEpoch() + randomizer.Next(75)) / 75.0) * 0.15 * 255));
 
                 byte red = redAdjusted switch
                 {
@@ -66,7 +69,7 @@ namespace Aurora.Profiles.CSGO.Layers
                     _ => (byte) redAdjusted
                 };
 
-                var greenAdjusted = (int)(burncolor.G + (Math.Sin((Time.GetMillisecondsSinceEpoch() + randomizer.Next(150)) / 75.0) * 0.15 * 255));
+                var greenAdjusted = (int)(burnColor.G + (Math.Sin((Time.GetMillisecondsSinceEpoch() + randomizer.Next(150)) / 75.0) * 0.15 * 255));
 
                 byte green = greenAdjusted switch
                 {
@@ -75,7 +78,7 @@ namespace Aurora.Profiles.CSGO.Layers
                     _ => (byte) greenAdjusted
                 };
 
-                var blueAdjusted = (int)(burncolor.B + (Math.Cos((Time.GetMillisecondsSinceEpoch() + randomizer.Next(225)) / 75.0) * 0.15 * 255));
+                var blueAdjusted = (int)(burnColor.B + (Math.Cos((Time.GetMillisecondsSinceEpoch() + randomizer.Next(225)) / 75.0) * 0.15 * 255));
 
                 byte blue = blueAdjusted switch
                 {
@@ -84,13 +87,13 @@ namespace Aurora.Profiles.CSGO.Layers
                     _ => (byte) blueAdjusted
                 };
 
-                burncolor = Color.FromArgb(csgostate.Player.State.Burning, red, green, blue);
+                burnColor = Color.FromArgb(csgostate.Player.State.Burning, red, green, blue);
             }
 
-            if (_solidBrush.Color == burncolor) return _burningLayer;
-            _solidBrush.Color = burncolor;
-            _burningLayer.Fill(_solidBrush);
-            return _burningLayer;
+            if (_solidBrush.Color == burnColor) return EffectLayer;
+            _solidBrush.Color = burnColor;
+            EffectLayer.Fill(_solidBrush);
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)
