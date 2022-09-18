@@ -9,7 +9,7 @@ namespace Aurora.Devices.Bloody
 {
     public static class BloodyKeyMap
     {
-        public static Dictionary<DeviceKeys, Key> KeyMap = new Dictionary<DeviceKeys, Key>
+        public static Dictionary<DeviceKeys, Key> KeyMap = new()
         {
             [DeviceKeys.ESC] = Key.ESC,
             [DeviceKeys.TILDE] = Key.TILDE,

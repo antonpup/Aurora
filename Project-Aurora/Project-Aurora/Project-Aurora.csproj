@@ -64,10 +64,12 @@
     <Reference Include="OpenRGB.NET">
       <HintPath>.\OpenRGB.NET.dll</HintPath>
     </Reference>
+    <Reference Include="Bloody.NET">
+      <HintPath>.\Bloody.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-	<PackageReference Include="Bloody.NET" Version="1.0.4" />
     <PackageReference Include="Colore" Version="5.2.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="4.4.6" />
