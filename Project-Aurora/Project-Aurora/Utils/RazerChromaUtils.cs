@@ -175,7 +175,7 @@ namespace Aurora.Utils
         private static void RestartChromaService()
         {
             using var service = new ServiceController("Razer Chroma SDK Service");
-            if (service.Status != ServiceControllerStatus.Running)
+            if (service.Status == ServiceControllerStatus.Running)
             {
                 service.Stop(true);
                 service.WaitForStatus(ServiceControllerStatus.Stopped);
