@@ -8,18 +8,6 @@ namespace Aurora.Devices.YeeLight
 {
     public interface IYeeLightState
     {
-        private static Task<bool> _stateTask = Task.Run(() => true);
-
-        protected static Task<bool> StateTask
-        {
-            set
-            {
-                _stateTask.Wait();
-                _stateTask = value;
-            }
-            get => _stateTask;
-        }
-        
         void InitState();
         
         IYeeLightState Update(Color color);
@@ -74,13 +62,11 @@ namespace Aurora.Devices.YeeLight
         
         private async void TurnOff()
         {
-            await IYeeLightState.StateTask;
             _lights.ForEach(device => device.SetPower(Constants.PowerStateParamValues.OFF));
         }
         
         private async void TurnOn()
         {
-            await IYeeLightState.StateTask;
             _lights.ForEach(device => device.SetPower(Constants.PowerStateParamValues.ON));
         }
     }
@@ -149,14 +135,14 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                IYeeLightState.StateTask = x.SetColorAsync(color.R, color.G, color.B,
-                    14,
+                x.SetColor(color.R, color.G, color.B,
+                    0,
                     Constants.EffectParamValues.SMOOTH
                     );
                 var brightness = Math.Max(color.R, Math.Max(color.G, Math.Max(color.B, (short) 1))) * 100 / 255;
                 if (_previousBrightness == brightness) return;
                 _previousBrightness = brightness;
-                IYeeLightState.StateTask = x.SetBrightnessAsync(brightness);
+                x.SetBrightness(brightness);
             });
         }
     }
@@ -179,7 +165,7 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                IYeeLightState.StateTask = x.SetColorTemperatureAsync(6500);
+               x.SetColorTemperature(6500);
             });
         }
 
@@ -217,7 +203,7 @@ namespace Aurora.Devices.YeeLight
         {
             _lights.ForEach(x =>
             {
-                IYeeLightState.StateTask = x.SetBrightnessAsync(color.R * 100 / 255);
+                x.SetBrightness(color.R * 100 / 255);
             });
         }
     }
