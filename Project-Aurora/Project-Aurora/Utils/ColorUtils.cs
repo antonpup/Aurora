@@ -44,7 +44,7 @@ namespace Aurora.Utils
         /// <returns>A Drawing Color</returns>
         public static DrawingColor MediaColorToDrawingColor(MediaColor in_color)
         {
-            return DrawingColor.FromArgb(in_color.A, in_color.R, in_color.G, in_color.B);
+            return FastColor(in_color.R, in_color.G, in_color.B, in_color.A);
         }
 
         /// <summary>
@@ -89,12 +89,12 @@ namespace Aurora.Utils
             else if (percent > 1.0)
                 percent = 1.0;
 
-            int Red = (byte)Math.Min(foreground.R * percent + background.R * (1.0 - percent), 255);
-            int Green = (byte)Math.Min(foreground.G * percent + background.G * (1.0 - percent), 255);
-            int Blue = (byte)Math.Min(foreground.B * percent + background.B * (1.0 - percent), 255);
-            int Alpha = (byte)Math.Min(foreground.A * percent + background.A * (1.0 - percent), 255);
+            var red = (byte)Math.Min(foreground.R * percent + background.R * (1.0 - percent), 255);
+            var green = (byte)Math.Min(foreground.G * percent + background.G * (1.0 - percent), 255);
+            var blue = (byte)Math.Min(foreground.B * percent + background.B * (1.0 - percent), 255);
+            var alpha = (byte)Math.Min(foreground.A * percent + background.A * (1.0 - percent), 255);
 
-            return DrawingColor.FromArgb(Alpha, Red, Green, Blue);
+            return FastColor(red, green, blue, alpha);
         }
 
         /// <summary>
@@ -105,12 +105,8 @@ namespace Aurora.Utils
         /// <returns>The sum of two colors including combined alpha</returns>
         public static DrawingColor AddColors(DrawingColor background, DrawingColor foreground)
         {
-            return DrawingColor.FromArgb(
-                (int)(1 - (255 - background.A) / 255d * (255 - foreground.A) / 255d) * 255,
-                foreground.R * foreground.A / 255 + background.R * ( 255 - background.A) / 255,
-                foreground.G * foreground.A / 255 + background.G * ( 255 - background.A) / 255,
-                foreground.B * foreground.A / 255 + background.B * ( 255 - background.A) / 255
-                );
+            return FastColor((byte)(foreground.R * foreground.A / 255 + background.R * (255 - background.A) / 255),
+                (byte)(foreground.G * foreground.A / 255 + background.G * (255 - background.A) / 255), (byte)(foreground.B * foreground.A / 255 + background.B * (255 - background.A) / 255), (byte)((int) (1 - (255 - background.A) / 255d * (255 - foreground.A) / 255d) * 255));
         }
 
         /// <summary>
@@ -123,11 +119,11 @@ namespace Aurora.Utils
         {
             float scalar = color.A / 255.0f;
 
-            int Red = ColorByteMultiplication(color.R, scalar);
-            int Green = ColorByteMultiplication(color.G, scalar);
-            int Blue = ColorByteMultiplication(color.B, scalar);
+            byte red = ColorByteMultiplication(color.R, scalar);
+            byte green = ColorByteMultiplication(color.G, scalar);
+            byte blue = ColorByteMultiplication(color.B, scalar);
 
-            return DrawingColor.FromArgb(255, Red, Green, Blue);
+            return FastColor(red, green, blue);
         }
 
         /// <summary>
@@ -138,12 +134,12 @@ namespace Aurora.Utils
         /// <returns>The multiplied Color</returns>
         public static DrawingColor MultiplyColorByScalar(DrawingColor color, double scalar)
         {
-            int Red = ColorByteMultiplication(color.R, scalar);
-            int Green = ColorByteMultiplication(color.G, scalar);
-            int Blue = ColorByteMultiplication(color.B, scalar);
-            int Alpha = ColorByteMultiplication(color.A, scalar);
+            byte red = ColorByteMultiplication(color.R, scalar);
+            byte green = ColorByteMultiplication(color.G, scalar);
+            byte blue = ColorByteMultiplication(color.B, scalar);
+            byte alpha = ColorByteMultiplication(color.A, scalar);
 
-            return DrawingColor.FromArgb(Alpha, Red, Green, Blue);
+            return FastColor(red, green, blue, alpha);
         }
 
         /// <summary>
@@ -154,12 +150,12 @@ namespace Aurora.Utils
         /// <returns>The multiplied Color</returns>
         public static MediaColor MultiplyColorByScalar(MediaColor color, double scalar)
         {
-            int Red = ColorByteMultiplication(color.R, scalar);
-            int Green = ColorByteMultiplication(color.G, scalar);
-            int Blue = ColorByteMultiplication(color.B, scalar);
-            int Alpha = ColorByteMultiplication(color.A, scalar);
+            byte red = ColorByteMultiplication(color.R, scalar);
+            byte green = ColorByteMultiplication(color.G, scalar);
+            byte blue = ColorByteMultiplication(color.B, scalar);
+            byte alpha = ColorByteMultiplication(color.A, scalar);
 
-            return MediaColor.FromArgb((byte)Alpha, (byte)Red, (byte)Green, (byte)Blue);
+            return MediaColor.FromArgb(alpha, red, green, blue);
         }
 
         /// <summary>
@@ -168,7 +164,10 @@ namespace Aurora.Utils
         /// <returns>A random color</returns>
         public static DrawingColor GenerateRandomColor()
         {
-            return DrawingColor.FromArgb(Randomizer.Next(255), Randomizer.Next(255), Randomizer.Next(255));
+            return FastColor((byte)Randomizer.Next(255), 
+                (byte)Randomizer.Next(255), 
+                (byte)Randomizer.Next(255)
+                );
         }
 
         /// <summary>
@@ -207,21 +206,23 @@ namespace Aurora.Utils
                 red += pixelBuffer[i + 2];
             }
 
-            return DrawingColor.FromArgb((byte)(red / numPixels), (byte)(green / numPixels), (byte)(blue / numPixels));
+            return FastColor((byte)(red / numPixels), (byte)(green / numPixels), (byte)(blue / numPixels));
         }
 
-        public static DrawingColor GetColorFromInt(int interger)
+        public static DrawingColor GetColorFromInt(int integer)
         {
-            if (interger < 0)
-                interger = 0;
-            else if (interger > 16777215)
-                interger = 16777215;
+            integer = integer switch
+            {
+                < 0 => 0,
+                > 16777215 => 16777215,
+                _ => integer
+            };
 
-            int R = interger >> 16;
-            int G = (interger >> 8) & 255;
-            int B = interger & 255;
+            int r = integer >> 16;
+            int g = (integer >> 8) & 255;
+            int b = integer & 255;
 
-            return DrawingColor.FromArgb(R, G, B);
+            return FastColor((byte)r, (byte)g, (byte)b);
         }
 
         public static int GetIntFromColor(DrawingColor color)
@@ -272,12 +273,12 @@ namespace Aurora.Utils
 
             switch (hi)
             {
-                case 0: return DrawingColor.FromArgb(v, t, p);
-                case 1: return DrawingColor.FromArgb(q, v, p);
-                case 2: return DrawingColor.FromArgb(p, v, t);
-                case 3: return DrawingColor.FromArgb(p, q, v);
-                case 4: return DrawingColor.FromArgb(t, p, v);
-                default: return DrawingColor.FromArgb(v, p, q);
+                case 0: return FastColor(v, t, p);
+                case 1: return FastColor(q, v, p);
+                case 2: return FastColor(p, v, t);
+                case 3: return FastColor(p, q, v);
+                case 4: return FastColor(t, p, v);
+                default: return FastColor(v, p, q);
             }
         }
 
@@ -465,17 +466,12 @@ namespace Aurora.Utils
             return diff / (absA + absB) < epsilon;
         }
 
-        public static DrawingColor FastColor(byte r, byte g, byte b)
-        {
-            return FastColor(b, g, r, 255);
-        }
-
         public static DrawingColor FastColorTransparent(byte r, byte g, byte b)
         {
-            return FastColor(b, g, r, Math.Max(b, Math.Max(g, r)));
+            return FastColor(r, g, b, Math.Max(b, Math.Max(g, r)));
         }
 
-        public static DrawingColor FastColor(byte b, byte g, byte r, byte a)
+        public static DrawingColor FastColor(byte r, byte g, byte b, byte a = 255)
         {
             return DrawingColor.FromArgb(
                 b | (g << 8) | (r << 16) | (a << 24)
@@ -510,9 +506,9 @@ namespace Aurora.Utils
 
     public class BoolToColorConverter : IValueConverter
     {
-        public static Tuple<DrawingColor, DrawingColor> TextWhiteRed = new Tuple<DrawingColor, DrawingColor>(DrawingColor.FromArgb(255, 186, 186, 186), DrawingColor.Red);
+        public static Tuple<DrawingColor, DrawingColor> TextWhiteRed = new(DrawingColor.FromArgb(255, 186, 186, 186), DrawingColor.Red);
 
-        public static Tuple<DrawingColor, DrawingColor> TextRedWhite = new Tuple<DrawingColor, DrawingColor>(DrawingColor.Red, DrawingColor.FromArgb(255, 186, 186, 186));
+        public static Tuple<DrawingColor, DrawingColor> TextRedWhite = new(DrawingColor.Red, DrawingColor.FromArgb(255, 186, 186, 186));
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
