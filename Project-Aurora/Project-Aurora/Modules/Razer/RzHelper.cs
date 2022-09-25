@@ -33,16 +33,20 @@ namespace Aurora.Modules.Razer
         {
             try
             {
-                using (var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32))
+                using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+                var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
+                if (key is null)
                 {
-                    var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                    return (int)key?.GetValue("Enable", 0) == 1;
+                    return false;
                 }
+                return (int)key.GetValue("Enable", 0) == 1;
             }
             catch
             {
-                return false;
+                // NOOP
             }
+
+            return false;
         }
 
         public static RzSdkVersion GetSdkVersion()
@@ -51,10 +55,11 @@ namespace Aurora.Modules.Razer
             {
                 using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
                 var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                if (key == null)
+                if (key is null)
                 {
                     return new RzSdkVersion(0, 0, 0);
                 }
+
                 var major = (int)key.GetValue("MajorVersion", 0);
                 var minor = (int)key.GetValue("MinorVersion", 0);
                 var revision = (int)key.GetValue("RevisionNumber", 0);
@@ -63,8 +68,10 @@ namespace Aurora.Modules.Razer
             }
             catch
             {
-                return new RzSdkVersion(0, 0, 0);
+                // NOOP
             }
+
+            return new RzSdkVersion(0, 0, 0);
         }
 
         public static bool IsSdkVersionSupported(RzSdkVersion version)
@@ -98,28 +105,28 @@ namespace Aurora.Modules.Razer
             switch (provider)
             {
                 case RzKeyboardDataProvider keyboard:
-                {
-                    for (var i = 0; i < keyboard.Grids[0].Height * keyboard.Grids[0].Width; i++)
-                        KeyboardColors[i] = keyboard.GetZoneColor(i);
-                    break;
-                }
+                    {
+                        for (var i = 0; i < keyboard.Grids[0].Height * keyboard.Grids[0].Width; i++)
+                            KeyboardColors[i] = keyboard.GetZoneColor(i);
+                        break;
+                    }
                 case RzMouseDataProvider mouse:
                     for (var i = 0; i < mouse.Grids[0].Height * mouse.Grids[0].Width; i++)
                         MouseColors[i] = mouse.GetZoneColor(i);
                     break;
                 case RzMousepadDataProvider mousePad:
-                {
-                    for (var i = 0; i < mousePad.Grids[0].Height * mousePad.Grids[0].Width; i++)
-                        MousepadColors[i] = mousePad.GetZoneColor(i);
-                    break;
-                }
+                    {
+                        for (var i = 0; i < mousePad.Grids[0].Height * mousePad.Grids[0].Width; i++)
+                            MousepadColors[i] = mousePad.GetZoneColor(i);
+                        break;
+                    }
                 case RzAppListDataProvider appList:
                     CurrentAppExecutable = appList.CurrentAppExecutable;
                     break;
             }
         }
 
-        public static bool IsCurrentAppValid() 
+        public static bool IsCurrentAppValid()
         => !string.IsNullOrEmpty(CurrentAppExecutable)
            && string.Compare(CurrentAppExecutable, "Aurora.exe", StringComparison.OrdinalIgnoreCase) != 0;
     }

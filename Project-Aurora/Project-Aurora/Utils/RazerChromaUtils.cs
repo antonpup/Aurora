@@ -8,6 +8,10 @@ using System.Net;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Xml;
+using RazerSdkHelper;
+using System.Net.Http;
+using System.Net.Http.Json;
+using Octokit.Internal;
 using Aurora.Modules.Razer;
 
 namespace Aurora.Utils
@@ -79,18 +83,17 @@ namespace Aurora.Utils
             return (int)RazerChromaInstallerExitCode.Success;
         });
 
-        public static Task<string> GetDownloadUrlAsync() => Task.Run(() =>
+        public static async Task<string> GetDownloadUrlAsync()
         {
-            using (var client = new WebClient())
-            {
-                var endpoint = "prod";
-                var json = JObject.Parse(client.DownloadString("https://discovery.razerapi.com/user/endpoints"));
-                var hash = json["endpoints"].Children().FirstOrDefault(c => c.Value<string>("name") == endpoint)?.Value<string>("hash");
+            using var client = new HttpClient();
+            var endpoint = "prod";
+            var json = JObject.Parse(await client.GetStringAsync("https://discovery.razerapi.com/user/endpoints"));
+            var hash = json["endpoints"].Children().FirstOrDefault(c => c.Value<string>("name") == endpoint)?.Value<string>("hash");
 
-                if (hash == null)
-                    return null;
+            if (hash == null)
+                return null;
 
-                var platformData = @"
+            var platformData = @"
 <PlatformRoot xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
   <Platform>
     <Arch>64</Arch>
@@ -104,32 +107,38 @@ namespace Aurora.Utils
 </PlatformRoot>
 ";
 
-                client.Headers.Set("Content-Type", "application/xml");
-                var xml = client.UploadString($"https://manifest.razerapi.com/api/legacy/{hash}/{endpoint}/productlist/get", platformData);
-                var doc = new XmlDocument();
-                doc.LoadXml(xml);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://manifest.razerapi.com/api/legacy/{hash}/{endpoint}/productlist/get")
+            {
+                Content = new StringContent(platformData)
+            };
+            request.Content.Headers.ContentType = new("application/xml");
+            var response = await client.SendAsync(request);
+            var xml = await response.Content.ReadAsStringAsync();
+            var doc = new XmlDocument();
+            doc.LoadXml(xml);
 
-                foreach(XmlNode node in doc.DocumentElement.SelectNodes("//Module"))
-                    if (node["Name"].InnerText == "CHROMABROADCASTER")
-                        return node["DownloadURL"].InnerText;
+            foreach (XmlNode node in doc.DocumentElement.SelectNodes("//Module"))
+                if (node["Name"].InnerText == "CHROMABROADCASTER")
+                    return node["DownloadURL"].InnerText;
 
-                return null;
-            }
-        });
+            return null;
+        }
 
-        public static Task<string> DownloadAsync() => Task.Run(async () =>
+        public static async Task<string> DownloadAsync()
         {
             var url = await GetDownloadUrlAsync();
             if (url == null)
                 return null;
 
-            using (var client = new WebClient())
-            {
-                var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
-                client.DownloadFile(url, path);
-                return path;
-            }
-        });
+            using var client = new HttpClient();
+            using var responseStream = await client.GetStreamAsync(url);
+
+            var path = Path.ChangeExtension(Path.GetTempFileName(), ".exe");
+            using var fileStream = new FileStream(path, FileMode.CreateNew, FileAccess.Write);
+            await responseStream.CopyToAsync(fileStream);
+
+            return path;
+        }
 
         public static Task<int> InstallAsync(string installerPath) => Task.Run(() =>
         {
@@ -152,7 +161,7 @@ namespace Aurora.Utils
             const string file = @"<?xml version=""1.0"" encoding=""utf-8""?>" +
                                 "\n<devices>" +
                                 "\n</devices>";
-            
+
             List<Task> tasks = new();
             var chromaPath = GetChromaPath();
             if (chromaPath != null)
@@ -167,7 +176,7 @@ namespace Aurora.Utils
             }
 
             await Task.WhenAll(tasks.ToArray());
-            
+
             RestartChromaService();
             return tasks.Count > 0;
         }
@@ -189,7 +198,7 @@ namespace Aurora.Utils
         {
             using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
             var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-            var path = (string) key?.GetValue("InstallPath", null);
+            var path = (string)key?.GetValue("InstallPath", null);
             return path;
         }
 
@@ -197,7 +206,7 @@ namespace Aurora.Utils
         {
             using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
             var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-            var path = (string) key?.GetValue("InstallPath64", null);
+            var path = (string)key?.GetValue("InstallPath64", null);
             return path;
         }
     }
