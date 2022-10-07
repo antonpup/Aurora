@@ -127,6 +127,10 @@ namespace Aurora.Profiles.CSGO.Layers
                 csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID))
             {
                 var index = csgostate.Player.State.RoundKills - 1;
+                if (index >= roundKills.Count)
+                {
+                    return;
+                }
                 if (csgostate.Previously.Player.State.RoundKillHS != -1 && csgostate.Player.State.RoundKillHS != -1 &&
                     csgostate.Previously.Player.State.RoundKillHS < csgostate.Player.State.RoundKillHS)
                     
