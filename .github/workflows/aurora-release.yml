@@ -87,7 +87,7 @@ jobs:
       - name: Archive Build
         shell: pwsh
         run: |
-          Compress-Archive .\Build\Release\* Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
+          Compress-Archive .\Build\Release\win10-x64\* Aurora-v${{steps.buildnumber.outputs.build_number}}.zip
 
       - name: Release
         uses: softprops/action-gh-release@v1
