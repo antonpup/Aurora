@@ -2,6 +2,7 @@ using LibreHardwareMonitor.Hardware;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -88,6 +89,7 @@ namespace Aurora.Utils
             protected IHardware hw;
             protected bool inUse;
 
+            private Stopwatch _lastUsage = Stopwatch.StartNew();
             protected readonly Timer _useTimer; // Check if hw is used
             protected readonly Timer _updateTimer; // Update sensor value
             protected readonly Dictionary<Identifier, Queue<float>> _queues;
@@ -101,6 +103,7 @@ namespace Aurora.Utils
                 _useTimer = new Timer(5000);
                 _useTimer.Elapsed += (a, b) =>
                 {
+                    if (_lastUsage.Elapsed.Seconds <= 5) return;
                     inUse = false;
                     _useTimer.Stop();
                 };
@@ -123,10 +126,12 @@ namespace Aurora.Utils
                 if (sensor is null)
                     return 0;
 
+                if (!inUse)
+                {
+                    _useTimer.Start();
+                }
                 inUse = true;
-
-                _useTimer.Stop();
-                _useTimer.Start();
+                _lastUsage.Reset();
 
                 float value = sensor?.Value ?? 0;
 
