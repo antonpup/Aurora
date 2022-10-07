@@ -53,6 +53,7 @@ namespace Aurora.Utils
         private static void MediaManager_OnAnyPlaybackStateChanged(MediaManager.MediaSession mediaSession,
             GlobalSystemMediaTransportControlsSessionPlaybackInfo playbackInfo)
         {
+            MediaSessions.Add(mediaSession);
             UpdateButtons();
         }
 
