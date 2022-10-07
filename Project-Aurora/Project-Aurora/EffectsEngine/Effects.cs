@@ -109,7 +109,7 @@ namespace Aurora
 
     public class Effects
     {
-        private const int MaxDeviceId = (int)DeviceKeys.ADDITIONALLIGHT60;    //Optimization: used to block dictionary resizing
+        private const int MaxDeviceId = (int)DeviceKeys.PROFILESWITCH;    //Optimization: used to block dictionary resizing
 
         private static readonly DeviceKeys[] PossiblePeripheralKeys = {
                     DeviceKeys.Peripheral,

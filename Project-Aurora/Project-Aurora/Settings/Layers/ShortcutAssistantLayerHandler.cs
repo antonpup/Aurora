@@ -121,7 +121,6 @@ namespace Aurora.Settings.Layers
 
     public class ShortcutAssistantLayerHandler : LayerHandler<ShortcutAssistantLayerHandlerProperties>
     {
-        private bool _clear = true;
 
         public ShortcutAssistantLayerHandler() : base("Shortcut Assistant")
         {
@@ -180,14 +179,8 @@ namespace Aurora.Settings.Layers
         {
             if (IsLayerActive() == false)
             {
-                if (!_clear)
-                {
-                    EffectLayer.Clear();
-                    _clear = true;
-                }
-                return EffectLayer;
+                return EffectLayer.EmptyLayer;
             }
-            _clear = false;
 
             // The layer is active. At this point we have at least 1 key to highlight
 

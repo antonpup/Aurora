@@ -211,7 +211,7 @@ namespace Aurora.Settings.Layers
 
 
                 if (_deviceProxy is null)
-                    return EffectLayer;
+                    return EffectLayer.EmptyLayer;
 
                 // Update device ID. If it has changed, it will re-assign itself to the new device
                 DeviceProxy.DeviceId = Properties.DeviceId;

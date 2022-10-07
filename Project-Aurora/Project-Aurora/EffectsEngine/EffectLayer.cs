@@ -50,15 +50,6 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        private Color _peripheral;
-
-        private static readonly DeviceKeys[] PossiblePeripheralKeys = {
-                DeviceKeys.Peripheral,
-                DeviceKeys.Peripheral_FrontLight,
-                DeviceKeys.Peripheral_ScrollWheel,
-                DeviceKeys.Peripheral_Logo
-            };
-
         [Obsolete("Always name the layer")]
         public EffectLayer()
         {
@@ -67,7 +58,6 @@ namespace Aurora.EffectsEngine
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-            _peripheral = Color.Empty;
 
             FillOver(Color.Empty);
         }
@@ -81,7 +71,6 @@ namespace Aurora.EffectsEngine
             _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = anotherLayer.Dimension;
-            _peripheral = anotherLayer._peripheral;
 
             _needsRender = anotherLayer._needsRender;
         }
@@ -93,7 +82,6 @@ namespace Aurora.EffectsEngine
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-            _peripheral = Color.Empty;
 
             FillOver(Color.FromArgb(0, 1, 1, 1));
         }
@@ -105,7 +93,6 @@ namespace Aurora.EffectsEngine
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-            _peripheral = color;
 
             FillOver(color);
         }
@@ -681,7 +668,7 @@ namespace Aurora.EffectsEngine
         {
             if (brush is SolidBrush solidBrush)
             {
-                if (_keyColors.TryGetValue(key, out var currentColor) && currentColor == solidBrush.Color)
+                if (_keyColors.TryGetValue(key, out var currentColor) && currentColor.ToArgb() == solidBrush.Color.ToArgb())
                 {
                     return;
                 }
@@ -690,37 +677,16 @@ namespace Aurora.EffectsEngine
             BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
             _needsRender = true;
 
-            if (key == DeviceKeys.Peripheral)
+            if (keymaping.Top < 0 || keymaping.Bottom > Effects.CanvasHeight ||
+                keymaping.Left < 0 || keymaping.Right > Effects.CanvasWidth)
             {
-                if (brush is SolidBrush pSolidBrush)
-                    _peripheral = pSolidBrush.Color;
-                // TODO Add support for this ^ to other brush types
-
-                using Graphics g = Graphics.FromImage(_colormap);
-                g.CompositingMode = CompositingMode.SourceCopy;
-                foreach (DeviceKeys periKey in PossiblePeripheralKeys)
-                {
-                    BitmapRectangle periKeymaping = Effects.GetBitmappingFromDeviceKey(periKey);
-
-                    if (periKeymaping.IsValid)
-                    {
-                        g.FillRectangle(brush, periKeymaping.Rectangle);
-                    }
-                }
+                Global.logger.Warn("Coudln't set key color " + key + ". Key is outside canvas");
+                return;
             }
-            else
-            {
-                if (keymaping.Top < 0 || keymaping.Bottom > Effects.CanvasHeight ||
-                    keymaping.Left < 0 || keymaping.Right > Effects.CanvasWidth)
-                {
-                    Global.logger.Warn("Coudln't set key color " + key);
-                    return;
-                }
 
-                using Graphics g = Graphics.FromImage(_colormap);
-                g.CompositingMode = CompositingMode.SourceCopy;
-                g.FillRectangle(brush, keymaping.Rectangle);
-            }
+            using Graphics g = Graphics.FromImage(_colormap);
+            g.CompositingMode = CompositingMode.SourceCopy;
+            g.FillRectangle(brush, keymaping.Rectangle);
         }
 
         /// <summary>
@@ -736,9 +702,8 @@ namespace Aurora.EffectsEngine
 
             var keyColor = keyMapping.IsEmpty switch
             {
-                true when key == DeviceKeys.Peripheral => _peripheral,
                 true => Color.Black,
-                _ => BitmapUtils.GetRegionColor(_colormap, keyMapping.Rectangle)
+                false => BitmapUtils.GetRegionColor(_colormap, keyMapping.Rectangle)
             };
             _keyColors[key] = keyColor;
             return keyColor;
@@ -768,6 +733,16 @@ namespace Aurora.EffectsEngine
         /// <returns>Left hand side EffectLayer, which is a combination of two passed EffectLayers</returns>
         public static EffectLayer operator +(EffectLayer lhs, EffectLayer rhs)
         {
+            if (lhs == EmptyLayer)
+            {
+                return rhs;
+            }
+
+            if (rhs == EmptyLayer)
+            {
+                return lhs;
+            }
+            
             using (var g = lhs.GetGraphics())
             {
                 g.CompositingMode = CompositingMode.SourceOver;
@@ -778,7 +753,6 @@ namespace Aurora.EffectsEngine
             }
             lhs.Invalidate();
 
-            lhs._peripheral = ColorUtils.AddColors(lhs._peripheral, rhs._peripheral);
             return lhs;
         }
 
@@ -1129,23 +1103,32 @@ namespace Aurora.EffectsEngine
             Invalidate();
         }
 
+        private KeySequence _excludeSequence = new();
         /// <summary>
         /// Excludes provided sequence from the layer (Applies a mask)
         /// </summary>
         /// <param name="sequence">The mask to be applied</param>
         public void Exclude(KeySequence sequence)
         {
+            if (_excludeSequence.Equals(sequence))
+            {
+                return;
+            }
+
+            _excludeSequence = sequence.Clone() as KeySequence;
+            
             var gp = new GraphicsPath();
             sequence.keys.ForEach(k =>
             {
                 var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
                 gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
+                _keyColors.Remove(k);
             });
 
             using var g = Graphics.FromImage(_colormap);
             g.SetClip(gp);
             g.Clear(Color.Transparent);
-            Invalidate();
+            _needsRender = true;
         }
 
         /// <summary>

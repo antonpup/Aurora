@@ -42,7 +42,7 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientFillLayerHandler : LayerHandler<GradientFillLayerHandlerProperties>
     {
-        public GradientFillLayerHandler(string name) : base("GradientFillLayer")
+        public GradientFillLayerHandler() : base("GradientFillLayer")
         {
         }
 

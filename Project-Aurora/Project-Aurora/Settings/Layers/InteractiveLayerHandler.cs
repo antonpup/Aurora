@@ -298,10 +298,12 @@ namespace Aurora.Settings.Layers
                 _timeOfLastPress.TryRemove(lengthPresses.Key, out _);
             }
 
-            if (_inputList.Count > 0)
+            if (_inputList.Count == 0)
             {
-                EffectLayer.Clear();
+                return EffectLayer.EmptyLayer;
             }
+
+            EffectLayer.Clear();
             foreach (var input in _inputList.ToArray())
             {
                 if (input == null)

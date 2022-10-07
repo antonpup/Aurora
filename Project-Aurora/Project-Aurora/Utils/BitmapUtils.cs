@@ -22,14 +22,17 @@ namespace Aurora.Utils
             var stride = srcData.Stride;
             var scan0 = srcData.Scan0;
 
+            var rectangleHeight = rectangle.Height;
+            var rectangleWidth = rectangle.Width;
             unsafe
             {
                 var p = (byte*)(void*)scan0;
 
-                for (var y = 0; y < rectangle.Height; y++)
+                for (var y = 0; y < rectangleHeight; y++)
                 {
                     var i = y * stride;
-                    for (var x = 0; x < rectangle.Width; x++)
+                    //var j = i;
+                    for (var x = 0; x < rectangleWidth; x++)
                     {
                         var j = i + x * 4;
                         color[0] += p[j];
@@ -41,14 +44,10 @@ namespace Aurora.Utils
             }
             map.UnlockBits(srcData);
 
-            //each color value is rounded to the nearest integer
-            //because for bytes each increment is significant
-            //https://stackoverflow.com/a/17974/13320838
             var area = rectangle.Width * rectangle.Height;
-            return ColorUtils.FastColor(//B
-                //G
-                (byte) (color[2] / area),   //R
-                (byte) (color[1] / area), (byte) (color[0] / area), (byte) (color[3] / area) //A
+            return ColorUtils.FastColor(
+                (byte) (color[2] / area), (byte) (color[1] / area), (byte) (color[0] / area),
+                (byte) (color[3] / area)
             );
         }
 

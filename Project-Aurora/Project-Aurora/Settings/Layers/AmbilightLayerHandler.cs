@@ -330,15 +330,15 @@ namespace Aurora.Settings.Layers
             }
 
             if (_screenBrush is null)
-                return EffectLayer;
+                return EffectLayer.EmptyLayer;
 
             var region = Properties.Sequence.GetAffectedRegion();
             if (region.IsEmpty)
-                return EffectLayer;
+                return EffectLayer.EmptyLayer;
 
             //and because of that, this should never happen 
             if (_cropRegion.IsEmpty)
-                return EffectLayer;
+                return EffectLayer.EmptyLayer;
 
             switch (Properties.AmbilightType)
             {
@@ -359,7 +359,7 @@ namespace Aurora.Settings.Layers
                             g.Clear(Color.Transparent);
                             g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
                         },
-                        new Rectangle(0, 0, _cropRegion.Width, _cropRegion.Height)
+                        _cropRegion with {X = 0, Y = 0}
                     );
                     break;
 
@@ -367,8 +367,9 @@ namespace Aurora.Settings.Layers
                     var oneColorBitmap = new Bitmap(1, 1);
                     using (var g = Graphics.FromImage(oneColorBitmap))
                     {
-                        g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                        g.CompositingMode = CompositingMode.SourceCopy;
+                        g.InterpolationMode = InterpolationMode.Default;
+                        g.SmoothingMode = SmoothingMode.Default;
                         g.FillRectangle(_screenBrush, 0, 0, 1, 1);
                     }
                     

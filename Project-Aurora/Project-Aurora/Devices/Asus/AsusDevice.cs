@@ -16,7 +16,7 @@ namespace Aurora.Devices.Asus
         public override string DeviceName => deviceName;
 
         /// <inheritdoc />
-        public string DeviceDetails => GetDeviceStatus();
+        public override string DeviceDetails => GetDeviceStatus();
 
         private string GetDeviceStatus()
         {

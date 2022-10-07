@@ -124,9 +124,9 @@ namespace Aurora.Settings
             if (ReferenceEquals(null, p)) return false;
             if (ReferenceEquals(this, p)) return true;
 
-            return (new HashSet<Devices.DeviceKeys>(keys).SetEquals(p.keys)) &&
-                type == p.type &&
-                freeform.Equals(p.freeform);
+            return keys.Equals(p.keys) &&
+                   type == p.type &&
+                   freeform.Equals(p.freeform);
         }
 
         public override int GetHashCode()

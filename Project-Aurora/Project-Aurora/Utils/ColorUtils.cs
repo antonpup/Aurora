@@ -105,8 +105,12 @@ namespace Aurora.Utils
         /// <returns>The sum of two colors including combined alpha</returns>
         public static DrawingColor AddColors(DrawingColor background, DrawingColor foreground)
         {
-            return FastColor((byte)(foreground.R * foreground.A / 255 + background.R * (255 - background.A) / 255),
-                (byte)(foreground.G * foreground.A / 255 + background.G * (255 - background.A) / 255), (byte)(foreground.B * foreground.A / 255 + background.B * (255 - background.A) / 255), (byte)((int) (1 - (255 - background.A) / 255d * (255 - foreground.A) / 255d) * 255));
+            var backgroundA = 255 - background.A;
+            return FastColor(
+                (byte)(foreground.R * foreground.A / 255 + background.R * backgroundA / 255),
+                (byte)(foreground.G * foreground.A / 255 + background.G * backgroundA / 255), 
+                (byte)(foreground.B * foreground.A / 255 + background.B * backgroundA / 255),
+                (byte)((int) (1 - backgroundA / 255d * (255 - foreground.A) / 255d) * 255));
         }
 
         /// <summary>
