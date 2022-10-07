@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 
 namespace Aurora.Devices
 {
@@ -57,12 +58,17 @@ namespace Aurora.Devices
             _tempStopWatch.Restart();
             var updateResult = UpdateDevice(colorComposition.KeyColors, e, forced);
 
-            if (!updateResult) return updateResult;
+            if (!updateResult) return false;
             lastUpdateTime = watch.ElapsedMilliseconds;
             updateTime = _tempStopWatch.ElapsedMilliseconds;
             watch.Restart();
 
-            return updateResult;
+            return true;
+        }
+
+        public virtual IEnumerable<string> GetDevices()
+        {
+            yield break;
         }
 
         #region Variables

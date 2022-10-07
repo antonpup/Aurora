@@ -47,12 +47,6 @@ namespace Aurora
         private Timer virtual_keyboard_timer;
         private Grid virtial_kb = new();
 
-        private readonly double virtual_keyboard_width;
-        private readonly double virtual_keyboard_height;
-
-        private readonly double width;
-        private readonly double height;
-
         public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register("FocusedApplication", typeof(Profiles.Application), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
 
         public Profiles.Application FocusedApplication
@@ -80,12 +74,6 @@ namespace Aurora
         public ConfigUI()
         {
             InitializeComponent();
-
-            virtual_keyboard_height = keyboard_grid.Height;
-            virtual_keyboard_width = keyboard_grid.Width;
-
-            width = Width;
-            height = Height;
 
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
@@ -127,10 +115,8 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
 
@@ -166,10 +152,8 @@ namespace Aurora
             keyboard_grid.Children.Add(new LayerEditor());
 
             keyboard_grid.Width = virtial_kb.Width;
-            Width = width + (virtial_kb.Width - virtual_keyboard_width);
 
             keyboard_grid.Height = virtial_kb.Height;
-            Height = height + (virtial_kb.Height - virtual_keyboard_height);
 
             keyboard_grid.UpdateLayout();
 

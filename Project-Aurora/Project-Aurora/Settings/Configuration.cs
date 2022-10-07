@@ -589,6 +589,11 @@ namespace Aurora.Settings
 
         public VariableRegistry VarRegistry { get; set; } = new VariableRegistry();
 
+        public double Width { get; set; } = 656;
+        public double Height { get; set; } = 800;
+        public double Top { get; set; } = 50;
+        public double Left { get; set; } = 50;
+
         //BitmapDebug Data
         public bool BitmapDebugTopMost { get; set; } = false;
         public WINDOWPLACEMENT BitmapPlacement { get; set; }
@@ -602,6 +607,8 @@ namespace Aurora.Settings
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
+
+        public Dictionary<string, Color> DeviceCalibrations { get; set; } = new();
 
         public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
         public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;

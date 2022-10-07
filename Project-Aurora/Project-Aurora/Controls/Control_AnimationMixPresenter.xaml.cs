@@ -96,13 +96,10 @@ namespace Aurora.Controls
 
         private float _animationScale = 1.0f;
         public float AnimationScale {
-            get {
-                return _animationScale;
-            }
+            get => _animationScale;
             set {
                 _animationScale = value;
-                if(ContextMix != null)
-                    ContextMix.SetScale(AnimationScale);
+                ContextMix?.SetScale(AnimationScale);
             }
         }
 
@@ -185,12 +182,26 @@ namespace Aurora.Controls
         public void UpdatePlaybackTime()
         {
 
-            gridScrubber.Margin = new Thickness(ConvertToLocation(_currentPlaybackTime) + 100.0, 0, 0, 0);
-
             int seconds = (int)_currentPlaybackTime;
             int milliseconds = (int)((_currentPlaybackTime - seconds) * 1000.0);
 
             this.txtblkCurrentTime.Text = $"{seconds};{milliseconds}";
+
+            Bitmap newBitmap = new Bitmap((int)(Effects.CanvasWidth * AnimationScale), (int)(Effects.CanvasHeight * AnimationScale));
+
+            using (Graphics g = Graphics.FromImage(newBitmap))
+            {
+                g.Clear(System.Drawing.Color.Black);
+
+                ContextMix.Draw(g, _currentPlaybackTime, new PointF(AnimationScale, AnimationScale));
+            }
+
+            RenderedBitmap = newBitmap;
+
+            if (chkbxDrawToDevices.IsChecked.Value)
+                Global.effengine.ForceImageRender(RenderedBitmap);
+
+            AnimationMixRendered?.Invoke(this);
         }
 
         private double ConvertToLocation(float time)

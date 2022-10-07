@@ -75,5 +75,7 @@ namespace Aurora.Devices
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
         bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
+
+        IEnumerable<string> GetDevices();
     }
 }

@@ -69,5 +69,10 @@ namespace Aurora.Controls
             Global.dev_manager.InitializeDevices();
             UpdateControls();
         }
+
+        private void btnCalibrate_Click(object sender, RoutedEventArgs e)
+        {
+            new Control_DeviceCalibration().Show();
+        }
     }
 }

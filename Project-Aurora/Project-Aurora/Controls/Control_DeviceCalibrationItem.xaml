@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Aurora.Controls.Control_DeviceCalibrationItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Aurora.Controls"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+            <TextBlock Text="{Binding Key}" Name="DeviceId" />
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1">
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        </StackPanel>
+        <DockPanel Grid.Column="2">
+            <xctk:ColorPicker
+                SelectedColor="{Binding Path=Value, Mode=OneTime, Converter={StaticResource DrawingToMediaColorConv}}"
+                Width="123" Height="24"
+                ColorMode="ColorCanvas"
+                UsingAlphaChannel="False" 
+                SelectedColorChanged="ColorPicker_OnSelectedColorChanged"
+            />
+        </DockPanel>
+        <Button Name="RemoveButton" Grid.Column="3" Width="30" Height="30" Click="RemoveButton_OnClick">x</Button>
+    </Grid>
+</UserControl>
