@@ -3,16 +3,13 @@ using Aurora.Profiles;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Controls;
+using Lombok.NET;
 
 namespace Aurora.Settings.Layers
 {
-    public class SolidFillLayerHandlerProperties : LayerHandlerProperties<SolidFillLayerHandlerProperties>
+    [NoArgsConstructor]
+    public partial class SolidFillLayerHandlerProperties : LayerHandlerProperties<SolidFillLayerHandlerProperties>
     {
-        public SolidFillLayerHandlerProperties() : base()
-        {
-
-        }
-
         public SolidFillLayerHandlerProperties(bool arg = false) : base(arg)
         {
 
@@ -29,7 +26,6 @@ namespace Aurora.Settings.Layers
     public class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerProperties>
     {
         private readonly SolidBrush _solidBrush = new(Color.Transparent);
-        private bool _needsUpdate = true;
 
         public SolidFillLayerHandler() : base("Solid Fill Layer")
         {
@@ -50,7 +46,6 @@ namespace Aurora.Settings.Layers
             base.PropertiesChanged(sender, args);
             _solidBrush.Color = Properties.PrimaryColor;
             EffectLayer.Fill(_solidBrush);
-            EffectLayer.Invalidate();
         }
     }
 }

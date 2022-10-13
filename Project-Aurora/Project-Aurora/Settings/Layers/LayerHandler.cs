@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 using System.Windows;
 using Windows.Foundation.Metadata;
 using Application = Aurora.Profiles.Application;
@@ -127,6 +128,12 @@ namespace Aurora.Settings.Layers
                     Accessor.Value[Logic, propertyName] = value;
                 }
             } catch (ArgumentOutOfRangeException) { }
+        }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
+            OnPropertiesChanged(this, new PropertyChangedEventArgs(""));
         }
 
         public void OnPropertiesChanged(object sender, object args = null)
@@ -266,9 +273,21 @@ namespace Aurora.Settings.Layers
         private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer; //Layer before previous
 
         [JsonIgnore]
-        private Lazy<EffectLayer> _effectLayer;
+        private readonly Lazy<EffectLayer> _effectLayer;
 
-        protected EffectLayer EffectLayer => _effectLayer.Value;
+        protected static PropertyChangedEventArgs ConstPropertyChangedEventArgs = new("");
+        protected EffectLayer EffectLayer
+        {
+            get
+            {
+                if (!_effectLayer.IsValueCreated)
+                {
+                    var _ = _effectLayer.Value;
+                    PropertiesChanged(this, ConstPropertyChangedEventArgs);
+                }
+                return _effectLayer.Value;
+            }
+        }
 
         protected LayerHandler(): this("Unoptimized Layer"){}
 
@@ -329,6 +348,12 @@ namespace Aurora.Settings.Layers
         {
             return new Control_DefaultLayer();
         }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
+            PropertiesChanged(this, new PropertyChangedEventArgs(""));
+        }
         
         protected virtual void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
@@ -337,12 +362,12 @@ namespace Aurora.Settings.Layers
 
         private void PropertiesChanged(object sender, CanvasChangedArgs e)
         {
-            PropertiesChanged(sender, new PropertyChangedEventArgs(""));
+            PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }
 
         private void PropertiesChanged(object sender, FreeFormChangedArgs e)
         {
-            PropertiesChanged(sender, new PropertyChangedEventArgs(""));
+            PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }
 
         public virtual void Dispose()

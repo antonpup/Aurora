@@ -32,10 +32,12 @@ namespace Aurora.Settings
     {
         private readonly RegistryKey _runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         private const string StartupTaskId = "AuroraStartup";
+        private readonly bool _componentsInitialized;
 
         public Control_Settings()
         {
             InitializeComponent();
+            _componentsInitialized = true;
 
             tabMain.DataContext = Global.Configuration;
 
@@ -202,7 +204,14 @@ namespace Aurora.Settings
             }
         }
 
-        private void LoadBrandDefault(object sender, SelectionChangedEventArgs e) => Global.kbLayout.LoadBrandDefault();
+        private void LoadBrandDefault(object sender, SelectionChangedEventArgs e)
+        {
+            if (_componentsInitialized)
+            {
+                Global.kbLayout.LoadBrandDefault();
+            }
+        }
+
         private async void ResetDevices(object sender, RoutedEventArgs e) => await Global.dev_manager.ResetDevices();
 
         private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)

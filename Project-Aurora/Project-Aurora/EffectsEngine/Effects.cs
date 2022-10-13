@@ -177,7 +177,7 @@ namespace Aurora
 
         // ReSharper disable once EventNeverSubscribedTo.Global
         public static event EventHandler<CanvasChangedArgs> CanvasChanged;
-        public static object CanvasChangedLock = new();
+        public static readonly object CanvasChangedLock = new();
 
         private static int _canvasWidth = 1;
         public static int CanvasWidth
@@ -227,7 +227,7 @@ namespace Aurora
         private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
         private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
-        private EffectLayer _background => _effectLayerFactory.Value;
+        private EffectLayer Background => _effectLayerFactory.Value;
 
         public Effects()
         {
@@ -267,35 +267,35 @@ namespace Aurora
         private readonly SolidBrush _blackBrush = new(Color.Black);
         public void PushFrame(EffectFrame frame)
         {
-            _background.Fill(_blackBrush);
+            Background.Fill(_blackBrush);
 
             var overLayersArray = frame.GetOverlayLayers();
             var layersArray = frame.GetLayers();
 
             foreach (var layer in layersArray)
-                _background.Add(layer);
+                Background.Add(layer);
             foreach (var layer in overLayersArray)
-                _background.Add(layer);
+                Background.Add(layer);
 
             //Apply Brightness
             foreach (var key in PossiblePeripheralKeys)
             {
-                _peripheralColors[key] = _background.Get(key);
+                _peripheralColors[key] = Background.Get(key);
             }
 
             var keyboardDarkness = 1.0f - Global.Configuration.KeyboardBrightness * Global.Configuration.GlobalBrightness;
             _keyboardDarknessBrush.Color = Color.FromArgb((int) (255.0f * keyboardDarkness), Color.Black);
-            _background.FillOver(_keyboardDarknessBrush);
+            Background.FillOver(_keyboardDarknessBrush);
 
             var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
-            lock (_background.GetBitmap())
+            lock (Background.GetBitmap())
                 foreach (var key in PossiblePeripheralKeys)
-                    _background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, peripheralDarkness));
+                    Background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, peripheralDarkness));
             
 
             if (_forcedFrame != null)
             {
-                using var g = _background.GetGraphics();
+                using var g = Background.GetGraphics();
                 g.Clear(Color.Black);
                 g.DrawImage(_forcedFrame, 0, 0, CanvasWidth, CanvasHeight);
             }
@@ -303,7 +303,7 @@ namespace Aurora
             var allKeys = _bitmapMap.Keys.ToArray();
 
             foreach (var key in allKeys)
-                _keyColors[key] = _background.Get(key);
+                _keyColors[key] = Background.Get(key);
 
             var dcc = new DeviceColorComposition
             {
@@ -311,7 +311,7 @@ namespace Aurora
             };
             Global.dev_manager.UpdateDevices(dcc);
 
-            NewLayerRender?.Invoke(_background.GetBitmap());
+            NewLayerRender?.Invoke(Background.GetBitmap());
 
             frame.Dispose();
         }

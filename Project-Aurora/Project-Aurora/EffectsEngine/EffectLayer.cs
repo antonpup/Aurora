@@ -24,7 +24,7 @@ namespace Aurora.EffectsEngine
         private float _opacity = 1;
 
         private TextureBrush _textureBrush;
-        private bool _needsRender;
+        private bool _needsRender = true;
 
         internal Rectangle Dimension;
 
