@@ -269,9 +269,6 @@ namespace Aurora.Devices.OpenRGB
                 }
             }
 
-            if (fallbackKey == DK.NONE)
-                return;
-
             //if we have the option enabled,
             //we'll skip these as users may not want 
             //linear zones to depend on additionalllight
