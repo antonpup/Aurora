@@ -20,25 +20,22 @@ namespace Aurora.Devices.OpenRGB
     public class OpenRGBAuroraDevice : DefaultDevice
     {
         public override string DeviceName => "OpenRGB";
-        protected override string DeviceInfo =>
-            _connecting ? "Connecting" : string.Join(", ", _devices.Select(d => d.OrgbDevice.Name));
+        protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.OrgbDevice.Name));
 
         private OpenRGBClient _openRgb;
         private List<HelperOpenRGBDevice> _devices;
 
-        private bool _connecting;
-        private object _updateLock = new object();
+        private readonly object _updateLock = new();
 
         public override bool Initialize()
         {
-            if (IsInitialized || _connecting)
+            if (IsInitialized)
                 return true;
 
             try
             {
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
                 var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
-                var usePeriphLogo = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_use_periph_logo");
                 var connectSleepTimeSeconds = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
                 
                 bool openrgbRunning = false;
@@ -89,8 +86,8 @@ namespace Aurora.Devices.OpenRGB
                     break;
                 }
 
-                UpdateDeviceList(usePeriphLogo);
                 _openRgb.DeviceListUpdated += OnDeviceListUpdated;
+                UpdateDeviceList();
             }
             catch (Exception e)
             {
@@ -108,12 +105,11 @@ namespace Aurora.Devices.OpenRGB
         {
             lock (_updateLock)
             {
-                var usePeriphLogo = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_use_periph_logo");
-                UpdateDeviceList(usePeriphLogo);
+                UpdateDeviceList();
             }
         }
 
-        private void UpdateDeviceList(bool usePeriphLogo)
+        private void UpdateDeviceList()
         {
             if (_openRgb == null)
             {
@@ -122,18 +118,20 @@ namespace Aurora.Devices.OpenRGB
             
             _devices = new List<HelperOpenRGBDevice>();
             
+            var fallbackKey = Global.Configuration.VarRegistry.GetVariable<DK>($"{DeviceName}_fallback_key");
             lock (_updateLock)
+            {
                 foreach (var device in _openRgb.EnumerateControllerData())
                 {
                     var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
                     if (directMode == null) continue;
                     _openRgb.SetMode(device.ID, device.Modes.FindIndex(mode => mode == directMode));
                     var helper = new HelperOpenRGBDevice(device.ID, device);
-                    helper.ProcessMappings(usePeriphLogo);
+                    helper.ProcessMappings(fallbackKey);
                     _devices.Add(helper);
                 }
-                
-            Thread.Sleep(500);
+                Thread.Sleep(500);
+            }
         }
 
         public override void Shutdown()
@@ -167,10 +165,9 @@ namespace Aurora.Devices.OpenRGB
             lock (_updateLock)
                 foreach (var device in _devices)
                 {
-                    UpdateDevice(device, keyColors);
-
                     try
                     {
+                        UpdateDevice(device, keyColors);
                         _openRgb.UpdateLeds(device.Index, device.Colors);
                     }
                     catch (Exception exc)
@@ -217,7 +214,7 @@ namespace Aurora.Devices.OpenRGB
             variableRegistry.Register($"{DeviceName}_sleep", 0, "Sleep for", 1000, 0);
             variableRegistry.Register($"{DeviceName}_ip", "127.0.0.1", "IP Address");
             variableRegistry.Register($"{DeviceName}_port", 6742, "Port", 1024, 65535);
-            variableRegistry.Register($"{DeviceName}_use_periph_logo", false, "Use peripheral logo for unknown leds");
+            variableRegistry.Register($"{DeviceName}_fallback_key", DK.Peripheral_Logo, "Key to use for unknown leds. Select NONE to disable");
             variableRegistry.Register($"{DeviceName}_connect_sleep_time", 5, "Connection timeout seconds");
         }
 
@@ -250,7 +247,7 @@ namespace Aurora.Devices.OpenRGB
             Mapping = new DK[dev.Zones.Sum(z => z.LedCount)];
         }
 
-        internal void ProcessMappings(bool usePeriphLogo)
+        internal void ProcessMappings(DK fallbackKey)
         {
             for (var ledIndex = 0; ledIndex < OrgbDevice.Leds.Length; ledIndex++)
             {
@@ -268,11 +265,11 @@ namespace Aurora.Devices.OpenRGB
                 }
                 else
                 {
-                    Mapping[ledIndex] = usePeriphLogo ? DK.Peripheral_Logo : DK.NONE;
+                    Mapping[ledIndex] = fallbackKey;
                 }
             }
 
-            if (usePeriphLogo)
+            if (fallbackKey == DK.NONE)
                 return;
 
             //if we have the option enabled,

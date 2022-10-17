@@ -8,9 +8,8 @@ namespace Aurora.Devices.Asus
 {
     public class AsusDevice : DefaultDevice
     {
-        public const string deviceName = "Asus";
-        private AsusHandler asusHandler = new AsusHandler();
-        private bool isActive = false;
+        private const string deviceName = "Asus";
+        private AsusHandler asusHandler = new();
 
         /// <inheritdoc />
         public override string DeviceName => deviceName;
@@ -20,7 +19,7 @@ namespace Aurora.Devices.Asus
 
         private string GetDeviceStatus()
         {
-            if (!isActive)
+            if (!IsInitialized)
                 return "Not Initialized";
 
             if (asusHandler.DeviceCount == 0)
@@ -37,32 +36,26 @@ namespace Aurora.Devices.Asus
             asusHandler = new AsusHandler(
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
-            isActive = asusHandler.Start();
-            return isActive;
+            IsInitialized = asusHandler.Start();
+            return IsInitialized;
         }
 
         /// <inheritdoc />
         public override void Shutdown()
         {
-            if (!isActive) return;
+            if (!IsInitialized) return;
 
+            IsInitialized = false;
             asusHandler.Stop();
-            isActive = false;
         }
-
-        /// <inheritdoc />
-        public void Reset()
-        {
-            Shutdown();
-            Initialize();
-        }
-
-        /// <inheritdoc />
-        public bool IsInitialized => isActive;
 
         /// <inheritdoc />
         protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
+            if (!IsInitialized)
+            {
+                return false;
+            }
             asusHandler.UpdateColors(keyColors);
             return true;
         }
