@@ -13,6 +13,7 @@
                 <Grid>
                     <StackPanel>
                         <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Overwatch" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                        <TextBlock Text="Needs Chroma SDK installed. (Settings -&gt; Devices &amp; Wrappers -&gt; Chroma)" Margin="10,10,0,0"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
