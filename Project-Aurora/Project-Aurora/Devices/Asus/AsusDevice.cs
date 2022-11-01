@@ -8,11 +8,10 @@ namespace Aurora.Devices.Asus
 {
     public class AsusDevice : DefaultDevice
     {
-        private const string deviceName = "Asus";
-        private AsusHandler asusHandler = new();
+        private AsusHandler _asusHandler = new();
 
         /// <inheritdoc />
-        public override string DeviceName => deviceName;
+        public override string DeviceName => "Asus";
 
         /// <inheritdoc />
         public override string DeviceDetails => GetDeviceStatus();
@@ -22,21 +21,21 @@ namespace Aurora.Devices.Asus
             if (!IsInitialized)
                 return "Not Initialized";
 
-            if (asusHandler.DeviceCount == 0)
+            if (_asusHandler.DeviceCount == 0)
                 return "Initialized: No devices connected";
 
-            return "Initialized: " + asusHandler?.GetDevicePerformance();
+            return "Initialized: " + _asusHandler?.GetDevicePerformance();
         }
 
         /// <inheritdoc />
         public override bool Initialize()
         {
-            asusHandler?.Stop();
+            _asusHandler?.Stop();
 
-            asusHandler = new AsusHandler(
+            _asusHandler = new AsusHandler(
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_enable_unsupported_version"),
                 Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_force_initialize"));
-            IsInitialized = asusHandler.Start();
+            IsInitialized = _asusHandler.Start();
             return IsInitialized;
         }
 
@@ -46,7 +45,7 @@ namespace Aurora.Devices.Asus
             if (!IsInitialized) return;
 
             IsInitialized = false;
-            asusHandler.Stop();
+            _asusHandler.Stop();
         }
 
         /// <inheritdoc />
@@ -56,7 +55,7 @@ namespace Aurora.Devices.Asus
             {
                 return false;
             }
-            asusHandler.UpdateColors(keyColors);
+            _asusHandler.UpdateColors(keyColors);
             return true;
         }
 

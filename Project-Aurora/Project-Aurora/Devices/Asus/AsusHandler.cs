@@ -11,14 +11,15 @@ namespace Aurora.Devices.Asus
     public class AsusHandler
     {
         public IAuraSdk2 AuraSdk { get; }
-        private readonly List<AuraSyncDevice> devices = new();
+        private readonly List<AuraSyncDevice> _devices = new();
+        private readonly object _deviceLock = new();
         private const string RecommendedAsusVersion = "1.07.71";
         private const string AsusAuraPath = @"Software\Asus\AURA";
 
         /// <summary>
         /// The number of registered devices
         /// </summary>
-        public int DeviceCount => devices.Count;
+        public int DeviceCount => _devices.Count;
 
         /// <summary>
         /// Does this user have the Aura SDK installed?
@@ -27,7 +28,7 @@ namespace Aurora.Devices.Asus
 
         public AsusHandler(bool enableUnsupportedVersion = false, bool forceInitialize = false)
         {
-            string message = "";
+            var message = "";
             try
             {
                 if (CheckVersion(enableUnsupportedVersion, forceInitialize, out message))
@@ -99,82 +100,85 @@ namespace Aurora.Devices.Asus
             if (AuraSdk == null)
                 return false;
 
-            try
+            lock (_deviceLock)
             {
-                AuraSdk.SwitchMode();
-
-                var config = AsusConfig.LoadConfig();
-
-                var allDevices = AuraSdk.Enumerate((uint) AsusDeviceType.All);
-                foreach (IAuraSyncDevice device in allDevices)
+                try
                 {
-                    AsusDeviceType deviceType;
-                    if (Enum.IsDefined(typeof(AsusDeviceType), device.Type))
-                    {
-                        deviceType = (AsusDeviceType) device.Type;
-                    }
-                    else
-                    {
-                        deviceType = AsusDeviceType.Unknown;
-                        Log($"Could not read device type {device.Type} marking as Unknown");
-                    }
+                    AuraSdk.SwitchMode();
 
-                    Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
+                    var config = AsusConfig.LoadConfig();
 
-                    var configIndex = config.Devices.IndexOf(new AsusConfig.AsusConfigDevice(device));
-
-                    if (configIndex >= 0)
+                    var allDevices = AuraSdk.Enumerate((uint) AsusDeviceType.All);
+                    foreach (IAuraSyncDevice device in allDevices)
                     {
-                        var configDevice = config.Devices[configIndex];
-                        if (configDevice.Enabled)
+                        AsusDeviceType deviceType;
+                        if (Enum.IsDefined(typeof(AsusDeviceType), device.Type))
                         {
-                            devices.Add(new AsusSyncConfiguredDevice(this, device, config.Devices[configIndex]));
+                            deviceType = (AsusDeviceType) device.Type;
+                        }
+                        else
+                        {
+                            deviceType = AsusDeviceType.Unknown;
+                            Log($"Could not read device type {device.Type} marking as Unknown");
+                        }
+
+                        Log($"Added device {device.Name} of type {deviceType} it has {device.Lights.Count} lights");
+
+                        var configIndex = config.Devices.IndexOf(new AsusConfig.AsusConfigDevice(device));
+
+                        if (configIndex >= 0)
+                        {
+                            var configDevice = config.Devices[configIndex];
+                            if (configDevice.Enabled)
+                            {
+                                _devices.Add(new AsusSyncConfiguredDevice(this, device, config.Devices[configIndex]));
+                                continue;
+                            }
+                        }
+
+                        // Claymore Keyboard is not a IAuraSyncKeyboard, so a custom class has been made for it
+                        if (device.Name == "Armoury" && deviceType == AsusDeviceType.Keyboard)
+                        {
+                            _devices.Add(new AsusSyncClaymoreDevice(this, device));
                             continue;
+                        }
+
+                        switch (deviceType)
+                        {
+                            case AsusDeviceType.Keyboard:
+                            case AsusDeviceType.NotebookKeyboard:
+                            case AsusDeviceType.NotebookKeyboard4ZoneType:
+                                try
+                                {
+                                    _devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
+                                }
+                                catch (Exception e)
+                                {
+                                    Log(
+                                        $"Something went wrong with reading your device as a keyboard {device} using as generic aura sync device\r\n{e}");
+                                    _devices.Add(new AuraSyncDevice(this, device));
+                                }
+
+                                break;
+                            // ignore whatever this is
+                            case AsusDeviceType.All:
+                            // ignore terminal for now, there are 270 lights :0
+                            case AsusDeviceType.Terminal:
+                                break;
+                            default:
+                                _devices.Add(new AuraSyncDevice(this, device));
+                                break;
                         }
                     }
 
-                    // Claymore Keyboard is not a IAuraSyncKeyboard, so a custom class has been made for it
-                    if (device.Name == "Armoury" && deviceType == AsusDeviceType.Keyboard)
-                    {
-                        devices.Add(new AsusSyncClaymoreDevice(this, device));
-                        continue;
-                    }
-
-                    switch (deviceType)
-                    {
-                        case AsusDeviceType.Keyboard:
-                        case AsusDeviceType.NotebookKeyboard:
-                        case AsusDeviceType.NotebookKeyboard4ZoneType:
-                            try
-                            {
-                                devices.Add(new AuraSyncKeyboardDevice(this, (IAuraSyncKeyboard) device));
-                            }
-                            catch (Exception e)
-                            {
-                                Log(
-                                    $"Something went wrong with reading your device as a keyboard {device} using as generic aura sync device\r\n{e}");
-                                devices.Add(new AuraSyncDevice(this, device));
-                            }
-
-                            break;
-                        // ignore whatever this is
-                        case AsusDeviceType.All:
-                        // ignore terminal for now, there are 270 lights :0
-                        case AsusDeviceType.Terminal:
-                            break;
-                        default:
-                            devices.Add(new AuraSyncDevice(this, device));
-                            break;
-                    }
+                    foreach (AuraSyncDevice device in _devices)
+                        device.Start();
                 }
-
-                foreach (AuraSyncDevice device in devices)
-                    device.Start();
-            }
-            catch (Exception e)
-            {
-                Log($"ERROR: Are you using \"Lighting_Control_1.07.71\"? \r\n{e}");
-                return false;
+                catch (Exception e)
+                {
+                    Log($"ERROR: Are you using \"Lighting_Control_1.07.71\"? \r\n{e}");
+                    return false;
+                }
             }
 
             return true;
@@ -182,44 +186,84 @@ namespace Aurora.Devices.Asus
 
         public void Stop()
         {
-            for (var i = devices.Count - 1; i >= 0; i--)
+            lock (_deviceLock)
             {
-                var device = devices[i];
-                device.Stop(false);
-                device.Dispose();
-            }
+                for (var i = _devices.Count - 1; i >= 0; i--)
+                {
+                    var device = _devices[i];
+                    device.Stop(false);
+                    device.Dispose();
+                }
 
-            devices.Clear();
-            AuraSdk?.ReleaseControl(0);
+                _devices.Clear();
+                AuraSdk?.ReleaseControl(0);
+            }
         }
 
         public void UpdateColors(Dictionary<DeviceKeys, Color> colors)
         {
-            foreach (var device in devices)
-                device.UpdateColors(colors);
+            lock (_deviceLock)
+            {
+                foreach (var device in _devices)
+                    device.UpdateColors(colors);
+            }
         }
 
         public string GetDevicePerformance()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            for (var i = 0; i < devices.Count; i++)
+            lock (_deviceLock)
             {
-                var device = devices[i];
-                if (i != 0)
-                    stringBuilder.Append(", ");
+                for (var i = 0; i < _devices.Count; i++)
+                {
+                    var device = _devices[i];
+                    if (i != 0)
+                        stringBuilder.Append(", ");
 
-                stringBuilder.Append(device.Name).Append(" ").Append(device.LastUpdateMillis).Append("ms");
+                    stringBuilder.Append(device.Name).Append(" ").Append(device.LastUpdateMillis).Append("ms");
+                }
             }
 
             return stringBuilder.ToString();
         }
 
+        public bool KeyboardActive()
+        {
+            lock (_deviceLock)
+            {
+                foreach (var device in _devices)
+                {
+                    if (device.DeviceType == AsusDeviceType.Keyboard && device.Active)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool MouseActive()
+        {
+            lock (_deviceLock)
+            {
+                foreach (var device in _devices)
+                {
+                    if (device.DeviceType == AsusDeviceType.Mouse && device.Active)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public void DisconnectDevice(AuraSyncDevice device)
         {
-            Log($"Device {device.Name} was disconnected");
-            device.Stop();
-            devices.Remove(device);
+            lock (_deviceLock)
+            {
+                Log($"Device {device.Name} was disconnected");
+                device.Stop();
+                _devices.Remove(device);
+            }
         }
 
         public static void Log(string text)
