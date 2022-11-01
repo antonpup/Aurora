@@ -214,6 +214,16 @@
           "Fody": "6.6.3"
         }
       },
+      "RGB.NET.Devices.Logitech": {
+        "type": "Direct",
+        "requested": "[1.0.0-prerelease.58, )",
+        "resolved": "1.0.0-prerelease.58",
+        "contentHash": "IWCSrIU7Qho/M16jcE7QIHnaDjjoTU/Hy2SIDnOaATNEJF9do5pUM5oSVecOA0LdB1XlinlDQgcRIdv1kgeyyA==",
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease.58",
+          "RGB.NET.HID": "1.0.0-prerelease.58"
+        }
+      },
       "SharpDX.Direct3D11": {
         "type": "Direct",
         "requested": "[4.2.0, )",
@@ -554,6 +564,20 @@
           "System.Threading.Timer": "4.3.0",
           "System.Xml.ReaderWriter": "4.3.0",
           "System.Xml.XDocument": "4.3.0"
+        }
+      },
+      "RGB.NET.Core": {
+        "type": "Transitive",
+        "resolved": "1.0.0-prerelease.58",
+        "contentHash": "+RuVVkhN5wjw8ej2SxmzCC4CbwXNKBP7KvYKJuWXadPkncGzD2iMT+Fsswj7mP4Q+aJXt+hrERNe5kxQ17zNIg=="
+      },
+      "RGB.NET.HID": {
+        "type": "Transitive",
+        "resolved": "1.0.0-prerelease.58",
+        "contentHash": "01eez87MauItT1lyLYDmQmrpNdMyuEqp+WYgbyeNWYfuSe5gNwSH5FUWhZ7FChMKz/UZfzGPOECPyclF8/aJmA==",
+        "dependencies": {
+          "HidSharp": "2.1.0",
+          "RGB.NET.Core": "1.0.0-prerelease.58"
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
