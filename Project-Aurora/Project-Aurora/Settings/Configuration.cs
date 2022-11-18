@@ -9,6 +9,7 @@ using System.Text;
 using Aurora.Utils;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
+using System.Windows;
 using Aurora.Settings.Overrides.Logic;
 using static Aurora.Utils.HardwareMonitor;
 
@@ -541,6 +542,7 @@ namespace Aurora.Settings
         {
             typeof(Devices.Asus.AsusDevice),
             typeof(Devices.AtmoOrbDevice.AtmoOrbDevice),
+            typeof(Devices.Bloody.BloodyDevice),
             typeof(Devices.Clevo.ClevoDevice),
             typeof(Devices.CoolerMaster.CoolerMasterDevice),
             typeof(Devices.Drevo.DrevoDevice),
@@ -548,6 +550,9 @@ namespace Aurora.Settings
             typeof(Devices.RGBNet.RgbNetDevice),
             typeof(Devices.Razer.RazerDevice),
             typeof(Devices.Roccat.RoccatDevice),
+            typeof(Devices.RGBNet.BloodyRgbNetDevice),
+            typeof(Devices.RGBNet.CorsairRgbNetDevice),
+            typeof(Devices.RGBNet.LogitechRgbNetDevice),
             typeof(Devices.Omen.OmenDevices),
             typeof(Devices.Dualshock.DualshockDevice),
             typeof(Devices.UnifiedHID.UnifiedHIDDevice),
@@ -595,6 +600,7 @@ namespace Aurora.Settings
         public double Height { get; set; } = 800;
         public double Top { get; set; } = 50;
         public double Left { get; set; } = 50;
+        public WindowState WindowState { get; set; } = WindowState.Normal;
 
         //BitmapDebug Data
         public bool BitmapDebugTopMost { get; set; } = false;

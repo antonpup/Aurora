@@ -2,40 +2,40 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Win32;
+using Aurora.Devices.RGBNet.Config;
 using RGB.NET.Core;
 using RGB.NET.Devices.Logitech;
 using Color = System.Drawing.Color;
 
 namespace Aurora.Devices.RGBNet;
 
-public class RgbNetDevice : DefaultDevice, IDisposable
+public abstract class RgbNetDevice : DefaultDevice
 {
-    private bool _suspended;
+    protected abstract IRGBDeviceProvider Provider { get; }
+    public Dictionary<IRGBDevice, Dictionary<LedId, DeviceKeys>> DeviceKeyRemap { get; } = new();
 
-    public override string DeviceName => "Logitech RGB.NET";
-    protected override string DeviceInfo => string.Join(", ", LogitechDeviceProvider.Instance.Devices.Select(d => d.DeviceInfo.DeviceName));
+    public IEnumerable<IRGBDevice> Devices()
+    {
+        return Provider.Devices;
+    }
+
     public override bool Initialize()
     {
-        var deviceProvider = LogitechDeviceProvider.Instance;
         List<Exception> providerExceptions = new();
-        void DeviceProviderOnException(object? sender, ExceptionEventArgs e)
+        void DeviceProviderOnException(object sender, ExceptionEventArgs e)
         {
             if (e.IsCritical)
             {
                 providerExceptions.Add(e.Exception);
-                Global.logger.Error(e.Exception, "Device provider {deviceProvider} threw critical exception", deviceProvider.GetType().Name);
+                Global.logger.Error(e.Exception, "Device provider {DeviceProvider} threw critical exception", Provider.GetType().Name);
             }
             else
-                Global.logger.Warn(e.Exception, "Device provider {deviceProvider} threw non-critical exception", deviceProvider.GetType().Name);
+                Global.logger.Warn(e.Exception, "Device provider {DeviceProvider} threw non-critical exception", Provider.GetType().Name);
         }
         
-        deviceProvider.Exception += DeviceProviderOnException;
-        deviceProvider.Initialize();
-        deviceProvider.Exception -= DeviceProviderOnException;
-        IsInitialized = deviceProvider.Initialize();
+        Provider.Exception += DeviceProviderOnException;
+        IsInitialized = Provider.Initialize();
+        Provider.Exception -= DeviceProviderOnException;
         if (providerExceptions.Count >= 1)
         {
             return false;
@@ -46,73 +46,53 @@ public class RgbNetDevice : DefaultDevice, IDisposable
             return false;
         }
 
-        SystemEvents.PowerModeChanged += SystemEventsPowerModeChanged;
-        SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
+        var rgbNetConfigDevices = DeviceMappingConfig.Config.Devices.ToDictionary(device => device.Name, device => device);
+        foreach (var rgbDevice in Devices())
+        {
+            if (rgbNetConfigDevices.TryGetValue(rgbDevice.DeviceInfo.DeviceName, out var configDevice))
+            {
+                DeviceKeyRemap.Add(rgbDevice, configDevice.KeyMapper);
+            }
+        }
+        
+        OnInitialized();
         return true;
     }
 
     public override void Shutdown()
     {
+        OnShutdown();
         LogitechDeviceProvider.Instance.Dispose();
         IsInitialized = false;
+    }
+    protected virtual void OnInitialized()
+    {
+    }
 
-        SystemEvents.PowerModeChanged -= SystemEventsPowerModeChanged;
+    protected virtual void OnShutdown()
+    {
     }
 
     protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
-        foreach (var device in LogitechDeviceProvider.Instance.Devices)
+        foreach (var device in Provider.Devices)
         {
-            foreach (var key in keyColors)
+            foreach (var led in device)
             {
-                if (!RgbNetKeyMappings.KeyNames.TryGetValue(key.Key, out var rgbNetLedId)) continue;
-                var led = device[rgbNetLedId];
-                if (led != null)
-                {
-                    led.Color = new RGB.NET.Core.Color(
-                        key.Value.A,
-                        key.Value.R,
-                        key.Value.G,
-                        key.Value.B
-                    );
-                }
+                DeviceKeyRemap.TryGetValue(device, out var keyRemap);
+                if (!(keyRemap != null && keyRemap.TryGetValue(led.Id, out var dk)) &&  //get remapped key if device if remapped
+                    !RgbNetKeyMappings.KeyNames.TryGetValue(led.Id, out dk)) continue;
+                if (!keyColors.TryGetValue(dk, out var color)) continue;
+                led.Color = new RGB.NET.Core.Color(
+                    color.A,
+                    color.R,
+                    color.G,
+                    color.B
+                );
             }
             device.Update();
         }
 
         return true;
-    }
-    #region Event handlers
-
-    private void SystemEventsOnSessionSwitch(object sender, SessionSwitchEventArgs e)
-    {
-        if (!IsInitialized)
-            return;
-
-        if (e.Reason == SessionSwitchReason.SessionUnlock && _suspended)
-            Task.Run(() =>
-            {
-                // Give LGS a moment to think about its sins
-                Thread.Sleep(5000);
-                _suspended = false;
-                Initialize();
-            });
-    }
-
-    private void SystemEventsPowerModeChanged(object sender, PowerModeChangedEventArgs e)
-    {
-        if (!IsInitialized)
-            return;
-
-        if (e.Mode != PowerModes.Suspend || _suspended) return;
-        _suspended = true;
-        Shutdown();
-    }
-
-    #endregion
-
-    public void Dispose()
-    {
-        SystemEvents.SessionSwitch -= SystemEventsOnSessionSwitch;
     }
 }

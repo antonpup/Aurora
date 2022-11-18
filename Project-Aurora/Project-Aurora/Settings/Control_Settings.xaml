@@ -168,7 +168,7 @@
                             <CheckBox Content="Disable Keyboard Lighting" IsChecked="{Binding DevicesDisableKeyboard}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
                             <CheckBox Content="Disable Mouse Lighting" IsChecked="{Binding DevicesDisableMouse}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
                             <CheckBox Content="Disable Headset Lighting" IsChecked="{Binding DevicesDisableHeadset}" Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
-                            <Button Content="Configure Asus Peripheral Devices" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
+                            <Button Content="Configure RGB.NET Devices" HorizontalAlignment="Left" Margin="2" VerticalAlignment="Top" Click="wrapper_asus_configure_devices_Click"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

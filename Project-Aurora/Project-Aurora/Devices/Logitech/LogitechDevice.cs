@@ -1,14 +1,11 @@
 ﻿using Aurora.Settings;
 using Aurora.Utils;
 using LedCSharp;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Win32;
 
 namespace Aurora.Devices.Logitech
 {
@@ -50,6 +47,8 @@ namespace Aurora.Devices.Logitech
                 return IsInitialized = true;
             }
 
+            SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+
             return IsInitialized = false;
         }
 
@@ -57,7 +56,14 @@ namespace Aurora.Devices.Logitech
         {
             LogitechGSDK.LogiLedRestoreLighting();
             LogitechGSDK.LogiLedShutdown();
+            SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
             IsInitialized = false;
+        }
+
+        // Handle Logon Event
+        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            Reset();
         }
 
         protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -118,9 +124,9 @@ namespace Aurora.Devices.Logitech
             {
                 if (Global.Configuration.MousePreference == PreferredMouse.Logitech_G102)
                 {
-                    LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB);
+                    //LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_RGB);
                     LogitechGSDK.LogiLedSetLighting(mouse[0]); //I'll have it fall back to the old ways with no zones bc zones don't work on G102
-                    LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL);
+                    //LogitechGSDK.LogiLedSetTargetDevice(LogitechGSDK.LOGI_DEVICETYPE_ALL);
                 }
                 else
                 {

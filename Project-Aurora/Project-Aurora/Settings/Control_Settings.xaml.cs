@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Navigation;
 using System.Windows.Threading;
-using Aurora.Devices.Asus.Config;
+using Aurora.Devices.RGBNet.Config;
 using Aurora.Utils;
 using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
@@ -433,8 +433,7 @@ namespace Aurora.Settings
 
         private void wrapper_asus_configure_devices_Click(object sender, RoutedEventArgs e)
         {
-            var window = new AsusConfigWindow();
-            window.Show();
+            new DeviceMappingConfigWindow().Show();
         }
 
         private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
