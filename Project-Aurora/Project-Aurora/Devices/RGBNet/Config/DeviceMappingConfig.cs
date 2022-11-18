@@ -13,7 +13,7 @@ public class DeviceMappingConfig
     public static DeviceMappingConfig Config => _configLoader.Value;
         
     [JsonIgnore]
-    private static string _configPath = Path.Combine(Global.AppDataDirectory, "AsusDevices.json");
+    private static string _configPath = Path.Combine(Global.AppDataDirectory, "DeviceMappings.json");
 
     [JsonProperty(PropertyName = "d")]
     public List<RgbNetConfigDevice> Devices { get; set; } = new();

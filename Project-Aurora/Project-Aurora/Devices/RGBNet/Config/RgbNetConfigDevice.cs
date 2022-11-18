@@ -14,7 +14,7 @@ public partial class RgbNetConfigDevice
     public string Name { get; init; }
 
     [JsonProperty(PropertyName = "k")]
-    public Dictionary<LedId, DeviceKeys> KeyMapper { get; init; }
+    public Dictionary<LedId, DeviceKeys> KeyMapper { get; } = new();
 
     public RgbNetConfigDevice(IRGBDevice device)
     {
