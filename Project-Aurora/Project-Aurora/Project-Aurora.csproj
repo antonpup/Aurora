@@ -157,10 +157,10 @@
       <HintPath>.\WindowsMediaController.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="RGB.NET.Devices.Bloody">
+    <!-- <Reference Include="RGB.NET.Devices.Bloody">
       <HintPath>.\RGB.NET.Devices.Bloody.dll</HintPath>
       <Private>true</Private>
-    </Reference>
+    </Reference> -->
   </ItemGroup>
 
   <ItemGroup>

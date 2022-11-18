@@ -550,7 +550,7 @@ namespace Aurora.Settings
             typeof(Devices.RGBNet.RgbNetDevice),
             typeof(Devices.Razer.RazerDevice),
             typeof(Devices.Roccat.RoccatDevice),
-            typeof(Devices.RGBNet.BloodyRgbNetDevice),
+            //typeof(Devices.RGBNet.BloodyRgbNetDevice),
             typeof(Devices.RGBNet.CorsairRgbNetDevice),
             typeof(Devices.RGBNet.LogitechRgbNetDevice),
             typeof(Devices.Omen.OmenDevices),
