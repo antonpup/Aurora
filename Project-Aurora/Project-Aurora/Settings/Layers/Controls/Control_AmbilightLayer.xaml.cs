@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Aurora.Settings.Layers.Ambilight;
 
 namespace Aurora.Settings.Layers
 {

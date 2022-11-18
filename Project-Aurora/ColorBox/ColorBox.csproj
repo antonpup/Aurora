@@ -43,9 +43,12 @@
 
   <ItemGroup>
     <PackageReference Include="Lombok.NET">
-      <Version>1.2.0</Version>
+      <Version>1.2.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.Common">
+      <Version>4.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
       <Version>4.1.0</Version>
     </PackageReference>
   </ItemGroup>

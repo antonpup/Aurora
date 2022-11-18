@@ -103,7 +103,7 @@ namespace Aurora.Utils
                     try
                     {
                         IReadOnlyCollection<RepositoryContent> repoFile = await octokitClient.Repository.Content.GetAllContentsByRef("Aurora-RGB", "Aurora", repoPath + "/" + pointerRepoFiles.Name, branch);
-                        File.WriteAllText(Path.Combine(pointerPath, repoFile.ElementAt(0).Name), repoFile.ElementAt(0).Content);
+                        await File.WriteAllTextAsync(Path.Combine(pointerPath, repoFile.ElementAt(0).Name), repoFile.ElementAt(0).Content);
                     }
                     catch (Exception e)
                     {
@@ -120,7 +120,7 @@ namespace Aurora.Utils
                         //TEMPLATE: https://github.com/Aurora-RGB/Aurora/raw/[BRANCH]/Project-Aurora/Project-Aurora/Pointers/[GAME].json
                         // This should redirect to raw.githubusercontent.com and comply with 301 redirect requests
                         string fContent = await pointerClient.GetStringAsync(@"https://github.com/Aurora-RGB/Aurora/raw/" + branch + @"/Project-Aurora/Project-Aurora/Pointers/" + app);
-                        File.WriteAllText(Path.Combine(pointerPath, app), fContent);
+                        await File.WriteAllTextAsync(Path.Combine(pointerPath, app), fContent);
                     }
                     catch (Exception e)
                     {

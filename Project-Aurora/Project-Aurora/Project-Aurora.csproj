@@ -38,10 +38,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\DS4WindowsApi.dll</HintPath>
     </Reference>
-    <Reference Include="Interop.AuraServiceLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Interop.AuraServiceLib.dll</HintPath>
-    </Reference>
     <Reference Include="OmenFourZoneLighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\OmenFourZoneLighting.dll</HintPath>
@@ -79,8 +75,8 @@
     <PackageReference Include="Infragistics.Themes.MetroDark.Wpf" Version="1.0.0" />
     <PackageReference Include="IronPython" Version="2.7.12" />
     <PackageReference Include="JsonSubTypes" Version="1.9.0" />
-    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.0" />
-    <PackageReference Include="Lombok.NET" Version="1.2.0" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.1" />
+    <PackageReference Include="Lombok.NET" Version="1.2.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
@@ -91,6 +87,8 @@
     <PackageReference Include="Octokit" Version="2.0.1" />
    <!-- <PackageReference Include="OpenRGB.NET" Version="1.7.0" /> -->
     <PackageReference Include="PropertyChanged.Fody" Version="4.0.1" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0-prerelease.58" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0-prerelease.69" />
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0-prerelease.58" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
@@ -157,6 +155,10 @@
     </Content>
     <Reference Include="Dubya.WindowsMediaController" Version="2.1.0">
       <HintPath>.\WindowsMediaController.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Bloody">
+      <HintPath>.\RGB.NET.Devices.Bloody.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

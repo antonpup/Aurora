@@ -21,10 +21,5 @@ namespace Aurora.Settings.Layers
         {
             return new Control_DefaultLayer();
         }
-
-        public override EffectLayer Render(IGameState gamestate)
-        {
-            return base.Render(gamestate);
-        }
     }
 }

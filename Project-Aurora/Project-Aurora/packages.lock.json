@@ -78,9 +78,9 @@
       },
       "LibreHardwareMonitorLib": {
         "type": "Direct",
-        "requested": "[0.9.0, )",
-        "resolved": "0.9.0",
-        "contentHash": "qDI0QKr99PsMGsOjDHOGqlkC2+3+TR1d9DRc/5HRYVD0SxwXed+gk9UgIRIPs52UeTe2Veky3Y1lIqBKnRyflA==",
+        "requested": "[0.9.1, )",
+        "resolved": "0.9.1",
+        "contentHash": "CV4SAuhnswaq6SwtTa2R8z+wNElGwLfU5ZlynpsmWGihjmwxsXPcperCfJGHMxg+jCRGGz3ihbV9BDr5hZKfjA==",
         "dependencies": {
           "HidSharp": "2.1.0",
           "Microsoft.Win32.Registry": "5.0.0",
@@ -92,9 +92,9 @@
       },
       "Lombok.NET": {
         "type": "Direct",
-        "requested": "[1.2.0, )",
-        "resolved": "1.2.0",
-        "contentHash": "/laRYlXZ2g7fdjctGdsuP6YyCOsEFDXrhW2t9URU+Y4XkInn0rJ9q0VVP8TB3ARvBPRMJhX71HMKgnQcpEiGVQ==",
+        "requested": "[1.2.3, )",
+        "resolved": "1.2.3",
+        "contentHash": "NZ4NHtOqAfikRzE7elD7fnE8VJqqAvtCFrqMKzu4CfKcfiScOc/3627Zuxmp5SEMcRETUsoONAmGBVy61kddsA==",
         "dependencies": {
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.0.1"
         }
@@ -212,6 +212,25 @@
         "contentHash": "jxIvzn1WHT+Xft3kalW5msnj+AUo1rAJhTNlm4oQxSMBg1c/pPHoTPeu58dCtfY9/D8fkWhB1WPZZvvZBePYKA==",
         "dependencies": {
           "Fody": "6.6.3"
+        }
+      },
+      "RGB.NET.Devices.Asus": {
+        "type": "Direct",
+        "requested": "[1.0.0-prerelease.58, )",
+        "resolved": "1.0.0-prerelease.58",
+        "contentHash": "Jae0G1kPtmE+gcI4Bx3sT8qkCpKXFreemYmIK9//iMwUqljhI0t2JRgk8umOW7w0RqKGEpVFJRMSrp/6NeUN6g==",
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease.58",
+          "System.Management": "5.0.0"
+        }
+      },
+      "RGB.NET.Devices.Corsair": {
+        "type": "Direct",
+        "requested": "[1.0.0-prerelease.69, )",
+        "resolved": "1.0.0-prerelease.69",
+        "contentHash": "4DVCuyEHn8y6QoRPQRJevmSJmwltQvebJtw00KP/SzuxKMXfH0HXM3+2XQ03XxUrgkbvAsWk76v9PL4cH4o+5A==",
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0-prerelease.69"
         }
       },
       "RGB.NET.Devices.Logitech": {
@@ -568,8 +587,8 @@
       },
       "RGB.NET.Core": {
         "type": "Transitive",
-        "resolved": "1.0.0-prerelease.58",
-        "contentHash": "+RuVVkhN5wjw8ej2SxmzCC4CbwXNKBP7KvYKJuWXadPkncGzD2iMT+Fsswj7mP4Q+aJXt+hrERNe5kxQ17zNIg=="
+        "resolved": "1.0.0-prerelease.69",
+        "contentHash": "aQi94vVFbt9Ixc/IKExooJiK6tTaxKZg2nd3LSeo7B6ej84fsOjtIFAyO4aL2fo5gUVgOU9g44ncuhc1uObNvw=="
       },
       "RGB.NET.HID": {
         "type": "Transitive",
@@ -1899,7 +1918,8 @@
       "colorbox": {
         "type": "Project",
         "dependencies": {
-          "Lombok.NET": "[1.2.0, )",
+          "Lombok.NET": "[1.2.3, )",
+          "Microsoft.CodeAnalysis.CSharp": "[4.1.0, )",
           "Microsoft.CodeAnalysis.Common": "[4.1.0, )"
         }
       }
