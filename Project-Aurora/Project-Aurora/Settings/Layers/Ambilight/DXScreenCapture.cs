@@ -8,12 +8,11 @@ using SharpDX.Mathematics.Interop;
 
 namespace Aurora.Settings.Layers.Ambilight;
 
-internal class DXScreenCapture : IScreenCapture
+internal class DxScreenCapture : IScreenCapture
 {
     private static readonly Semaphore Semaphore = new(1, 1);
     private Rectangle _currentBounds;
     private DesktopDuplicator _desktopDuplicator;
-    private int _display;
 
     public Bitmap Capture(Rectangle desktopRegion)
     {

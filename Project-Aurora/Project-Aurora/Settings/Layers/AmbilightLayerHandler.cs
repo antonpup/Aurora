@@ -300,7 +300,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     private void Initialize()
     {
         _screenCapture?.Dispose();
-        _screenCapture = Properties.ExperimentalMode ? new DXScreenCapture() : new GDIScreenCapture();
+        _screenCapture = Properties.ExperimentalMode ? new DxScreenCapture() : new GDIScreenCapture();
         Global.logger.Info("Started regular ambilight mode");
         InvokePropertyChanged(nameof(Displays));
     }
