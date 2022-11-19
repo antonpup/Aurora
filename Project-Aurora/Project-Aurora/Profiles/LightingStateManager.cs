@@ -542,7 +542,10 @@ namespace Aurora.Profiles
                 profile = tempProfile;
                 preview = true;
             }
-            else if (Global.Configuration.AllowWrappersInBackground && Global.net_listener != null && Global.net_listener.IsWrapperConnected && ((tempProfile = GetProfileFromProcessName(Global.net_listener.WrappedProcess)) != null) && tempProfile.IsEnabled)
+            else if (Global.Configuration.AllowWrappersInBackground
+                     && Global.IpcListener is {IsWrapperConnected: true}
+                     && (tempProfile = GetProfileFromProcessName(Global.IpcListener.WrappedProcess)) != null
+                     && tempProfile.IsEnabled)
                 profile = tempProfile;
 
             profile ??= DesktopProfile;

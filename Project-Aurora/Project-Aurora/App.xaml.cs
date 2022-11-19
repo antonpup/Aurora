@@ -15,6 +15,7 @@ using Aurora.Devices;
 using Aurora.Modules;
 using Aurora.Profiles;
 using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Win32;
 using NLog;
 using MessageBox = System.Windows.MessageBox;
@@ -84,7 +85,7 @@ public partial class App
                 Global.Configuration = new Configuration();
             }
 
-            Global.Configuration.PropertyChanged += (sender, eventArgs) => {
+            Global.Configuration.PropertyChanged += (_, _) => {
                 ConfigManager.Save(Global.Configuration);
             };
 
@@ -123,9 +124,12 @@ public partial class App
             Global.logger.Info("Starting GameStateListener");
             try
             {
-                Global.net_listener = new NetworkListener(9088);
-                Global.net_listener.NewGameState += Global.LightingStateManager.GameStateUpdate;
-                Global.net_listener.WrapperConnectionClosed += Global.LightingStateManager.ResetGameState;
+                Global.HttpListener = new AuroraHttpListener(9088);
+                Global.HttpListener.NewGameState += Global.LightingStateManager.GameStateUpdate;
+                
+                Global.IpcListener = new IpcListener();
+                Global.IpcListener.NewGameState += Global.LightingStateManager.GameStateUpdate;
+                Global.IpcListener.WrapperConnectionClosed += Global.LightingStateManager.ResetGameState;
             }
             catch (Exception exc)
             {
@@ -134,7 +138,14 @@ public partial class App
                 Environment.Exit(0);
             }
 
-            if (!Global.net_listener.Start())
+            if (!Global.HttpListener.Start())
+            {
+                Global.logger.Error("GameStateListener could not start");
+                MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
+                Environment.Exit(0);
+            }
+
+            if (!Global.IpcListener.Start())
             {
                 Global.logger.Error("GameStateListener could not start");
                 MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
@@ -289,7 +300,8 @@ public partial class App
         Task.WhenAll(tasks).Wait();
 
         Global.LightingStateManager?.Dispose();
-        Global.net_listener?.Stop().Wait();
+        Global.IpcListener?.Stop().Wait();
+        Global.HttpListener?.Stop().Wait();
         Global.dev_manager?.ShutdownDevices();
 
         try

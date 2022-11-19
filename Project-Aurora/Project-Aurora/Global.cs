@@ -4,6 +4,7 @@ using System.IO;
 using Aurora.Devices;
 using Aurora.Profiles;
 using Aurora.Settings;
+using Aurora.Utils;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
 using NLog;
@@ -99,7 +100,8 @@ public static class Global
     //public static GameEventHandler geh;
     public static PluginManager PluginManager;
     public static LightingStateManager LightingStateManager;
-    public static NetworkListener net_listener;
+    public static IpcListener IpcListener;
+    public static AuroraHttpListener HttpListener;
     public static Configuration Configuration;
     public static DeviceManager dev_manager;
     public static KeyboardLayoutManager kbLayout;

@@ -142,8 +142,8 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="170"/>
-                            <RowDefinition/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
                             <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="Preferred Keyboard Layout:" VerticalAlignment="Top"/>
