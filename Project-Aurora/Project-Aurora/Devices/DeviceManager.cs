@@ -127,17 +127,10 @@ namespace Aurora.Devices
 
                             break;
                         case ".cs":
-                            System.Reflection.Assembly script_assembly = CSScript.Evaluator.CompileCode(device_script);
-                            foreach (Type typ in script_assembly.ExportedTypes)
-                            {
-                                dynamic script = Activator.CreateInstance(typ);
-
-                                IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
-
-                                DeviceContainers.Add(new DeviceContainer(scripted_device));
-                                Global.logger.Info($"Loaded device script {device_script}");
-                            }
-
+                            dynamic script_assembly = CSScript.Evaluator.LoadFile(device_script);
+                            IDevice csDevice = new Devices.ScriptedDevice.ScriptedDevice(script_assembly);
+                            DeviceContainers.Add(new DeviceContainer(csDevice));
+                            Global.logger.Info($"Loaded device script {device_script}");
                             break;
                         default:
                             Global.logger.Error("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext);
