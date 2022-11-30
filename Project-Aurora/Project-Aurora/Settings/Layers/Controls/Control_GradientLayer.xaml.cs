@@ -6,7 +6,7 @@ using Aurora.EffectsEngine;
 using ColorBox;
 using Xceed.Wpf.Toolkit;
 
-namespace Aurora.Settings.Layers
+namespace Aurora.Settings.Layers.Controls
 {
     /// <summary>
     /// Interaction logic for Control_GradientLayer.xaml
@@ -159,7 +159,7 @@ namespace Aurora.Settings.Layers
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Controls.KeySequence sequence)
+            if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Aurora.Controls.KeySequence sequence)
             {
                 (DataContext as GradientLayerHandler).Properties._Sequence = sequence.Sequence;
                 TriggerPropertyChanged();

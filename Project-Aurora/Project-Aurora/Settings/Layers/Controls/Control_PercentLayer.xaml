@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Aurora.Settings.Layers.Control_PercentLayer"
+﻿<UserControl  x:Class="Aurora.Settings.Layers.Controls.Control_PercentLayer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,10 +7,10 @@
              xmlns:Controls="clr-namespace:Aurora.Controls"
              xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:s="clr-namespace:Aurora.Settings"
-             xmlns:local="clr-namespace:Aurora.Settings.Layers"
+             xmlns:controls="clr-namespace:Aurora.Settings.Layers.Controls"
              mc:Ignorable="d" d:DesignHeight="195.98">
     <UserControl.Resources>
-        <local:IntegerDoublePercentConverter x:Key="PercentageConverter" />
+        <controls:IntegerDoublePercentConverter x:Key="PercentageConverter" />
     </UserControl.Resources>
 
     <Grid>

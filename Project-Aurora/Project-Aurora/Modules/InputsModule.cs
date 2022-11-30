@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Aurora.Modules;
 
-public partial class InputsModule : IAuroraModule
+public sealed partial class InputsModule : IAuroraModule
 {
     private static InputInterceptor InputInterceptor;
     

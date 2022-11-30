@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_BreathingLayer"
+             xmlns:Controls="clr-namespace:Aurora.Controls"  x:Class="Aurora.Settings.Layers.Controls.Control_BreathingLayer"
              mc:Ignorable="d">
     <Grid>
         <TextBlock Text="Primary Color:" Margin="0,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>

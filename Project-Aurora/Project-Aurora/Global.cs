@@ -98,16 +98,13 @@ public static class Global
     public static InputEvents InputEvents;
 
     //public static GameEventHandler geh;
-    public static PluginManager PluginManager;
-    public static LightingStateManager LightingStateManager;
-    public static IpcListener IpcListener;
-    public static AuroraHttpListener HttpListener;
-    public static Configuration Configuration;
-    public static DeviceManager dev_manager;
-    public static KeyboardLayoutManager kbLayout;
-    public static Effects effengine;
-    public static KeyRecorder key_recorder;
-    public static RzSdkManager razerSdkManager;
+    public static LightingStateManager LightingStateManager { get; set; }     //TODO module access
+    public static Configuration Configuration { get; set; }
+    public static DeviceManager dev_manager { get; set; }
+    public static KeyboardLayoutManager kbLayout { get; set; }                //TODO module access
+    public static Effects effengine { get; set; }
+    public static KeyRecorder key_recorder { get; set; }
+    public static RzSdkManager razerSdkManager { get; set; }                  //TODO module access
 
     public static object Clipboard { get; set; }
 

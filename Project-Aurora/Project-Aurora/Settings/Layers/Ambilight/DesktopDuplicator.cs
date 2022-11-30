@@ -105,17 +105,17 @@ public class DesktopDuplicator : IDisposable
         }
     }
 
-    Bitmap ProcessFrame(IntPtr SourcePtr, int SourceRowPitch)
+    Bitmap ProcessFrame(IntPtr sourcePtr, int SourceRowPitch)
     {
         var frame = new Bitmap(_rect.Width, _rect.Height, PixelFormat.Format32bppRgb);
         // Copy pixels from screen capture Texture to GDI bitmap
-        var mapDest = frame.LockBits(new Rectangle(0, 0, _rect.Width, _rect.Height), ImageLockMode.WriteOnly, frame.PixelFormat);
+        var mapDest = frame.LockBits(_rect with {X = 0, Y = 0}, ImageLockMode.WriteOnly, frame.PixelFormat);
         var screenY = _rect.Top;
         var sizeInBytesToCopy = _rect.Width * 4;
         for (var y = 0; screenY < _rect.Bottom; screenY++, y++)
         {
             var mapDestStride = mapDest.Scan0 + y * mapDest.Stride;
-            var sourceRowPitch = SourcePtr + screenY * SourceRowPitch + _rect.Left * 4;
+            var sourceRowPitch = sourcePtr + screenY * SourceRowPitch + _rect.Left * 4;
             Utilities.CopyMemory(mapDestStride, sourceRowPitch, sizeInBytesToCopy);
         }
         // Release source and dest locks

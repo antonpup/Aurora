@@ -3,6 +3,7 @@ using Aurora.Profiles;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Controls;
+using Aurora.Settings.Layers.Controls;
 using Lombok.NET;
 
 namespace Aurora.Settings.Layers

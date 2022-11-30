@@ -32,7 +32,7 @@ namespace Aurora.Profiles
 
     public class GameState : IGameState
     {
-        private static LocalPCInformation _localpcinfo;
+        private static LocalPcInformation _localpcinfo;
 
         // Holds a cache of the child nodes on this gamestate
         private readonly Dictionary<string, object> childNodes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -40,7 +40,7 @@ namespace Aurora.Profiles
         [GameStateIgnore] public JObject _ParsedData { get; }
         [GameStateIgnore] public string Json { get; }
 
-        public LocalPCInformation LocalPCInfo => _localpcinfo ?? (_localpcinfo = new LocalPCInformation());
+        public LocalPcInformation LocalPCInfo => _localpcinfo ?? (_localpcinfo = new LocalPcInformation());
 
         /// <summary>
         /// Creates a default GameState instance.

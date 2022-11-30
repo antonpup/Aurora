@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Layers.Controls;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers {

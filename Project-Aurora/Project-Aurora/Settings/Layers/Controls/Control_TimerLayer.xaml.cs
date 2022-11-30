@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
+using Aurora.Controls;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers.Controls {
 
     public partial class Control_TimerLayer : UserControl {
 
@@ -12,7 +13,7 @@ namespace Aurora.Settings.Layers {
         }
 
         private void triggerKeyList_KeybindsChanged(object sender) {
-            if (sender is Controls.KeyBindList kbl)
+            if (sender is KeyBindList kbl)
                 (DataContext as TimerLayerHandler).Properties._TriggerKeys = kbl.Keybinds;
         }
     }

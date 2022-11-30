@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -14,6 +15,7 @@ using Aurora.Utils;
 using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
 using RazerSdkHelper;
+using RazerSdkWrapper;
 using RazerSdkWrapper.Data;
 using Xceed.Wpf.Toolkit;
 using Action = System.Action;
@@ -34,8 +36,16 @@ namespace Aurora.Settings
         private const string StartupTaskId = "AuroraStartup";
         private readonly bool _componentsInitialized;
 
-        public Control_Settings()
+        private readonly Task<PluginManager> _pluginManager;
+        private readonly Task<KeyboardLayoutManager> _layoutManager;
+        private readonly Task<AuroraHttpListener> _httpListener;
+
+        public Control_Settings(Task<RzSdkManager> rzSdkManager, Task<PluginManager> pluginManager,
+            Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener> httpListener)
         {
+            _pluginManager = pluginManager;
+            _layoutManager = layoutManager;
+            _httpListener = httpListener;
             InitializeComponent();
             _componentsInitialized = true;
 
@@ -103,7 +113,7 @@ namespace Aurora.Settings
             razer_wrapper_enabled_label.Content = rzSdkEnabled ? "Enabled" : "Disabled";
             razer_wrapper_enabled_label.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.DarkGray);
 
-            if (Global.razerSdkManager != null)
+            if (rzSdkManager.Result != null)
             {
                 razer_wrapper_connection_status_label.Content = "Success";
                 razer_wrapper_connection_status_label.Foreground = new SolidColorBrush(Colors.LightGreen);
@@ -114,7 +124,7 @@ namespace Aurora.Settings
                     razer_wrapper_current_application_label.Content = $"{appList.CurrentAppExecutable ?? "None"} [{appList.CurrentAppPid}]";
                 }
 
-                Global.razerSdkManager.DataUpdated += HandleChromaAppChange;
+                rzSdkManager.Result.DataUpdated += HandleChromaAppChange;
             }
             else
             {
@@ -139,7 +149,7 @@ namespace Aurora.Settings
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ctrlPluginManager.Host = Global.PluginManager;
+            ctrlPluginManager.Host = _pluginManager.Result;
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -208,7 +218,7 @@ namespace Aurora.Settings
         {
             if (_componentsInitialized)
             {
-                Global.kbLayout.LoadBrandDefault();
+                _layoutManager.Result.LoadBrandDefault();
             }
         }
 
@@ -449,7 +459,7 @@ namespace Aurora.Settings
 
         private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
 
-        private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => Window_GSIHttpDebug.Open();
+        private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => Window_GSIHttpDebug.Open(_httpListener);
 
         private void StartDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {

@@ -9,7 +9,11 @@ using System.Text;
 using Aurora.Utils;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Windows;
+using Aurora.Devices.AtmoOrb;
+using Aurora.Devices.OpenRGB;
+using Aurora.Devices.RGBNet;
 using Aurora.Settings.Overrides.Logic;
 using static Aurora.Utils.HardwareMonitor;
 
@@ -232,8 +236,6 @@ namespace Aurora.Settings
         Masterkeys_Pro_L = 500,
         [Description("Cooler Master - Masterkeys Pro S")]
         Masterkeys_Pro_S = 501,
-        [Description("Cooler Master - Masterkeys Pro M")]
-        Masterkeys_Pro_M = 502,
         [Description("Cooler Master - Masterkeys MK750")]
         Masterkeys_MK750 = 503,
         [Description("Cooler Master - Masterkeys MK730")]
@@ -317,7 +319,7 @@ namespace Aurora.Settings
         HyperX_Alloy_Elite_RGB = 1400,
         //Keychron q1 knob
         [Description("Keychron q1 knob ansi 75%")]
-        Keychron_Q1_Knob_Ansi = 0107,
+        Keychron_Q1_Knob_Ansi = 1107,
  
         //MSI range is 1500-1599
         [Description("MSI GP66 US")]
@@ -504,7 +506,7 @@ namespace Aurora.Settings
         [JsonProperty("allow_wrappers_in_background")] public bool AllowWrappersInBackground { get; set; } = true;
         [JsonProperty("allow_all_logitech_bitmaps")] public bool AllowAllLogitechBitmaps { get; set; } = true;
 
-        [JsonProperty("use_volume_as_brightness")] public bool UseVolumeAsBrightness { get; set; } = false;
+        [JsonProperty("use_volume_as_brightness")] public bool UseVolumeAsBrightness { get; set; }
         [JsonProperty("global_brightness")] public float GlobalBrightness { get; set; } = 1.0f;
         [JsonProperty("keyboard_brightness_modifier")] public float KeyboardBrightness { get; set; } = 1.0f;
         [JsonProperty("peripheral_brightness_modifier")] public float PeripheralBrightness { get; set; } = 1.0f;
@@ -540,19 +542,19 @@ namespace Aurora.Settings
 
         public ObservableCollection<Type> DevicesDisabled { get; set; } = new()
         {
-            typeof(Devices.Asus.AsusDevice),
-            typeof(Devices.AtmoOrbDevice.AtmoOrbDevice),
+            typeof(AsusDevice),
+            typeof(AtmoOrbDevice),
             typeof(Devices.Bloody.BloodyDevice),
             typeof(Devices.Clevo.ClevoDevice),
-            typeof(Devices.CoolerMaster.CoolerMasterDevice),
+            typeof(CorsairRgbNetDevice),
             typeof(Devices.Drevo.DrevoDevice),
             typeof(Devices.Ducky.DuckyDevice),
-            typeof(Devices.RGBNet.RgbNetDevice),
+            typeof(RgbNetDevice),
             typeof(Devices.Razer.RazerDevice),
             typeof(Devices.Roccat.RoccatDevice),
             //typeof(Devices.RGBNet.BloodyRgbNetDevice),
-            typeof(Devices.RGBNet.CorsairRgbNetDevice),
-            typeof(Devices.RGBNet.LogitechRgbNetDevice),
+            typeof(CorsairRgbNetDevice),
+            typeof(LogitechRgbNetDevice),
             typeof(Devices.Omen.OmenDevices),
             typeof(Devices.Dualshock.DualshockDevice),
             typeof(Devices.UnifiedHID.UnifiedHIDDevice),
@@ -666,25 +668,53 @@ namespace Aurora.Settings
             if (!File.Exists(configPath))
                 config = CreateDefaultConfigurationFile();
             else {
-                var content = File.ReadAllText(configPath, Encoding.UTF8)
-                    .Replace("\"Aurora.Devices.Creative.SoundBlasterXDevice, Aurora, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null\",", "");
+                var content = File.ReadAllText(configPath, Encoding.UTF8);
                 config = string.IsNullOrWhiteSpace(content)
                     ? CreateDefaultConfigurationFile()
-                    : JsonConvert.DeserializeObject<Configuration>(content, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = Aurora.Utils.JSONUtils.SerializationBinder, Error = DeserializeErrorHandler });
+                    : JsonConvert.DeserializeObject<Configuration>(content,
+                        new JsonSerializerSettings
+                        {
+                            ObjectCreationHandling = ObjectCreationHandling.Replace,
+                            TypeNameHandling = TypeNameHandling.All,
+                            SerializationBinder = JSONUtils.SerializationBinder,
+                            Error = DeserializeErrorHandler
+                        })!;
             }
 
             config.OnPostLoad();
             return config;
         }
 
+        private static readonly Dictionary<string,Type> Migrations = new()
+        {
+            {"Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice" , typeof(Devices.UnifiedHID.UnifiedHIDDevice)},
+            {"Aurora.Devices.Asus.AsusDevice" , typeof(AsusDevice)},
+            {"Aurora.Devices.CoolerMaster.CoolerMasterDevice", typeof(CoolerMasterRgbNetDevice)},
+            {"Aurora.Devices.AtmoOrbDevice.AtmoOrbDevice", typeof(AtmoOrbDevice)},
+            {"Aurora.Devices.OpenRGB", typeof(OpenRgbAuroraDevice)},
+        };
+
+        private static readonly List<string> Discard = new()
+        {
+            "Aurora.Devices.Creative.SoundBlasterXDevice",
+            "Aurora.Devices.NZXT.NZXTDevice",
+        };
         private static void DeserializeErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
-            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice") && e.CurrentObject is HashSet<Type> dd)
+            if (e.CurrentObject is not ICollection<Type> dd)
             {
-                dd.Add(typeof(Aurora.Devices.UnifiedHID.UnifiedHIDDevice));
-                e.ErrorContext.Handled = true;
+                return;
             }
-            if (e.ErrorContext.Error.Message.Contains("Aurora.Devices.NZXT.NZXTDevice") && e.CurrentObject is HashSet<Type>)
+
+            foreach (var (key, value) in Migrations)
+            {
+                if (!e.ErrorContext.Error.Message.Contains(key)) continue;
+                dd.Add(value);
+                e.ErrorContext.Handled = true;
+                return;
+            }
+
+            if (Discard.Any(s => e.ErrorContext.Error.Message.Contains(s)))
             {
                 e.ErrorContext.Handled = true;
             }

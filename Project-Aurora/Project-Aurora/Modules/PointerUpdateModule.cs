@@ -3,7 +3,7 @@ using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public partial class PointerUpdateModule : IAuroraModule
+public sealed partial class PointerUpdateModule : IAuroraModule
 {
     [Async]
     public void Initialize()

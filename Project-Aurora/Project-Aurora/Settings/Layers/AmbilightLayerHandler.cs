@@ -13,6 +13,7 @@ using Amib.Threading;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Layers.Ambilight;
+using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
@@ -75,11 +76,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public AmbilightType AmbilightType
     {
         get => Logic._ambilightType ?? _ambilightType ?? AmbilightType.Default;
-        set
-        {
-            _ambilightType = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _ambilightType, value);
     }
 
     [JsonIgnore]
@@ -89,11 +86,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public AmbilightCaptureType AmbilightCaptureType
     {
         get => Logic._ambilightCaptureType ?? _ambilightCaptureType ?? AmbilightCaptureType.EntireMonitor;
-        set
-        {
-            _ambilightCaptureType = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _ambilightCaptureType, value);
     }
 
     [JsonIgnore]
@@ -113,11 +106,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public AmbilightFpsChoice AmbiLightUpdatesPerSecond
     {
         get => Logic._ambiLightUpdatesPerSecond ?? _ambiLightUpdatesPerSecond ?? AmbilightFpsChoice.Medium;
-        set
-        {
-            _ambiLightUpdatesPerSecond = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _ambiLightUpdatesPerSecond, value);
     }
 
     [JsonIgnore]
@@ -127,11 +116,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public string SpecificProcess
     {
         get => Logic._specificProcess ?? _specificProcess ?? string.Empty;
-        set
-        {
-            _specificProcess = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _specificProcess, value);
     }
 
     [JsonIgnore]
@@ -142,11 +127,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public Rectangle Coordinates
     {
         get => Logic._coordinates ?? _coordinates ?? Rectangle.Empty;
-        set
-        {
-            _coordinates = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _coordinates, value);
     }
 
     [JsonIgnore]
@@ -156,7 +137,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public bool BrightenImage
     {
         get => Logic._brightenImage ?? _brightenImage ?? false;
-        set => _brightenImage = value;
+        set => SetFieldAndRaisePropertyChanged(out _brightenImage, value);
     }
 
     [JsonIgnore]
@@ -166,11 +147,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public float BrightnessChange
     {
         get => Logic._brightnessChange ?? _brightnessChange ?? 0.0f;
-        set
-        {
-            _brightnessChange = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _brightnessChange, value);
     }
 
     [JsonIgnore]
@@ -180,7 +157,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public bool SaturateImage
     {
         get => Logic._saturateImage ?? _saturateImage ?? false;
-        set => _saturateImage = value;
+        set => SetFieldAndRaisePropertyChanged(out _saturateImage, value);
     }
 
     [JsonIgnore]
@@ -190,11 +167,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public float SaturationChange
     {
         get => Logic._saturationChange ?? _saturationChange ?? 0.0f;
-        set
-        {
-            _saturationChange = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _saturationChange, value);
     }
 
     [JsonIgnore] private bool? _flipVertically;
@@ -213,17 +186,17 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public bool ExperimentalMode
     {
         get => Logic._experimentalMode ?? _experimentalMode ?? false;
-        set
-        {
-            _experimentalMode = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _experimentalMode, value);
     }
 
-    public bool? _HueShiftImage { get; set; }
+    [JsonIgnore] private bool? _hueShiftImage;
 
-    [JsonIgnore]
-    public bool HueShiftImage => Logic._HueShiftImage ?? _HueShiftImage ?? false;
+    [JsonProperty("_HueShiftImage")]
+    public bool HueShiftImage
+    {
+        get => Logic._hueShiftImage ?? _hueShiftImage ?? false;
+        set => SetFieldAndRaisePropertyChanged(out _hueShiftImage, value);
+    }
 
     [JsonIgnore]
     private float? _hueShiftAngle;
@@ -231,11 +204,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public float HueShiftAngle
     {
         get => Logic._hueShiftAngle ?? _hueShiftAngle ?? 0.0f;
-        set
-        {
-            _hueShiftAngle = value;
-            OnPropertiesChanged(this);
-        }
+        set => SetFieldAndRaisePropertyChanged(out _hueShiftAngle, value);
     }
 
     public AmbilightLayerHandlerProperties()
@@ -258,7 +227,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
         _saturationChange = 1.0f;
         _flipVertically = false;
         _experimentalMode = false;
-        _HueShiftImage = false;
+        _hueShiftImage = false;
         _hueShiftAngle = 0.0f;
         _Sequence = new KeySequence(Effects.WholeCanvasFreeForm);
     }
@@ -271,11 +240,11 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
 public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
 {
     private IScreenCapture _screenCapture;
-        
+
     private readonly SmartThreadPool _captureWorker = new(1000, 1);
     private TimeSpan _screenshotInterval;
     private readonly WorkItemCallback _screenshotWork;
-        
+
     private Brush _screenBrush;
     private IntPtr _specificProcessHandle = IntPtr.Zero;
     private Rectangle _cropRegion = new(8, 8, 8, 8);
@@ -313,31 +282,25 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
             _screenBrush = null;
             _invalidated = false;
         }
-            
-        //This is needed to prevent the layer from disappearing
-        //for a frame when the user alt-tabs with the foregroundapp option selected
-        if (TryGetCropRegion(out var newCropRegion))
-            _cropRegion = newCropRegion;
 
-        if (_captureWorker.WaitingCallbacks < 1)
+        if (_captureWorker.WaitingCallbacks < 2)
         {
             _captureWorker.QueueWorkItem(_screenshotWork);
         }
 
-        if (_screenBrush is null)
+        if (_screenBrush is null || Properties.Sequence.GetAffectedRegion().IsEmpty)
             return EffectLayer.EmptyLayer;
 
-        var region = Properties.Sequence.GetAffectedRegion();
-        if (region.IsEmpty)
-            return EffectLayer.EmptyLayer;
-
+        //This is needed to prevent the layer from disappearing
+        //for a frame when the user alt-tabs with the foregroundapp option selected
+        if (TryGetCropRegion(out var newCropRegion))
+            _cropRegion = newCropRegion;
         //and because of that, this should never happen 
         if (_cropRegion.IsEmpty)
             return EffectLayer.EmptyLayer;
 
         switch (Properties.AmbilightType)
         {
-            default:
             case AmbilightType.Default:
                 lock (_screenBrush)
                     EffectLayer.DrawTransformed(Properties.Sequence,
@@ -429,7 +392,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     {
         switch (Properties.AmbilightType)
         {
-            default:
             case AmbilightType.Default:
                 _screenBrush = new TextureBrush(bigScreen, new Rectangle(0, 0, bigScreen.Width, bigScreen.Height), _imageAttributes);
                 break;
@@ -494,9 +456,16 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 //we're using the whole screen, so we don't crop at all
                 crop = Screen.AllScreens[Properties.AmbilightOutputId].Bounds;
                 break;
+            case AmbilightCaptureType.Coordinates:
+                var screenBounds = Screen.AllScreens[Properties.AmbilightOutputId].Bounds;
+                crop = new Rectangle(
+                    Properties.Coordinates.Left - screenBounds.Left,
+                    Properties.Coordinates.Top - screenBounds.Top,
+                    Properties.Coordinates.Width,
+                    Properties.Coordinates.Height);
+                break;
             case AmbilightCaptureType.SpecificProcess:
             case AmbilightCaptureType.ForegroundApp:
-            default:
                 var handle = Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp ?
                     User32.GetForegroundWindow() : _specificProcessHandle;
 
@@ -512,14 +481,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                     appRect.Right - appRect.Left,
                     appRect.Bottom - appRect.Top);
 
-                break;
-            case AmbilightCaptureType.Coordinates:
-                var screenBounds = Screen.AllScreens[Properties.AmbilightOutputId].Bounds;
-                crop = new Rectangle(
-                    Properties.Coordinates.Left - screenBounds.Left,
-                    Properties.Coordinates.Top - screenBounds.Top,
-                    Properties.Coordinates.Width,
-                    Properties.Coordinates.Height);
                 break;
         }
 

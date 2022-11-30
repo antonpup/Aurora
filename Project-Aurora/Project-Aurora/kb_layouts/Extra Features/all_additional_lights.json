@@ -8,10 +8,6 @@
       "margin_top": 200.0,
       "width": 0.0,
       "height": 0.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 13,
-      "height_bits": 19,
       "enabled": true,
       "absolute_location": true
     },

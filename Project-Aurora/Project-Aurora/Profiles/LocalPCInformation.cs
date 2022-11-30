@@ -9,7 +9,7 @@ namespace Aurora.Profiles {
     /// <summary>
     /// Class representing local computer information
     /// </summary>
-    public class LocalPCInformation : Node {
+    public class LocalPcInformation : Node {
         #region Time Properties
         /// <summary>
         /// The current hour
@@ -168,7 +168,7 @@ namespace Aurora.Profiles {
 
         private bool pendingAudioDeviceUpdate = false;
 
-        static LocalPCInformation() {
+        static LocalPcInformation() {
             // Do not create a capture device if audio capture is disabled. Otherwise it will create a mic icon in win 10 and people will think we're spies.
             try
             {

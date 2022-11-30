@@ -8,7 +8,7 @@
              xmlns:eff_config="clr-namespace:Aurora.Settings"
              xmlns:Controls="clr-namespace:Aurora.Controls"
              xmlns:u="clr-namespace:Aurora.Utils"
-             x:Class="Aurora.Settings.Layers.Control_GradientLayer"
+              x:Class="Aurora.Settings.Layers.Controls.Control_GradientLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
 
     <Grid>

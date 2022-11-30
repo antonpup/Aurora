@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:Controls="clr-namespace:Aurora.Controls"
-    xmlns:logic="clr-namespace:Aurora.Settings.Overrides.Logic" x:Class="Aurora.Settings.Layers.Control_AnimationLayer"
+    xmlns:logic="clr-namespace:Aurora.Settings.Overrides.Logic"  x:Class="Aurora.Settings.Layers.Controls.Control_AnimationLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <GroupBox Header="Animation" Height="49" Width="590" HorizontalAlignment="Left" VerticalAlignment="Top">

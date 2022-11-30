@@ -8,7 +8,7 @@ using RGB.NET.Devices.Logitech;
 
 namespace Aurora.Devices.RGBNet;
 
-public class LogitechRgbNetDevice : RgbNetDevice, IDisposable
+public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
 {
     private bool _suspended;
 

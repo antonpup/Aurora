@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using DK = Aurora.Devices.DeviceKeys;
 
 namespace Aurora.Devices.OpenRGB
 {
-    public static class OpenRGBKeyNames
+    public static class OpenRgbKeyNames
     {
-        public static readonly Dictionary<string, DK> KeyNames = new Dictionary<string, DK>()
+        private static readonly Dictionary<string, DK> KeyNameMap = new()
         {
             { "Key: A"                , DK.A                      },
             { "Key: B"                , DK.B                      },
@@ -47,7 +44,7 @@ namespace Aurora.Devices.OpenRGB
             { "Key: 8"                , DK.EIGHT                  },
             { "Key: 9"                , DK.NINE                   },
             { "Key: 0"                , DK.ZERO                   },
-            { "Key: Enter"            , DK.ENTER                  },//TODO: Fix
+            { "Key: Enter"            , DK.ENTER                  },
             { "Key: Enter (ISO)"      , DK.ENTER                  },
             { "Key: Escape"           , DK.ESC                    },
             { "Key: Backspace"        , DK.BACKSPACE              },
@@ -111,6 +108,7 @@ namespace Aurora.Devices.OpenRGB
             { "Key: Number Pad ."     , DK.NUM_PERIOD             },
             { "Key: Left Fn"          , DK.LEFT_FN                },
             { "Key: Right Fn"         , DK.FN_Key                 },
+            { "Key: Fn"               , DK.FN_Key                 },
             { "Key: \\ (ISO)"         , DK.BACKSLASH_UK           },
             { "Key: Menu"             , DK.APPLICATION_SELECT     },
             { "Key: Left Control"     , DK.LEFT_CONTROL           },
@@ -215,9 +213,9 @@ namespace Aurora.Devices.OpenRGB
             { "RGB Strip 60"           , DK.ADDITIONALLIGHT60      },
             { "Key: Calculator"        , DK.CALC                   },
         };
+        public static readonly ReadOnlyDictionary<string, DK> KeyNames = new (KeyNameMap);
 
-        public static readonly DK[] MousepadLights = new[]
-        {
+        public static readonly DK[] MousepadLights = {
             DK.MOUSEPADLIGHT1,
             DK.MOUSEPADLIGHT2,
             DK.MOUSEPADLIGHT3,
@@ -235,8 +233,7 @@ namespace Aurora.Devices.OpenRGB
             DK.MOUSEPADLIGHT15,
         };
 
-        public static readonly DK[] AdditionalLights = new[]
-        {
+        public static readonly DK[] AdditionalLights = {
             DK.ADDITIONALLIGHT1,
             DK.ADDITIONALLIGHT2,
             DK.ADDITIONALLIGHT3,

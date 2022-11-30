@@ -11,25 +11,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers
 {
     public class GradientLayerHandlerProperties : LayerHandlerProperties2Color<GradientLayerHandlerProperties>
     {
-        [Overrides.LogicOverridable("Gradient")]
+        [LogicOverridable("Gradient")]
         public LayerEffectConfig _GradientConfig { get; set; }
 
         [JsonIgnore]
-        public LayerEffectConfig GradientConfig { get { return Logic._GradientConfig ?? _GradientConfig; } }
+        public LayerEffectConfig GradientConfig => Logic._GradientConfig ?? _GradientConfig;
 
-        public GradientLayerHandlerProperties() : base() { }
+        public GradientLayerHandlerProperties()
+        { }
 
         public GradientLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
         public override void Default()
         {
             base.Default();
-            this._GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()) { AnimationType = AnimationType.None };
+            _GradientConfig = new LayerEffectConfig(Utils.ColorUtils.GenerateRandomColor(), Utils.ColorUtils.GenerateRandomColor()) { AnimationType = AnimationType.None };
         }
     }
 
@@ -38,16 +40,17 @@ namespace Aurora.Settings.Layers
     public class GradientLayerHandler : LayerHandler<GradientLayerHandlerProperties>
     {
         private readonly EffectLayer _tempLayerBitmap = new("GradientLayer - Colors");
-        private bool invalidated;
+        private bool _invalidated;
 
         public GradientLayerHandler(): base("GradientLayer")
         {
             Properties.PropertyChanged += PropertiesChanged;
         }
 
-        private void PropertiesChanged(object sender, PropertyChangedEventArgs e)
+        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
-            invalidated = true;
+            base.PropertiesChanged(sender, args);
+            _invalidated = true;
         }
 
         protected override UserControl CreateControl()
@@ -56,19 +59,19 @@ namespace Aurora.Settings.Layers
         }
         public override EffectLayer Render(IGameState gamestate)
         {
-            if (invalidated)
+            if (_invalidated)
             {
                 EffectLayer.Clear();
-                invalidated = false;
+                _invalidated = false;
             }
             //If Wave Size 0 Gradiant Stop Moving Animation
-            if (Properties.GradientConfig.gradient_size == 0)
+            if (Properties.GradientConfig.GradientSize == 0)
             {
-                Properties.GradientConfig.shift_amount += (Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.last_effect_call) / 1000.0f * 5.0f * Properties.GradientConfig.speed;
-                Properties.GradientConfig.shift_amount %= Effects.CanvasBiggest;
-                Properties.GradientConfig.last_effect_call = Utils.Time.GetMillisecondsSinceEpoch();
+                Properties.GradientConfig.ShiftAmount += (Utils.Time.GetMillisecondsSinceEpoch() - Properties.GradientConfig.LastEffectCall) / 1000.0f * 5.0f * Properties.GradientConfig.Speed;
+                Properties.GradientConfig.ShiftAmount %= Effects.CanvasBiggest;
+                Properties.GradientConfig.LastEffectCall = Utils.Time.GetMillisecondsSinceEpoch();
 
-                Color selectedColor = Properties.GradientConfig.brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.shift_amount, Effects.CanvasBiggest);
+                Color selectedColor = Properties.GradientConfig.Brush.GetColorSpectrum().GetColorAt(Properties.GradientConfig.ShiftAmount, Effects.CanvasBiggest);
 
                 EffectLayer.Set(Properties.Sequence, selectedColor);
             }

@@ -94,7 +94,7 @@ namespace Aurora.Controls
             {
                 if (this.cz_list.SelectedItem != null)
                 {
-                    ((ColorZone)this.cz_list.SelectedItem).name = cz_name_textbox.Text;
+                    ((ColorZone)this.cz_list.SelectedItem).Name = cz_name_textbox.Text;
                     update_cz_list();
                 }
             }
@@ -106,10 +106,10 @@ namespace Aurora.Controls
             {
                 ColorZone cz = (ColorZone)cz_list.SelectedItem;
 
-                this.cz_name_textbox.Text = cz.name;
-                this.cz_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(cz.color);
-                this.cz_effect.SelectedItem = cz.effect;
-                ks.Sequence = cz.keysequence;
+                this.cz_name_textbox.Text = cz.Name;
+                this.cz_colorpicker.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor(cz.Color);
+                this.cz_effect.SelectedItem = cz.Effect;
+                ks.Sequence = cz.Keysequence;
 
                 update_cz_list();
             }
@@ -121,7 +121,7 @@ namespace Aurora.Controls
             {
                 if (cz_list.SelectedItem != null)
                 {
-                    ((ColorZone)cz_list.SelectedItem).color = Utils.ColorUtils.MediaColorToDrawingColor(this.cz_colorpicker.SelectedColor.Value);
+                    ((ColorZone)cz_list.SelectedItem).Color = Utils.ColorUtils.MediaColorToDrawingColor(this.cz_colorpicker.SelectedColor.Value);
                     ConfigManager.Save(Global.Configuration);
                 }
             }
@@ -145,7 +145,7 @@ namespace Aurora.Controls
         {
             if (cz_list.SelectedItem != null)
             {
-                ((ColorZone)cz_list.SelectedItem).keysequence.keys = ks.List;
+                ((ColorZone)cz_list.SelectedItem).Keysequence.keys = ks.List;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -156,7 +156,7 @@ namespace Aurora.Controls
             {
                 LayerEffects selectedEffecttype = (LayerEffects)Enum.Parse(typeof(LayerEffects), this.cz_effect.SelectedIndex.ToString());
 
-                ((ColorZone)cz_list.SelectedItem).effect = selectedEffecttype;
+                ((ColorZone)cz_list.SelectedItem).Effect = selectedEffecttype;
                 ConfigManager.Save(Global.Configuration);
 
                 effect_settings_button.IsEnabled = selectedEffecttype != LayerEffects.None;
@@ -167,7 +167,7 @@ namespace Aurora.Controls
         {
             if (cz_list.SelectedItem != null)
             {
-                EffectSettingsWindow effect_settings = new EffectSettingsWindow(((ColorZone)cz_list.SelectedItem).effect_config);
+                EffectSettingsWindow effect_settings = new EffectSettingsWindow(((ColorZone)cz_list.SelectedItem).EffectConfig);
                 effect_settings.preview_key = Global.LightingStateManager.PreviewProfileKey;
                 effect_settings.EffectConfigUpdated += Effect_settings_EffectConfigUpdated;
 
@@ -179,7 +179,7 @@ namespace Aurora.Controls
         {
             if (cz_list.SelectedItem != null)
             {
-                ((ColorZone)cz_list.SelectedItem).effect_config = (sender as EffectSettingsWindow).EffectConfig;
+                ((ColorZone)cz_list.SelectedItem).EffectConfig = (sender as EffectSettingsWindow).EffectConfig;
                 ConfigManager.Save(Global.Configuration);
             }
         }
@@ -226,7 +226,7 @@ namespace Aurora.Controls
         {
             if (cz_list.SelectedItem != null)
             {
-                ((ColorZone)cz_list.SelectedItem).keysequence = ks.Sequence;
+                ((ColorZone)cz_list.SelectedItem).Keysequence = ks.Sequence;
                 //ConfigManager.Save(Global.Configuration);
             }
         }

@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using LedCSharp;
@@ -464,7 +465,7 @@ namespace Aurora.Settings.Layers
                     break;
                 }
                 default:
-                    Global.logger.Info("Unknown Wrapper Command: " + ngwState.Command);
+                    Global.logger.Info("Unknown Wrapper Command: {Command} Data: {Data}", ngwState.Command, ngwState.Command_Data);
                     break;
             }
         }

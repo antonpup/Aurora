@@ -232,7 +232,7 @@ namespace Aurora.Utils
             // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
             bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
             bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
-            if (Global.kbLayout.Loaded_Localization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
+            if (Global.kbLayout.LoadedLocalization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
             {
                 uint thread = GetWindowThreadProcessId(ActiveProcessMonitor.GetForegroundWindow(), IntPtr.Zero);
                 var layout = GetKeyboardLayout(thread);

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_SolidColorLayer"
+             xmlns:Controls="clr-namespace:Aurora.Controls"  x:Class="Aurora.Settings.Layers.Controls.Control_SolidColorLayer"
              mc:Ignorable="d">
     <Grid>
         <TextBlock Text="Color:" Margin="0,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />

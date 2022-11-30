@@ -127,7 +127,6 @@ begin
             MsgBox(ExpandConstant('The installer will now try to close running instances of {#SetupSetting("AppName")} and uninstall them. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
           end;
         TaskKill('Aurora.exe');
-        TaskKill('Aurora-SkypeIntegration.exe');
         TaskKill('Aurora-Updater.exe');
         
         sUnInstallString := GetUninstallString();
@@ -150,7 +149,6 @@ begin
           begin
             MsgBox(ExpandConstant('The uninstaller will now try to close running instances of {#SetupSetting("AppName")} if there are any. Please save your work.'), mbConfirmation, MB_OK or MB_DEFBUTTON2);
             TaskKill('Aurora.exe');
-            TaskKill('Aurora-SkypeIntegration.exe');
             TaskKill('Aurora-Updater.exe');
 
             if ((not KeepSettings()) and (MsgBox(ExpandConstant('Do you want to remove all the settings and user data?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES)) then
@@ -165,7 +163,6 @@ begin
         else
           begin
             TaskKill('Aurora.exe');
-            TaskKill('Aurora-SkypeIntegration.exe');
             TaskKill('Aurora-Updater.exe');
 
             if (not KeepSettings()) then

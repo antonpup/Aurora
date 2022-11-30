@@ -1,76 +1,71 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.Media.Control;
 using WindowsMediaController;
 
-namespace Aurora.Utils
+namespace Aurora.Utils;
+
+public sealed class MediaMonitor : IDisposable
 {
-    public static class MediaMonitor
+    public static bool MediaPlaying { get; private set; }
+    public static bool HasMedia { get; private set; }
+    public static bool HasNextMedia { get; private set; }
+    public static bool HasPreviousMedia { get; private set; }
+
+    private readonly MediaManager _mediaManager = new();
+
+    private readonly HashSet<MediaManager.MediaSession> _mediaSessions = new(new MediaSessionComparer());
+
+    public MediaMonitor()
     {
-        public static bool MediaPlaying;
-        public static bool HasMedia;
-        public static bool HasNextMedia;
-        public static bool HasPreviousMedia;
-        
-        private static readonly MediaManager MediaManager = new();
+        _mediaManager.OnAnySessionOpened += MediaManager_OnSessionOpened;
+        _mediaManager.OnAnyPlaybackStateChanged += MediaManager_OnAnyPlaybackStateChanged;
+        _mediaManager.OnAnySessionClosed += MediaManager_OnAnySessionClosed;
 
-        private static readonly HashSet<MediaManager.MediaSession> MediaSessions = new(new MediaSessionComparer());
-
-        static MediaMonitor()
-        {
-            MediaManager.OnAnySessionOpened += MediaManager_OnSessionOpened;
-            MediaManager.OnAnyPlaybackStateChanged += MediaManager_OnAnyPlaybackStateChanged;
-            MediaManager.OnAnySessionClosed += MediaManager_OnAnySessionClosed;
-
-            MediaManager.Start();
-            
-            HasMedia = MediaManager.CurrentMediaSessions.Count > 0;
-            if (!HasMedia) return;
-
-            foreach (var (_, mediaSession) in MediaManager.CurrentMediaSessions)
-            {
-                MediaSessions.Add(mediaSession);
-            }
-
-            UpdateButtons();
-        }
-
-        private static void MediaManager_OnSessionOpened(MediaManager.MediaSession mediaSession)
-        {
-            HasMedia = true;
-            MediaSessions.Add(mediaSession);
-            UpdateButtons();
-        }
-
-        private static void MediaManager_OnAnySessionClosed(MediaManager.MediaSession mediaSession)
-        {
-            mediaSession.OnPlaybackStateChanged -= MediaManager_OnAnyPlaybackStateChanged;
-            MediaSessions.Remove(mediaSession);
-
-            UpdateButtons();
-        }
-
-        private static void MediaManager_OnAnyPlaybackStateChanged(MediaManager.MediaSession mediaSession,
-            GlobalSystemMediaTransportControlsSessionPlaybackInfo playbackInfo)
-        {
-            MediaSessions.Add(mediaSession);
-            UpdateButtons();
-        }
-
-        private static void UpdateButtons()
-        {
-            HasMedia = MediaSessions.Count > 0;
-            HasNextMedia = MediaSessions.Any(
-                    value => value.ControlSession.GetPlaybackInfo().Controls.IsNextEnabled);
-            HasPreviousMedia = MediaSessions.Any(value =>
-                value.ControlSession.GetPlaybackInfo().Controls.IsPreviousEnabled);
-            MediaPlaying = MediaManager.CurrentMediaSessions.Any(pair =>
-                pair.Value.ControlSession.GetPlaybackInfo().PlaybackStatus ==
-                GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing);
-        }
+        _mediaManager.Start();
     }
 
-    internal class MediaSessionComparer : IEqualityComparer<MediaManager.MediaSession>
+    private void MediaManager_OnSessionOpened(MediaManager.MediaSession mediaSession)
+    {
+        HasMedia = true;
+        _mediaSessions.Add(mediaSession);
+        UpdateButtons();
+    }
+
+    private void MediaManager_OnAnySessionClosed(MediaManager.MediaSession mediaSession)
+    {
+        mediaSession.OnPlaybackStateChanged -= MediaManager_OnAnyPlaybackStateChanged;
+        _mediaSessions.Remove(mediaSession);
+
+        UpdateButtons();
+    }
+
+    private void MediaManager_OnAnyPlaybackStateChanged(MediaManager.MediaSession mediaSession,
+        GlobalSystemMediaTransportControlsSessionPlaybackInfo playbackInfo)
+    {
+        _mediaSessions.Add(mediaSession);
+        UpdateButtons();
+    }
+
+    private void UpdateButtons()
+    {
+        HasMedia = _mediaSessions.Count > 0;
+        HasNextMedia = _mediaSessions.Any(
+            value => value.ControlSession.GetPlaybackInfo().Controls.IsNextEnabled);
+        HasPreviousMedia = _mediaSessions.Any(value =>
+            value.ControlSession.GetPlaybackInfo().Controls.IsPreviousEnabled);
+        MediaPlaying = _mediaManager.CurrentMediaSessions.Any(pair =>
+            pair.Value.ControlSession.GetPlaybackInfo().PlaybackStatus ==
+            GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing);
+    }
+
+    public void Dispose()
+    {
+        _mediaManager?.Dispose();
+    }
+
+    private sealed class MediaSessionComparer : IEqualityComparer<MediaManager.MediaSession>
     {
         public bool Equals(MediaManager.MediaSession x, MediaManager.MediaSession y)
         {

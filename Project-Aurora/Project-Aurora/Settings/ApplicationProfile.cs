@@ -6,76 +6,78 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+public class ScriptSettings : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler PropertyChanged;
 
-    public class ScriptSettings : INotifyPropertyChanged
+    [OnChangedMethod(nameof(OnEnabledChanged))] public bool Enabled { get; set; }
+    [JsonIgnore] public bool ExceptionHit { get; set; }
+    [JsonIgnore] public Exception Exception { get; set; }
+
+    private void OnEnabledChanged()
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        if (!Enabled) return;
+        ExceptionHit = false;
+        Exception = null;
+    }
+}
 
-        [OnChangedMethod(nameof(OnEnabledChanged))] public bool Enabled { get; set; }
-        [JsonIgnore] public bool ExceptionHit { get; set; }
-        [JsonIgnore] public Exception Exception { get; set; }
+public class ApplicationProfile : INotifyPropertyChanged, IDisposable
+{
+    public string ProfileName { get; set; }
+    public Keybind TriggerKeybind { get; set; }
+    [JsonIgnore] public string ProfileFilepath { get; set; }
+    public Dictionary<string, ScriptSettings> ScriptSettings { get; set; }
+    public ObservableCollection<Layer> Layers { get; set; }
+    public ObservableCollection<Layer> OverlayLayers { get; set; }
 
-        private void OnEnabledChanged() {
-            if (Enabled) {
-                ExceptionHit = false;
-                Exception = null;
-            }
-        }
+    protected ApplicationProfile()
+    {
+        Reset();
     }
 
-    public class ApplicationProfile : INotifyPropertyChanged, IDisposable
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public virtual void Reset()
     {
-        public string ProfileName { get; set; }
-        public Keybind TriggerKeybind { get; set; }
-        [JsonIgnore] public string ProfileFilepath { get; set; }
-        public Dictionary<string, ScriptSettings> ScriptSettings { get; set; }
-        public ObservableCollection<Layer> Layers { get; set; }
-        public ObservableCollection<Layer> OverlayLayers { get; set; }
+        Layers = new ObservableCollection<Layer>();
+        OverlayLayers = new ObservableCollection<Layer>();
+        ScriptSettings = new Dictionary<string, ScriptSettings>();
+        TriggerKeybind = new Keybind();
+    }
 
-        public ApplicationProfile()
+    public void SetApplication(Profiles.Application app)
+    {
+        foreach (var l in Layers)
+            l.SetProfile(app);
+
+        foreach (var l in OverlayLayers)
+            l.SetProfile(app);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposing)
         {
-            this.Reset();
+            return;
         }
+        foreach (var l in Layers)
+            l.Dispose();
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        foreach (var l in OverlayLayers)
+            l.Dispose();
+    }
 
-        public virtual void Reset()
-        {
-            Layers = new ObservableCollection<Layer>();
-            OverlayLayers = new ObservableCollection<Layer>();
-            ScriptSettings = new Dictionary<string, ScriptSettings>();
-            TriggerKeybind = new Keybind();
-        }
-
-        public virtual void SetApplication(Profiles.Application app)
-        {
-            foreach (Layer l in Layers)
-                l.SetProfile(app);
-
-            foreach (Layer l in OverlayLayers)
-                l.SetProfile(app);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        
-        protected virtual void Dispose(bool disposing)
-        {
-            foreach (Layer l in Layers)
-                l.Dispose();
-
-            foreach (Layer l in OverlayLayers)
-                l.Dispose();
-        }
-
-        ~ApplicationProfile()
-        {
-            Dispose(false);
-        }
+    ~ApplicationProfile()
+    {
+        Dispose(false);
     }
 }

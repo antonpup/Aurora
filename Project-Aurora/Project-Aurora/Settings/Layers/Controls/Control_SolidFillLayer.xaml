@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             x:Class="Aurora.Settings.Layers.Control_SolidFillLayer"
+              x:Class="Aurora.Settings.Layers.Controls.Control_SolidFillLayer"
              mc:Ignorable="d">
     <Grid>
         <TextBlock Text="Color:" Margin="0,4,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />

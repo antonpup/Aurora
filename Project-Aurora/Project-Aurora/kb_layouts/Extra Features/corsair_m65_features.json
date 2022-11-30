@@ -8,10 +8,6 @@
       "margin_top": -232.0,
       "width": 158.0,
       "height": 232.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 13,
-      "height_bits": 19,
       "image": "Corsair_M65_outline.png",
       "enabled": true,
       "absolute_location": true
@@ -23,10 +19,6 @@
       "margin_top": -76.0,
       "width": 27.0,
       "height": 27.0,
-      "width_bits": 2,
-      "height_bits": 2,
-      "margin_left_bits": 7,
-      "margin_top_bits": -6,
       "image": "Corsair_M65_logo.png",
       "enabled": true,
       "absolute_location": true
@@ -38,10 +30,6 @@
       "margin_top": -222.0,
       "width": 21.0,
       "height": 60.0,
-      "width_bits": 2,
-      "height_bits": 5,
-      "margin_left_bits": 7,
-      "margin_top_bits": -18,
       "image": "Corsair_M65_scrollwheel.png",
       "enabled": true,
       "absolute_location": true

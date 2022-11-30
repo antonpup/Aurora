@@ -1,53 +1,50 @@
-﻿using Aurora.Controls;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Forms;
+using Aurora.Controls;
+using Button = System.Windows.Controls.Button;
+using ComboBox = System.Windows.Controls.ComboBox;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
 
-namespace Aurora.Settings.Layers
+namespace Aurora.Settings.Layers.Controls
 {
     /// <summary>
     /// Interaction logic for Control_ShortcutAssistantLayer.xaml
     /// </summary>
-    public partial class Control_ShortcutAssistantLayer : UserControl
+    public partial class ControlShortcutAssistantLayer
     {
-        private Button buttonAddNewShortcut = new Button() {
+        private readonly List<IShortcut> _predefinedShortcuts = new();
+
+        private readonly Button _buttonAddNewShortcut = new() {
             Content = "New shortcut",
             HorizontalAlignment = HorizontalAlignment.Center
         };
 
-        protected Control_ShortcutAssistantLayer()
+        protected ControlShortcutAssistantLayer()
         {
             InitializeComponent();
+            CreateDefaults();
 
-            this.PopulatePresets();
+            PopulatePresets();
 
-            buttonAddNewShortcut.Click += ButtonAddNewShortcut_Click;
+            _buttonAddNewShortcut.Click += ButtonAddNewShortcut_Click;
 
-            this.Loaded += (obj, e) => { this.SetSettings(); };
+            Loaded += (_, _) => { SetSettings(); };
         }
 
-        public Control_ShortcutAssistantLayer(ShortcutAssistantLayerHandler datacontext) : this()
+        public ControlShortcutAssistantLayer(ShortcutAssistantLayerHandler datacontext) : this()
         {
-            this.DataContext = datacontext;
+            DataContext = datacontext;
         }
 
         public void SetSettings()
         {
-            this.comboboxPresentationType.SelectedValue = ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType;
+            comboboxPresentationType.SelectedValue = ((ShortcutAssistantLayerHandler)DataContext).Properties._PresentationType;
 
-            this.stackPanelShortcuts.Children.Clear();
-            foreach(Keybind keyb in ((ShortcutAssistantLayerHandler)this.DataContext).Properties._ShortcutKeys)
+            stackPanelShortcuts.Children.Clear();
+            foreach(Keybind keyb in ((ShortcutAssistantLayerHandler)DataContext).Properties._ShortcutKeys)
             {
                 AddKeybind(keyb);
             }
@@ -56,12 +53,12 @@ namespace Aurora.Settings.Layers
         private void PopulatePresets(MenuItem item = null, ShortcutNode node = null)
         {
             MenuItem currentItem = item ?? menuPresets;
-            foreach (IShortcut shortcut in node?.Children ?? Global.PluginManager.PredefinedShortcuts)
+            foreach (IShortcut shortcut in node?.Children ?? _predefinedShortcuts)
             {
                 MenuItem newItem = new MenuItem { Header = shortcut.Title, Tag = shortcut };
                 newItem.Click += ShortcutPresetClick;
-                if (shortcut is ShortcutNode)
-                    PopulatePresets(newItem, (ShortcutNode)shortcut);
+                if (shortcut is ShortcutNode shortcutNode)
+                    PopulatePresets(newItem, shortcutNode);
                 currentItem.Items.Add(newItem);
             }
         }
@@ -69,30 +66,30 @@ namespace Aurora.Settings.Layers
         private void ShortcutPresetClick(object sender, RoutedEventArgs e)
         {
             IShortcut shortcut;
-            if ((shortcut = (e.OriginalSource as MenuItem)?.Tag as IShortcut) != null)
+            if ((shortcut = (e.OriginalSource as MenuItem)?.Tag as IShortcut) == null) return;
+            ShortcutAssistantLayerHandler layer = (ShortcutAssistantLayerHandler)DataContext;
+            layer.Properties._ShortcutKeys = shortcut switch
             {
-                ShortcutAssistantLayerHandler layer = (ShortcutAssistantLayerHandler)this.DataContext;
-                if (shortcut is ShortcutNode)
-                    layer.Properties._ShortcutKeys = ((ShortcutNode)shortcut).GetShortcuts();
-                else if (shortcut is ShortcutGroup)
-                    layer.Properties._ShortcutKeys = ((ShortcutGroup)shortcut).Shortcuts;
-                this.SetSettings();
-                e.Handled = true;
-            }
+                ShortcutNode shortcutNode => shortcutNode.GetShortcuts(),
+                ShortcutGroup shortcutGroup => shortcutGroup.Shortcuts,
+                _ => layer.Properties._ShortcutKeys
+            };
+            SetSettings();
+            e.Handled = true;
         }
 
         private void ButtonRemoveKeybind_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button && (sender as Button).Tag is DockPanel)
             {
-                this.stackPanelShortcuts.Children.Remove((sender as Button).Tag as DockPanel);
+                stackPanelShortcuts.Children.Remove((sender as Button).Tag as DockPanel);
                 ApplySettings();
             }
         }
 
         private void ButtonAddNewShortcut_Click(object sender, RoutedEventArgs e)
         {
-            this.stackPanelShortcuts.Children.Remove(buttonAddNewShortcut);
+            stackPanelShortcuts.Children.Remove(_buttonAddNewShortcut);
 
             AddKeybind(new Keybind());
 
@@ -106,33 +103,33 @@ namespace Aurora.Settings.Layers
             keybindEditor.VerticalAlignment = VerticalAlignment.Stretch;
             keybindEditor.KeybindUpdated += KeybindEditor_KeybindUpdated;
 
-            DockPanel dp = new DockPanel()
+            DockPanel dp = new DockPanel
             {
                 LastChildFill = true,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Tag = keybindEditor
             };
 
-            Button ButtonRemoveKeybind = new Button()
+            Button buttonRemoveKeybind = new Button
             {
                 Content = "X",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 Tag = dp
             };
-            DockPanel.SetDock(ButtonRemoveKeybind, Dock.Right);
-            ButtonRemoveKeybind.Click += ButtonRemoveKeybind_Click;
+            DockPanel.SetDock(buttonRemoveKeybind, Dock.Right);
+            buttonRemoveKeybind.Click += ButtonRemoveKeybind_Click;
 
 
-            dp.Children.Add(ButtonRemoveKeybind);
+            dp.Children.Add(buttonRemoveKeybind);
             dp.Children.Add(keybindEditor);
 
-            this.stackPanelShortcuts.Children.Add(dp);
+            stackPanelShortcuts.Children.Add(dp);
         }
 
         public void AddStackPanelButton()
         {
-            this.stackPanelShortcuts.Children.Add(buttonAddNewShortcut);
+            stackPanelShortcuts.Children.Add(_buttonAddNewShortcut);
         }
 
         private void KeybindEditor_KeybindUpdated(object sender, Keybind newKeybind)
@@ -142,33 +139,90 @@ namespace Aurora.Settings.Layers
 
         private void ApplySettings()
         {
-            List<Keybind> newShortcuts = new List<Keybind>();
-
-            foreach (var child in this.stackPanelShortcuts.Children)
-            {
-                if (child is DockPanel && (child as DockPanel).Tag is Control_Keybind)
-                    newShortcuts.Add(((child as DockPanel).Tag as Control_Keybind).ContextKeybind);
-            }
-
-            ((ShortcutAssistantLayerHandler)this.DataContext).Properties._ShortcutKeys = newShortcuts.ToArray();
-        }
-
-        private void keysMain_SequenceUpdated(object sender, EventArgs e)
-        {
-            ((ShortcutAssistantLayerHandler)this.DataContext).Properties._Sequence = ((Controls.KeySequence)sender).Sequence;
-        }
-
-        private void cmbModifier_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0) {
-                this.SetSettings();
-            }
+            ((ShortcutAssistantLayerHandler)DataContext).Properties._ShortcutKeys = (
+                from object child in stackPanelShortcuts.Children
+                where (child as DockPanel)?.Tag is Control_Keybind
+                select ((Control_Keybind) (child as DockPanel).Tag).ContextKeybind).ToArray();
         }
 
         private void comboboxPresentationType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoaded && this.DataContext is ShortcutAssistantLayerHandler && sender is ComboBox)
-                ((ShortcutAssistantLayerHandler)this.DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)(sender as ComboBox).SelectedValue;
+            if (IsLoaded && DataContext is ShortcutAssistantLayerHandler && sender is ComboBox)
+                ((ShortcutAssistantLayerHandler)DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)(sender as ComboBox).SelectedValue;
+        }
+
+        private void CreateDefaults()
+        {
+            _predefinedShortcuts.Add(
+                new ShortcutNode("Windows") {
+                    Children = new List<IShortcut> {
+                        new ShortcutGroup("Ctrl"){
+                            Shortcuts = new[]
+                            {
+                                new Keybind( new[] { Keys.LControlKey, Keys.X }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.C }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.V }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Z }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.F4 }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.A }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.D }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.R }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Y }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Right }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Left }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Down }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Up }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LMenu, Keys.Tab }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LMenu, Keys.LShiftKey, Keys.Tab }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Up }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Down }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Left }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Right }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Escape }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Escape }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.Escape }),
+                                new Keybind( new[] { Keys.LControlKey, Keys.F })
+                            }
+                        },
+                        new ShortcutGroup("Win"){
+                            Shortcuts = new[]
+                            {
+                                new Keybind( new[] { Keys.LWin, Keys.L }),
+                                new Keybind( new[] { Keys.LWin, Keys.D }),
+                                new Keybind( new[] { Keys.LWin, Keys.B }),
+                                new Keybind( new[] { Keys.LWin, Keys.A }),
+                                new Keybind( new[] { Keys.LWin, Keys.LMenu, Keys.D }),
+                                new Keybind( new[] { Keys.LWin, Keys.E }),
+                                new Keybind( new[] { Keys.LWin, Keys.G }),
+                                new Keybind( new[] { Keys.LWin, Keys.I }),
+                                new Keybind( new[] { Keys.LWin, Keys.M }),
+                                new Keybind( new[] { Keys.LWin, Keys.P }),
+                                new Keybind( new[] { Keys.LWin, Keys.R }),
+                                new Keybind( new[] { Keys.LWin, Keys.S }),
+                                new Keybind( new[] { Keys.LWin, Keys.Up }),
+                                new Keybind( new[] { Keys.LWin, Keys.Down }),
+                                new Keybind( new[] { Keys.LWin, Keys.Left }),
+                                new Keybind( new[] { Keys.LWin, Keys.Right }),
+                                new Keybind( new[] { Keys.LWin, Keys.Home }),
+                                new Keybind( new[] { Keys.LWin, Keys.D })
+                            }
+                        },
+                        new ShortcutGroup("Alt"){
+                            Shortcuts = new[]
+                            {
+                                new Keybind( new[] { Keys.LMenu, Keys.Tab }),
+                                new Keybind( new[] { Keys.LMenu, Keys.F4 }),
+                                new Keybind( new[] { Keys.LMenu, Keys.Space }),
+                                new Keybind( new[] { Keys.LMenu, Keys.Left }),
+                                new Keybind( new[] { Keys.LMenu, Keys.Right }),
+                                new Keybind( new[] { Keys.LMenu, Keys.PageUp }),
+                                new Keybind( new[] { Keys.LMenu, Keys.PageDown }),
+                                new Keybind( new[] { Keys.LMenu, Keys.Tab })
+                            }
+                        }
+                    }
+                }
+            );
         }
     }
 }

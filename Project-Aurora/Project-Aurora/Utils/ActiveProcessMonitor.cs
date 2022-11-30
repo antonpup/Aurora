@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using Lombok.NET;
 
 namespace Aurora.Utils
 {
@@ -12,12 +13,9 @@ namespace Aurora.Utils
 		public Int32 dwTime;
 	}
 
-	public sealed class ActiveProcessMonitor
+	[Singleton]
+	public sealed partial class ActiveProcessMonitor
 	{
-		private static readonly Lazy<ActiveProcessMonitor> SingletonInstance = new(() => new ActiveProcessMonitor());
-		
-		public static ActiveProcessMonitor Instance => SingletonInstance.Value;
-		
 		private const uint WinEventOutOfContext = 0;
 		private const uint EventSystemForeground = 3;
 		private const uint EventSystemMinimizeStart = 0x0016;

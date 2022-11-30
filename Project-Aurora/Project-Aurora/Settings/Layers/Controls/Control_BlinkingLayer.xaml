@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_BlinkingLayer"
+             xmlns:Controls="clr-namespace:Aurora.Controls"  x:Class="Aurora.Settings.Layers.Controls.Control_BlinkingLayer"
              mc:Ignorable="d">
     
     <Grid>

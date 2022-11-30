@@ -14,6 +14,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Controls;
+using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -272,7 +273,7 @@ namespace Aurora.Settings.Layers
                     switch (Properties.EQType) {
                         case EqualizerType.Waveform:
                             var halfHeight = SourceRect.Height / 2f;
-                            for (var x = 0; x < (int)SourceRect.Width; x++) {
+                            for (var x = 0; x < (int)SourceRect.Width; x++) {   //TODO step by wave width, DrawRectangle
                                 var fftVal = localFft.Length > x * waveStepAmount ? localFft[x * waveStepAmount].X : 0.0f;
                                 var brush = GetBrush(fftVal, x, SourceRect.Width);
                                 var yOff = -Math.Max(Math.Min(fftVal / scaledMaxAmplitude * 1000.0f, halfHeight), -halfHeight);
@@ -281,7 +282,7 @@ namespace Aurora.Settings.Layers
                             break;
 
                         case EqualizerType.Waveform_Bottom:
-                            for (var x = 0; x < (int)SourceRect.Width; x++) {
+                            for (var x = 0; x < (int)SourceRect.Width; x++) {   //TODO step by wave width, DrawRectangle
                                 var fftVal = localFft.Length > x * waveStepAmount ? localFft[x * waveStepAmount].X : 0.0f;
                                 var brush = GetBrush(fftVal, x, SourceRect.Width);
                                 g.DrawLine(new Pen(brush), x, SourceRect.Height, x, SourceRect.Height - Math.Min(Math.Abs(fftVal / scaledMaxAmplitude) * 1000.0f, SourceRect.Height));
@@ -362,9 +363,12 @@ namespace Aurora.Settings.Layers
             // 4 bytes per channel, bufferIncrement is numChannels * 4
             for (var index = 0; index < bytesRecorded; index += _bufferIncrement) // Loop over the bytes, respecting the channel grouping
             {
-                _sampleAggregator.Add(_channels == 2
-                    ? Math.Max(BitConverter.ToSingle(buffer, index), BitConverter.ToSingle(buffer, index + 4))
-                    : BitConverter.ToSingle(buffer, index));
+                var single = BitConverter.ToSingle(buffer, index);
+                _sampleAggregator.Add(_channels switch
+                {
+                    2 => Math.Max(single, BitConverter.ToSingle(buffer, index + 4)),
+                    _ => single
+                });
             }
         }
 

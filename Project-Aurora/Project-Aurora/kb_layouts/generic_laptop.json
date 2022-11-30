@@ -40,10 +40,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "3": {
@@ -55,10 +51,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "4": {
@@ -70,10 +62,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "5": {
@@ -85,10 +73,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "6": {
@@ -100,10 +84,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "7": {
@@ -115,10 +95,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "8": {
@@ -130,10 +106,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "9": {
@@ -145,10 +117,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "10": {
@@ -160,10 +128,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "11": {
@@ -175,10 +139,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "12": {
@@ -190,10 +150,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "13": {
@@ -205,10 +161,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "31": {
@@ -220,10 +172,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "14": {
@@ -235,10 +183,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "52": {
@@ -250,10 +194,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "15": {
@@ -265,10 +205,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "30": {
@@ -280,10 +216,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "50": {
@@ -295,10 +227,6 @@
       "width": 30,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "72": {
@@ -310,10 +238,6 @@
       "width": 74.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 7,
-      "height_bits": 3,
-      "margin_left_bits": 0,
-      "margin_top_bits": 0,
       "enabled": null
     },
     "76": {
@@ -325,10 +249,6 @@
       "width": 78.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 7,
-      "height_bits": 3,
-      "margin_left_bits": 0,
-      "margin_top_bits": 0,
       "enabled": null
     },
     "88": {
@@ -340,10 +260,6 @@
       "width": 93,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "94": {
@@ -355,10 +271,6 @@
       "width": 41,
       "height": null,
       "font_size": null,
-      "width_bits": 4,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "95": {
@@ -370,10 +282,6 @@
       "width": 30,
       "height": null,
       "font_size": null,
-      "width_bits": 3,
-      "height_bits": null,
-      "margin_left_bits": 3,
-      "margin_top_bits": null,
       "enabled": null
     },
     "96": {
@@ -385,10 +293,6 @@
       "width": 30,
       "height": null,
       "font_size": null,
-      "width_bits": 3,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "97": {
@@ -400,10 +304,6 @@
       "width": 178,
       "height": null,
       "font_size": null,
-      "width_bits": 15,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "98": {
@@ -415,10 +315,6 @@
       "width": 30,
       "height": null,
       "font_size": null,
-      "width_bits": 3,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "99": {
@@ -430,10 +326,6 @@
       "width": 30,
       "height": null,
       "font_size": null,
-      "width_bits": 3,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "101": {
@@ -445,10 +337,6 @@
       "width": 30,
       "height": null,
       "font_size": null,
-      "width_bits": 3,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "102": {
@@ -460,10 +348,6 @@
       "width": 24.5,
       "height": null,
       "font_size": null,
-      "width_bits": 2,
-      "height_bits": null,
-      "margin_left_bits": 0,
-      "margin_top_bits": null,
       "enabled": null
     },
     "89": {
@@ -475,10 +359,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "103": {
@@ -490,10 +370,6 @@
       "width": null,
       "height": 14,
       "font_size": 9,
-      "width_bits": null,
-      "height_bits": 1,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "104": {
@@ -505,10 +381,6 @@
       "width": 24.5,
       "height": null,
       "font_size": null,
-      "width_bits": 2,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     }
   },

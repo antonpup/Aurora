@@ -1,6 +1,5 @@
 ﻿using Aurora.EffectsEngine;
 using Aurora.Profiles;
-using Aurora.Settings.Layers;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
@@ -8,14 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
+using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers {
 

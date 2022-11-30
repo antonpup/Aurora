@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
-using System.Windows.Forms;
 
 namespace Aurora.Settings
 {
@@ -116,7 +111,6 @@ namespace Aurora.Settings
 
     public class PluginManager : ObjectSettings<PluginManagerSettings>, IInit, IPluginHost
     {
-        public List<IShortcut> PredefinedShortcuts { get; protected set; } = new List<IShortcut>();
 
         public const string PluginDirectory = "Plugins";
 
@@ -125,7 +119,6 @@ namespace Aurora.Settings
         public PluginManager()
         {
             SettingsSavePath = Path.Combine(Global.AppDataDirectory, "PluginSettings.json");
-            this.CreateDefaults();
         }
 
         public bool Initialized { get; protected set; }
@@ -210,80 +203,6 @@ namespace Aurora.Settings
                 this.Settings.PluginManagement[id] = enabled;
 
             this.SaveSettings();
-        }
-
-        protected void CreateDefaults()
-        {
-            this.PredefinedShortcuts.Add(
-                new ShortcutNode("Windows") {
-                    Children = new List<IShortcut> {
-                        new ShortcutGroup("Ctrl"){
-                            Shortcuts = new Keybind[]
-                            {
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.X }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.C }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.V }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Z }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.F4 }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.A }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.D }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.R }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Y }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Right }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Left }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Down }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Up }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.Tab }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.LShiftKey, Keys.Tab }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Up }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Down }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Left }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Right }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Escape }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Escape }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.Escape }),
-                                new Keybind( new Keys[] { Keys.LControlKey, Keys.F })
-                            }
-                        },
-                        new ShortcutGroup("Win"){
-                            Shortcuts = new Keybind[]
-                            {
-                                new Keybind( new Keys[] { Keys.LWin, Keys.L }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.D }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.B }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.A }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.LMenu, Keys.D }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.E }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.G }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.I }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.M }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.P }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.R }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.S }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.Up }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.Down }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.Left }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.Right }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.Home }),
-                                new Keybind( new Keys[] { Keys.LWin, Keys.D })
-                            }
-                        },
-                        new ShortcutGroup("Alt"){
-                            Shortcuts = new Keybind[]
-                            {
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.Tab }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.F4 }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.Space }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.Left }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.Right }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.PageUp }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.PageDown }),
-                                new Keybind( new Keys[] { Keys.LMenu, Keys.Tab })
-                            }
-                        }
-                    }
-                }
-            );
         }
 
         public void Dispose()

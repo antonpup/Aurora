@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using Aurora.Devices.RGBNet.Config;
 using RGB.NET.Core;
-using RGB.NET.Devices.Logitech;
 using Color = System.Drawing.Color;
 
 namespace Aurora.Devices.RGBNet;
@@ -62,7 +61,7 @@ public abstract class RgbNetDevice : DefaultDevice
     public override void Shutdown()
     {
         OnShutdown();
-        LogitechDeviceProvider.Instance.Dispose();
+        Provider.Dispose();
         IsInitialized = false;
     }
     protected virtual void OnInitialized()

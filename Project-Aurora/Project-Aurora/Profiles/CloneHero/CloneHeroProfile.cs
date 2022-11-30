@@ -49,13 +49,13 @@ namespace Aurora.Profiles.CloneHero
                     {
                         _GradientConfig =
                         {
-                            primary = Color.FromArgb(123, 1, 227),
-                            secondary = Color.FromArgb(39, 73, 167),
-                            speed = 3,
-                            angle = 0,
-                            animation_type = AnimationType.Translate_XY,
-                            animation_reverse = false,
-                            brush =
+                            Primary = Color.FromArgb(123, 1, 227),
+                            Secondary = Color.FromArgb(39, 73, 167),
+                            Speed = 3,
+                            Angle = 0,
+                            AnimationType = AnimationType.TranslateXy,
+                            AnimationReverse = false,
+                            Brush =
                             {
                                 type = EffectBrush.BrushType.Linear,
                                 wrap = EffectBrush.BrushWrap.Repeat,

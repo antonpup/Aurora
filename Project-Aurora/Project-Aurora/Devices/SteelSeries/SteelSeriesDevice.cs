@@ -356,7 +356,7 @@ namespace Aurora.Devices.SteelSeries
                 case (DeviceKeys.JPN_HALFFULLWIDTH):
                     return (byte)USBHIDCodes.TILDE;
                 case (DeviceKeys.OEM5):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    if (Global.kbLayout.LoadedLocalization == PreferredKeyboardLocalization.jpn)
                         return (byte)USBHIDCodes.ERROR;
                     else
                         return (byte)USBHIDCodes.TILDE;
@@ -481,7 +481,7 @@ namespace Aurora.Devices.SteelSeries
                 case (DeviceKeys.LEFT_SHIFT):
                     return (byte)USBHIDCodes.LEFT_SHIFT;
                 case (DeviceKeys.BACKSLASH_UK):
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.jpn)
+                    if (Global.kbLayout.LoadedLocalization == PreferredKeyboardLocalization.jpn)
                         return (byte)USBHIDCodes.ERROR;
                     else
                         return (byte)USBHIDCodes.BACKSLASH_UK;

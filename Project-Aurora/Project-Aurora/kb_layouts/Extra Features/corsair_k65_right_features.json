@@ -10,10 +10,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -9,
-      "margin_top_bits": -3,
       "enabled": true,
       "absolute_location": true
     },
@@ -25,10 +21,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -13,
-      "margin_top_bits": -3,
       "enabled": true,
       "absolute_location": true
     },
@@ -40,10 +32,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -16,
-      "margin_top_bits": -3,
       "enabled": true,
       "absolute_location": true
     },
@@ -55,10 +43,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -20,
-      "margin_top_bits": -3,
       "enabled": true,
       "absolute_location": true
     },
@@ -71,10 +55,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -23,
-      "margin_top_bits": -3,
       "enabled": true,
       "absolute_location": true
     }

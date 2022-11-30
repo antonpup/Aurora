@@ -2,6 +2,7 @@
 using System.Drawing;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Layers.Controls;
 using Newtonsoft.Json;
 
 namespace Aurora.Settings.Layers {

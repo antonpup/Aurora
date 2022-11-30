@@ -4,7 +4,6 @@ using Aurora.Profiles.Generic_Application;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,33 +12,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Globalization;
-using System.ComponentModel;
 
 namespace Aurora.Profiles
 {
-    public class ProfilesManagerSettings
-    {
-        public ProfilesManagerSettings()
-        {
-
-        }
-
-        [OnDeserialized]
-        void OnDeserialized(StreamingContext context)
-        {
-
-        }
-    }
-
-    public class LightingStateManager : ObjectSettings<ProfilesManagerSettings>, IInit
+    public sealed class LightingStateManager : IInit
     {
         public Dictionary<string, ILightEvent> Events { get; } = new() { { "desktop", new Desktop.Desktop() } };
 
@@ -56,23 +36,23 @@ namespace Aurora.Profiles
 
         public Dictionary<Type, LayerHandlerMeta> LayerHandlers { get; } = new();
 
-        public string AdditionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
-
         public event EventHandler PreUpdate;
         public event EventHandler PostUpdate;
 
         private ActiveProcessMonitor processMonitor;
         private RunningProcessMonitor runningProcessMonitor;
         public RunningProcessMonitor RunningProcessMonitor => runningProcessMonitor;
-        
-        
 
         private Func<string, bool> _isRunningProcess;
         private Func<ILightEvent, bool> _isOverlayActiveProfile;
 
-        public LightingStateManager()
+        private readonly Task<PluginManager> _pluginManager;
+        private readonly Task<IpcListener> _ipcListener;
+
+        public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener> ipcListener)
         {
-            SettingsSavePath = Path.Combine(Global.AppDataDirectory, "ProfilesSettings.json");
+            _pluginManager = pluginManager;
+            _ipcListener = ipcListener;
         }
 
         public bool Initialized { get; private set; }
@@ -112,12 +92,12 @@ namespace Aurora.Profiles
                 LayerHandlers.Add(type, new LayerHandlerMeta(type, meta));
 
             LoadSettings();
-
             LoadPlugins();
 
-            if (Directory.Exists(AdditionalProfilesPath))
+            string additionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
+            if (Directory.Exists(additionalProfilesPath))
             {
-                List<string> additionals = new List<string>(Directory.EnumerateDirectories(AdditionalProfilesPath));
+                List<string> additionals = new List<string>(Directory.EnumerateDirectories(additionalProfilesPath));
                 foreach (var dir in additionals)
                 {
                     if (File.Exists(Path.Combine(dir, "settings.json")))
@@ -142,13 +122,11 @@ namespace Aurora.Profiles
 
         private void LoadPlugins()
         {
-            Global.PluginManager.ProcessManager(this);
+            _pluginManager.Result.ProcessManager(this);
         }
 
-        protected override void LoadSettings(Type settingsType)
+        private void LoadSettings()
         {
-            base.LoadSettings(settingsType);
-
             foreach (var kvp in Events)
             {
                 if (!Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application)
@@ -167,8 +145,6 @@ namespace Aurora.Profiles
 
         public void SaveAll()
         {
-            SaveSettings();
-
             foreach (var profile in Events)
             {
                 if (profile.Value is Application)
@@ -176,16 +152,10 @@ namespace Aurora.Profiles
             }
         }
 
-        public bool RegisterProfile(LightEventConfig config)
-        {
-            return RegisterEvent(new Application(config));
-        }
-
-        public bool RegisterEvent(ILightEvent @event)
+        public void RegisterEvent(ILightEvent @event)
         {
             string key = @event.Config.ID;
-            if (string.IsNullOrWhiteSpace(key) || Events.ContainsKey(key))
-                return false;
+            if (string.IsNullOrWhiteSpace(key) || Events.ContainsKey(key)) return;
 
             Events.Add(key, @event);
 
@@ -213,24 +183,6 @@ namespace Aurora.Profiles
 
             if (Initialized)
                 @event.Initialize();
-
-            return true;
-        }
-
-        public void RegisterProfiles(List<LightEventConfig> profiles)
-        {
-            foreach (var profile in profiles)
-            {
-                RegisterProfile(profile);
-            }
-        }
-
-        public void RegisterEvents(List<ILightEvent> profiles)
-        {
-            foreach (var profile in profiles)
-            {
-                RegisterEvent(profile);
-            }
         }
 
         public void RemoveGenericProfile(string key)
@@ -342,7 +294,7 @@ namespace Aurora.Profiles
         private string previewModeProfileKey = "";
 
         private List<TimedListObject> overlays = new List<TimedListObject>();
-        private Event_Idle idle_e = new Event_Idle();
+        private readonly EventIdle _idleE = new();
 
         public string PreviewProfileKey { get { return previewModeProfileKey; } set { previewModeProfileKey = value ?? string.Empty; } }
 
@@ -350,6 +302,7 @@ namespace Aurora.Profiles
         
         private Semaphore updateLock = new Semaphore(1, 1);
         private bool locked = false;
+
         public void InitUpdate()
         {
             watch.Start();
@@ -405,20 +358,16 @@ namespace Aurora.Profiles
             LastInput.cbSize = (uint)Marshal.SizeOf(LastInput);
             LastInput.dwTime = 0;
 
-            if (ActiveProcessMonitor.GetLastInputInfo(ref LastInput))
-            {
-                IdleTime = System.Environment.TickCount - LastInput.dwTime;
+            if (!ActiveProcessMonitor.GetLastInputInfo(ref LastInput)) return;
+            IdleTime = Environment.TickCount - LastInput.dwTime;
 
-                if (IdleTime >= Global.Configuration.IdleDelay * 60 * 1000)
-                {
-                    if (!(Global.Configuration.TimeBasedDimmingEnabled &&
-                    Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingStartMinute, Global.Configuration.TimeBasedDimmingEndHour, Global.Configuration.TimeBasedDimmingEndMinute))
-                    )
-                    {
-                        UpdateEvent(idle_e, newFrame);
-                    }
-                }
-            }
+            if (IdleTime < Global.Configuration.IdleDelay * 60 * 1000) return;
+            if (Global.Configuration.TimeBasedDimmingEnabled &&
+                Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour,
+                    Global.Configuration.TimeBasedDimmingStartMinute,
+                    Global.Configuration.TimeBasedDimmingEndHour,
+                    Global.Configuration.TimeBasedDimmingEndMinute)) return;
+            UpdateEvent(_idleE, newFrame);
         }
 
         private void UpdateEvent(ILightEvent @event, EffectsEngine.EffectFrame frame)
@@ -427,23 +376,21 @@ namespace Aurora.Profiles
             @event.UpdateLights(frame);
         }
 
-        private bool StartEvent(ILightEvent @event)
+        private void StartEvent(ILightEvent @event)
         {
             UpdatedEvents.Add(@event);
 
             // Skip if event was already started
-            if (StartedEvents.Contains(@event)) return false;
+            if (StartedEvents.Contains(@event)) return;
 
             StartedEvents.Add(@event);
             @event.OnStart();
-
-            return true;
         }
 
-        private bool StopUnUpdatedEvents()
+        private void StopUnUpdatedEvents()
         {
             // Skip if there are no started events or started events are the same since last update
-            if (!StartedEvents.Any() || StartedEvents.SequenceEqual(UpdatedEvents)) return false;
+            if (!StartedEvents.Any() || StartedEvents.SequenceEqual(UpdatedEvents)) return;
 
             List<ILightEvent> eventsToStop = StartedEvents.Except(UpdatedEvents).ToList();
             foreach (var eventToStop in eventsToStop)
@@ -451,8 +398,6 @@ namespace Aurora.Profiles
 
             StartedEvents.Clear();
             StartedEvents.AddRange(UpdatedEvents);
-
-            return true;
         }
 
         private void Update()
@@ -543,8 +488,8 @@ namespace Aurora.Profiles
                 preview = true;
             }
             else if (Global.Configuration.AllowWrappersInBackground
-                     && Global.IpcListener is {IsWrapperConnected: true}
-                     && (tempProfile = GetProfileFromProcessName(Global.IpcListener.WrappedProcess)) != null
+                     && _ipcListener.Result is {IsWrapperConnected: true}
+                     && (tempProfile = GetProfileFromProcessName(_ipcListener.Result.WrappedProcess)) != null
                      && tempProfile.IsEnabled)
                 profile = tempProfile;
 

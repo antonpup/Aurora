@@ -2,141 +2,121 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Threading;
-using System.Threading.Tasks;
-using Aurora.Settings;
-using Microsoft.Win32.TaskScheduler;
 
-namespace Aurora.Devices.ScriptedDevice
+namespace Aurora.Devices.ScriptedDevice;
+
+public class ScriptedDevice : DefaultDevice
 {
-    public class ScriptedDevice : DefaultDevice
+    private bool crashed;
+    private readonly dynamic script;
+
+    private string devicename;
+    private bool isInitialized;
+
+    private long lastUpdateTime = 0;
+
+    public ScriptedDevice(dynamic script)
     {
-        private bool crashed = false;
-        private readonly dynamic script = null;
-
-        private string devicename = "";
-        private bool isInitialized = false;
-
-        private System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-        private long lastUpdateTime = 0;
-
-        public ScriptedDevice(dynamic script)
+        if (
+            (script != null) &&
+            (script.devicename != null) &&
+            (script.enabled != null && script.enabled) &&
+            (script.GetType().GetMethod("Initialize") != null) &&
+            (script.GetType().GetMethod("Shutdown") != null) &&
+            (script.GetType().GetMethod("Reset") != null) &&
+            (script.GetType().GetMethod("UpdateDevice") != null)
+        )
         {
-            if (
-                (script != null) &&
-                (script.devicename != null) &&
-                (script.enabled != null && script.enabled == true) &&
-                (script.GetType().GetMethod("Initialize") != null || script.Initialize != null) &&
-                (script.GetType().GetMethod("Shutdown") != null || script.Shutdown != null) &&
-                (script.GetType().GetMethod("Reset") != null || script.Reset != null) &&
-                (script.GetType().GetMethod("UpdateDevice") != null || script.UpdateDevice != null)
-                )
-            {
-                this.devicename = script.devicename;
-                this.script = script;
-            }
-            else
-            {
-                throw new Exception("Provided script, does not meet all the requirements");
-            }
+            devicename = script.devicename;
+            this.script = script;
         }
-
-        public string DeviceDetails
+        else
         {
-            get
-            {
-                if (crashed)
-                    return "Error!";
-
-                if (isInitialized)
-                    return "Connected";
-                else
-                    return "Not initialized";
-            }
+            throw new Exception("Provided script, does not meet all the requirements");
         }
+    }
 
-        public override string DeviceName => devicename;
-
-        public override bool Initialize()
+    public override string DeviceDetails
+    {
+        get
         {
-            if (!isInitialized)
-            {
-                try
-                {
-                    isInitialized = script.Initialize();
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Device script for {0} encountered an error during Initialization. Exception: {1}", devicename, exc);
-                    crashed = true;
-                    isInitialized = false;
+            if (crashed)
+                return "Error!";
 
-                    return false;
-                }
-            }
-
-            return isInitialized && !crashed;
+            return isInitialized ? "Connected" : "Not initialized";
         }
+    }
 
-        public void Reset()
+    public override string DeviceName => devicename;
+
+    public override bool Initialize()
+    {
+        if (!isInitialized)
         {
-            if (isInitialized)
+            try
             {
-                try
-                {
-                    script.Reset();
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Device script for {0} encountered an error during Reset. Exception: {1}", devicename, exc);
-                    crashed = true;
-                    isInitialized = false;
-                }
+                isInitialized = script.Initialize();
             }
-        }
-
-        public override void Shutdown()
-        {
-            if (isInitialized)
+            catch (Exception exc)
             {
-                try
-                {
-                    this.Reset();
-                    script.Shutdown();
-                    isInitialized = false;
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Device script for {0} encountered an error during Shutdown. Exception: {1}", devicename, exc);
-                    crashed = true;
-                    isInitialized = false;
-                }
-            }
-        }
+                Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Initialization", devicename);
+                crashed = true;
+                isInitialized = false;
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
-        {
-            if (isInitialized)
-            {
-                try
-                {
-                    return script.UpdateDevice(keyColors, forced);
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error(
-                        "Device script for {0} encountered an error during UpdateDevice. Exception: {1}",
-                        devicename, exc);
-                    crashed = true;
-                    isInitialized = false;
-
-                    return false;
-                }
-            }
-            else
-            {
                 return false;
             }
+        }
+
+        return isInitialized && !crashed;
+    }
+
+    public override void Reset()
+    {
+        if (!isInitialized) return;
+        try
+        {
+            script.Reset();
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Reset", devicename);
+            crashed = true;
+            isInitialized = false;
+        }
+    }
+
+    public override void Shutdown()
+    {
+        if (!isInitialized) return;
+        try
+        {
+            Reset();
+            script.Shutdown();
+            isInitialized = false;
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Shutdown", devicename);
+            crashed = true;
+            isInitialized = false;
+        }
+    }
+
+    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+    {
+        if (!isInitialized) return false;
+        try
+        {
+            return script.UpdateDevice(keyColors, forced);
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, 
+                "Device script for {DeviceName} encountered an error during UpdateDevice", devicename);
+            crashed = true;
+            isInitialized = false;
+
+            return false;
         }
     }
 }

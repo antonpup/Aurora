@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using System.Windows.Controls;
 using Aurora.Utils;
 using System.ComponentModel;
+using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers
 {
@@ -128,7 +129,7 @@ namespace Aurora.Settings.Layers
 
         protected override System.Windows.Controls.UserControl CreateControl()
         {
-            return new Control_ShortcutAssistantLayer(this);
+            return new ControlShortcutAssistantLayer(this);
         }
 
         /// <summary>

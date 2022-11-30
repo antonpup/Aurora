@@ -17,7 +17,6 @@ internal class GDIScreenCapture : IScreenCapture
     {
         if (_targetSize != desktopRegion.Size)
         {
-            _targetBitmap.Dispose();
             _targetBitmap = new Bitmap(desktopRegion.Width, desktopRegion.Height);
             _targetSize = desktopRegion.Size;
             _graphics.Dispose();
@@ -35,7 +34,6 @@ internal class GDIScreenCapture : IScreenCapture
 
     public void Dispose()
     {
-        _targetBitmap?.Dispose();
         _graphics.Dispose();
     }
 }

@@ -8,10 +8,6 @@
       "margin_top": -232.0,
       "width": 123.0,
       "height": 232.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 10,
-      "height_bits": 19,
       "image": "Logi_G900_outline.png",
       "enabled": true,
       "absolute_location": true
@@ -23,10 +19,6 @@
       "margin_top": -69.0,
       "width": 22.0,
       "height": 24.0,
-      "width_bits": 2,
-      "height_bits": 2,
-      "margin_left_bits": 5,
-      "margin_top_bits": -5,
       "image": "Logi_G900_logo.png",
       "enabled": true,
       "absolute_location": true
@@ -38,10 +30,6 @@
       "margin_top": -125.0,
       "width": 15.0,
       "height": 14.0,
-      "width_bits": 2,
-      "height_bits": 2,
-      "margin_left_bits": 5,
-      "margin_top_bits": -5,
       "image": "Logi_G900_dpi.png",
       "enabled": true,
       "absolute_location": true

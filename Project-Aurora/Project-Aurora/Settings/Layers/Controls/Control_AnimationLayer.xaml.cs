@@ -1,14 +1,15 @@
-﻿using Aurora.Settings.Overrides.Logic;
-using Aurora.Utils;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Aurora.Controls;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Utils;
 
-namespace Aurora.Settings.Layers
+namespace Aurora.Settings.Layers.Controls
 {
     /// <summary>
     /// Interaction logic for Control_AnimationLayer.xaml
@@ -107,7 +108,7 @@ namespace Aurora.Settings.Layers
 
                 windowAnimationEditor.Title = "Animation Editor";
 
-                Controls.Control_AnimationEditor animEditor = new Controls.Control_AnimationEditor() { AnimationMix = Context.Properties._AnimationMix };
+                Control_AnimationEditor animEditor = new Control_AnimationEditor { AnimationMix = Context.Properties._AnimationMix };
                 animEditor.AnimationMixUpdated += AnimEditor_AnimationMixUpdated;
 
                 windowAnimationEditor.Content = animEditor;
@@ -126,7 +127,7 @@ namespace Aurora.Settings.Layers
         }
 
         private void AnimEditor_AnimationMixUpdated(object sender, EffectsEngine.Animations.AnimationMix mix) {
-            if (CanSet && sender is Controls.Control_AnimationEditor)
+            if (CanSet && sender is Control_AnimationEditor)
                 (this.DataContext as AnimationLayerHandler).Properties._AnimationMix = mix;
         }
 
@@ -141,7 +142,7 @@ namespace Aurora.Settings.Layers
         }
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e) {
-            if (CanSet && sender is Controls.KeySequence)
+            if (CanSet && sender is KeySequence)
                 Context.Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
@@ -213,7 +214,7 @@ namespace Aurora.Settings.Layers
 
         private void triggerKeys_SequenceUpdated(object sender, EventArgs e) {
             if (CanSet)
-                Context.Properties._TriggerKeySequence = (sender as Controls.KeySequence).Sequence;
+                Context.Properties._TriggerKeySequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
         private void translateToKey_Checked(object sender, RoutedEventArgs e) {

@@ -1,19 +1,27 @@
-﻿using Aurora.Settings;
+﻿using System.Threading.Tasks;
+using Aurora.Settings;
 using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public partial class LayoutsModule : IAuroraModule
+public sealed partial class LayoutsModule : IAuroraModule
 {
+    private KeyboardLayoutManager _layoutManager;
+    private TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    public Task<KeyboardLayoutManager> LayoutManager => _taskCompletionSource.Task;
+
     [Async]
     public void Initialize()
     {
         Global.logger.Info("Loading KB Layouts");
-        Global.kbLayout = new KeyboardLayoutManager();
+        _layoutManager = new KeyboardLayoutManager();
+        Global.kbLayout = _layoutManager;
         Global.kbLayout.LoadBrandDefault();
         Global.logger.Info("Loaded KB Layouts");
+        _taskCompletionSource.SetResult(_layoutManager);
     }
-    
+
     [Async]
     public void Dispose()
     {

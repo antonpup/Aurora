@@ -18,14 +18,17 @@ using Aurora.Settings.Layers;
 using Aurora.Profiles.Aurora_Wrapper;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Aurora.Utils;
 using PropertyChanged;
+using RazerSdkWrapper;
 
 namespace Aurora
 {
     [DoNotNotify]
     partial class ConfigUI : INotifyPropertyChanged
     {
-        Control_Settings settingsControl = new();
+        readonly Control_Settings settingsControl;
         Control_LayerControlPresenter layerPresenter = new();
         Control_ProfileControlPresenter profilePresenter = new();
 
@@ -47,7 +50,12 @@ namespace Aurora
         private Timer virtual_keyboard_timer;
         private Grid virtial_kb = new();
 
-        public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register("FocusedApplication", typeof(Profiles.Application), typeof(ConfigUI), new PropertyMetadata(null, new PropertyChangedCallback(FocusedProfileChanged)));
+        public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register(
+            "FocusedApplication", typeof(Profiles.Application), typeof(ConfigUI),
+            new PropertyMetadata(null, FocusedProfileChanged));
+
+        private readonly Task<KeyboardLayoutManager> _layoutManager;
+        private readonly Task<AuroraHttpListener> _httpListener;
 
         public Profiles.Application FocusedApplication
         {
@@ -71,11 +79,15 @@ namespace Aurora
             }
         }
 
-        public ConfigUI()
+        public ConfigUI(Task<RzSdkManager> rzSdkManager, Task<PluginManager> pluginManager,
+            Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener> httpListener)
         {
+            _httpListener = httpListener;
+            _layoutManager = layoutManager;
+            settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener);
             InitializeComponent();
 
-            Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+            _layoutManager.Result.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
             ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
@@ -85,7 +97,7 @@ namespace Aurora
 
         internal void Display()
         {
-            if (App.isSilent || Global.Configuration.StartSilently)
+            if (App.IsSilent || Global.Configuration.StartSilently)
             {
                 Visibility = Visibility.Hidden;
                 WindowStyle = WindowStyle.None;
@@ -108,7 +120,7 @@ namespace Aurora
 
         private void KbLayout_KeyboardLayoutUpdated(object sender)
         {
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
+            virtial_kb = _layoutManager.Result.VirtualKeyboard;
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
@@ -145,7 +157,7 @@ namespace Aurora
             current_color = desktop_color_scheme;
             bg_grid.Background = new SolidColorBrush(Color.FromRgb(desktop_color_scheme.Red, desktop_color_scheme.Green, desktop_color_scheme.Blue));
 
-            virtial_kb = Global.kbLayout.Virtual_keyboard;
+            virtial_kb = _layoutManager.Result.VirtualKeyboard;
 
             keyboard_grid.Children.Clear();
             keyboard_grid.Children.Add(virtial_kb);
@@ -213,11 +225,8 @@ namespace Aurora
 
                             Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
 
-                            if (IsActive)
-                            {
-                            }
                             keylights = Global.effengine.GetKeyboardLights();
-                            Global.kbLayout.SetKeyboardColors(keylights);
+                            _layoutManager.Result.SetKeyboardColors(keylights);
 
                             keyboard_record_message.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
 
@@ -628,7 +637,7 @@ namespace Aurora
             UpdateProfileStackBackground(sender as FrameworkElement);
         }
         private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
-        private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open();
+        private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
 
 
         private void UpdateProfileStackBackground(FrameworkElement item)

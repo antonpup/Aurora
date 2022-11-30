@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
+using Aurora.Settings.Layers.Controls;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using UserControl = System.Windows.Controls.UserControl;

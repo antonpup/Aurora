@@ -13,9 +13,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Aurora.Devices;
 using Aurora.Modules;
-using Aurora.Profiles;
 using Aurora.Settings;
-using Aurora.Utils;
 using Microsoft.Win32;
 using NLog;
 using MessageBox = System.Windows.MessageBox;
@@ -27,27 +25,37 @@ namespace Aurora;
 /// </summary>
 public partial class App
 {
-    private static readonly Mutex mutex = new(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
+    private static readonly Mutex Mutex = new(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
 
-    public static bool isSilent;
+    public static bool IsSilent { get; private set; }
     private static bool _isDelayed;
     private static int _delayTime = 5000;
     private static bool _ignoreUpdate;
 
+    private static readonly PluginsModule PluginsModule = new();
+    private static readonly IpcListenerModule IpcListenerModule = new();
+    private static readonly HttpListenerModule HttpListenerModule = new();
+    private static readonly RazerSdkModule RazerSdkModule = new();
+    private static readonly LayoutsModule LayoutsModule = new();
+
     private readonly List<IAuroraModule> _modules = new()
     {
         new UpdateCleanup(),
-        new PluginsModule(),
-        new LayoutsModule(),
         new InputsModule(),
-        new RazerSdkModule(),
         new PointerUpdateModule(),
+        new MediaInfoModule(),
+        PluginsModule,
+        IpcListenerModule,
+        HttpListenerModule,
+        new LightningStateManagerModule(PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener),
+        RazerSdkModule,
+        LayoutsModule,
     };
 
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        if (mutex.WaitOne(TimeSpan.Zero, true))
+        if (Mutex.WaitOne(TimeSpan.Zero, true))
         {
 #if DEBUG
                 Global.isDebug = true;
@@ -112,47 +120,6 @@ public partial class App
             }
 
             var tasks = _modules.ConvertAll(m => m.InitializeAsync());
-            Task.WhenAll(tasks).Wait();
-
-            Global.logger.Info("Loading Applications");
-            (Global.LightingStateManager = new LightingStateManager()).Initialize();
-
-            Global.logger.Info("Loading Device Manager");
-            Global.dev_manager.RegisterVariables();
-            Global.dev_manager.InitializeDevices();
-
-            Global.logger.Info("Starting GameStateListener");
-            try
-            {
-                Global.HttpListener = new AuroraHttpListener(9088);
-                Global.HttpListener.NewGameState += Global.LightingStateManager.GameStateUpdate;
-                
-                Global.IpcListener = new IpcListener();
-                Global.IpcListener.NewGameState += Global.LightingStateManager.GameStateUpdate;
-                Global.IpcListener.WrapperConnectionClosed += Global.LightingStateManager.ResetGameState;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("GameStateListener Exception, " + exc);
-                MessageBox.Show("GameStateListener Exception.\r\n" + exc);
-                Environment.Exit(0);
-            }
-
-            if (!Global.HttpListener.Start())
-            {
-                Global.logger.Error("GameStateListener could not start");
-                MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
-                Environment.Exit(0);
-            }
-
-            if (!Global.IpcListener.Start())
-            {
-                Global.logger.Error("GameStateListener could not start");
-                MessageBox.Show("GameStateListener could not start. Try running this program as Administrator.\r\nExiting.");
-                Environment.Exit(0);
-            }
-
-            Global.logger.Info("Listening for game integration calls...");
 
             Global.logger.Info("Loading ResourceDictionaries...");
             Resources.MergedDictionaries.Add(new ResourceDictionary
@@ -164,11 +131,16 @@ public partial class App
                 Source = new Uri("Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml", UriKind.Relative)
             });
             Global.logger.Info("Loaded ResourceDictionaries");
+            MainWindow = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager, HttpListenerModule.HttpListener);
 
+            Task.WhenAll(tasks).Wait();
+
+            Global.logger.Info("Loading Device Manager");
+            Global.dev_manager.RegisterVariables();
+            Global.dev_manager.InitializeDevices();
 
             Global.logger.Info("Loading ConfigUI...");
 
-            MainWindow = new ConfigUI();
             Global.LightingStateManager.InitUpdate();
             ((ConfigUI)MainWindow).Display();
 
@@ -176,7 +148,7 @@ public partial class App
             if (Global.Configuration.BitmapWindowOnStartUp)
                 Window_BitmapView.Open();
             if (Global.Configuration.HttpWindowOnStartUp)
-                Window_GSIHttpDebug.Open();
+                Window_GSIHttpDebug.Open(HttpListenerModule.HttpListener);
         }
         else
         {
@@ -211,7 +183,7 @@ public partial class App
                     Global.logger.Info("Program started in debug mode.");
                     break;
                 case "-silent":
-                    isSilent = true;
+                    IsSilent = true;
                     Global.logger.Info("Program started with '-silent' parameter");
                     break;
                 case "-ignore_update":
@@ -291,7 +263,6 @@ public partial class App
     protected override void OnExit(ExitEventArgs e)
     {
         base.OnExit(e);
-        Global.LightingStateManager.SaveAll();
 
         if (Global.Configuration != null)
             ConfigManager.Save(Global.Configuration);
@@ -299,22 +270,7 @@ public partial class App
         var tasks = _modules.ConvertAll(m => m.DisposeAsync());
         Task.WhenAll(tasks).Wait();
 
-        Global.LightingStateManager?.Dispose();
-        Global.IpcListener?.Stop().Wait();
-        Global.HttpListener?.Stop().Wait();
         Global.dev_manager?.ShutdownDevices();
-
-        try
-        {
-            foreach (Process proc in Process.GetProcessesByName("Aurora-SkypeIntegration"))
-            {
-                proc.Kill();
-            }
-        }
-        catch (Exception exc)
-        {
-            Global.logger.Error("Exception closing \"Aurora-SkypeIntegration\", Exception: " + exc);
-        }
 
         Environment.Exit(0);
     }

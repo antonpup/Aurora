@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_WrapperLightsLayer"
+             xmlns:Controls="clr-namespace:Aurora.Controls"  x:Class="Aurora.Settings.Layers.Controls.Control_WrapperLightsLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     <Grid>
         <TextBlock TextWrapping="Wrap" Text="The purpose of this layer is to display lighting effects from games that have native lighting(LightFX, Razer, Logitech, etc) that Aurora has wrappers for. This will only work if you have a wrapper applied to the correct location for a game that supports the lighting engine that the wrapper is designed for." HorizontalAlignment="Left" Width="487" VerticalAlignment="Top" Margin="0,0,0,0"/>

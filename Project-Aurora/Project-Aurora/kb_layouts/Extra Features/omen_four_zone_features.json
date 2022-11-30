@@ -8,10 +8,6 @@
       "margin_top": 200.0,
       "width": 0.0,
       "height": 0.0,
-      "margin_left_bits": 1,
-      "margin_top_bits": -19,
-      "width_bits": 13,
-      "height_bits": 19,
       "enabled": true,
       "absolute_location": true
     },
@@ -23,10 +19,6 @@
       "width": 216.0,
       "height": 211.0,
       "font_size": 20.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 3,
       "image": "Omen_zone_2.png",
       "enabled": true,
       "absolute_location": true
@@ -39,10 +31,6 @@
       "width": 105.0,
       "height": 67.0,
       "font_size": 20.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 12,
       "image": "Omen_zone_3.png",
       "enabled": true,
       "absolute_location": true
@@ -55,10 +43,6 @@
       "width": 338.0,
       "height": 211.0,
       "font_size": 20.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 6,
       "image": "Omen_zone_1.png",
       "enabled": true,
       "absolute_location": true
@@ -71,10 +55,6 @@
       "width": 192.0,
       "height": 211.0,
       "font_size": 20.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 9,
       "image": "Omen_zone_0.png",
       "enabled": true,
       "absolute_location": true
@@ -86,10 +66,6 @@
       "width": 0.0,
       "height": 0.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": 10,
-      "margin_top_bits": 0,
       "enabled": false,
       "absolute_location": true
     }

@@ -2,8 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows;
-using CSScripting;
-using Microsoft.Scripting.Utils;
 
 namespace Aurora.Controls;
 
@@ -28,7 +26,7 @@ public partial class Control_DeviceCalibration : Window
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
         var value = (string)ComboBox.SelectionBoxItem;
-        if (value.IsEmpty())
+        if (string.IsNullOrEmpty(value))
         {
             return;
         }

@@ -11,10 +11,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "16": {
@@ -26,10 +22,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     },
     "100": {
@@ -41,10 +33,6 @@
       "width": null,
       "height": null,
       "font_size": null,
-      "width_bits": null,
-      "height_bits": null,
-      "margin_left_bits": null,
-      "margin_top_bits": null,
       "enabled": null
     }
   },

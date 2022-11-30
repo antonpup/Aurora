@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
 
-namespace Aurora
+namespace Aurora.Utils
 {
 	internal sealed class MessagePumpThread : IDisposable
 	{
 		private Thread thread;
-		private readonly TaskCompletionSource<Exception> initResult
-			= new TaskCompletionSource<Exception>();
+		private readonly TaskCompletionSource<Exception> initResult = new();
 		private ApplicationContext applicationContext;
 
 		public void Start(Action init)

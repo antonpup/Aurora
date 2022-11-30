@@ -2,170 +2,143 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
+using System.Linq;
 using Aurora.Utils;
 using Newtonsoft.Json;
 
-namespace Aurora.EffectsEngine.Animations
+namespace Aurora.EffectsEngine.Animations;
+
+public sealed class AnimationMix: IEquatable<AnimationMix>
 {
-    public class AnimationMix
+    [JsonProperty]
+    [JsonConverter(typeof(ConcurrentDictionaryJsonConverterAdapter<string, AnimationTrack>))]
+    private readonly ConcurrentDictionary<string, AnimationTrack> _tracks = new();
+
+    /// <summary>
+    /// When true, will remove Animation tracks that no longer have any animations.
+    /// </summary>
+    [JsonProperty("_automatically_remove_complete")]
+    private bool _automaticallyRemoveComplete;
+
+    public AnimationMix()
     {
-        [Newtonsoft.Json.JsonProperty]
-        [JsonConverter(typeof(ConcurrentDictionaryJsonConverterAdapter<string, AnimationTrack>))]
-        private readonly ConcurrentDictionary<string, AnimationTrack> _tracks = new();
+    }
 
-        /// <summary>
-        /// When true, will remove Animation tracks that no longer have any animations.
-        /// </summary>
-        [Newtonsoft.Json.JsonProperty] private bool _automatically_remove_complete;
+    public AnimationMix(AnimationTrack[] tracks)
+    {
+        foreach (var track in tracks)
+            AddTrack(track);
+    }
 
-        public AnimationMix()
+    public AnimationMix SetAutoRemove(bool value)
+    {
+        _automaticallyRemoveComplete = value;
+
+        return this;
+    }
+
+    public AnimationMix AddTrack(AnimationTrack track)
+    {
+        if (track != null)
         {
-        }
-
-        public AnimationMix(AnimationTrack[] tracks)
-        {
-            foreach (var track in tracks)
-                AddTrack(track);
-        }
-
-        public AnimationMix SetAutoRemove(bool value)
-        {
-            _automatically_remove_complete = value;
-
-            return this;
-        }
-
-        public AnimationMix AddTrack(AnimationTrack track)
-        {
-            if (track != null)
-            {
-                if (_tracks.ContainsKey(track.GetName()))
-                    _tracks[track.GetName()] = track;
-                else
-                    _tracks.TryAdd(track.GetName(), track);
-            }
-
-            return this;
-        }
-
-        public AnimationMix RemoveTrack(string track_name)
-        {
-            _tracks.TryRemove(track_name, out _);
-
-            return this;
-        }
-
-        public AnimationTrack GetTrack(string track_name)
-        {
-            if (_tracks.ContainsKey(track_name))
-                return _tracks[track_name];
+            if (_tracks.ContainsKey(track.GetName()))
+                _tracks[track.GetName()] = track;
             else
-                return null;
+                _tracks.TryAdd(track.GetName(), track);
         }
 
-        public bool ContainsTrack(string track_name)
+        return this;
+    }
+
+    private void RemoveTrack(string trackName)
+    {
+        _tracks.TryRemove(trackName, out _);
+    }
+
+    public bool ContainsTrack(string trackName)
+    {
+        return _tracks.ContainsKey(trackName);
+    }
+
+    public float GetDuration()
+    {
+        return _tracks.Select(track => track.Value.GetShift() + track.Value.AnimationDuration)
+            .Prepend(0.0f)
+            .Max();
+    }
+
+    public void SetScale(float scale)
+    {
+        foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
         {
-            return _tracks.ContainsKey(track_name);
+            track.Value.SetScale(scale);
         }
+    }
 
-        public float GetDuration()
+    public ConcurrentDictionary<string, AnimationTrack> GetTracks()
+    {
+        return _tracks;
+    }
+
+    public bool AnyActiveTracksAt(float time)
+    {
+        return _tracks.Any(track => track.Value.ContainsAnimationAt(time));
+    }
+
+    public void Draw(Graphics g, float time, PointF offset = default(PointF))
+    {
+        foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
         {
-            float current_duration, return_val = 0.0f;
-
-            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
+            if (track.Value.ContainsAnimationAt(time))
             {
-                current_duration = track.Value.GetShift() + track.Value.AnimationDuration;
-                if (current_duration > return_val)
-                    return_val = current_duration;
-            }
-
-            return return_val;
-        }
-
-        public void SetScale(float scale)
-        {
-            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
-            {
-                track.Value.SetScale(scale);
-            }
-        }
-
-        public ConcurrentDictionary<string, AnimationTrack> GetTracks()
-        {
-            return _tracks;
-        }
-
-        public bool AnyActiveTracksAt(float time)
-        {
-            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
-            {
-                if (track.Value.ContainsAnimationAt(time))
-                    return true;
-            }
-
-            return false;
-        }
-
-        public void Draw(Graphics g, float time, PointF offset = default(PointF))
-        {
-            foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
-            {
-                if (track.Value.ContainsAnimationAt(time))
+                AnimationFrame frame = track.Value.GetFrame(time);
+                try
                 {
-                    AnimationFrame frame = track.Value.GetFrame(time);
-                    try
-                    {
-                        frame.SetOffset(offset);
-                        frame.Draw(g);
-                    }
-                    catch (Exception exc)
-                    {
-                        System.Console.WriteLine("Animation mix draw error: " + exc.Message);
-                    }
+                    frame.SetOffset(offset);
+                    frame.Draw(g);
                 }
-                else if (_automatically_remove_complete)
+                catch (Exception exc)
                 {
-                    RemoveTrack(track.Key);
+                    Console.WriteLine(@"Animation mix draw error: " + exc.Message);
                 }
             }
-        }
-
-        public AnimationMix Clear()
-        {
-            _tracks.Clear();
-
-            return this;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((AnimationMix) obj);
-        }
-
-        public bool Equals(AnimationMix p)
-        {
-            return _tracks.Equals(p._tracks) &&
-                   _automatically_remove_complete == p._automatically_remove_complete;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
+            else if (_automaticallyRemoveComplete)
             {
-                int hash = 17;
-                hash = hash * 23 + _tracks.GetHashCode();
-                hash = hash * 23 + _automatically_remove_complete.GetHashCode();
-                return hash;
+                RemoveTrack(track.Key);
             }
         }
+    }
 
-        public override string ToString()
+    public void Clear()
+    {
+        _tracks.Clear();
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType() && Equals((AnimationMix) obj);
+    }
+
+    public bool Equals(AnimationMix p)
+    {
+        return _tracks.Equals(p._tracks) &&
+               _automaticallyRemoveComplete == p._automaticallyRemoveComplete;
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            return "AnimationMix: [ Count: " + _tracks.Count + " ]";
+            int hash = 17;
+            hash = hash * 23 + _tracks.GetHashCode();
+            return hash;
         }
+    }
+
+    public override string ToString()
+    {
+        return "AnimationMix: [ Count: " + _tracks.Count + " ]";
     }
 }

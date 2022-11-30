@@ -17,13 +17,13 @@ using OpenRGBZoneType = OpenRGB.NET.Enums.ZoneType;
 
 namespace Aurora.Devices.OpenRGB
 {
-    public class OpenRGBAuroraDevice : DefaultDevice
+    public class OpenRgbAuroraDevice : DefaultDevice
     {
         public override string DeviceName => "OpenRGB";
         protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.OrgbDevice.Name));
 
         private OpenRGBClient _openRgb;
-        private List<HelperOpenRGBDevice> _devices;
+        private List<HelperOpenRgbDevice> _devices;
 
         private readonly object _updateLock = new();
 
@@ -73,7 +73,7 @@ namespace Aurora.Devices.OpenRGB
                     {
                         _openRgb = new OpenRGBClient(name: "Aurora", ip: ip, port: port, autoconnect: true);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         remainingMillis -= 1000;
                         if (remainingMillis <= 0)
@@ -116,7 +116,7 @@ namespace Aurora.Devices.OpenRGB
                 return;
             }
             
-            _devices = new List<HelperOpenRGBDevice>();
+            _devices = new List<HelperOpenRgbDevice>();
             
             var fallbackKey = Global.Configuration.VarRegistry.GetVariable<DK>($"{DeviceName}_fallback_key");
             lock (_updateLock)
@@ -126,7 +126,7 @@ namespace Aurora.Devices.OpenRGB
                     var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
                     if (directMode == null) continue;
                     _openRgb.SetMode(device.ID, device.Modes.FindIndex(mode => mode == directMode));
-                    var helper = new HelperOpenRGBDevice(device.ID, device);
+                    var helper = new HelperOpenRgbDevice(device.ID, device);
                     helper.ProcessMappings(fallbackKey);
                     _devices.Add(helper);
                 }
@@ -184,7 +184,7 @@ namespace Aurora.Devices.OpenRGB
             return true;
         }
 
-        private void UpdateDevice(HelperOpenRGBDevice device, IReadOnlyDictionary<DeviceKeys, Color> keyColors)
+        private void UpdateDevice(HelperOpenRgbDevice device, IReadOnlyDictionary<DeviceKeys, Color> keyColors)
         {
             var ledIndex = 0;
             foreach (var zone in device.OrgbDevice.Zones)
@@ -226,20 +226,20 @@ namespace Aurora.Devices.OpenRGB
                     select CalibrationName(device, zone);
         }
 
-        private string CalibrationName(HelperOpenRGBDevice device, Zone zone)
+        private string CalibrationName(HelperOpenRgbDevice device, Zone zone)
         {
             return $"{DeviceName}_{device.OrgbDevice.Name.Trim()}_{zone.Name}";
         }
     }
 
-    public class HelperOpenRGBDevice
+    public class HelperOpenRgbDevice
     {
         public int Index { get; }
         public OpenRGBDevice OrgbDevice { get; }
         public OpenRGBColor[] Colors { get; }
         public DK[] Mapping { get; }
 
-        public HelperOpenRGBDevice(int idx, OpenRGBDevice dev)
+        public HelperOpenRgbDevice(int idx, OpenRGBDevice dev)
         {
             Index = idx;
             OrgbDevice = dev;
@@ -256,9 +256,9 @@ namespace Aurora.Devices.OpenRGB
                 {
                     Mapping[ledIndex] = DeviceKeys.Peripheral_Logo;
                 }
-                else if (OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName, out var devKey) ||
-                         OpenRGBKeyNames.KeyNames.TryGetValue(orgbKeyName.Replace(" LED", ""), out devKey) ||
-                         OpenRGBKeyNames.KeyNames.TryGetValue("Key: " + orgbKeyName, out devKey)
+                else if (OpenRgbKeyNames.KeyNames.TryGetValue(orgbKeyName, out var devKey) ||
+                         OpenRgbKeyNames.KeyNames.TryGetValue(orgbKeyName.Replace(" LED", ""), out devKey) ||
+                         OpenRgbKeyNames.KeyNames.TryGetValue("Key: " + orgbKeyName, out devKey)
                         )
                 {
                     Mapping[ledIndex] = devKey;
@@ -284,7 +284,7 @@ namespace Aurora.Devices.OpenRGB
                         {
                             if (zoneLedIndex < 15)
                             {
-                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRGBKeyNames.MousepadLights[zoneLedIndex];
+                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRgbKeyNames.MousepadLights[zoneLedIndex];
                             }
                         }
                         else
@@ -292,7 +292,7 @@ namespace Aurora.Devices.OpenRGB
                             //TODO - scale zones with more than 32 LEDs
                             if (zoneLedIndex < 60)
                             {
-                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRGBKeyNames.AdditionalLights[zoneLedIndex];
+                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRgbKeyNames.AdditionalLights[zoneLedIndex];
                             }
                         }
                     }

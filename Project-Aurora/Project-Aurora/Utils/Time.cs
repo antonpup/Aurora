@@ -83,14 +83,14 @@ namespace Aurora.Utils
         /// <summary>
         /// Determines whether the two specified hour and minute marks are inbetween the current time
         /// </summary>
-        /// <param name="start_hour">The starting hour</param>
-        /// <param name="start_minute">The starting minute</param>
-        /// <param name="end_hour">The ending hour</param>
-        /// <param name="end_minute">The ending minute</param>
+        /// <param name="startHour">The starting hour</param>
+        /// <param name="startMinute">The starting minute</param>
+        /// <param name="endHour">The ending hour</param>
+        /// <param name="endMinute">The ending minute</param>
         /// <returns>A boolean representing if the current time falls between the two hours and minutes</returns>
-        public static bool IsCurrentTimeBetween(int start_hour, int start_minute, int end_hour, int end_minute)
+        public static bool IsCurrentTimeBetween(int startHour, int startMinute, int endHour, int endMinute)
         {
-            return IsCurrentTimeBetween(new TimeSpan(start_hour, start_minute, 0), new TimeSpan(end_hour, end_minute, 0));
+            return IsCurrentTimeBetween(new TimeSpan(startHour, startMinute, 0), new TimeSpan(endHour, endMinute, 0));
         }
 
         /// <summary>

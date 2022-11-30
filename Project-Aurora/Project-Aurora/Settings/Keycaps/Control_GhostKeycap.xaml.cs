@@ -34,30 +34,30 @@ namespace Aurora.Settings.Keycaps
         {
             InitializeComponent();
 
-            associatedKey = key.tag;
+            associatedKey = key.Tag;
 
-            this.Width = key.width.Value;
-            this.Height = key.height.Value;
+            this.Width = key.Width;
+            this.Height = key.Height;
 
             //Keycap adjustments
-            if (string.IsNullOrWhiteSpace(key.image))
+            if (string.IsNullOrWhiteSpace(key.Image))
                 keyBorder.BorderThickness = new Thickness(1.5);
             else
                 keyBorder.BorderThickness = new Thickness(0.0);
-            keyBorder.IsEnabled = key.enabled.Value;
+            keyBorder.IsEnabled = key.Enabled.Value;
 
-            if (!key.enabled.Value)
+            if (!key.Enabled.Value)
             {
                 ToolTipService.SetShowOnDisabled(keyBorder, true);
                 keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
             }
 
-            if (string.IsNullOrWhiteSpace(key.image))
+            if (string.IsNullOrWhiteSpace(key.Image))
             {
-                keyCap.Text = key.visualName;
-                keyCap.Tag = key.tag;
-                if (key.font_size != null)
-                    keyCap.FontSize = key.font_size.Value;
+                keyCap.Text = key.VisualName;
+                keyCap.Tag = key.Tag;
+                if (key.FontSize != null)
+                    keyCap.FontSize = key.FontSize.Value;
             }
             else
             {
@@ -71,7 +71,7 @@ namespace Aurora.Settings.Keycaps
                     image.StreamSource = memStream;
                     image.EndInit();
 
-                    if (key.tag == DeviceKeys.NONE)
+                    if (key.Tag == DeviceKeys.NONE)
                         keyBorder.Background = new ImageBrush(image);
                     else
                     {

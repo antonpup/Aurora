@@ -291,7 +291,16 @@ namespace Aurora.Profiles
 
                     if (!String.IsNullOrWhiteSpace(profile_content))
                     {
-                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(profile_content, Config.ProfileType, new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = binder, Error = new EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs>(LoadProfilesError) });
+                        ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(
+                            profile_content,
+                            Config.ProfileType,
+                            new JsonSerializerSettings
+                            {
+                                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                                TypeNameHandling = TypeNameHandling.All,
+                                SerializationBinder = binder,
+                                Error = LoadProfilesError
+                            });
                         prof.ProfileFilepath = path;
 
                         if (String.IsNullOrWhiteSpace(prof.ProfileName))
@@ -522,7 +531,8 @@ namespace Aurora.Profiles
                                 {
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
                                     if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
-                                        Global.logger.Warn(string.Format("Script \"{0}\" must have a unique string ID variable for the effect {1}", script, typ.FullName));
+                                        Global.logger.Warn("Script {Script} must have a unique string ID variable for the effect {FullName}",
+                                            script, typ.FullName);
                                     else
                                         anyLoaded = true;
                                 }
@@ -530,7 +540,7 @@ namespace Aurora.Profiles
 
                             break;
                         default:
-                            Global.logger.Warn(string.Format("Script with path {0} has an unsupported type/ext! ({1})", script, ext));
+                            Global.logger.Warn("Script with path {Script} has an unsupported type/ext! ({Ext})", script, ext);
                             continue;
                     }
 
@@ -539,7 +549,7 @@ namespace Aurora.Profiles
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error(string.Format("An error occured while trying to load script {0}. Exception: {1}", script, exc));
+                    Global.logger.Error(exc, "An error occured while trying to load script {Script}", script);
                     //Maybe MessageBox info dialog could be included.
                 }
             }

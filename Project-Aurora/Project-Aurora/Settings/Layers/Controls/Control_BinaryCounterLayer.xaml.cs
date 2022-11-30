@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Controls;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers.Controls {
 
     public partial class Control_BinaryCounterLayer : UserControl {
 

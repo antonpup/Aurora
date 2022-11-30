@@ -9,6 +9,7 @@ using Aurora.Profiles;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 
 namespace Aurora.Settings.Layers

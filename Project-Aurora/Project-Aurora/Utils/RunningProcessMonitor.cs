@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using Lombok.NET;
 
 namespace Aurora.Utils {
 
@@ -23,11 +24,8 @@ namespace Aurora.Utils {
     /// process closes and can delay by about 2 seconds, though this really shouldn't be an issue since this isn't required for the
     /// profile switching - only the overlay toggling.
     /// </summary>
-    public class RunningProcessMonitor {
-        private static readonly Lazy<RunningProcessMonitor> SingletonInstance = new(() => new RunningProcessMonitor());
-        public static RunningProcessMonitor Instance => SingletonInstance.Value;
-        
-        // ReSharper disable once EventNeverSubscribedTo.Global
+    [Singleton]
+    public partial class RunningProcessMonitor {
         public event EventHandler<RunningProcessChanged> RunningProcessesChanged;
 
         /// <summary>A list of all currently running processes (and how many instances are running).</summary>

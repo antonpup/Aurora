@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Aurora.Settings.Layers.Control_AmbilightLayer"
+﻿<UserControl  x:Class="Aurora.Settings.Layers.Controls.Control_AmbilightLayer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,11 +8,12 @@
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:c="clr-namespace:Aurora.Controls"
              xmlns:ambilight="clr-namespace:Aurora.Settings.Layers.Ambilight"
+             xmlns:controls="clr-namespace:Aurora.Settings.Layers.Controls"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
     
     <UserControl.Resources>
-        <local:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
-        <local:AmbilightTypeValueConverter x:Key="AmbilightTypeValueConverter" />
+        <controls:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
+        <controls:AmbilightTypeValueConverter x:Key="AmbilightTypeValueConverter" />
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal">
@@ -109,15 +110,15 @@
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <CheckBox IsChecked="{Binding Properties._BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" Grid.Row="0" Grid.Column="0"/>
+                    <CheckBox IsChecked="{Binding Properties.BrightenImage}" x:Name="EnableBrightnessMod" Content="Brightness:" Grid.Row="0" Grid.Column="0"/>
                     <Slider Value="{Binding Properties.BrightnessChange}" x:Name="BrightnessSlider" IsEnabled="{Binding ElementName=EnableBrightnessMod, Path=IsChecked}" Minimum="0" Maximum="3" TickFrequency="0.1" Grid.Row="0" Grid.Column="1"/>
                     <Label Content="{Binding ElementName=BrightnessSlider, Path=Value}" ContentStringFormat="N1" Grid.Row="0" Grid.Column="2" />
 
-                    <CheckBox IsChecked="{Binding Properties._SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:"  Grid.Row="1" Grid.Column="0"/>
+                    <CheckBox IsChecked="{Binding Properties.SaturateImage}" x:Name="EnableSaturationMod" Content="Saturation:"  Grid.Row="1" Grid.Column="0"/>
                     <Slider Value="{Binding Properties.SaturationChange}" x:Name="SaturationSlider" IsEnabled="{Binding ElementName=EnableSaturationMod, Path=IsChecked}" Minimum="0" Maximum="3" TickFrequency="0.1" Grid.Row="1" Grid.Column="1"/>
                     <Label Content="{Binding ElementName=SaturationSlider, Path=Value}" ContentStringFormat="N1" Grid.Row="1" Grid.Column="2"/>
 
-                    <CheckBox IsChecked="{Binding Properties._HueShiftImage}" x:Name="EnableHueMod" Content="Hue:" Grid.Row="2" Grid.Column="0"/>
+                    <CheckBox IsChecked="{Binding Properties.HueShiftImage}" x:Name="EnableHueMod" Content="Hue:" Grid.Row="2" Grid.Column="0"/>
                     <Slider Value="{Binding Properties.HueShiftAngle}" x:Name="HueAngleSlider" IsEnabled="{Binding ElementName=EnableHueMod, Path=IsChecked}" Minimum="0" Maximum="360" TickFrequency="1" Grid.Row="2" Grid.Column="1"/>
                     <Label Content="{Binding ElementName=HueAngleSlider, Path=Value}" ContentStringFormat="N0" Grid.Row="2" Grid.Column="2"/>
                 </Grid>

@@ -10,10 +10,6 @@
       "width": 90.0,
       "height": 30.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": 0,
-      "margin_top_bits": -3,
       "image": "Corsair_strafe_mk2_logo.png",
       "enabled": true,
       "absolute_location": true
@@ -26,10 +22,6 @@
       "width": 25.0,
       "height": 20.0,
       "font_size": 9.0,
-      "width_bits": 2,
-      "height_bits": 1,
-      "margin_left_bits": 0,
-      "margin_top_bits": 0,
       "enabled": false,
       "absolute_location": true
     },
@@ -41,10 +33,6 @@
       "width": 25.0,
       "height": 20.0,
       "font_size": 9.0,
-      "width_bits": 2,
-      "height_bits": 1,
-      "margin_left_bits": 1,
-      "margin_top_bits": 0,
       "enabled": true,
       "absolute_location": true
     },
@@ -56,10 +44,6 @@
       "width": 25.0,
       "height": 20.0,
       "font_size": 9.0,
-      "width_bits": 2,
-      "height_bits": 1,
-      "margin_left_bits": 0,
-      "margin_top_bits": 0,
       "enabled": true,
       "absolute_location": true
     }

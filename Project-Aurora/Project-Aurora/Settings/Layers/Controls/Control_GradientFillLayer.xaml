@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ncore="http://schemas.ncore.com/wpf/xaml/colorbox"
-             xmlns:Controls="clr-namespace:Aurora.Controls" x:Class="Aurora.Settings.Layers.Control_GradientFillLayer"
+             xmlns:Controls="clr-namespace:Aurora.Controls"  x:Class="Aurora.Settings.Layers.Controls.Control_GradientFillLayer"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
 
     <Grid>

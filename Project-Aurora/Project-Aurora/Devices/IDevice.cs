@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
+using JetBrains.Annotations;
 
 namespace Aurora.Devices
 {
@@ -19,6 +18,8 @@ namespace Aurora.Devices
     /// <summary>
     /// An interface for a device class.
     /// </summary>
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature | ImplicitUseKindFlags.Access,
+        ImplicitUseTargetFlags.WithInheritors)]
     public interface IDevice
     {
         /// <summary>
@@ -72,9 +73,10 @@ namespace Aurora.Devices
         /// Updates the device with a specified color composition.
         /// </summary>
         /// <param name="colorComposition">A struct containing a dictionary of colors as well as the resulting bitmap</param>
+        /// <param name="e"></param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        bool UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
+        void UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
 
         IEnumerable<string> GetDevices();
     }

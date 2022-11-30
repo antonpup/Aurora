@@ -1,87 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+[JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+public class ColorZone
 {
-    public class ColorZone
+    public string Name { get; set; }
+    public KeySequence Keysequence { get; set; }
+    public Color Color { get; set; }
+    public LayerEffects Effect { get; set; }
+    public LayerEffectConfig EffectConfig { get; set; }
+
+    public ColorZone()
     {
-        public string name;
-        public KeySequence keysequence;
-        public Color color;
-        public LayerEffects effect;
-        public LayerEffectConfig effect_config;
+        Name = "New Zone";
+        Keysequence = new KeySequence();
+        Color = Color.Black;
+        Effect = LayerEffects.None;
+        EffectConfig = new LayerEffectConfig();
+        GenerateRandomColor();
+    }
 
-        public ColorZone()
-        {
-            name = "New Zone";
-            keysequence = new KeySequence();
-            color = Color.Black;
-            effect = LayerEffects.None;
-            effect_config = new LayerEffectConfig();
-            GenerateRandomColor();
-        }
-        
-        public ColorZone(ColorZone otherZone)
-        {
-            name = otherZone.name;
-            keysequence = new KeySequence(otherZone.keysequence);
-            color = otherZone.color;
-            effect = otherZone.effect;
-            effect_config = new LayerEffectConfig(otherZone.effect_config);
-        }
+    private void GenerateRandomColor()
+    {
+        Random r = new Random(Utils.Time.GetSeconds());
+        Color = Color.FromArgb(r.Next(255), r.Next(255), r.Next(255));
+    }
 
-        public ColorZone(string zone_name = "New Zone")
-        {
-            name = zone_name;
-            keysequence = new KeySequence();
-            color = Color.Black;
-            effect = LayerEffects.None;
-            effect_config = new LayerEffectConfig();
-            GenerateRandomColor();
-        }
-
-        public ColorZone(Devices.DeviceKeys[] zone_keys, string zone_name = "New Zone")
-        {
-            name = zone_name;
-            keysequence = new KeySequence(zone_keys);
-            color = Color.Black;
-            effect = LayerEffects.None;
-            effect_config = new LayerEffectConfig();
-            GenerateRandomColor();
-        }
-
-        public ColorZone(Devices.DeviceKeys[] zone_keys, LayerEffects zone_effect, string zone_name = "New Zone")
-        {
-            name = zone_name;
-            keysequence = new KeySequence(zone_keys);
-            color = Color.Black;
-            effect = zone_effect;
-            effect_config = new LayerEffectConfig();
-            GenerateRandomColor();
-        }
-
-        public ColorZone(Devices.DeviceKeys[] zone_keys, Color zone_color, string zone_name = "New Zone")
-        {
-            name = zone_name;
-            keysequence = new KeySequence(zone_keys);
-            color = zone_color;
-            effect = LayerEffects.None;
-            effect_config = new LayerEffectConfig();
-        }
-
-        private void GenerateRandomColor()
-        {
-            Random r = new Random(Utils.Time.GetSeconds());
-            color = Color.FromArgb(r.Next(255), r.Next(255), r.Next(255));
-        }
-
-        public override string ToString()
-        {
-            return this.name;
-        }
+    public override string ToString()
+    {
+        return Name;
     }
 }

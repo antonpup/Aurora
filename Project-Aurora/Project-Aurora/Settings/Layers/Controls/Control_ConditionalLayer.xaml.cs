@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers.Controls {
     /// <summary>
     /// Interaction logic for Control_ConditionalLayer.xaml
     /// </summary>

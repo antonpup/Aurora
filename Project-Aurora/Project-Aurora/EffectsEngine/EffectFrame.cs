@@ -1,95 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Aurora.EffectsEngine
+namespace Aurora.EffectsEngine;
+
+/// <summary>
+/// A class representative of one frame. Contains a list of EffectLayers as layers and overlay layers.
+/// </summary>
+public sealed class EffectFrame : IDisposable
 {
+    private readonly Queue<EffectLayer> _overLayers = new();
+    private readonly Queue<EffectLayer> _layers = new();
+
     /// <summary>
-    /// A class representative of one frame. Contains a list of EffectLayers as layers and overlay layers.
+    /// Adds layers into the frame
     /// </summary>
-    public class EffectFrame : IDisposable
+    /// <param name="effectLayers">Array of layers to be added</param>
+    public void AddLayers(IEnumerable<EffectLayer> effectLayers)
     {
-        readonly Queue<EffectLayer> over_layers = new();
-        readonly Queue<EffectLayer> layers = new();
+        foreach (var layer in effectLayers)
+            _layers.Enqueue(layer);
+    }
 
-        /// <summary>
-        /// Adds layers into the frame
-        /// </summary>
-        /// <param name="effectLayers">Array of layers to be added</param>
-        public void AddLayers(EffectLayer[] effectLayers)
-        {
-            foreach (EffectLayer layer in effectLayers)
-                layers.Enqueue(layer);
-        }
+    /// <summary>
+    /// Add overlay layers into the frame
+    /// </summary>
+    /// <param name="effectLayers">Array of layers to be added</param>
+    public void AddOverlayLayers(IEnumerable<EffectLayer> effectLayers)
+    {
+        foreach(var layer in effectLayers)
+            _overLayers.Enqueue(layer);
+    }
 
-        /// <summary>
-        /// Add overlay layers into the frame
-        /// </summary>
-        /// <param name="effectLayers">Array of layers to be added</param>
-        public void AddOverlayLayers(EffectLayer[] effectLayers)
-        {
-            foreach(EffectLayer layer in effectLayers)
-                over_layers.Enqueue(layer);
-        }
+    /// <summary>
+    /// Add overlay layer into the frame
+    /// </summary>
+    /// <param name="effectLayer">Array of layers to be added</param>
+    public void AddOverlayLayer(EffectLayer effectLayer)
+    {
+        _overLayers.Enqueue(effectLayer);
+    }
 
-        /// <summary>
-        /// Add overlay layer into the frame
-        /// </summary>
-        /// <param name="effectLayers">Array of layers to be added</param>
-        public void AddOverlayLayer(EffectLayer effectLayer)
-        {
-            over_layers.Enqueue(effectLayer);
-        }
+    /// <summary>
+    /// Gets the queue of layers
+    /// </summary>
+    /// <returns>Queue of layers</returns>
+    public Queue<EffectLayer> GetLayers()
+    {
+        return _layers;
+    }
 
-        /// <summary>
-        /// Gets the queue of layers
-        /// </summary>
-        /// <returns>Queue of layers</returns>
-        public Queue<EffectLayer> GetLayers()
-        {
-            return new Queue<EffectLayer>(layers);
-        }
+    /// <summary>
+    /// Gets the queue of overlay layers
+    /// </summary>
+    /// <returns>Queue of overlay layers</returns>
+    public Queue<EffectLayer> GetOverlayLayers()
+    {
+        return _overLayers;
+    }
 
-        /// <summary>
-        /// Gets the queue of overlay layers
-        /// </summary>
-        /// <returns>Queue of overlay layers</returns>
-        public Queue<EffectLayer> GetOverlayLayers()
-        {
-            return new Queue<EffectLayer>(over_layers);
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposedValue) return;
-            if (disposing)
-            {
-                over_layers.Clear();
-                layers.Clear();
-            }
-
-            // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-            // TODO: set large fields to null.
-
-            disposedValue = true;
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~EffectFrame() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-        #endregion
+    public void Dispose()
+    {
+        _overLayers.Clear();
+        _layers.Clear();
     }
 }

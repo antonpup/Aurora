@@ -7,13 +7,17 @@ using System.Drawing;
 using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
 using Windows.Foundation.Metadata;
+using Aurora.Settings.Layers.Controls;
+using JetBrains.Annotations;
 using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Settings.Layers
 {
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
     public abstract class LayerHandlerProperties<TProperty> : IValueOverridable, INotifyPropertyChanged, IDisposable where TProperty : LayerHandlerProperties<TProperty>
     {
         private static readonly Lazy<TypeAccessor> Accessor = new(() => TypeAccessor.Create(typeof(TProperty)));
@@ -136,6 +140,12 @@ namespace Aurora.Settings.Layers
             OnPropertiesChanged(this, new PropertyChangedEventArgs(""));
         }
 
+        protected void SetFieldAndRaisePropertyChanged<T>(out T field, T newValue, [CallerMemberName] string propertyName = null)
+        {
+            field = newValue;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public void OnPropertiesChanged(object sender, object args = null)
         {
             PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(""));
@@ -170,7 +180,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public Color SecondaryColor => Logic._SecondaryColor ?? _SecondaryColor ?? Color.Empty;
 
-        public LayerHandlerProperties2Color(bool assign_default = false) : base(assign_default) { }
+        public LayerHandlerProperties2Color(bool assignDefault = false) : base(assignDefault) { }
 
         public override void Default()
         {
@@ -184,7 +194,7 @@ namespace Aurora.Settings.Layers
         public LayerHandlerProperties()
         { }
 
-        public LayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+        public LayerHandlerProperties(bool assignDefault = false) : base(assignDefault) { }
     }
 
     public interface ILayerHandler: IDisposable
@@ -206,13 +216,14 @@ namespace Aurora.Settings.Layers
 
         EffectLayer Render(IGameState gamestate);
 
-        EffectLayer PostRenderFX(EffectLayer layer_render);
+        EffectLayer PostRenderFX(EffectLayer layerRender);
 
         void SetApplication(Application profile);
         void SetGameState(IGameState gamestate);
         void Dispose();
     }
 
+    [UsedImplicitly(ImplicitUseTargetFlags.WithInheritors)]
     public abstract class LayerHandler<TProperty> : ILayerHandler where TProperty : LayerHandlerProperties<TProperty>
     {
         [JsonIgnore]
@@ -275,7 +286,7 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         private readonly Lazy<EffectLayer> _effectLayer;
 
-        protected static PropertyChangedEventArgs ConstPropertyChangedEventArgs = new("");
+        private static PropertyChangedEventArgs ConstPropertyChangedEventArgs = new("");
         protected EffectLayer EffectLayer
         {
             get
@@ -293,7 +304,6 @@ namespace Aurora.Settings.Layers
 
         protected LayerHandler(string name)
         {
-            //ScriptProperties = new LayerHandlerProperties();
             _effectLayer = new(() => new EffectLayer(name));
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
@@ -310,11 +320,11 @@ namespace Aurora.Settings.Layers
 
         }
 
-        public EffectLayer PostRenderFX(EffectLayer rendered_layer)
+        public EffectLayer PostRenderFX(EffectLayer renderedLayer)
         {
             if (EnableSmoothing)
             {
-                EffectLayer returnLayer = new EffectLayer(rendered_layer);
+                EffectLayer returnLayer = new EffectLayer(renderedLayer);
                 EffectLayer previousLayer = new EffectLayer(_previousRender);
                 EffectLayer previousSecondLayer = new EffectLayer(_previousSecondRender);
 
@@ -322,8 +332,8 @@ namespace Aurora.Settings.Layers
 
                 //Update previous layers
                 _previousSecondRender = _previousRender;
-                _previousRender = rendered_layer;
-                
+                _previousRender = renderedLayer;
+
                 //Last PostFX is exclusion
                 if (EnableExclusionMask)
                     returnLayer.Exclude(ExclusionMask);
@@ -332,11 +342,11 @@ namespace Aurora.Settings.Layers
 
             //Last PostFX is exclusion
             if (EnableExclusionMask)
-                rendered_layer.Exclude(ExclusionMask);
+                renderedLayer.Exclude(ExclusionMask);
 
-            rendered_layer *= Properties.LayerOpacity;
+            renderedLayer *= Properties.LayerOpacity;
 
-            return rendered_layer;
+            return renderedLayer;
         }
 
         public virtual void SetApplication(Application profile)
@@ -350,7 +360,8 @@ namespace Aurora.Settings.Layers
         }
 
         [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
+        [UsedImplicitly]
+        private void OnDeserialized(StreamingContext context)
         {
             PropertiesChanged(this, new PropertyChangedEventArgs(""));
         }

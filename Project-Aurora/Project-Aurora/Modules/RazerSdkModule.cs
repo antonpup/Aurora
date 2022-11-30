@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Lombok.NET;
 using RazerSdkHelper;
 using RazerSdkWrapper;
@@ -6,8 +7,13 @@ using RazerSdkWrapper.Data;
 
 namespace Aurora.Modules;
 
-public partial class RazerSdkModule : IAuroraModule
+public sealed partial class RazerSdkModule : IAuroraModule
 {
+    private readonly TaskCompletionSource<RzSdkManager> _sdkTaskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private RzSdkManager _razerSdkManager;
+
+    public Task<RzSdkManager> RzSdkManager => _sdkTaskSource.Task;
+
     [Async]
     public void Initialize()
     {
@@ -16,21 +22,23 @@ public partial class RazerSdkModule : IAuroraModule
         {
             try
             {
-                Global.razerSdkManager = new RzSdkManager
+                _razerSdkManager = new RzSdkManager
                 {
                     KeyboardEnabled = true,
                     MouseEnabled = true,
                     MousepadEnabled = true,
                     AppListEnabled = true,
                 };
+                Global.razerSdkManager = _razerSdkManager;
 
-                Global.razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
+                _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
 
-                var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
+                var appList = _razerSdkManager.GetDataProvider<RzAppListDataProvider>();
                 appList.Update();
                 RzHelper.CurrentAppExecutable = appList.CurrentAppExecutable;
 
                 Global.logger.Info("RazerSdkManager loaded successfully!");
+                _sdkTaskSource.SetResult(_razerSdkManager);
             }
             catch (Exception exc)
             {
@@ -50,7 +58,7 @@ public partial class RazerSdkModule : IAuroraModule
     {
         try
         {
-            Global.razerSdkManager?.Dispose();
+            _razerSdkManager?.Dispose();
             Global.razerSdkManager = null;
         }
         catch (Exception exc)

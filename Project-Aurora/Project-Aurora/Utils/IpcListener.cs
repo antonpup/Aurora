@@ -33,11 +33,6 @@ public class IpcListener
 
     private NamedPipeServerStream _ipcPipeStream;
 
-    public IpcListener()
-    {
-        _ipcPipeStream = CreatePipe();
-    }
-
     private static NamedPipeServerStream CreatePipe()
     {
         var securityIdentifier = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
@@ -74,6 +69,7 @@ public class IpcListener
 
         _ipcPipeStream.Close();
         await _ipcPipeStream.DisposeAsync();
+        _ipcPipeStream = null;
     }
 
     private void BeginIpcServer()
@@ -82,11 +78,16 @@ public class IpcListener
         WrappedProcess = "";
         Global.logger.Info("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
 
-        _ipcPipeStream!.BeginWaitForConnection(ReceiveGameState, null);
+        _ipcPipeStream = CreatePipe();
+        _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
     }
 
     private void ReceiveGameState(IAsyncResult result)
     {
+        if (!_isRunning)
+        {
+            return;
+        }
         Global.logger.Info("[IPCServer] Pipe connection established");
 
         try
@@ -109,13 +110,17 @@ public class IpcListener
                 }
             }
         }
-        catch
+        finally
         {
-            _ipcPipeStream = CreatePipe();
             WrapperConnectionClosed?.Invoke(WrappedProcess);
             IsWrapperConnected = false;
             WrappedProcess = "";
         }
+        if (!_isRunning)
+        {
+            return;
+        }
+        _ipcPipeStream = CreatePipe();
         _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
     }
 }

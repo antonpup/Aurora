@@ -7,7 +7,7 @@ namespace Aurora.Devices.RGBNet;
 public static class RgbNetKeyMappings
 {
     
-    private static readonly Dictionary<LedId, DeviceKeys> _keyNames = new()
+    private static readonly Dictionary<LedId, DeviceKeys> KeyNameMap = new()
     {
         {LedId.Keyboard_Escape , DeviceKeys.ESC},
         {LedId.Keyboard_F1 , DeviceKeys.F1},
@@ -126,5 +126,5 @@ public static class RgbNetKeyMappings
         {LedId.Logo , DeviceKeys.LOGO},
         {LedId.Custom1 , DeviceKeys.Peripheral_Logo},
     };
-    public static readonly ReadOnlyDictionary<LedId, DeviceKeys> KeyNames = new(_keyNames);
+    public static readonly ReadOnlyDictionary<LedId, DeviceKeys> KeyNames = new(KeyNameMap);
 }

@@ -116,11 +116,10 @@ namespace Aurora.Devices
                             {
                                 dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
 
-                                IDevice scripted_device = new Devices.ScriptedDevice.ScriptedDevice(script);
+                                IDevice scriptedDevice = new Devices.ScriptedDevice.ScriptedDevice(script);
 
-                                DeviceContainers.Add(new DeviceContainer(scripted_device));
+                                DeviceContainers.Add(new DeviceContainer(scriptedDevice));
                                 Global.logger.Info($"Loaded device script {device_script}");
-
                             }
                             else
                                 Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);

@@ -10,10 +10,6 @@
       "width": 35.0,
       "height": 35.0,
       "font_size": 9.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 0,
       "image": "Logi_G810_logo.png",
       "enabled": true,
       "absolute_location": true
@@ -26,10 +22,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 3,
       "enabled": true,
       "absolute_location": true
     },
@@ -41,10 +33,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 6,
       "enabled": true,
       "absolute_location": true
     },
@@ -56,10 +44,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 9,
       "enabled": true,
       "absolute_location": true
     },
@@ -71,10 +55,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 12,
       "enabled": true,
       "absolute_location": true
     },
@@ -86,10 +66,6 @@
       "width": 30.0,
       "height": 30.0,
       "font_size": 12.0,
-      "width_bits": 3,
-      "height_bits": 3,
-      "margin_left_bits": -4,
-      "margin_top_bits": 15,
       "enabled": true,
       "absolute_location": true
     }

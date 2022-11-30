@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Forms;
 using UserControl = System.Windows.Controls.UserControl;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers.Controls {
 
     public partial class Control_ImageLayer : UserControl {
         public Control_ImageLayer() {

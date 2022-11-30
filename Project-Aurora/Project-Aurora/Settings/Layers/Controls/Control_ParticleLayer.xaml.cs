@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers.Controls {
     /// <summary>
     /// Interaction logic for Control_ParticleLayer.xaml
     /// </summary>

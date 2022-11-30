@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers.Controls {
 
     public partial class Control_PercentLayer : UserControl {
 

@@ -1,23 +1,14 @@
-﻿using Aurora.EffectsEngine;
-using Aurora.Settings;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using Aurora.EffectsEngine;
+using Aurora.Settings;
 
 namespace Aurora.Profiles
 {
-    public enum LightEventType
-    {
-        Normal,
-        Underlay,
-        Overlay
-    }
-
     public interface ILightEvent : IInit
     {
-        void UpdateLights(EffectsEngine.EffectFrame frame);
+        void UpdateLights(EffectFrame frame);
 
         void UpdateOverlayLights(EffectFrame newFrame);
 
@@ -38,7 +29,7 @@ namespace Aurora.Profiles
     /// <summary>
     /// Class responsible for applying EffectLayers to an EffectFrame based on GameState information.
     /// </summary>
-    public class LightEvent : ILightEvent, IDisposable
+    public class LightEvent : ILightEvent
     {
         public Application Application { get; set; }
         public LightEventConfig Config { get; protected set; }
@@ -53,7 +44,7 @@ namespace Aurora.Profiles
 
         public LightEvent(LightEventConfig config) : this()
         {
-            this.Config = config;
+            Config = config;
         }
 
         /// <summary>
@@ -74,7 +65,12 @@ namespace Aurora.Profiles
         public virtual void UpdateOverlayLights(EffectFrame frame) {
             try
             {
-                var overlayLayers = new Queue<EffectLayer>(Application.Profile.OverlayLayers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
+                var overlayLayers = new Queue<EffectLayer>(
+                    Application.Profile.OverlayLayers
+                    .Where(l => l.Enabled)
+                    .Reverse()
+                    .Select(l => l.Render(_game_state))
+                );
                 Application.UpdateEffectScripts(overlayLayers);
                 frame.AddOverlayLayers(overlayLayers.ToArray());
             }
@@ -94,24 +90,21 @@ namespace Aurora.Profiles
         /// <summary>
         /// Adds new layers to the passed EffectFrame instance based on GameState information as well as process a new GameState instance.
         /// </summary>
-        /// <param name="new_game_state">GameState instance which will be processed before adding new layers</param>
-        public virtual void SetGameState(IGameState new_game_state)
+        /// <param name="newGameState">GameState instance which will be processed before adding new layers</param>
+        public virtual void SetGameState(IGameState newGameState)
         {
-            _game_state = new_game_state;
+            _game_state = newGameState;
         }
 
         /// <summary>
         /// Returns whether or not this LightEvent is active
         /// </summary>
         /// <returns>A boolean value representing if this LightEvent is active</returns>
-        public virtual bool IsEnabled
-        {
-            get { return this.Application?.Settings?.IsEnabled ?? true; }
-        }
+        public virtual bool IsEnabled => Application?.Settings?.IsEnabled ?? true;
 
-        public virtual bool IsOverlayEnabled => this.Application?.Settings?.IsOverlayEnabled ?? true;
+        public virtual bool IsOverlayEnabled => Application?.Settings?.IsOverlayEnabled ?? true;
 
-        public bool Initialized { get; protected set; }
+        public bool Initialized { get; private set; }
 
         public virtual void ResetGameState()
         {
