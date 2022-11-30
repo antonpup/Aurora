@@ -57,8 +57,7 @@ namespace Aurora.Settings.Keycaps
             {
                 keyCap.Text = key.VisualName;
                 keyCap.Tag = key.Tag;
-                if (key.FontSize != null)
-                    keyCap.FontSize = key.FontSize.Value;
+                keyCap.FontSize = key.FontSize;
                 keyCap.Visibility = System.Windows.Visibility.Visible;
             }
             else

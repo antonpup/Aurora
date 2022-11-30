@@ -23,17 +23,68 @@ namespace Aurora.Settings;
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 public class KeyboardKey
 {
+    private DeviceKeys? _tag;
+    private double? _marginLeft;
+    private double? _marginTop;
+    private double? _width;
+    private double? _height;
+    private double? _fontSize;
+    private bool? _lineBreak;
+    private bool? _absoluteLocation;
+
     [JsonProperty("visualName")]
     public string VisualName { get; private set; }
-    public DeviceKeys Tag { get; set; } = DeviceKeys.NONE;
-    public bool LineBreak { get; set; }
-    public double MarginLeft { get; set; } = 7;
-    public double MarginTop { get; set; }
-    public double Width { get; set; } = 30;
-    public double Height { get; set; } = 30;
-    public double? FontSize { get; set; } = 12;
+
+    public DeviceKeys Tag
+    {
+        get => _tag.GetValueOrDefault();
+        set => _tag = value;
+    }
+
+    public bool LineBreak
+    {
+        get => _lineBreak.GetValueOrDefault();
+        set => _lineBreak = value;
+    }
+
+    public double MarginLeft
+    {
+        get => _marginLeft.GetValueOrDefault();
+        set => _marginLeft = value;
+    }
+
+    public double MarginTop
+    {
+        get => _marginTop.GetValueOrDefault();
+        set => _marginTop = value;
+    }
+
+    public double Width
+    {
+        get => _width.GetValueOrDefault(30);
+        set => _width = value;
+    }
+
+    public double Height
+    {
+        get => _height.GetValueOrDefault(30);
+        set => _height = value;
+    }
+
+    public double FontSize
+    {
+        get => _fontSize.GetValueOrDefault(12);
+        set => _fontSize = value;
+    }
+
     public bool? Enabled { get; set; } = true;
-    public bool AbsoluteLocation { get; set; }
+
+    public bool AbsoluteLocation
+    {
+        get => _absoluteLocation.GetValueOrDefault();
+        set => _absoluteLocation = value;
+    }
+
     public string Image { get; set; } = "";
     public int ZIndex { get; set; }
 
@@ -41,15 +92,15 @@ public class KeyboardKey
     {
         if (otherKey == null) return;
         if (otherKey.VisualName != null) VisualName = otherKey.VisualName;
-        if (otherKey.Tag != DeviceKeys.NONE)
-            Tag = otherKey.Tag;
-        LineBreak = otherKey.LineBreak;
-        Width = otherKey.Width;
-        Height = otherKey.Height;
-        if (otherKey.FontSize != null) FontSize = otherKey.FontSize;
-        MarginLeft = otherKey.MarginLeft;
-        MarginTop = otherKey.MarginTop;
+        if (otherKey._tag != null) Tag = otherKey.Tag;
+        if (otherKey._lineBreak != null) LineBreak = otherKey.LineBreak;
+        if (otherKey._width != null) Width = otherKey.Width;
+        if (otherKey._height != null) Height = otherKey.Height;
+        if (otherKey._fontSize != null) FontSize = otherKey.FontSize;
+        if (otherKey._marginLeft != null) MarginLeft = otherKey.MarginLeft;
+        if (otherKey._marginTop != null) MarginTop = otherKey.MarginTop;
         if (otherKey.Enabled != null) Enabled = otherKey.Enabled;
+        if (otherKey._absoluteLocation != null) AbsoluteLocation = otherKey.AbsoluteLocation;
     }
 }
 
@@ -93,7 +144,9 @@ public class VirtualGroup
     [JsonProperty("key_conversion")]
     public Dictionary<DeviceKeys, DeviceKeys> KeyConversion { get; set; }
 
-    public VirtualGroup() { }
+    public VirtualGroup()
+    {
+    }
 
     public VirtualGroup(KeyboardKey[] keys)
     {
@@ -126,8 +179,8 @@ public class VirtualGroup
                 layoutHeight = currentHeight;
         }
 
-        _region.Width = (float)layoutWidth;
-        _region.Height = (float)layoutHeight;
+        _region.Width = (float) layoutWidth;
+        _region.Height = (float) layoutHeight;
     }
 
     public void AddFeature(KeyboardKey[] keys, KeyboardRegion insertionRegion = KeyboardRegion.TopLeft)
@@ -163,19 +216,19 @@ public class VirtualGroup
             _keyText.Add(key.Tag, key.VisualName);
 
             if (key.Width + key.MarginLeft > _region.Width)
-                _region.Width = (float)(key.Width + key.MarginLeft);
+                _region.Width = (float) (key.Width + key.MarginLeft);
             else if (key.MarginLeft + addedWidth < 0)
             {
-                addedWidth = -(float)key.MarginLeft;
-                _region.Width -= (float)key.MarginLeft;
+                addedWidth = -(float) key.MarginLeft;
+                _region.Width -= (float) key.MarginLeft;
             }
 
             if (key.Height + key.MarginTop > _region.Height)
-                _region.Height = (float)(key.Height + key.MarginTop);
+                _region.Height = (float) (key.Height + key.MarginTop);
             else if (key.MarginTop + addedHeight < 0)
             {
-                addedHeight = -(float)key.MarginTop;
-                _region.Height -= (float)key.MarginTop;
+                addedHeight = -(float) key.MarginTop;
+                _region.Height -= (float) key.MarginTop;
             }
         }
 
@@ -269,8 +322,8 @@ public class VirtualGroup
             _keyText.Remove(key.Tag);
         }
 
-        _region.Width = (float)layoutWidth;
-        _region.Height = (float)layoutHeight;
+        _region.Width = (float) layoutWidth;
+        _region.Height = (float) layoutHeight;
     }
 }
 
@@ -609,10 +662,14 @@ public class KeyboardLayoutManager
     private Func<double, int> _pixelToByte = DefaultPixelToByte;
 
     private static int DefaultPixelToByte(double pixel)
-    { return (int)Math.Round(pixel / (double)Global.Configuration.BitmapAccuracy); }
+    {
+        return (int) Math.Round(pixel / (double) Global.Configuration.BitmapAccuracy);
+    }
 
     private static int BestPixelToByte(double pixel)
-    { return (int)Math.Round(pixel); }
+    {
+        return (int) Math.Round(pixel);
+    }
 
     private int PixelToByte(double pixel)
     {
@@ -622,13 +679,15 @@ public class KeyboardLayoutManager
     private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e is not {PropertyName: nameof(Configuration.BitmapAccuracy)}) return;
-        if(Global.Configuration.BitmapAccuracy == BitmapAccuracy.Best)
+        if (Global.Configuration.BitmapAccuracy == BitmapAccuracy.Best)
         {
             _pixelToByte = BestPixelToByte;
-        }else
+        }
+        else
         {
             _pixelToByte = DefaultPixelToByte;
         }
+
         Global.LightingStateManager.PostUpdate += LightingStateManager_PostUpdate;
     }
 
@@ -662,7 +721,8 @@ public class KeyboardLayoutManager
 
             if (key.AbsoluteLocation)
             {
-                _bitmapMap[key.Tag] = new BitmapRectangle(PixelToByte(xOffset), PixelToByte(yOffset), widthBit, heightBit);
+                _bitmapMap[key.Tag] =
+                    new BitmapRectangle(PixelToByte(xOffset), PixelToByte(yOffset), widthBit, heightBit);
                 brX = xOffset + width;
                 brY = yOffset + height;
             }
@@ -688,6 +748,7 @@ public class KeyboardLayoutManager
                         curHeight = y;
                 }
             }
+
             if (brX > widthMax) widthMax = brX;
             if (brY > heightMax) heightMax = brY;
         }
@@ -753,10 +814,11 @@ public class KeyboardLayoutManager
                         break;
                 }
             }
-                
+
             newVirtualKeyboard.Children.Add(keycap);
 
-            if (key.Tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.Tag) && keycap is IKeycap && !abstractKeycaps)
+            if (key.Tag != DeviceKeys.NONE && !_virtualKeyboardMap.ContainsKey(key.Tag) && keycap is IKeycap &&
+                !abstractKeycaps)
                 _virtualKeyboardMap.Add(key.Tag, keycap as IKeycap);
 
             if (key.AbsoluteLocation)
@@ -862,10 +924,10 @@ public class KeyboardLayoutManager
             VirtualKeyboard.Children.Clear();
             VirtualKeyboard = newVirtualKeyboard;
 
-            Effects.grid_baseline_x = (float)baselineX;
-            Effects.grid_baseline_y = (float)baselineY;
-            Effects.grid_height = (float)newVirtualKeyboard.Height;
-            Effects.grid_width = (float)newVirtualKeyboard.Width;
+            Effects.grid_baseline_x = (float) baselineX;
+            Effects.grid_baseline_y = (float) baselineY;
+            Effects.grid_height = (float) newVirtualKeyboard.Height;
+            Effects.grid_width = (float) newVirtualKeyboard.Width;
 
             _virtualKbInvalid = false;
         }
@@ -875,11 +937,9 @@ public class KeyboardLayoutManager
 
     private sealed class KeyboardLayout
     {
-        [JsonProperty("key_conversion")]
-        public Dictionary<DeviceKeys, DeviceKeys> KeyConversion;
+        [JsonProperty("key_conversion")] public Dictionary<DeviceKeys, DeviceKeys> KeyConversion;
 
-        [JsonProperty("keys")]
-        public KeyboardKey[] Keys;
+        [JsonProperty("keys")] public KeyboardKey[] Keys;
     }
 
     private void LoadCulture(string culture)
@@ -894,7 +954,7 @@ public class KeyboardLayoutManager
 
         var content = File.ReadAllText(layoutPath, Encoding.UTF8);
         var keyboard = JsonConvert.DeserializeObject<KeyboardLayout>(content,
-            new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace })!;
+            new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace})!;
 
         _virtualKeyboardGroup = new VirtualGroup(keyboard.Keys);
 

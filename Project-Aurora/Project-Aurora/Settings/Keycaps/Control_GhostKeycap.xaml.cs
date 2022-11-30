@@ -56,12 +56,11 @@ namespace Aurora.Settings.Keycaps
             {
                 keyCap.Text = key.VisualName;
                 keyCap.Tag = key.Tag;
-                if (key.FontSize != null)
-                    keyCap.FontSize = key.FontSize.Value;
+                keyCap.FontSize = key.FontSize;
             }
             else
             {
-                keyCap.Visibility = System.Windows.Visibility.Hidden;
+                keyCap.Visibility = Visibility.Hidden;
 
                 if (System.IO.File.Exists(image_path))
                 {
