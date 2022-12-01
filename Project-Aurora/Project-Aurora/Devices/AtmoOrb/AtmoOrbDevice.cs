@@ -113,8 +113,8 @@ public class AtmoOrbDevice : DefaultDevice
 
         if (Watch.ElapsedMilliseconds <= Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"))
             return !e.Cancel;
+        if (!keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT1)) return false;
         var averageColor = keyColors[DeviceKeys.ADDITIONALLIGHT1];   //TODO add 1 zone kb
-
         SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
 
         return !e.Cancel;
