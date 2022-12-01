@@ -44,11 +44,13 @@ public sealed partial class RazerSdkModule : IAuroraModule
             {
                 Global.logger.Fatal("RazerSdkManager failed to load!");
                 Global.logger.Fatal(exc.ToString());
+                _sdkTaskSource.SetResult(null);
             }
         }
         else
         {
             Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported by the RazerSdkManager!", RzHelper.GetSdkVersion());
+            _sdkTaskSource.SetResult(null);
         }
     }
 
