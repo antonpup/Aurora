@@ -10,8 +10,10 @@ namespace Aurora.Devices.RGBNet;
 
 public abstract class RgbNetDevice : DefaultDevice
 {
+    public bool Disabled { get; set; }
     protected abstract IRGBDeviceProvider Provider { get; }
     public Dictionary<IRGBDevice, Dictionary<LedId, DeviceKeys>> DeviceKeyRemap { get; } = new();
+    protected override string DeviceInfo => string.Join(", ", Provider.Devices.Select(d => d.DeviceInfo.DeviceName));
 
     public IEnumerable<IRGBDevice> Devices()
     {
@@ -74,6 +76,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
+        if (Disabled) return false;
         foreach (var device in Provider.Devices)
         {
             foreach (var led in device)

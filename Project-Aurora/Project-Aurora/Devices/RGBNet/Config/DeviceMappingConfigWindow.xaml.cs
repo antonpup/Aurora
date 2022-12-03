@@ -100,7 +100,18 @@ public partial class DeviceMappingConfigWindow
         {
             var keyControl = new RgbNetKeyToDeviceKeyControl();
                 
-            keyControl.BlinkCallback += () => BlinkKey(device, led);
+            keyControl.BlinkCallback += () =>
+            {
+                _tokenSource?.Cancel();
+                rgbNetDevice.Disabled = true;
+                BlinkKey(device, led)
+                    .ContinueWith((a) =>
+                        {
+                            rgbNetDevice.Disabled = false;
+                            return Task.CompletedTask;
+                        }
+                    );
+            };
             keyControl.KeyIdValue.Text = led.Id.ToString();
             keyControl.DeviceKey.SelectedValue = configDevice.KeyMapper.TryGetValue(led.Id, out var deviceKey)
                 ? deviceKey : DeviceKeys.NONE;
@@ -130,16 +141,11 @@ public partial class DeviceMappingConfigWindow
             AsusDeviceKeys.Children.Add(keyControl);
         }
     }
-
-    private void BlinkKey(IRGBDevice device, Led led)
-    {
-        BlinkLight(device, led);
-    }
         
     private CancellationTokenSource _tokenSource;
     private const int BlinkCount = 7;
 
-    private async void BlinkLight(IRGBDevice device, Led led)
+    private async Task BlinkKey(IRGBDevice device, Led led)
     {
         if (_tokenSource is {Token.IsCancellationRequested: false})
             _tokenSource.Cancel();

@@ -15,7 +15,6 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
     protected override IRGBDeviceProvider Provider => LogitechDeviceProvider.Instance;
 
     public override string DeviceName => "Logitech (RGB.NET)";
-    protected override string DeviceInfo => string.Join(", ", Provider.Devices.Select(d => d.DeviceInfo.DeviceName));
 
     protected override void OnInitialized()
     {
