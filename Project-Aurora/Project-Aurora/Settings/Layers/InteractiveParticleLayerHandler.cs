@@ -1,32 +1,36 @@
+using System.Collections.Concurrent;
 using Aurora.Devices;
 using Aurora.Profiles;
 using Aurora.Utils;
-using System.Collections.Generic;
-using System.Drawing;
 
-namespace Aurora.Settings.Layers {
+namespace Aurora.Settings.Layers;
 
-    [LayerHandlerMeta(Name = "Particle (Interactive)", IsDefault = true)]
-    public class InteractiveParticleLayerHandler : SimpleParticleLayerHandler {
+[LayerHandlerMeta(Name = "Particle (Interactive)", IsDefault = true)]
+public sealed class InteractiveParticleLayerHandler : SimpleParticleLayerHandler {
 
-        private readonly HashSet<DeviceKeys> awaitingKeys = new HashSet<DeviceKeys>();
+    private readonly ConcurrentQueue<DeviceKeys> _awaitingKeys = new();
 
-        public InteractiveParticleLayerHandler() {
-            Global.InputEvents.KeyDown += KeyDown;
+    public InteractiveParticleLayerHandler() {
+        Global.InputEvents.KeyDown += KeyDown;
+    }
+
+    private void KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        _awaitingKeys.Enqueue(e.GetDeviceKey());
+    }
+
+    protected override void SpawnParticles(double dt) {
+        foreach (var key in _awaitingKeys) {
+            Properties._Sequence = new KeySequence(new[] { key });
+            var count = Rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount);
+            for (var i = 0; i < count; i++)
+                SpawnParticle();
         }
+        _awaitingKeys.Clear();
+    }
 
-        private void KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
-            awaitingKeys.Add(e.GetDeviceKey());
-        }
-
-        protected override void SpawnParticles(double dt) {
-            foreach (var key in awaitingKeys) {
-                Properties._Sequence = new KeySequence(new[] { key });
-                var count = Rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount);
-                for (var i = 0; i < count; i++)
-                    SpawnParticle();
-            }
-            awaitingKeys.Clear();
-        }
+    public override void Dispose()
+    {
+        base.Dispose();
+        Global.InputEvents.KeyDown -= KeyDown;
     }
 }
