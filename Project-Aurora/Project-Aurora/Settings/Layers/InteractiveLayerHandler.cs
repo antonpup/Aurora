@@ -93,6 +93,15 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public bool UsePressBuffer => Logic._UsePressBuffer ?? _UsePressBuffer ?? true;
 
+        [JsonIgnore]
+        private DeviceKeys? _mouseEffectKey;
+
+        public DeviceKeys MouseEffectKey
+        {
+            get => (Logic._mouseEffectKey ?? _mouseEffectKey) ?? DeviceKeys.NONE;
+            set => SetFieldAndRaisePropertyChanged(out _mouseEffectKey, value);
+        }
+
         public InteractiveLayerHandlerProperties()
         { }
 
@@ -116,16 +125,16 @@ namespace Aurora.Settings.Layers
         private readonly Func<KeyValuePair<DeviceKeys, long>, bool> _keysToRemove;
         private readonly List<input_item> _inputList = new();
         
-        private Keys _previousKey = Keys.None;
+        private DeviceKeys _previousKey = DeviceKeys.NONE;
         private long _previousTime;
         private long _currentTime;
-
-        private input_item _holdKeyInputItem;
 
         public InteractiveLayerHandler(): base("Interactive Effects")
         {
             Global.InputEvents.KeyDown += InputEventsKeyDown;
             Global.InputEvents.KeyUp += InputEventsKeyUp;
+            Global.InputEvents.MouseButtonDown += MouseKeyDown;
+            Global.InputEvents.MouseButtonUp += MouseKeyUp;
             _keysToRemove = lengthPresses => !Properties.UsePressBuffer || _currentTime - lengthPresses.Value > PressBuffer;
         }
 
@@ -139,12 +148,25 @@ namespace Aurora.Settings.Layers
             return new Control_InteractiveLayer(this);
         }
 
+        private void MouseKeyUp(object sender, MouseInputEventArgs mouseInputEventArgs)
+        {
+            if (Properties.MouseEffectKey == DeviceKeys.NONE)
+                return;
+
+            DeviceKeyUp(Properties.MouseEffectKey);
+        }
+
         private void InputEventsKeyUp(object sender, KeyboardInputEventArgs e)
+        {
+            var deviceKey = e.GetDeviceKey();
+            DeviceKeyUp(deviceKey);
+        }
+
+        private void DeviceKeyUp(DeviceKeys deviceKey)
         {
             if (Time.GetMillisecondsSinceEpoch() - _previousTime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-            var deviceKey = e.GetDeviceKey();
             if (deviceKey != DeviceKeys.NONE)
             {
                 foreach (var input in _inputList.ToArray())
@@ -154,28 +176,42 @@ namespace Aurora.Settings.Layers
                 }
             }
 
-            if (_previousKey == e.Key)
-                _previousKey = Keys.None;
+            if (_previousKey == deviceKey)
+                _previousKey = DeviceKeys.NONE;
         }
 
         private readonly ConcurrentDictionary<DeviceKeys, long> _timeOfLastPress = new();
         private const long PressBuffer = 300L;
 
+        private void MouseKeyDown(object sender, MouseInputEventArgs mouseInputEventArgs)
+        {
+            if (Properties.MouseEffectKey == DeviceKeys.NONE)
+                return;
+
+            DeviceKeyDown(Properties.MouseEffectKey);
+        }
+
         private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
+        {
+            var deviceKey = e.GetDeviceKey();
+
+            DeviceKeyDown(deviceKey);
+        }
+
+        private void DeviceKeyDown(DeviceKeys deviceKey)
         {
             if (Time.GetMillisecondsSinceEpoch() - _previousTime > 1000L)
                 return; //This event wasn't used for at least 1 second
 
-
-            if (_previousKey == e.Key)
+            if (_previousKey == deviceKey)
                 return;
 
             long? currentTime = null;
-            var deviceKey = e.GetDeviceKey();
 
             if (_timeOfLastPress.ContainsKey(deviceKey))
             {
-                if (Properties.UsePressBuffer && (currentTime = Time.GetMillisecondsSinceEpoch()) - _timeOfLastPress[deviceKey] < PressBuffer)
+                if (Properties.UsePressBuffer &&
+                    (currentTime = Time.GetMillisecondsSinceEpoch()) - _timeOfLastPress[deviceKey] < PressBuffer)
                     return;
                 _timeOfLastPress.TryRemove(deviceKey, out _);
             }
@@ -183,11 +219,11 @@ namespace Aurora.Settings.Layers
             if (deviceKey == DeviceKeys.NONE || Properties.Sequence.keys.Contains(deviceKey)) return;
             var pt = Effects.GetBitmappingFromDeviceKey(deviceKey).Center;
             if (pt.IsEmpty) return;
-            
+
             _timeOfLastPress.TryAdd(deviceKey, currentTime ?? Time.GetMillisecondsSinceEpoch());
 
             _inputList.Add(CreateInputItem(deviceKey, pt));
-            _previousKey = e.Key;
+            _previousKey = deviceKey;
         }
 
         private input_item CreateInputItem(DeviceKeys key, PointF origin)

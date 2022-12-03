@@ -6,7 +6,17 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:e="clr-namespace:Aurora.Profiles.Desktop"
              xmlns:u="clr-namespace:Aurora.Utils"
+             xmlns:devices="clr-namespace:Aurora.Devices"
+             xmlns:sys="clr-namespace:System;assembly=System.Runtime"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="DeviceKeyEnum" MethodName="GetValues"
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="devices:DeviceKeys"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
     
     <Grid>
         <TextBlock Text="Interactive Effect Type:" HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -28,6 +38,9 @@
 
         <CheckBox Content="Start progress when key released" IsChecked="{Binding Properties._WaitOnKeyUp}" Margin="0,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <CheckBox Content="Mitigate rapid key presses" IsChecked="{Binding Properties._UsePressBuffer}" Margin="0,188,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+
+        <Label Content="Mouse Effect Key:" Margin="0,210,0,0" Padding="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top"/>
+        <ComboBox Margin="100,210,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Name="DeviceKey" SelectedItem="{Binding Properties.MouseEffectKey}" ItemsSource="{Binding Source={StaticResource DeviceKeyEnum}}"/>
 
         <Controls:KeySequence Sequence="{Binding Properties._Sequence}" RecordingTag="Interactive Layer (Excluded Keys)" Title="Excluded Keys" Margin="354,0,0,0" Width="230" HorizontalAlignment="Left" />
     </Grid>
