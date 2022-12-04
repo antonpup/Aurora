@@ -115,11 +115,10 @@ public enum KeyboardRegion
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 public class VirtualGroupConfiguration
 {
-    public DeviceKeys[] KeysToRemove { get; set; } = { };
+    public DeviceKeys[] KeysToRemove { get; set; } = Array.Empty<DeviceKeys>();
 
     public Dictionary<DeviceKeys, KeyboardKey> KeyModifications { get; set; } = new();
 
-    [JsonProperty("key_conversion")]
     public Dictionary<DeviceKeys, DeviceKeys> KeyConversion { get; set; } = new();
 
     /// <summary>
@@ -141,7 +140,6 @@ public class VirtualGroup
 
     public RectangleF Region => _region;
 
-    [JsonProperty("key_conversion")]
     public Dictionary<DeviceKeys, DeviceKeys> KeyConversion { get; set; }
 
     public VirtualGroup()
@@ -552,9 +550,11 @@ public class KeyboardLayoutManager
         _virtualKbInvalid = true;
         CalculateBitmap();
 
-        CreateUserControl();
-
-        KeyboardLayoutUpdated?.Invoke(this);
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            CreateUserControl();
+            KeyboardLayoutUpdated?.Invoke(this);
+        });
     }
 
     private void LoadMousepad(MouseOrientationType mouseOrientation, string mousepadFeaturePath)
@@ -935,11 +935,12 @@ public class KeyboardLayoutManager
         return newVirtualKeyboard;
     }
 
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     private sealed class KeyboardLayout
     {
-        [JsonProperty("key_conversion")] public Dictionary<DeviceKeys, DeviceKeys> KeyConversion;
+        public Dictionary<DeviceKeys, DeviceKeys> KeyConversion;
 
-        [JsonProperty("keys")] public KeyboardKey[] Keys;
+        public KeyboardKey[] Keys;
     }
 
     private void LoadCulture(string culture)
