@@ -28,16 +28,13 @@ public sealed class MediaMonitor : IDisposable
 
     private void MediaManager_OnSessionOpened(MediaManager.MediaSession mediaSession)
     {
-        HasMedia = true;
         _mediaSessions.Add(mediaSession);
         UpdateButtons();
     }
 
     private void MediaManager_OnAnySessionClosed(MediaManager.MediaSession mediaSession)
     {
-        mediaSession.OnPlaybackStateChanged -= MediaManager_OnAnyPlaybackStateChanged;
         _mediaSessions.Remove(mediaSession);
-
         UpdateButtons();
     }
 
