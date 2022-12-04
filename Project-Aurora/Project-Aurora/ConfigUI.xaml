@@ -41,7 +41,7 @@
                         </DataTemplate>
                     </ContextMenu.ItemTemplate>
 
-                    <MenuItem x:Name="trayicon_menu_restore" Header="Force Restore Window" Click="trayicon_menu_restore_Click" Foreground="White" />
+                    <MenuItem x:Name="trayicon_menu_restore" Header="Force Restore Window" Click="trayicon_menu_restore_Click" Foreground="DarkRed" />
                     <MenuItem x:Name="trayicon_menu_settings" Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
                     <MenuItem x:Name="trayicon_menu_quit" Header="Quit" Click="trayicon_menu_quit_Click" Foreground="White" />
                 </ContextMenu>
