@@ -167,7 +167,7 @@ namespace Aurora.Devices.Roccat
 
         public override string DeviceName => "Roccat";
 
-        public string DeviceDetails
+        public override string DeviceDetails
         {
             get
             {
@@ -231,7 +231,7 @@ namespace Aurora.Devices.Roccat
             IsInitialized = false;
         }
 
-        public void Reset()
+        public override void Reset()
         {
             if (IsInitialized)
             {
