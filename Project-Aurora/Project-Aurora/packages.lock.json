@@ -110,11 +110,11 @@
       },
       "Lombok.NET": {
         "type": "Direct",
-        "requested": "[1.2.3, )",
-        "resolved": "1.2.3",
-        "contentHash": "NZ4NHtOqAfikRzE7elD7fnE8VJqqAvtCFrqMKzu4CfKcfiScOc/3627Zuxmp5SEMcRETUsoONAmGBVy61kddsA==",
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "40zSpaMitJc4FGnc9joQJ6oRgleHuVIB9+xI8TnmrML9eZUeAc56HIBCSypGlI97R8ER4xWyRVUrXozRoL0Gtg==",
         "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.0.1"
+          "Microsoft.CodeAnalysis.CSharp.Workspaces": "4.3.1"
         }
       },
       "Microsoft.CodeAnalysis.Common": {
@@ -1884,7 +1884,7 @@
       "colorbox": {
         "type": "Project",
         "dependencies": {
-          "Lombok.NET": "[1.2.3, )",
+          "Lombok.NET": "[2.0.0, )",
           "Microsoft.CodeAnalysis.CSharp": "[4.3.1, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[4.3.1, )",
           "Microsoft.CodeAnalysis.Common": "[4.3.1, )"

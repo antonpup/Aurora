@@ -140,7 +140,8 @@ namespace Aurora.Settings.Layers {
     /// acceleration and drag and whose alive state is determined by their life span.
     /// </summary>
     public class SimpleParticleLayerProperties : SimpleParticleLayerProperties<SimpleParticleLayerProperties> {
-        public SimpleParticleLayerProperties() : base() { }
+        public SimpleParticleLayerProperties()
+        { }
         public SimpleParticleLayerProperties(bool empty = false) : base(empty) { }
     }
 
@@ -156,12 +157,12 @@ namespace Aurora.Settings.Layers {
         
         protected override UserControl CreateControl() => new Control_ParticleLayer(this);
 
-        protected override void SpawnParticles(double dt)
+        protected override void SpawnParticles(double deltaTime)
         {
             if (!Properties.SpawningEnabled) return;
-            _nextSpawnInterval -= dt;
+            _nextSpawnInterval -= deltaTime;
 
-            if (!(_nextSpawnInterval < 0)) return;
+            if (_nextSpawnInterval >= 0) return;
 
             var count = Rnd.Next(Properties.MinSpawnAmount, Properties.MaxSpawnAmount + 1);
             for (var i = 0; i < count; i++)

@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using JetBrains.Annotations;
 using static System.Linq.Expressions.Expression;
 
 namespace Aurora.Settings.Layers {
@@ -119,6 +120,7 @@ namespace Aurora.Settings.Layers {
     /// Interface for the particle data class.
     /// </summary>
     /// <typeparam name="TProperties">The layer handler properties type that is passed to the particle.</typeparam>
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
     public interface IParticle<TProperties> where TProperties : ParticleLayerPropertiesBase<TProperties> {
 
         /// <summary>Updates the data of the particle (e.g. position, velocity).</summary>

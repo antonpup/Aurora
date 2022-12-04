@@ -13,16 +13,16 @@ using System.Windows;
 using Windows.Foundation.Metadata;
 using Aurora.Settings.Layers.Controls;
 using JetBrains.Annotations;
+using Lombok.NET;
 using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Settings.Layers
 {
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
-    public abstract class LayerHandlerProperties<TProperty> : IValueOverridable, INotifyPropertyChanged, IDisposable where TProperty : LayerHandlerProperties<TProperty>
+    [NotifyPropertyChanged]
+    public abstract partial class LayerHandlerProperties<TProperty> : IValueOverridable, IDisposable where TProperty : LayerHandlerProperties<TProperty>
     {
         private static readonly Lazy<TypeAccessor> Accessor = new(() => TypeAccessor.Create(typeof(TProperty)));
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [GameStateIgnore, JsonIgnore]
         public TProperty Logic { get; set; }
@@ -138,12 +138,6 @@ namespace Aurora.Settings.Layers
         public void OnDeserialized(StreamingContext context)
         {
             OnPropertiesChanged(this, new PropertyChangedEventArgs(""));
-        }
-
-        protected void SetFieldAndRaisePropertyChanged<T>(out T field, T newValue, [CallerMemberName] string propertyName = null)
-        {
-            field = newValue;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void OnPropertiesChanged(object sender, object args = null)
