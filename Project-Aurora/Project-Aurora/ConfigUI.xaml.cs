@@ -97,7 +97,7 @@ namespace Aurora
 
         internal void Display()
         {
-            if (App.IsSilent || Global.Configuration.StartSilently)
+            if (App.IsSilent)
             {
                 Visibility = Visibility.Hidden;
                 WindowStyle = WindowStyle.None;
@@ -244,6 +244,17 @@ namespace Aurora
         {
             ShowInTaskbar = true;
             WindowStyle = WindowStyle.SingleBorderWindow;
+            Show();
+        }
+
+        private void trayicon_menu_restore_Click(object sender, RoutedEventArgs e)
+        {
+            ShowInTaskbar = true;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            Height = 800;
+            Width = 800;
+            WindowState = WindowState.Normal;
+
             Show();
         }
 
