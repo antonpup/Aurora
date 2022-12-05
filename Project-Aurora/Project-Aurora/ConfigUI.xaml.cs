@@ -247,17 +247,6 @@ namespace Aurora
             Show();
         }
 
-        private void trayicon_menu_restore_Click(object sender, RoutedEventArgs e)
-        {
-            ShowInTaskbar = true;
-            WindowStyle = WindowStyle.SingleBorderWindow;
-            Height = 800;
-            Width = 800;
-            WindowState = WindowState.Normal;
-
-            Show();
-        }
-
         private void Window_Initialized(object sender, EventArgs e)
         {
             
@@ -723,9 +712,23 @@ namespace Aurora
             Visibility = Visibility.Visible;
             WindowStyle = WindowStyle.SingleBorderWindow;
             ShowInTaskbar = true;
-            //this.Topmost = true;
             Show();
             Activate();
+        }
+
+        protected override void OnStateChanged(EventArgs e)
+        {
+            base.OnStateChanged(e);
+
+            if (Top <= 0)
+            {
+                Top = 0;
+            }
+
+            if (Left <= 0)
+            {
+                Left = 0;
+            }
         }
 
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
