@@ -1025,6 +1025,7 @@ namespace Aurora.EffectsEngine
 
         public void Invalidate()
         {
+            _textureBrush = null;
             _needsRender = true;
             _keyColors.Clear();
         }
