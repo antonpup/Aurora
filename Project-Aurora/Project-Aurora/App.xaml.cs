@@ -44,6 +44,7 @@ public partial class App
         new InputsModule(),
         new PointerUpdateModule(),
         new MediaInfoModule(),
+        new AudioCaptureModule(),
         PluginsModule,
         IpcListenerModule,
         HttpListenerModule,

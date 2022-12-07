@@ -85,12 +85,12 @@ namespace Aurora.Settings.Layers
         public KeySequence Exclusion => Logic._Exclusion ?? _Exclusion ?? new KeySequence();
         #endregion
 
-        public LayerHandlerProperties()
+        public LayerHandlerProperties() : this(false)
         {
             Default();
         }
 
-        public LayerHandlerProperties(bool empty = false)
+        public LayerHandlerProperties(bool empty)
         {
             if (!empty)
                 Default();

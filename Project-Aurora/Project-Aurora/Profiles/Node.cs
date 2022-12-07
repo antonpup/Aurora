@@ -3,9 +3,11 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace Aurora.Profiles
 {
+    [UsedImplicitly(ImplicitUseTargetFlags.WithInheritors | ImplicitUseTargetFlags.Members)]
     public class Node
     {
         protected JObject _ParsedData;

@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:Aurora.Settings"
              xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:Controls="clr-namespace:Aurora.Controls" 
+             xmlns:Controls="clr-namespace:Aurora.Controls"
+             xmlns:audioCapture="clr-namespace:Aurora.Modules.AudioCapture"
              x:Class="Aurora.Settings.Control_Settings"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="403.521"
@@ -15,6 +16,7 @@
              Loaded="UserControl_Loaded"
              x:Name="ctrlSettings">
     <UserControl.Resources>
+        <a:Global x:Key="Global"/>
         <u:StringFormatConverter Format="{}{0:0}%" Multiplier="100" x:Key="PercentageFormatter" />
         <u:StringFormatConverter Format="x {0:0.0}" x:Key="AwayEffectSpeedLabelFormatter" />
     </UserControl.Resources>
@@ -93,10 +95,10 @@
                 <!-- Audio capture -->
                 <CheckBox Content="Enable Audio Capture for gamestates (restart required)" IsChecked="{Binding EnableAudioCapture}" ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere." Margin="512,39,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text="GSI Playback Device:" Margin="511,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <ComboBox SelectedValue="{Binding Path=GSIAudioRenderDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,59,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <ComboBox SelectedValue="{Binding Path=GsiAudioRenderDevice, Mode=TwoWay}" ItemsSource="{x:Static audioCapture:AudioDevices.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,59,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,62,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text="GSI Recording Device:" Margin="511,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <ComboBox SelectedValue="{Binding Path=GSIAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <ComboBox SelectedValue="{Binding Path=GsiAudioCaptureDevice, Mode=TwoWay}" ItemsSource="{x:Static audioCapture:AudioDevices.RecordingDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" Margin="632,86,0,0" Width="185" HorizontalAlignment="Left" VerticalAlignment="Top" />
                 <TextBlock Text="?" TextDecorations="Underline" ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer." ToolTipService.InitialShowDelay="0" Margin="822,89,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
             </Grid>
         </TabItem>

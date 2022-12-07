@@ -1,268 +1,277 @@
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.EffectsEngine;
+using Aurora.Utils;
+using ColorBox;
+using Xceed.Wpf.Toolkit;
+using Brush = System.Windows.Media.Brush;
+using Color = System.Windows.Media.Color;
+using Image = System.Windows.Controls.Image;
+using MessageBox = System.Windows.MessageBox;
 
-namespace Aurora.Settings.Layers.Controls
+namespace Aurora.Settings.Layers.Controls;
+
+/// <summary>
+/// Interaction logic for Control_EqualizerLayer.xaml
+/// </summary>
+public partial class ControlEqualizerLayer
 {
-    /// <summary>
-    /// Interaction logic for Control_EqualizerLayer.xaml
-    /// </summary>
-    public partial class Control_EqualizerLayer : UserControl
+    private bool _settingsset;
+
+    private Window _previewWindow;
+    private readonly Image _previewImage = new();
+    private static bool _previewWindowOpen;
+
+    public ControlEqualizerLayer()
     {
-        private bool settingsset = false;
+        InitializeComponent();
+    }
 
-        private Window preview_window = null;
-        private Image preview_image = new Image();
-        private static bool preview_window_open;
+    public ControlEqualizerLayer(EqualizerLayerHandler datacontext)
+    {
+        InitializeComponent();
 
-        public Control_EqualizerLayer()
+        DataContext = datacontext;
+    }
+
+    private void SetSettings()
+    {
+        if (DataContext is not EqualizerLayerHandler || _settingsset) return;
+        affectedKeys.Sequence = ((EqualizerLayerHandler)DataContext).Properties._Sequence;
+
+        eq_type.SelectedValue = ((EqualizerLayerHandler)DataContext).Properties._EQType;
+        eq_view_type.SelectedValue = ((EqualizerLayerHandler)DataContext).Properties.ViewType;
+        eq_background_mode.SelectedValue = ((EqualizerLayerHandler)DataContext).Properties._BackgroundMode;
+        Clr_primary_color.SelectedColor = ColorUtils.DrawingColorToMediaColor(
+            ((EqualizerLayerHandler)DataContext).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
+        Clr_secondary_color.SelectedColor = ColorUtils.DrawingColorToMediaColor(((EqualizerLayerHandler)DataContext).Properties.SecondaryColor);
+
+        Brush brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
+        try
         {
-            InitializeComponent();
+            gradient_editor.Brush = brush;
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error("Could not set brush, exception: " + exc);
         }
 
-        public Control_EqualizerLayer(EqualizerLayerHandler datacontext)
-        {
-            InitializeComponent();
+        updown_max_amplitude_value.Value = (int)((EqualizerLayerHandler)DataContext).Properties.MaxAmplitude;
+        Clr_dim_color.SelectedColor = ColorUtils.DrawingColorToMediaColor(
+            ((EqualizerLayerHandler)DataContext).Properties._DimColor ?? System.Drawing.Color.Empty);
+        lstbx_frequencies.ItemsSource = ((EqualizerLayerHandler)DataContext).Properties.Frequencies;
+        chkbox_scale_with_system_volume.IsChecked = ((EqualizerLayerHandler)DataContext).Properties._ScaleWithSystemVolume;
 
-            this.DataContext = datacontext;
+        _settingsset = true;
+    }
+
+    private void eq_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
+            ((EqualizerLayerHandler)DataContext).Properties._EQType = (EqualizerType)(sender as ComboBox).SelectedValue;
+    }
+
+    private void eq_view_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
+            ((EqualizerLayerHandler)DataContext).Properties.ViewType = (EqualizerPresentationType)(sender as ComboBox).SelectedValue;
+    }
+
+    private void eq_background_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
+            ((EqualizerLayerHandler)DataContext).Properties._BackgroundMode = (EqualizerBackgroundMode)(sender as ComboBox).SelectedValue;
+    }
+
+    private void Clr_primary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler &&
+            sender is ColorPicker { SelectedColor: { } } picker)
+            ((EqualizerLayerHandler)DataContext).Properties._PrimaryColor =
+                ColorUtils.MediaColorToDrawingColor(picker.SelectedColor.Value);
+    }
+
+    private void Clr_secondary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler &&
+            (sender as ColorPicker)?.SelectedColor != null)
+            ((EqualizerLayerHandler)DataContext).Properties.SecondaryColor =
+                ColorUtils.MediaColorToDrawingColor(((ColorPicker)sender).SelectedColor.Value);
+    }
+
+    private void Gradient_editor_BrushChanged(object sender, BrushChangedEventArgs e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ColorBox.ColorBox box)
+            ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(box.Brush);
+    }
+
+    private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
+    {
+        ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(ColorSpectrum.Rainbow);
+
+        Brush brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
+        try
+        {
+            gradient_editor.Brush = brush;
         }
-
-        public void SetSettings()
+        catch (Exception exc)
         {
-            if (this.DataContext is EqualizerLayerHandler && !settingsset)
+            Global.logger.Error("Could not set brush, exception: " + exc);
+        }
+    }
+
+    private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
+    {
+        ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(ColorSpectrum.RainbowLoop);
+
+        Brush brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
+        try
+        {
+            gradient_editor.Brush = brush;
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error("Could not set brush, exception: " + exc);
+        }
+    }
+
+    private void updown_max_amplitude_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as IntegerUpDown)?.Value != null)
+            ((EqualizerLayerHandler)DataContext).Properties.MaxAmplitude = ((IntegerUpDown)sender).Value.Value;
+    }
+
+    private void chkbox_scale_with_system_sound_Checked(object sender, RoutedEventArgs e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as CheckBox)?.IsChecked != null)
+            ((EqualizerLayerHandler)DataContext).Properties._ScaleWithSystemVolume = ((CheckBox)sender).IsChecked.Value;
+    }
+
+    private void Clr_dim_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as ColorPicker)?.SelectedColor != null)
+            ((EqualizerLayerHandler)DataContext).Properties._DimColor = ColorUtils.MediaColorToDrawingColor(((ColorPicker)sender).SelectedColor.Value);
+    }
+
+    private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+    {
+        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence sequence)
+        {
+            ((EqualizerLayerHandler)DataContext).Properties._Sequence = sequence.Sequence;
+        }
+    }
+
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        SetSettings();
+
+        Loaded -= UserControl_Loaded;
+    }
+
+    private void btn_AddFreq_Click(object sender, RoutedEventArgs e)
+    {
+        float value;
+
+        if (float.TryParse(txtBox_newFreqValue.Text, out value))
+        {
+            if (value >= 0.0f && value <= 16000.0f)
             {
-                //this.ColorPicker_primaryColor.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).PrimaryColor);
-                this.affectedKeys.Sequence = (this.DataContext as EqualizerLayerHandler).Properties._Sequence;
+                ((EqualizerLayerHandler)DataContext).Properties.Frequencies.Add(value);
 
-                this.eq_type.SelectedValue = (this.DataContext as EqualizerLayerHandler).Properties._EQType;
-                this.eq_view_type.SelectedValue = (this.DataContext as EqualizerLayerHandler).Properties._ViewType;
-                this.eq_background_mode.SelectedValue = (this.DataContext as EqualizerLayerHandler).Properties._BackgroundMode;
-                this.Clr_primary_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
-                this.Clr_secondary_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._SecondaryColor ?? System.Drawing.Color.Empty);
-
-                Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
-                try
-                {
-                    this.gradient_editor.Brush = brush;
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Could not set brush, exception: " + exc);
-                }
-
-                this.updown_max_amplitude_value.Value = (int)(this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude;
-                this.Clr_dim_color.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as EqualizerLayerHandler).Properties._DimColor ?? System.Drawing.Color.Empty);
-                this.lstbx_frequencies.ItemsSource = (this.DataContext as EqualizerLayerHandler).Properties._Frequencies;
-                this.chkbox_scale_with_system_volume.IsChecked = (this.DataContext as EqualizerLayerHandler).Properties._ScaleWithSystemVolume;
-
-                settingsset = true;
-            }
-        }
-
-        private void eq_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is ComboBox)
-                (this.DataContext as EqualizerLayerHandler).Properties._EQType = (EqualizerType)(sender as ComboBox).SelectedValue;
-        }
-
-        private void eq_view_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is ComboBox)
-                (this.DataContext as EqualizerLayerHandler).Properties._ViewType = (EqualizerPresentationType)(sender as ComboBox).SelectedValue;
-        }
-
-        private void eq_background_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is ComboBox)
-                (this.DataContext as EqualizerLayerHandler).Properties._BackgroundMode = (EqualizerBackgroundMode)(sender as ComboBox).SelectedValue;
-        }
-
-        private void Clr_primary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as EqualizerLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void Clr_secondary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as EqualizerLayerHandler).Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
-        }
-
-        private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new EffectBrush(ColorSpectrum.Rainbow);
-
-            Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
-        }
-
-        private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as EqualizerLayerHandler).Properties._Gradient = new EffectBrush(ColorSpectrum.RainbowLoop);
-
-            Brush brush = (this.DataContext as EqualizerLayerHandler).Properties._Gradient.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
-        }
-
-        private void updown_max_amplitude_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown && (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue)
-                (this.DataContext as EqualizerLayerHandler).Properties._MaxAmplitude = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value;
-        }
-
-        private void chkbox_scale_with_system_sound_Checked(object sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-                (this.DataContext as EqualizerLayerHandler).Properties._ScaleWithSystemVolume = (sender as CheckBox).IsChecked.Value;
-        }
-
-        private void Clr_dim_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as EqualizerLayerHandler).Properties._DimColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
-        }
-
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence)
-            {
-                (this.DataContext as EqualizerLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
-            }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            SetSettings();
-
-            this.Loaded -= UserControl_Loaded;
-        }
-
-        private void btn_AddFreq_Click(object sender, RoutedEventArgs e)
-        {
-            float value;
-
-            if (float.TryParse(this.txtBox_newFreqValue.Text, out value))
-            {
-                if (value >= 0.0f && value <= 16000.0f)
-                {
-                    (this.DataContext as EqualizerLayerHandler).Properties._Frequencies.Add(value);
-
-                    this.lstbx_frequencies.Items.Refresh();
-                }
-                else
-                    MessageBox.Show("Frequency must be in-between 0 Hz and 16000 Hz");
+                lstbx_frequencies.Items.Refresh();
             }
             else
-                MessageBox.Show("Entered value is not a number!");
+                MessageBox.Show("Frequency must be in-between 0 Hz and 16000 Hz");
         }
+        else
+            MessageBox.Show("Entered value is not a number!");
+    }
 
-        private void btn_DeleteFreq_Click(object sender, RoutedEventArgs e)
+    private void btn_DeleteFreq_Click(object sender, RoutedEventArgs e)
+    {
+        if (lstbx_frequencies.SelectedItem != null)
         {
-            if (this.lstbx_frequencies.SelectedItem != null)
-            {
-                (this.DataContext as EqualizerLayerHandler).Properties._Frequencies.Remove((float)this.lstbx_frequencies.SelectedItem);
+            ((EqualizerLayerHandler)DataContext).Properties.Frequencies.Remove((float)lstbx_frequencies.SelectedItem);
 
-                this.lstbx_frequencies.Items.Refresh();
+            lstbx_frequencies.Items.Refresh();
+        }
+    }
+
+    private void btn_ShowPreviewWindow_Click(object sender, RoutedEventArgs e)
+    {
+        if(_previewWindow == null)
+        {
+            if(_previewWindowOpen)
+            {
+                MessageBox.Show("Equalizer preview already open for another layer.\r\nPlease close it.");
+                return;
             }
+
+            _previewWindow = new Window();
+            _previewWindow.Closed += Preview_window_Closed;
+            _previewWindow.ResizeMode = ResizeMode.NoResize;
+            _previewWindow.SizeToContent = SizeToContent.WidthAndHeight;
+
+            _previewWindow.Title = "Equalizer preview";
+            _previewWindow.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            ((EqualizerLayerHandler)DataContext).NewLayerRender += Control_EqualizerLayer_NewLayerRender;
+
+            _previewImage.SnapsToDevicePixels = true;
+            _previewImage.HorizontalAlignment = HorizontalAlignment.Stretch;
+            _previewImage.VerticalAlignment = VerticalAlignment.Stretch;
+            _previewImage.MinWidth = Effects.CanvasWidth;
+            _previewImage.MinHeight = Effects.CanvasHeight;
+            _previewImage.Width = Effects.CanvasWidth * 4;
+            _previewImage.Height = Effects.CanvasHeight * 4;
+
+            _previewWindow.Content = _previewImage;
+
+            _previewWindow.UpdateLayout();
+            _previewWindow.Show();
+        }
+        else
+        {
+            _previewWindow.BringIntoView();
         }
 
-        private void btn_ShowPreviewWindow_Click(object sender, RoutedEventArgs e)
+        _previewWindowOpen = true;
+    }
+
+    private void Preview_window_Closed(object sender, EventArgs e)
+    {
+        _previewWindow = null;
+        ((EqualizerLayerHandler)DataContext).NewLayerRender -= Control_EqualizerLayer_NewLayerRender;
+        _previewWindowOpen = false;
+    }
+
+    private void Control_EqualizerLayer_NewLayerRender(Bitmap bitmap)
+    {
+        try
         {
-            if(preview_window == null)
-            {
-                if(preview_window_open == true)
+            Dispatcher.Invoke(
+                () =>
                 {
-                    MessageBox.Show("Equalizer preview already open for another layer.\r\nPlease close it.");
-                    return;
-                }
+                    using MemoryStream memory = new MemoryStream();
+                    bitmap.Save(memory, ImageFormat.Png);
+                    memory.Position = 0;
+                    BitmapImage bitmapimage = new BitmapImage();
+                    bitmapimage.BeginInit();
+                    bitmapimage.StreamSource = memory;
+                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapimage.EndInit();
 
-                preview_window = new Window();
-                preview_window.Closed += Preview_window_Closed;
-                preview_window.ResizeMode = ResizeMode.NoResize;
-                preview_window.SizeToContent = SizeToContent.WidthAndHeight;
-
-                preview_window.Title = "Equalizer preview";
-                preview_window.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                (this.DataContext as EqualizerLayerHandler).NewLayerRender += Control_EqualizerLayer_NewLayerRender;
-
-                preview_image.SnapsToDevicePixels = true;
-                preview_image.HorizontalAlignment = HorizontalAlignment.Stretch;
-                preview_image.VerticalAlignment = VerticalAlignment.Stretch;
-                preview_image.MinWidth = Effects.CanvasWidth;
-                preview_image.MinHeight = Effects.CanvasHeight;
-                preview_image.Width = Effects.CanvasWidth * 4;
-                preview_image.Height = Effects.CanvasHeight * 4;
-
-                preview_window.Content = preview_image;
-
-                preview_window.UpdateLayout();
-                preview_window.Show();
-            }
-            else
-            {
-                preview_window.BringIntoView();
-            }
-
-            preview_window_open = true;
+                    _previewImage.Source = bitmapimage;
+                });
         }
-
-        private void Preview_window_Closed(object sender, EventArgs e)
+        catch (Exception ex)
         {
-            preview_window = null;
-            (this.DataContext as EqualizerLayerHandler).NewLayerRender -= Control_EqualizerLayer_NewLayerRender;
-            preview_window_open = false;
-        }
-
-        private void Control_EqualizerLayer_NewLayerRender(System.Drawing.Bitmap bitmap)
-        {
-            try
-            {
-                Dispatcher.Invoke(
-                    () =>
-                    {
-                        using (MemoryStream memory = new MemoryStream())
-                        {
-                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
-                            memory.Position = 0;
-                            BitmapImage bitmapimage = new BitmapImage();
-                            bitmapimage.BeginInit();
-                            bitmapimage.StreamSource = memory;
-                            bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                            bitmapimage.EndInit();
-
-                            preview_image.Source = bitmapimage;
-                        }
-                    });
-            }
-            catch (Exception ex)
-            {
-                Global.logger.Warn(ex.ToString());
-            }
+            Global.logger.Warn(ex.ToString());
         }
     }
 }

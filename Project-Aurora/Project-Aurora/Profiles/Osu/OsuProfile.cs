@@ -127,11 +127,11 @@ namespace Aurora.Profiles.Osu {
                     }
                 }),
 
-                new Layer("Equalizer background", new EqualizerLayerHandler {
+                new ("Equalizer background", new EqualizerLayerHandler {
                     Properties = new EqualizerLayerHandlerProperties {
-                        _ViewType = EqualizerPresentationType.GradientColorShift,
-                        _MaxAmplitude = 25,
-                        _Gradient = new EffectsEngine.EffectBrush {
+                        ViewType = EqualizerPresentationType.GradientColorShift,
+                        MaxAmplitude = 25,
+                        Gradient = new EffectsEngine.EffectBrush {
                             type = EffectsEngine.EffectBrush.BrushType.Linear,
                             colorGradients = new SortedDictionary<float, Color> {
                                 { 0, Color.Magenta },
@@ -139,7 +139,7 @@ namespace Aurora.Profiles.Osu {
                                 { 1, Color.Magenta }
                             }
                         },
-                        _Frequencies = new SortedSet<float> { 60, 170, 310, 600, 1000, 1500, 2000, 2500 },
+                        Frequencies = new SortedSet<float> { 60, 170, 310, 600, 1000, 1500, 2000, 2500 },
                     },
                     _Opacity = .2f
                 })

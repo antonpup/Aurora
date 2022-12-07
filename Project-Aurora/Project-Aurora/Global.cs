@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using Aurora.Devices;
+using Aurora.Modules.AudioCapture;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Aurora.Utils;
 using IronPython.Hosting;
+using JetBrains.Annotations;
 using Microsoft.Scripting.Hosting;
 using NLog;
 using RazerSdkWrapper;
@@ -105,6 +107,10 @@ public static class Global
     public static Effects effengine { get; set; }
     public static KeyRecorder key_recorder { get; set; }
     public static RzSdkManager razerSdkManager { get; set; }                  //TODO module access
+    [CanBeNull]
+    public static AudioDeviceProxy CaptureProxy { get; set; }
+    [CanBeNull]
+    public static AudioDeviceProxy RenderProxy { get; set; }
 
     public static object Clipboard { get; set; }
 

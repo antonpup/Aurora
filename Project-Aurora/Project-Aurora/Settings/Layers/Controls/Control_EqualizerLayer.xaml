@@ -1,4 +1,4 @@
-<UserControl  x:Class="Aurora.Settings.Layers.Controls.Control_EqualizerLayer"
+<UserControl  x:Class="Aurora.Settings.Layers.Controls.ControlEqualizerLayer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,7 +8,12 @@
              xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:c="clr-namespace:Aurora.Controls"
+             xmlns:aurora="clr-namespace:Aurora"
+             xmlns:audioCapture="clr-namespace:Aurora.Modules.AudioCapture"
              mc:Ignorable="d" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <aurora:Global x:Key="Global"/>
+    </UserControl.Resources>
 
     <Grid Width="700" Height="320" VerticalAlignment="Top" HorizontalAlignment="Left">
         <Grid.ColumnDefinitions>
@@ -60,7 +65,7 @@
             <Button Grid.Row="7" Grid.Column="1" Margin="3" x:Name="Button_SetGradientRainbowLoop" Content="Set to Rainbow (Seamless)" Click="Button_SetGradientRainbowLoop_Click" />
 
             <TextBlock Grid.Row="8" Grid.Column="0" Margin="3" Text="Audio Device:" />
-            <ComboBox Grid.Row="8" Grid.Column="1" Margin="3" SelectedValue="{Binding Path=Properties._DeviceId, Mode=TwoWay}" ItemsSource="{x:Static u:AudioDeviceProxy.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" />
+            <ComboBox Grid.Row="8" Grid.Column="1" Margin="3" SelectedValue="{Binding Path=Properties.DeviceId, Mode=TwoWay}" ItemsSource="{x:Static audioCapture:AudioDevices.PlaybackDevices}" DisplayMemberPath="Value" SelectedValuePath="Key" />
 
             <TextBlock Grid.Row="9" Grid.Column="0" Margin="3" Text="Max amplitude:" />
             <xctk:IntegerUpDown Grid.Row="9" Grid.Column="1" Margin="3" x:Name="updown_max_amplitude_value" Value="1" Maximum="120" Minimum="1" MouseWheelActiveOnFocus="True" ValueChanged="updown_max_amplitude_value_ValueChanged" />

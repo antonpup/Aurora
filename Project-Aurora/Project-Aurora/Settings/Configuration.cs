@@ -14,6 +14,7 @@ using System.Windows;
 using Aurora.Devices.AtmoOrb;
 using Aurora.Devices.OpenRGB;
 using Aurora.Devices.RGBNet;
+using Aurora.Modules.AudioCapture;
 using Aurora.Settings.Overrides.Logic;
 using static Aurora.Utils.HardwareMonitor;
 
@@ -620,8 +621,10 @@ namespace Aurora.Settings
 
         public Dictionary<string, Color> DeviceCalibrations { get; set; } = new();
 
-        public string GSIAudioRenderDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
-        public string GSIAudioCaptureDevice { get; set; } = AudioDeviceProxy.DEFAULT_DEVICE_ID;
+        [JsonProperty("GSIAudioRenderDevice", NullValueHandling = NullValueHandling.Ignore)]
+        public string GsiAudioRenderDevice { get; set; } = AudioDevices.DefaultDeviceId;
+        [JsonProperty("GSIAudioCaptureDevice", NullValueHandling = NullValueHandling.Ignore)]
+        public string GsiAudioCaptureDevice { get; set; } = AudioDevices.DefaultDeviceId;
 
         /// <summary>
         /// Called after the configuration file has been deserialized or created for the first time.

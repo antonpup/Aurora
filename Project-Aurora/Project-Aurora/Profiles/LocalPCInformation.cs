@@ -2,8 +2,8 @@
 using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace Aurora.Profiles {
     /// <summary>
@@ -38,24 +38,12 @@ namespace Aurora.Profiles {
         #endregion
 
         #region Audio Properties
-        private static readonly AudioDeviceProxy captureProxy;
-        private static readonly AudioDeviceProxy renderProxy;
 
-        private MMDevice CaptureDevice {
-            get {
-                if (captureProxy != null)
-                    captureProxy.DeviceId = Global.Configuration.GSIAudioCaptureDevice;
-                return captureProxy?.Device;
-            }
-        }
+        [CanBeNull]
+        private MMDevice CaptureDevice => Global.CaptureProxy?.Device;
 
-        private MMDevice RenderDevice {
-            get {
-                if (renderProxy != null)
-                    renderProxy.DeviceId = Global.Configuration.GSIAudioRenderDevice;
-                return renderProxy?.Device;
-            }
-        }
+        [CanBeNull]
+        private MMDevice RenderDevice => Global.RenderProxy?.Device;
 
         /// <summary>
         /// Current system volume (as set from the speaker icon)
@@ -87,6 +75,11 @@ namespace Aurora.Profiles {
         /// Gets whether the default microphone is muted.
         /// </summary>
         public bool MicrophoneIsMuted => CaptureDevice?.AudioEndpointVolume.Mute ?? true;
+
+        /// <summary>
+        /// Selected Audio Device's index.
+        /// </summary>
+        public string PlaybackDeviceName => Global.RenderProxy?.DeviceName ?? "";
         #endregion
 
         #region Device Properties
@@ -165,22 +158,6 @@ namespace Aurora.Profiles {
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
         public bool IsDesktopLocked => DesktopUtils.IsDesktopLocked;
-
-        private bool pendingAudioDeviceUpdate = false;
-
-        static LocalPcInformation() {
-            // Do not create a capture device if audio capture is disabled. Otherwise it will create a mic icon in win 10 and people will think we're spies.
-            try
-            {
-                if (Global.Configuration.EnableAudioCapture)
-                    captureProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioCaptureDevice, DataFlow.Capture);
-                renderProxy = new AudioDeviceProxy(Global.Configuration.GSIAudioRenderDevice, DataFlow.Render);
-            }
-            catch(COMException e)
-            {
-                Global.logger.Error("Error initializing audio device proxy in LocalPCInfo, this is probably caused by an incompatible audio software: " + e);
-            }
-        }
     }
 
     public class CPUInfo : Node
