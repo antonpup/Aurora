@@ -108,7 +108,7 @@ namespace Aurora.Settings.Layers
         {
             base.PropertiesChanged(sender, args);
             _glitchColors.Clear();
-            EffectLayer.Clear();
+            EffectLayer.Invalidate();
         }
     }
 
