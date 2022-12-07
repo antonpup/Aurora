@@ -10,7 +10,8 @@
     </UserControl.Resources>
     
     <Grid>
-        <DockPanel VerticalAlignment="Stretch">
+        <DockPanel VerticalAlignment="Stretch" >
+            <TextBlock Name="TitleText" DockPanel.Dock="Top" Text="Title text here"/>
             <Grid DockPanel.Dock="Bottom">
                 <ListBox x:Name="keys_keysequence" Margin="0,0,80,25" MinWidth="150" SelectionMode="Extended" SelectionChanged="keys_keysequence_SelectionChanged" VerticalAlignment="Stretch">
                     <ListBox.ItemTemplate>

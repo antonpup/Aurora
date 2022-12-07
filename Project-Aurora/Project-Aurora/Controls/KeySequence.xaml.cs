@@ -22,6 +22,7 @@ namespace Aurora.Controls
             }
             set
             {
+                UpdateTitle(value);
                 SetValue(TitleProperty, value);
             }
         }
@@ -144,6 +145,35 @@ namespace Aurora.Controls
              *     <KeySequence Sequence="{Binding SomeProperty}" />
              * </Grid> */
             //this.DataContext = this;
+
+            UpdateTitle(Title);
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (e.Property.Name == nameof(Title))
+            {
+                UpdateTitle(Title);
+            }
+        }
+
+        private void UpdateTitle(string value)
+        {
+            if (TitleText == null)
+            {
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                TitleText.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                TitleText.Visibility = Visibility.Visible;
+                TitleText.Text = Title;
+            }
         }
 
         private void sequence_remove_keys_Click(object sender, RoutedEventArgs e)
