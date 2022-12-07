@@ -19,6 +19,7 @@ using Aurora.Profiles.Aurora_Wrapper;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Aurora.Modules.GameStateListen;
 using Aurora.Utils;
 using PropertyChanged;
 using RazerSdkWrapper;

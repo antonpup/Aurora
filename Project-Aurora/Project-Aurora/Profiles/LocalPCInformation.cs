@@ -3,6 +3,7 @@ using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using System.Linq;
 using System.Windows.Forms;
+using Aurora.Modules.Media;
 using JetBrains.Annotations;
 
 namespace Aurora.Profiles {

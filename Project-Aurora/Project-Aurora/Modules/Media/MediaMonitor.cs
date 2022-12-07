@@ -4,7 +4,7 @@ using System.Linq;
 using Windows.Media.Control;
 using WindowsMediaController;
 
-namespace Aurora.Utils;
+namespace Aurora.Modules.Media;
 
 public sealed class MediaMonitor : IDisposable
 {

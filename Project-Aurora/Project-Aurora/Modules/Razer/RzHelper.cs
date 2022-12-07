@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using Aurora;
 using Microsoft.Win32;
 using RazerSdkWrapper.Data;
 
-namespace RazerSdkHelper
+namespace Aurora.Modules.Razer
 {
     public static class RzHelper
     {

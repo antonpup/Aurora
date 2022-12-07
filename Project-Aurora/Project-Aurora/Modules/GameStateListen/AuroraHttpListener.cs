@@ -4,9 +4,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Profiles;
-using Application = System.Windows.Application;
 
-namespace Aurora.Utils;
+namespace Aurora.Modules.GameStateListen;
 
 public delegate void NewGameStateHandler(IGameState gamestate);
 public class AuroraHttpListener

@@ -1,14 +1,9 @@
-﻿using Aurora.Devices;
+﻿using System.Linq;
+using System.Windows.Forms;
 using SharpDX.RawInput;
 using MBF = SharpDX.RawInput.MouseButtonFlags;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
-namespace Aurora.Utils {
+namespace Aurora.Modules.Inputs {
     public static class MouseUtils {
 
         private static MBF[] LeftButtonFlags { get; } = new[] { MBF.Button1Down, MBF.Button1Up, MBF.LeftButtonDown, MBF.LeftButtonUp };

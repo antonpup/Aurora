@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RazerSdkHelper
+namespace Aurora.Modules.Razer
 {
     public readonly struct RzSdkVersion : IComparable<RzSdkVersion>
     {

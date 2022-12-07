@@ -6,7 +6,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Aurora.Profiles;
 
-namespace Aurora.Utils;
+namespace Aurora.Modules.GameStateListen;
 
 public delegate void WrapperConnectionClosedHandler(string process);
 

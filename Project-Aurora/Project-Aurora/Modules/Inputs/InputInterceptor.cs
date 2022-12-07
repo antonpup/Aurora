@@ -7,9 +7,8 @@ using System.Windows.Forms;
 using Aurora.Utils;
 using Gma.System.MouseKeyHook.WinApi;
 using Microsoft.Win32.SafeHandles;
-using SharpDX.RawInput;
 
-namespace Aurora
+namespace Aurora.Modules.Inputs
 {
     /// <summary>
     /// Class for intercepting input events

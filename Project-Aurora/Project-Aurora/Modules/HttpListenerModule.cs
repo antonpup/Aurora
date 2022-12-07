@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
-using Aurora.Profiles;
-using Aurora.Utils;
+using Aurora.Modules.GameStateListen;
 using Lombok.NET;
 
 namespace Aurora.Modules;

@@ -8,7 +8,7 @@ using System.Net;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Xml;
-using RazerSdkHelper;
+using Aurora.Modules.Razer;
 
 namespace Aurora.Utils
 {

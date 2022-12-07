@@ -1,14 +1,10 @@
-﻿using Aurora.Devices;
-using Gma.System.MouseKeyHook;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Aurora.Devices;
 using Aurora.Utils;
 using SharpDX.RawInput;
 
-namespace Aurora.Settings
+namespace Aurora.Modules.Inputs
 {
     public sealed class KeyRecorder : IDisposable
     {

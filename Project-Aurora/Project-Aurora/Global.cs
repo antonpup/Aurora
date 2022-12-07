@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using Aurora.Devices;
 using Aurora.Modules.AudioCapture;
+using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Aurora.Utils;

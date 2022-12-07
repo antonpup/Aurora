@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Aurora.Modules.Razer;
 using Lombok.NET;
-using RazerSdkHelper;
 using RazerSdkWrapper;
 using RazerSdkWrapper.Data;
 

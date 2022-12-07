@@ -9,8 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls;
+using Aurora.Modules.Razer;
 using Aurora.Settings.Layers.Controls;
-using RazerSdkHelper;
 
 namespace Aurora.Settings.Layers
 {

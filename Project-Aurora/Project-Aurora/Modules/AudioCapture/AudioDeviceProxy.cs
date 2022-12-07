@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Aurora.Utils;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 

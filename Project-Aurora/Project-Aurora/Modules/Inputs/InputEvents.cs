@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using Aurora.Modules.Inputs;
 using Aurora.Utils;
 using Microsoft.Win32;
 using SharpDX.Multimedia;
@@ -67,7 +68,7 @@ namespace Aurora
             try
             {
                 thread.Start(MessagePumpInit);
-                SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch);
+                SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
             }
             catch
             {

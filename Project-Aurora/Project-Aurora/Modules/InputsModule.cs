@@ -5,6 +5,7 @@ using Aurora.Settings;
 using Aurora.Utils;
 using Lombok.NET;
 using System.Windows.Forms;
+using Aurora.Modules.Inputs;
 
 namespace Aurora.Modules;
 
@@ -26,7 +27,6 @@ public sealed partial class InputsModule : IAuroraModule
         Global.logger.Info("Loaded Input Hooking");
     }
 
-
     [Async]
     public void Dispose()
     {
@@ -37,40 +37,33 @@ public sealed partial class InputsModule : IAuroraModule
 
     private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)
     {
-        if (eventArgs.PropertyName == nameof(Global.Configuration.UseVolumeAsBrightness))
+        if (eventArgs.PropertyName != nameof(Global.Configuration.UseVolumeAsBrightness)) return;
+        if (Global.Configuration.UseVolumeAsBrightness)
         {
-            if (Global.Configuration.UseVolumeAsBrightness)
-            {
-                InputInterceptor = new InputInterceptor();
-                InputInterceptor.Input += InterceptVolumeAsBrightness;
-            }
-            else if (InputInterceptor != null)
-            {
-                InputInterceptor.Input -= InterceptVolumeAsBrightness;
-                InputInterceptor.Dispose();
-            }
+            InputInterceptor = new InputInterceptor();
+            InputInterceptor.Input += InterceptVolumeAsBrightness;
+        }
+        else if (InputInterceptor != null)
+        {
+            InputInterceptor.Input -= InterceptVolumeAsBrightness;
+            InputInterceptor.Dispose();
         }
     }
 
     private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
     {
         var keys = (Keys)e.Data.VirtualKeyCode;
-        if ((keys.Equals(Keys.VolumeDown) || keys.Equals(Keys.VolumeUp))
-            && Global.InputEvents.Alt)
-        {
-            e.Intercepted = true;
-            Task.Factory.StartNew(() =>
-                {
-                    if (e.KeyDown)
-                    {
-                        float brightness = Global.Configuration.GlobalBrightness;
-                        brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
-                        Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
+        if ((!keys.Equals(Keys.VolumeDown) && !keys.Equals(Keys.VolumeUp)) || !Global.InputEvents.Alt) return;
+        e.Intercepted = true;
+        Task.Factory.StartNew(() =>
+            {
+                if (!e.KeyDown) return;
+                float brightness = Global.Configuration.GlobalBrightness;
+                brightness += keys == Keys.VolumeUp ? 0.05f : -0.05f;
+                Global.Configuration.GlobalBrightness = Math.Max(0f, Math.Min(1f, brightness));
 
-                        ConfigManager.Save(Global.Configuration);
-                    }
-                }
-            );
-        }
+                ConfigManager.Save(Global.Configuration);
+            }
+        );
     }
 }
