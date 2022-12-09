@@ -124,10 +124,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="CUESDK.x64_2017.dll">
+    <Content Include="x64\CUESDK.x64_2017.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="x64\CMSDK.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x64\LogitechLedEnginesWrapper.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="DrevoRadi.dll">

@@ -141,15 +141,6 @@ namespace Aurora.Controls
             allowListRefresh = true;
         }
 
-        private void ks_ListUpdated(object sender, EventArgs e)
-        {
-            if (cz_list.SelectedItem != null)
-            {
-                ((ColorZone)cz_list.SelectedItem).Keysequence.keys = ks.List;
-                ConfigManager.Save(Global.Configuration);
-            }
-        }
-
         private void cz_effect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cz_list.SelectedItem != null)
