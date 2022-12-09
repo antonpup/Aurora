@@ -7,10 +7,8 @@ using System.Drawing;
 using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
-using Windows.Foundation.Metadata;
 using Aurora.Settings.Layers.Controls;
 using JetBrains.Annotations;
 using Lombok.NET;
@@ -301,7 +299,7 @@ namespace Aurora.Settings.Layers
             _effectLayer = new(() => new EffectLayer(name));
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", PropertiesChanged);
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
         }
 
         public virtual EffectLayer Render(IGameState gamestate)
@@ -378,7 +376,7 @@ namespace Aurora.Settings.Layers
         public virtual void Dispose()
         {
             Properties.PropertyChanged -= PropertiesChanged;
-            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", PropertiesChanged);
+            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
         }
     }
 

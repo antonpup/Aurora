@@ -54,7 +54,7 @@ namespace Aurora.EffectsEngine
         public EffectLayer()
         {
             _name = "Unknown Layer";
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
@@ -67,7 +67,7 @@ namespace Aurora.EffectsEngine
             _name = anotherLayer._name;
             var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
             var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = anotherLayer.Dimension;
@@ -78,7 +78,7 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name)
         {
             _name = name;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
@@ -89,7 +89,7 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name, Color color)
         {
             _name = name;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, "CanvasChanged", InvalidateColorMap);
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
@@ -311,7 +311,7 @@ namespace Aurora.EffectsEngine
                 _colormap?.Dispose();
                 _textureBrush?.Dispose();
                 _transformedDrawExcludeMap?.Dispose();
-                WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, "CanvasChanged", InvalidateColorMap);
+                WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             }
         }
 

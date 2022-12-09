@@ -46,7 +46,8 @@ namespace Aurora.Controls
             InitializeComponent();
 
             Timer update_controls_timer = new Timer(1000); //Update every second
-            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(update_controls_timer, "Elapsed", Update_controls_timer_Elapsed);
+            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(update_controls_timer,
+                nameof(update_controls_timer.Elapsed), Update_controls_timer_Elapsed);
             update_controls_timer.Start();
         }
 

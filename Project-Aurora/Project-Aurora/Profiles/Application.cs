@@ -315,14 +315,14 @@ namespace Aurora.Profiles
                                     continue;
                                 }
 
-                                lyr.PropertyChanged += SaveProfilesEvent;
+                                WeakEventManager<Layer, PropertyChangedEventArgs>.AddHandler(lyr, nameof(lyr.PropertyChanged), SaveProfilesEvent);
                             }
 
                             collection.CollectionChanged += (_, e) => {
                                 if (e.NewItems != null)
                                     foreach (Layer lyr in e.NewItems)
                                         if (lyr != null)
-                                            lyr.PropertyChanged += SaveProfilesEvent;
+                                            WeakEventManager<Layer, PropertyChangedEventArgs>.AddHandler(lyr, nameof(lyr.PropertyChanged), SaveProfilesEvent);
                                 SaveProfiles();
                             };
                         }
@@ -375,7 +375,7 @@ namespace Aurora.Profiles
             }
         }
 
-        private void Profile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Profile_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is ApplicationProfile)
                 SaveProfile(sender as ApplicationProfile);
@@ -386,13 +386,13 @@ namespace Aurora.Profiles
             if (Disposed)
                 return false;
 
-            if (this.EffectScripts.ContainsKey(key))
+            if (EffectScripts.ContainsKey(key))
             {
                 Global.logger.Warn(string.Format("Effect script with key {0} already exists!", key));
                 return false;
             }
 
-            this.EffectScripts.Add(key, obj);
+            EffectScripts.Add(key, obj);
 
             return true;
         }
@@ -402,7 +402,7 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
-            this.Config.Event.UpdateLights(frame);
+            Config.Event.UpdateLights(frame);
         }
 
         public virtual void UpdateOverlayLights(EffectFrame frame) {
@@ -415,7 +415,7 @@ namespace Aurora.Profiles
             if (Disposed)
                 return;
 
-            this.Config.Event.SetGameState(state);
+            Config.Event.SetGameState(state);
         }
 
         public virtual void ResetGameState()
@@ -479,7 +479,7 @@ namespace Aurora.Profiles
             if (!force && ScriptsLoaded)
                 return;
 
-            this.EffectScripts.Clear();
+            EffectScripts.Clear();
             var voronsScriptPerf = new PerformanceEffect();
             var voronsScriptPing = new PingEffect();
             RegisterEffect(voronsScriptPerf.ID, voronsScriptPerf);
@@ -501,15 +501,15 @@ namespace Aurora.Profiles
                             var scope = Global.PythonEngine.ExecuteFile(script);
                             foreach (var v in scope.GetItems())
                             {
-                                if (v.Value is IronPython.Runtime.Types.PythonType)
+                                if (v.Value is PythonType)
                                 {
-                                    Type typ = ((IronPython.Runtime.Types.PythonType)v.Value).__clrtype__();
+                                    Type typ = ((PythonType)v.Value).__clrtype__();
                                     if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
                                     {
                                         IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
                                         if (obj != null)
                                         {
-                                            if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                            if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
                                                 Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
                                             else
                                                 anyLoaded = true;
@@ -530,7 +530,7 @@ namespace Aurora.Profiles
                                 if (effectType.IsAssignableFrom(typ))
                                 {
                                     IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
-                                    if (!(obj.ID != null && this.RegisterEffect(obj.ID, obj)))
+                                    if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
                                         Global.logger.Warn("Script {Script} must have a unique string ID variable for the effect {FullName}",
                                             script, typ.FullName);
                                     else
@@ -561,7 +561,7 @@ namespace Aurora.Profiles
 
         protected void InitalizeScriptSettings(ApplicationProfile profile_settings, bool ignore_removal = false)
         {
-            foreach (string id in this.EffectScripts.Keys)
+            foreach (string id in EffectScripts.Keys)
             {
                 if (!profile_settings.ScriptSettings.ContainsKey(id))
                     profile_settings.ScriptSettings.Add(id, new ScriptSettings());
@@ -570,7 +570,7 @@ namespace Aurora.Profiles
 
             if (!ignore_removal)
             {
-                foreach (string key in profile_settings.ScriptSettings.Keys.Where(s => !this.EffectScripts.ContainsKey(s)).ToList())
+                foreach (string key in profile_settings.ScriptSettings.Keys.Where(s => !EffectScripts.ContainsKey(s)).ToList())
                 {
                     profile_settings.ScriptSettings.Remove(key);
                 }
@@ -583,7 +583,7 @@ namespace Aurora.Profiles
 
             if (Directory.Exists(profilesPath))
             {
-                this.LoadScripts(profilesPath);
+                LoadScripts(profilesPath);
 
                 foreach (string profile in Directory.EnumerateFiles(profilesPath, "*.json", SearchOption.TopDirectoryOnly))
                 {
@@ -595,7 +595,7 @@ namespace Aurora.Profiles
 
                     if (profileSettings != null)
                     {
-                        this.InitalizeScriptSettings(profileSettings);
+                        InitalizeScriptSettings(profileSettings);
 
                         if (profileFilename.Equals("default") || profileFilename.Equals(Settings.SelectedProfile))
                             Profile = profileSettings;
@@ -621,7 +621,7 @@ namespace Aurora.Profiles
 
         public virtual void SaveProfile()
         {
-            SaveProfile(this.Profile);
+            SaveProfile(Profile);
         }
 
         public virtual void SaveProfile(ApplicationProfile profile, string path = null)
@@ -631,10 +631,10 @@ namespace Aurora.Profiles
             try
             {
                 path = path ?? Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
-                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder };
+                JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder };
                 string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
-                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
                 File.WriteAllText(path, content, Encoding.UTF8);
 
             }
@@ -646,7 +646,7 @@ namespace Aurora.Profiles
 
         public void SaveProfilesEvent(object sender, EventArgs e)
         {
-            this.SaveProfiles();
+            SaveProfiles();
         }
 
         public virtual void SaveProfiles()
@@ -687,7 +687,7 @@ namespace Aurora.Profiles
         {
             base.LoadSettings(settingsType);
 
-            this.Settings.PropertyChanged += (sender, e) => {
+            Settings.PropertyChanged += (sender, e) => {
                 SaveSettings(Config.SettingsType);
             };
         }
