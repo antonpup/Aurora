@@ -28,9 +28,10 @@ public partial class App
     private static readonly Mutex Mutex = new(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
 
     public static bool IsSilent { get; private set; }
-    private static bool _isDelayed;
-    private static int _delayTime = 5000;
-    private static bool _ignoreUpdate;
+    private bool _isDelayed;
+    private int _delayTime = 5000;
+    private bool _ignoreUpdate;
+    private bool _closing;
 
     private static readonly PluginsModule PluginsModule = new();
     private static readonly IpcListenerModule IpcListenerModule = new();
@@ -166,12 +167,20 @@ public partial class App
             catch
             {
                 MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
-                Environment.Exit(0);
+                ShutdownApp(0);
             }
         }
     }
 
-    private static void UseArgs(StartupEventArgs e)
+    private static void ShutdownApp(int exitCode)
+    {
+        
+        Environment.ExitCode = exitCode;
+        Current.Shutdown();
+        Environment.Exit(exitCode);
+    }
+
+    private void UseArgs(StartupEventArgs e)
     {
         for (var i = 0; i < e.Args.Length; i++)
         {
@@ -214,7 +223,7 @@ public partial class App
                         MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
                     }
 
-                    Environment.Exit(0);
+                    ShutdownApp(0);
                     break;
             }
         }
@@ -263,6 +272,7 @@ public partial class App
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _closing = true;
         base.OnExit(e);
 
         if (Global.Configuration != null)
@@ -272,28 +282,27 @@ public partial class App
         Task.WhenAll(tasks).Wait();
 
         Global.dev_manager?.ShutdownDevices();
+        Global.dev_manager?.Dispose();
+        Environment.ExitCode = 0;
 
-        Environment.Exit(0);
+        //ShutdownApp(0);
     }
 
-    private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Exception exc = (Exception)e.ExceptionObject;
         Global.logger.Fatal(exc, "Fatal Exception caught : ");
 
-        if (Current == null)
+        if (Current == null || _closing)
+        {
+            return;
+        }
+        
+        if (exc is SEHException sehException && sehException.CanResume())
         {
             return;
         }
 
-        if (exc is SEHException sehException)
-        {
-            if (sehException.CanResume())
-            {
-                return;
-            }
-        }
-            
         Global.logger.Fatal($"Runtime terminating: {e.IsTerminating}");
         LogManager.Flush();
 
@@ -312,12 +321,11 @@ public partial class App
             e.Handled = true;
         else
             throw exc;
-        if (Global.Configuration.CloseProgramOnException)
-        {
-            MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
-            //Perform exit operations
-            Current?.Shutdown();
-        }
+        if (!Global.Configuration.CloseProgramOnException) return;
+        if (_closing) return;
+        MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+        //Perform exit operations
+        Current?.Shutdown();
     }
 
     public static void InstallLogitech()
@@ -332,7 +340,7 @@ public partial class App
         {
             Global.logger.Error("Program does not have admin rights");
             MessageBox.Show("Program does not have admin rights");
-            Environment.Exit(1);
+            ShutdownApp(1);
         }
 
         //Patch 32-bit

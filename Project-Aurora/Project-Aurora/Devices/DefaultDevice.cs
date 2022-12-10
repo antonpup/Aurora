@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using System;
+using Aurora.Settings;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Aurora.Devices;
 
-public abstract class DefaultDevice : IDevice
+public abstract class DefaultDevice : IDevice, IDisposable
 {
     protected readonly Stopwatch Watch = new();
     private long _lastUpdateTime;
@@ -63,6 +64,20 @@ public abstract class DefaultDevice : IDevice
     public virtual IEnumerable<string> GetDevices()
     {
         yield break;
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _initializeTask?.Dispose();
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     #region Variables

@@ -7,25 +7,39 @@ namespace Aurora.Modules;
 
 public sealed partial class AudioCaptureModule : IAuroraModule
 {
-
     private AudioDevices _audioDevices;
+    private AudioDeviceProxy _renderProxy;
+    private AudioDeviceProxy _captureProxy;
     
     [Async]
     public void Initialize()
     {
         _audioDevices = new AudioDevices();
-        Global.RenderProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioRenderDevice, DataFlow.Render);
+        _renderProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioRenderDevice, DataFlow.Render);
+        Global.RenderProxy = _renderProxy;
         if (Global.Configuration.EnableAudioCapture)
-            Global.CaptureProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioCaptureDevice, DataFlow.Capture);
+        {
+            _captureProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioCaptureDevice, DataFlow.Capture);
+            Global.CaptureProxy = _captureProxy;
+        }
     }
-
 
     [Async]
     public void Dispose()
     {
+        _renderProxy?.Dispose();
+        _renderProxy = null;
         Global.RenderProxy = null;
+        _captureProxy?.Dispose();
+        _captureProxy = null;
         Global.CaptureProxy = null;
         _audioDevices?.Dispose();
         _audioDevices = null;
+        
+        foreach (var audioDeviceProxy in AudioDeviceProxy.Instances)
+        {
+            audioDeviceProxy.Dispose();
+        }
+        AudioDeviceProxy.Instances.Clear();
     }
 }

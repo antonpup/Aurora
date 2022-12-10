@@ -153,6 +153,7 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
     {
         if (_disposed) return;
         _deviceEnumerator.UnregisterEndpointNotificationCallback(this);
+        _deviceEnumerator.Dispose();
         _disposed = true;
     }
 

@@ -698,11 +698,16 @@ namespace Aurora.Profiles
         {
             if (Disposed)
                 return;
-
-            foreach (ApplicationProfile profile in this.Profiles)
-                profile.Dispose();
-
             Disposed = true;
+            Profile = null;
+
+            foreach (var profile in Profiles)
+                profile.Dispose();
+            Profiles = null;
+
+            _control = null;
+            
+            EffectScripts.Clear();
         }
     }
 }

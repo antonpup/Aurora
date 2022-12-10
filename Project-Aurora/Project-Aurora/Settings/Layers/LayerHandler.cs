@@ -375,6 +375,10 @@ namespace Aurora.Settings.Layers
 
         public virtual void Dispose()
         {
+            if (_effectLayer.IsValueCreated)
+            {
+                _effectLayer.Value.Dispose();
+            }
             Properties.PropertyChanged -= PropertiesChanged;
             WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
         }

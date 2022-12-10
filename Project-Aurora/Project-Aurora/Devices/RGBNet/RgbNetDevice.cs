@@ -97,4 +97,11 @@ public abstract class RgbNetDevice : DefaultDevice
 
         return true;
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        
+        Provider.Dispose();
+    }
 }

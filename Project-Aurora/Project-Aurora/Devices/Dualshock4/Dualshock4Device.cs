@@ -98,17 +98,30 @@ namespace Aurora.Devices.Dualshock
         private DeviceKeys key;
         private bool isDisconnecting;
 
-        public DualshockDevice()
+        public override bool Initialize()
         {
+            if (IsInitialized)
+                return true;
+
             //dummy call, we just need hidsharp to scan for devices once
             HidSharp.DeviceList.Local.GetAllDevices();
             HidSharp.DeviceList.Local.Changed += DeviceListChanged;
+
+            key = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
+            DS4Devices.findControllers();
+
+            var restore = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_restore_dualshock").GetDrawingColor();
+
+            foreach (var controller in DS4Devices.getDS4Controllers())
+                devices.Add(new DS4Container(controller, restore));
+
+            return IsInitialized = devices.Count > 0;
         }
 
         private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
         {
             if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) || 
-               (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
+                (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
             {
                 return;
             }
@@ -123,26 +136,11 @@ namespace Aurora.Devices.Dualshock
                 Reset();
         }
 
-        public override bool Initialize()
-        {
-            if (IsInitialized)
-                return true;
-
-            key = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
-            DS4Devices.findControllers();
-
-            var restore = Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_restore_dualshock").GetDrawingColor();
-
-            foreach (var controller in DS4Devices.getDS4Controllers())
-                devices.Add(new DS4Container(controller, restore));
-
-            return IsInitialized = devices.Count > 0;
-        }
-
         public override void Shutdown()
         {
             if (!IsInitialized)
                 return;
+            HidSharp.DeviceList.Local.Changed -= DeviceListChanged;
 
             isDisconnecting = true;
             foreach (var dev in devices)

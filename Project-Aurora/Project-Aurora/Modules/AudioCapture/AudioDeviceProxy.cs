@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
@@ -12,6 +14,7 @@ namespace Aurora.Modules.AudioCapture;
 /// </summary>
 public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfaces.IMMNotificationClient
 {
+    public static List<AudioDeviceProxy> Instances = new();
     private readonly MMDeviceEnumerator _deviceEnumerator = new();
 
     public event EventHandler<EventArgs> DeviceChanged;
@@ -35,6 +38,8 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         Flow = flow;
         DeviceId = deviceId ?? AudioDevices.DefaultDeviceId;
         _deviceEnumerator.RegisterEndpointNotificationCallback(this);
+        
+        Instances.Add(this);
     }
 
     /// <summary>Indicates recorded data is available on the selected device.</summary>
@@ -53,7 +58,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
     }
 
-    public MMDevice Device { get; private set; }
+    [CanBeNull] public MMDevice Device { get; private set; }
     public WasapiCapture WaveIn { get; private set; }
     public string DeviceName { get; private set; }
 
@@ -66,6 +71,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         get => _deviceId;
         set
         {
+            if (_disposed) return;
             value ??= AudioDevices.DefaultDeviceId; // Ensure not-null (if null, assume default device)
             if (_deviceId == value && !(_defaultDeviceChanged && _deviceId == AudioDevices.DefaultDeviceId)) return;
             _defaultDeviceChanged = false;
@@ -81,6 +87,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         if (WaveIn != null)
             WaveIn.DataAvailable -= _waveInDataAvailable;
         DisposeCurrentDevice();
+        if (_disposed) return;
 
         // Get a new device with this ID and flow direction
         var mmDevice = _deviceId == AudioDevices.DefaultDeviceId
@@ -88,18 +95,18 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
             : _deviceEnumerator.EnumerateAudioEndPoints(Flow, DeviceState.Active)
                 .FirstOrDefault(d => d.ID == DeviceId); // Otherwise, get the one with this ID
         if (mmDevice == null) return;
+        if (mmDevice.ID == Device?.ID) return;
         SetDevice(mmDevice);
     }
 
-    private AudioClient _audioClient;   //just keep a reference!
     private void SetDevice(MMDevice mmDevice)
     {
         var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
-        _audioClient = mmDevice.AudioClient;
         mmDevice.AudioSessionManager.RefreshSessions();
         Device = mmDevice;
 
         // Get a WaveIn from the device and start it, adding any events as requied
+        WaveIn?.StopRecording();
         WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
         WaveIn.DataAvailable += _waveInDataAvailable;
         WaveIn.StartRecording();
@@ -182,8 +189,10 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     {
         if (_disposed) return;
         _disposed = true;
+        Device?.Dispose();
         DisposeCurrentDevice();
         _deviceEnumerator.UnregisterEndpointNotificationCallback(this);
+        _deviceEnumerator.Dispose();
     }
 
     #endregion

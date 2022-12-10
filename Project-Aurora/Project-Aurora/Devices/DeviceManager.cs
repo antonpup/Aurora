@@ -12,7 +12,7 @@ using CSScriptLib;
 
 namespace Aurora.Devices
 {
-    public class DeviceContainer
+    public sealed class DeviceContainer : IDisposable
     {
         public IDevice Device { get; }
 
@@ -54,9 +54,15 @@ namespace Aurora.Devices
                 _worker.QueueWorkItem(_updateAction);
             }
         }
+
+        public void Dispose()
+        {
+            _worker.Shutdown(250);
+            _worker?.Dispose();
+        }
     }
 
-    public class DeviceManager
+    public sealed class DeviceManager: IDisposable
     {
         private const int RETRY_ATTEMPTS = 6;
         private bool _InitializeOnceAllowed;
@@ -335,5 +341,10 @@ namespace Aurora.Devices
             }
         }
         #endregion
+
+        public void Dispose()
+        {
+            DeviceContainers.Clear();
+        }
     }
 }
