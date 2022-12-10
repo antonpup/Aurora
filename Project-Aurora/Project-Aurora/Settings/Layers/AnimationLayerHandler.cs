@@ -6,15 +6,11 @@ using Aurora.Settings.Overrides;
 using Aurora.Settings.Overrides.Logic;
 using Aurora.Utils;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
 
@@ -147,13 +143,13 @@ namespace Aurora.Settings.Layers
             CheckTriggers(gamestate);
 
             EffectLayer.Clear();
+            var affectedRegion = Rectangle.Truncate(Properties.Sequence.GetAffectedRegion());
             // Render each playing animation.
             frameAnimations.ForEach(anim => {
                 // Default values for the destination rect (the area that the canvas is drawn to) and animation offset
                 PointF offset = Properties.KeyTriggerTranslate ? anim.offset : PointF.Empty;
 
                 // When ScaleToKeySequenceBounds is true, additional calculations are needed on the destRect and offset:
-                RectangleF affectedRegion = Properties.Sequence.GetAffectedRegion();
                 if (Properties.ScaleToKeySequenceBounds && !affectedRegion.IsEmpty) {
                     // If we are scaling to key sequence bounds, we need to adapt the offset of the pressed key so that it
                     // remains where it is after the bound - scaling operation.
@@ -302,7 +298,7 @@ namespace Aurora.Settings.Layers
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
             // If triggering on any key or the pressed key is in the trigger list AND the pressed key has not already been handled (i.e. it's not being held)
-            if ((Properties.TriggerAnyKey || Properties.TriggerKeySequence.keys.Contains(e.GetDeviceKey())) && !_pressedKeys.Contains(e.GetDeviceKey())) {
+            if ((Properties.TriggerAnyKey || Properties.TriggerKeySequence.Keys.Contains(e.GetDeviceKey())) && !_pressedKeys.Contains(e.GetDeviceKey())) {
                 // Start an animation if trigger is for 'press' event
                 if (Properties.TriggerMode == AnimationTriggerMode.OnKeyPress)
                     StartAnimation(e.GetDeviceKey());

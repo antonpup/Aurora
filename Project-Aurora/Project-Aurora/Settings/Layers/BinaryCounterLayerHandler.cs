@@ -49,9 +49,9 @@ namespace Aurora.Settings.Layers {
 
             // Set the active key
             var layer = new EffectLayer("BinaryCounterCustomLayer");
-            for (var i = 0; i < Properties.Sequence.keys.Count; i++)
+            for (var i = 0; i < Properties.Sequence.Keys.Count; i++)
                 if (((int)value & 1 << i) > 0)
-                    layer.Set(Properties.Sequence.keys[i], Properties.PrimaryColor);
+                    layer.Set(Properties.Sequence.Keys[i], Properties.PrimaryColor);
             return layer;
         }
     }

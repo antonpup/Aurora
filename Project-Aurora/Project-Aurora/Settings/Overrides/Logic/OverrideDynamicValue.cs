@@ -131,7 +131,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         #region Dynamic Constructor Helper Methods
         /// <summary>Converts a double object (from 0-1) into a color component (int between 0 and 255).</summary>
-        private static int ToColorComp(object c) => Convert.ToInt32(Utils.MathUtils.Clamp((double)c, 0, 1) * 255);
+        private static int ToColorComp(object c) => Double.IsNaN((double)c) ? 0 : Convert.ToInt32(Utils.MathUtils.Clamp((double)c, 0, 1) * 255);
         #endregion
     }
 

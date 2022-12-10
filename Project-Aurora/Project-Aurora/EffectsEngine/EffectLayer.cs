@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows;
 using Aurora.Devices;
 using Aurora.Settings;
 using Aurora.Utils;
+using CSScripting;
 using Point = System.Drawing.Point;
 
 namespace Aurora.EffectsEngine
@@ -449,36 +453,44 @@ namespace Aurora.EffectsEngine
         /// <returns>Itself</returns>
         public EffectLayer Set(KeySequence sequence, Brush brush)
         {
-            if (_previousSequenceType != sequence.type)
+            if (!ReferenceEquals(sequence, _keySequence))
             {
-                Clear();
-                _previousSequenceType = sequence.type;
+                WeakEventManager<ObservableCollection<DeviceKeys>, EventArgs>.RemoveHandler(_keySequence.Keys,
+                    nameof(_keySequence.Keys.CollectionChanged), FreeformOnValuesChanged);
+                _keySequence = sequence;
+                WeakEventManager<ObservableCollection<DeviceKeys>, EventArgs>.AddHandler(_keySequence.Keys,
+                    nameof(_keySequence.Keys.CollectionChanged), FreeformOnValuesChanged);
+                FreeformOnValuesChanged(this, EventArgs.Empty);
+            }
+            if (_previousSequenceType != sequence.Type)
+            {
+                _previousSequenceType = sequence.Type;
                 _ksChanged = true;
             }
 
-            if (sequence.type == KeySequenceType.Sequence)
+            if (_ksChanged)
             {
-                foreach (var key in sequence.keys)
+                Clear();
+                _ksChanged = false;
+            }
+
+            if (sequence.Type == KeySequenceType.Sequence)
+            {
+                foreach (var key in sequence.Keys)
                     SetOneKey(key, brush);
             }
             else
             {
-                if (!sequence.freeform.Equals(_lastFreeform))
+                if (!ReferenceEquals(sequence.Freeform, _lastFreeform))
                 {
-                    WeakEventManager<FreeFormObject, EventArgs>.RemoveHandler(_lastFreeform, "ValuesChanged", FreeformOnValuesChanged);
-                    _lastFreeform = sequence.freeform;
-                    WeakEventManager<FreeFormObject, EventArgs>.AddHandler(_lastFreeform, "ValuesChanged", FreeformOnValuesChanged);
+                    WeakEventManager<FreeFormObject, EventArgs>.RemoveHandler(_lastFreeform, nameof(_lastFreeform.ValuesChanged), FreeformOnValuesChanged);
+                    _lastFreeform = sequence.Freeform;
+                    WeakEventManager<FreeFormObject, EventArgs>.AddHandler(_lastFreeform, nameof(_lastFreeform.ValuesChanged), FreeformOnValuesChanged);
                     FreeformOnValuesChanged(this, EventArgs.Empty);
-                }
-
-                if (_ksChanged)
-                {
-                    Clear();
-                    _ksChanged = false;
                 }
                 else if (brush is SolidBrush solidBrush)
                 {
-                    if (sequence.freeform.Equals(_lastFreeform) && _lastColor == solidBrush.Color)
+                    if (sequence.Freeform.Equals(_lastFreeform) && _lastColor == solidBrush.Color)
                     {
                         return this;
                     }
@@ -486,10 +498,10 @@ namespace Aurora.EffectsEngine
                 }
 
                 using var g = Graphics.FromImage(_colormap);
-                var xPos = (float)Math.Round((sequence.freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
-                var yPos = (float)Math.Round((sequence.freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
-                var width = (float)Math.Round(sequence.freeform.Width * Effects.EditorToCanvasWidth);
-                var height = (float)Math.Round(sequence.freeform.Height * Effects.EditorToCanvasHeight);
+                var xPos = (float)Math.Round((sequence.Freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
+                var yPos = (float)Math.Round((sequence.Freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+                var width = (float)Math.Round(sequence.Freeform.Width * Effects.EditorToCanvasWidth);
+                var height = (float)Math.Round(sequence.Freeform.Height * Effects.EditorToCanvasHeight);
 
                 if (width < 3) width = 3;
                 if (height < 3) height = 3;
@@ -498,7 +510,7 @@ namespace Aurora.EffectsEngine
 
                 var rotatePoint = new PointF(xPos + width / 2.0f, yPos + height / 2.0f);
                 var myMatrix = new Matrix();
-                myMatrix.RotateAt(sequence.freeform.Angle, rotatePoint, MatrixOrder.Append);    //TODO dependant property? parameter?
+                myMatrix.RotateAt(sequence.Freeform.Angle, rotatePoint, MatrixOrder.Append);    //TODO dependant property? parameter?
 
                 g.Transform = myMatrix;
                 g.CompositingMode = CompositingMode.SourceCopy;
@@ -512,7 +524,6 @@ namespace Aurora.EffectsEngine
         private void FreeformOnValuesChanged(object sender, EventArgs args)
         {
             _ksChanged = true;
-            Clear();
         }
 
         private Bitmap _transformedDrawExcludeMap;
@@ -566,9 +577,9 @@ namespace Aurora.EffectsEngine
                 // Second, for freeform objects, apply the rotation. This needs to be done AFTER the scaling,
                 // else the scaling is applied to the rotated object, which skews it
                 // We rotate around the central point of the source region, but we need to take the scaling of the dimensions into account
-                if (sequence.type == KeySequenceType.FreeForm)
+                if (sequence.Type == KeySequenceType.FreeForm)
                     matrix.RotateAt(
-                        sequence.freeform.Angle,
+                        sequence.Freeform.Angle,
                         new PointF((sourceRegion.Left + sourceRegion.Width / 2f) * sx, (sourceRegion.Top + sourceRegion.Height / 2f) * sy), MatrixOrder.Append);
 
                 // Third, we can translate the matrix from the source to the target location.
@@ -582,7 +593,7 @@ namespace Aurora.EffectsEngine
                 gfx.ResetClip();
                 gfx.Transform = matrix;
                 render(gfx);
-                if (sequence.type == KeySequenceType.Sequence)
+                if (sequence.Type == KeySequenceType.Sequence)
                 {
                     var gp = GetExclusionPath(sequence);
                     gfx.ResetTransform();
@@ -598,11 +609,11 @@ namespace Aurora.EffectsEngine
 
         private static GraphicsPath GetExclusionPath(KeySequence sequence)
         {
-            if (sequence.type == KeySequenceType.Sequence)
+            if (sequence.Type == KeySequenceType.Sequence)
             {
                 var gp = new GraphicsPath();
                 gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
-                sequence.keys.ForEach(k =>
+                sequence.Keys.ForEach(k =>
                 {
                     var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
                     gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
@@ -653,7 +664,7 @@ namespace Aurora.EffectsEngine
             SetOneKey(key, new SolidBrush(color));
         }
 
-        private readonly Dictionary<DeviceKeys, Color> _keyColors = new();
+        private readonly ConcurrentDictionary<DeviceKeys, Color> _keyColors = new();
         private static readonly SolidBrush ClearingBrush = new(Color.Transparent);
         private Color _lastColor = Color.Empty;
 
@@ -771,6 +782,7 @@ namespace Aurora.EffectsEngine
         }
 
         private KeySequenceType _previousSequenceType;
+        private KeySequence _keySequence = new();
 
         /// <summary>
         /// Draws a percent effect on the layer bitmap using a KeySequence with solid colors.
@@ -782,15 +794,16 @@ namespace Aurora.EffectsEngine
             double total = 1.0D, PercentEffectType percentEffectType = PercentEffectType.Progressive,
             double flashPast = 0.0, bool flashReversed = false, bool blinkBackground = false)
         {
-            if (_previousSequenceType != sequence.type)
+            if (_previousSequenceType != sequence.Type)
             {
                 Clear();
-                _previousSequenceType = sequence.type;
+                _previousSequenceType = sequence.Type;
             }
-            if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(foregroundColor, backgroundColor, sequence.keys, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
+            if (sequence.Type == KeySequenceType.Sequence)
+                PercentEffect(foregroundColor, backgroundColor, sequence.Keys, value, total, percentEffectType,
+                    flashPast, flashReversed, blinkBackground);
             else
-                PercentEffect(foregroundColor, backgroundColor, sequence.freeform, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
+                PercentEffect(foregroundColor, backgroundColor, sequence.Freeform, value, total, percentEffectType, flashPast, flashReversed, blinkBackground);
         }
 
         /// <summary>
@@ -803,15 +816,16 @@ namespace Aurora.EffectsEngine
             PercentEffectType percentEffectType = PercentEffectType.Progressive, double flashPast = 0.0,
             bool flashReversed = false)
         {
-            if (_previousSequenceType != sequence.type)
+            if (_previousSequenceType != sequence.Type)
             {
                 Clear();
-                _previousSequenceType = sequence.type;
+                _previousSequenceType = sequence.Type;
             }
-            if (sequence.type == KeySequenceType.Sequence)
-                PercentEffect(spectrum, sequence.keys.ToArray(), value, total, percentEffectType, flashPast, flashReversed);
+            if (sequence.Type == KeySequenceType.Sequence)
+                PercentEffect(spectrum, sequence.Keys.ToArray(), value, total, percentEffectType, flashPast,
+                    flashReversed);
             else
-                PercentEffect(spectrum, sequence.freeform, value, total, percentEffectType, flashPast, flashReversed);
+                PercentEffect(spectrum, sequence.Freeform, value, total, percentEffectType, flashPast, flashReversed);
         }
 
         /// <summary>
@@ -1114,14 +1128,14 @@ namespace Aurora.EffectsEngine
                 return;
             }
 
-            _excludeSequence = sequence.Clone() as KeySequence;
+            _excludeSequence = sequence;
             
             var gp = new GraphicsPath();
-            sequence.keys.ForEach(k =>
+            sequence.Keys.ForEach(k =>
             {
                 var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
                 gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
-                _keyColors.Remove(k);
+                _keyColors.Remove(k, out _);
             });
 
             using var g = Graphics.FromImage(_colormap);

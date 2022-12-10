@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Controls;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
@@ -84,7 +85,7 @@ namespace Aurora.Settings.Layers
             if (!(_previousTime + Properties.UpdateInterval * 1000L <= _currentTime)) return EffectLayer;
             _previousTime = _currentTime;
 
-            var keys = Properties.Sequence.type == KeySequenceType.FreeForm ? Enum.GetValues(typeof(DeviceKeys)) : Properties.Sequence.keys.ToArray();
+            var keys = Properties.Sequence.Type == KeySequenceType.FreeForm ? Enum.GetValues(typeof(DeviceKeys)) : Properties.Sequence.Keys.ToArray();
             foreach (DeviceKeys key in keys)
             {
                 var clr = Properties.AllowTransparency ? _randomizer.Next() % 2 == 0 ? Color.Transparent : ColorUtils.GenerateRandomColor() : ColorUtils.GenerateRandomColor();

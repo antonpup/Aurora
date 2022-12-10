@@ -100,7 +100,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         // The value to compare the GSI enum against.
         // Has to be converted using the TypeAnnotatedObjectConverter else the type won't be stored, only the number (which JSON then doesn't know how to serialise back)
-        [Newtonsoft.Json.JsonConverter(typeof(TypeAnnotatedObjectConverter))]
+        [Newtonsoft.Json.JsonConverter(typeof(EnumConverter))]
         public Enum EnumValue { get; set; }
 
         // Control

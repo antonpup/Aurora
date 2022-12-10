@@ -84,20 +84,20 @@ namespace Aurora.Profiles.CSGO.Layers
             }
 
             if (!csgostate.Provider.SteamID.Equals(csgostate.Player.SteamID)) return EffectLayer.EmptyLayer;
-            for (var pos = 0; pos < Properties.Sequence.keys.Count; pos++)
+            for (var pos = 0; pos < Properties.Sequence.Keys.Count; pos++)
             {
                 if (pos < roundKills.Count)
                 {
                     switch (roundKills[pos])
                     {
                         case RoundKillType.Regular:
-                            EffectLayer.Set(Properties.Sequence.keys[pos], Properties.RegularKillColor);
+                            EffectLayer.Set(Properties.Sequence.Keys[pos], Properties.RegularKillColor);
                             break;
                         case RoundKillType.Headshot:
-                            EffectLayer.Set(Properties.Sequence.keys[pos], Properties.HeadshotKillColor);
+                            EffectLayer.Set(Properties.Sequence.Keys[pos], Properties.HeadshotKillColor);
                             break;
                         case RoundKillType.None:
-                            EffectLayer.Set(Properties.Sequence.keys[pos], Color.Empty);
+                            EffectLayer.Set(Properties.Sequence.Keys[pos], Color.Empty);
                             break;
                     }
                 }

@@ -59,11 +59,23 @@ namespace Aurora.Settings.Layers
 
         public EffectLayer Render(IGameState gs) {
             Stopwatch timer = Stopwatch.StartNew();
-            if (OverrideLogic != null) {
+            if (OverrideLogic != null)
+            {
                 // For every property which has an override logic assigned
                 foreach (var kvp in OverrideLogic)
                     // Set the value of the logic evaluation as the override for this property
-                    ((IValueOverridable)Handler.Properties).SetOverride(kvp.Key, kvp.Value.Evaluate(gs));
+                {
+                    var value = kvp.Value.Evaluate(gs);
+                    if (kvp.Value.VarType is { IsEnum: true })
+                    {
+                        ((IValueOverridable)Handler.Properties).SetOverride(kvp.Key,
+                            value == null ? null : Enum.ToObject(kvp.Value.VarType, value));
+                    }
+                    else
+                    {
+                        ((IValueOverridable)Handler.Properties).SetOverride(kvp.Key, value);
+                    }
+                }
             }
 
             EffectLayer effectLayer = ((dynamic)Handler.Properties).Enabled ? Handler.PostRenderFX(Handler.Render(gs)) : EffectLayer.EmptyLayer;

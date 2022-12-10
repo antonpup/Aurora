@@ -1,5 +1,4 @@
 ﻿using Aurora.Profiles;
-using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -75,7 +74,7 @@ namespace Aurora.Settings.Overrides.Logic {
             // type instead of an instance of the struct. The custom converter forcefully wraps a $type parameter around the JSON of
             // the struct so that it can always know the correct class/struct to deserialize the JSON as.
             /// <summary>The value of this entry.</summary>
-            [JsonConverter(typeof(Utils.TypeAnnotatedObjectConverter))]
+            //[JsonConverter(typeof(Utils.TypeAnnotatedObjectConverter))]
             public object Value { get; set; }
 
             /// <summary>A boolean condition that should be met for this entry to be valid.</summary>

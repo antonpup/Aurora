@@ -83,10 +83,10 @@ namespace Aurora.Profiles.ETS2.Layers {
                         List<DeviceKeys> half;
                         if (frame < 5)
                             // First half
-                            half = Properties.Sequence.keys.GetRange(0, (int)Math.Ceiling((double)Properties.Sequence.keys.Count / 2));
+                            half = Properties.Sequence.Keys.ToList().GetRange(0, (int)Math.Ceiling((double)Properties.Sequence.Keys.Count / 2));
                         else
                             // Second half
-                            half = Properties.Sequence.keys.GetRange((int)Math.Ceiling((double)Properties.Sequence.keys.Count / 2), (int)Math.Ceiling((double)Properties.Sequence.keys.Count / 2));
+                            half = Properties.Sequence.Keys.ToList().GetRange((int)Math.Ceiling((double)Properties.Sequence.Keys.Count / 2), (int)Math.Ceiling((double)Properties.Sequence.Keys.Count / 2));
 
                         layer.Set(half.ToArray(), Properties.PrimaryColor);
 
@@ -95,12 +95,12 @@ namespace Aurora.Profiles.ETS2.Layers {
                     
                     // The "on" key goes up and down the sequence
                     case ETS2_BeaconStyle.Side_To_Side:
-                        int keyCount = Properties.Sequence.keys.Count;
+                        int keyCount = Properties.Sequence.Keys.Count;
 
                         int light = Math.Abs(((frame/2 + 1) % (keyCount * 2 - 2)) - keyCount + 2);
                         int prevLight = Math.Abs(frame/2 - keyCount + 2);
-                        layer.Set(Properties.Sequence.keys[light], Properties.PrimaryColor);
-                        layer.Set(Properties.Sequence.keys[prevLight], PrimaryColorAlpha(.5));
+                        layer.Set(Properties.Sequence.Keys[light], Properties.PrimaryColor);
+                        layer.Set(Properties.Sequence.Keys[prevLight], PrimaryColorAlpha(.5));
 
                         frame = (frame + 1) % ((keyCount - 1) * 4); // *4 because we want the pattern to go up and down (*2), and also each keyframe should take 2 real frames
                         break;

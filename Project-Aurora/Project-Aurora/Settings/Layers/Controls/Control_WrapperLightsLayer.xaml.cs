@@ -60,7 +60,7 @@ namespace Aurora.Settings.Layers.Controls
         private void CloneSourceKS_SequenceKeysChange(object sender, EventArgs e) {
             // If any items ARE in the clone map but NOT in the sequence, remove them
             // We dont need to worry about adding items to the clone map since CloneDestKS_SequenceUpdated takes care of that
-            var toRemove = Context.Properties.CloningMap.Keys.Where(key => !CloneSourceKS.Sequence.keys.Contains(key)).ToList();
+            var toRemove = Context.Properties.CloningMap.Keys.Where(key => !CloneSourceKS.Sequence.Keys.Contains(key)).ToList();
             foreach (var key in toRemove)
                 Context.Properties.CloningMap.Remove(key);
         }

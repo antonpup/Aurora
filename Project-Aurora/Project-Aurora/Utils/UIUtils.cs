@@ -1,14 +1,9 @@
-﻿using Aurora.Devices;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Aurora.Devices;
 
 namespace Aurora.Utils
 {
@@ -20,18 +15,6 @@ namespace Aurora.Utils
                 key_destination.Text = Enum.GetName(typeof(DeviceKeys), keyslist[position]);
             else
                 key_destination.Text = Enum.GetName(typeof(DeviceKeys), DeviceKeys.NONE);
-        }
-
-        public static List<Devices.DeviceKeys> SequenceToList(ItemCollection items)
-        {
-            List<Devices.DeviceKeys> newsequence = new List<Devices.DeviceKeys>();
-
-            foreach (Devices.DeviceKeys key in items)
-            {
-                newsequence.Add(key);
-            }
-
-            return newsequence;
         }
 
         public static bool ListBoxMoveSelectedUp(ListBox list)
@@ -91,19 +74,17 @@ namespace Aurora.Utils
 
                 return false;
             }
-            else
+
+            bool isremoved = false;
+
+            while (list.SelectedItems.Count > 0)
             {
-                bool isremoved = false;
+                list.Items.Remove(list.SelectedItems[0]);
 
-                while (list.SelectedItems.Count > 0)
-                {
-                    list.Items.Remove(list.SelectedItems[0]);
-
-                    isremoved = true;
-                }
-
-                return isremoved;
+                isremoved = true;
             }
+
+            return isremoved;
         }
 
         public static bool ListBoxReverseOrder(ListBox keys_keysequence)

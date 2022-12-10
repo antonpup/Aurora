@@ -169,7 +169,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
     private int _channels;
     private int _bufferIncrement;
     private bool _disposed;
-    private AudioDeviceProxy DeviceProxy {  //_deviceProxy.WaveIn.WaveFormat is a very expensive line
+    private AudioDeviceProxy DeviceProxy {  
         get {
             if (_deviceProxy != null) return _deviceProxy;
             _deviceProxy = new AudioDeviceProxy(DataFlow.Render);
@@ -186,7 +186,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
         if (_deviceProxy.Device == null || _deviceProxy.WaveIn == null)
             return;
         try
-        {
+        {   //_deviceProxy.WaveIn.WaveFormat is a very expensive line
             _channels = _deviceProxy.WaveIn.WaveFormat.Channels;
             _bufferIncrement = _deviceProxy.WaveIn.WaveFormat.BlockAlign;
             _freq = _deviceProxy.Device.AudioClient.MixFormat.SampleRate;

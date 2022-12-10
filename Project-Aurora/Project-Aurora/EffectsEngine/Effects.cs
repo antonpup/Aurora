@@ -175,7 +175,6 @@ namespace Aurora
         
         public event NewLayerRendered NewLayerRender = delegate { };
 
-        // ReSharper disable once EventNeverSubscribedTo.Global
         public static event EventHandler<CanvasChangedArgs> CanvasChanged;
         public static readonly object CanvasChangedLock = new();
 

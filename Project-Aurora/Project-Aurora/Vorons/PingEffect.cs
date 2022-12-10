@@ -230,7 +230,7 @@ namespace Aurora.Scripts.VoronScripts
 
 			var oldBarStart = Math.Max(0, pingPos);
 
-			if (Keys.type == KeySequenceType.FreeForm)
+			if (Keys.Type == KeySequenceType.FreeForm)
 			{
 				var gradLayers = new GradientCascade();
 
@@ -269,15 +269,15 @@ namespace Aurora.Scripts.VoronScripts
 					gradLayers.Add(new ColorSpectrum(FailAnimationGradient.GetColorAt(phase)), 0, 1, 0, 1);
 				}
 
-				gradLayers.Draw(Keys.freeform, effectLayer);
+				gradLayers.Draw(Keys.Freeform, effectLayer);
 			}
 			else
 			{
-				for (int i = 0; i < Keys.keys.Count; i++)
+				for (int i = 0; i < Keys.Keys.Count; i++)
 				{
-					var keyColor = effectLayer.Get(Keys.keys[i]);
+					var keyColor = effectLayer.Get(Keys.Keys[i]);
 
-					float kL = i / (Keys.keys.Count - 1f);
+					float kL = i / (Keys.Keys.Count - 1f);
 
 					if (EffectType == EffectTypes.PingGraph)
 					{
@@ -298,18 +298,18 @@ namespace Aurora.Scripts.VoronScripts
 					if (PingShadowWidth > 0f)
 						keyColor = ColorUtils.BlendColors(keyColor, Color.Black,
 							GetKeyBlend(pingPos, i, pingPos + PingShadowWidth)
-							* (1 - ((i / (float)Keys.keys.Count - pingPos) / PingShadowWidth)));
+							* (1 - ((i / (float)Keys.Keys.Count - pingPos) / PingShadowWidth)));
 
 					if (PingSignalWidth > 0f)
 						keyColor = ColorUtils.BlendColors(keyColor, PingSignalColor,
 							GetKeyBlend(pingPos - PingSignalWidth, i, pingPos)
-							* (((i + 1) / (float)Keys.keys.Count - (pingPos - PingSignalWidth)) / PingSignalWidth));
+							* (((i + 1) / (float)Keys.Keys.Count - (pingPos - PingSignalWidth)) / PingSignalWidth));
 
 					if (Data.Phase == AnimationPhase.CompletingFailAnimation)
 						keyColor = ColorUtils.AddColors(keyColor, FailAnimationGradient.GetColorAt(
 							Math.Min(1, (CurrentTime - Data.FinalAnimationEndTime) / (float)FailAnimationDuration)));
 
-					effectLayer.Set(Keys.keys[i], keyColor);
+					effectLayer.Set(Keys.Keys[i], keyColor);
 				}
 			}
 		}
@@ -388,10 +388,10 @@ namespace Aurora.Scripts.VoronScripts
 
 		public float GetKeyBlend(float leftEdge, float pos, float rightEdge)
 		{
-			var leftEdgePercent = (1 + pos) / Keys.keys.Count - leftEdge;
-			var rightEdgePercent = rightEdge - (pos / Keys.keys.Count);
-			leftEdgePercent /= 1f / Keys.keys.Count;
-			rightEdgePercent /= 1f / Keys.keys.Count;
+			var leftEdgePercent = (1 + pos) / Keys.Keys.Count - leftEdge;
+			var rightEdgePercent = rightEdge - (pos / Keys.Keys.Count);
+			leftEdgePercent /= 1f / Keys.Keys.Count;
+			rightEdgePercent /= 1f / Keys.Keys.Count;
 			leftEdgePercent = 1 - Math.Max(0, Math.Min(1, leftEdgePercent));
 			rightEdgePercent = 1 - Math.Max(0, Math.Min(1, rightEdgePercent));
 			return 1 - leftEdgePercent - rightEdgePercent;

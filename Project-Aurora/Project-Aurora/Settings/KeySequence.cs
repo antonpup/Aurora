@@ -1,149 +1,161 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Aurora.Devices;
+using Aurora.EffectsEngine.Animations;
+using Aurora.Utils;
+using Microsoft.Scripting.Utils;
+using Newtonsoft.Json;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+/// <summary>
+/// The type of the KeySequence
+/// </summary>
+public enum KeySequenceType
 {
     /// <summary>
-    /// The type of the KeySequence
+    /// Sequence uses an array of DeviceKeys keys
     /// </summary>
-    public enum KeySequenceType
+    Sequence,
+
+    /// <summary>
+    /// Sequence uses a freeform region
+    /// </summary>
+    FreeForm
+}
+
+/// <summary>
+/// A class representing a series of DeviceKeys keys or a freeform region
+/// </summary>
+public sealed class KeySequence : ICloneable
+{
+    [JsonIgnore] private readonly ObservableCollection<DeviceKeys> _keys;
+
+    /// <summary>
+    /// An array of DeviceKeys keys to be used with KeySequenceType.Sequence type.
+    /// </summary>
+    [JsonConverter(typeof(ConcurrentListJsonConverterAdapter<DeviceKeys>))]
+    [JsonProperty("keys")]
+    public ObservableCollection<DeviceKeys> Keys
     {
-        /// <summary>
-        /// Sequence uses an array of DeviceKeys keys
-        /// </summary>
-        Sequence,
-        /// <summary>
-        /// Sequence uses a freeform region
-        /// </summary>
-        FreeForm
+        get => _keys;
+        set
+        {
+            if (ReferenceEquals(_keys, value))
+            {
+                return;
+            }
+
+            _keys.Clear();
+            _keys.AddRange(value);
+        }
     }
 
     /// <summary>
-    /// A class representing a series of DeviceKeys keys or a freeform region
+    /// The type of this KeySequence instance.
     /// </summary>
-    public class KeySequence : ICloneable
+    [JsonProperty("type")]
+    public KeySequenceType Type { get; set; }
+
+    /// <summary>
+    /// The Freeform object to be used with KeySequenceType.FreeForm type
+    /// </summary>
+    [JsonProperty("freeform")]
+    public FreeFormObject Freeform { get; set; }
+
+    public KeySequence()
     {
-        /// <summary>
-        /// An array of DeviceKeys keys to be used with KeySequenceType.Sequence type.
-        /// </summary>
-        public List<Devices.DeviceKeys> keys;
+        _keys = new ObservableCollection<DeviceKeys>();
+        Type = KeySequenceType.Sequence;
+        Freeform = new FreeFormObject();
+    }
 
-        /// <summary>
-        /// The type of this KeySequence instance.
-        /// </summary>
-        public KeySequenceType type;
+    public KeySequence(KeySequence other)
+    {
+        _keys = new ObservableCollection<DeviceKeys>();
+        Type = other.Type;
+        Freeform = other.Freeform;
+    }
 
-        /// <summary>
-        /// The Freeform object to be used with KeySequenceType.FreeForm type
-        /// </summary>
-        public FreeFormObject freeform;
+    public KeySequence(FreeFormObject freeform)
+    {
+        _keys = new ObservableCollection<DeviceKeys>();
+        Type = KeySequenceType.FreeForm;
+        this.Freeform = freeform;
+    }
 
-        public KeySequence()
+    public KeySequence(IEnumerable<DeviceKeys> keys)
+    {
+        _keys = new ObservableCollection<DeviceKeys>(keys);
+        Type = KeySequenceType.Sequence;
+        Freeform = new FreeFormObject();
+    }
+
+    public RectangleF GetAffectedRegion()
+    {
+        switch (Type)
         {
-            keys = new List<Devices.DeviceKeys>();
-            type = KeySequenceType.Sequence;
-            freeform = new FreeFormObject();
-        }
+            case KeySequenceType.FreeForm:
+                return new RectangleF((Freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth,
+                    (Freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight,
+                    Freeform.Width * Effects.EditorToCanvasWidth, Freeform.Height * Effects.EditorToCanvasHeight);
+            default:
 
-        public KeySequence(KeySequence otherKeysequence)
+                var left = 0.0f;
+                var top = left;
+                var right = top;
+                var bottom = right;
+
+                foreach (var key in Keys)
+                {
+                    BitmapRectangle keyMapping = Effects.GetBitmappingFromDeviceKey(key);
+                    if (keyMapping.Left < left)
+                        left = keyMapping.Left;
+                    if (keyMapping.Top < top)
+                        top = keyMapping.Top;
+                    if (keyMapping.Right > right)
+                        right = keyMapping.Right;
+                    if (keyMapping.Bottom > bottom)
+                        bottom = keyMapping.Bottom;
+                }
+
+                return new RectangleF(left, top, right - left, bottom - top);
+        }
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType() && Equals((KeySequence)obj);
+    }
+
+    public bool Equals(KeySequence p)
+    {
+        if (ReferenceEquals(null, p)) return false;
+        if (ReferenceEquals(this, p)) return true;
+
+        return Keys.Equals(p.Keys) &&
+               Type == p.Type &&
+               Freeform.Equals(p.Freeform);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            keys = new List<Devices.DeviceKeys>(otherKeysequence.keys);
-            type = otherKeysequence.type;
-            freeform = otherKeysequence.freeform;
+            int hash = 17;
+            hash = hash * 23 + Keys.GetHashCode();
+            hash = hash * 23 + Type.GetHashCode();
+            hash = hash * 23 + Freeform.GetHashCode();
+            return hash;
         }
+    }
 
-        public KeySequence(FreeFormObject freeform)
-        {
-            this.keys = new List<Devices.DeviceKeys>();
-            type = KeySequenceType.FreeForm;
-            this.freeform = freeform;
-        }
-
-        public KeySequence(Devices.DeviceKeys[] keys)
-        {
-            this.keys = new List<Devices.DeviceKeys>(keys);
-            type = KeySequenceType.Sequence;
-            freeform = new FreeFormObject();
-        }
-
-        public RectangleF GetAffectedRegion()
-        {
-            switch (type)
-            {
-                case KeySequenceType.FreeForm:
-                    return new RectangleF((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth, (freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight, freeform.Width * Effects.EditorToCanvasWidth, freeform.Height * Effects.EditorToCanvasHeight);
-                default:
-
-                    var left = 0.0f;
-                    var top = left;
-                    var right = top;
-                    var bottom = right;
-
-                    foreach(var key in keys)
-                    {
-                        BitmapRectangle keyMapping = Effects.GetBitmappingFromDeviceKey(key);
-
-                        if(left == top && top == right && right == bottom && bottom == 0.0f)
-                        {
-                            left = keyMapping.Left;
-                            top = keyMapping.Top;
-                            right = keyMapping.Right;
-                            bottom = keyMapping.Bottom;
-                        }
-                        else
-                        {
-                            if (keyMapping.Left < left)
-                                left = keyMapping.Left;
-                            if (keyMapping.Top < top)
-                                top = keyMapping.Top;
-                            if (keyMapping.Right > right)
-                                right = keyMapping.Right;
-                            if (keyMapping.Bottom > bottom)
-                                bottom = keyMapping.Bottom;
-                        }
-                    }
-
-                    return new RectangleF(left, top, right - left, bottom - top);
-            }
-
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((KeySequence)obj);
-        }
-
-        public bool Equals(KeySequence p)
-        {
-            if (ReferenceEquals(null, p)) return false;
-            if (ReferenceEquals(this, p)) return true;
-
-            return keys.Equals(p.keys) &&
-                   type == p.type &&
-                   freeform.Equals(p.freeform);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 17;
-                hash = hash * 23 + keys.GetHashCode();
-                hash = hash * 23 + type.GetHashCode();
-                hash = hash * 23 + freeform.GetHashCode();
-                return hash;
-            }
-        }
-
-        public object Clone()
-        {
-            return new KeySequence(this);
-        }
+    public object Clone()
+    {
+        return new KeySequence(this);
     }
 }

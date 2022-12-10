@@ -1,4 +1,8 @@
-﻿namespace Aurora.Settings.Overrides.Logic {
+﻿using System;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
+
+namespace Aurora.Settings.Overrides.Logic {
 
     /// <summary>
     /// Interface that states this class can be used for a property for the overrides logic system.
@@ -15,5 +19,7 @@
         /// Gets a control for editing this overridge logic system.
         /// </summary>
         System.Windows.Media.Visual GetControl();
+        
+        [CanBeNull] public Type VarType { get; set; }
     }
 }

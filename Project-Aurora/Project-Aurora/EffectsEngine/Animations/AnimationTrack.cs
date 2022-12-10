@@ -11,7 +11,6 @@ namespace Aurora.EffectsEngine.Animations
     public class AnimationTrack
     {
         [JsonProperty]
-        [JsonConverter(typeof(ConcurrentDictionaryJsonConverterAdapter<float, AnimationFrame>))]
         private readonly ConcurrentDictionary<float, AnimationFrame> _animations;
         [JsonProperty]
         private float _animationDuration;

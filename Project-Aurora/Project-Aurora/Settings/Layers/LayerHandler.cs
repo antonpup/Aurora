@@ -49,11 +49,7 @@ namespace Aurora.Settings.Layers
         public virtual KeySequence _Sequence
         {
             get => _sequence;
-            set
-            {
-                _sequence = value;
-                PropertyChanged?.Invoke(null, new PropertyChangedEventArgs(""));
-            }
+            set => SetFieldAndRaisePropertyChanged(out _sequence, value);
         }
 
         [JsonIgnore]
@@ -105,10 +101,10 @@ namespace Aurora.Settings.Layers
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             if (_Sequence != null)
             {
-                _Sequence.freeform.ValuesChanged -= OnPropertiesChanged;
+                _Sequence.Freeform.ValuesChanged -= OnPropertiesChanged;
             }
             _Sequence = new KeySequence();
-            _Sequence.freeform.ValuesChanged += OnPropertiesChanged;
+            _Sequence.Freeform.ValuesChanged += OnPropertiesChanged;
         }
 
         public object GetOverride(string propertyName) {
@@ -120,11 +116,11 @@ namespace Aurora.Settings.Layers
         }
 
         public void SetOverride(string propertyName, object value) {
-            if (Accessor.Value[Logic, propertyName] == value)
-            {
-                return;
-            }
             try {
+                if (Accessor.Value[Logic, propertyName] == value)
+                {
+                    return;
+                }
                 if (value == null || !value.Equals(Accessor.Value[Logic, propertyName]))
                 {
                     Accessor.Value[Logic, propertyName] = value;
@@ -150,7 +146,7 @@ namespace Aurora.Settings.Layers
 
         public void Dispose()
         {
-            _Sequence.freeform.ValuesChanged -= OnPropertiesChanged;
+            _Sequence.Freeform.ValuesChanged -= OnPropertiesChanged;
         }
     }
 
@@ -233,11 +229,11 @@ namespace Aurora.Settings.Layers
             get => _properties;
             set
             {
-                _properties.Sequence.freeform.ValuesChanged -= PropertiesChanged;
+                _properties.Sequence.Freeform.ValuesChanged -= PropertiesChanged;
                 _properties.PropertyChanged -= PropertiesChanged;
                 _properties = value;
                 value.PropertyChanged += PropertiesChanged;
-                value.Sequence.freeform.ValuesChanged += PropertiesChanged;
+                value.Sequence.Freeform.ValuesChanged += PropertiesChanged;
                 value.OnPropertiesChanged(this);
             }
         }

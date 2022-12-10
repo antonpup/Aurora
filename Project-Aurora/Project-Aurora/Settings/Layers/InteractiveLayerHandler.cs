@@ -216,7 +216,7 @@ namespace Aurora.Settings.Layers
                 _timeOfLastPress.TryRemove(deviceKey, out _);
             }
 
-            if (deviceKey == DeviceKeys.NONE || Properties.Sequence.keys.Contains(deviceKey)) return;
+            if (deviceKey == DeviceKeys.NONE || Properties.Sequence.Keys.Contains(deviceKey)) return;
             var pt = Effects.GetBitmappingFromDeviceKey(deviceKey).Center;
             if (pt.IsEmpty) return;
 

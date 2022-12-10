@@ -96,7 +96,7 @@ namespace Aurora.Settings.Layers
 
                 // This checks if a key is already being cloned over and thus should be prevented from being re-set by the
                 // normal wrapper. Fixes issues with some clones not working. Thanks to @Gurjot95 for finding it :)
-                if (Properties.CloningMap.Values.Any(sequence => sequence.keys.Contains(key)))
+                if (Properties.CloningMap.Values.Any(sequence => sequence.Keys.Contains(key)))
                     continue;
 
 

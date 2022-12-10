@@ -161,7 +161,7 @@ namespace Aurora.Settings
 
                                                         if (deviceKey != Devices.DeviceKeys.NONE)
                                                         {
-                                                            affected_keys.keys.Add(deviceKey);
+                                                            affected_keys.Keys.Add(deviceKey);
                                                             bindings.Add(new Keybind(new System.Windows.Forms.Keys[] { Utils.KeyUtils.GetFormsKey(deviceKey) }));
                                                         }
                                                     }

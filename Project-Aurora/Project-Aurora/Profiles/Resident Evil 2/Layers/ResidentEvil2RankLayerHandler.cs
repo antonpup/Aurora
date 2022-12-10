@@ -50,7 +50,7 @@ namespace Aurora.Profiles.ResidentEvil2.Layers
 
                 if (re2state.Player.Status != Player_ResidentEvil2.PlayerStatus.OffGame && re2state.Player.Rank != 0)
                 {
-                    keys_layer.Set(Properties.Sequence.keys[re2state.Player.Rank - 1], Color.White);
+                    keys_layer.Set(Properties.Sequence.Keys[re2state.Player.Rank - 1], Color.White);
                 }
             }
             return keys_layer;
