@@ -2,15 +2,10 @@
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.Dota_2.GSI;
 using Aurora.Profiles.Dota_2.GSI.Nodes;
-using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Aurora.Profiles.Dota_2.Layers
@@ -121,6 +116,12 @@ namespace Aurora.Profiles.Dota_2.Layers
         private static Abilities_Dota2 _abilities;
 
         public Dota2HeroAbilityEffectsLayerHandler(): base("Dota 2 - Ability Effects")
+        {
+            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
+            UpdateAnimations();
+        }
+
+        private void Effects_CanvasChanged(object sender, CanvasChangedArgs e)
         {
             UpdateAnimations();
         }
@@ -1371,6 +1372,13 @@ namespace Aurora.Profiles.Dota_2.Layers
                 new AnimationFilledCircle(Effects.CanvasWidthCenter, Effects.CanvasHeightCenter, Effects.CanvasBiggest / 2.0f, Color.FromArgb(0, 0, 150, 255))
                 );
 
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            
+            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
         }
     }
 }
