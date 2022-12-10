@@ -14,6 +14,7 @@ using System.Windows.Threading;
 using Aurora.Devices;
 using Aurora.Modules;
 using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Win32;
 using NLog;
 using MessageBox = System.Windows.MessageBox;
@@ -63,9 +64,8 @@ public partial class App
                 Global.isDebug = true;
 #endif
             Global.Initialize();
-
+            new UserSettingsBackup().BackupIfNew();
             PrintSystemInfo();
-
             UseArgs(e);
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -76,7 +76,6 @@ public partial class App
                 Thread.Sleep(_delayTime);
 
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
-            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
             Global.dev_manager = new DeviceManager();
             Global.effengine = new Effects();
