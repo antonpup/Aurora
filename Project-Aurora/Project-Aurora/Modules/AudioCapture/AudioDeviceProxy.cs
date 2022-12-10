@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using JetBrains.Annotations;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
@@ -102,7 +103,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     private void SetDevice(MMDevice mmDevice)
     {
         var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
-        mmDevice.AudioSessionManager.RefreshSessions();
         Device = mmDevice;
 
         // Get a WaveIn from the device and start it, adding any events as requied
