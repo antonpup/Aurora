@@ -64,9 +64,9 @@ namespace Aurora.Settings.Layers.Controls
 
         private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence)
+            if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is Aurora.Controls.KeySequence)
             {
-                (this.DataContext as EqualizerLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
+                (this.DataContext as AmbilightLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
             }
         }
     }
