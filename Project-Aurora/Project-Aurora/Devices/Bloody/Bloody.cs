@@ -18,33 +18,33 @@ namespace Aurora.Devices.Bloody
         protected override string DeviceInfo => IsInitialized ? GetDeviceNames() : base.DeviceInfo;
         private readonly Stopwatch _updateDelayStopWatch = new();
 
-        private BloodyKeyboard keyboard;
-        private List<BloodyPeripheral> peripherals;
+        private BloodyKeyboard _keyboard;
+        private List<BloodyPeripheral> _peripherals;
 
-        private event EventHandler<Dictionary<DeviceKeys, Color>> deviceUpdated;
+        private event EventHandler<Dictionary<DeviceKeys, Color>> DeviceUpdated;
 
         public override bool Initialize()
         {
-            keyboard = BloodyKeyboard.Initialize();
-            if(keyboard != null)
+            _keyboard = BloodyKeyboard.Initialize();
+            if(_keyboard != null)
             {
-                deviceUpdated += UpdateKeyboard;
+                DeviceUpdated += UpdateKeyboard;
             }
 
-            peripherals = BloodyPeripheral.GetDevices();
-            deviceUpdated += UpdatePeripherals;
+            _peripherals = BloodyPeripheral.GetDevices();
+            DeviceUpdated += UpdatePeripherals;
             _updateDelayStopWatch.Start();
 
-            return IsInitialized = (keyboard != null) || (peripherals.Any());
+            return IsInitialized = _keyboard != null || _peripherals.Any();
         }
 
         public override void Shutdown()
         {
-            keyboard?.Disconnect();
-            deviceUpdated -= UpdateKeyboard;
+            _keyboard?.Disconnect();
+            DeviceUpdated -= UpdateKeyboard;
 
-            peripherals.ForEach(p => p.Disconnect());
-            deviceUpdated -= UpdatePeripherals;
+            _peripherals.ForEach(p => p.Disconnect());
+            DeviceUpdated -= UpdatePeripherals;
             _updateDelayStopWatch.Stop();
 
             IsInitialized = false;
@@ -56,7 +56,7 @@ namespace Aurora.Devices.Bloody
             if (_updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
                 return false;
 
-            deviceUpdated(this, keyColors);
+            DeviceUpdated?.Invoke(this, keyColors);
             _updateDelayStopWatch.Restart();
             return true;
         }
@@ -70,15 +70,15 @@ namespace Aurora.Devices.Bloody
             foreach (var key in keyColors)
             {
                 if (BloodyKeyMap.KeyMap.TryGetValue(key.Key, out var bloodyKey))
-                    keyboard.SetKeyColor(bloodyKey, ColorUtils.CorrectWithAlpha(key.Value));
+                    _keyboard.SetKeyColor(bloodyKey, ColorUtils.CorrectWithAlpha(key.Value));
             }
 
-            keyboard.Update();
+            _keyboard.Update();
         }
 
         private void UpdatePeripherals(object sender, Dictionary<DeviceKeys, Color> keyColors)
         {
-            foreach(var dev in peripherals)
+            foreach(var dev in _peripherals)
             {
                 Dictionary<BloodyPeripheralLed, DeviceKeys> keyMap = null;
                 switch (dev.PeripheralType)
@@ -102,7 +102,7 @@ namespace Aurora.Devices.Bloody
 
         private string GetDeviceNames()
         {
-            return (keyboard != null ? " Keyboard" : "") + String.Join(" ", peripherals);
+            return (_keyboard != null ? " Keyboard" : "") + String.Join(" ", _peripherals);
         }
     }
 }
