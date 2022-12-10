@@ -123,7 +123,7 @@ namespace Aurora.EffectsEngine.Animations
             if (_invalidated)
             {
                 _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
-                _pen.Width = _width;
+                _pen.Width = _width * Scale * (12 / (int)Global.Configuration.BitmapAccuracy);
                 _pen.Alignment = PenAlignment.Center;
 
                 //_pen.ScaleTransform(Scale, Scale);

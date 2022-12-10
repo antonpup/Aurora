@@ -79,14 +79,11 @@ namespace Aurora.EffectsEngine.Animations
 
         public float Scale
         {
-            get { return _scale; }
+            get => _scale;
             set
             {
-                if (_scale != value)
-                {
-                    _scale = value;
-                    _invalidated = true;
-                }
+                _scale = value;
+                _invalidated = true;
             }
         }
         public PointF Offset => _offset;
@@ -144,7 +141,7 @@ namespace Aurora.EffectsEngine.Animations
             _transformationMatrix = new Matrix();
             
             _transformationMatrix.RotateAt(-_angle, _dimension.Location, MatrixOrder.Append);
-            //_transformationMatrix.Scale(_scale, _scale, MatrixOrder.Append);
+            _transformationMatrix.Scale(_scale, _scale, MatrixOrder.Append);
             _transformationMatrix.Translate(-_offset.X, -_offset.Y, MatrixOrder.Append);
 
             _invalidated = false;

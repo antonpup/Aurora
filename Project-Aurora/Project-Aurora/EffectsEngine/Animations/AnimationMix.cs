@@ -85,22 +85,15 @@ public sealed class AnimationMix: IEquatable<AnimationMix>
         return _tracks.Any(track => track.Value.ContainsAnimationAt(time));
     }
 
-    public void Draw(Graphics g, float time, PointF offset = default(PointF))
+    public void Draw(Graphics g, float time, PointF offset = default)
     {
         foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
         {
             if (track.Value.ContainsAnimationAt(time))
             {
                 AnimationFrame frame = track.Value.GetFrame(time);
-                try
-                {
-                    frame.SetOffset(offset);
-                    frame.Draw(g);
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(@"Animation mix draw error: " + exc.Message);
-                }
+                frame.SetOffset(offset);
+                frame.Draw(g);
             }
             else if (_automaticallyRemoveComplete)
             {

@@ -28,7 +28,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 _brush = new SolidBrush(_color);
                 _pen = new Pen(_color);
-                _pen.Width = _width;
+                _pen.Width = _width * Scale * (12 / (int)Global.Configuration.BitmapAccuracy);
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
                 _pen.ScaleTransform(Scale, Scale);
 
