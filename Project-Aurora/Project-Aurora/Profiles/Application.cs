@@ -16,7 +16,9 @@ using System.Collections.ObjectModel;
 using Aurora.Settings;
 using System.ComponentModel;
 using Aurora.Scripts.VoronScripts;
+using Aurora.Utils;
 using CSScriptLib;
+using IronPython.Runtime.Types;
 
 namespace Aurora.Profiles
 {
