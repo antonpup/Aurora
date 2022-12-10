@@ -41,6 +41,7 @@
             this.labelUpdateDescription = new System.Windows.Forms.Label();
             this.linkLabelViewHistory = new System.Windows.Forms.LinkLabel();
             this.labelUpdateSize = new System.Windows.Forms.Label();
+            this.skipButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxApplicationLogo)).BeginInit();
             this.SuspendLayout();
@@ -48,18 +49,20 @@
             // labelCurrentVersion
             // 
             this.labelCurrentVersion.AutoSize = true;
-            this.labelCurrentVersion.Location = new System.Drawing.Point(12, 63);
+            this.labelCurrentVersion.Location = new System.Drawing.Point(14, 73);
+            this.labelCurrentVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelCurrentVersion.Name = "labelCurrentVersion";
-            this.labelCurrentVersion.Size = new System.Drawing.Size(122, 13);
+            this.labelCurrentVersion.Size = new System.Drawing.Size(131, 15);
             this.labelCurrentVersion.TabIndex = 0;
             this.labelCurrentVersion.Text = "Installed Version: #.#.#x";
             // 
             // labelUpdateVersion
             // 
             this.labelUpdateVersion.AutoSize = true;
-            this.labelUpdateVersion.Location = new System.Drawing.Point(12, 81);
+            this.labelUpdateVersion.Location = new System.Drawing.Point(14, 93);
+            this.labelUpdateVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelUpdateVersion.Name = "labelUpdateVersion";
-            this.labelUpdateVersion.Size = new System.Drawing.Size(118, 13);
+            this.labelUpdateVersion.Size = new System.Drawing.Size(125, 15);
             this.labelUpdateVersion.TabIndex = 1;
             this.labelUpdateVersion.Text = "Update Version: #.#.#x";
             // 
@@ -70,9 +73,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.richTextBoxChangelog);
             this.panel1.Controls.Add(this.labelChangelogTitle);
-            this.panel1.Location = new System.Drawing.Point(12, 115);
+            this.panel1.Location = new System.Drawing.Point(14, 133);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(560, 305);
+            this.panel1.Size = new System.Drawing.Size(653, 352);
             this.panel1.TabIndex = 2;
             // 
             // richTextBoxChangelog
@@ -81,11 +85,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxChangelog.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.richTextBoxChangelog.Location = new System.Drawing.Point(0, 16);
+            this.richTextBoxChangelog.Location = new System.Drawing.Point(0, 18);
             this.richTextBoxChangelog.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.richTextBoxChangelog.Name = "richTextBoxChangelog";
             this.richTextBoxChangelog.ReadOnly = true;
-            this.richTextBoxChangelog.Size = new System.Drawing.Size(560, 289);
+            this.richTextBoxChangelog.Size = new System.Drawing.Size(653, 333);
             this.richTextBoxChangelog.TabIndex = 1;
             this.richTextBoxChangelog.Text = "";
             // 
@@ -93,17 +97,19 @@
             // 
             this.labelChangelogTitle.AutoSize = true;
             this.labelChangelogTitle.Location = new System.Drawing.Point(0, 0);
+            this.labelChangelogTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelChangelogTitle.Name = "labelChangelogTitle";
-            this.labelChangelogTitle.Size = new System.Drawing.Size(61, 13);
+            this.labelChangelogTitle.Size = new System.Drawing.Size(68, 15);
             this.labelChangelogTitle.TabIndex = 0;
             this.labelChangelogTitle.Text = "Change log";
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCancel.Location = new System.Drawing.Point(497, 426);
+            this.buttonCancel.Location = new System.Drawing.Point(580, 492);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.Size = new System.Drawing.Size(88, 27);
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
@@ -112,9 +118,10 @@
             // buttonInstall
             // 
             this.buttonInstall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonInstall.Location = new System.Drawing.Point(416, 426);
+            this.buttonInstall.Location = new System.Drawing.Point(388, 492);
+            this.buttonInstall.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonInstall.Name = "buttonInstall";
-            this.buttonInstall.Size = new System.Drawing.Size(75, 23);
+            this.buttonInstall.Size = new System.Drawing.Size(88, 27);
             this.buttonInstall.TabIndex = 4;
             this.buttonInstall.Text = "Install";
             this.buttonInstall.UseVisualStyleBackColor = true;
@@ -123,7 +130,8 @@
             // pictureBoxApplicationLogo
             // 
             this.pictureBoxApplicationLogo.Image = global::Aurora_Updater.Properties.Resources.Aurora_updater_logo;
-            this.pictureBoxApplicationLogo.Location = new System.Drawing.Point(12, 12);
+            this.pictureBoxApplicationLogo.Location = new System.Drawing.Point(14, 14);
+            this.pictureBoxApplicationLogo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.pictureBoxApplicationLogo.Name = "pictureBoxApplicationLogo";
             this.pictureBoxApplicationLogo.Size = new System.Drawing.Size(48, 48);
             this.pictureBoxApplicationLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -133,8 +141,9 @@
             // lblUpdateTitle
             // 
             this.lblUpdateTitle.AutoSize = true;
-            this.lblUpdateTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUpdateTitle.Location = new System.Drawing.Point(66, 12);
+            this.lblUpdateTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblUpdateTitle.Location = new System.Drawing.Point(77, 14);
+            this.lblUpdateTitle.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblUpdateTitle.Name = "lblUpdateTitle";
             this.lblUpdateTitle.Size = new System.Drawing.Size(261, 20);
             this.lblUpdateTitle.TabIndex = 6;
@@ -143,9 +152,10 @@
             // labelUpdateDescription
             // 
             this.labelUpdateDescription.AutoSize = true;
-            this.labelUpdateDescription.Location = new System.Drawing.Point(67, 32);
+            this.labelUpdateDescription.Location = new System.Drawing.Point(78, 37);
+            this.labelUpdateDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelUpdateDescription.Name = "labelUpdateDescription";
-            this.labelUpdateDescription.Size = new System.Drawing.Size(107, 13);
+            this.labelUpdateDescription.Size = new System.Drawing.Size(117, 15);
             this.labelUpdateDescription.TabIndex = 7;
             this.labelUpdateDescription.Text = "$UpdateDescription$";
             // 
@@ -154,9 +164,10 @@
             this.linkLabelViewHistory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelViewHistory.AutoSize = true;
             this.linkLabelViewHistory.LinkArea = new System.Windows.Forms.LinkArea(0, 21);
-            this.linkLabelViewHistory.Location = new System.Drawing.Point(12, 431);
+            this.linkLabelViewHistory.Location = new System.Drawing.Point(14, 497);
+            this.linkLabelViewHistory.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.linkLabelViewHistory.Name = "linkLabelViewHistory";
-            this.linkLabelViewHistory.Size = new System.Drawing.Size(114, 13);
+            this.linkLabelViewHistory.Size = new System.Drawing.Size(125, 15);
             this.linkLabelViewHistory.TabIndex = 8;
             this.linkLabelViewHistory.TabStop = true;
             this.linkLabelViewHistory.Text = "View previous updates";
@@ -165,17 +176,31 @@
             // labelUpdateSize
             // 
             this.labelUpdateSize.AutoSize = true;
-            this.labelUpdateSize.Location = new System.Drawing.Point(12, 99);
+            this.labelUpdateSize.Location = new System.Drawing.Point(14, 114);
+            this.labelUpdateSize.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelUpdateSize.Name = "labelUpdateSize";
-            this.labelUpdateSize.Size = new System.Drawing.Size(155, 13);
+            this.labelUpdateSize.Size = new System.Drawing.Size(166, 15);
             this.labelUpdateSize.TabIndex = 9;
             this.labelUpdateSize.Text = "Update Download Size: ## MB";
             // 
+            // skipButton
+            // 
+            this.skipButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.skipButton.Location = new System.Drawing.Point(484, 492);
+            this.skipButton.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.skipButton.Name = "skipButton";
+            this.skipButton.Size = new System.Drawing.Size(88, 27);
+            this.skipButton.TabIndex = 10;
+            this.skipButton.Text = "Skip Version";
+            this.skipButton.UseVisualStyleBackColor = true;
+            this.skipButton.Click += new System.EventHandler(this.skipButton_Click);
+            // 
             // UpdateInfoForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 461);
+            this.ClientSize = new System.Drawing.Size(681, 532);
+            this.Controls.Add(this.skipButton);
             this.Controls.Add(this.labelUpdateSize);
             this.Controls.Add(this.linkLabelViewHistory);
             this.Controls.Add(this.labelUpdateDescription);
@@ -188,9 +213,10 @@
             this.Controls.Add(this.labelCurrentVersion);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(600, 500);
-            this.MinimumSize = new System.Drawing.Size(600, 500);
+            this.MaximumSize = new System.Drawing.Size(697, 571);
+            this.MinimumSize = new System.Drawing.Size(697, 571);
             this.Name = "UpdateInfoForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -218,5 +244,6 @@
         private System.Windows.Forms.Label labelUpdateDescription;
         private System.Windows.Forms.LinkLabel linkLabelViewHistory;
         private System.Windows.Forms.Label labelUpdateSize;
+        private System.Windows.Forms.Button skipButton;
     }
 }

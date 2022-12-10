@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Aurora_Updater
@@ -69,6 +70,13 @@ namespace Aurora_Updater
             return string.Format("{0:n" + decimalPlaces + "} {1}",
                 adjustedSize,
                 SizeSuffixes[mag]);
+        }
+
+        private void skipButton_Click(object sender, EventArgs e)
+        {
+            File.WriteAllText("skipversion.txt", updateVersion);
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
         }
     }
 }

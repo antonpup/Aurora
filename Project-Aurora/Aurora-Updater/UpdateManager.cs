@@ -9,7 +9,8 @@ using System.Linq;
 using System.Net;
 using System.Windows.Forms;
 using Octokit;
-using Version = SemVer.Version;
+
+using Version = SemanticVersioning.Version;
 
 namespace Aurora_Updater
 {

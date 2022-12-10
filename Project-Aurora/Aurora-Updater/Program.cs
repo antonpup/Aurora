@@ -5,7 +5,8 @@ using System.Security.Principal;
 using System.Windows.Forms;
 using System.Linq;
 using System.Reflection;
-using Version = SemVer.Version;
+using SemanticVersioning;
+using Version = SemanticVersioning.Version;
 
 namespace Aurora_Updater
 {
@@ -116,6 +117,14 @@ namespace Aurora_Updater
             else
             {
                 Version latestV = new Version(StaticStorage.Manager.LatestRelease.TagName.TrimStart('v') + ".0.0", true);
+                if (File.Exists("skipversion.txt"))
+                {
+                    var skippedVersion = Version.Parse(File.ReadAllText("skipversion.txt"), true);
+                    if (skippedVersion >= latestV)
+                    {
+                        return;
+                    }
+                }
 
                 if (latestV > versionMajor)
                 {
