@@ -69,7 +69,7 @@ namespace Aurora_Updater
         private float downloadProgess = 0.0f;
         private float extractProgess = 0.0f;
         public UpdateStatus updateState = UpdateStatus.None;
-        private int downloadProgressCheck = 0;
+        private int? previousPercentage;
         private int secondsLeft = 15;
         private Aurora.Settings.Configuration Config;
         private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
@@ -169,13 +169,14 @@ namespace Aurora_Updater
             double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
             double percentage = bytesIn / totalBytes;
 
-            downloadProgressCheck++;
+            int newPercentage = (int)(percentage * 100);
+            if (previousPercentage == newPercentage)
+                return;
 
-            if (downloadProgressCheck % 10 == 0)
-            {
-                log.Enqueue(new LogEntry("Download " + Math.Truncate(percentage * 100) + "%"));
-                this.downloadProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
-            }
+            previousPercentage = newPercentage;
+
+            log.Enqueue(new LogEntry("Download " + newPercentage + "%"));
+            downloadProgess = newPercentage / 100.0f;
         }
 
         void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
