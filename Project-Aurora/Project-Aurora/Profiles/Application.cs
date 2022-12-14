@@ -594,7 +594,7 @@ namespace Aurora.Profiles
                     {
                         InitalizeScriptSettings(profileSettings);
 
-                        if (profileFilename.Equals("default") || profileFilename.Equals(Settings.SelectedProfile))
+                        if (profileFilename.Equals(Settings.SelectedProfile))
                             Profile = profileSettings;
 
                         Profiles.Add(profileSettings);
