@@ -204,11 +204,31 @@ public class TypeAnnotatedObjectConverter : JsonConverter
         switch (readerTokenType)
         {
             case JsonToken.String:
-                return JsonConvert.DeserializeObject("\"" + reader.Value + "\"", objectType);
+                return reader.Value.ToString().StartsWith("\"") ?
+                    JsonConvert.DeserializeObject(reader.Value.ToString(), objectType) :
+                    JsonConvert.DeserializeObject("\"" + reader.Value + "\"", objectType);
             case JsonToken.StartObject:
                 var item = serializer.Deserialize<JObject>(reader);
-                var conditionType = serializer.Deserialize<Type>(item["$type"].CreateReader());
-                return serializer.Deserialize(item["$value"].CreateReader(), conditionType);
+                var type = serializer.Deserialize<Type>(item["$type"].CreateReader());
+                var value = item["$value"];
+                if (value == null)
+                {
+                    return serializer.Deserialize(item.CreateReader(), type);
+                }
+
+                var valueReader = value.CreateReader();
+                switch (valueReader.TokenType)
+                {
+                    case JsonToken.StartObject:
+                        return serializer.Deserialize(valueReader, type);
+                    case JsonToken.String:
+                    default:
+                        return JsonConvert.DeserializeObject(value.ToString(), type);
+                }
+            case JsonToken.Boolean:
+                return reader.Value;
+            case JsonToken.Null:
+                return existingValue;
         }
 
         return JsonConvert.DeserializeObject(reader.Value.ToString(), objectType);
