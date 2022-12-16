@@ -284,7 +284,18 @@ public partial class App
         Global.dev_manager?.Dispose();
         Environment.ExitCode = 0;
 
-        //ShutdownApp(0);
+        var thread = new Thread(() =>
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            Thread.Sleep(5000);
+            if (stopwatch.ElapsedMilliseconds > 4500) {
+                ShutdownApp(0);
+            }
+        });
+        thread.IsBackground = true;
+        thread.Name = "Exit timer";
+        thread.Start();
     }
 
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
