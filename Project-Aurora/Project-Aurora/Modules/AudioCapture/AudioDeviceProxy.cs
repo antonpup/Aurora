@@ -103,6 +103,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     private void SetDevice(MMDevice mmDevice)
     {
         var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
+        var __ = mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
         Device = mmDevice;
 
         // Get a WaveIn from the device and start it, adding any events as requied
