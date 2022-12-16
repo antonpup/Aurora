@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Media;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Overrides.Logic {
 
@@ -14,6 +15,7 @@ namespace Aurora.Settings.Overrides.Logic {
         public Type VarType { get; set; }
 
         /// <summary>The collection of entries that make up this LookupTable.</summary>
+        //[JsonConverter(typeof(TypeAnnotatedObjectConverter))]
         public ObservableCollection<LookupTableEntry> LookupTable { get; set; }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace Aurora.Settings.Overrides.Logic {
             // type instead of an instance of the struct. The custom converter forcefully wraps a $type parameter around the JSON of
             // the struct so that it can always know the correct class/struct to deserialize the JSON as.
             /// <summary>The value of this entry.</summary>
-            //[JsonConverter(typeof(Utils.TypeAnnotatedObjectConverter))]
+            [JsonConverter(typeof(TypeAnnotatedObjectConverter))]
             public object Value { get; set; }
 
             /// <summary>A boolean condition that should be met for this entry to be valid.</summary>

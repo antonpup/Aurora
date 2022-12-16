@@ -291,7 +291,7 @@ namespace Aurora.Profiles
                         };
                         jsonSerializerSettings.Converters.Add(new EnumConverter());
                         jsonSerializerSettings.Converters.Add(new OverrideTypeConverter());
-                        jsonSerializerSettings.Converters.Add(new ColorJsonConverter());
+                        jsonSerializerSettings.Converters.Add(new TypeAnnotatedObjectConverter());
                         jsonSerializerSettings.Converters.Add(new DictionaryJsonConverterAdapter());
                         jsonSerializerSettings.Converters.Add(new ConcurrentDictionaryJsonConverterAdapter());
                         ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(

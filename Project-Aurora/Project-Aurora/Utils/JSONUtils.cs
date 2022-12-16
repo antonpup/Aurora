@@ -183,20 +183,34 @@ public class OverrideTypeConverter : JsonConverter
     }
 }
 
-public class ColorJsonConverter : JsonConverter
+public class TypeAnnotatedObjectConverter : JsonConverter
 {
-    public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Color).FullName;
-    public override bool CanWrite => false;
+    public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Color).FullName || objectType.IsAssignableFrom(typeof(object));
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        throw new NotSupportedException();
+        writer.WriteStartObject();
+        writer.WritePropertyName("$type");
+        writer.WriteValue(value.GetType().AssemblyQualifiedName);
+        writer.WritePropertyName("$value");
+        serializer.Serialize(writer, value);
+        writer.WriteEndObject();
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
         // If this is a null token, then the original value was null.
         var readerTokenType = reader.TokenType;
-        return JsonConvert.DeserializeObject("\"" + reader.Value + "\"", objectType);
+        switch (readerTokenType)
+        {
+            case JsonToken.String:
+                return JsonConvert.DeserializeObject("\"" + reader.Value + "\"", objectType);
+            case JsonToken.StartObject:
+                var item = serializer.Deserialize<JObject>(reader);
+                var conditionType = serializer.Deserialize<Type>(item["$type"].CreateReader());
+                return serializer.Deserialize(item["$value"].CreateReader(), conditionType);
+        }
+
+        return JsonConvert.DeserializeObject(reader.Value.ToString(), objectType);
     }
 }
