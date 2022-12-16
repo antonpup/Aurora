@@ -30,6 +30,7 @@ namespace Aurora.Settings.Layers
 
         public SolidFillLayerHandler() : base("Solid Fill Layer")
         {
+            Effects.CanvasChanged += EffectsOnCanvasChanged;
         }
 
         protected override UserControl CreateControl()
@@ -42,11 +43,23 @@ namespace Aurora.Settings.Layers
             return EffectLayer;
         }
 
+        private void EffectsOnCanvasChanged(object sender, CanvasChangedArgs e)
+        {
+            EffectLayer.Fill(_solidBrush);
+        }
+
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _solidBrush.Color = Properties.PrimaryColor;
             EffectLayer.Fill(_solidBrush);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            
+            Effects.CanvasChanged -= EffectsOnCanvasChanged;
         }
     }
 }
