@@ -80,6 +80,7 @@ namespace Aurora.Settings.Layers
     public class PercentLayerHandler<TProperty> : LayerHandler<TProperty> where TProperty : PercentLayerHandlerProperties<TProperty>
     {
         private double _value;
+        protected bool _invalidated;
 
         public PercentLayerHandler() : base("PercentLayer")
         {
@@ -87,6 +88,12 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState state)
         {
+            if (_invalidated)
+            {
+                EffectLayer.Clear();
+                _invalidated = false;
+                _value = -1;
+            }
             var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
             if (ColorUtils.NearlyEqual(_value, value, 0.0001))
             {
@@ -117,8 +124,8 @@ namespace Aurora.Settings.Layers
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
-            
-            EffectLayer.Clear();
+
+            _invalidated = true;
         }
     }
 

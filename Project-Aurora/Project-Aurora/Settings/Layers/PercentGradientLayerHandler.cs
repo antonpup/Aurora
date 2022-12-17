@@ -31,7 +31,6 @@ namespace Aurora.Settings.Layers
     [LayerHandlerMeta(Name = "Percent (Gradient)", IsDefault = true)]
     public class PercentGradientLayerHandler : PercentLayerHandler<PercentGradientLayerHandlerProperties>
     {
-        private bool _invalidated;
         
         protected override UserControl CreateControl()
         {
