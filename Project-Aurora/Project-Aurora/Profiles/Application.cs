@@ -473,7 +473,7 @@ namespace Aurora.Profiles
 
         protected void LoadScripts(string profiles_path, bool force = false)
         {
-            if (!force)
+            if (!force && EffectScripts.Count != 0)
                 return;
 
             EffectScripts.Clear();
