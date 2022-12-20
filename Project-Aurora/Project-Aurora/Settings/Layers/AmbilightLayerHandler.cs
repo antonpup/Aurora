@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Amib.Threading;
 using Aurora.EffectsEngine;
+using Aurora.Modules.ProcessMonitor;
 using Aurora.Profiles;
 using Aurora.Settings.Layers.Ambilight;
 using Aurora.Settings.Layers.Controls;

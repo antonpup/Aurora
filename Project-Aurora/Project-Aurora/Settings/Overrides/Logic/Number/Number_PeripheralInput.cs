@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Aurora.Modules.ProcessMonitor;
 using Aurora.Profiles;
 using Aurora.Utils;
 

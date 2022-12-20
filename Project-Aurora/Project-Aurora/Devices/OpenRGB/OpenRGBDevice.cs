@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
-using Aurora.Utils;
+using Aurora.Modules.ProcessMonitor;
 using Microsoft.Scripting.Utils;
 using OpenRGB.NET.Models;
 using Color = System.Drawing.Color;

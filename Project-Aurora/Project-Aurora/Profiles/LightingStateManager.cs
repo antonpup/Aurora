@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Modules.GameStateListen;
+using Aurora.Modules.ProcessMonitor;
 
 namespace Aurora.Profiles
 {
