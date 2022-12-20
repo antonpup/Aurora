@@ -96,11 +96,14 @@ public class EnumConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType) => objectType.IsEnum;
 
-    public override bool CanWrite => false;
-
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        throw new NotSupportedException();
+        writer.WriteStartObject();
+        writer.WritePropertyName("$type");
+        writer.WriteValue(value.GetType().AssemblyQualifiedName);
+        writer.WritePropertyName("$value");
+        serializer.Serialize(writer, value);
+        writer.WriteEndObject();
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -114,28 +117,9 @@ public class EnumConverter : JsonConverter
             case JsonToken.Integer:
                 return Enum.ToObject(objectType, reader.Value);
             case JsonToken.StartObject:
-                var typeName = "";
                 var item = serializer.Deserialize<JObject>(reader);
-                foreach (var prop in item.Children<JProperty>())
-                {
-                    switch (prop.Name)
-                    {
-                        case "$type":
-                            typeName = prop.Value.ToString();
-                            continue;
-                        case "$values":
-                        {
-                            foreach (var jToken in prop.Value.Children())
-                            {
-                                return JsonConvert.DeserializeObject(jToken.ToString(), Type.GetType(typeName));
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
-                break;
+                var typeName = item["$type"].Value<string>();
+                return JsonConvert.DeserializeObject(item["$value"].ToString(), Type.GetType(typeName));
         }
 
         return existingValue;
@@ -145,11 +129,15 @@ public class EnumConverter : JsonConverter
 public class OverrideTypeConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Type).FullName;
-    public override bool CanWrite => false;
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
-        throw new NotSupportedException();
+        writer.WriteStartObject();
+        writer.WritePropertyName("$type");
+        writer.WriteValue(value.GetType().AssemblyQualifiedName);
+        writer.WritePropertyName("$value");
+        serializer.Serialize(writer, value);
+        writer.WriteEndObject();
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -161,7 +149,6 @@ public class OverrideTypeConverter : JsonConverter
             case JsonToken.String:
                 return Type.GetType(reader.Value.ToString());
             case JsonToken.StartObject:
-                var typeName = "";
                 var item = serializer.Deserialize<JObject>(reader);
                 foreach (var prop in item.Children<JProperty>())
                 {
