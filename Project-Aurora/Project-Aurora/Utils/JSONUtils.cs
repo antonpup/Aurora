@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Aurora.Settings.Overrides.Logic;
 using Newtonsoft.Json.Linq;
 
@@ -210,7 +211,14 @@ public class TypeAnnotatedObjectConverter : JsonConverter
                         return serializer.Deserialize(valueReader, type);
                     case JsonToken.String:
                     default:
-                        return JsonConvert.DeserializeObject(value.ToString(), type);
+                        var s = value.ToString();
+                        if (objectType.FullName != typeof(Color).FullName && type?.FullName != typeof(Color).FullName)
+                            return JsonConvert.DeserializeObject(s, type);
+                        if (s.StartsWith("\""))
+                        {
+                            return JsonConvert.DeserializeObject(s, type);
+                        }
+                        return JsonConvert.DeserializeObject("\"" + value + "\"", type);
                 }
             case JsonToken.Boolean:
                 return reader.Value;
