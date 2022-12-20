@@ -175,7 +175,7 @@ public partial class App
     {
         
         Environment.ExitCode = exitCode;
-        Current.Shutdown();
+        Current?.Shutdown();
         Environment.Exit(exitCode);
     }
 
