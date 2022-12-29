@@ -28,9 +28,9 @@
       },
       "Dubya.WindowsMediaController": {
         "type": "Direct",
-        "requested": "[2.3.2, )",
-        "resolved": "2.3.2",
-        "contentHash": "22Xrzte9g/okexRRd685UNtXmRqm6IolLm9s003fp8li+rh+F1KvA8bj66xki55k1tl/9rt/ezecuwq1tmZ9KA=="
+        "requested": "[2.4.0, )",
+        "resolved": "2.4.0",
+        "contentHash": "AlIKX9SKaIVOpgBCJobqmug/zofuZLSxkRAh1bKiB0eYg61YoKXrNXcf/D60QKF32xAPioRcZdVaVf0BCGmlIQ=="
       },
       "Extended.Wpf.Toolkit": {
         "type": "Direct",
