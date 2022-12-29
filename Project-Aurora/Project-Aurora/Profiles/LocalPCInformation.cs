@@ -4,6 +4,7 @@ using NAudio.CoreAudioApi;
 using System.Linq;
 using System.Windows.Forms;
 using Aurora.Modules.Media;
+using Aurora.Modules.ProcessMonitor;
 using JetBrains.Annotations;
 
 namespace Aurora.Profiles {
@@ -159,6 +160,16 @@ namespace Aurora.Profiles {
         /// Returns whether or not the device dession is in a locked state.
         /// </summary>
         public bool IsDesktopLocked => DesktopUtils.IsDesktopLocked;
+
+        /// <summary>
+        /// Returns focused window's name.
+        /// </summary>
+        public string ActiveWindowName => ActiveProcessMonitor.Instance.GetActiveWindowsProcessTitle();
+
+        /// <summary>
+        /// Returns focused window's process name.
+        /// </summary>
+        public string ActiveProcess => ActiveProcessMonitor.Instance.ActiveProcessName;
     }
 
     public class CPUInfo : Node

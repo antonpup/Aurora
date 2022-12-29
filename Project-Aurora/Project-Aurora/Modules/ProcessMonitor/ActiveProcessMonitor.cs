@@ -27,10 +27,18 @@ public sealed partial class ActiveProcessMonitor
 		get => _processPath;
 		private set
 		{
-			_processPath = value; ActiveProcessChanged?.Invoke(this, EventArgs.Empty);
+			_processPath = value;
+			ActiveProcessChanged?.Invoke(this, EventArgs.Empty);
+			var processName = GetActiveWindowsProcessName();
+			if (processName != null)
+			{
+				ActiveProcessName = processName;
+			}
 		}
 	}
 	public static event EventHandler ActiveProcessChanged;
+
+	public string ActiveProcessName { get; set; } = "";
 
 	private WinEventDelegate dele;
 
@@ -45,7 +53,7 @@ public sealed partial class ActiveProcessMonitor
 	{
 		if (Global.Configuration.DetectionMode == Settings.ApplicationDetectionMode.WindowsEvents)
 		{
-			GetActiveWindowsProcessName();
+			UpdateActiveWindowsProcessPath();
 		}
 	}
 
@@ -65,9 +73,9 @@ public sealed partial class ActiveProcessMonitor
 	[DllImport("user32.dll")]
 	static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-	public void GetActiveWindowsProcessName()
+	public void UpdateActiveWindowsProcessPath()
 	{
-		string activeProcess = getActiveWindowsProcessname();
+		string activeProcess = GetActiveWindowsProcessPath();
 
 		if (!String.IsNullOrWhiteSpace(activeProcess))
 			ProcessPath = activeProcess;
@@ -133,7 +141,7 @@ public sealed partial class ActiveProcessMonitor
 	}
 
 
-	private string getActiveWindowsProcessname()
+	private string GetActiveWindowsProcessPath()
 	{
 		IntPtr windowHandle = IntPtr.Zero;
 
@@ -170,6 +178,23 @@ public sealed partial class ActiveProcessMonitor
 			Global.logger.Error("Exception in GetActiveWindowsProcessTitle" + exc);
 		}
 		return "";
+	}
+
+	private string GetActiveWindowsProcessName() {
+		try {
+			IntPtr windowHandle = GetForegroundWindow();
+			uint processID;
+
+			if (GetWindowThreadProcessId(windowHandle, out processID) > 0)
+			{
+				var process = Process.GetProcessById((int)processID);
+				var exePath = process.MainModule.FileName;
+				return exePath.Remove(0, exePath.LastIndexOf('\\') + 1);
+			}
+		} catch (Exception exc) {
+			Global.logger.Error("Exception in GetActiveWindowsProcessTitle", exc);
+		}
+		return null;
 	}
 
 }

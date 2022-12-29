@@ -348,7 +348,7 @@ namespace Aurora.Profiles
         {
             if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && currentTick >= nextProcessNameUpdate)
             {
-                processMonitor.GetActiveWindowsProcessName();
+                processMonitor.UpdateActiveWindowsProcessPath();
                 nextProcessNameUpdate = currentTick + 1000L;
             }
         }
