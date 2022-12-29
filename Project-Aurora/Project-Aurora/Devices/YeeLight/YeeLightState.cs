@@ -116,10 +116,9 @@ internal partial class YeeLightStateColor : IYeeLightState
 
     private IYeeLightState ProceedSameColor(Color targetColor)
     {
-        if (Utils.ShouldSendKeepAlive())
-        {
-            UpdateLights(targetColor);
-        }
+        if (!Utils.ShouldSendKeepAlive()) return this;
+        _lights.ForEach(device => device.SetPower(Constants.PowerStateParamValues.ON));
+        UpdateLights(targetColor);
         return this;
     }
 
@@ -205,7 +204,7 @@ static class Utils
     }
     internal static bool IsBlack(Color color)
     {
-        return color.R == 0 && color.G == 0 && color.B  == 0;
+        return color is { R: 0, G: 0, B: 0 };
     }
 
     private const int KeepAliveCounter = 500;
