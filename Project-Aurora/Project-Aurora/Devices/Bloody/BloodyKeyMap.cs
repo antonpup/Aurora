@@ -118,7 +118,7 @@ namespace Aurora.Devices.Bloody
             [DeviceKeys.NUM_ZERO] = Key.NUM_ZERO,
             [DeviceKeys.NUM_PERIOD] = Key.NUM_PERIOD,
         };
-        public static Dictionary<BloodyPeripheralLed, DeviceKeys> MouseLightMap = new Dictionary<BloodyPeripheralLed, DeviceKeys>()
+        public static Dictionary<BloodyPeripheralLed, DeviceKeys> MouseLightMap = new()
         {
             [BloodyPeripheralLed.L2] = DeviceKeys.PERIPHERAL_LIGHT1,
             [BloodyPeripheralLed.L3] = DeviceKeys.PERIPHERAL_LIGHT2,
@@ -127,16 +127,16 @@ namespace Aurora.Devices.Bloody
             [BloodyPeripheralLed.L6] = DeviceKeys.PERIPHERAL_LIGHT5,
             [BloodyPeripheralLed.L7] = DeviceKeys.PERIPHERAL_LIGHT6,
             [BloodyPeripheralLed.L10] = DeviceKeys.PERIPHERAL_LIGHT7, 
-            [BloodyPeripheralLed.L9 ] = DeviceKeys.PERIPHERAL_LIGHT13,
-            [BloodyPeripheralLed.L8 ] = DeviceKeys.PERIPHERAL_LIGHT14,
-            [BloodyPeripheralLed.L14] = DeviceKeys.PERIPHERAL_LIGHT15,
-            [BloodyPeripheralLed.L13] = DeviceKeys.PERIPHERAL_LIGHT16,
+            [BloodyPeripheralLed.L9 ] = DeviceKeys.PERIPHERAL_LIGHT8,
+            [BloodyPeripheralLed.L8 ] = DeviceKeys.PERIPHERAL_LIGHT9,
+            [BloodyPeripheralLed.L14] = DeviceKeys.PERIPHERAL_LIGHT10,
+            [BloodyPeripheralLed.L13] = DeviceKeys.PERIPHERAL_LIGHT11,
 
 
             [BloodyPeripheralLed.L11] = DeviceKeys.Peripheral_Logo,
             [BloodyPeripheralLed.L15] = DeviceKeys.Peripheral_ScrollWheel,
         };
-        public static Dictionary<BloodyPeripheralLed, DeviceKeys> MousePadLightMap = new Dictionary<BloodyPeripheralLed, DeviceKeys>()
+        public static Dictionary<BloodyPeripheralLed, DeviceKeys> MousePadLightMap = new()
         {
             [BloodyPeripheralLed.L1] = DeviceKeys.MOUSEPADLIGHT1,
             [BloodyPeripheralLed.L2] = DeviceKeys.MOUSEPADLIGHT2,

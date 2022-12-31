@@ -215,6 +215,29 @@ namespace Aurora.Devices.OpenRGB
         };
         public static readonly ReadOnlyDictionary<string, DK> KeyNames = new (KeyNameMap);
 
+        public static readonly DK[] MouseLights = {
+            DK.PERIPHERAL_LIGHT1,
+            DK.PERIPHERAL_LIGHT2,
+            DK.PERIPHERAL_LIGHT3,
+            DK.PERIPHERAL_LIGHT4,
+            DK.PERIPHERAL_LIGHT5,
+            DK.PERIPHERAL_LIGHT6,
+            DK.PERIPHERAL_LIGHT7,
+            DK.PERIPHERAL_LIGHT8,
+            DK.PERIPHERAL_LIGHT9,
+            DK.PERIPHERAL_LIGHT10,
+            DK.PERIPHERAL_LIGHT11,
+            DK.PERIPHERAL_LIGHT12,
+            DK.PERIPHERAL_LIGHT13,
+            DK.PERIPHERAL_LIGHT14,
+            DK.PERIPHERAL_LIGHT15,
+            DK.PERIPHERAL_LIGHT16,
+            DK.PERIPHERAL_LIGHT17,
+            DK.PERIPHERAL_LIGHT18,
+            DK.PERIPHERAL_LIGHT19,
+            DK.PERIPHERAL_LIGHT20,
+        };
+
         public static readonly DK[] MousepadLights = {
             DK.MOUSEPADLIGHT1,
             DK.MOUSEPADLIGHT2,

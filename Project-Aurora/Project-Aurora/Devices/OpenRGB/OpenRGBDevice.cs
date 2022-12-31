@@ -117,6 +117,7 @@ namespace Aurora.Devices.OpenRGB
             }
             
             _devices = new List<HelperOpenRgbDevice>();
+            Queue<DeviceKeys> mouseLights = new Queue<DeviceKeys>(OpenRgbKeyNames.MouseLights);
             
             var fallbackKey = Global.Configuration.VarRegistry.GetVariable<DK>($"{DeviceName}_fallback_key");
             lock (_updateLock)
@@ -126,7 +127,7 @@ namespace Aurora.Devices.OpenRGB
                     var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
                     if (directMode == null) continue;
                     _openRgb.SetMode(device.ID, device.Modes.FindIndex(mode => mode == directMode));
-                    var helper = new HelperOpenRgbDevice(device.ID, device);
+                    var helper = new HelperOpenRgbDevice(device.ID, device, fallbackKey, mouseLights);
                     helper.ProcessMappings(fallbackKey);
                     _devices.Add(helper);
                 }
@@ -238,13 +239,15 @@ namespace Aurora.Devices.OpenRGB
         public OpenRGBDevice OrgbDevice { get; }
         public OpenRGBColor[] Colors { get; }
         public DK[] Mapping { get; }
+        private readonly Queue<DeviceKeys> _mouseLights;
 
-        public HelperOpenRgbDevice(int idx, OpenRGBDevice dev)
+        public HelperOpenRgbDevice(int idx, Device dev, DeviceKeys fallbackKey, Queue<DeviceKeys> mouseLights)
         {
             Index = idx;
             OrgbDevice = dev;
             Colors = Enumerable.Range(0, dev.Leds.Length).Select(_ => new OpenRGBColor()).ToArray();
             Mapping = new DK[dev.Zones.Sum(z => z.LedCount)];
+            _mouseLights = mouseLights;
         }
 
         internal void ProcessMappings(DK fallbackKey)
@@ -280,20 +283,31 @@ namespace Aurora.Devices.OpenRGB
                 {
                     for (int zoneLedIndex = 0; zoneLedIndex < OrgbDevice.Zones[zoneIndex].LedCount; zoneLedIndex++)
                     {
-                        if (OrgbDevice.Type == OpenRGBDeviceType.Mousemat)
+                        switch (OrgbDevice.Type)
                         {
-                            if (zoneLedIndex < 15)
-                            {
-                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRgbKeyNames.MousepadLights[zoneLedIndex];
-                            }
-                        }
-                        else
-                        {
-                            //TODO - scale zones with more than 32 LEDs
-                            if (zoneLedIndex < 60)
-                            {
-                                Mapping[(int)(ledOffset + zoneLedIndex)] = OpenRgbKeyNames.AdditionalLights[zoneLedIndex];
-                            }
+                            case OpenRGBDeviceType.Mousemat:
+                                if (zoneLedIndex < OpenRgbKeyNames.MousepadLights.Length)
+                                {
+                                    Mapping[(int)(ledOffset + zoneLedIndex)] =
+                                        OpenRgbKeyNames.MousepadLights[zoneLedIndex];
+                                }
+                                break;
+                            case OpenRGBDeviceType.Mouse:
+                                if (zoneLedIndex < OpenRgbKeyNames.MouseLights.Length)
+                                {
+                                    if (_mouseLights.TryDequeue(out var res))
+                                    {
+                                        Mapping[(int)(ledOffset + zoneLedIndex)] = res;
+                                    }
+                                }
+                                break;
+                            default:
+                                if (zoneLedIndex < OpenRgbKeyNames.AdditionalLights.Length)
+                                {
+                                    Mapping[(int)(ledOffset + zoneLedIndex)] =
+                                        OpenRgbKeyNames.AdditionalLights[zoneLedIndex];
+                                }
+                                break;
                         }
                     }
                 }

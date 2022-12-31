@@ -8,10 +8,6 @@
 			"margin_top": -232.0,
 			"width": 150.0,
 			"height": 210.0,
-			"margin_left_bits": 1,
-			"margin_top_bits": -19,
-			"width_bits": 13,
-			"height_bits": 19,
 			"image": "Bloody_W60_outline.png",
 			"enabled": true,
 			"absolute_location": true
@@ -40,7 +36,7 @@
 		},
 		{
 			"visualName": "Left Side 1",
-			"tag": 217,
+			"tag": 219,
 			"margin_left": 19.0,
 			"margin_top": -146.0,
 			"width": 15.0,
@@ -51,7 +47,7 @@
 		},
 		{
 			"visualName": "Left Side 2",
-			"tag": 218,
+			"tag": 220,
 			"margin_left": 28.0,
 			"margin_top": -117.0,
 			"width": 10.0,
@@ -62,19 +58,18 @@
 		},
 		{
 			"visualName": "Left Side 3",
-			"tag": 219,
+			"tag": 221,
 			"margin_left": 37.0,
 			"margin_top": -114.0,
 			"width": 8.0,
 			"height": 23.0,
-			"margin_left_bits": 1,
 			"image": "bloody_w60_ls_3.png",
 			"enabled": true,
 			"absolute_location": true
 		},
 		{
 			"visualName": "Mid 1",
-			"tag": 220,
+			"tag": 222,
 			"margin_left": 46.0,
 			"margin_top": -118.0,
 			"width": 40.0,
@@ -85,7 +80,7 @@
 		},
 		{
 			"visualName": "Mid 2",
-			"tag": 221,
+			"tag": 223,
 			"margin_left": 65.0,
 			"margin_top": -128.0,
 			"width": 50.0,
@@ -96,7 +91,7 @@
 		},
 		{
 			"visualName": "Mid 3",
-			"tag": 222,
+			"tag": 224,
 			"margin_left": 96.0,
 			"margin_top": -139.0,
 			"width": 40.0,
@@ -107,7 +102,7 @@
 		},
 		{
 			"visualName": "Bottom 1",
-			"tag": 223,
+			"tag": 225,
 			"margin_left": 7.0,
 			"margin_top": -80.0,
 			"width": 38.0,
@@ -118,7 +113,7 @@
 		},
 		{
 			"visualName": "Bottom 2",
-			"tag": 229,
+			"tag": 226,
 			"margin_left": 38.0,
 			"margin_top": -37.0,
 			"width": 36.0,
@@ -129,7 +124,7 @@
 		},
 		{
 			"visualName": "Bottom 3",
-			"tag": 230,
+			"tag": 227,
 			"margin_left": 70.0,
 			"margin_top": -38.0,
 			"width": 36.0,
@@ -140,7 +135,7 @@
 		},
 		{
 			"visualName": "Bottom 4",
-			"tag": 231,
+			"tag": 228,
 			"margin_left": 106.0,
 			"margin_top": -86.0,
 			"width": 22.0,
