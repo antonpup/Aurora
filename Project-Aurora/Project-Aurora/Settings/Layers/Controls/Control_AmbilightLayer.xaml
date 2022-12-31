@@ -60,7 +60,7 @@
             />
             
             <Label Content="Flip Image" Grid.Row="5" VerticalAlignment="Center" IsEnabled="{Binding ElementName=EffectType, Path=SelectedValue, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="26" Margin="0,1"/>
-            <CheckBox Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties._FlipVertically, Mode=TwoWay}" IsEnabled="{Binding ElementName=EffectType, Path=SelectedValue, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="16" Margin="0,6"/>
+            <CheckBox Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties.FlipVertically, Mode=TwoWay}" IsEnabled="{Binding ElementName=EffectType, Path=SelectedValue, Converter={StaticResource AmbilightTypeValueConverter}, ConverterParameter=Default}" Height="16" Margin="0,6"/>
             <Image Grid.Row="5" Grid.Column="2" Margin="6" ToolTip="This option will flip the image vertically to give the illusion of your keyboard reflecting your display." Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
             <Label Content="HW Acceleration" Grid.Row="6" Grid.Column="0"></Label>

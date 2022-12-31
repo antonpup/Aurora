@@ -177,7 +177,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     public bool FlipVertically
     {
         get => Logic._flipVertically ?? _flipVertically ?? false;
-        set => _flipVertically = value;
+        set => SetFieldAndRaisePropertyChanged(out _flipVertically, value);
     }
 
     [JsonIgnore]
