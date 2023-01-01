@@ -155,10 +155,10 @@
     <Content Include="Logi\LGS\LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <!-- <Reference Include="RGB.NET.Devices.Bloody">
+    <Reference Include="RGB.NET.Devices.Bloody">
       <HintPath>.\RGB.NET.Devices.Bloody.dll</HintPath>
       <Private>true</Private>
-    </Reference> -->
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
