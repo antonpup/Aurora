@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using CSScripting;
 using YeeLightAPI.YeeLightConstants;
 using YeeLightAPI.YeeLightDeviceLocator;
 
@@ -47,11 +48,14 @@ namespace Aurora.Devices.YeeLight
             }
         }
 
-        private static void ConnectNewDevice(List<YeeLightAPI.YeeLightDevice> lights, IPAddress lightIp)
+        public static void ConnectNewDevice(List<YeeLightAPI.YeeLightDevice> lights, IPAddress lightIp)
         {
-            if (lights.Any(x => x.IsConnected() && Equals(x.GetLightIPAddressAndPort().ipAddress, lightIp)))
+            var yeeLightDevices = lights.Where(x => Equals(x.GetLightIPAddressAndPort().ipAddress, lightIp));
+            if (!yeeLightDevices.IsEmpty())
             {
-                return;
+                var yeeLightDevice = yeeLightDevices.First();
+                lights.Remove(yeeLightDevice);
+                yeeLightDevice.CloseConnection();
             }
 
             var light = new YeeLightAPI.YeeLightDevice();
@@ -63,7 +67,10 @@ namespace Aurora.Devices.YeeLight
                 return;
             }
 
-            lights.Add(light);
+            if (light.IsConnected())
+            {
+                lights.Add(light);
+            }
         }
 
         private static int _connectionTries;
