@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
@@ -15,7 +15,7 @@ namespace Aurora.Modules.AudioCapture;
 /// </summary>
 public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfaces.IMMNotificationClient
 {
-    public static List<AudioDeviceProxy> Instances = new();
+    public static readonly List<AudioDeviceProxy> Instances = new();
     private readonly MMDeviceEnumerator _deviceEnumerator = new();
 
     public event EventHandler<EventArgs> DeviceChanged;
@@ -85,8 +85,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     private void UpdateDevice()
     {
         // Release the current device (if any), removing any events as required
-        if (WaveIn != null)
-            WaveIn.DataAvailable -= _waveInDataAvailable;
         DisposeCurrentDevice();
         if (_disposed) return;
 
@@ -102,18 +100,33 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
 
     private void SetDevice(MMDevice mmDevice)
     {
-        var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
-        var __ = mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
         Device = mmDevice;
 
         // Get a WaveIn from the device and start it, adding any events as requied
-        WaveIn?.StopRecording();
         WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
         WaveIn.DataAvailable += _waveInDataAvailable;
-        WaveIn.StartRecording();
+        WaveIn.RecordingStopped += WaveInOnRecordingStopped;
+        
+        var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
+        var __ = mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
 
         DeviceName = Device.FriendlyName;
         DeviceChanged?.Invoke(this, EventArgs.Empty);
+        WaveIn.StartRecording();
+    }
+
+    private void WaveInOnRecordingStopped(object sender, StoppedEventArgs e)
+    {
+        var audioException = e.Exception;
+        if (audioException == null) return;
+        if (audioException.Message.Equals("0x88890004"))
+        {
+            SetDevice(Device);
+        }
+        else
+        {
+            Global.logger.Error("Audio proxy error", audioException);
+        }
     }
 
     /// <summary>Disposes and clears the current <see cref="Device"/> and <see cref="WaveIn"/>.</summary>
@@ -122,10 +135,13 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         Device = null;
 
         WaveIn?.StopRecording();
+        if (WaveIn != null)
+            WaveIn.DataAvailable -= _waveInDataAvailable;
         WaveIn = null;
         DeviceChanged?.Invoke(this, EventArgs.Empty);
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void OnDeviceStateChanged(string deviceId, DeviceState newState)
     {
         if (DeviceId != deviceId)
@@ -146,6 +162,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void OnDeviceAdded(string pwstrDeviceId)
     {
         if (pwstrDeviceId == DeviceId)
@@ -155,9 +172,10 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void OnDeviceRemoved(string deviceId)
     {
-        if (Device.ID == DeviceId)
+        if (Device?.ID == deviceId && Device?.State != DeviceState.Active)
         {
             DisposeCurrentDevice();
         }
@@ -166,6 +184,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     /// <summary>
     /// Update the device when changed by the system.
     /// </summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
     {
         if (Flow != flow || !AudioDevices.DefaultDeviceId.Equals(DeviceId)) return;

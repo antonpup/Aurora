@@ -183,18 +183,11 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
 
     private void DeviceChanged(object sender, EventArgs e)
     {
-        if (_deviceProxy.Device == null || _deviceProxy.WaveIn == null)
+        if (_deviceProxy.Device == null)
             return;
-        try
-        {   //_deviceProxy.WaveIn.WaveFormat is a very expensive line
-            _channels = _deviceProxy.WaveIn.WaveFormat.Channels;
-            _bufferIncrement = _deviceProxy.WaveIn.WaveFormat.BlockAlign;
-            _freq = _deviceProxy.Device.AudioClient.MixFormat.SampleRate;
-        }
-        catch (Exception exception)
-        {
-            //ignore
-        }
+        _channels = _deviceProxy.WaveIn.WaveFormat.Channels;
+        _bufferIncrement = _deviceProxy.WaveIn.WaveFormat.BlockAlign;
+        _freq = _deviceProxy.Device.AudioClient.MixFormat.SampleRate;
     }
 
     private readonly List<float> _fluxArray = new();
@@ -391,7 +384,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
     private void FftCalculated(object sender, FftEventArgs e)
     {
         _fftsPrev = _ffts;
-        _ffts = new List<Complex>(e.Result).ToArray();
+        _ffts = e.Result;
     }
 
     private int FreqToBin(float freq)
