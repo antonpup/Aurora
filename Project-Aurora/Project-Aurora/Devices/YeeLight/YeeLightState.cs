@@ -104,6 +104,11 @@ internal partial class YeeLightStateColor : IYeeLightState
         {
             _whiteCounter = _whiteCounterStart;
         }
+
+        if (Utils.ShouldSendKeepAlive())
+        {
+            _lights.ForEach(device => device.SetPower(Constants.PowerStateParamValues.ON));
+        }
             
         if (_previousColor == color)
             return ProceedSameColor(color);
