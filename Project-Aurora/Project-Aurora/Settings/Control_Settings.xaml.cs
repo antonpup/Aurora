@@ -33,7 +33,6 @@ namespace Aurora.Settings
     /// </summary>
     public partial class Control_Settings
     {
-        private readonly RegistryKey _runRegistryPath = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         private const string StartupTaskId = "AuroraStartup";
         private readonly bool _componentsInitialized;
 
@@ -51,9 +50,6 @@ namespace Aurora.Settings
             _componentsInitialized = true;
 
             tabMain.DataContext = Global.Configuration;
-
-            if (_runRegistryPath.GetValue("Aurora") != null)
-                _runRegistryPath.DeleteValue("Aurora");
 
             try
             {
