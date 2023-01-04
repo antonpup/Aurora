@@ -563,6 +563,7 @@ namespace Aurora.Settings
             typeof(Devices.Vulcan.VulcanDevice),
             typeof(Devices.Wooting.WootingDevice),
             typeof(Devices.YeeLight.YeeLightDevice),
+            typeof(Devices.Creative.SoundBlasterXDevice),
         };
 
         //Blackout and Night theme
