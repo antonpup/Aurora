@@ -65,6 +65,9 @@
     <Reference Include="Bloody.NET">
       <HintPath>.\Bloody.NET.dll</HintPath>
     </Reference>
+    <Reference Include="SBAuroraReactive">
+      <HintPath>.\SBAuroraReactive.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
