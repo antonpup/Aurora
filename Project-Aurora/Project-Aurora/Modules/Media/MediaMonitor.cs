@@ -41,7 +41,10 @@ public sealed class MediaMonitor : IDisposable
     private void MediaManager_OnAnyPlaybackStateChanged(MediaManager.MediaSession mediaSession,
         GlobalSystemMediaTransportControlsSessionPlaybackInfo playbackInfo)
     {
-        _mediaSessions.Add(mediaSession);
+        if (playbackInfo.PlaybackStatus != GlobalSystemMediaTransportControlsSessionPlaybackStatus.Closed)
+        {
+            _mediaSessions.Add(mediaSession);
+        }
         UpdateButtons();
     }
 
@@ -59,7 +62,11 @@ public sealed class MediaMonitor : IDisposable
 
     public void Dispose()
     {
-        _mediaManager?.Dispose();
+        if (_mediaManager == null) return;
+        _mediaManager.OnAnySessionOpened -= MediaManager_OnSessionOpened;
+        _mediaManager.OnAnyPlaybackStateChanged -= MediaManager_OnAnyPlaybackStateChanged;
+        _mediaManager.OnAnySessionClosed -= MediaManager_OnAnySessionClosed;
+        _mediaManager.Dispose();
     }
 
     private sealed class MediaSessionComparer : IEqualityComparer<MediaManager.MediaSession>
