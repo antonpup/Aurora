@@ -517,6 +517,7 @@ namespace Aurora.Settings
         public bool HighPriority { get; set; } = false;
         public BitmapAccuracy BitmapAccuracy { get; set; } = BitmapAccuracy.Okay;
         public bool EnableAudioCapture { get; set; } = false;
+        public bool EnableMediaInfo { get; set; } = true;
 
 
         public int UpdateDelay { get; set; } = 30;

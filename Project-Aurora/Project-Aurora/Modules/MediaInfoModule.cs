@@ -1,5 +1,6 @@
-﻿using Aurora.Modules.Media;
-using Aurora.Utils;
+﻿using System;
+using System.Windows;
+using Aurora.Modules.Media;
 using Lombok.NET;
 
 namespace Aurora.Modules;
@@ -11,7 +12,19 @@ public sealed partial class MediaInfoModule : IAuroraModule
     [Async]
     public void Initialize()
     {
-        _mediaMonitor = new MediaMonitor();
+        if (!Global.Configuration.EnableMediaInfo)
+        {
+            return;
+        }
+        try
+        {
+            _mediaMonitor = new MediaMonitor();
+        }
+        catch (Exception e)
+        {
+            MessageBox.Show("Media Info module could not be loaded.\nMedia playback data will not be detected.", "Aurora - Error");
+            Global.logger.Error("MediaInfo error", e);
+        }
     }
 
 
