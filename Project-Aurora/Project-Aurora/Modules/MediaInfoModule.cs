@@ -22,7 +22,8 @@ public sealed partial class MediaInfoModule : IAuroraModule
         }
         catch (Exception e)
         {
-            MessageBox.Show("Media Info module could not be loaded.\nMedia playback data will not be detected.", "Aurora - Error");
+            MessageBox.Show("Media Info module could not be loaded.\nMedia playback data will not be detected.",
+                "Aurora - Warning");
             Global.logger.Error("MediaInfo error", e);
         }
     }
