@@ -8,14 +8,14 @@ namespace Aurora.Modules.Inputs
 {
     public sealed class KeyRecorder : IDisposable
     {
-	    private readonly InputEvents inputEvents;
+	    private readonly IInputEvents inputEvents;
 	    private String recordingType = "";
         private bool isSingleKey = false;
         private List<DeviceKeys> recordedKeys = new List<DeviceKeys>();
         public delegate void RecordingFinishedHandler(DeviceKeys[] resulting_keys);
         public event RecordingFinishedHandler FinishedRecording;
 
-        public KeyRecorder(InputEvents inputEvents)
+        public KeyRecorder(IInputEvents inputEvents)
         {
 	        this.inputEvents = inputEvents;
 	        Reset();

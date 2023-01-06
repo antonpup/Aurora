@@ -98,7 +98,7 @@ public static class Global
     /// <summary>
     /// Input event subscriptions
     /// </summary>
-    public static InputEvents InputEvents;
+    public static IInputEvents InputEvents;
 
     //public static GameEventHandler geh;
     public static LightingStateManager LightingStateManager { get; set; }     //TODO module access

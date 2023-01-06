@@ -12,19 +12,27 @@ namespace Aurora.Modules;
 public sealed partial class InputsModule : IAuroraModule
 {
     private static InputInterceptor InputInterceptor;
-    
+
     [Async]
     public void Initialize()
     {
-        Global.logger.Info("Loading Input Hooking");
-        Global.InputEvents = new InputEvents();
-        Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
-        SetupVolumeAsBrightness(Global.Configuration,
-            new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
+        if (!Global.Configuration.EnableInputCapture)
+        {
+            Global.InputEvents = new NoopInputEvents();
+        }
+        else
+        {
+            Global.logger.Info("Loading Input Hooking");
+            Global.InputEvents = new InputEvents();
+            Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
+            SetupVolumeAsBrightness(Global.Configuration,
+                new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
+            Global.logger.Info("Loaded Input Hooking");
+        }
+
         DesktopUtils.StartSessionWatch();
 
         Global.key_recorder = new KeyRecorder(Global.InputEvents);
-        Global.logger.Info("Loaded Input Hooking");
     }
 
     [Async]

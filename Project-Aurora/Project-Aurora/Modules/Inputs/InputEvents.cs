@@ -14,7 +14,7 @@ namespace Aurora
     /// <summary>
     /// Class for subscribing to various HID input events
     /// </summary>
-    public sealed class InputEvents : IDisposable
+    public sealed class InputEvents : IInputEvents
     {
         private readonly MessagePumpThread thread = new MessagePumpThread();
 
