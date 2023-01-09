@@ -43,7 +43,7 @@ namespace Aurora.EffectsEngine.Animations
                 _pen.Width = _width;
                 _pen.Alignment = PenAlignment.Inset;
 
-                virtUpdate();
+                VirtUpdate();
                 _invalidated = false;
             }
             

@@ -128,7 +128,7 @@ namespace Aurora.EffectsEngine.Animations
 
                 //_pen.ScaleTransform(Scale, Scale);
 
-                virtUpdate();
+                VirtUpdate();
 
                 _invalidated = false;
             }

@@ -131,12 +131,12 @@ namespace Aurora.EffectsEngine.Animations
             _duration = duration;
         }
 
-        protected virtual void virtUpdate()
+        protected virtual void VirtUpdate()
         {
-            updateMatrices();
+            UpdateMatrices();
         }
 
-        void updateMatrices()
+        void UpdateMatrices()
         {
             _transformationMatrix = new Matrix();
             
@@ -290,19 +290,11 @@ namespace Aurora.EffectsEngine.Animations
             return (float)(first * (1.0 - amount) + second * (amount));
         }
 
-        internal double CalculateNewValue(double first, double second, double amount)
-        {
-            if (first == second)
-                return first;
-            return first * (1.0 - amount) + second * (amount);
-        }
-
         internal int CalculateNewValue(int first, int second, double amount)
         {
             if (first == second)
                 return first;
-            else
-                return (int)(first * (1.0 - amount) + second * (amount));
+            return (int)(first * (1.0 - amount) + second * (amount));
         }
 
         public virtual AnimationFrame GetCopy()
@@ -314,7 +306,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((AnimationFrame)obj);
         }
 
@@ -341,7 +333,7 @@ namespace Aurora.EffectsEngine.Animations
 
         public override string ToString()
         {
-            return "AnimationFrame [ Color: " + _color.ToString() + " Dimensions: " + _dimension.ToString() + " Width: " + _width + "]";
+            return "AnimationFrame [ Color: " + _color + " Dimensions: " + _dimension + " Width: " + _width + "]";
         }
     }
 }

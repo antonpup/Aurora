@@ -32,7 +32,7 @@ namespace Aurora.EffectsEngine.Animations
                 _pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
                 _pen.ScaleTransform(Scale, Scale);
 
-                virtUpdate();
+                VirtUpdate();
                 _invalidated = false;
             }
 

@@ -45,7 +45,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             if (_invalidated)
             {
-                virtUpdate();
+                VirtUpdate();
                 _invalidated = false;
             }
             

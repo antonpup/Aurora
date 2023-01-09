@@ -28,7 +28,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 _brush = new SolidBrush(_color);
 
-                virtUpdate();
+                VirtUpdate();
                 _invalidated = false;
             }
 

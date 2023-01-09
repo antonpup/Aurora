@@ -48,9 +48,9 @@ namespace Aurora.EffectsEngine.Animations
             _gradientBrush.center = new PointF(0.5f, 0.5f);
         }
 
-        protected override void virtUpdate()
+        protected override void VirtUpdate()
         {
-            base.virtUpdate();
+            base.VirtUpdate();
 
             SortedDictionary<float, Color> newColorGradients = new SortedDictionary<float, Color>();
             ColorSpectrum spectrum = _gradientBrush.GetColorSpectrum();
@@ -95,7 +95,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             if (_invalidated)
             {
-                virtUpdate();
+                VirtUpdate();
                 _invalidated = false;
             }
 

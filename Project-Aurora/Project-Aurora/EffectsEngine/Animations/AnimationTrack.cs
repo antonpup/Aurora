@@ -1,9 +1,7 @@
-﻿using Aurora.Settings;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Aurora.Utils;
 using Newtonsoft.Json;
 
 namespace Aurora.EffectsEngine.Animations
@@ -44,10 +42,10 @@ namespace Aurora.EffectsEngine.Animations
 
         public float AnimationDuration => _animationDuration;
 
-        public AnimationTrack(string track_name, float animationDuration, float shift = 0.0f)
+        public AnimationTrack(string trackName, float animationDuration, float shift = 0.0f)
         {
             _animations = new ConcurrentDictionary<float, AnimationFrame>();
-            _track_name = track_name;
+            _track_name = trackName;
             _animationDuration = animationDuration;
             _shift = shift;
         }
@@ -95,13 +93,13 @@ namespace Aurora.EffectsEngine.Animations
         {
             time = NormalizeTime(time);
 
-            return !(time > _animationDuration) && _animations.Count != 0;
+            return time <= _animationDuration && !_animations.IsEmpty;
         }
 
         public AnimationTrack SetFrame(float time, AnimationFrame animframe)
         {
             //One can retype the animation track by removing all frames
-            if (_animations.Count == 0)
+            if (_animations.IsEmpty)
             {
                 _SupportedAnimationType = animframe.GetType();
                 _SupportedTypeIdentified = true;
@@ -109,7 +107,7 @@ namespace Aurora.EffectsEngine.Animations
 
             if (_SupportedAnimationType == animframe.GetType())
             {
-                if (_animations.Count > 0)
+                if (!_animations.IsEmpty)
                 {
                     Tuple<float, float> closeValues = GetCloseValues(time);
 
@@ -164,7 +162,7 @@ namespace Aurora.EffectsEngine.Animations
                 return new AnimationFrame();
 
             //The time value is exact
-            if (closeValues.Item1 == closeValues.Item2)
+            if (Math.Abs(closeValues.Item1 - closeValues.Item2) < 0.1)
                 return _animations[closeValues.Item1];
             if (closeValues.Item1 + _animations[closeValues.Item1]._duration > time)
                 return _animations[closeValues.Item1];
