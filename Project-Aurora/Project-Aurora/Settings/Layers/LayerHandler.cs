@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Windows.Controls;
 using FastMember;
 using System.ComponentModel;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Runtime.Serialization;
 using System.Windows;
 using Aurora.Settings.Layers.Controls;
@@ -23,7 +25,7 @@ namespace Aurora.Settings.Layers
         private static readonly Lazy<TypeAccessor> Accessor = new(() => TypeAccessor.Create(typeof(TProperty)));
 
         [GameStateIgnore, JsonIgnore]
-        public TProperty Logic { get; set; }
+        public TProperty Logic { get; private set; }
 
         [JsonIgnore]
         private Color? _primaryColor;
@@ -266,10 +268,10 @@ namespace Aurora.Settings.Layers
         }
 
         [JsonIgnore]
-        private EffectLayer _previousRender = EffectLayer.EmptyLayer; //Previous layer
+        private TextureBrush _previousRender = EffectLayer.EmptyLayer.TextureBrush; //Previous layer
 
         [JsonIgnore]
-        private EffectLayer _previousSecondRender = EffectLayer.EmptyLayer; //Layer before previous
+        private TextureBrush _previousSecondRender = EffectLayer.EmptyLayer.TextureBrush; //Layer before previous
 
         [JsonIgnore]
         private readonly Lazy<EffectLayer> _effectLayer;
@@ -292,6 +294,19 @@ namespace Aurora.Settings.Layers
 
         protected LayerHandler(string name)
         {
+            var colorMatrix1 = new ColorMatrix
+            {
+                Matrix33 = 0.6f
+            };
+            _prevImageAttributes = new();
+            _prevImageAttributes.SetColorMatrix(colorMatrix1);
+            var colorMatrix2 = new ColorMatrix
+            {
+                Matrix33 = 0.4f
+            };
+            _secondPrevImageAttributes = new();
+            _secondPrevImageAttributes.SetColorMatrix(colorMatrix2);
+
             _effectLayer = new(() => new EffectLayer(name));
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
@@ -308,19 +323,43 @@ namespace Aurora.Settings.Layers
 
         }
 
+        private Lazy<EffectLayer> _postfxLayer = new(() => new EffectLayer("PostFXLayer"));
+        private readonly ImageAttributes _prevImageAttributes;
+        private readonly ImageAttributes _secondPrevImageAttributes;
+
         public EffectLayer PostRenderFX(EffectLayer renderedLayer)
         {
             if (EnableSmoothing)
             {
-                EffectLayer returnLayer = new EffectLayer(renderedLayer);
-                EffectLayer previousLayer = new EffectLayer(_previousRender);
-                EffectLayer previousSecondLayer = new EffectLayer(_previousSecondRender);
+                var returnLayer = _postfxLayer.Value;
+                returnLayer.Clear();
 
-                returnLayer = returnLayer + previousLayer * 0.50 + previousSecondLayer * 0.25;
+                using (var g = returnLayer.GetGraphics())
+                {
+                    g.CompositingMode = CompositingMode.SourceOver;
+                    g.CompositingQuality = CompositingQuality.HighSpeed;
+                    g.SmoothingMode = SmoothingMode.None;
+                    g.InterpolationMode = InterpolationMode.Low;
+                    
+                    g.DrawImage(renderedLayer.TextureBrush.Image,
+                        renderedLayer.Dimension, renderedLayer.Dimension,
+                        GraphicsUnit.Pixel
+                    );
+                    g.FillRectangle(_previousRender, renderedLayer.Dimension);
+                    g.FillRectangle(_previousSecondRender, renderedLayer.Dimension);
+                }
 
-                //Update previous layers
-                _previousSecondRender = _previousRender;
-                _previousRender = renderedLayer;
+                try
+                {
+                    //Update previous layers
+                    _previousSecondRender = new TextureBrush(_previousRender.Image, renderedLayer.Dimension, _secondPrevImageAttributes);
+                    _previousRender = new TextureBrush(renderedLayer.TextureBrush.Image, renderedLayer.Dimension, _prevImageAttributes);
+                }
+                catch (Exception e) //canvas changes
+                {
+                    _previousSecondRender = EffectLayer.EmptyLayer.TextureBrush;
+                    _previousRender = EffectLayer.EmptyLayer.TextureBrush;
+                }
 
                 //Last PostFX is exclusion
                 if (EnableExclusionMask)
