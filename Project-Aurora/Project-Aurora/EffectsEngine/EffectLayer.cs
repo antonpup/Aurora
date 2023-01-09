@@ -310,13 +310,16 @@ namespace Aurora.EffectsEngine
 
         private void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                _colormap?.Dispose();
-                _textureBrush?.Dispose();
-                _transformedDrawExcludeMap?.Dispose();
-                WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
-            }
+            if (!disposing) return;
+            _keyColors.Clear();
+            _excludeSequence = null;
+            _keySequence = null;
+            _lastFreeform = null;
+            _colormap?.Dispose();
+            _textureBrush?.Dispose();
+            _textureBrush = null;
+            _transformedDrawExcludeMap?.Dispose();
+            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
         }
 
         ~EffectLayer()
@@ -664,7 +667,7 @@ namespace Aurora.EffectsEngine
             SetOneKey(key, new SolidBrush(color));
         }
 
-        private readonly ConcurrentDictionary<DeviceKeys, Color> _keyColors = new();
+        private readonly ConcurrentDictionary<DeviceKeys, Color> _keyColors = new(1, 220);
         private static readonly SolidBrush ClearingBrush = new(Color.Transparent);
         private Color _lastColor = Color.Empty;
 
