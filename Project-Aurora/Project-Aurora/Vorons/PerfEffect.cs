@@ -41,10 +41,7 @@ namespace Aurora.Scripts.VoronScripts
 {
 	public class PerformanceEffect : IEffectScript
 	{
-		public string ID
-		{
-			get { return "Voron Scripts - PerfEffect - v1.0-beta.6"; }
-		}
+		public string ID => "Voron Scripts - PerfEffect - v1.0-beta.6";
 
 		public VariableRegistry Properties { get; private set; }
 
@@ -125,6 +122,7 @@ namespace Aurora.Scripts.VoronScripts
 
 			Properties.RegProp("Cycled Gradient Shift Full Speed", 100L, "Cycled gradient shifting speed at 100%", -1000L, 1000L);
 
+			_effectLayer = new EffectLayer(ID);
 		}
 
 		private static readonly MathParser MathParser = new();
@@ -136,6 +134,8 @@ namespace Aurora.Scripts.VoronScripts
 
 		private static readonly ConcurrentDictionary<CircleGradientStateKey, CircleGradientState>
 			CircleShidtStates = new();
+
+		private readonly EffectLayer _effectLayer;
 
 		private KeySequence Keys { get; set; }
 		private EffectTypes EffectType { get; set; }
@@ -180,7 +180,7 @@ namespace Aurora.Scripts.VoronScripts
 		{
 			ReadProperties(properties);
 
-			var layer = new EffectLayer(ID);
+			_effectLayer.Clear();
 			var value = ValueSource.GetValue() / 100f;
 			if (ValueExpression != "x")
 			{
@@ -219,7 +219,7 @@ namespace Aurora.Scripts.VoronScripts
 
 				var grad = gradient.Shift(gradState.Key);
 
-				layer.PercentEffect(grad, Keys, 1, 1, PercentEffectType.Progressive);
+				_effectLayer.PercentEffect(grad, Keys, 1, 1, PercentEffectType.Progressive);
 
 			}
 			else
@@ -239,10 +239,10 @@ namespace Aurora.Scripts.VoronScripts
 					default:
 						throw new ArgumentOutOfRangeException();
 				}
-				layer.PercentEffect(gradient, Keys, value, 1, effectType);
+				_effectLayer.PercentEffect(gradient, Keys, value, 1, effectType);
 			}
 
-			return layer;
+			return _effectLayer;
 		}
 
 	}

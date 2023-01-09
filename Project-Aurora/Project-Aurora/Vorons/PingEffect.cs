@@ -98,11 +98,13 @@ namespace Aurora.Scripts.VoronScripts
 			Properties.RegProp("Number of Pings in graph mode", 10L, "Amount of last pings that will be used to display graph.", 1, 50);
 
 			//Properties.RegProp("BrightMode", false);
+			_layer = new EffectLayer(ID);
 		}
 
 		private static readonly ConcurrentDictionary<Tuple<KeySequence, string, string>, KeyValuePair<AnimationData, Pinger>> PingAnimations = new();
 
 		private static readonly ConcurrentDictionary<string, ColorSpectrum> Gradients = new();
+		private readonly EffectLayer _layer;
 
 		private KeySequence Keys { get; set; }
 		private EffectTypes EffectType { get; set; }
@@ -180,9 +182,9 @@ namespace Aurora.Scripts.VoronScripts
 		{
 			ReadProperties(properties);
 
-			var layer = new EffectLayer(ID);
-			Render(layer);
-			return layer;
+			_layer.Clear();
+			Render(_layer);
+			return _layer;
 		}
 
 		public void Render(EffectLayer effectLayer)
