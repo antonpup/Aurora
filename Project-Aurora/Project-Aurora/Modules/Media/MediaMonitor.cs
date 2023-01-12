@@ -62,7 +62,6 @@ public sealed class MediaMonitor : IDisposable
 
     public void Dispose()
     {
-        if (_mediaManager == null) return;
         _mediaManager.OnAnySessionOpened -= MediaManager_OnSessionOpened;
         _mediaManager.OnAnyPlaybackStateChanged -= MediaManager_OnAnyPlaybackStateChanged;
         _mediaManager.OnAnySessionClosed -= MediaManager_OnAnySessionClosed;
