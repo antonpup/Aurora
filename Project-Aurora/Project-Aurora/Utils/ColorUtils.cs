@@ -1,7 +1,10 @@
-using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Aurora.EffectsEngine;
+using Newtonsoft.Json;
 using DrawingColor = System.Drawing.Color;
 using MediaColor = System.Windows.Media.Color;
 
@@ -40,21 +43,21 @@ namespace Aurora.Utils
         /// <summary>
         /// Converts from System.Windows.Media.Color to System.Drawing.Color
         /// </summary>
-        /// <param name="in_color">A Windows Media Color</param>
+        /// <param name="inColor">A Windows Media Color</param>
         /// <returns>A Drawing Color</returns>
-        public static DrawingColor MediaColorToDrawingColor(MediaColor in_color)
+        public static DrawingColor MediaColorToDrawingColor(MediaColor inColor)
         {
-            return FastColor(in_color.R, in_color.G, in_color.B, in_color.A);
+            return FastColor(inColor.R, inColor.G, inColor.B, inColor.A);
         }
 
         /// <summary>
         /// Converts from System.Drawing.Color to System.Windows.Media.Color
         /// </summary>
-        /// <param name="in_color">A Drawing Color</param>
+        /// <param name="inColor">A Drawing Color</param>
         /// <returns>A Windows Media Color</returns>
-        public static MediaColor DrawingColorToMediaColor(DrawingColor in_color)
+        public static MediaColor DrawingColorToMediaColor(DrawingColor inColor)
         {
-            return MediaColor.FromArgb(in_color.A, in_color.R, in_color.G, in_color.B);
+            return MediaColor.FromArgb(inColor.A, inColor.R, inColor.G, inColor.B);
         }
 
         /// <summary>
@@ -121,11 +124,11 @@ namespace Aurora.Utils
         /// <returns>Corrected Color</returns>
         public static DrawingColor CorrectWithAlpha(DrawingColor color)
         {
-            float scalar = color.A / 255.0f;
+            var scalar = color.A / 255.0f;
 
-            byte red = ColorByteMultiplication(color.R, scalar);
-            byte green = ColorByteMultiplication(color.G, scalar);
-            byte blue = ColorByteMultiplication(color.B, scalar);
+            var red = ColorByteMultiplication(color.R, scalar);
+            var green = ColorByteMultiplication(color.G, scalar);
+            var blue = ColorByteMultiplication(color.B, scalar);
 
             return FastColor(red, green, blue);
         }
@@ -138,10 +141,10 @@ namespace Aurora.Utils
         /// <returns>The multiplied Color</returns>
         public static DrawingColor MultiplyColorByScalar(DrawingColor color, double scalar)
         {
-            byte red = ColorByteMultiplication(color.R, scalar);
-            byte green = ColorByteMultiplication(color.G, scalar);
-            byte blue = ColorByteMultiplication(color.B, scalar);
-            byte alpha = ColorByteMultiplication(color.A, scalar);
+            var red = color.R;
+            var green = color.G;
+            var blue = color.B;
+            var alpha = ColorByteMultiplication(color.A, scalar);
 
             return FastColor(red, green, blue, alpha);
         }
@@ -154,10 +157,10 @@ namespace Aurora.Utils
         /// <returns>The multiplied Color</returns>
         public static MediaColor MultiplyColorByScalar(MediaColor color, double scalar)
         {
-            byte red = ColorByteMultiplication(color.R, scalar);
-            byte green = ColorByteMultiplication(color.G, scalar);
-            byte blue = ColorByteMultiplication(color.B, scalar);
-            byte alpha = ColorByteMultiplication(color.A, scalar);
+            var red = color.R;
+            var green = color.G;
+            var blue = color.B;
+            var alpha = ColorByteMultiplication(color.A, scalar);
 
             return MediaColor.FromArgb(alpha, red, green, blue);
         }
@@ -179,14 +182,14 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="bitmap">The bitmap to be evaluated</param>
         /// <returns>An average color from the bitmap</returns>
-        public static DrawingColor GetAverageColor(System.Windows.Media.Imaging.BitmapSource bitmap)
+        public static DrawingColor GetAverageColor(BitmapSource bitmap)
         {
             var format = bitmap.Format;
 
-            if (format != System.Windows.Media.PixelFormats.Bgr24 &&
-                format != System.Windows.Media.PixelFormats.Bgr32 &&
-                format != System.Windows.Media.PixelFormats.Bgra32 &&
-                format != System.Windows.Media.PixelFormats.Pbgra32)
+            if (format != PixelFormats.Bgr24 &&
+                format != PixelFormats.Bgr32 &&
+                format != PixelFormats.Bgra32 &&
+                format != PixelFormats.Pbgra32)
             {
                 throw new InvalidOperationException("BitmapSource must have Bgr24, Bgr32, Bgra32 or Pbgra32 format");
             }
@@ -222,16 +225,16 @@ namespace Aurora.Utils
                 _ => integer
             };
 
-            int r = integer >> 16;
-            int g = (integer >> 8) & 255;
-            int b = integer & 255;
+            var r = integer >> 16;
+            var g = (integer >> 8) & 255;
+            var b = integer & 255;
 
             return FastColor((byte)r, (byte)g, (byte)b);
         }
 
         public static int GetIntFromColor(DrawingColor color)
         {
-            return (color.R << 16) | (color.G << 8) | (color.B);
+            return (color.R << 16) | (color.G << 8) | color.B;
         }
 
         public static void ToHsv(DrawingColor color, out double hue, out double saturation, out double value)
@@ -257,7 +260,7 @@ namespace Aurora.Utils
             hue *= 60;
             if (hue < 0.0) hue += 360;
 
-            saturation = (max == 0) ? 0 : 1d - (1d * min / max);
+            saturation = max == 0 ? 0 : 1d - 1d * min / max;
             value = max / 255d;
         }
 
@@ -410,12 +413,13 @@ namespace Aurora.Utils
                 return;
 
             strength = strength >= 0 ? MathUtils.Clamp(strength, 0, 1) : MathUtils.Clamp(strength, -1, 0);
-            if (strength == -1)
+            if (strength <= -1)
             {
                 component = 0;
                 return;
             }
-            else if (strength == 1)
+
+            if (strength >= 1)
             {
                 component = 1;
                 return;
@@ -437,7 +441,7 @@ namespace Aurora.Utils
         }
 
         public static bool NearlyEqual(float a, float b, float epsilon) {
-            const double MinNormal = 2.2250738585072014E-308d;
+            const double minNormal = 2.2250738585072014E-308d;
             float absA = Math.Abs(a);
             float absB = Math.Abs(b);
             float diff = Math.Abs(a - b);
@@ -445,16 +449,16 @@ namespace Aurora.Utils
             if (a.Equals(b)) { // shortcut, handles infinities
                 return true;
             }
-            if (a == 0 || b == 0 || absA + absB < MinNormal) {
+            if (a == 0 || b == 0 || absA + absB < minNormal) {
                 // a or b is zero or both are extremely close to it
                 // relative error is less meaningful here
-                return diff < (epsilon * MinNormal);
+                return diff < epsilon * minNormal;
             } // use relative error
             return diff / (absA + absB) < epsilon;
         }
 
         public static bool NearlyEqual(double a, double b, double epsilon) {
-            const double MinNormal = 2.2250738585072014E-308d;
+            const double minNormal = 2.2250738585072014E-308d;
             double absA = Math.Abs(a);
             double absB = Math.Abs(b);
             double diff = Math.Abs(a - b);
@@ -462,10 +466,10 @@ namespace Aurora.Utils
             if (a.Equals(b)) { // shortcut, handles infinities
                 return true;
             }
-            if (a == 0 || b == 0 || absA + absB < MinNormal) {
+            if (a == 0 || b == 0 || absA + absB < minNormal) {
                 // a or b is zero or both are extremely close to it
                 // relative error is less meaningful here
-                return diff < (epsilon * MinNormal);
+                return diff < epsilon * minNormal;
             } // use relative error
             return diff / (absA + absB) < epsilon;
         }
@@ -504,23 +508,23 @@ namespace Aurora.Utils
     /// used with the ColorBox gradient editor control.
     /// </summary>
     public class EffectMediaBrushConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((EffectsEngine.EffectBrush)value).GetMediaBrush();
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new EffectsEngine.EffectBrush((System.Windows.Media.Brush)value);
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => ((EffectBrush)value).GetMediaBrush();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => new EffectBrush((Brush)value);
     }
 
     public class BoolToColorConverter : IValueConverter
     {
-        public static Tuple<DrawingColor, DrawingColor> TextWhiteRed = new(DrawingColor.FromArgb(255, 186, 186, 186), DrawingColor.Red);
+        public static readonly Tuple<DrawingColor, DrawingColor> TextWhiteRed = new(DrawingColor.FromArgb(255, 186, 186, 186), DrawingColor.Red);
 
-        public static Tuple<DrawingColor, DrawingColor> TextRedWhite = new(DrawingColor.Red, DrawingColor.FromArgb(255, 186, 186, 186));
+        public static readonly Tuple<DrawingColor, DrawingColor> TextRedWhite = new(DrawingColor.Red, DrawingColor.FromArgb(255, 186, 186, 186));
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool b = (bool)value;
+            bool b = (bool)(value ?? false);
             Tuple<DrawingColor, DrawingColor> clrs = parameter as Tuple<DrawingColor, DrawingColor> ?? TextWhiteRed;
             DrawingColor clr = b ? clrs.Item1 : clrs.Item2;
 
-            return new System.Windows.Media.SolidColorBrush(ColorUtils.DrawingColorToMediaColor(clr));
+            return new SolidColorBrush(ColorUtils.DrawingColorToMediaColor(clr));
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -541,12 +545,12 @@ namespace Aurora.Utils
 
         public RealColor(MediaColor clr)
         {
-            this.SetMediaColor(clr);
+            SetMediaColor(clr);
         }
 
         public RealColor(DrawingColor color)
         {
-            this.Color = color.Clone();
+            Color = color.Clone();
         }
 
         public DrawingColor GetDrawingColor()
@@ -559,19 +563,14 @@ namespace Aurora.Utils
             return Color.ToMediaColor();
         }
 
-        public void SetDrawingColor(DrawingColor clr)
-        {
-            this.Color = clr.Clone();
-        }
-
         public void SetMediaColor(MediaColor clr)
         {
-            this.Color = clr.ToDrawingColor();
+            Color = clr.ToDrawingColor();
         }
 
         public object Clone()
         {
-            return new RealColor(this.Color.Clone());
+            return new RealColor(Color.Clone());
         }
 
         public static implicit operator DrawingColor(RealColor c) => c.GetDrawingColor();
