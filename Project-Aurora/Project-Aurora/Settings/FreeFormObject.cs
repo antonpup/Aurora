@@ -2,11 +2,11 @@
 
 namespace Aurora.Settings
 {
-    public class FreeFormChangedArgs : EventArgs
+    public sealed class FreeFormChangedEventArgs : EventArgs
     {
         public FreeFormObject FreeForm { get; }
 
-        public FreeFormChangedArgs(FreeFormObject freeFormObject)
+        public FreeFormChangedEventArgs(FreeFormObject freeFormObject)
         {
             FreeForm = freeFormObject;
         }
@@ -15,7 +15,7 @@ namespace Aurora.Settings
     /// <summary>
     /// A class representing a region within a bitmap.
     /// </summary>
-    public class FreeFormObject
+    public sealed class FreeFormObject : IEquatable<FreeFormObject>
     {
         private float _x;
         /// <summary>
@@ -27,7 +27,7 @@ namespace Aurora.Settings
             set
             {
                 _x = value;
-                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
+                ValuesChanged?.Invoke(this, new FreeFormChangedEventArgs(this));
             }
         }
 
@@ -41,7 +41,7 @@ namespace Aurora.Settings
             set
             {
                 _y = value;
-                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
+                ValuesChanged?.Invoke(this, new FreeFormChangedEventArgs(this));
             }
         }
 
@@ -55,7 +55,7 @@ namespace Aurora.Settings
             set
             {
                 _width = value;
-                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
+                ValuesChanged?.Invoke(this, new FreeFormChangedEventArgs(this));
             }
         }
 
@@ -69,7 +69,7 @@ namespace Aurora.Settings
             set
             {
                 _height = value;
-                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
+                ValuesChanged?.Invoke(this, new FreeFormChangedEventArgs(this));
             }
         }
 
@@ -83,14 +83,14 @@ namespace Aurora.Settings
             set
             {
                 _angle = value;
-                ValuesChanged?.Invoke(this, new FreeFormChangedArgs(this));
+                ValuesChanged?.Invoke(this, new FreeFormChangedEventArgs(this));
             }
         }
 
         /// <summary>
         /// Event for when any value of this FreeFormObject changes.
         /// </summary>
-        public event EventHandler<FreeFormChangedArgs> ValuesChanged;
+        public event EventHandler<FreeFormChangedEventArgs> ValuesChanged;
 
         /// <summary>
         /// Creates a default instance of the FreeFormObject

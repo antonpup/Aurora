@@ -306,11 +306,11 @@ namespace Aurora.Controls
             }
         }
 
-        private void freeform_updated(object sender, FreeFormChangedArgs args)
+        private void freeform_updated(object sender, FreeFormChangedEventArgs eventArgs)
         {
-            if(args.FreeForm != null)
+            if(eventArgs.FreeForm != null)
             {
-                Sequence.Freeform = args.FreeForm;
+                Sequence.Freeform = eventArgs.FreeForm;
 
                 SequenceUpdated?.Invoke(this, EventArgs.Empty);
             }

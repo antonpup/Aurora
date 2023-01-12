@@ -71,7 +71,8 @@ namespace Aurora.Settings.Layers {
 
             var area = Properties.Sequence.GetAffectedRegion();
             var brush = Properties.Brush.GetBrush(area, _angle);
-            return EffectLayer.Set(Properties.Sequence, brush);
+            EffectLayer.Set(Properties.Sequence, brush);
+            return EffectLayer;
         }
 
         protected virtual void Dispose(bool disposing)

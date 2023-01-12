@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using Aurora.Devices;
-using Aurora.EffectsEngine.Animations;
 using Aurora.Utils;
 using Microsoft.Scripting.Utils;
 using Newtonsoft.Json;
@@ -29,7 +28,7 @@ public enum KeySequenceType
 /// <summary>
 /// A class representing a series of DeviceKeys keys or a freeform region
 /// </summary>
-public sealed class KeySequence : ICloneable
+public sealed class KeySequence : ICloneable, IEquatable<KeySequence>
 {
     [JsonIgnore] private readonly ObservableCollection<DeviceKeys> _keys;
 
@@ -83,7 +82,7 @@ public sealed class KeySequence : ICloneable
     {
         _keys = new ObservableCollection<DeviceKeys>();
         Type = KeySequenceType.FreeForm;
-        this.Freeform = freeform;
+        Freeform = freeform;
     }
 
     public KeySequence(IEnumerable<DeviceKeys> keys)

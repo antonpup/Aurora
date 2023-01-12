@@ -71,7 +71,7 @@ namespace Aurora.Settings.Layers {
         }
 
         public override EffectLayer Render(IGameState gamestate) {
-            EffectLayer layer = new EffectLayer();
+            EffectLayer layer = new EffectLayer("TimerLayer");
             if (isActive) {
                 switch (Properties.AnimationType) {
                     case TimerLayerAnimationType.OnOff:

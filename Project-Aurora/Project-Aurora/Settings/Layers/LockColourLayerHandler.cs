@@ -56,14 +56,20 @@ namespace Aurora.Settings.Layers
             {
                 clr = Properties.PrimaryColor;
 
-                if (!Properties.Pulse) return EffectLayer.Set(Properties.Sequence, clr);
+                if (!Properties.Pulse)
+                {
+                    EffectLayer.Set(Properties.Sequence, clr);
+                    return EffectLayer;
+                }
+
                 var d = Math.Pow(Math.Sin(Time.GetMillisecondsSinceEpoch() % 1500L / 1500.0D * Math.PI), 2);
                 clr = ColorUtils.MultiplyColorByScalar(clr, d);
             }
             else
                 clr = Properties.SecondaryColor;
 
-            return EffectLayer.Set(Properties.Sequence, clr);
+            EffectLayer.Set(Properties.Sequence, clr);
+            return EffectLayer;
         }
     }
 }

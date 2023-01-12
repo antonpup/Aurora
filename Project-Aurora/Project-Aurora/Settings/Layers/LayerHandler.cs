@@ -403,7 +403,7 @@ namespace Aurora.Settings.Layers
             PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }
 
-        private void PropertiesChanged(object sender, FreeFormChangedArgs e)
+        private void PropertiesChanged(object sender, FreeFormChangedEventArgs e)
         {
             PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }

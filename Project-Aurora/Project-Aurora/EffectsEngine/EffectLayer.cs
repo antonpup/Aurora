@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using Aurora.Devices;
 using Aurora.Settings;
@@ -18,9 +19,10 @@ namespace Aurora.EffectsEngine
     /// <summary>
     /// A class representing a bitmap layer for effects
     /// </summary>
-    public class EffectLayer : IDisposable
+    public sealed class EffectLayer : IDisposable
     {
-        private static readonly Lazy<EffectLayer> EmptyLayerFactory = new();
+        private static readonly Lazy<EffectLayer> EmptyLayerFactory = new(
+            () => new EffectLayer("EmptyLayer"), LazyThreadSafetyMode.PublicationOnly);
         public static EffectLayer EmptyLayer => EmptyLayerFactory.Value;
 
         private readonly string _name;
@@ -54,40 +56,8 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        [Obsolete("Always name the layer")]
-        public EffectLayer()
+        public EffectLayer(string name) : this(name, Color.FromArgb(0, 1, 1, 1))
         {
-            _name = "Unknown Layer";
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-
-            FillOver(Color.Empty);
-        }
-
-        public EffectLayer(EffectLayer anotherLayer)
-        {
-            _name = anotherLayer._name;
-            var graphicsUnit = anotherLayer.GetGraphics().PageUnit;
-            var rectangleF = anotherLayer._colormap.GetBounds(ref graphicsUnit);
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
-            _colormap = anotherLayer._colormap.Clone(rectangleF, anotherLayer._colormap.PixelFormat);
-            _textureBrush = new TextureBrush(_colormap);
-            Dimension = anotherLayer.Dimension;
-
-            _needsRender = anotherLayer._needsRender;
-        }
-
-        public EffectLayer(string name)
-        {
-            _name = name;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
-            _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
-            _textureBrush = new TextureBrush(_colormap);
-            Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
-
-            FillOver(Color.FromArgb(0, 1, 1, 1));
         }
 
         public EffectLayer(string name, Color color)
@@ -304,13 +274,6 @@ namespace Aurora.EffectsEngine
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (!disposing) return;
             _keyColors.Clear();
             _excludeSequence = null;
             _keySequence = null;
@@ -319,12 +282,6 @@ namespace Aurora.EffectsEngine
             _textureBrush?.Dispose();
             _textureBrush = null;
             _transformedDrawExcludeMap?.Dispose();
-            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
-        }
-
-        ~EffectLayer()
-        {
-            Dispose(false);
         }
 
         /// <summary>
@@ -380,7 +337,7 @@ namespace Aurora.EffectsEngine
         /// <param name="color">Color to be used during bitmap fill</param>
         /// <returns>Itself</returns>
         [Obsolete("Use with Brush argument")]
-        public EffectLayer FillOver(Color color)
+        public void FillOver(Color color)
         {
             using (var g = Graphics.FromImage(_colormap))
             {
@@ -390,7 +347,6 @@ namespace Aurora.EffectsEngine
             }
 
             Invalidate();
-            return this;
         }
 
         /// <summary>
@@ -423,10 +379,9 @@ namespace Aurora.EffectsEngine
         /// <param name="key">DeviceKey to be set</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(DeviceKeys key, Color color)
+        public void Set(DeviceKeys key, Color color)
         {
             SetOneKey(key, color);
-            return this;
         }
 
         /// <summary>
@@ -446,7 +401,7 @@ namespace Aurora.EffectsEngine
         /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>
         /// <param name="color">Color to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(KeySequence sequence, Color color) => Set(sequence, new SolidBrush(color));
+        public void Set(KeySequence sequence, Color color) => Set(sequence, new SolidBrush(color));
 
         /// <summary>
         /// Sets a specific KeySequence on the bitmap with a specified brush.
@@ -454,7 +409,7 @@ namespace Aurora.EffectsEngine
         /// <param name="sequence">KeySequence to specify what regions of the bitmap need to be changed</param>
         /// <param name="brush">Brush to be used</param>
         /// <returns>Itself</returns>
-        public EffectLayer Set(KeySequence sequence, Brush brush)
+        public void Set(KeySequence sequence, Brush brush)
         {
             if (!ReferenceEquals(sequence, _keySequence))
             {
@@ -495,7 +450,7 @@ namespace Aurora.EffectsEngine
                 {
                     if (sequence.Freeform.Equals(_lastFreeform) && _lastColor == solidBrush.Color)
                     {
-                        return this;
+                        return;
                     }
                     _lastColor = solidBrush.Color;
                 }
@@ -520,8 +475,6 @@ namespace Aurora.EffectsEngine
                 g.FillRectangle(brush, rect);
                 Invalidate();
             }
-
-            return this;
         }
 
         private void FreeformOnValuesChanged(object sender, EventArgs args)

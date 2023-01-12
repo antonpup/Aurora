@@ -48,7 +48,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer image_layer = new EffectLayer();
+            EffectLayer image_layer = new EffectLayer("ImageLayer");
 
             if (!String.IsNullOrWhiteSpace(Properties.ImagePath))
             {
