@@ -1,53 +1,44 @@
-﻿using Aurora.Devices;
-using Aurora.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Devices;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Keycaps
 {
     /// <summary>
     /// Interaction logic for Control_DefaultKeycapBackglow.xaml
     /// </summary>
-    public partial class Control_DefaultKeycapBackglow : UserControl, IKeycap
+    public partial class Control_DefaultKeycapBackglow : IKeycap
     {
-        private Color current_color = Color.FromArgb(0, 0, 0, 0);
-        private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
-        private bool isImage = false;
+        private Color _currentColor = Color.FromArgb(0, 0, 0, 0);
+        private readonly DeviceKeys _associatedKey = DeviceKeys.NONE;
+        private readonly bool _isImage;
 
         public Control_DefaultKeycapBackglow()
         {
             InitializeComponent();
         }
 
-        public Control_DefaultKeycapBackglow(KeyboardKey key, string image_path)
+        public Control_DefaultKeycapBackglow(KeyboardKey key, string imagePath)
         {
             InitializeComponent();
 
-            associatedKey = key.Tag;
+            _associatedKey = key.Tag;
 
-            this.Width = key.Width;
-            this.Height = key.Height;
+            Width = key.Width;
+            Height = key.Height;
 
             //Keycap adjustments
-            if (string.IsNullOrWhiteSpace(key.Image))
-                keyBorder.BorderThickness = new Thickness(1.5);
-            else
-                keyBorder.BorderThickness = new Thickness(0.0);
-            keyBorder.IsEnabled = key.Enabled.Value;
+            keyBorder.BorderThickness = new Thickness(string.IsNullOrWhiteSpace(key.Image) ? 1.5 : 0.0);
+            keyBorder.IsEnabled = key.Enabled.GetValueOrDefault(true);
 
-            if (!key.Enabled.Value)
+            if (!key.Enabled.GetValueOrDefault(true))
             {
                 ToolTipService.SetShowOnDisabled(keyBorder, true);
                 keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
@@ -62,12 +53,12 @@ namespace Aurora.Settings.Keycaps
             }
             else
             {
-                keyCap.Visibility = System.Windows.Visibility.Hidden;
+                keyCap.Visibility = Visibility.Hidden;
                 grid_backglow.Visibility = Visibility.Hidden;
 
-                if (System.IO.File.Exists(image_path))
+                if (File.Exists(imagePath))
                 {
-                    var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(image_path));
+                    var memStream = new MemoryStream(File.ReadAllBytes(imagePath));
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
                     image.StreamSource = memStream;
@@ -77,76 +68,80 @@ namespace Aurora.Settings.Keycaps
                         keyBorder.Background = new ImageBrush(image);
                     else
                     {
-                        keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
+                        keyBorder.Background = IKeycap.DefaultColorBrush;
                         keyBorder.OpacityMask = new ImageBrush(image);
                     }
 
-                    isImage = true;
+                    _isImage = true;
                 }
             }
         }
 
         public DeviceKeys GetKey()
         {
-            return associatedKey;
+            return _associatedKey;
         }
 
-        public void SetColor(Color key_color)
+        public void SetColor(Color keyColor)
         {
-            if (!current_color.Equals(key_color))
+            if (!_currentColor.Equals(keyColor))
             {
-                if (!isImage)
+                if (!_isImage)
                 {
-                    keyCap.Foreground = new SolidColorBrush(key_color);
-                    grid_backglow.Background = new SolidColorBrush(key_color);
+                    keyCap.Foreground = new SolidColorBrush(keyColor);
+                    grid_backglow.Background = new SolidColorBrush(keyColor);
                 }
                 else
                 {
-                    if (associatedKey != DeviceKeys.NONE)
-                        keyBorder.Background = new SolidColorBrush(key_color);
+                    if (_associatedKey != DeviceKeys.NONE)
+                        SetGlowColor(keyColor);
                 }
-                current_color = key_color;
+                _currentColor = keyColor;
             }
 
-            if (Global.key_recorder.HasRecorded(associatedKey))
-                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+            if (Global.key_recorder.HasRecorded(_associatedKey))
+                SetGlowColor(Color.FromArgb(255, 0, 
+                    (byte)(Math.Min(Math.Pow(Math.Cos(Time.GetMilliSeconds() / 1000.0 * Math.PI) + 0.05, 2.0), 1.0) * 255), 0));
             else
             {
                 if (keyBorder.IsEnabled)
                 {
-                    if (!isImage)
-                        keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
-                    else
-                        keyBorder.Background = new SolidColorBrush(key_color);
+                    SetGlowColor(!_isImage ? Color.FromArgb(255, 30, 30, 30) : keyColor);
                 }
                 else
                 {
-                    keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
-                    keyBorder.BorderThickness = new Thickness(0);
+                    SetGlowColor(Color.FromArgb(255, 100, 100, 100));
                 }
             }
             UpdateText();
         }
 
+        private Color _currentGlowColor = Color.FromArgb(0, 0, 0, 0);
+        private void SetGlowColor(Color color)
+        {
+            if (!_currentGlowColor.Equals(color))
+            {
+                keyBorder.Background = new SolidColorBrush(color);
+            }
+        }
+
         private void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
+                virtualkeyboard_key_selected(_associatedKey);
         }
 
         private void keyBorder_MouseMove(object sender, MouseEventArgs e)
         {
         }
 
-        private void virtualkeyboard_key_selected(Devices.DeviceKeys key)
+        private void virtualkeyboard_key_selected(DeviceKeys key)
         {
-            if (key != DeviceKeys.NONE)
-            {
-                if (Global.key_recorder.HasRecorded(key))
-                    Global.key_recorder.RemoveKey(key);
-                else
-                    Global.key_recorder.AddKey(key);
-            }
+            if (key == DeviceKeys.NONE) return;
+            if (Global.key_recorder.HasRecorded(key))
+                Global.key_recorder.RemoveKey(key);
+            else
+                Global.key_recorder.AddKey(key);
         }
 
         private void keyBorder_MouseLeave(object sender, MouseEventArgs e)
@@ -156,27 +151,18 @@ namespace Aurora.Settings.Keycaps
         private void keyBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
+                virtualkeyboard_key_selected(_associatedKey);
         }
 
-        public void UpdateText()
+        private void UpdateText()
         {
-            if (Global.kbLayout.LoadedLocalization.IsAutomaticGeneration())
-            {
+            if (!Global.kbLayout.LoadedLocalization.IsAutomaticGeneration()) return;
+            StringBuilder sb = new StringBuilder(2);
+            var scanCode = KeyUtils.GetScanCode(_associatedKey);
+            if (scanCode == -1)
+                return;
 
-                //if (keyCap.Text.Length > 1)
-                //    return;
-
-                StringBuilder sb = new StringBuilder(2);
-                var scan_code = KeyUtils.GetScanCode(associatedKey);
-                if (scan_code == -1)
-                    return;
-                /*var key = KeyUtils.GetFormsKey((KeyboardKeys)associatedKey.LedID);
-                var scan_code = KeyUtils.MapVirtualKeyEx((uint)key, KeyUtils.MapVirtualKeyMapTypes.MapvkVkToVsc, (IntPtr)0x8090809);*/
-
-                int ret = KeyUtils.GetKeyNameTextW((uint)scan_code << 16, sb, 2);
-                keyCap.Text = sb.ToString();
-            }
+            keyCap.Text = sb.ToString();
         }
     }
 }

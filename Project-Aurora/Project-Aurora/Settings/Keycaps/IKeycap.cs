@@ -9,7 +9,9 @@ namespace Aurora.Settings.Keycaps
 {
     public interface IKeycap
     {
-        void SetColor(Color key_color);
+        protected static readonly SolidColorBrush DefaultColorBrush = new (Color.FromArgb(255, 0, 0, 0));
+        
+        void SetColor(Color keyColor);
 
         Devices.DeviceKeys GetKey();
     }

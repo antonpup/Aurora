@@ -1,30 +1,24 @@
-﻿using Aurora.Devices;
-using Aurora.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Devices;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Keycaps
 {
     /// <summary>
     /// Interaction logic for Control_DefaultKeycap.xaml
     /// </summary>
-    public partial class Control_DefaultKeycap : UserControl, IKeycap
+    public partial class Control_DefaultKeycap : IKeycap
     {
         private Color current_color = Color.FromArgb(0, 0, 0, 0);
-        private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
-        private bool isImage = false;
+        private DeviceKeys associatedKey = DeviceKeys.NONE;
+        private bool isImage;
 
         public Control_DefaultKeycap()
         {
@@ -37,14 +31,11 @@ namespace Aurora.Settings.Keycaps
 
             associatedKey = key.Tag;
 
-            this.Width = key.Width;
-            this.Height = key.Height;
+            Width = key.Width;
+            Height = key.Height;
 
             //Keycap adjustments
-            if (string.IsNullOrWhiteSpace(key.Image))
-                keyBorder.BorderThickness = new Thickness(1.5);
-            else
-                keyBorder.BorderThickness = new Thickness(0.0);
+            keyBorder.BorderThickness = new Thickness(string.IsNullOrWhiteSpace(key.Image) ? 1.5 : 0.0);
             keyBorder.IsEnabled = key.Enabled.Value;
 
             if (!key.Enabled.Value)
@@ -58,15 +49,15 @@ namespace Aurora.Settings.Keycaps
                 keyCap.Text = key.VisualName;
                 keyCap.Tag = key.Tag;
                 keyCap.FontSize = key.FontSize;
-                keyCap.Visibility = System.Windows.Visibility.Visible;
+                keyCap.Visibility = Visibility.Visible;
             }
             else
             {
-                keyCap.Visibility = System.Windows.Visibility.Hidden;
+                keyCap.Visibility = Visibility.Hidden;
 
-                if (System.IO.File.Exists(image_path))
+                if (File.Exists(image_path))
                 {
-                    var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(image_path));
+                    var memStream = new MemoryStream(File.ReadAllBytes(image_path));
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
                     image.StreamSource = memStream;
@@ -76,7 +67,7 @@ namespace Aurora.Settings.Keycaps
                         keyBorder.Background = new ImageBrush(image);
                     else
                     {
-                        keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
+                        keyBorder.Background = IKeycap.DefaultColorBrush;
                         keyBorder.OpacityMask = new ImageBrush(image);
                     }
 
@@ -110,7 +101,7 @@ namespace Aurora.Settings.Keycaps
             }
 
             if (Global.key_recorder.HasRecorded(associatedKey))
-                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+                keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(Math.Min(Math.Pow(Math.Cos(Time.GetMilliSeconds() / 1000.0 * Math.PI) + 0.05, 2.0), 1.0) * 255), 0));
             else
             {
                 if (keyBorder.IsEnabled)
@@ -118,17 +109,16 @@ namespace Aurora.Settings.Keycaps
                     if (!isImage)
                     {
                         if (string.IsNullOrWhiteSpace(keyCap.Text))
-                            keyBorder.Background = new SolidColorBrush(Utils.ColorUtils.MultiplyColorByScalar(key_color, 0.6));
+                            keyBorder.Background = new SolidColorBrush(ColorUtils.MultiplyColorByScalar(key_color, 0.6));
                         else
-                            keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)30, (byte)30, (byte)30));
+                            keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
                     }
                     else
                         keyBorder.Background = new SolidColorBrush(key_color);
                 }
                 else
                 {
-                    keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
-                    keyBorder.BorderThickness = new Thickness(0);
+                    keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
                 }
             }
             UpdateText();
@@ -157,7 +147,7 @@ namespace Aurora.Settings.Keycaps
             */
         }
 
-        private void virtualkeyboard_key_selected(Devices.DeviceKeys key)
+        private void virtualkeyboard_key_selected(DeviceKeys key)
         {
             if(key != DeviceKeys.NONE)
             {

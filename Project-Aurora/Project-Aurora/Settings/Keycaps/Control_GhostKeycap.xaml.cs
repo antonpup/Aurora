@@ -1,49 +1,40 @@
-﻿using Aurora.Devices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Devices;
+using Aurora.Utils;
 
 namespace Aurora.Settings.Keycaps
 {
     /// <summary>
     /// Interaction logic for Control_GhostKeycap.xaml
     /// </summary>
-    public partial class Control_GhostKeycap : UserControl, IKeycap
+    public partial class Control_GhostKeycap : IKeycap
     {
-        private Color current_color = Color.FromArgb(0, 0, 0, 0);
-        private Devices.DeviceKeys associatedKey = DeviceKeys.NONE;
-        private bool isImage = false;
+        private Color _currentColor = Color.FromArgb(0, 0, 0, 0);
+        private readonly DeviceKeys _associatedKey = DeviceKeys.NONE;
+        private readonly bool _isImage;
 
         public Control_GhostKeycap()
         {
             InitializeComponent();
         }
 
-        public Control_GhostKeycap(KeyboardKey key, string image_path)
+        public Control_GhostKeycap(KeyboardKey key, string imagePath)
         {
             InitializeComponent();
 
-            associatedKey = key.Tag;
+            _associatedKey = key.Tag;
 
-            this.Width = key.Width;
-            this.Height = key.Height;
+            Width = key.Width;
+            Height = key.Height;
 
             //Keycap adjustments
-            if (string.IsNullOrWhiteSpace(key.Image))
-                keyBorder.BorderThickness = new Thickness(1.5);
-            else
-                keyBorder.BorderThickness = new Thickness(0.0);
+            keyBorder.BorderThickness = new Thickness(string.IsNullOrWhiteSpace(key.Image) ? 1.5 : 0.0);
             keyBorder.IsEnabled = key.Enabled.Value;
 
             if (!key.Enabled.Value)
@@ -62,9 +53,9 @@ namespace Aurora.Settings.Keycaps
             {
                 keyCap.Visibility = Visibility.Hidden;
 
-                if (System.IO.File.Exists(image_path))
+                if (File.Exists(imagePath))
                 {
-                    var memStream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(image_path));
+                    var memStream = new MemoryStream(File.ReadAllBytes(imagePath));
                     BitmapImage image = new BitmapImage();
                     image.BeginInit();
                     image.StreamSource = memStream;
@@ -74,49 +65,48 @@ namespace Aurora.Settings.Keycaps
                         keyBorder.Background = new ImageBrush(image);
                     else
                     {
-                        keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 255, 255));
+                        keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
                         keyBorder.OpacityMask = new ImageBrush(image);
                     }
 
-                    isImage = true;
+                    _isImage = true;
                 }
             }
         }
 
         public DeviceKeys GetKey()
         {
-            return associatedKey;
+            return _associatedKey;
         }
 
-        public void SetColor(Color key_color)
+        public void SetColor(Color keyColor)
         {
-            key_color = Color.FromArgb(255, 255, 255, 255); //No colors allowed!
+            keyColor = Color.FromArgb(255, 255, 255, 255); //No colors allowed!
 
-            if (!current_color.Equals(key_color))
+            if (!_currentColor.Equals(keyColor))
             {
-                if (isImage)
+                if (_isImage)
                 {
-                    if (associatedKey != DeviceKeys.NONE)
-                        keyBorder.Background = new SolidColorBrush(key_color);
+                    if (_associatedKey != DeviceKeys.NONE)
+                        keyBorder.Background = new SolidColorBrush(keyColor);
                 }
-                current_color = key_color;
+                _currentColor = keyColor;
             }
 
-            if (Global.key_recorder.HasRecorded(associatedKey))
-                keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb((byte)255, (byte)0, (byte)(Math.Min(Math.Pow(Math.Cos((double)(Utils.Time.GetMilliSeconds() / 1000.0) * Math.PI) + 0.05, 2.0), 1.0) * 255), (byte)0));
+            if (Global.key_recorder.HasRecorded(_associatedKey))
+                keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(Math.Min(Math.Pow(Math.Cos(Time.GetMilliSeconds() / 1000.0 * Math.PI) + 0.05, 2.0), 1.0) * 255), 0));
             else
             {
                 if (keyBorder.IsEnabled)
                 {
-                    if (isImage)
-                        keyBorder.Background = new SolidColorBrush(key_color);
+                    if (_isImage)
+                        keyBorder.Background = new SolidColorBrush(keyColor);
                     else
-                        keyBorder.Background = new SolidColorBrush(Utils.ColorUtils.MultiplyColorByScalar(key_color, 0.6));
+                        keyBorder.Background = new SolidColorBrush(ColorUtils.MultiplyColorByScalar(keyColor, 0.6));
                 }
                 else
                 {
-                    keyBorder.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 100, 100, 100));
-                    keyBorder.BorderThickness = new Thickness(0);
+                    keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
                 }
             }
         }
@@ -124,14 +114,14 @@ namespace Aurora.Settings.Keycaps
         private void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
+                virtualkeyboard_key_selected(_associatedKey);
         }
 
         private void keyBorder_MouseMove(object sender, MouseEventArgs e)
         {
         }
 
-        private void virtualkeyboard_key_selected(Devices.DeviceKeys key)
+        private void virtualkeyboard_key_selected(DeviceKeys key)
         {
             if (key != DeviceKeys.NONE)
             {
@@ -149,7 +139,7 @@ namespace Aurora.Settings.Keycaps
         private void keyBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
+                virtualkeyboard_key_selected(_associatedKey);
         }
     }
 }
