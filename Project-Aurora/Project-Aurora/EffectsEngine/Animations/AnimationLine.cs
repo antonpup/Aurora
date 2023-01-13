@@ -14,12 +14,9 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         private Color _end_color;
 
-        public PointF StartPoint { get { return _start_point; } }
-        public PointF EndPoint { get { return _end_point; } }
-        public Color EndColor { get { return _end_color; } }
-
-        //PointF _scaledStartPoint;
-        //PointF _scaledEndPoint;
+        public PointF StartPoint => _start_point;
+        public PointF EndPoint => _end_point;
+        public Color EndColor => _end_color;
 
         public AnimationFrame SetStartPoint(PointF startPoint)
         {
@@ -49,8 +46,8 @@ namespace Aurora.EffectsEngine.Animations
         {
             _start_point = new PointF(0, 0);
             _end_point = new PointF(30, 30);
-            _color = Utils.ColorUtils.GenerateRandomColor();
-            _end_color = Utils.ColorUtils.GenerateRandomColor();
+            _color = ColorUtils.GenerateRandomColor();
+            _end_color = ColorUtils.GenerateRandomColor();
             _width = 1;
             _duration = 1.0f;
         }
@@ -117,16 +114,14 @@ namespace Aurora.EffectsEngine.Animations
 
         public override void Draw(Graphics g)
         {
-            if (_start_point.Equals(_end_point))
+            if (Math.Abs((int)(_start_point.X - _end_point.X)) - Math.Abs((int)(_start_point.Y - _end_point.Y)) == 0 )
                 return;
 
             if (_invalidated)
             {
                 _pen = new Pen(new LinearGradientBrush(_start_point, _end_point, _color, _end_color));
-                _pen.Width = _width * Scale * (12 / (int)Global.Configuration.BitmapAccuracy);
+                _pen.Width = _width * Scale * (12f / (int)Global.Configuration.BitmapAccuracy);
                 _pen.Alignment = PenAlignment.Center;
-
-                //_pen.ScaleTransform(Scale, Scale);
 
                 VirtUpdate();
 
