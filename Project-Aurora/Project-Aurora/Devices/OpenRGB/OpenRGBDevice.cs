@@ -229,7 +229,7 @@ namespace Aurora.Devices.OpenRGB
 
         private string CalibrationName(HelperOpenRgbDevice device, Zone zone)
         {
-            return $"{DeviceName}_{device.OrgbDevice.Name.Trim()}_{zone.Name}";
+            return device.ZoneCalibrationNames[zone.ID];
         }
     }
 
@@ -239,6 +239,8 @@ namespace Aurora.Devices.OpenRGB
         public OpenRGBDevice OrgbDevice { get; }
         public OpenRGBColor[] Colors { get; }
         public DK[] Mapping { get; }
+        public Dictionary<int, string> ZoneCalibrationNames { get; } = new();
+
         private readonly Queue<DeviceKeys> _mouseLights;
 
         public HelperOpenRgbDevice(int idx, Device dev, DeviceKeys fallbackKey, Queue<DeviceKeys> mouseLights)
@@ -248,6 +250,10 @@ namespace Aurora.Devices.OpenRGB
             Colors = Enumerable.Range(0, dev.Leds.Length).Select(_ => new OpenRGBColor()).ToArray();
             Mapping = new DK[dev.Zones.Sum(z => z.LedCount)];
             _mouseLights = mouseLights;
+            foreach (var zone in dev.Zones)
+            {
+                ZoneCalibrationNames.Add(zone.ID, $"OpenRGB_{dev.Name.Trim()}_{zone.Name}");
+            }
         }
 
         internal void ProcessMappings(DK fallbackKey)
