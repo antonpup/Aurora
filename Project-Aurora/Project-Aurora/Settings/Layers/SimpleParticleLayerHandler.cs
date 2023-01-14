@@ -176,9 +176,11 @@ namespace Aurora.Settings.Layers {
     /// Particle definition that handles "simple" particles. Simple particles are ones that just support velocity,
     /// acceleration and drag and whose alive state is determined by their life span.
     /// </summary>
-    public class SimpleParticle : IParticle<SimpleParticleLayerProperties> {
+    public sealed class SimpleParticle : IParticle<SimpleParticleLayerProperties> {
 
         private static readonly Random Rnd = new();
+
+        private readonly SolidBrush _solidBrush = new(Color.Transparent);
         
         private PointF _position;
 
@@ -223,10 +225,9 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// The particle's life is based on it's <see cref="Lifetime"/> and <see cref="MaxLifetime"/> properties.
         /// </summary>
-        public bool IsAlive(SimpleParticleLayerProperties properties, IGameState gameState) => Lifetime < MaxLifetime;
+        public bool IsAlive() => Lifetime < MaxLifetime;
 
-        private readonly SolidBrush _solidBrush = new(Color.Transparent);
-        public void Render(Graphics gfx, SimpleParticleLayerProperties properties, IGameState gameState) {
+        public void Render(Graphics gfx, SimpleParticleLayerProperties properties) {
             var color = properties.ParticleColorStops.GetColorAt((float)(Lifetime / MaxLifetime));
             _solidBrush.Color = color;
             
@@ -238,7 +239,7 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Update the velocity of the particle based on the acceleration and drag. Then, update the position based on the velocity.
         /// </summary>
-        public void Update(double deltaTime, SimpleParticleLayerProperties properties, IGameState gameState) {
+        public void Update(double deltaTime, SimpleParticleLayerProperties properties) {
             Lifetime += deltaTime;
             VelocityX += (float)(properties.AccelerationX * deltaTime);
             VelocityY += (float)(properties.AccelerationY * deltaTime);
@@ -248,6 +249,11 @@ namespace Aurora.Settings.Layers {
             PositionX += VelocityX;
             PositionY += VelocityY;
             Size += (float)(properties.DeltaSize * deltaTime);
+        }
+
+        public void Dispose()
+        {
+            _solidBrush.Dispose();
         }
     }
 

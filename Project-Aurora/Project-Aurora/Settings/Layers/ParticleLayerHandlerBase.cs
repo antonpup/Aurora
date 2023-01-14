@@ -13,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using JetBrains.Annotations;
 using static System.Linq.Expressions.Expression;
+using IDisposable = ABI.System.IDisposable;
 
 namespace Aurora.Settings.Layers {
 
@@ -79,9 +80,9 @@ namespace Aurora.Settings.Layers {
             using (var gfx = EffectLayer.GetGraphics()) {
                 EffectLayer.Clear();
                 foreach (var particle in _particles) {
-                    particle.Update(dt, Properties, gameState);
-                    if (particle.IsAlive(Properties, gameState))
-                        particle.Render(gfx, Properties, gameState);
+                    particle.Update(dt, Properties);
+                    if (particle.IsAlive())
+                        particle.Render(gfx, Properties);
                 }
             }
 
@@ -89,7 +90,7 @@ namespace Aurora.Settings.Layers {
             SpawnParticles(dt);
 
             // Remove any particles that have expired
-            _particles.RemoveAll(p => !p.IsAlive(Properties, gameState));
+            _particles.RemoveAll(p => !p.IsAlive());
 
             // Call the render event
             LayerRender?.Invoke(this, EffectLayer.GetBitmap());
@@ -121,16 +122,16 @@ namespace Aurora.Settings.Layers {
     /// </summary>
     /// <typeparam name="TProperties">The layer handler properties type that is passed to the particle.</typeparam>
     [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
-    public interface IParticle<TProperties> where TProperties : ParticleLayerPropertiesBase<TProperties> {
+    public interface IParticle<TProperties> : IDisposable where TProperties : ParticleLayerPropertiesBase<TProperties> {
 
         /// <summary>Updates the data of the particle (e.g. position, velocity).</summary>
         /// <param name="deltaTime">The time (in seconds) since the last update.</param>
-        void Update(double deltaTime, TProperties properties, IGameState gameState);
+        void Update(double deltaTime, TProperties properties);
 
         /// <summary>Renders the particle to the given graphics context.</summary>
-        void Render(Graphics gfx, TProperties properties, IGameState gameState);
+        void Render(Graphics gfx, TProperties properties);
 
         /// <summary>Determines if the particle is alive. A particle that is not alive will be removed from the canvas.</summary>
-        bool IsAlive(TProperties properties, IGameState gameState);
+        bool IsAlive();
     }
 }
