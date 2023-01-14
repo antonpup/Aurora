@@ -476,7 +476,9 @@ namespace Aurora.Utils
 
         public static DrawingColor FastColorTransparent(byte r, byte g, byte b)
         {
-            return FastColor(r, g, b, Math.Max(b, Math.Max(g, r)));
+            var brightness = Math.Max(b, Math.Max(g, r));
+            var normalizer = 255d / brightness;
+            return FastColor((byte)(r * normalizer), (byte)(g * normalizer), (byte)(b * normalizer), brightness);
         }
 
         public static DrawingColor FastColor(byte r, byte g, byte b, byte a = 255)
