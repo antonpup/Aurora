@@ -100,19 +100,27 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
 
     private void SetDevice(MMDevice mmDevice)
     {
-        Device = mmDevice;
-
-        // Get a WaveIn from the device and start it, adding any events as requied
-        WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
-        WaveIn.DataAvailable += _waveInDataAvailable;
-        WaveIn.RecordingStopped += WaveInOnRecordingStopped;
+        var fallbackWaveIn = WaveIn;
+        try
+        {
+            // Get a WaveIn from the device and start it, adding any events as requied
+            WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
+            WaveIn.DataAvailable += _waveInDataAvailable;
+            WaveIn.RecordingStopped += WaveInOnRecordingStopped;
         
-        var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
-        var __ = mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
+            var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
+            var __ = mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
 
-        DeviceName = Device.FriendlyName;
-        DeviceChanged?.Invoke(this, EventArgs.Empty);
-        WaveIn.StartRecording();
+            Device = mmDevice;
+            DeviceName = Device.FriendlyName;
+            DeviceChanged?.Invoke(this, EventArgs.Empty);
+            WaveIn.StartRecording();
+        }
+        catch (Exception e)
+        {
+            WaveIn = fallbackWaveIn;
+            Global.logger.Error("Error while switching sound device", e);
+        }
     }
 
     private void WaveInOnRecordingStopped(object sender, StoppedEventArgs e)
