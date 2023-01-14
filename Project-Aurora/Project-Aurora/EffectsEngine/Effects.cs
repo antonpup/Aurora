@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
+using Aurora.Utils;
 
 namespace Aurora
 {
@@ -260,8 +261,6 @@ namespace Aurora
             _bitmapMap = bitmap_map;
         }
 
-        private readonly Dictionary<DeviceKeys, Color> _peripheralColors = new(PossiblePeripheralKeys.Length, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
-
         private readonly SolidBrush _keyboardDarknessBrush = new(Color.Empty);
         private readonly SolidBrush _blackBrush = new(Color.Black);
         public void PushFrame(EffectFrame frame)
@@ -276,21 +275,9 @@ namespace Aurora
             foreach (var layer in overLayersArray)
                 Background.Add(layer);
 
-            //Apply Brightness
-            foreach (var key in PossiblePeripheralKeys)
-            {
-                _peripheralColors[key] = Background.Get(key);
-            }
-
             var keyboardDarkness = 1.0f - Global.Configuration.KeyboardBrightness * Global.Configuration.GlobalBrightness;
             _keyboardDarknessBrush.Color = Color.FromArgb((int) (255.0f * keyboardDarkness), Color.Black);
             Background.FillOver(_keyboardDarknessBrush);
-
-            var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
-            lock (Background.GetBitmap())
-                foreach (var key in PossiblePeripheralKeys)
-                    Background.Set(key, Utils.ColorUtils.BlendColors(_peripheralColors[key], Color.Black, peripheralDarkness));
-            
 
             if (_forcedFrame != null)
             {
@@ -303,6 +290,15 @@ namespace Aurora
 
             foreach (var key in allKeys)
                 _keyColors[key] = Background.Get(key);
+
+            var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
+            foreach (var key in PossiblePeripheralKeys)
+            {
+                if (_keyColors.TryGetValue(key, out var color))
+                {
+                    _keyColors[key] = ColorUtils.BlendColors(color, Color.Black, peripheralDarkness);
+                }
+            }
 
             var dcc = new DeviceColorComposition
             {
