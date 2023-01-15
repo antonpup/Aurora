@@ -1,18 +1,12 @@
-﻿using Aurora.Controls;
-using Aurora.Utils;
-using System;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Forms;
 using System.Windows.Navigation;
-using Aurora.Devices;
 using Aurora.Settings;
-using Xceed.Wpf.Toolkit;
-using Aurora.Profiles.Witcher3.GSI;
+using Aurora.Utils;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Aurora.Profiles.Witcher3
@@ -20,7 +14,7 @@ namespace Aurora.Profiles.Witcher3
     /// <summary>
     /// Interaction logic for Control_Witcher3.xaml
     /// </summary>
-    public partial class Control_Witcher3 : UserControl
+    public partial class Control_Witcher3
     {
         private Application profile_manager;
 
@@ -48,7 +42,7 @@ namespace Aurora.Profiles.Witcher3
 
         private void SetSettings()
         {
-            this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
 
         }
 
@@ -63,9 +57,9 @@ namespace Aurora.Profiles.Witcher3
             }
             else//user could have the GOG version of the game
             {
-                System.Windows.MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
+                var dialog = new FolderBrowserDialog();
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     InstallMod(dialog.SelectedPath);
                 }
@@ -82,8 +76,8 @@ namespace Aurora.Profiles.Witcher3
             else
             {
                 MessageBox.Show("Witcher 3 was not installed through steam, please pick the path manually");
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                var dialog = new FolderBrowserDialog();
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     UninstallMod(dialog.SelectedPath);
                 }
@@ -94,14 +88,14 @@ namespace Aurora.Profiles.Witcher3
         {
             if (IsLoaded)
             {
-                profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
+                profile_manager.Settings.IsEnabled = (game_enabled.IsChecked.HasValue) ? game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
             }
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            System.Diagnostics.Process.Start("explorer", e.Uri.AbsoluteUri);
+            Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;
         }
 
@@ -115,25 +109,27 @@ namespace Aurora.Profiles.Witcher3
 
             try
             {
-                using (MemoryStream w3_mod = new MemoryStream(Properties.Resources.witcher3_mod))
+                using MemoryStream w3Mod = new MemoryStream(Properties.Resources.witcher3_mod);
+                using ZipArchive zip = new ZipArchive(w3Mod);
+                foreach (ZipArchiveEntry entry in zip.Entries)
                 {
-                    using (ZipArchive zip = new ZipArchive(w3_mod))
+                    var lowerByte = (byte)(entry.ExternalAttributes & 0x00FF);
+                    var attributes = (FileAttributes)lowerByte;
+                    if (attributes.HasFlag(FileAttributes.Directory))
                     {
-                        foreach (ZipArchiveEntry entry in zip.Entries)
-                        {
-                            entry.ExtractToFile(root, true); //the zip's directory structure assumes
-                                                             //it is extracted to the root folder of the game
-                        }
-                        MessageBox.Show("Witcher 3 mod installed.");
-                        return;
+                        Directory.CreateDirectory(Path.Combine(root, entry.FullName));
+                    }
+                    else
+                    {
+                        entry.ExtractToFile(Path.Combine(root, entry.FullName), true);
                     }
                 }
+                MessageBox.Show("Witcher 3 mod installed.");
             }
             catch (Exception e)
             {
                 Global.logger.Error("Error installing the Witcher 3 mod: " + e.Message);
                 MessageBox.Show("Witcher 3 directory is not found.\r\nCould not install the mod.");
-                return;
             }
         }
 
@@ -165,14 +161,11 @@ namespace Aurora.Profiles.Witcher3
                     MessageBox.Show("Witcher 3 mod uninstalled successfully!");
                 else
                     MessageBox.Show("Witcher 3 mod already uninstalled!");
-
-                return;
             }
             catch (Exception e)
             {
                 Global.logger.Error("Error uninstalling witcher 3 mod: " + e.Message);
                 MessageBox.Show("Witcher 3 mod uninstall failed!");
-                return;
             }
         }
     }
