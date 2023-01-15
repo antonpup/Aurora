@@ -55,25 +55,22 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer layer = null;
 
             if (!IsScriptValid) return EffectLayer.EmptyLayer;
             try
             {
                 var script = ProfileManager.EffectScripts[Properties.Script];
                 var scriptLayers = script.UpdateLights(Properties.ScriptProperties, gamestate);
+                EffectLayer.Clear();
                 switch (scriptLayers)
                 {
                     case EffectLayer layers:
-                        layer = layers;
+                        EffectLayer.Add(layers);
                         break;
                     case EffectLayer[] effectLayers:
                     {
-                        layer = effectLayers.First();
                         for (var i = 1; i < effectLayers.Length; i++)
-                            layer += effectLayers[i];
-                        //foreach (var layer in (script_layers as EffectLayer[]))
-                        //  layers.Enqueue(layer);
+                            EffectLayer.Add(effectLayers[i]);
                         break;
                     }
                 }
@@ -85,7 +82,7 @@ namespace Aurora.Settings.Layers
                 ScriptException = exc;
             }
 
-            return layer ?? EffectLayer.EmptyLayer;
+            return EffectLayer;
         }
 
         public VariableRegistry GetScriptPropertyRegistry()
