@@ -1,110 +1,94 @@
-﻿using Aurora.EffectsEngine;
+﻿using System.Drawing;
+using System.Windows.Controls;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.Witcher3.GSI;
 using Aurora.Profiles.Witcher3.GSI.Nodes;
-using Aurora.Settings;
 using Aurora.Settings.Layers;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace Aurora.Profiles.Witcher3.Layers
+namespace Aurora.Profiles.Witcher3.Layers;
+
+public class Witcher3BackgroundLayerHandlerProperties : LayerHandlerProperties2Color<Witcher3BackgroundLayerHandlerProperties>
 {
-    public class Witcher3BackgroundLayerHandlerProperties : LayerHandlerProperties2Color<Witcher3BackgroundLayerHandlerProperties>
+    public Color? _DefaultColor { get; set; }
+
+    public Color DefaultColor => Logic._DefaultColor ?? _DefaultColor ?? Color.Empty;
+
+    public Color? _QuenColor { get; set; }
+
+    public Color QuenColor => Logic._QuenColor ?? _QuenColor ?? Color.Empty;
+
+    public Color? _IgniColor { get; set; }
+
+    public Color IgniColor => Logic._IgniColor ?? _IgniColor ?? Color.Empty;
+
+    public Color? _AardColor { get; set; }
+
+    public Color AardColor => Logic._AardColor ?? _AardColor ?? Color.Empty;
+
+    public Color? _YrdenColor { get; set; }
+
+    public Color YrdenColor => Logic._YrdenColor ?? _YrdenColor ?? Color.Empty;
+
+    public Color? _AxiiColor { get; set; }
+
+    public Color AxiiColor => Logic._AxiiColor ?? _AxiiColor ?? Color.Empty;
+
+
+    public Witcher3BackgroundLayerHandlerProperties()
+    { }
+
+    public Witcher3BackgroundLayerHandlerProperties(bool assignDefault = false) : base(assignDefault) { }
+
+    public override void Default()
     {
-        public Color? _DefaultColor { get; set; }
+        base.Default();
+        _DefaultColor = Color.Gray;
+        _QuenColor = Color.Yellow;
+        _IgniColor = Color.Red;
+        _AardColor = Color.Blue;
+        _YrdenColor = Color.Purple;
+        _AxiiColor = Color.Green;
+    }
+}
 
-        public Color DefaultColor { get { return Logic._DefaultColor ?? _DefaultColor ?? Color.Empty; } }
-
-        public Color? _QuenColor { get; set; }
-
-        public Color QuenColor { get { return Logic._QuenColor ?? _QuenColor ?? Color.Empty; } }
-
-        public Color? _IgniColor { get; set; }
-
-        public Color IgniColor { get { return Logic._IgniColor ?? _IgniColor ?? Color.Empty; } }
-
-        public Color? _AardColor { get; set; }
-
-        public Color AardColor { get { return Logic._AardColor ?? _AardColor ?? Color.Empty; } }
-
-        public Color? _YrdenColor { get; set; }
-
-        public Color YrdenColor { get { return Logic._YrdenColor ?? _YrdenColor ?? Color.Empty; } }
-
-        public Color? _AxiiColor { get; set; }
-
-        public Color AxiiColor { get { return Logic._AxiiColor ?? _AxiiColor ?? Color.Empty; } }
-
-
-        public Witcher3BackgroundLayerHandlerProperties() : base() { }
-
-        public Witcher3BackgroundLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
-
-        public override void Default()
-        {
-            base.Default();
-            this._DefaultColor = Color.Gray;
-            this._QuenColor = Color.Yellow;
-            this._IgniColor = Color.Red;
-            this._AardColor = Color.Blue;
-            this._YrdenColor = Color.Purple;
-            this._AxiiColor = Color.Green;
-        }
+public class Witcher3BackgroundLayerHandler : LayerHandler<Witcher3BackgroundLayerHandlerProperties>
+{
+    private readonly SolidBrush _currentColor = new(Color.White);
+    
+    public Witcher3BackgroundLayerHandler() : base("Witcher3 - Background")
+    {
     }
 
-    public class Witcher3BackgroundLayerHandler : LayerHandler<Witcher3BackgroundLayerHandlerProperties>
+    protected override UserControl CreateControl()
     {
-        protected override UserControl CreateControl()
+        return new Control_Witcher3BackgroundLayer(this);
+    }
+
+    public override EffectLayer Render(IGameState gameState)
+    {
+        if (gameState is not GameState_Witcher3 witcher3State) return EffectLayer.EmptyLayer;
+
+        Color bgColor = witcher3State.Player.ActiveSign switch
         {
-            return new Control_Witcher3BackgroundLayer(this);
-        }
+            WitcherSign.Aard => Properties.AardColor,
+            WitcherSign.Igni => Properties.IgniColor,
+            WitcherSign.Quen => Properties.QuenColor,
+            WitcherSign.Yrden => Properties.YrdenColor,
+            WitcherSign.Axii => Properties.AxiiColor,
+            WitcherSign.None => Properties.DefaultColor,
+            _ => Properties.DefaultColor
+        };
 
-        public override EffectLayer Render(IGameState state)
-        {
-            EffectLayer bg_layer = new EffectLayer("Witcher3 - Background");
+        if (_currentColor.Color == bgColor) return EffectLayer;
+        _currentColor.Color = bgColor;
+        EffectLayer.FillOver(bgColor);
 
-            if (state is GameState_Witcher3)
-            {
-                GameState_Witcher3 Witcher3state = state as GameState_Witcher3;
+        return EffectLayer;
+    }
 
-                Color bg_color = this.Properties.DefaultColor;
-
-                switch (Witcher3state.Player.ActiveSign)
-                {
-                    case WitcherSign.Aard:
-                        bg_color = this.Properties.AardColor;
-                        break;
-                    case WitcherSign.Igni:
-                        bg_color = this.Properties.IgniColor;
-                        break;
-                    case WitcherSign.Quen:
-                        bg_color = this.Properties.QuenColor;
-                        break;
-                    case WitcherSign.Yrden:
-                        bg_color = this.Properties.YrdenColor;
-                        break;
-                    case WitcherSign.Axii:
-                        bg_color = this.Properties.AxiiColor;
-                        break;
-                    case WitcherSign.None:
-                        bg_color = Properties.DefaultColor;
-                        break;
-                }
-                bg_layer.FillOver(bg_color);
-            }
-
-            return bg_layer;
-        }
-
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_Witcher3BackgroundLayer).SetProfile(profile);
-            base.SetApplication(profile);
-        }
+    public override void SetApplication(Application profile)
+    {
+        (Control as Control_Witcher3BackgroundLayer).SetProfile(profile);
+        base.SetApplication(profile);
     }
 }
