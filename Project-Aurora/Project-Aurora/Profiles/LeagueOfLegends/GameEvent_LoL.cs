@@ -20,7 +20,7 @@ namespace Aurora.Profiles.LeagueOfLegends
     {
         private const string URI = "https://127.0.0.1:2999/liveclientdata/allgamedata";
 
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient client;
         private readonly Timer updateTimer;
 
         private _RootGameData allGameData;
@@ -29,7 +29,9 @@ namespace Aurora.Profiles.LeagueOfLegends
         public GameEvent_LoL() : base()
         {
             //ignore ssl errors
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) => { return true; };
+            client = new HttpClient(handler);
             updateTimer = new Timer(100);
             updateTimer.Elapsed += UpdateData;
         }
