@@ -166,6 +166,9 @@ namespace Aurora.Settings
         [Description("Additional Lights (Debug)")]
         Debug = 3,
 
+        [Description("Custom Json")]
+        Custom = 4,
+
         /*
         [Description("Logitech")]
         Logitech = 1,

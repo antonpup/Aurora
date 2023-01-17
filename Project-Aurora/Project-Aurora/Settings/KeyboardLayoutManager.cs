@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Devices;
@@ -15,8 +16,13 @@ using Aurora.Settings.Keycaps;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Application = System.Windows.Application;
 using Color = System.Drawing.Color;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using Image = System.Windows.Controls.Image;
+using Label = System.Windows.Controls.Label;
+using MessageBox = System.Windows.MessageBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace Aurora.Settings;
 
@@ -591,6 +597,7 @@ public class KeyboardLayoutManager
     {
         if (!File.Exists(layoutConfigPath))
         {
+            MessageBox.Show( layoutConfigPath + " could not be found", "Layout not found", MessageBoxButton.OK);
             return;
         }
 
