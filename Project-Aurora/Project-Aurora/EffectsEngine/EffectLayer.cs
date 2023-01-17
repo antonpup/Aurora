@@ -47,6 +47,8 @@ namespace Aurora.EffectsEngine
                 var imageAttributes = new ImageAttributes();
                 imageAttributes.SetColorMatrix(colorMatrix);
                 imageAttributes.SetWrapMode(WrapMode.Clamp, Color.Empty);
+                
+                PerformExclude(_excludeSequence);
 
                 _textureBrush?.Dispose();
                 _textureBrush = new TextureBrush(_colormap, Dimension, imageAttributes);
@@ -1084,20 +1086,49 @@ namespace Aurora.EffectsEngine
                 return;
             }
 
+            var freeform = _excludeSequence.Freeform;
+            WeakEventManager<FreeFormObject, EventArgs>.RemoveHandler(freeform, nameof(freeform.ValuesChanged), FreeformOnValuesChanged);
             _excludeSequence = sequence;
+            WeakEventManager<FreeFormObject, EventArgs>.AddHandler(freeform, nameof(freeform.ValuesChanged), FreeformOnValuesChanged);
+            FreeformOnValuesChanged(this, EventArgs.Empty);
             
+            _needsRender = true;
+        }
+
+        private void PerformExclude(KeySequence sequence)
+        {
             var gp = new GraphicsPath();
-            sequence.Keys.ForEach(k =>
+            switch (sequence.Type)
             {
-                var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
-                gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
-                _keyColors.Remove(k, out _);
-            });
+                case KeySequenceType.Sequence:
+                    sequence.Keys.ForEach(k =>
+                    {
+                        var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
+                        gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
+                        _keyColors.Remove(k, out _);
+                    });
+                    break;
+                case KeySequenceType.FreeForm:
+                    var freeform = sequence.Freeform;
+                    
+                    var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
+                    var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+                    var width = (float)Math.Round(freeform.Width * Effects.EditorToCanvasWidth);
+                    var height = (float)Math.Round(freeform.Height * Effects.EditorToCanvasHeight);
+
+                    var rotatePoint = new PointF(xPos + width / 2.0f, yPos + height / 2.0f);
+                    var myMatrix = new Matrix();
+                    myMatrix.RotateAt(freeform.Angle, rotatePoint, MatrixOrder.Append);
+
+                    gp.AddRectangle(new RectangleF(xPos, yPos, width, height));
+                    gp.Transform(myMatrix);
+                    _keyColors.Clear();
+                    break;
+            }
 
             using var g = Graphics.FromImage(_colormap);
             g.SetClip(gp);
             g.Clear(Color.Transparent);
-            _needsRender = true;
         }
 
         /// <summary>

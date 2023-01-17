@@ -64,6 +64,8 @@ public sealed class KeySequence : ICloneable, IEquatable<KeySequence>
     [JsonProperty("freeform")]
     public FreeFormObject Freeform { get; set; }
 
+    public static KeySequence Empty { get; } = new();
+
     public KeySequence()
     {
         _keys = new ObservableCollection<DeviceKeys>();

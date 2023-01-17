@@ -360,16 +360,10 @@ namespace Aurora.Settings.Layers
                     _previousSecondRender = EffectLayer.EmptyLayer.TextureBrush;
                     _previousRender = EffectLayer.EmptyLayer.TextureBrush;
                 }
-
-                //Last PostFX is exclusion
-                if (EnableExclusionMask)
-                    returnLayer.Exclude(ExclusionMask);
-                return returnLayer;
             }
 
             //Last PostFX is exclusion
-            if (EnableExclusionMask)
-                renderedLayer.Exclude(ExclusionMask);
+            renderedLayer.Exclude(EnableExclusionMask ? ExclusionMask : KeySequence.Empty);
 
             renderedLayer *= Properties.LayerOpacity;
 
