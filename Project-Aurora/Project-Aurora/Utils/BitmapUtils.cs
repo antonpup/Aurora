@@ -7,18 +7,21 @@ namespace Aurora.Utils;
 public static class BitmapUtils
 {
 
+    /**
+     * Gets average color of region, ignoring transparency
+     */
     public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
     {
         if (rectangle.Width == 0 || rectangle.Height == 0)
             return Color.Black;
 
-        //B, G, R, A
-        var color = new[] {0L, 0L, 0L, 0L}; //array because SIMD optimizations
+        //B, G, R
+        var color = new[] {0L, 0L, 0L}; //array because SIMD optimizations
 
         var srcData = map.LockBits(
             rectangle,
             ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppArgb);
+            PixelFormat.Format32bppRgb);
         var stride = srcData.Stride;
         var scan0 = srcData.Scan0;
 
@@ -37,7 +40,6 @@ public static class BitmapUtils
                     color[0] += p[j];
                     color[1] += p[j + 1];
                     color[2] += p[j + 2];
-                    color[3] += p[j + 3];
                 }
             }
         }
@@ -45,8 +47,7 @@ public static class BitmapUtils
 
         var area = rectangle.Width * rectangle.Height;
         return ColorUtils.FastColor(
-            (byte) (color[2] / area), (byte) (color[1] / area), (byte) (color[0] / area),
-            (byte) (color[3] / area)
+            (byte) (color[2] / area), (byte) (color[1] / area), (byte) (color[0] / area)
         );
     }
 
