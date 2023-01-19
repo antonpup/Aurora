@@ -102,22 +102,7 @@ public partial class App
 
             if (Global.Configuration.UpdatesCheckOnStartUp && !_ignoreUpdate)
             {
-                string updaterPath = Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
-
-                if (File.Exists(updaterPath))
-                {
-                    try
-                    {
-                        ProcessStartInfo updaterProc = new ProcessStartInfo();
-                        updaterProc.FileName = updaterPath;
-                        updaterProc.Arguments = "-silent";
-                        Process.Start(updaterProc);
-                    }
-                    catch (Exception exc)
-                    {
-                        Global.logger.Error("Could not start Aurora Updater. Error: " + exc);
-                    }
-                }
+                DesktopUtils.CheckUpdate();
             }
 
             var tasks = _modules.ConvertAll(m => m.InitializeAsync());

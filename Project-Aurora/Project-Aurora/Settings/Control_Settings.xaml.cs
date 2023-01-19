@@ -194,21 +194,8 @@ namespace Aurora.Settings
 
         private void updates_check_Click(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded)
-            {
-                string updaterPath = Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
-
-                if (File.Exists(updaterPath))
-                {
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = updaterPath;
-                    Process.Start(startInfo);
-                }
-                else
-                {
-                    MessageBox.Show("Updater is missing!");
-                }
-            }
+            if (!IsLoaded) return;
+            DesktopUtils.CheckUpdate();
         }
 
         private void LoadBrandDefault(object sender, SelectionChangedEventArgs e)
