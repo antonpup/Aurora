@@ -71,7 +71,7 @@ namespace Aurora_Updater
         private float extractProgess = 0.0f;
         public UpdateStatus updateState = UpdateStatus.None;
         private int? previousPercentage;
-        private int secondsLeft = 15;
+        private int secondsLeft = 3;
         private Aurora.Settings.Configuration Config;
         private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
         public Release LatestRelease;
