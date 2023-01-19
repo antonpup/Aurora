@@ -96,7 +96,7 @@ namespace Aurora
             settingsControl.DataContext = this;
         }
 
-        internal void Display()
+        internal void DisplayIfNotSilent()
         {
             if (App.IsSilent)
             {
@@ -107,8 +107,15 @@ namespace Aurora
             }
             else
             {
-                Show();
+                Display();
             }
+        }
+
+        private void Display()
+        {
+            ShowInTaskbar = true;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            Show();
         }
 
         private void CtrlProfileManager_ProfileSelected(ApplicationProfile profile)
@@ -142,8 +149,6 @@ namespace Aurora
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
-
             if (!settingsloaded)
             {
                 virtual_keyboard_timer = new Timer(8);
@@ -243,9 +248,7 @@ namespace Aurora
 
         private void trayicon_menu_settings_Click(object sender, RoutedEventArgs e)
         {
-            ShowInTaskbar = true;
-            WindowStyle = WindowStyle.SingleBorderWindow;
-            Show();
+            Display();
         }
 
         private void Window_Initialized(object sender, EventArgs e)
@@ -255,28 +258,32 @@ namespace Aurora
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (Global.Configuration.CloseMode == AppExitMode.Ask)
+            switch (Global.Configuration.CloseMode)
             {
-                MessageBoxResult result = MessageBox.Show("Would you like to Exit Aurora?", "Aurora", MessageBoxButton.YesNo);
-
-                if (result == MessageBoxResult.No)
+                case AppExitMode.Ask:
                 {
+                    MessageBoxResult result = MessageBox.Show("Would you like to Exit Aurora?",
+                        "Aurora", MessageBoxButton.YesNo);
+
+                    if (result == MessageBoxResult.No)
+                    {
+                        minimizeApp();
+                        e.Cancel = true;
+                    }
+                    else
+                    {
+                        exitApp();
+                    }
+
+                    break;
+                }
+                case AppExitMode.Minimize:
                     minimizeApp();
                     e.Cancel = true;
-                }
-                else
-                {
+                    break;
+                default:
                     exitApp();
-                }
-            }
-            else if (Global.Configuration.CloseMode == AppExitMode.Minimize)
-            {
-                minimizeApp();
-                e.Cancel = true;
-            }
-            else
-            {
-                exitApp();
+                    break;
             }
         }
 
@@ -299,13 +306,8 @@ namespace Aurora
 
             Global.LightingStateManager.PreviewProfileKey = string.Empty;
 
-            //Hide Window
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background, (System.Windows.Threading.DispatcherOperationCallback)delegate (object o)
-            {
-                WindowStyle = WindowStyle.None;
-                Hide();
-                return null;
-            }, null);
+            Visibility = Visibility.Hidden;
+            Hide();
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -640,7 +642,6 @@ namespace Aurora
         private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
         private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
 
-
         private void UpdateProfileStackBackground(FrameworkElement item)
         {
             selected_item = item;
@@ -710,16 +711,15 @@ namespace Aurora
         public void ShowWindow()
         {
             Global.logger.Info("Show Window called");
-            Visibility = Visibility.Visible;
-            WindowStyle = WindowStyle.SingleBorderWindow;
-            ShowInTaskbar = true;
-            Show();
-            Activate();
+            Display();
         }
 
         protected override void OnStateChanged(EventArgs e)
         {
-            base.OnStateChanged(e);
+            if (WindowState != WindowState.Normal)
+            {
+                return;
+            }
 
             if (Top <= 0)
             {
@@ -730,11 +730,11 @@ namespace Aurora
             {
                 Left = 0;
             }
+            base.OnStateChanged(e);
         }
 
         private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            ShowInTaskbar = true;
             ShowWindow();
         }
 
@@ -797,8 +797,6 @@ namespace Aurora
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
             UpdateManagerStackFocus(_selectedManager, true);
         }
-
-
 
         // This new code for the layer selection has been separated from the existing code so that one day we can sort all
         // the above out and make it more WPF with bindings and other dark magic like that.

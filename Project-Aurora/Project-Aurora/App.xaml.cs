@@ -143,7 +143,7 @@ public partial class App
             Global.logger.Info("Loading ConfigUI...");
 
             Global.LightingStateManager.InitUpdate();
-            ((ConfigUI)MainWindow).Display();
+            ((ConfigUI)MainWindow).DisplayIfNotSilent();
 
             //Debug Windows on Startup
             if (Global.Configuration.BitmapWindowOnStartUp)

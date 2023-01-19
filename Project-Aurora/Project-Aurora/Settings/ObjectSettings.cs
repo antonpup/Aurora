@@ -47,6 +47,10 @@ namespace Aurora.Settings
                 try
                 {
                     Settings = (T)JsonConvert.DeserializeObject(File.ReadAllText(SettingsSavePath), settingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+                    if (Settings == null)
+                    {
+                        SaveSettings(settingsType);
+                    }
                 }
                 catch (Exception exc)
                 {

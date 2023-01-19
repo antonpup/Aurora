@@ -673,7 +673,7 @@ namespace Aurora.Profiles
 
         public virtual void SaveAll()
         {
-            if (Disposed)
+            if (Disposed || Config == null)
                 return;
 
             SaveSettings(Config.SettingsType);
