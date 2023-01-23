@@ -101,10 +101,10 @@
     <PackageReference Include="Octokit" Version="2.0.1" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
    <!-- <PackageReference Include="OpenRGB.NET" Version="1.7.0" /> -->
-    <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0-prerelease.58" />
-    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="1.0.0-prerelease.71" />
-    <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0-prerelease.69" />
-    <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0-prerelease.58" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0" />
+    <PackageReference Include="RGB.NET.Devices.Logitech" Version="1.0.0" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
