@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using JetBrains.Annotations;
+using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
@@ -41,6 +43,8 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         _deviceEnumerator.RegisterEndpointNotificationCallback(this);
         
         Instances.Add(this);
+
+        SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
     }
 
     /// <summary>Indicates recorded data is available on the selected device.</summary>
@@ -209,6 +213,22 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         //unused
     }
 
+    #region PowerState
+    private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+    {
+        switch (e.Mode)
+        {
+            case PowerModes.Suspend:
+                DisposeCurrentDevice();
+                break;
+            case PowerModes.Resume:
+                Thread.Sleep(TimeSpan.FromSeconds(2));
+                UpdateDevice();
+                break;
+        }
+    }
+    #endregion
+
     #region IDisposable Implementation
 
     private bool _disposed;
@@ -216,6 +236,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     public void Dispose()
     {
         if (_disposed) return;
+        SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
         _disposed = true;
         Device?.Dispose();
         DisposeCurrentDevice();
