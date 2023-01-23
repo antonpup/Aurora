@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using JetBrains.Annotations;
 
 namespace Aurora.Settings;
 
@@ -24,6 +25,7 @@ public class ScriptSettings : INotifyPropertyChanged
     }
 }
 
+[UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
 public class ApplicationProfile : INotifyPropertyChanged, IDisposable
 {
     public string ProfileName { get; set; }

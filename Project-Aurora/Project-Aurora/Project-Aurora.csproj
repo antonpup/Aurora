@@ -68,6 +68,10 @@
     <Reference Include="SBAuroraReactive">
       <HintPath>.\SBAuroraReactive.dll</HintPath>
     </Reference>
+    <!-- https://github.com/Aytackydln/Artemis.Plugins.Games.Witcher3 -->
+    <Reference Include="Artemis.Plugins.Games.Witcher3">
+      <HintPath>.\Witcher3Gsi.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

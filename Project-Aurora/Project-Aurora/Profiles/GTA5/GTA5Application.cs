@@ -12,7 +12,6 @@ namespace Aurora.Profiles.GTA5
                 ProfileType = typeof(GTA5Profile),
                 OverviewControlType = typeof(Control_GTA5),
                 GameStateType = typeof(GSI.GameState_GTA5),
-                Event = new GameEvent_Generic(),
                 IconURI = "Resources/gta5_64x64.png"
             })
         {

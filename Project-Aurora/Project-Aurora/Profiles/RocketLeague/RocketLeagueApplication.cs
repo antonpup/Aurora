@@ -1,9 +1,9 @@
-﻿namespace Aurora.Profiles.RocketLeague
+﻿namespace Aurora.Profiles.RocketLeague;
+
+public class RocketLeague : Application
 {
-    public class RocketLeague : Application
-    {
-        public RocketLeague()
-            : base(
+    public RocketLeague()
+        : base(
             new LightEventConfig {
                 Name = "Rocket League",
                 ID = "rocketleague",
@@ -11,11 +11,9 @@
                 ProfileType = typeof(RocketLeagueBMProfile),
                 OverviewControlType = typeof(Control_RocketLeague),
                 GameStateType = typeof(GSI.GameState_RocketLeague),
-                Event = new GameEvent_Generic(),
                 IconURI = "Resources/rocketleague_256x256.png"
             })
-        {
-            AllowLayer<Layers.RocketLeagueGoalExplosionLayerHandler>();
-        }
+    {
+        AllowLayer<Layers.RocketLeagueGoalExplosionLayerHandler>();
     }
 }

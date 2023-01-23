@@ -2,8 +2,8 @@
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.Witcher3.GSI;
-using Aurora.Profiles.Witcher3.GSI.Nodes;
 using Aurora.Settings.Layers;
+using Witcher3Gsi;
 
 namespace Aurora.Profiles.Witcher3.Layers;
 
@@ -66,7 +66,7 @@ public class Witcher3BackgroundLayerHandler : LayerHandler<Witcher3BackgroundLay
 
     public override EffectLayer Render(IGameState gameState)
     {
-        if (gameState is not GameState_Witcher3 witcher3State) return EffectLayer.EmptyLayer;
+        if (gameState is not GameStateWitcher3 witcher3State) return EffectLayer.EmptyLayer;
 
         Color bgColor = witcher3State.Player.ActiveSign switch
         {

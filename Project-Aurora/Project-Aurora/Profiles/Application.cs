@@ -47,7 +47,8 @@ namespace Aurora.Profiles
 
         public Type GameStateType { get; set; }
 
-        public LightEvent Event { get; set; }
+        private readonly Lazy<LightEvent> _lightEvent;
+        public LightEvent Event => _lightEvent.Value;
 
         public int? UpdateInterval { get; set; } = null;
 
@@ -59,13 +60,23 @@ namespace Aurora.Profiles
         public bool EnableOverlaysByDefault { get; set; } = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
+        public LightEventConfig() : this(new Lazy<LightEvent>(() => new GameEvent_Generic()))
+        {
+        }
+
+        public LightEventConfig(Lazy<LightEvent> lightEvent)
+        {
+            _lightEvent = lightEvent;
+        }
+
         public LightEventConfig WithLayer<T>() where T : ILayerHandler {
             ExtraAvailableLayers.Add(typeof(T));
             return this;
         }
     }
 
+    [UsedImplicitly(ImplicitUseKindFlags.InstantiatedWithFixedConstructorSignature, ImplicitUseTargetFlags.WithInheritors)]
     public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INotifyPropertyChanged
     {
         #region Public Properties

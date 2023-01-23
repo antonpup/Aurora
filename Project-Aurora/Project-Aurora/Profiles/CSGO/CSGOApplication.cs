@@ -15,7 +15,6 @@ namespace Aurora.Profiles.CSGO
                 ProfileType = typeof(CSGOProfile),
                 OverviewControlType = typeof(Control_CSGO),
                 GameStateType = typeof(GSI.GameState_CSGO),
-                Event = new GameEvent_Generic(),
                 IconURI = "Resources/csgo_64x64.png"
             })
         {

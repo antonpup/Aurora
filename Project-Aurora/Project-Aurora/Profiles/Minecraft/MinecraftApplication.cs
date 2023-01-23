@@ -17,7 +17,6 @@ namespace Aurora.Profiles.Minecraft {
             ProfileType = typeof(MinecraftProfile),
             OverviewControlType = typeof(Control_Minecraft),
             GameStateType = typeof(GSI.GameState_Minecraft),
-            Event = new GameEvent_Generic(),
             IconURI = "Resources/minecraft_128x128.png"
         }) {
             AllowLayer<MinecraftHealthBarLayerHandler>();
