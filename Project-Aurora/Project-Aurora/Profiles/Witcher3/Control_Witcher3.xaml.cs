@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Navigation;
@@ -16,22 +17,22 @@ namespace Aurora.Profiles.Witcher3
     /// </summary>
     public partial class Control_Witcher3
     {
-        private Application profile_manager;
+        private readonly Application _profileManager;
 
         public Control_Witcher3(Application profile)
         {
             InitializeComponent();
 
-            profile_manager = profile;
+            _profileManager = profile;
 
             SetSettings();
 
-            if (!(profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled)
+            if (!(_profileManager.Settings as FirstTimeApplicationSettings)?.IsFirstTimeInstalled ?? false)
             {
-                (profile_manager.Settings as FirstTimeApplicationSettings).IsFirstTimeInstalled = true;
+                ((FirstTimeApplicationSettings)_profileManager.Settings).IsFirstTimeInstalled = true;
             }
 
-            profile_manager.ProfileChanged += Control_Witcher3_ProfileChanged;
+            _profileManager.ProfileChanged += Control_Witcher3_ProfileChanged;
 
         }
 
@@ -42,7 +43,7 @@ namespace Aurora.Profiles.Witcher3
 
         private void SetSettings()
         {
-            game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
+            game_enabled.IsChecked = _profileManager.Settings.IsEnabled;
 
         }
 
@@ -86,11 +87,9 @@ namespace Aurora.Profiles.Witcher3
 
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded)
-            {
-                profile_manager.Settings.IsEnabled = (game_enabled.IsChecked.HasValue) ? game_enabled.IsChecked.Value : false;
-                profile_manager.SaveProfiles();
-            }
+            if (!IsLoaded) return;
+            _profileManager.Settings.IsEnabled = game_enabled.IsChecked.HasValue && game_enabled.IsChecked.Value;
+            _profileManager.SaveProfiles();
         }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -109,28 +108,54 @@ namespace Aurora.Profiles.Witcher3
 
             try
             {
-                using MemoryStream w3Mod = new MemoryStream(Properties.Resources.witcher3_mod);
-                using ZipArchive zip = new ZipArchive(w3Mod);
-                foreach (ZipArchiveEntry entry in zip.Entries)
-                {
-                    var lowerByte = (byte)(entry.ExternalAttributes & 0x00FF);
-                    var attributes = (FileAttributes)lowerByte;
-                    if (attributes.HasFlag(FileAttributes.Directory))
-                    {
-                        Directory.CreateDirectory(Path.Combine(root, entry.FullName));
-                    }
-                    else
-                    {
-                        entry.ExtractToFile(Path.Combine(root, entry.FullName), true);
-                    }
-                }
+                ExtractZip(root);
+                AddConfigLines(root);
                 MessageBox.Show("Witcher 3 mod installed.");
             }
             catch (Exception e)
             {
-                Global.logger.Error("Error installing the Witcher 3 mod: " + e.Message);
+                Global.logger.Error("Error installing the Witcher 3 mod", e);
                 MessageBox.Show("Witcher 3 directory is not found.\r\nCould not install the mod.");
             }
+        }
+
+        private static void ExtractZip(string root)
+        {
+            using var w3Mod = new MemoryStream(Properties.Resources.witcher3_mod);
+            using var zip = new ZipArchive(w3Mod);
+            foreach (var entry in zip.Entries)
+            {
+                var lowerByte = (byte)(entry.ExternalAttributes & 0x00FF);
+                var attributes = (FileAttributes)lowerByte;
+                if (attributes.HasFlag(FileAttributes.Directory))
+                {
+                    Directory.CreateDirectory(Path.Combine(root, entry.FullName));
+                }
+                else
+                {
+                    entry.ExtractToFile(Path.Combine(root, entry.FullName), true);
+                }
+            }
+        }
+
+        private static void AddConfigLines(string root)
+        {
+            var folder = Path.Combine(root, "bin\\config\\r4game\\user_config_matrix\\pc");
+            var dx11File = Path.Combine(folder, "dx11filelist.txt");
+            var dx12File = Path.Combine(folder, "dx12filelist.txt");
+
+            AddConfigLine(dx11File);
+            AddConfigLine(dx12File);
+        }
+
+        private static void AddConfigLine(string file)
+        {
+            if (File.ReadAllLines(file).Any(line => line.Equals("artemis.xml;")))
+            {
+                return;
+            }
+
+            File.AppendAllLines(file, new []{"\nartemis.xml;"});
         }
 
         private void UninstallMod(string root)
@@ -164,7 +189,7 @@ namespace Aurora.Profiles.Witcher3
             }
             catch (Exception e)
             {
-                Global.logger.Error("Error uninstalling witcher 3 mod: " + e.Message);
+                Global.logger.Error("Error uninstalling witcher 3 mod", e);
                 MessageBox.Show("Witcher 3 mod uninstall failed!");
             }
         }
