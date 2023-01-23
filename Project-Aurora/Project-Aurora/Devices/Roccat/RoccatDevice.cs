@@ -241,17 +241,6 @@ namespace Aurora.Devices.Roccat
 
         private void Restoregeneric()
         {
-            //Workaround
-            //Global.logger.LogLine("restore Roccat generic");
-            Color restore_fallback = Global.Configuration.VarRegistry.GetVariable<RealColor>(
-                $"{DeviceName}_restore_fallback").GetDrawingColor();
-            restore_fallback = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(restore_fallback, restore_fallback.A / 255.0D));
-
-            //Global.logger.LogLine("restore Roccat generic" + restore_fallback + restore_fallback.R + restore_fallback.G + restore_fallback.B);
-            talkFX.SetLedRgb(Zone.Event, KeyEffect.On, Speed.Fast, new Roccat_Talk.TalkFX.Color(restore_fallback.R, restore_fallback.G, restore_fallback.B));
-
-            previous_peripheral_Color = Color.FromArgb(restore_fallback.R, restore_fallback.G, restore_fallback.B);
-
             //.RestoreLedRgb() Does not work 
             talkFX.RestoreLedRgb();
         }
