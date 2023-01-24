@@ -20,7 +20,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
         private ReadMode readMode;
         private FileReadCallback readCallback;
         private long lastFileWrite = 0;
-        private bool runnning;
+        private bool running;
         
         public FileWatcher(string filename, ReadMode readMode, FileReadCallback readCallback)
         {
@@ -40,7 +40,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
                 {
                     reader.ReadToEnd();
                 }
-                while (runnning)
+                while  running)
                 {
                     if(readMode == ReadMode.FULL) {
                         long writeTime = File.GetLastWriteTime(filename).Ticks;
@@ -102,6 +102,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
             {
                 watcherThread = new Thread(TailFile);
                 watcherThread.Name = "Elite Dangerous File Watcher";
+                running = true;
                 watcherThread.Start();
                 return true;
             }
@@ -112,7 +113,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
         public bool Stop()
         {
             if (watcherThread == null) return false;
-            runnning = false;
+            running = false;
             watcherThread.Join();
             watcherThread = null;
 
