@@ -1,18 +1,10 @@
-﻿using Aurora.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Aurora.Controls;
+using Aurora.Utils;
+using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Profiles.GTA5.Layers
 {
@@ -21,7 +13,7 @@ namespace Aurora.Profiles.GTA5.Layers
     /// </summary>
     public partial class Control_GTA5PoliceSirenLayer : UserControl
     {
-        private bool settingsset = false;
+        private bool settingsset;
 
         public Control_GTA5PoliceSirenLayer()
         {
@@ -32,19 +24,19 @@ namespace Aurora.Profiles.GTA5.Layers
         {
             InitializeComponent();
 
-            this.DataContext = datacontext;
+            DataContext = datacontext;
         }
 
         public void SetSettings()
         {
-            if (this.DataContext is GTA5PoliceSirenLayerHandler && !settingsset)
+            if (DataContext is GTA5PoliceSirenLayerHandler && !settingsset)
             {
-                this.ColorPicker_LeftSiren.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5PoliceSirenLayerHandler).Properties._LeftSirenColor ?? System.Drawing.Color.Empty);
-                this.ColorPicker_RightSiren.SelectedColor = Utils.ColorUtils.DrawingColorToMediaColor((this.DataContext as GTA5PoliceSirenLayerHandler).Properties._RightSirenColor ?? System.Drawing.Color.Empty);
-                this.ComboBox_SirenEffectType.SelectedValue = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._SirenType;
-                this.Checkbox_DisplayOnPeripherals.IsChecked = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._PeripheralUse;
-                this.KeySequence_LeftSiren.Sequence = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._LeftSirenSequence;
-                this.KeySequence_RightSiren.Sequence = (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._RightSirenSequence;
+                ColorPicker_LeftSiren.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as GTA5PoliceSirenLayerHandler).Properties.LeftSirenColor);
+                ColorPicker_RightSiren.SelectedColor = ColorUtils.DrawingColorToMediaColor((DataContext as GTA5PoliceSirenLayerHandler).Properties.RightSirenColor);
+                ComboBox_SirenEffectType.SelectedValue = (DataContext as GTA5PoliceSirenLayerHandler).Properties.SirenType;
+                Checkbox_DisplayOnPeripherals.IsChecked = (DataContext as GTA5PoliceSirenLayerHandler).Properties.PeripheralUse;
+                KeySequence_LeftSiren.Sequence = (DataContext as GTA5PoliceSirenLayerHandler).Properties.LeftSirenSequence;
+                KeySequence_RightSiren.Sequence = (DataContext as GTA5PoliceSirenLayerHandler).Properties.RightSirenSequence;
 
                 settingsset = true;
             }
@@ -58,48 +50,48 @@ namespace Aurora.Profiles.GTA5.Layers
         {
             SetSettings();
 
-            this.Loaded -= UserControl_Loaded;
+            Loaded -= UserControl_Loaded;
         }
 
         private void ColorPicker_LeftSiren_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._LeftSirenColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+            if (IsLoaded && settingsset && DataContext is GTA5PoliceSirenLayerHandler && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
+                (DataContext as GTA5PoliceSirenLayerHandler).Properties.LeftSirenColor = ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
         private void ColorPicker_RightSiren_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._RightSirenColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
+            if (IsLoaded && settingsset && DataContext is GTA5PoliceSirenLayerHandler && sender is ColorPicker && (sender as ColorPicker).SelectedColor.HasValue)
+                (DataContext as GTA5PoliceSirenLayerHandler).Properties.RightSirenColor = ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
         private void Checkbox_DisplayOnPeripherals_Checked(object sender, RoutedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._PeripheralUse = (sender as CheckBox).IsChecked.Value;
+            if (IsLoaded && settingsset && DataContext is GTA5PoliceSirenLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
+                (DataContext as GTA5PoliceSirenLayerHandler).Properties.PeripheralUse = (sender as CheckBox).IsChecked.Value;
         }
 
         private void KeySequence_LeftSiren_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is Aurora.Controls.KeySequence)
+            if (IsLoaded && settingsset && DataContext is GTA5PoliceSirenLayerHandler && sender is KeySequence)
             {
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._LeftSirenSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+                (DataContext as GTA5PoliceSirenLayerHandler).Properties.LeftSirenSequence = (sender as KeySequence).Sequence;
             }
         }
 
         private void KeySequence_RightSiren_SequenceUpdated(object sender, EventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is Aurora.Controls.KeySequence)
+            if (IsLoaded && settingsset && DataContext is GTA5PoliceSirenLayerHandler && sender is KeySequence)
             {
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._RightSirenSequence = (sender as Aurora.Controls.KeySequence).Sequence;
+                (DataContext as GTA5PoliceSirenLayerHandler).Properties.RightSirenSequence = (sender as KeySequence).Sequence;
             }
         }
 
         private void ComboBox_SirenEffectType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (IsLoaded && settingsset && this.DataContext is GTA5PoliceSirenLayerHandler && sender is ComboBox)
+            if (IsLoaded && settingsset && DataContext is GTA5PoliceSirenLayerHandler && sender is ComboBox)
             {
-                (this.DataContext as GTA5PoliceSirenLayerHandler).Properties._SirenType = (GTA5_PoliceEffects)((sender as ComboBox).SelectedValue);
+                (DataContext as GTA5PoliceSirenLayerHandler).Properties.SirenType = (GTA5_PoliceEffects)((sender as ComboBox).SelectedValue);
             }
         }
     }

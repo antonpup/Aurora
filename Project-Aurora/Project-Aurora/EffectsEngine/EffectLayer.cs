@@ -428,7 +428,7 @@ namespace Aurora.EffectsEngine
                 _ksChanged = true;
             }
 
-            if (_ksChanged)
+            if (_ksChanged && !_needsRender)
             {
                 Clear();
                 _ksChanged = false;
