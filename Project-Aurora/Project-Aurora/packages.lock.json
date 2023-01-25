@@ -294,6 +294,16 @@
           "RGB.NET.HID": "1.0.0"
         }
       },
+      "RGB.NET.Devices.SteelSeries": {
+        "type": "Direct",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "WVKNZsDZzV9cqBHmF0K/gUIQUxAH3NZOuC0T1LGA8njLD9yCe1ZlDCJkrd8RrWXbMOv1JjaavVFmXZu/nVr8tg==",
+        "dependencies": {
+          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.HID": "1.0.0"
+        }
+      },
       "SemanticVersioning": {
         "type": "Direct",
         "requested": "[2.0.2, )",
