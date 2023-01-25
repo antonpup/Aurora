@@ -218,25 +218,23 @@ namespace Aurora
                 return;
 
             Dispatcher.Invoke(
-                        () =>
-                        {
-                            if (transitionamount <= 1.0f)
-                            {
-                                transition_color.BlendColors(current_color, transitionamount += 0.07f);
+                () =>
+                {
+                    if (transitionamount <= 1.0f)
+                    {
+                        transition_color.BlendColors(current_color, transitionamount += 0.07f);
 
-                                bg_grid.Background = new SolidColorBrush(Color.FromRgb(transition_color.Red, transition_color.Green, transition_color.Blue));
-                                bg_grid.UpdateLayout();
-                            }
+                        bg_grid.Background = new SolidColorBrush(Color.FromRgb(transition_color.Red,
+                            transition_color.Green, transition_color.Blue));
+                        bg_grid.UpdateLayout();
+                    }
 
+                    Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = Global.effengine.GetKeyboardLights();
+                    _layoutManager.Result.SetKeyboardColors(keylights);
 
-                            Dictionary<Devices.DeviceKeys, System.Drawing.Color> keylights = new Dictionary<Devices.DeviceKeys, System.Drawing.Color>();
-
-                            keylights = Global.effengine.GetKeyboardLights();
-                            _layoutManager.Result.SetKeyboardColors(keylights);
-
-                            keyboard_record_message.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
-
-                        });
+                    keyboard_record_message.Visibility =
+                        Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
+                });
         }
 
         ////Misc
@@ -321,121 +319,105 @@ namespace Aurora
             Global.LightingStateManager.PreviewProfileKey = string.Empty;
         }
 
-        private Image profile_add;
+        private readonly Image _profileAdd = new()
+        {
+            Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
+            ToolTip = "Add a new Lighting Profile",
+            Margin = new Thickness(0, 5, 0, 0)
+        };
 
-        private Image profile_hidden;
+        private Image _profileHidden;
 
-        private BitmapImage _visible = new(new Uri(@"Resources/Visible.png", UriKind.Relative));
-        private BitmapImage _not_visible = new(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
+        private readonly BitmapImage _visible = new(new Uri(@"Resources/Visible.png", UriKind.Relative));
+        private readonly BitmapImage _notVisible = new(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
         
         private void GenerateProfileStack(string focusedKey = null)
         {
             selected_item = null;
             profiles_stack.Children.Clear();
 
-            /*Image profile_desktop = new Image
+            foreach (var application in Global.Configuration.ProfileOrder
+                         .Where(profileName => Global.LightingStateManager.Events.ContainsKey(profileName))
+                         .Select(profileName => (Profiles.Application)Global.LightingStateManager.Events[profileName])
+                         .OrderBy(item => item.Settings.Hidden))
             {
-                Tag = Global.Configuration.desktop_profile,
-                Source = new BitmapImage(new Uri(@"Resources/desktop_icon.png", UriKind.Relative)),
-                ToolTip = "Desktop Settings",
-                Margin = new Thickness(0, 5, 0, 0)
-            };
-            profile_desktop.MouseDown += ProfileImage_MouseDown;
-            this.profiles_stack.Children.Add(profile_desktop);*/
-
-            //Included Game Profiles
-            foreach (string profile_k in Global.Configuration.ProfileOrder)
-            {
-                if (!Global.LightingStateManager.Events.ContainsKey(profile_k))
-                    continue;
-
-                Profiles.Application application = (Profiles.Application)Global.LightingStateManager.Events[profile_k];
                 ImageSource icon = application.Icon;
                 UserControl control = application.Control;
-                if (icon != null && control != null)
+                if (icon == null || control == null) continue;
+                Image profileImage;
+                if (application is GenericApplication)
                 {
-                    Image profile_image;
-                    if (application is GenericApplication)
+                    GenericApplicationSettings settings = (GenericApplicationSettings)application.Settings;
+                    profileImage = new Image
                     {
-                        GenericApplicationSettings settings = (application.Settings as GenericApplicationSettings);
-                        profile_image = new Image
-                        {
-                            Tag = application,
-                            Source = icon,
-                            ToolTip = settings.ApplicationName + " Settings",
-                            Margin = new Thickness(0, 5, 0, 0)
-                        };
-                        profile_image.MouseDown += ProfileImage_MouseDown;
+                        Tag = application,
+                        Source = icon,
+                        ToolTip = settings.ApplicationName + " Settings",
+                        Margin = new Thickness(0, 5, 0, 0)
+                    };
+                    profileImage.MouseDown += ProfileImage_MouseDown;
 
-                        Image profile_remove = new Image
-                        {
-                            Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative)),
-                            ToolTip = $"Remove {settings.ApplicationName} Profile",
-                            HorizontalAlignment = HorizontalAlignment.Right,
-                            VerticalAlignment = VerticalAlignment.Bottom,
-                            Height = 16,
-                            Width = 16,
-                            Visibility = Visibility.Hidden,
-                            Tag = profile_k
-                        };
-                        profile_remove.MouseDown += RemoveProfile_MouseDown;
-
-                        Grid profile_grid = new Grid
-                        {
-                            Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
-                            Margin = new Thickness(0, 5, 0, 0),
-                            Tag = profile_remove
-                        };
-
-                        profile_grid.MouseEnter += Profile_grid_MouseEnter;
-                        profile_grid.MouseLeave += Profile_grid_MouseLeave;
-
-                        profile_grid.Children.Add(profile_image);
-                        profile_grid.Children.Add(profile_remove);
-
-                        profiles_stack.Children.Add(profile_grid);
-                    }
-                    else
+                    Image profileRemove = new Image
                     {
-                        profile_image = new Image
-                        {
-                            Tag = application,
-                            Source = icon,
-                            ToolTip = application.Config.Name + " Settings",
-                            Margin = new Thickness(0, 5, 0, 0),
-                            Visibility = application.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
-                        };
-                        profile_image.MouseDown += ProfileImage_MouseDown;
-                        profiles_stack.Children.Add(profile_image);
-                    }
+                        Source = new BitmapImage(new Uri(@"Resources/removeprofile_icon.png", UriKind.Relative)),
+                        ToolTip = $"Remove {settings.ApplicationName} Profile",
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Height = 16,
+                        Width = 16,
+                        Visibility = Visibility.Hidden,
+                        Tag = application.Config.ID
+                    };
+                    profileRemove.MouseDown += RemoveProfile_MouseDown;
 
-                    if (application.Config.ID.Equals(focusedKey))
+                    Grid profileGrid = new Grid
                     {
-                        FocusedApplication = application;
-                        TransitionToProfile(profile_image);
-                    }
+                        Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                        Margin = new Thickness(0, 5, 0, 0),
+                        Tag = profileRemove
+                    };
+
+                    profileGrid.MouseEnter += Profile_grid_MouseEnter;
+                    profileGrid.MouseLeave += Profile_grid_MouseLeave;
+
+                    profileGrid.Children.Add(profileImage);
+                    profileGrid.Children.Add(profileRemove);
+
+                    profiles_stack.Children.Add(profileGrid);
                 }
+                else
+                {
+                    profileImage = new Image
+                    {
+                        Tag = application,
+                        Source = icon,
+                        ToolTip = application.Config.Name + " Settings",
+                        Margin = new Thickness(0, 5, 0, 0),
+                        Visibility = application.Settings.Hidden ? Visibility.Collapsed : Visibility.Visible
+                    };
+                    profileImage.MouseDown += ProfileImage_MouseDown;
+                    profiles_stack.Children.Add(profileImage);
+                }
+
+                if (!application.Config.ID.Equals(focusedKey)) continue;
+                FocusedApplication = application;
+                TransitionToProfile(profileImage);
             }
 
             //Add new profiles button
-            profile_add = new Image
-            {
-                Source = new BitmapImage(new Uri(@"Resources/addprofile_icon.png", UriKind.Relative)),
-                ToolTip = "Add a new Lighting Profile",
-                Margin = new Thickness(0, 5, 0, 0)
-            };
-            profile_add.MouseDown += AddProfile_MouseDown;
-            profiles_stack.Children.Add(profile_add);
+            _profileAdd.MouseDown -= AddProfile_MouseDown;
+            _profileAdd.MouseDown += AddProfile_MouseDown;
+            profiles_stack.Children.Add(_profileAdd);
 
             //Show hidden profiles button
-            profile_hidden = new Image
+            _profileHidden = new Image
             {
-                Source = _not_visible,
+                Source = _notVisible,
                 ToolTip = "Toggle Hidden profiles' visibility",
                 Margin = new Thickness(0, 5, 0, 0)
             };
-            profile_hidden.MouseDown += HiddenProfile_MouseDown;
-            profiles_stack.Children.Add(profile_hidden);
+            _profileHidden.MouseDown += HiddenProfile_MouseDown;
+            profiles_stack.Children.Add(_profileHidden);
         }
 
         private void HiddenProfile_MouseDown(object sender, EventArgs e)
@@ -445,7 +427,7 @@ namespace Aurora
 
         protected void ShowHiddenChanged(bool value)
         {
-            profile_hidden.Source = value ? _visible : _not_visible;
+            _profileHidden.Source = value ? _visible : _notVisible;
 
             foreach (FrameworkElement ctrl in profiles_stack.Children)
             {
@@ -568,65 +550,67 @@ namespace Aurora
 
         private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender != null && sender is Image && (sender as Image).Tag != null && (sender as Image).Tag is string)
+            if (sender == null || sender is not Image || (sender as Image).Tag == null || (sender as Image).Tag is not string)
             {
-                string name = (sender as Image).Tag as string;
-
-                if (Global.LightingStateManager.Events.ContainsKey(name))
-                {
-                    if (MessageBox.Show("Are you sure you want to delete profile for " + (((Profiles.Application)Global.LightingStateManager.Events[name]).Settings as GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-                    {
-                        var eventList = Global.Configuration.ProfileOrder
-                            .ToDictionary(x => x, x => Global.LightingStateManager.Events[x])
-                            .Where(x => ShowHidden || !(x.Value as Profiles.Application).Settings.Hidden)
-                            .ToList();
-                        var idx = Math.Max(eventList.FindIndex(x => x.Key == name), 0);
-                        Global.LightingStateManager.RemoveGenericProfile(name);
-                        //ConfigManager.Save(Global.Configuration);
-                        GenerateProfileStack(eventList[idx].Key);
-                    }
-                }
+                return;
             }
+
+            string name = (sender as Image).Tag as string;
+
+            if (!Global.LightingStateManager.Events.ContainsKey(name)) return;
+            if (MessageBox.Show(
+                    "Are you sure you want to delete profile for " +
+                    (((Profiles.Application)Global.LightingStateManager.Events[name]).Settings as
+                        GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+            var eventList = Global.Configuration.ProfileOrder
+                .ToDictionary(x => x, x => Global.LightingStateManager.Events[x])
+                .Where(x => ShowHidden || !(x.Value as Profiles.Application).Settings.Hidden)
+                .ToList();
+            var idx = Math.Max(eventList.FindIndex(x => x.Key == name), 0);
+            Global.LightingStateManager.RemoveGenericProfile(name);
+            //ConfigManager.Save(Global.Configuration);
+            GenerateProfileStack(eventList[idx].Key);
         }
 
         private void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
             Window_ProcessSelection dialog = new Window_ProcessSelection { CheckCustomPathExists = true, ButtonLabel = "Add Profile", Title ="Add Profile" };
-            if (dialog.ShowDialog() == true && !string.IsNullOrWhiteSpace(dialog.ChosenExecutablePath)) { // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
+            if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.ChosenExecutablePath))
+                return; // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
 
-                string filename = Path.GetFileName(dialog.ChosenExecutablePath.ToLowerInvariant());
+            string filename = Path.GetFileName(dialog.ChosenExecutablePath.ToLowerInvariant());
 
-                if (Global.LightingStateManager.Events.ContainsKey(filename))
+            if (Global.LightingStateManager.Events.ContainsKey(filename))
+            {
+                if (Global.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
+                    Global.LightingStateManager.Events.Remove(filename);
+                else
                 {
-                    if (Global.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
-                        Global.LightingStateManager.Events.Remove(filename);
-                    else
-                    {
-                        MessageBox.Show("Profile for this application already exists.");
-                        return;
-                    }
+                    MessageBox.Show("Profile for this application already exists.");
+                    return;
                 }
-
-                GenericApplication gen_app_pm = new GenericApplication(filename);
-                gen_app_pm.Initialize();
-                ((GenericApplicationSettings)gen_app_pm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
-
-                System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(dialog.ChosenExecutablePath.ToLowerInvariant());
-
-                if (!Directory.Exists(gen_app_pm.GetProfileFolderPath()))
-                    Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
-
-                using (var icon_asbitmap = ico.ToBitmap())
-                {
-                    icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
-                }
-                ico.Dispose();
-
-                Global.LightingStateManager.RegisterEvent(gen_app_pm);
-                ConfigManager.Save(Global.Configuration);
-                GenerateProfileStack(filename);
             }
+
+            GenericApplication gen_app_pm = new GenericApplication(filename);
+            gen_app_pm.Initialize();
+            ((GenericApplicationSettings)gen_app_pm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
+
+            System.Drawing.Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(dialog.ChosenExecutablePath.ToLowerInvariant());
+
+            if (!Directory.Exists(gen_app_pm.GetProfileFolderPath()))
+                Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
+
+            using (var icon_asbitmap = ico.ToBitmap())
+            {
+                icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), System.Drawing.Imaging.ImageFormat.Png);
+            }
+            ico.Dispose();
+
+            Global.LightingStateManager.RegisterEvent(gen_app_pm);
+            ConfigManager.Save(Global.Configuration);
+            GenerateProfileStack(filename);
         }
 
         private void DesktopControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
