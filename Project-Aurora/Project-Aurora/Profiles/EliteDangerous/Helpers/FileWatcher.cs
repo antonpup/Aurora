@@ -40,7 +40,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
                 {
                     reader.ReadToEnd();
                 }
-                while  running)
+                while  (running)
                 {
                     if(readMode == ReadMode.FULL) {
                         long writeTime = File.GetLastWriteTime(filename).Ticks;
