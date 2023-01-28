@@ -78,7 +78,8 @@ public static class PeripheralLayoutMap
     private static readonly Dictionary<PreferredMouse, string> MouseLayouts = new()
     {
           {PreferredMouse.Generic_Peripheral, "generic_peripheral.json"},
-          {PreferredMouse.Generic_Openrgb_Mouse, "generic_openrgb_mouse.json"},
+          {PreferredMouse.Generic_Openrgb_Mouse, "custom_mouse.json"},
+          {PreferredMouse.Custom, "custom_mouse.json"},
           {PreferredMouse.Logitech_G900, "logitech_g900_features.json"},
           {PreferredMouse.Logitech_G502, "logitech_g502_features.json"},
           {PreferredMouse.Logitech_G102, "logitech_g102_features.json"},
@@ -104,6 +105,7 @@ public static class PeripheralLayoutMap
     private static readonly Dictionary<PreferredMousepad, string> MousepadLayouts = new()
     {
         {PreferredMousepad.Generic_Mousepad, "generic_mousepad.json"},
+        {PreferredMousepad.Custom, "custom_mousepad.json"},
         {PreferredMousepad.Two_Zone_Plus_Logo_Mousepad, "2zone_1logo_mousepad.json"},
         {PreferredMousepad.SteelSeries_QcK_Prism, "steelseries_qck_prism_features.json"},
         {PreferredMousepad.SteelSeries_QcK_2_Zone, "steelseries_qck_2zone_features.json"},

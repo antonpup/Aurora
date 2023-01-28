@@ -390,6 +390,9 @@ namespace Aurora.Settings
         
         [Description("Generic Openrgb Mouse")]
         Generic_Openrgb_Mouse = 2,
+        
+        [Description("Custom Mouse")]
+        Custom = 3,
 
         //Logitech range is 100-199
         [Description("Logitech - G900")]
@@ -457,6 +460,9 @@ namespace Aurora.Settings
         
         [Description("2 Zone + Logo Mousepad")]
         Two_Zone_Plus_Logo_Mousepad = 2,
+        
+        [Description("Custom Mouse")]
+        Custom = 3,
 
         //Steelseries range is 100-299
         [Description("SteelSeries - QcK Prism Mousepad")]

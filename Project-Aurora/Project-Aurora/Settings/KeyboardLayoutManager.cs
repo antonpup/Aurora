@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Devices;
@@ -563,11 +562,27 @@ public class KeyboardLayoutManager
         });
     }
 
+    private bool LoadLayout(string path, out VirtualGroup layout)
+    {
+        if (!File.Exists(path))
+        {
+            MessageBox.Show( path + " could not be found", "Layout not found", MessageBoxButton.OK);
+            layout = null;
+            return false;
+        }
+
+        var featureContent = File.ReadAllText(path, Encoding.UTF8);
+        layout = JsonConvert.DeserializeObject<VirtualGroup>(featureContent,
+            new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace})!;
+        return true;
+    }
+
     private void LoadMousepad(MouseOrientationType mouseOrientation, string mousepadFeaturePath)
     {
-        string featureContent = File.ReadAllText(mousepadFeaturePath, Encoding.UTF8);
-        VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(featureContent,
-            new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace})!;
+        if (!LoadLayout(mousepadFeaturePath, out var featureConfig))
+        {
+            return;
+        }
 
         if (mouseOrientation == MouseOrientationType.LeftHanded)
         {
@@ -638,9 +653,10 @@ public class KeyboardLayoutManager
 
     private void LoadMouse(MouseOrientationType mouseOrientation, string mouseFeaturePath)
     {
-        string featureContent = File.ReadAllText(mouseFeaturePath, Encoding.UTF8);
-        VirtualGroup featureConfig = JsonConvert.DeserializeObject<VirtualGroup>(featureContent,
-            new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace})!;
+        if (!LoadLayout(mouseFeaturePath, out var featureConfig))
+        {
+            return;
+        }
 
         if (mouseOrientation == MouseOrientationType.LeftHanded)
         {
