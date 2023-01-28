@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using JetBrains.Annotations;
-using Microsoft.Win32;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
@@ -43,8 +41,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         _deviceEnumerator.RegisterEndpointNotificationCallback(this);
         
         Instances.Add(this);
-
-        SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
     }
 
     /// <summary>Indicates recorded data is available on the selected device.</summary>
@@ -94,12 +90,25 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
 
         // Get a new device with this ID and flow direction
         var mmDevice = _deviceId == AudioDevices.DefaultDeviceId
-            ? _deviceEnumerator.GetDefaultAudioEndpoint(Flow, Role.Multimedia) // Get default if no ID is provided
+            ? GetDefaultAudioEndpoint() // Get default if no ID is provided
             : _deviceEnumerator.EnumerateAudioEndPoints(Flow, DeviceState.Active)
                 .FirstOrDefault(d => d.ID == DeviceId); // Otherwise, get the one with this ID
         if (mmDevice == null) return;
         if (mmDevice.ID == Device?.ID) return;
         SetDevice(mmDevice);
+    }
+
+    private MMDevice GetDefaultAudioEndpoint()
+    {
+        try
+        {
+            return _deviceEnumerator.GetDefaultAudioEndpoint(Flow, Role.Multimedia);
+        }
+        catch (Exception e)
+        {
+            Global.logger.Error("Default audio defice could not be found.", e);
+            return null;
+        }
     }
 
     private void SetDevice(MMDevice mmDevice)
@@ -130,14 +139,20 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     private void WaveInOnRecordingStopped(object sender, StoppedEventArgs e)
     {
         var audioException = e.Exception;
-        if (audioException == null) return;
-        if (audioException.Message.Equals("0x88890004"))
+        if (audioException == null)
+        {
+            DisposeCurrentDevice();
+            return;
+        }
+
+        if (audioException.Message.Equals("0x88890004") && Device?.State == DeviceState.Active)
         {
             SetDevice(Device);
         }
         else
         {
             Global.logger.Error("Audio proxy error", audioException);
+            DisposeCurrentDevice();
         }
     }
 
@@ -213,22 +228,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         //unused
     }
 
-    #region PowerState
-    private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
-    {
-        switch (e.Mode)
-        {
-            case PowerModes.Suspend:
-                DisposeCurrentDevice();
-                break;
-            case PowerModes.Resume:
-                Thread.Sleep(TimeSpan.FromSeconds(2));
-                UpdateDevice();
-                break;
-        }
-    }
-    #endregion
-
     #region IDisposable Implementation
 
     private bool _disposed;
@@ -236,7 +235,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     public void Dispose()
     {
         if (_disposed) return;
-        SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
         _disposed = true;
         Device?.Dispose();
         DisposeCurrentDevice();

@@ -167,6 +167,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
 
     private AudioDeviceProxy _deviceProxy;
     private int _channels;
+    private int _bitsPerSample;
     private int _bufferIncrement;
     private bool _disposed;
     private AudioDeviceProxy DeviceProxy {  
@@ -186,6 +187,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
         if (_deviceProxy.Device == null)
             return;
         _channels = _deviceProxy.WaveIn.WaveFormat.Channels;
+        _bitsPerSample = _deviceProxy.WaveIn.WaveFormat.BitsPerSample;
         _bufferIncrement = _deviceProxy.WaveIn.WaveFormat.BlockAlign;
         _freq = _deviceProxy.Device.AudioClient.MixFormat.SampleRate;
     }
@@ -222,7 +224,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
     {
         if (_disposed) return EffectLayer.EmptyLayer;
 
-        if (_deviceProxy?.Device is null)
+        if (_deviceProxy?.Device == null)
             return EffectLayer.EmptyLayer;
 
         // The system sound as a value between 0.0 and 1.0
