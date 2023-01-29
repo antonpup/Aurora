@@ -567,6 +567,7 @@ namespace Aurora.Settings
             //typeof(Devices.RGBNet.BloodyRgbNetDevice),
             typeof(CorsairRgbNetDevice),
             typeof(LogitechRgbNetDevice),
+            typeof(SteelSeriesRgbNetDevice),
             typeof(Devices.Omen.OmenDevices),
             typeof(Devices.Dualshock.DualshockDevice),
             typeof(Devices.UnifiedHID.UnifiedHIDDevice),
