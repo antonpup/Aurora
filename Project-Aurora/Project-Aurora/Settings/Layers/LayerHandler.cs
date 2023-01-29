@@ -323,7 +323,7 @@ namespace Aurora.Settings.Layers
 
         }
 
-        private Lazy<EffectLayer> _postfxLayer = new(() => new EffectLayer("PostFXLayer"));
+        private readonly Lazy<EffectLayer> _postfxLayer = new(() => new EffectLayer("PostFXLayer"));
         private readonly ImageAttributes _prevImageAttributes;
         private readonly ImageAttributes _secondPrevImageAttributes;
 
@@ -331,35 +331,7 @@ namespace Aurora.Settings.Layers
         {
             if (EnableSmoothing)
             {
-                var returnLayer = _postfxLayer.Value;
-                returnLayer.Clear();
-
-                using (var g = returnLayer.GetGraphics())
-                {
-                    g.CompositingMode = CompositingMode.SourceOver;
-                    g.CompositingQuality = CompositingQuality.HighSpeed;
-                    g.SmoothingMode = SmoothingMode.None;
-                    g.InterpolationMode = InterpolationMode.Low;
-                    
-                    g.DrawImage(renderedLayer.TextureBrush.Image,
-                        renderedLayer.Dimension, renderedLayer.Dimension,
-                        GraphicsUnit.Pixel
-                    );
-                    g.FillRectangle(_previousRender, renderedLayer.Dimension);
-                    g.FillRectangle(_previousSecondRender, renderedLayer.Dimension);
-                }
-
-                try
-                {
-                    //Update previous layers
-                    _previousSecondRender = new TextureBrush(_previousRender.Image, renderedLayer.Dimension, _secondPrevImageAttributes);
-                    _previousRender = new TextureBrush(renderedLayer.TextureBrush.Image, renderedLayer.Dimension, _prevImageAttributes);
-                }
-                catch (Exception e) //canvas changes
-                {
-                    _previousSecondRender = EffectLayer.EmptyLayer.TextureBrush;
-                    _previousRender = EffectLayer.EmptyLayer.TextureBrush;
-                }
+                SmoothLayer(renderedLayer);
             }
 
             //Last PostFX is exclusion
@@ -368,6 +340,39 @@ namespace Aurora.Settings.Layers
             renderedLayer *= Properties.LayerOpacity;
 
             return renderedLayer;
+        }
+
+        private void SmoothLayer(EffectLayer renderedLayer)
+        {
+            var returnLayer = _postfxLayer.Value;
+            returnLayer.Clear();
+
+            using (var g = returnLayer.GetGraphics())
+            {
+                g.CompositingMode = CompositingMode.SourceOver;
+                g.CompositingQuality = CompositingQuality.HighSpeed;
+                g.SmoothingMode = SmoothingMode.None;
+                g.InterpolationMode = InterpolationMode.Low;
+
+                g.DrawImage(renderedLayer.TextureBrush.Image,
+                    renderedLayer.Dimension, renderedLayer.Dimension,
+                    GraphicsUnit.Pixel
+                );
+                g.FillRectangle(_previousRender, renderedLayer.Dimension);
+                g.FillRectangle(_previousSecondRender, renderedLayer.Dimension);
+            }
+
+            try
+            {
+                //Update previous layers
+                _previousSecondRender = new TextureBrush(_previousRender.Image, renderedLayer.Dimension, _secondPrevImageAttributes);
+                _previousRender = new TextureBrush(renderedLayer.TextureBrush.Image, renderedLayer.Dimension, _prevImageAttributes);
+            }
+            catch (Exception e) //canvas changes
+            {
+                _previousSecondRender = EffectLayer.EmptyLayer.TextureBrush;
+                _previousRender = EffectLayer.EmptyLayer.TextureBrush;
+            }
         }
 
         public virtual void SetApplication(Application profile)

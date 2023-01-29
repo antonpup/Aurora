@@ -50,7 +50,6 @@ namespace Aurora.EffectsEngine
                 
                 PerformExclude(_excludeSequence);
 
-                _textureBrush?.Dispose();
                 _textureBrush = new TextureBrush(_colormap, Dimension, imageAttributes);
                 _needsRender = false;
 
