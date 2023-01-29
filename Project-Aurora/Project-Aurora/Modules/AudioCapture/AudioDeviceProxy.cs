@@ -15,7 +15,7 @@ namespace Aurora.Modules.AudioCapture;
 /// </summary>
 public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfaces.IMMNotificationClient
 {
-    public static readonly List<AudioDeviceProxy> Instances = new();
+    public static List<AudioDeviceProxy> Instances { get; } = new();
     private readonly MMDeviceEnumerator _deviceEnumerator = new();
 
     public event EventHandler<EventArgs> DeviceChanged;
@@ -60,7 +60,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     }
 
     [CanBeNull] public MMDevice Device { get; private set; }
-    public WasapiCapture WaveIn { get; private set; }
+    [CanBeNull] public WasapiCapture WaveIn { get; private set; }
     public string DeviceName { get; private set; }
 
     /// <summary>Gets the currently assigned direction of this device.</summary>
@@ -98,6 +98,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         SetDevice(mmDevice);
     }
 
+    [CanBeNull]
     private MMDevice GetDefaultAudioEndpoint()
     {
         try
@@ -111,27 +112,38 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
     }
 
-    private void SetDevice(MMDevice mmDevice)
+    [MethodImpl(MethodImplOptions.Synchronized)]
+    private void SetDevice([CanBeNull] MMDevice mmDevice)
     {
+        if (mmDevice == null)
+        {
+            DisposeCurrentDevice();
+            return;
+        }
+
         var fallbackWaveIn = WaveIn;
+        var fallbackDevice = Device;
         try
         {
             // Get a WaveIn from the device and start it, adding any events as requied
             WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
             WaveIn.DataAvailable += _waveInDataAvailable;
             WaveIn.RecordingStopped += WaveInOnRecordingStopped;
-        
-            var _ = mmDevice.AudioMeterInformation?.MasterPeakValue; //"Activate" device
-            var __ = mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
+
+            //"Activate" device
+            var _ = mmDevice.AudioMeterInformation?.MasterPeakValue + mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
 
             Device = mmDevice;
             DeviceName = Device.FriendlyName;
-            DeviceChanged?.Invoke(this, EventArgs.Empty);
             WaveIn.StartRecording();
+            DeviceChanged?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception e)
         {
             WaveIn = fallbackWaveIn;
+            Device = fallbackDevice;
+            DeviceName = Device?.FriendlyName ?? "";
+            DeviceChanged?.Invoke(this, EventArgs.Empty);
             Global.logger.Error("Error while switching sound device", e);
         }
     }
@@ -141,7 +153,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         var audioException = e.Exception;
         if (audioException == null)
         {
-            DisposeCurrentDevice();
             return;
         }
 
@@ -157,11 +168,13 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     }
 
     /// <summary>Disposes and clears the current <see cref="Device"/> and <see cref="WaveIn"/>.</summary>
+    [MethodImpl(MethodImplOptions.Synchronized)]
     private void DisposeCurrentDevice()
     {
-        Device = null;
-
         WaveIn?.StopRecording();
+        Device = null;
+        DeviceName = "";
+
         if (WaveIn != null)
             WaveIn.DataAvailable -= _waveInDataAvailable;
         WaveIn = null;
