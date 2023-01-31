@@ -21,6 +21,6 @@ namespace Aurora.Profiles.EliteDangerous
             "Options",
             "Bindings"
         );
-        public static readonly string BINDINGS_PRESET_FILE = Path.Combine(BINDINGS_DIR, "StartPreset.start");
+        public static readonly string BINDINGS_PRESET_FILE = Path.Combine(BINDINGS_DIR, "StartPreset.4.start");
     }
 }

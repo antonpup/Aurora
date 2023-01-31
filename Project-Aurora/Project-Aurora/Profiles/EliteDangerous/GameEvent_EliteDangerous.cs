@@ -9,6 +9,7 @@ using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
 using Aurora.Profiles.EliteDangerous.Journal;
+using CSScripting;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.EliteDangerous
@@ -201,8 +202,8 @@ namespace Aurora.Profiles.EliteDangerous
         {
             if (File.Exists(EliteConfig.BINDINGS_PRESET_FILE))
             {
-                string currentBindPrefix = File.ReadAllText(EliteConfig.BINDINGS_PRESET_FILE).Trim();
-                currentBindFile = SearchForBindsFile(EliteConfig.BINDINGS_DIR, currentBindPrefix);
+                string[] currentBindPrefix = File.ReadAllText(EliteConfig.BINDINGS_PRESET_FILE).GetLines();
+                currentBindFile = SearchForBindsFile(EliteConfig.BINDINGS_DIR, currentBindPrefix[1].Trim());
 
                 if (currentBindFile == null)
                 {
@@ -229,7 +230,7 @@ namespace Aurora.Profiles.EliteDangerous
                     if (defaultBindsDirectory != null)
                     {
                         ((EliteDangerousSettings) Application.Settings).GamePath = currentGamePath;
-                        currentBindFile = SearchForBindsFile(defaultBindsDirectory, currentBindPrefix);
+                        currentBindFile = SearchForBindsFile(defaultBindsDirectory, currentBindPrefix[1]);
                         if (currentBindFile != null)
                         {
                             Global.logger.Info("Found default binds file: " + currentBindFile);
@@ -266,7 +267,7 @@ namespace Aurora.Profiles.EliteDangerous
         private string SearchForBindsFile(string directory, string filePrefix)
         {
             string returnBindsFile = null;
-            foreach (string bindFile in Directory.GetFiles(directory, filePrefix + ".*.binds")
+            foreach (string bindFile in Directory.GetFiles(directory, filePrefix + "*.binds")
             )
             {
                 returnBindsFile = bindFile;
