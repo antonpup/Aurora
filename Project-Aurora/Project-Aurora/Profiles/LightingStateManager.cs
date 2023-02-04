@@ -166,9 +166,32 @@ namespace Aurora.Profiles
                 foreach (string exe in @event.Config.ProcessNames)
                 {
                     if (!exe.Equals(key))
-                        EventProcesses.Add(exe.ToLower(), key);
+                        EventProcesses.TryAdd(exe.ToLower(), key);
                 }
             }
+
+            @event.Config.ProcessNamesChanged += (_, _) =>
+            {
+                var keysToRemove = new List<string>();
+                foreach (var (s, value) in EventProcesses)
+                {
+                    if (value == key)
+                    {
+                        keysToRemove.Add(s);
+                    }
+                }
+
+                foreach (var s in keysToRemove)
+                {
+                    EventProcesses.Remove(s);
+                }
+
+                foreach (var exe in @event.Config.ProcessNames)
+                {
+                    if (!exe.Equals(key))
+                        EventProcesses.TryAdd(exe.ToLower(), key);
+                }
+            };
 
             if (@event.Config.ProcessTitles != null)
                 foreach (string titleRx in @event.Config.ProcessTitles)

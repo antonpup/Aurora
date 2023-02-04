@@ -28,7 +28,17 @@ namespace Aurora.Profiles
 {
     public class LightEventConfig : INotifyPropertyChanged
     {
-        public string[] ProcessNames { get; set; }
+        public string[] ProcessNames
+        {
+            get => _processNames;
+            set
+            {
+                _processNames = value;
+                ProcessNamesChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler<EventArgs> ProcessNamesChanged; 
 
         /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
         public string[] ProcessTitles { get; set; }
@@ -48,6 +58,7 @@ namespace Aurora.Profiles
         public Type GameStateType { get; set; }
 
         private readonly Lazy<LightEvent> _lightEvent;
+        private string[] _processNames;
         public LightEvent Event => _lightEvent.Value;
 
         public int? UpdateInterval { get; set; } = null;
@@ -700,7 +711,7 @@ namespace Aurora.Profiles
             };
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (Disposed)
                 return;
