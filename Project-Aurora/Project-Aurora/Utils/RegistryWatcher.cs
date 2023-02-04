@@ -55,9 +55,16 @@ public sealed class RegistryWatcher : IDisposable
         var query = new WqlEventQuery(queryString);
         _eventWatcher = new ManagementEventWatcher(scope, query);
         _eventWatcher.EventArrived += KeyWatcherOnEventArrived;
-        _eventWatcher.Start();
+        try
+        {
+            _eventWatcher.Start();
         
-        SendData();
+            SendData();
+        }
+        catch (Exception e)
+        {
+            Global.logger.Error("Registry not available, Query: {0}", queryString);
+        }
     }
 
     public void StopWatching()
