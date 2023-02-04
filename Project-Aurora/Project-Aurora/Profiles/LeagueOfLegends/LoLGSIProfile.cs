@@ -51,6 +51,19 @@ namespace Aurora.Profiles.LeagueOfLegends
                         _Sequence = new KeySequence(new DK[] { DK.B })
                     }
                 }, EnabledWhen(new BooleanGSIBoolean("Match/InGame"))),
+                new Layer("LowHealth", new BreathingLayerHandler()
+                {
+                    Properties = new BreathingLayerHandlerProperties()
+                    {
+                        _PrimaryColor = Color.Red,
+                        _SecondaryColor = Color.Black, 
+                        _Sequence = new KeySequence(new FreeFormObject(0f,0f,820f,215f)),
+                        _EffectSpeed = 6
+                    }
+                }, EnabledWhen(new BooleanAnd( new Evaluatable <bool>[]{
+                                new BooleanGSIBoolean("Match/InGame"),
+                                new BooleanNot(new BooleanGSIBoolean("Player/IsDead")),
+                                new BooleanMathsComparison(new NumberGSINumeric("Player/ChampionStats/HealthCurrent"), ComparisonOperator.LTE, new NumberMathsOperation(new NumberGSINumeric("Player/ChampionStats/HealthMax"), MathsOperator.Mul, 0.2f)) }))),
                 new Layer("Health", new PercentLayerHandler()
                 {
                     Properties = new PercentLayerHandlerProperties()
