@@ -236,10 +236,11 @@
                 <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>
             </Grid>
         </TabItem>
-        <TabItem Header="Hardware Monitor">
+        <TabItem Header="Modules">
             <Grid Margin="7,7,7,7">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -248,10 +249,8 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
-                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="CPU Temperature:" VerticalAlignment="Top"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap" Text="CPU Load:" VerticalAlignment="Top"/>
-                </StackPanel>
+                <TextBlock Text="Hardware Info"></TextBlock>
+                <CheckBox Content="Enabled" IsChecked="{Binding EnableHardwareInfo}" Margin="0, 20, 0, 0"></CheckBox>
 
                 <Grid Grid.Column="1" Grid.Row="0" Margin="7,0,0,0">
                     <Grid.ColumnDefinitions>
@@ -263,12 +262,6 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-
-                    <ComboBox Grid.Column="0" Grid.Row="0" SelectedValue="{Binding HardwareMonitorCPUTemperature}" ItemsSource="{Binding HardwareMonitorCPUTemperatureList}" DisplayMemberPath="Name" SelectedValuePath="Index" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <ComboBox Grid.Column="0" Grid.Row="1" SelectedValue="{Binding HardwareMonitorCPULoad}" ItemsSource="{Binding HardwareMonitorCPULoadList}" DisplayMemberPath="Name" SelectedValuePath="Index" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
-
-                    <TextBlock Grid.Column="1" Grid.Row="0" x:Name="currentCpuTemp" DataContext="{x:Static u:HardwareMonitor.CPU}" Text="{Binding CPUTemp, Mode=OneWay}" ToolTip="Current CPU Temperature" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" />
-                    <TextBlock Grid.Column="1" Grid.Row="1" x:Name="currentCpuLoad" DataContext="{x:Static u:HardwareMonitor.CPU}" Text="{Binding CPULoad, Mode=OneWay}" ToolTip="Current CPU Load" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" />
                 </Grid>
 
                 <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,7,0,0">
@@ -288,6 +281,14 @@
                     <TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,7,0" Text="Maximum queue size for average values:" ToolTip="Used for CPU temp and load" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     <xctk:IntegerUpDown Grid.Column="1" Grid.Row="1" Value="{Binding HardwareMonitorMaxQueue}" Minimum="2" Maximum="1000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
                     <CheckBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" FlowDirection="RightToLeft" IsChecked="{Binding HardwareMonitorUseAverageValues}" Content="Use average hardware sensor values instead of real-time ones" ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                </Grid>
+                
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <StackPanel>
+                        <TextBlock Text="Other modules (these changes need restart of Aurora)"></TextBlock>
+                        <CheckBox Content="Input Capture" IsChecked="{Binding EnableInputCapture}"></CheckBox>
+                        <CheckBox Content="Media Info" IsChecked="{Binding EnableMediaInfo}"></CheckBox>
+                    </StackPanel>
                 </Grid>
             </Grid>
         </TabItem>

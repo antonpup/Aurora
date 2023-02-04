@@ -53,6 +53,7 @@ public partial class App
         new LightningStateManagerModule(PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener),
         RazerSdkModule,
         LayoutsModule,
+        new HardwareMonitorModule(),
     };
 
     protected override void OnStartup(StartupEventArgs e)

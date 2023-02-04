@@ -15,8 +15,10 @@ using Aurora.Devices.AtmoOrb;
 using Aurora.Devices.OpenRGB;
 using Aurora.Devices.RGBNet;
 using Aurora.Modules.AudioCapture;
+using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
-using static Aurora.Utils.HardwareMonitor;
+using Define;
+using static Aurora.Modules.HardwareMonitor.HardwareMonitor;
 
 namespace Aurora.Settings
 {
@@ -528,7 +530,7 @@ namespace Aurora.Settings
         public bool EnableAudioCapture { get; set; } = false;
         public bool EnableMediaInfo { get; set; } = true;
         public bool EnableInputCapture { get; set; } = true;
-
+        public bool EnableHardwareInfo { get; set; } = true;
 
         public int UpdateDelay { get; set; } = 30;
 
@@ -607,8 +609,6 @@ namespace Aurora.Settings
         public bool HardwareMonitorUseAverageValues { get; set; } = true;
         public int HardwareMonitorCPUTemperature { get; set; } = 0;
         public int HardwareMonitorCPULoad { get; set; } = 0;
-        [JsonIgnore] public List<Sensor> HardwareMonitorCPUTemperatureList => CPU.GetSensorsTemp();
-        [JsonIgnore] public List<Sensor> HardwareMonitorCPULoadList => CPU.GetSensorsLoad();
 
         public VariableRegistry VarRegistry { get; set; } = new VariableRegistry();
 
