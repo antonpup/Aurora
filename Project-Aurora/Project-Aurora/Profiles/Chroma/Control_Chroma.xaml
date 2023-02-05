@@ -8,10 +8,10 @@
              d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
     <Grid>
         <TabControl>
-            <TabItem Header="Overview for BetterDiscord">
+            <TabItem Header="Overview for Chroma">
                 <StackPanel Margin="10">
                     <CheckBox x:Name="GameEnabled"
-                              Content="Enable Aurora to provide lighting effects with BetterDiscord. Ensure you have read the below text."
+                              Content="Enable Aurora to provide lighting effects with Razer Chroma SDK Apps"
                               Checked="GameEnabled_Checked" Unchecked="GameEnabled_Checked" />
                     
                     <StackPanel Orientation="Horizontal">
