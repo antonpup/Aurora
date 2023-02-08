@@ -78,7 +78,7 @@ public static class PeripheralLayoutMap
     private static readonly Dictionary<PreferredMouse, string> MouseLayouts = new()
     {
           {PreferredMouse.Generic_Peripheral, "generic_peripheral.json"},
-          {PreferredMouse.Generic_Openrgb_Mouse, "custom_mouse.json"},
+          {PreferredMouse.Generic_Openrgb_Mouse, "generic_openrgb_mouse.json"},
           {PreferredMouse.Custom, "custom_mouse.json"},
           {PreferredMouse.Logitech_G900, "logitech_g900_features.json"},
           {PreferredMouse.Logitech_G502, "logitech_g502_features.json"},
