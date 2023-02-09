@@ -36,6 +36,7 @@ public sealed partial class HttpListenerModule : IAuroraModule
             MessageBox.Show("HttpListener could not start. Try running this program as Administrator.\r\n" +
                             "Http socket could not be created. Games using this integration won't work");
             _taskSource.SetResult(null);
+            return;
         }
         _taskSource.SetResult(_listener);
     }
