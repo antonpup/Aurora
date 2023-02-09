@@ -18,7 +18,7 @@ namespace Aurora.Settings.Layers
     {
         
         [LogicOverridable("Enable Transparency")] public bool? _TransparencyEnabled { get; set; }
-        [JsonIgnore] public bool TransparencyEnabled => Logic._TransparencyEnabled ?? true;
+        [JsonIgnore] public bool TransparencyEnabled => Logic._TransparencyEnabled ?? false;
 
         public bool? _ColorPostProcessEnabled { get; set; }
         [JsonIgnore]
@@ -104,9 +104,7 @@ namespace Aurora.Settings.Layers
             else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
                 rColor = RzHelper.MousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
             else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
-                rColor = RzHelper.KeyboardColors[position[1] + position[0] * 7];
-            else if (key == DeviceKeys.Peripheral)
-                rColor = RzHelper.MouseColors[1];
+                rColor = RzHelper.MouseColors[position[1] + position[0] * 7];
             else
             {
                 color = Color.Transparent;
