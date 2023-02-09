@@ -557,6 +557,7 @@ namespace Aurora.Scripts.VoronScripts
 				{
 					UdpClient u = new UdpClient(Dns.GetHostName(), 1);
 					string localAddr = ((IPEndPoint)u.Client.LocalEndPoint).Address.ToString();
+					u.Dispose();
 
 					var defInt = NetworkInterface.GetAllNetworkInterfaces()
 						.Where(netInt => netInt.OperationalStatus == OperationalStatus.Up)
