@@ -580,6 +580,13 @@ namespace Aurora.Settings
             typeof(Devices.Creative.SoundBlasterXDevice),
         };
 
+        public List<BitmapAccuracy> BitmapAccuracies { get; } = new List<BitmapAccuracy>()
+        {
+            BitmapAccuracy.Good,
+            BitmapAccuracy.Okay,
+            BitmapAccuracy.Fine
+        };
+
         //Blackout and Night theme
         [JsonProperty("time_based_dimming_enabled")] public bool TimeBasedDimmingEnabled { get; set; }
         [JsonProperty("time_based_dimming_affect_games")] public bool TimeBasedDimmingAffectGames { get; set; }
