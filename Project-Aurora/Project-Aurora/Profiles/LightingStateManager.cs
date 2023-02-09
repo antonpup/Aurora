@@ -156,17 +156,16 @@ namespace Aurora.Profiles
 
         public void RegisterEvent(ILightEvent @event)
         {
-            string key = @event.Config.ID;
-            if (string.IsNullOrWhiteSpace(key) || Events.ContainsKey(key)) return;
+            string profileId = @event.Config.ID;
+            if (string.IsNullOrWhiteSpace(profileId) || Events.ContainsKey(profileId)) return;
 
-            Events.Add(key, @event);
+            Events.Add(profileId, @event);
 
             if (@event.Config.ProcessNames != null)
             {
                 foreach (string exe in @event.Config.ProcessNames)
                 {
-                    if (!exe.Equals(key))
-                        EventProcesses.TryAdd(exe.ToLower(), key);
+                    EventProcesses[exe.ToLower()] = profileId;
                 }
             }
 
@@ -175,7 +174,7 @@ namespace Aurora.Profiles
                 var keysToRemove = new List<string>();
                 foreach (var (s, value) in EventProcesses)
                 {
-                    if (value == key)
+                    if (value == profileId)
                     {
                         keysToRemove.Add(s);
                     }
@@ -188,22 +187,21 @@ namespace Aurora.Profiles
 
                 foreach (var exe in @event.Config.ProcessNames)
                 {
-                    if (!exe.Equals(key))
-                        EventProcesses.TryAdd(exe.ToLower(), key);
+                    if (!exe.Equals(profileId))
+                        EventProcesses.TryAdd(exe.ToLower(), profileId);
                 }
             };
 
             if (@event.Config.ProcessTitles != null)
                 foreach (string titleRx in @event.Config.ProcessTitles)
-                    EventTitles.Add(titleRx, key);
+                    EventTitles.Add(titleRx, profileId);
 
             if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
-                EventAppIDs.Add(@event.Config.AppID, key);
+                EventAppIDs.Add(@event.Config.AppID, profileId);
 
-            if (@event is Application)
+            if (@event is Application && !Global.Configuration.ProfileOrder.Contains(profileId))
             {
-                if (!Global.Configuration.ProfileOrder.Contains(key))
-                    Global.Configuration.ProfileOrder.Add(key);
+                Global.Configuration.ProfileOrder.Add(profileId);
             }
 
             if (Initialized)
@@ -225,8 +223,6 @@ namespace Aurora.Profiles
                 string path = profile.GetProfileFolderPath();
                 if (Directory.Exists(path))
                     Directory.Delete(path, true);
-
-                //SaveSettings();
             }
         }
 
@@ -258,17 +254,13 @@ namespace Aurora.Profiles
 
         public ILightEvent GetProfileFromProcessName(string process)
         {
-            if (EventProcesses.ContainsKey(process))
+            if (EventProcesses.TryGetValue(process, out var eventId) &&
+                Events.TryGetValue(eventId, out var res))
             {
-                if (!Events.ContainsKey(EventProcesses[process]))
-                    Global.logger.Warn($"GetProfileFromProcess: The process '{process}' exists in EventProcesses but subsequently '{EventProcesses[process]}' does not in Events!");
-
-                return Events[EventProcesses[process]];
+                return res;
             }
-            else if (Events.ContainsKey(process))
-                return Events[process];
-
-            return null;
+ 
+            return Events.TryGetValue(process, out res) ? res : null;
         }
 
         public ILightEvent GetProfileFromProcessTitle(string title)
@@ -601,7 +593,8 @@ namespace Aurora.Profiles
 
                     if (profile == null)
                     {
-                        Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper(new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gs_process_name } }));
+                        Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper(
+                            new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gs_process_name } }));
                         profile = Events[gs_process_name];
                     }
 
