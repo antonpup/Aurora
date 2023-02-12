@@ -127,7 +127,10 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         {
             // Get a WaveIn from the device and start it, adding any events as requied
             WaveIn = Flow == DataFlow.Render ? new WasapiLoopbackCapture(mmDevice) : new WasapiCapture(mmDevice);
-            WaveIn.DataAvailable += _waveInDataAvailable;
+            if (_waveInDataAvailable != null)
+            {
+                WaveIn.DataAvailable += _waveInDataAvailable;
+            }
             WaveIn.RecordingStopped += WaveInOnRecordingStopped;
 
             //"Activate" device
