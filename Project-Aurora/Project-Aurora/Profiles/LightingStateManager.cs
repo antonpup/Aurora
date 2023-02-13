@@ -261,6 +261,18 @@ public sealed class LightingStateManager : IInit
         return Events.TryGetValue(process, out res) ? res : null;
     }
 
+    /// <summary>
+    /// Manually registers a layer. Only needed externally.
+    /// </summary>
+    public bool RegisterLayer<T>() where T : ILayerHandler
+    {
+        var t = typeof(T);
+        if (LayerHandlers.ContainsKey(t)) return false;
+        var meta = t.GetCustomAttribute<LayerHandlerMetaAttribute>();
+        LayerHandlers.Add(t, new LayerHandlerMeta(t, meta));
+        return true;
+    }
+
     private ILightEvent? GetProfileFromProcessTitle(string title)
     {
         foreach (var value in EventTitles
