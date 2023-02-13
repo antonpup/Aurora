@@ -8,8 +8,6 @@ using Aurora.Profiles;
 
 namespace Aurora.Modules.GameStateListen;
 
-public delegate void WrapperConnectionClosedHandler(string process);
-
 public class IpcListener
 {
     private bool _isRunning;
@@ -17,9 +15,9 @@ public class IpcListener
     /// <summary>
     ///  Event for handing a newly received game state
     /// </summary>
-    public event NewGameStateHandler NewGameState = delegate { };
+    public event EventHandler<IGameState>? NewGameState;
 
-    public event WrapperConnectionClosedHandler WrapperConnectionClosed = delegate { };
+    public event EventHandler<string>? WrapperConnectionClosed;
 
     /// <summary>
     /// Returns whether or not the wrapper is connected through IPC
@@ -31,7 +29,7 @@ public class IpcListener
     /// </summary>
     public string WrappedProcess { get; private set; } = "";
 
-    private NamedPipeServerStream _ipcPipeStream;
+    private NamedPipeServerStream? _ipcPipeStream;
 
     private static NamedPipeServerStream CreatePipe()
     {
@@ -101,7 +99,7 @@ public class IpcListener
 
                     IsWrapperConnected = true;
                     WrappedProcess = newState.Provider.Name.ToLowerInvariant();
-                    NewGameState?.Invoke(newState);
+                    NewGameState?.Invoke(this, newState);
                 }
                 catch (Exception exc)
                 {
@@ -112,7 +110,7 @@ public class IpcListener
         }
         finally
         {
-            WrapperConnectionClosed?.Invoke(WrappedProcess);
+            WrapperConnectionClosed?.Invoke(this, WrappedProcess);
             IsWrapperConnected = false;
             WrappedProcess = "";
         }

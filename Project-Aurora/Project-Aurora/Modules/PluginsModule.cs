@@ -10,7 +10,7 @@ public sealed partial class PluginsModule : IAuroraModule
 
     public Task<PluginManager> PluginManager => _pluginManagerSource.Task;
 
-    private PluginManager _pluginManager;
+    private PluginManager? _pluginManager;
 
     [Async]
     public void Initialize()

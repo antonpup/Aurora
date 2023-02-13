@@ -45,11 +45,9 @@ namespace Aurora.Profiles {
 
         #region Audio Properties
 
-        [CanBeNull]
-        private MMDevice CaptureDevice => Global.CaptureProxy?.Device;
+        private MMDevice? CaptureDevice => Global.CaptureProxy?.Device;
 
-        [CanBeNull]
-        private MMDevice RenderDevice => Global.RenderProxy?.Device;
+        private MMDevice? RenderDevice => Global.RenderProxy?.Device;
 
         /// <summary>
         /// Current system volume (as set from the speaker icon)
@@ -90,19 +88,20 @@ namespace Aurora.Profiles {
 
         #region Device Properties
 
-        private readonly DualshockDevice ds4Device = Global.dev_manager.DeviceContainers.Select(d => d.Device).OfType<DualshockDevice>().FirstOrDefault();
+        private readonly DualshockDevice? _ds4Device = Global.dev_manager.DeviceContainers
+            .Select(d => d.Device).OfType<DualshockDevice>().FirstOrDefault();
         /// <summary>
         /// Battery level of a dualshock controller
         /// </summary>
-        public int DS4Battery => ds4Device?.Battery ?? -1;
+        public int DS4Battery => _ds4Device?.Battery ?? -1;
         /// <summary>
         /// Whether or not thr dualshock controller is charging
         /// </summary>
-        public bool DS4Charging => ds4Device?.Charging ?? false;
+        public bool DS4Charging => _ds4Device?.Charging ?? false;
         /// <summary>
         /// Latency of the controller in ms
         /// </summary>
-        public double DS4Latency => ds4Device?.Latency ?? -1;
+        public double DS4Latency => _ds4Device?.Latency ?? -1;
         #endregion
 
         #region CPU Properties
@@ -111,7 +110,7 @@ namespace Aurora.Profiles {
         /// </summary>
         public float CPUUsage => CPU.Usage;
 
-        private static CPUInfo _cpuInfo;
+        private static CPUInfo? _cpuInfo;
         public CPUInfo CPU => _cpuInfo ??= new CPUInfo();
         #endregion
 
@@ -131,33 +130,33 @@ namespace Aurora.Profiles {
         /// </summary>
         public long MemoryTotal => MemoryFree + MemoryUsed;
 
-        private static RAMInfo _ramInfo;
+        private static RAMInfo? _ramInfo;
         public RAMInfo RAM => _ramInfo ??= new RAMInfo();
         #endregion
 
         #region GPU Properties
-        private static GPUInfo _gpuInfo;
+        private static GPUInfo? _gpuInfo;
         public GPUInfo GPU => _gpuInfo ??= new GPUInfo();
         #endregion
 
         #region NET Properties
-        private static NETInfo _netInfo;
+        private static NETInfo? _netInfo;
         public NETInfo NET => _netInfo ??= new NETInfo();
         #endregion
 
         #region Cursor Position
-        private static CursorPositionNode _cursorPosition;
-        public CursorPositionNode CursorPosition => _cursorPosition ?? (_cursorPosition = new CursorPositionNode());
+        private static CursorPositionNode? _cursorPosition;
+        public CursorPositionNode CursorPosition => _cursorPosition ??= new CursorPositionNode();
         #endregion
 
         #region Battery Properties
-        private static BatteryNode _battery;
-        public BatteryNode Battery => _battery ?? (_battery = new BatteryNode());
+        private static BatteryNode? _battery;
+        public BatteryNode Battery => _battery ??= new BatteryNode();
         #endregion
 
         #region Media Properties
-        private static MediaNode _media;
-        public MediaNode Media => _media ?? (_media = new MediaNode());
+        private static MediaNode? _media;
+        public MediaNode Media => _media ??= new MediaNode();
         #endregion
 
         /// <summary>

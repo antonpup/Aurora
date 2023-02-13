@@ -11,9 +11,9 @@ namespace Aurora.Modules;
 
 public sealed partial class AudioCaptureModule : IAuroraModule
 {
-    private AudioDevices _audioDevices;
-    private AudioDeviceProxy _renderProxy;
-    private AudioDeviceProxy _captureProxy;
+    private AudioDevices? _audioDevices;
+    private AudioDeviceProxy? _renderProxy;
+    private AudioDeviceProxy? _captureProxy;
 
     [Async]
     public void Initialize()

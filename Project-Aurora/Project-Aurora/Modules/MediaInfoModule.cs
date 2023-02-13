@@ -7,7 +7,7 @@ namespace Aurora.Modules;
 
 public sealed partial class MediaInfoModule : IAuroraModule
 {
-    private MediaMonitor _mediaMonitor;
+    private MediaMonitor? _mediaMonitor;
     
     [Async]
     public void Initialize()

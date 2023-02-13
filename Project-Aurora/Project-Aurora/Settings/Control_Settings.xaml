@@ -192,25 +192,25 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Label Grid.Row="0" Grid.Column="0" Content="Supported Versions:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                <Label x:Name="razer_wrapper_supported_versions_label" Grid.Row="0" Grid.Column="1" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
-                                <Button x:Name="razer_wrapper_install_button" Grid.Row="0" Grid.Column="2" Content="Install" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
-                                <Button x:Name="razer_wrapper_uninstall_button" Grid.Row="0" Grid.Column="2" Content="Uninstall" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Click="razer_wrapper_uninstall_button_Click"/>
+                                <Label x:Name="ChromaSupportedVersionsLabel" Grid.Row="0" Grid.Column="1" Padding="0" Margin="5 0 5 0" VerticalAlignment="Center"/>
+                                <Button x:Name="ChromaInstallButton" Grid.Row="0" Grid.Column="2" Content="Install" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="razer_wrapper_install_button_Click"/>
+                                <Button x:Name="ChromaUninstallButton" Grid.Row="0" Grid.Column="2" Content="Uninstall" Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right" Click="razer_wrapper_uninstall_button_Click"/>
                                 
-                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="razer_wrapper_disable_device_control_button" HorizontalAlignment="Right"
+                                <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="ChromaDisableDeviceControlButton" HorizontalAlignment="Right"
                                         Content="Disable Device Control" Width="160"
                                         ToolTipService.InitialShowDelay="0"
                                         ToolTip="Disabling device control will stop ChromaSDK from controlling Razer Devices.&#x0a; After this you have to control them with OpenRGB. To enable it back reinstall ChromaSDK"
                                         Margin="0 0 0 0" VerticalAlignment="Center" Click="razer_wrapper_disable_device_control_button_Click"/>
 
                                 <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                <Label x:Name="razer_wrapper_installed_version_label" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                <Label x:Name="razer_wrapper_enabled_label" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <Label x:Name="ChromaInstalledVersionLabel" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
+                                <Label x:Name="ChromaEnabledLabel" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                                 <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                <Label x:Name="razer_wrapper_connection_status_label" Grid.Row="2" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <Label x:Name="ChromaConnectionStatusLabel" Grid.Row="2" Grid.Column="2" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                                 <Label Grid.Row="3" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center"/>
-                                <Label x:Name="razer_wrapper_current_application_label" Grid.Row="3" Grid.Column="2" Width="300" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                <Label x:Name="ChromaCurrentApplicationLabel" Grid.Row="3" Grid.Column="2" Width="300" Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                             </Grid>
                         </GroupBox>
                         <GroupBox DockPanel.Dock="Bottom" Header="Wrappers" VerticalAlignment="Bottom">
@@ -288,6 +288,16 @@
                         <TextBlock Text="Other modules (these changes need restart of Aurora)"></TextBlock>
                         <CheckBox Content="Input Capture" IsChecked="{Binding EnableInputCapture}"></CheckBox>
                         <CheckBox Content="Media Info" IsChecked="{Binding EnableMediaInfo}"></CheckBox>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="HTTP listener" IsChecked="{Binding EnableHttpListener}"></CheckBox>
+                            <TextBlock Text="?" TextDecorations="Underline" ToolTip="Needed for most GSI games"
+                                       ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="IPC listener" IsChecked="{Binding EnableIpcListener}"></CheckBox>
+                            <TextBlock Text="?" TextDecorations="Underline" ToolTip="Needed for wrappers"
+                                       ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </Grid>

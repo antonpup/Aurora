@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using JetBrains.Annotations;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
@@ -18,14 +17,14 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     public static List<AudioDeviceProxy> Instances { get; } = new();
     private readonly MMDeviceEnumerator _deviceEnumerator = new();
 
-    public event EventHandler<EventArgs> DeviceChanged;
+    public event EventHandler<EventArgs>? DeviceChanged;
 
     // Stores event handlers added to the proxy, so they can easily be added and removed from the MMDevice when it changes without
     // needing to rely on the consumer manually removing and re-adding the events.
-    private EventHandler<WaveInEventArgs> _waveInDataAvailable;
+    private EventHandler<WaveInEventArgs>? _waveInDataAvailable;
 
     // ID of currently selected device.
-    private string _deviceId;
+    private string _deviceId = AudioDevices.DefaultDeviceId;
     private bool _defaultDeviceChanged;
 
     /// <summary>Creates a new reference to the default audio device with the given flow direction.</summary>
@@ -34,7 +33,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     }
 
     /// <summary>Creates a new reference to the audio device with the given ID with the given flow direction.</summary>
-    public AudioDeviceProxy(string deviceId, DataFlow flow)
+    public AudioDeviceProxy(string? deviceId, DataFlow flow)
     {
         Flow = flow;
         DeviceId = deviceId ?? AudioDevices.DefaultDeviceId;
@@ -59,15 +58,15 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
     }
 
-    [CanBeNull] public MMDevice Device { get; private set; }
-    [CanBeNull] public WasapiCapture WaveIn { get; private set; }
-    public string DeviceName { get; private set; }
+    public MMDevice? Device { get; private set; }
+    public WasapiCapture? WaveIn { get; private set; }
+    public string? DeviceName { get; private set; }
 
     /// <summary>Gets the currently assigned direction of this device.</summary>
     private DataFlow Flow { get; }
 
     /// <summary>Gets or sets the ID of the selected device.</summary>
-    public string DeviceId
+    public string? DeviceId
     {
         get => _deviceId;
         set
@@ -98,8 +97,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         SetDevice(mmDevice);
     }
 
-    [CanBeNull]
-    private MMDevice GetDefaultAudioEndpoint()
+    private MMDevice? GetDefaultAudioEndpoint()
     {
         try
         {
@@ -113,7 +111,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    private void SetDevice([CanBeNull] MMDevice mmDevice)
+    private void SetDevice(MMDevice? mmDevice)
     {
         if (mmDevice == null)
         {
@@ -143,10 +141,13 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
         catch (Exception e)
         {
+            if (e.Message.Equals("0x88890004"))
+            {
+                return;
+            }
             WaveIn = fallbackWaveIn;
             Device = fallbackDevice;
             DeviceName = Device?.FriendlyName ?? "";
-            DeviceChanged?.Invoke(this, EventArgs.Empty);
             Global.logger.Error("Error while switching sound device", e);
         }
     }
@@ -156,6 +157,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         var audioException = e.Exception;
         if (audioException == null)
         {
+            DisposeCurrentDevice();
             return;
         }
 
@@ -174,13 +176,17 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     [MethodImpl(MethodImplOptions.Synchronized)]
     private void DisposeCurrentDevice()
     {
-        WaveIn?.StopRecording();
+        if (WaveIn?.CaptureState == CaptureState.Capturing)
+        {
+            WaveIn?.StopRecording();
+        }
+
+        if (WaveIn != null) WaveIn.DataAvailable -= _waveInDataAvailable;
+        WaveIn = null;
+
         Device = null;
         DeviceName = "";
 
-        if (WaveIn != null)
-            WaveIn.DataAvailable -= _waveInDataAvailable;
-        WaveIn = null;
         DeviceChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -208,11 +214,9 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     [MethodImpl(MethodImplOptions.Synchronized)]
     public void OnDeviceAdded(string pwstrDeviceId)
     {
-        if (pwstrDeviceId == DeviceId)
-        {
-            var mmDevice = _deviceEnumerator.GetDevice(pwstrDeviceId);
-            SetDevice(mmDevice);
-        }
+        if (pwstrDeviceId != DeviceId) return;
+        var mmDevice = _deviceEnumerator.GetDevice(pwstrDeviceId);
+        SetDevice(mmDevice);
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]

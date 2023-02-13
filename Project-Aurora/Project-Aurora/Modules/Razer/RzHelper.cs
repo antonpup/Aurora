@@ -7,11 +7,10 @@ namespace Aurora.Modules.Razer
 {
     public static class RzHelper
     {
-        
         public static readonly (byte r, byte g, byte b)[] KeyboardColors = new (byte r, byte g, byte b)[22 * 6];
         public static readonly (byte r, byte g, byte b)[] MousepadColors = new (byte r, byte g, byte b)[16];
-        public static (byte r, byte g, byte b)[] MouseColors = new (byte r, byte g, byte b)[9 * 7];
-        public static string CurrentAppExecutable;
+        public static readonly (byte r, byte g, byte b)[] MouseColors = new (byte r, byte g, byte b)[9 * 7];
+        public static string CurrentAppExecutable { get; set; }
         
         private static readonly Stopwatch UpdateStopwatch = new();
 
@@ -52,9 +51,13 @@ namespace Aurora.Modules.Razer
             {
                 using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
                 var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                var major = (int)key?.GetValue("MajorVersion", 0);
-                var minor = (int)key?.GetValue("MinorVersion", 0);
-                var revision = (int)key?.GetValue("RevisionNumber", 0);
+                if (key == null)
+                {
+                    return new RzSdkVersion(0, 0, 0);
+                }
+                var major = (int)key.GetValue("MajorVersion", 0);
+                var minor = (int)key.GetValue("MinorVersion", 0);
+                var revision = (int)key.GetValue("RevisionNumber", 0);
 
                 return new RzSdkVersion(major, minor, revision);
             }
@@ -112,9 +115,6 @@ namespace Aurora.Modules.Razer
                 }
                 case RzAppListDataProvider appList:
                     CurrentAppExecutable = appList.CurrentAppExecutable;
-                    break;
-                default:
-                    Console.WriteLine("wut");
                     break;
             }
         }

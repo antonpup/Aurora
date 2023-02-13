@@ -7,28 +7,27 @@ using Aurora.Profiles;
 
 namespace Aurora.Modules.GameStateListen;
 
-public delegate void NewGameStateHandler(IGameState gamestate);
 public class AuroraHttpListener
 {
     private bool _isRunning;
-    private IGameState _currentGameState;
-    private HttpListener _netListener;
+    private IGameState? _currentGameState;
+    private HttpListener? _netListener;
     private readonly int _port;
 
-    public IGameState CurrentGameState
+    public IGameState? CurrentGameState
     {
         get => _currentGameState;
         private set
         {
             _currentGameState = value;
-            NewGameState?.Invoke(CurrentGameState);
+            NewGameState?.Invoke(this, CurrentGameState);
         }
     }
 
     /// <summary>
     ///  Event for handing a newly received game state
     /// </summary>
-    public event NewGameStateHandler NewGameState = delegate { };
+    public event EventHandler<IGameState>? NewGameState;
 
     /// <summary>
     /// A GameStateListener that listens for connections on http://localhost:port/

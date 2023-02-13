@@ -11,7 +11,7 @@ namespace Aurora.Modules;
 
 public sealed partial class InputsModule : IAuroraModule
 {
-    private static InputInterceptor InputInterceptor;
+    private static InputInterceptor? InputInterceptor;
 
     [Async]
     public void Initialize()

@@ -15,15 +15,15 @@ namespace Aurora.Settings {
     /// </summary>
     public partial class Window_GSIHttpDebug
     {
-        static Window_GSIHttpDebug HttpDebugWindow;
+        static Window_GSIHttpDebug? HttpDebugWindow;
 
-        private readonly AuroraHttpListener _httpListener;
+        private readonly AuroraHttpListener? _httpListener;
 
         /// <summary>
         /// Opens the HttpDebugWindow if not already opened. If opened bring it to the foreground. 
         /// </summary>
         /// <param name="httpListener"></param>
-        public static void Open(Task<AuroraHttpListener> httpListener)
+        public static void Open(Task<AuroraHttpListener?> httpListener)
         {
             var httpListenerResult = httpListener.Result;
             if (httpListenerResult == null)
@@ -41,8 +41,8 @@ namespace Aurora.Settings {
             }
         }
 
-        private Timer timeDisplayTimer;
-        private DateTime? lastRequestTime;
+        private Timer? _timeDisplayTimer;
+        private DateTime? _lastRequestTime;
 
         private Window_GSIHttpDebug(AuroraHttpListener httpListener)
         {
@@ -68,9 +68,9 @@ namespace Aurora.Settings {
                 SetJsonText(_httpListener.CurrentGameState.Json);
 
             // Start a timer to update the time displays for the request
-            timeDisplayTimer = new Timer(_ => Dispatcher.Invoke(() => {
-                if (lastRequestTime.HasValue)
-                    CurRequestTime.Text = lastRequestTime + " (" + (DateTime.Now - lastRequestTime).Value.TotalSeconds.ToString("0.00") + "s ago)";
+            _timeDisplayTimer = new Timer(_ => Dispatcher.Invoke(() => {
+                if (_lastRequestTime.HasValue)
+                    CurRequestTime.Text = _lastRequestTime + " (" + (DateTime.Now - _lastRequestTime).Value.TotalSeconds.ToString("0.00") + "s ago)";
             }), null, 0, 50);
         }
 
@@ -84,7 +84,7 @@ namespace Aurora.Settings {
             _httpListener.NewGameState -= Net_listener_NewGameState;
 
             // Destory the timer to ensure it doesn't keep running and eating memory.
-            timeDisplayTimer.Dispose();
+            _timeDisplayTimer.Dispose();
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -94,13 +94,13 @@ namespace Aurora.Settings {
                 HttpDebugWindow = null;
         }
 
-        private void Net_listener_NewGameState(IGameState gamestate)
+        private void Net_listener_NewGameState(object sender, IGameState gamestate)
         {
             // This needs to be invoked due to the UI thread being different from the networking thread.
             // Without this, an exception is thrown trying to update the text box.
             Dispatcher.Invoke(() => SetJsonText(gamestate.Json));
             // Also record the time this request came in
-            lastRequestTime = DateTime.Now;
+            _lastRequestTime = DateTime.Now;
         }
 
         /// <summary>

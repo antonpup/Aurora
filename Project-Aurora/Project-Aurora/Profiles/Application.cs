@@ -28,7 +28,7 @@ namespace Aurora.Profiles
 {
     public class LightEventConfig : INotifyPropertyChanged
     {
-        public string[] ProcessNames
+        public string[]? ProcessNames
         {
             get => _processNames;
             set
@@ -41,7 +41,7 @@ namespace Aurora.Profiles
         public event EventHandler<EventArgs> ProcessNamesChanged; 
 
         /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
-        public string[] ProcessTitles { get; set; }
+        public string[]? ProcessTitles { get; set; }
 
         public string Name { get; set; }
 
@@ -55,17 +55,17 @@ namespace Aurora.Profiles
 
         public Type OverviewControlType { get; set; }
 
-        public Type GameStateType { get; set; }
+        public Type? GameStateType { get; set; }
 
         private readonly Lazy<LightEvent> _lightEvent;
-        private string[] _processNames;
+        private string[]? _processNames;
         public LightEvent Event => _lightEvent.Value;
 
         public int? UpdateInterval { get; set; } = null;
 
         public string IconURI { get; set; }
 
-        public HashSet<Type> ExtraAvailableLayers { get; } = new HashSet<Type>();
+        public HashSet<Type> ExtraAvailableLayers { get; } = new();
 
         public bool EnableByDefault { get; set; } = true;
         public bool EnableOverlaysByDefault { get; set; } = true;
@@ -93,21 +93,21 @@ namespace Aurora.Profiles
         #region Public Properties
         public bool Initialized { get; protected set; }
         public bool Disposed { get; protected set; }
-        [CanBeNull] public ApplicationProfile Profile { get; private set; }
+        public ApplicationProfile? Profile { get; private set; }
         public ObservableCollection<ApplicationProfile> Profiles { get; set; }
         public GameStateParameterLookup ParameterLookup { get; }
-        public event EventHandler ProfileChanged;
-        public LightEventConfig Config { get; }
+        public event EventHandler? ProfileChanged;
+        public LightEventConfig? Config { get; }
         public bool IsEnabled => Settings.IsEnabled;
         public bool IsOverlayEnabled => Settings.IsOverlayEnabled;
 
         #endregion
 
         #region Internal Properties
-        protected ImageSource icon;
+        protected ImageSource? icon;
         public virtual ImageSource Icon => icon ??= new BitmapImage(new Uri(Config.IconURI, UriKind.Relative));
 
-        private UserControl _control;
+        private UserControl? _control;
         public UserControl Control => _control ??= (UserControl)Activator.CreateInstance(Config.OverviewControlType, this);
 
         internal Dictionary<string, IEffectScript> EffectScripts { get; } = new();
@@ -122,12 +122,12 @@ namespace Aurora.Profiles
             config.Event.Application = this;
             config.Event.ResetGameState();
             Profiles = new ObservableCollection<ApplicationProfile>();
-            Profiles.CollectionChanged += (sender, e) => {
-                if (e.Action == NotifyCollectionChangedAction.Add) {
-                    foreach (ApplicationProfile prof in e.NewItems)
-                    {
-                        prof.SetApplication(this);
-                    }
+            Profiles.CollectionChanged += (_, e) =>
+            {
+                if (e.Action != NotifyCollectionChangedAction.Add) return;
+                foreach (ApplicationProfile prof in e.NewItems)
+                {
+                    prof.SetApplication(this);
                 }
             };
             if (config.GameStateType != null)
@@ -153,14 +153,16 @@ namespace Aurora.Profiles
         /// <summary>Enables the use of a non-default layer for this application.</summary>
         protected void AllowLayer<T>() where T : ILayerHandler => Config.WithLayer<T>();
 
-        /// <summary>Determines if the given layer handler type can be used by this application. This is the case either if it is a default handler or has explicitly been allowed for this application.</summary>
-        public bool IsAllowedLayer(Type type) => Global.LightingStateManager.LayerHandlers.TryGetValue(type, out var def) && (def.IsDefault || Config.ExtraAvailableLayers.Contains(type));
+        /// <summary>Determines if the given layer handler type can be used by this application.
+        /// This is the case either if it is a default handler or has explicitly been allowed for this application.</summary>
+        public bool IsAllowedLayer(Type type) => Global.LightingStateManager.LayerHandlers.TryGetValue(type, out var def) &&
+                                                 (def.IsDefault || Config.ExtraAvailableLayers.Contains(type));
 
         /// <summary>Gets a list of layers that are allowed to be used by this application.</summary>
         public IEnumerable<LayerHandlerMeta> AllowedLayers
             => Global.LightingStateManager.LayerHandlers.Values.Where(val => val.IsDefault || Config.ExtraAvailableLayers.Contains(val.Type));
 
-        public void SwitchToProfile(ApplicationProfile newProfileSettings)
+        public void SwitchToProfile(ApplicationProfile? newProfileSettings)
         {
             if (Disposed)
                 return;
@@ -176,7 +178,7 @@ namespace Aurora.Profiles
             Settings.SelectedProfile = Path.GetFileNameWithoutExtension(Profile.ProfileFilepath);
             Profile.PropertyChanged += Profile_PropertyChanged;
 
-            App.Current.Dispatcher.Invoke(() => ProfileChanged?.Invoke(this, new EventArgs()));
+            App.Current.Dispatcher.Invoke(() => ProfileChanged?.Invoke(this, EventArgs.Empty));
         }
 
         protected virtual ApplicationProfile CreateNewProfile(string profileName)
@@ -213,7 +215,7 @@ namespace Aurora.Profiles
             return newProfile;
         }
 
-        public void DeleteProfile(ApplicationProfile profile)
+        public void DeleteProfile(ApplicationProfile? profile)
         {
             if (Disposed)
                 return;
@@ -246,7 +248,7 @@ namespace Aurora.Profiles
             SaveProfiles();
         }
 
-        protected string GetValidFilename(string filename)
+        private string GetValidFilename(string filename)
         {
             foreach (char c in Path.GetInvalidFileNameChars())
                 filename = filename.Replace(c, '_');
@@ -275,11 +277,8 @@ namespace Aurora.Profiles
             try
             {
                 Profile?.Reset();
-                //Profile.PropertyChanged += Profile_PropertyChanged;
 
-                //this.InitalizeScriptSettings(Profile, true);
-
-                ProfileChanged?.Invoke(this, new EventArgs());
+                ProfileChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception exc)
             {
@@ -289,7 +288,7 @@ namespace Aurora.Profiles
 
         //hacky fix to sort out MoD profile type change
         protected ISerializationBinder binder = JSONUtils.SerializationBinder;
-        internal ApplicationProfile LoadProfile(string path)
+        internal ApplicationProfile? LoadProfile(string path)
         {
             if (Disposed)
                 return null;
@@ -298,9 +297,9 @@ namespace Aurora.Profiles
             {
                 if (File.Exists(path))
                 {
-                    string profile_content = File.ReadAllText(path, Encoding.UTF8);
+                    string profileContent = File.ReadAllText(path, Encoding.UTF8);
 
-                    if (!String.IsNullOrWhiteSpace(profile_content))
+                    if (!String.IsNullOrWhiteSpace(profileContent))
                     {
                         var jsonSerializerSettings = new JsonSerializerSettings
                         {
@@ -317,7 +316,7 @@ namespace Aurora.Profiles
                         jsonSerializerSettings.Converters.Add(new DictionaryJsonConverterAdapter());
                         jsonSerializerSettings.Converters.Add(new ConcurrentDictionaryJsonConverterAdapter());
                         ApplicationProfile prof = (ApplicationProfile)JsonConvert.DeserializeObject(
-                            profile_content,
+                            profileContent,
                             Config.ProfileType,
                             jsonSerializerSettings);
                         prof.ProfileFilepath = path;
@@ -362,10 +361,10 @@ namespace Aurora.Profiles
                 {
                     string newPath = path + ".corrupted";
 
-                    int _copy = 1;
+                    int copy = 1;
                     while (File.Exists(newPath))
                     {
-                        newPath = path + $"({_copy++}).corrupted";
+                        newPath = path + $"({copy++}).corrupted";
                     }
 
                     File.Move(path, newPath);
@@ -493,7 +492,7 @@ namespace Aurora.Profiles
             }*/
         }
 
-        protected void LoadScripts(string profiles_path, bool force = false)
+        protected void LoadScripts(string profilesPath, bool force = false)
         {
             if (!force && EffectScripts.Count != 0)
                 return;
@@ -504,11 +503,11 @@ namespace Aurora.Profiles
             RegisterEffect(voronsScriptPerf.ID, voronsScriptPerf);
             RegisterEffect(voronsScriptPing.ID, voronsScriptPing);
 
-            string scripts_path = Path.Combine(profiles_path, Global.ScriptDirectory);
-            if (!Directory.Exists(scripts_path))
-                Directory.CreateDirectory(scripts_path);
+            string scriptsPath = Path.Combine(profilesPath, Global.ScriptDirectory);
+            if (!Directory.Exists(scriptsPath))
+                Directory.CreateDirectory(scriptsPath);
 
-            foreach (string script in Directory.EnumerateFiles(scripts_path, "*.*"))
+            foreach (string script in Directory.EnumerateFiles(scriptsPath, "*.*"))
             {
                 try
                 {
@@ -520,41 +519,34 @@ namespace Aurora.Profiles
                             var scope = Global.PythonEngine.ExecuteFile(script);
                             foreach (var v in scope.GetItems())
                             {
-                                if (v.Value is PythonType)
+                                if (v.Value is not PythonType) continue;
+                                Type typ = ((PythonType)v.Value).__clrtype__();
+                                if (typ.IsInterface || !typeof(IEffectScript).IsAssignableFrom(typ)) continue;
+                                if (Global.PythonEngine.Operations.CreateInstance(v.Value) is IEffectScript obj)
                                 {
-                                    Type typ = ((PythonType)v.Value).__clrtype__();
-                                    if (!typ.IsInterface && typeof(IEffectScript).IsAssignableFrom(typ))
-                                    {
-                                        IEffectScript obj = Global.PythonEngine.Operations.CreateInstance(v.Value) as IEffectScript;
-                                        if (obj != null)
-                                        {
-                                            if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
-                                                Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
-                                            else
-                                                anyLoaded = true;
-                                        }
-                                        else
-                                            Global.logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
-                                    }
+                                    if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
+                                        Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
+                                    else
+                                        anyLoaded = true;
                                 }
+                                else
+                                    Global.logger.Error($"Could not create instance of Effect Script: {v.Key} in script: \"{script}\"");
                             }
 
 
                             break;
                         case ".cs":
-                            Assembly script_assembly = CSScript.RoslynEvaluator.CompileCode(File.ReadAllText(script));
+                            Assembly scriptAssembly = CSScript.RoslynEvaluator.CompileCode(File.ReadAllText(script));
                             Type effectType = typeof(IEffectScript);
-                            foreach (Type typ in script_assembly.ExportedTypes)
+                            foreach (Type typ in scriptAssembly.ExportedTypes)
                             {
-                                if (effectType.IsAssignableFrom(typ))
-                                {
-                                    IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
-                                    if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
-                                        Global.logger.Warn("Script {Script} must have a unique string ID variable for the effect {FullName}",
-                                            script, typ.FullName);
-                                    else
-                                        anyLoaded = true;
-                                }
+                                if (!effectType.IsAssignableFrom(typ)) continue;
+                                IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
+                                if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
+                                    Global.logger.Warn("Script {Script} must have a unique string ID variable for the effect {FullName}",
+                                        script, typ.FullName);
+                                else
+                                    anyLoaded = true;
                             }
 
                             break;
@@ -578,20 +570,20 @@ namespace Aurora.Profiles
             LoadScripts(GetProfileFolderPath(), true);
         }
 
-        protected void InitalizeScriptSettings(ApplicationProfile profile_settings, bool ignore_removal = false)
+        protected void InitalizeScriptSettings(ApplicationProfile profileSettings, bool ignoreRemoval = false)
         {
             foreach (string id in EffectScripts.Keys)
             {
-                if (!profile_settings.ScriptSettings.ContainsKey(id))
-                    profile_settings.ScriptSettings.Add(id, new ScriptSettings());
+                if (!profileSettings.ScriptSettings.ContainsKey(id))
+                    profileSettings.ScriptSettings.Add(id, new ScriptSettings());
             }
 
 
-            if (!ignore_removal)
+            if (!ignoreRemoval)
             {
-                foreach (string key in profile_settings.ScriptSettings.Keys.Where(s => !EffectScripts.ContainsKey(s)).ToList())
+                foreach (string key in profileSettings.ScriptSettings.Keys.Where(s => !EffectScripts.ContainsKey(s)).ToList())
                 {
-                    profile_settings.ScriptSettings.Remove(key);
+                    profileSettings.ScriptSettings.Remove(key);
                 }
             }
         }
@@ -610,7 +602,7 @@ namespace Aurora.Profiles
                     string profileFilename = Path.GetFileNameWithoutExtension(profile);
                     if (profileFilename.Equals(Path.GetFileNameWithoutExtension(SettingsSavePath)))
                         continue;
-                    ApplicationProfile profileSettings = LoadProfile(profile);
+                    var profileSettings = LoadProfile(profile);
 
                     if (profileSettings != null)
                     {
@@ -643,13 +635,13 @@ namespace Aurora.Profiles
             SaveProfile(Profile);
         }
 
-        public virtual void SaveProfile(ApplicationProfile profile, string path = null)
+        public virtual void SaveProfile(ApplicationProfile profile, string? path = null)
         {
             if (Disposed)
                 return;
             try
             {
-                path = path ?? Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
+                path ??= Path.Combine(GetProfileFolderPath(), profile.ProfileFilepath);
                 JsonSerializerSettings settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Binder = JSONUtils.SerializationBinder };
                 string content = JsonConvert.SerializeObject(profile, Formatting.Indented, settings);
 
@@ -675,16 +667,14 @@ namespace Aurora.Profiles
 
             try
             {
-                string profiles_path = GetProfileFolderPath();
+                string profilesPath = GetProfileFolderPath();
 
-                if (!Directory.Exists(profiles_path))
-                    Directory.CreateDirectory(profiles_path);
-
-                //SaveProfile(Path.Combine(profiles_path, Profile.ProfileFilepath), Profile);
+                if (!Directory.Exists(profilesPath))
+                    Directory.CreateDirectory(profilesPath);
 
                 foreach (var profile in Profiles)
                 {
-                    SaveProfile(profile, Path.Combine(profiles_path, profile.ProfileFilepath));
+                    SaveProfile(profile, Path.Combine(profilesPath, profile.ProfileFilepath));
                 }
             }
             catch (Exception exc)
@@ -706,7 +696,7 @@ namespace Aurora.Profiles
         {
             base.LoadSettings(settingsType);
 
-            Settings.PropertyChanged += (sender, e) => {
+            Settings.PropertyChanged += (_, e) => {
                 SaveSettings(Config.SettingsType);
             };
         }
@@ -721,9 +711,7 @@ namespace Aurora.Profiles
             foreach (var profile in Profiles)
                 profile.Dispose();
             Profiles = null;
-
             _control = null;
-            
             EffectScripts.Clear();
         }
     }

@@ -27,7 +27,7 @@ public class RunningProcessChanged: EventArgs
 /// </summary>
 [Singleton]
 public sealed partial class RunningProcessMonitor : IDisposable {
-    public event EventHandler<RunningProcessChanged> RunningProcessesChanged;
+    public event EventHandler<RunningProcessChanged>? RunningProcessesChanged;
 
     /// <summary>A list of all currently running processes (and how many instances are running).</summary>
     /// <remarks>The reason for the count is so that if two processes of the same file are running and one is closed, we can know
@@ -99,9 +99,9 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     {
         _startWatcher.EventArrived -= ProcessStarted;
         _startWatcher.Stop();
-        _startWatcher?.Dispose();
+        _startWatcher.Dispose();
         _stopWatcher.EventArrived -= ProcessStopped;
         _stopWatcher.Stop();
-        _stopWatcher?.Dispose();
+        _stopWatcher.Dispose();
     }
 }

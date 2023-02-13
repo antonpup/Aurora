@@ -70,7 +70,7 @@ public sealed class MediaMonitor : IDisposable
 
     private sealed class MediaSessionComparer : IEqualityComparer<MediaManager.MediaSession>
     {
-        public bool Equals(MediaManager.MediaSession x, MediaManager.MediaSession y)
+        public bool Equals(MediaManager.MediaSession? x, MediaManager.MediaSession? y)
         {
             return x?.Id == y?.Id;
         }

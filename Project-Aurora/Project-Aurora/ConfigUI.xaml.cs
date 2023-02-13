@@ -25,6 +25,7 @@ using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
 using Hardcodet.Wpf.TaskbarNotification;
+using JetBrains.Annotations;
 using PropertyChanged;
 using RazerSdkWrapper;
 using Application = Aurora.Profiles.Application;
@@ -37,26 +38,26 @@ namespace Aurora;
 [DoNotNotify]
 partial class ConfigUI : INotifyPropertyChanged
 {
-    readonly Control_Settings _settingsControl;
-    Control_LayerControlPresenter _layerPresenter = new();
-    Control_ProfileControlPresenter _profilePresenter = new();
+    private readonly  Control_Settings _settingsControl;
+    private readonly Control_LayerControlPresenter _layerPresenter = new();
+    private readonly Control_ProfileControlPresenter _profilePresenter = new();
 
-    readonly EffectColor _desktopColorScheme = new(0, 0, 0);
+    private readonly EffectColor _desktopColorScheme = new(0, 0, 0);
 
-    readonly EffectColor _transitionColor = new();
-    EffectColor _currentColor = new();
+    private readonly EffectColor _transitionColor = new();
+    private EffectColor _currentColor = new();
 
     private float _transitionAmount;
 
-    private FrameworkElement _selectedItem;
-    private FrameworkElement _selectedManager;
+    private FrameworkElement? _selectedItem;
+    private FrameworkElement? _selectedManager;
 
     private bool _settingsLoaded;
     private bool _shownHiddenMessage;
 
     private string _savedPreviewKey = "";
 
-    private Timer _virtualKeyboardTimer;
+    private Timer? _virtualKeyboardTimer;
     private Grid _virtualKb = new();
 
     public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register(
@@ -64,9 +65,9 @@ partial class ConfigUI : INotifyPropertyChanged
         new PropertyMetadata(null, FocusedProfileChanged));
 
     private readonly Task<KeyboardLayoutManager> _layoutManager;
-    private readonly Task<AuroraHttpListener> _httpListener;
+    private readonly Task<AuroraHttpListener?> _httpListener;
 
-    public Application FocusedApplication
+    public Application? FocusedApplication
     {
         get => (Application)GetValue(FocusedApplicationProperty);
         set
@@ -76,20 +77,20 @@ partial class ConfigUI : INotifyPropertyChanged
         }
     }
 
-    private bool _ShowHidden;
+    private bool _showHidden;
 
     public bool ShowHidden
     {
-        get => _ShowHidden;
+        get => _showHidden;
         set
         {
-            _ShowHidden = value;
+            _showHidden = value;
             ShowHiddenChanged(value);
         }
     }
 
-    public ConfigUI(Task<RzSdkManager> rzSdkManager, Task<PluginManager> pluginManager,
-        Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener> httpListener)
+    public ConfigUI(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
+        Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener)
     {
         _httpListener = httpListener;
         _layoutManager = layoutManager;
@@ -124,6 +125,7 @@ partial class ConfigUI : INotifyPropertyChanged
         ShowInTaskbar = true;
         WindowStyle = WindowStyle.SingleBorderWindow;
         Show();
+        Focus();
     }
 
     private void CtrlProfileManager_ProfileSelected(ApplicationProfile profile)
@@ -249,7 +251,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void trayicon_menu_quit_Click(object sender, RoutedEventArgs e)
     {
-        exitApp();
+        ExitApp();
     }
 
     private void trayicon_menu_settings_Click(object sender, RoutedEventArgs e)
@@ -259,7 +261,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void Window_Initialized(object sender, EventArgs e)
     {
-            
+        //unused
     }
 
     private void Window_Closing(object sender, CancelEventArgs e)
@@ -273,34 +275,34 @@ partial class ConfigUI : INotifyPropertyChanged
 
                 if (result == MessageBoxResult.No)
                 {
-                    minimizeApp();
+                    MinimizeApp();
                     e.Cancel = true;
                 }
                 else
                 {
-                    exitApp();
+                    ExitApp();
                 }
 
                 break;
             }
             case AppExitMode.Minimize:
-                minimizeApp();
+                MinimizeApp();
                 e.Cancel = true;
                 break;
             default:
-                exitApp();
+                ExitApp();
                 break;
         }
     }
 
-    private void exitApp()
+    private void ExitApp()
     {
         trayicon.Visibility = Visibility.Hidden;
         _virtualKeyboardTimer?.Stop();
         System.Windows.Application.Current.Shutdown();
     }
 
-    private void minimizeApp()
+    private void MinimizeApp()
     {
         FocusedApplication?.SaveAll();
 
@@ -350,8 +352,6 @@ partial class ConfigUI : INotifyPropertyChanged
                      .OrderBy(item => item.Settings.Hidden))
         {
             ImageSource icon = application.Icon;
-            UserControl control = application.Control;
-            if (icon == null || control == null) continue;
             Image profileImage;
             if (application is GenericApplication)
             {
@@ -504,7 +504,7 @@ partial class ConfigUI : INotifyPropertyChanged
         UpdateProfileStackBackground(source);
     }
 
-    private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs e)
+    private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs? e)
     {
         if (sender is not Image { Tag: Application } image) return;
         if (e == null || e.LeftButton == MouseButtonState.Pressed)
@@ -536,7 +536,7 @@ partial class ConfigUI : INotifyPropertyChanged
             return;
         }
 
-        string name = image.Tag as string;
+        string name = (string)image.Tag;
 
         if (!Global.LightingStateManager.Events.ContainsKey(name)) return;
         if (MessageBox.Show(
@@ -573,22 +573,22 @@ partial class ConfigUI : INotifyPropertyChanged
             }
         }
 
-        GenericApplication gen_app_pm = new GenericApplication(filename);
-        gen_app_pm.Initialize();
-        ((GenericApplicationSettings)gen_app_pm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
+        GenericApplication genAppPm = new GenericApplication(filename);
+        genAppPm.Initialize();
+        ((GenericApplicationSettings)genAppPm.Settings).ApplicationName = Path.GetFileNameWithoutExtension(filename);
 
         Icon ico = System.Drawing.Icon.ExtractAssociatedIcon(dialog.ChosenExecutablePath.ToLowerInvariant());
 
-        if (!Directory.Exists(gen_app_pm.GetProfileFolderPath()))
-            Directory.CreateDirectory(gen_app_pm.GetProfileFolderPath());
+        if (!Directory.Exists(genAppPm.GetProfileFolderPath()))
+            Directory.CreateDirectory(genAppPm.GetProfileFolderPath());
 
-        using (var icon_asbitmap = ico.ToBitmap())
+        using (var iconAsbitmap = ico.ToBitmap())
         {
-            icon_asbitmap.Save(Path.Combine(gen_app_pm.GetProfileFolderPath(), "icon.png"), ImageFormat.Png);
+            iconAsbitmap.Save(Path.Combine(genAppPm.GetProfileFolderPath(), "icon.png"), ImageFormat.Png);
         }
         ico.Dispose();
 
-        Global.LightingStateManager.RegisterEvent(gen_app_pm);
+        Global.LightingStateManager.RegisterEvent(genAppPm);
         ConfigManager.Save(Global.Configuration);
         GenerateProfileStack(filename);
     }
@@ -606,20 +606,20 @@ partial class ConfigUI : INotifyPropertyChanged
     private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
     private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
 
-    private void UpdateProfileStackBackground(FrameworkElement item)
+    private void UpdateProfileStackBackground(FrameworkElement? item)
     {
         _selectedItem = item;
 
         if (_selectedItem == null) return;
         DrawingBrush mask = new DrawingBrush();
-        GeometryDrawing visible_region =
+        GeometryDrawing visibleRegion =
             new GeometryDrawing(
                 new SolidColorBrush(Color.FromArgb(64, 0, 0, 0)),
                 null,
                 new RectangleGeometry(new Rect(0, 0, profiles_background.ActualWidth, profiles_background.ActualHeight)));
 
         DrawingGroup drawingGroup = new DrawingGroup();
-        drawingGroup.Children.Add(visible_region);
+        drawingGroup.Children.Add(visibleRegion);
 
         Point relativePoint = _selectedItem.TransformToAncestor(profiles_background)
             .Transform(new Point(0, 0));
@@ -656,13 +656,13 @@ partial class ConfigUI : INotifyPropertyChanged
                 
         if (height > 0 && width > 0)
         {
-            GeometryDrawing transparent_region =
+            GeometryDrawing transparentRegion =
                 new GeometryDrawing(
                     new SolidColorBrush((Color)_currentColor),
                     null,
                     new RectangleGeometry(new Rect(x, y, width, height)));
 
-            drawingGroup.Children.Add(transparent_region);
+            drawingGroup.Children.Add(transparentRegion);
         }
 
         mask.Drawing = drawingGroup;
@@ -761,7 +761,7 @@ partial class ConfigUI : INotifyPropertyChanged
     // This new code for the layer selection has been separated from the existing code so that one day we can sort all
     // the above out and make it more WPF with bindings and other dark magic like that.
     #region PropertyChangedEvent and Helpers
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Call the PropertyChangedEvent for a single property.
@@ -773,21 +773,21 @@ partial class ConfigUI : INotifyPropertyChanged
     /// Sets a field and calls <see cref="NotifyChanged(string)"/> with the calling member name and any additional properties.
     /// Designed for setting a field from a property.
     /// </summary>
-    private void SetField<T>(ref T var, T value, string[] additional = null, [CallerMemberName] string name = null) {
+    private void SetField<T>(ref T var, T value, string[]? additional = null, [CallerMemberName] string name = null) {
         var = value;
         NotifyChanged(name);
-        if (additional != null)
-            foreach (var prop in additional)
-                NotifyChanged(prop);
+        if (additional == null) return;
+        foreach (var prop in additional)
+            NotifyChanged(prop);
     }
     #endregion
 
     #region Properties
     /// <summary>A reference to the currently selected layer in either the regular or overlay layer list. When set, will update the <see cref="SelectedControl"/> property.</summary>
-    public Layer SelectedLayer {
-        get => selectedLayer;
+    public Layer? SelectedLayer {
+        get => _selectedLayer;
         set {
-            SetField(ref selectedLayer, value);
+            SetField(ref _selectedLayer, value);
             if (value == null)
                 SelectedControl = FocusedApplication?.Control;
             else {
@@ -796,10 +796,10 @@ partial class ConfigUI : INotifyPropertyChanged
             }
         }
     }
-    private Layer selectedLayer;
+    private Layer? _selectedLayer;
 
     /// <summary>The control that is currently displayed underneath they device preview panel. This could be an overview control or a layer presenter etc.</summary>
-    public Control SelectedControl { get => selectedControl; set => SetField(ref selectedControl, value); }
-    private Control selectedControl;
+    public Control? SelectedControl { get => _selectedControl; set => SetField(ref _selectedControl, value); }
+    private Control? _selectedControl;
     #endregion
 }

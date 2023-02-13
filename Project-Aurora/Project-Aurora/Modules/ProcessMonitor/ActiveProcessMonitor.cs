@@ -28,7 +28,7 @@ public sealed partial class ActiveProcessMonitor
 		private set
 		{
 			_processPath = value;
-			ActiveProcessChanged?.Invoke(this, EventArgs.Empty);
+			ActiveProcessChanged?.Invoke(null, EventArgs.Empty);
 			var processName = GetActiveWindowsProcessName();
 			if (processName != null)
 			{
@@ -36,11 +36,11 @@ public sealed partial class ActiveProcessMonitor
 			}
 		}
 	}
-	public static event EventHandler ActiveProcessChanged;
+	public static event EventHandler? ActiveProcessChanged;
 
 	public string ActiveProcessName { get; set; } = "";
 
-	private WinEventDelegate dele;
+	private WinEventDelegate? dele;
 
 	private ActiveProcessMonitor()
 	{
@@ -115,9 +115,9 @@ public sealed partial class ActiveProcessMonitor
 			new TimeSpan(0, 0, 0, 0, Environment.TickCount - inf.dwTime);
 	}
 
-	private static string GetExecutablePath(Process Process)
+	private static string GetExecutablePath(Process process)
 	{
-		return GetExecutablePathAboveVista(Process.Id);
+		return GetExecutablePathAboveVista(process.Id);
 	}
 
 	private static string GetExecutablePathAboveVista(int processId)
@@ -155,7 +155,7 @@ public sealed partial class ActiveProcessMonitor
 				Process proc = Process.GetProcessById((int)pid);
 				string path = GetExecutablePath(proc);
 				if (!System.IO.File.Exists(path))
-					throw new Exception($"Found file path does not exist! '{path}'");
+					throw new InvalidOperationException($"Found file path does not exist! '{path}'");
 				return path;
 			}
 		}
@@ -180,14 +180,13 @@ public sealed partial class ActiveProcessMonitor
 		return "";
 	}
 
-	private string GetActiveWindowsProcessName() {
+	private string? GetActiveWindowsProcessName() {
 		try {
 			IntPtr windowHandle = GetForegroundWindow();
-			uint processID;
 
-			if (GetWindowThreadProcessId(windowHandle, out processID) > 0)
+			if (GetWindowThreadProcessId(windowHandle, out var processId) > 0)
 			{
-				var process = Process.GetProcessById((int)processID);
+				var process = Process.GetProcessById((int)processId);
 				var exePath = process.MainModule.FileName;
 				return exePath.Remove(0, exePath.LastIndexOf('\\') + 1);
 			}

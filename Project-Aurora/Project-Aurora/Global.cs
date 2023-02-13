@@ -72,7 +72,6 @@ public static class Global
     /// Output logger for errors, warnings, and information
     /// </summary>
     public static NLog.Logger logger;
-    //public static Logger logger;
 
     public static void LogLine(this NLog.Logger logger, string text, Logging_Level level = Logging_Level.None)
     {
@@ -98,20 +97,17 @@ public static class Global
     /// <summary>
     /// Input event subscriptions
     /// </summary>
-    public static IInputEvents InputEvents;
+    public static IInputEvents? InputEvents;
 
-    //public static GameEventHandler geh;
-    public static LightingStateManager LightingStateManager { get; set; }     //TODO module access
-    public static Configuration Configuration { get; set; }
-    public static DeviceManager dev_manager { get; set; }
-    public static KeyboardLayoutManager kbLayout { get; set; }                //TODO module access
-    public static Effects effengine { get; set; }
-    public static KeyRecorder key_recorder { get; set; }
-    public static RzSdkManager razerSdkManager { get; set; }                  //TODO module access
-    [CanBeNull]
-    public static AudioDeviceProxy CaptureProxy { get; set; }
-    [CanBeNull]
-    public static AudioDeviceProxy RenderProxy { get; set; }
+    public static LightingStateManager? LightingStateManager { get; set; }     //TODO module access
+    public static Configuration? Configuration { get; set; }
+    public static DeviceManager? dev_manager { get; set; }
+    public static KeyboardLayoutManager? kbLayout { get; set; }                //TODO module access
+    public static Effects? effengine { get; set; }
+    public static KeyRecorder? key_recorder { get; set; }
+    public static RzSdkManager? razerSdkManager { get; set; }                  //TODO module access
+    public static AudioDeviceProxy? CaptureProxy { get; set; }
+    public static AudioDeviceProxy? RenderProxy { get; set; }
 
     public static object Clipboard { get; set; }
 

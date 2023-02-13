@@ -7,7 +7,7 @@ namespace Aurora.Modules;
 public sealed partial class LayoutsModule : IAuroraModule
 {
     private KeyboardLayoutManager _layoutManager;
-    private TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     public Task<KeyboardLayoutManager> LayoutManager => _taskCompletionSource.Task;
 

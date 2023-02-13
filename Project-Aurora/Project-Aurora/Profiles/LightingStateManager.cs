@@ -19,565 +19,533 @@ using System.Windows;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.ProcessMonitor;
 
-namespace Aurora.Profiles
+namespace Aurora.Profiles;
+
+public sealed class LightingStateManager : IInit
 {
-    public sealed class LightingStateManager : IInit
+    public Dictionary<string, ILightEvent> Events { get; } = new() { { "desktop", new Desktop.Desktop() } };
+
+    public Desktop.Desktop DesktopProfile => (Desktop.Desktop)Events["desktop"];
+
+    private readonly List<ILightEvent> _startedEvents = new();
+    private readonly List<ILightEvent> _updatedEvents = new();
+
+    private Dictionary<string, string> EventProcesses { get; } = new();
+
+    private Dictionary<string, string> EventTitles { get; } = new();
+
+    private Dictionary<string, string> EventAppIDs { get; } = new();
+
+    public Dictionary<Type, LayerHandlerMeta> LayerHandlers { get; } = new();
+
+    public event EventHandler? PreUpdate;
+    public event EventHandler? PostUpdate;
+
+    private ActiveProcessMonitor _processMonitor;
+    private RunningProcessMonitor _runningProcessMonitor;
+    public RunningProcessMonitor RunningProcessMonitor => _runningProcessMonitor;
+
+    private Func<string, bool> _isRunningProcess;
+    private Func<ILightEvent, bool> _isOverlayActiveProfile;
+
+    private readonly Task<PluginManager> _pluginManager;
+    private readonly Task<IpcListener?> _ipcListener;
+
+    public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener)
     {
-        public Dictionary<string, ILightEvent> Events { get; } = new() { { "desktop", new Desktop.Desktop() } };
+        _pluginManager = pluginManager;
+        _ipcListener = ipcListener;
+    }
 
-        public Desktop.Desktop DesktopProfile => (Desktop.Desktop)Events["desktop"];
+    public bool Initialized { get; private set; }
 
-        private List<ILightEvent> StartedEvents = new();
-        private List<ILightEvent> UpdatedEvents = new();
-
-        private Dictionary<string, string> EventProcesses { get; } = new();
-
-        private Dictionary<string, string> EventTitles { get; } = new();
-
-        private Dictionary<string, string> EventAppIDs { get; } = new();
-
-        public Dictionary<Type, LayerHandlerMeta> LayerHandlers { get; } = new();
-
-        public event EventHandler PreUpdate;
-        public event EventHandler PostUpdate;
-
-        private ActiveProcessMonitor processMonitor;
-        private RunningProcessMonitor runningProcessMonitor;
-        public RunningProcessMonitor RunningProcessMonitor => runningProcessMonitor;
-
-        private Func<string, bool> _isRunningProcess;
-        private Func<ILightEvent, bool> _isOverlayActiveProfile;
-
-        private readonly Task<PluginManager> _pluginManager;
-        private readonly Task<IpcListener> _ipcListener;
-
-        public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener> ipcListener)
-        {
-            _pluginManager = pluginManager;
-            _ipcListener = ipcListener;
-        }
-
-        public bool Initialized { get; private set; }
-
-        public bool Initialize()
-        {
-            if (Initialized)
-                return true;
-
-            processMonitor = ActiveProcessMonitor.Instance;
-            runningProcessMonitor = RunningProcessMonitor.Instance;
-            _isRunningProcess = name => runningProcessMonitor.IsProcessRunning(name);
-            _isOverlayActiveProfile = evt =>
-                evt.IsOverlayEnabled &&
-                (evt.Config.ProcessNames == null ||
-                 evt.Config.ProcessNames.Any(_isRunningProcess));
-
-            // Register all Application types in the assembly
-            var profileTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
-                               where type.BaseType == typeof(Application) && type != typeof(GenericApplication)
-                               let inst = (Application)Activator.CreateInstance(type)
-                               orderby inst.Config.Name
-                               select inst;
-            foreach (var inst in profileTypes)
-                RegisterEvent(inst);
-
-            // Register all layer types that are in the Aurora.Settings.Layers namespace.
-            // Do not register all that are inside the assembly since some are application-specific (e.g. minecraft health layer)
-            var layerTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
-                             where type.GetInterfaces().Contains(typeof(ILayerHandler))
-                             let name = type.Name.CamelCaseToSpaceCase()
-                             let meta = type.GetCustomAttribute<LayerHandlerMetaAttribute>()
-                             where !type.IsGenericType
-                             where meta == null || !meta.Exclude
-                             select (type, meta);
-            foreach (var (type, meta) in layerTypes)
-                LayerHandlers.Add(type, new LayerHandlerMeta(type, meta));
-
-            LoadSettings();
-            LoadPlugins();
-
-            string additionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
-            if (Directory.Exists(additionalProfilesPath))
-            {
-                List<string> additionals = new List<string>(Directory.EnumerateDirectories(additionalProfilesPath));
-                foreach (var dir in additionals)
-                {
-                    if (File.Exists(Path.Combine(dir, "settings.json")))
-                    {
-                        string proccess_name = Path.GetFileName(dir);
-                        RegisterEvent(new GenericApplication(proccess_name));
-                    }
-                }
-            }
-
-            foreach (var profile in Events)
-            {
-                profile.Value.Initialize();
-            }
-
-            // Listen for profile keybind triggers
-            Global.InputEvents.KeyDown += CheckProfileKeybinds;
-
-            Initialized = true;
-            return Initialized;
-        }
-
-        private void LoadPlugins()
-        {
-            _pluginManager.Result.ProcessManager(this);
-        }
-
-        private void LoadSettings()
-        {
-            foreach (var kvp in Events)
-            {
-                if (!Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application)
-                    Global.Configuration.ProfileOrder.Add(kvp.Key);
-            }
-
-            foreach (string key in Global.Configuration.ProfileOrder.ToList())
-            {
-                if (!Events.ContainsKey(key) || !(Events[key] is Application))
-                    Global.Configuration.ProfileOrder.Remove(key);
-            }
-
-            Global.Configuration.ProfileOrder.Remove("desktop");
-            Global.Configuration.ProfileOrder.Insert(0, "desktop");
-        }
-
-        public void SaveAll()
-        {
-            foreach (var profile in Events)
-            {
-                if (profile.Value is Application)
-                    ((Application)profile.Value).SaveAll();
-            }
-        }
-
-        public void RegisterEvent(ILightEvent @event)
-        {
-            string profileId = @event.Config.ID;
-            if (string.IsNullOrWhiteSpace(profileId) || Events.ContainsKey(profileId)) return;
-
-            Events.Add(profileId, @event);
-
-            if (@event.Config.ProcessNames != null)
-            {
-                foreach (string exe in @event.Config.ProcessNames)
-                {
-                    EventProcesses[exe.ToLower()] = profileId;
-                }
-            }
-
-            @event.Config.ProcessNamesChanged += (_, _) =>
-            {
-                var keysToRemove = new List<string>();
-                foreach (var (s, value) in EventProcesses)
-                {
-                    if (value == profileId)
-                    {
-                        keysToRemove.Add(s);
-                    }
-                }
-
-                foreach (var s in keysToRemove)
-                {
-                    EventProcesses.Remove(s);
-                }
-
-                foreach (var exe in @event.Config.ProcessNames)
-                {
-                    if (!exe.Equals(profileId))
-                        EventProcesses.TryAdd(exe.ToLower(), profileId);
-                }
-            };
-
-            if (@event.Config.ProcessTitles != null)
-                foreach (string titleRx in @event.Config.ProcessTitles)
-                    EventTitles.Add(titleRx, profileId);
-
-            if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
-                EventAppIDs.Add(@event.Config.AppID, profileId);
-
-            if (@event is Application && !Global.Configuration.ProfileOrder.Contains(profileId))
-            {
-                Global.Configuration.ProfileOrder.Add(profileId);
-            }
-
-            if (Initialized)
-                @event.Initialize();
-        }
-
-        public void RemoveGenericProfile(string key)
-        {
-            if (Events.ContainsKey(key))
-            {
-                if (!(Events[key] is GenericApplication))
-                    return;
-                GenericApplication profile = (GenericApplication)Events[key];
-                Events.Remove(key);
-                Global.Configuration.ProfileOrder.Remove(key);
-
-                profile.Dispose();
-
-                string path = profile.GetProfileFolderPath();
-                if (Directory.Exists(path))
-                    Directory.Delete(path, true);
-            }
-        }
-
-        // Used to match a process's name and optional window title to a profile
-        public ILightEvent GetProfileFromProcessData(string processName, string processTitle = null)
-        {
-            var processNameProfile = GetProfileFromProcessName(processName);
-
-            if (processNameProfile == null)
-                return null;
-
-            // Is title matching required?
-            if (processNameProfile.Config.ProcessTitles != null)
-            {
-                var processTitleProfile = GetProfileFromProcessTitle(processTitle);
-
-                if (processTitleProfile != null && processTitleProfile.Equals(processNameProfile))
-                {
-                    return processTitleProfile;
-                }
-            }
-            else
-            {
-                return processNameProfile;
-            }
-
-            return null;
-        }
-
-        public ILightEvent GetProfileFromProcessName(string process)
-        {
-            if (EventProcesses.TryGetValue(process, out var eventId) &&
-                Events.TryGetValue(eventId, out var res))
-            {
-                return res;
-            }
- 
-            return Events.TryGetValue(process, out res) ? res : null;
-        }
-
-        public ILightEvent GetProfileFromProcessTitle(string title)
-        {
-            foreach (var entry in EventTitles)
-            {
-                if (Regex.IsMatch(title, entry.Key, RegexOptions.IgnoreCase))
-                {
-                    if (!Events.ContainsKey(entry.Value))
-                        Global.logger.Warn($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles but subsequently '{entry.Value}' does not in Events!");
-                    else
-                        return Events[entry.Value]; // added in an else so we keep searching for more valid regexes.
-                }
-            }
-            return null;
-        }
-
-        public ILightEvent GetProfileFromAppID(string appid)
-        {
-            if (EventAppIDs.ContainsKey(appid))
-            {
-                if (!Events.ContainsKey(EventAppIDs[appid]))
-                    Global.logger.Warn($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs but subsequently '{EventAppIDs[appid]}' does not in Events!");
-                return Events[EventAppIDs[appid]];
-            }
-            else if (Events.ContainsKey(appid))
-                return Events[appid];
-
-            return null;
-        }
-
-        /// <summary>
-        /// Manually registers a layer. Only needed externally.
-        /// </summary>
-        public bool RegisterLayer<T>() where T : ILayerHandler
-        {
-            var t = typeof(T);
-            if (LayerHandlers.ContainsKey(t)) return false;
-            var meta = t.GetCustomAttribute<LayerHandlerMetaAttribute>() as LayerHandlerMetaAttribute;
-            LayerHandlers.Add(t, new LayerHandlerMeta(t, meta));
+    public bool Initialize()
+    {
+        if (Initialized)
             return true;
-        }
 
-        private Timer updateTimer;
+        _processMonitor = ActiveProcessMonitor.Instance;
+        _runningProcessMonitor = RunningProcessMonitor.Instance;
+        _isRunningProcess = name => _runningProcessMonitor.IsProcessRunning(name);
+        _isOverlayActiveProfile = evt =>
+            evt.IsOverlayEnabled &&
+            (evt.Config.ProcessNames == null ||
+             evt.Config.ProcessNames.Any(_isRunningProcess));
 
-        private long nextProcessNameUpdate;
-        private long currentTick;
-        private string previewModeProfileKey = "";
+        // Register all Application types in the assembly
+        var profileTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+            where type.BaseType == typeof(Application) && type != typeof(GenericApplication)
+            let inst = (Application)Activator.CreateInstance(type)
+            orderby inst.Config.Name
+            select inst;
+        foreach (var inst in profileTypes)
+            RegisterEvent(inst);
 
-        private List<TimedListObject> overlays = new List<TimedListObject>();
-        private readonly EventIdle _idleE = new();
+        // Register all layer types that are in the Aurora.Settings.Layers namespace.
+        // Do not register all that are inside the assembly since some are application-specific (e.g. minecraft health layer)
+        var layerTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+            where type.GetInterfaces().Contains(typeof(ILayerHandler))
+            let name = type.Name.CamelCaseToSpaceCase()
+            let meta = type.GetCustomAttribute<LayerHandlerMetaAttribute>()
+            where !type.IsGenericType
+            where meta is not { Exclude: true }
+            select (type, meta);
+        foreach (var (type, meta) in layerTypes)
+            LayerHandlers.Add(type, new LayerHandlerMeta(type, meta));
 
-        public string PreviewProfileKey { get { return previewModeProfileKey; } set { previewModeProfileKey = value ?? string.Empty; } }
+        LoadSettings();
+        LoadPlugins();
 
-        Stopwatch watch = new Stopwatch();
-        
-        private Semaphore updateLock = new Semaphore(1, 1);
-        private bool locked = false;
-
-        public void InitUpdate()
+        string additionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
+        if (Directory.Exists(additionalProfilesPath))
         {
-            watch.Start();
-            updateTimer = new Timer(g =>
+            List<string> additionals = new List<string>(Directory.EnumerateDirectories(additionalProfilesPath));
+            foreach (var processName in from dir in additionals
+                     where File.Exists(Path.Combine(dir, "settings.json"))
+                     select Path.GetFileName(dir)
+                    )
             {
-                TimerUpdate();
-            }, null, 0, System.Threading.Timeout.Infinite);
-        }
-
-        private void TimerUpdate()
-        {
-            if (locked)
-            {
-                return;
+                RegisterEvent(new GenericApplication(processName));
             }
-            updateLock.WaitOne();
-            locked = true;
+        }
 
-            if (Global.isDebug)
-                Update();
+        foreach (var profile in Events)
+        {
+            profile.Value.Initialize();
+        }
+
+        // Listen for profile keybind triggers
+        Global.InputEvents.KeyDown += CheckProfileKeybinds;
+
+        Initialized = true;
+        return Initialized;
+    }
+
+    private void LoadPlugins()
+    {
+        _pluginManager.Result.ProcessManager(this);
+    }
+
+    private void LoadSettings()
+    {
+        foreach (var kvp in Events)
+        {
+            if (!Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application)
+                Global.Configuration.ProfileOrder.Add(kvp.Key);
+        }
+
+        foreach (string key in Global.Configuration.ProfileOrder.ToList())
+        {
+            if (!Events.ContainsKey(key) || !(Events[key] is Application))
+                Global.Configuration.ProfileOrder.Remove(key);
+        }
+
+        Global.Configuration.ProfileOrder.Remove("desktop");
+        Global.Configuration.ProfileOrder.Insert(0, "desktop");
+    }
+
+    private void SaveAll()
+    {
+        foreach (var profile in Events.Where(profile => profile.Value is Application))
+        {
+            ((Application)profile.Value).SaveAll();
+        }
+    }
+
+    public void RegisterEvent(ILightEvent @event)
+    {
+        string profileId = @event.Config.ID;
+        if (string.IsNullOrWhiteSpace(profileId) || Events.ContainsKey(profileId)) return;
+
+        Events.Add(profileId, @event);
+
+        if (@event.Config.ProcessNames != null)
+        {
+            foreach (string exe in @event.Config.ProcessNames)
+            {
+                EventProcesses[exe.ToLower()] = profileId;
+            }
+        }
+
+        @event.Config.ProcessNamesChanged += (_, _) =>
+        {
+            var keysToRemove = new List<string>();
+            foreach (var (s, value) in EventProcesses)
+            {
+                if (value == profileId)
+                {
+                    keysToRemove.Add(s);
+                }
+            }
+
+            foreach (var s in keysToRemove)
+            {
+                EventProcesses.Remove(s);
+            }
+
+            foreach (var exe in @event.Config.ProcessNames)
+            {
+                if (!exe.Equals(profileId))
+                    EventProcesses.TryAdd(exe.ToLower(), profileId);
+            }
+        };
+
+        if (@event.Config.ProcessTitles != null)
+            foreach (string titleRx in @event.Config.ProcessTitles)
+                EventTitles.Add(titleRx, profileId);
+
+        if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
+            EventAppIDs.Add(@event.Config.AppID, profileId);
+
+        if (@event is Application && !Global.Configuration.ProfileOrder.Contains(profileId))
+        {
+            Global.Configuration.ProfileOrder.Add(profileId);
+        }
+
+        if (Initialized)
+            @event.Initialize();
+    }
+
+    public void RemoveGenericProfile(string key)
+    {
+        if (Events.ContainsKey(key))
+        {
+            if (!(Events[key] is GenericApplication))
+                return;
+            GenericApplication profile = (GenericApplication)Events[key];
+            Events.Remove(key);
+            Global.Configuration.ProfileOrder.Remove(key);
+
+            profile.Dispose();
+
+            string path = profile.GetProfileFolderPath();
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+        }
+    }
+
+    // Used to match a process's name and optional window title to a profile
+    private ILightEvent GetProfileFromProcessData(string processName, string processTitle = null)
+    {
+        var processNameProfile = GetProfileFromProcessName(processName);
+
+        if (processNameProfile == null)
+            return null;
+
+        // Is title matching required?
+        if (processNameProfile.Config.ProcessTitles != null)
+        {
+            var processTitleProfile = GetProfileFromProcessTitle(processTitle);
+
+            if (processTitleProfile != null && processTitleProfile.Equals(processNameProfile))
+            {
+                return processTitleProfile;
+            }
+        }
+        else
+        {
+            return processNameProfile;
+        }
+
+        return null;
+    }
+
+    private ILightEvent? GetProfileFromProcessName(string process)
+    {
+        if (EventProcesses.TryGetValue(process, out var eventId) &&
+            Events.TryGetValue(eventId, out var res))
+        {
+            return res;
+        }
+ 
+        return Events.TryGetValue(process, out res) ? res : null;
+    }
+
+    private ILightEvent? GetProfileFromProcessTitle(string title)
+    {
+        foreach (var value in EventTitles
+                     .Where(entry => Regex.IsMatch(title, entry.Key, RegexOptions.IgnoreCase))
+                     .Select(kv => kv.Value)
+                )
+        {
+            if (!Events.ContainsKey(value))
+                Global.logger.Warn($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles" +
+                                   $" but subsequently '{value}' does not in Events!");
             else
+                return Events[value]; // added in an else so we keep searching for more valid regexes.
+        }
+
+        return null;
+    }
+
+    private ILightEvent? GetProfileFromAppId(string appid)
+    {
+        if (!EventAppIDs.ContainsKey(appid)) return Events.ContainsKey(appid) ? Events[appid] : null;
+        if (!Events.ContainsKey(EventAppIDs[appid]))
+            Global.logger.Warn($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs" +
+                               $" but subsequently '{EventAppIDs[appid]}' does not in Events!");
+        return Events[EventAppIDs[appid]];
+
+    }
+
+    private Timer? _updateTimer;
+
+    private long _nextProcessNameUpdate;
+    private long _currentTick;
+    private string _previewModeProfileKey = "";
+
+    private readonly EventIdle _idleE = new();
+
+    public string? PreviewProfileKey {
+        get => _previewModeProfileKey;
+        set => _previewModeProfileKey = value ?? string.Empty;
+    }
+
+    private readonly Stopwatch _watch = new();
+        
+    private readonly Semaphore _updateLock = new(1, 1);
+    private bool _locked;
+
+    public void InitUpdate()
+    {
+        _watch.Start();
+        _updateTimer = new Timer(_ =>
+        {
+            TimerUpdate();
+        }, null, 0, Timeout.Infinite);
+    }
+
+    private void TimerUpdate()
+    {
+        if (_locked)
+        {
+            return;
+        }
+        _updateLock.WaitOne();
+        _locked = true;
+
+        if (Global.isDebug)
+            Update();
+        else
+        {
+            try
             {
-                try
-                {
-                    Update();
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
-                    MessageBox.Show("Error while updating light effects: " + exc.Message);
-                }
+                Update();
             }
-            currentTick += watch.ElapsedMilliseconds;
-            updateTimer?.Change(Math.Max(Global.Configuration.UpdateDelay - watch.ElapsedMilliseconds, Global.Configuration.UpdateDelay), Timeout.Infinite);
-            watch.Reset();
-            locked = false;
-            updateLock.Release();
-        }
-
-        private void UpdateProcess()
-        {
-            if (Global.Configuration.DetectionMode == ApplicationDetectionMode.ForegroroundApp && currentTick >= nextProcessNameUpdate)
+            catch (Exception exc)
             {
-                processMonitor.UpdateActiveWindowsProcessPath();
-                nextProcessNameUpdate = currentTick + 1000L;
+                Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
+                MessageBox.Show("Error while updating light effects: " + exc.Message);
             }
         }
+        _currentTick += _watch.ElapsedMilliseconds;
+        _updateTimer?.Change(
+            Math.Max(Global.Configuration.UpdateDelay - _watch.ElapsedMilliseconds, Global.Configuration.UpdateDelay), Timeout.Infinite);
+        _watch.Reset();
+        _locked = false;
+        _updateLock.Release();
+    }
 
-        private void UpdateIdleEffects(EffectsEngine.EffectFrame newFrame)
+    private void UpdateProcess()
+    {
+        if (Global.Configuration.DetectionMode != ApplicationDetectionMode.ForegroroundApp ||
+            _currentTick < _nextProcessNameUpdate) return;
+        _processMonitor.UpdateActiveWindowsProcessPath();
+        _nextProcessNameUpdate = _currentTick + 1000L;
+    }
+
+    private void UpdateIdleEffects(EffectsEngine.EffectFrame newFrame)
+    {
+        tagLASTINPUTINFO lastInput = new tagLASTINPUTINFO();
+        lastInput.cbSize = (uint)Marshal.SizeOf(lastInput);
+        lastInput.dwTime = 0;
+
+        if (!ActiveProcessMonitor.GetLastInputInfo(ref lastInput)) return;
+        var idleTime = Environment.TickCount - lastInput.dwTime;
+
+        if (idleTime < Global.Configuration.IdleDelay * 60 * 1000) return;
+        if (Global.Configuration.TimeBasedDimmingEnabled &&
+            Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour,
+                Global.Configuration.TimeBasedDimmingStartMinute,
+                Global.Configuration.TimeBasedDimmingEndHour,
+                Global.Configuration.TimeBasedDimmingEndMinute)) return;
+        UpdateEvent(_idleE, newFrame);
+    }
+
+    private void UpdateEvent(ILightEvent @event, EffectsEngine.EffectFrame frame)
+    {
+        StartEvent(@event);
+        @event.UpdateLights(frame);
+    }
+
+    private void StartEvent(ILightEvent @event)
+    {
+        _updatedEvents.Add(@event);
+
+        // Skip if event was already started
+        if (_startedEvents.Contains(@event)) return;
+
+        _startedEvents.Add(@event);
+        @event.OnStart();
+    }
+
+    private void StopUnUpdatedEvents()
+    {
+        // Skip if there are no started events or started events are the same since last update
+        if (!_startedEvents.Any() || _startedEvents.SequenceEqual(_updatedEvents)) return;
+
+        List<ILightEvent> eventsToStop = _startedEvents.Except(_updatedEvents).ToList();
+        foreach (var eventToStop in eventsToStop)
+            eventToStop.OnStop();
+
+        _startedEvents.Clear();
+        _startedEvents.AddRange(_updatedEvents);
+    }
+
+    private void Update()
+    {
+        Stopwatch debugTimer = new Stopwatch();
+        PreUpdate?.Invoke(this, EventArgs.Empty);
+        _updatedEvents.Clear();
+
+        //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
+        var dimmingStartTime = new TimeSpan(Global.Configuration.TimeBasedDimmingStartHour,
+            Global.Configuration.TimeBasedDimmingStartMinute, 0);
+        var dimmingEndTime = new TimeSpan(Global.Configuration.TimeBasedDimmingEndHour, 
+            Global.Configuration.TimeBasedDimmingEndMinute, 0);
+        if (Global.Configuration.TimeBasedDimmingEnabled &&
+            Time.IsCurrentTimeBetween(dimmingStartTime, dimmingEndTime))
         {
-            tagLASTINPUTINFO LastInput = new tagLASTINPUTINFO();
-            Int32 IdleTime;
-            LastInput.cbSize = (uint)Marshal.SizeOf(LastInput);
-            LastInput.dwTime = 0;
-
-            if (!ActiveProcessMonitor.GetLastInputInfo(ref LastInput)) return;
-            IdleTime = Environment.TickCount - LastInput.dwTime;
-
-            if (IdleTime < Global.Configuration.IdleDelay * 60 * 1000) return;
-            if (Global.Configuration.TimeBasedDimmingEnabled &&
-                Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour,
-                    Global.Configuration.TimeBasedDimmingStartMinute,
-                    Global.Configuration.TimeBasedDimmingEndHour,
-                    Global.Configuration.TimeBasedDimmingEndMinute)) return;
-            UpdateEvent(_idleE, newFrame);
+            StopUnUpdatedEvents();
+            return;
         }
 
-        private void UpdateEvent(ILightEvent @event, EffectsEngine.EffectFrame frame)
+        var rawProcessName = Path.GetFileName(_processMonitor.ProcessPath);
+
+        UpdateProcess();
+        EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
+        debugTimer.Restart();
+
+        var profile = GetCurrentProfile(out var preview);
+
+        // If the current foreground process is excluded from Aurora, disable the lighting manager
+        if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(rawProcessName))
         {
-            StartEvent(@event);
-            @event.UpdateLights(frame);
-        }
-
-        private void StartEvent(ILightEvent @event)
-        {
-            UpdatedEvents.Add(@event);
-
-            // Skip if event was already started
-            if (StartedEvents.Contains(@event)) return;
-
-            StartedEvents.Add(@event);
-            @event.OnStart();
-        }
-
-        private void StopUnUpdatedEvents()
-        {
-            // Skip if there are no started events or started events are the same since last update
-            if (!StartedEvents.Any() || StartedEvents.SequenceEqual(UpdatedEvents)) return;
-
-            List<ILightEvent> eventsToStop = StartedEvents.Except(UpdatedEvents).ToList();
-            foreach (var eventToStop in eventsToStop)
-                eventToStop.OnStop();
-
-            StartedEvents.Clear();
-            StartedEvents.AddRange(UpdatedEvents);
-        }
-
-        private void Update()
-        {
-            Stopwatch debugTimer = new Stopwatch();
-            PreUpdate?.Invoke(this, null);
-            UpdatedEvents.Clear();
-
-            //Blackout. TODO: Cleanup this a bit. Maybe push blank effect frame to keyboard incase it has existing stuff displayed
-            var dimmingStartTime = new TimeSpan(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingStartMinute, 0);
-            var dimmingEndTime = new TimeSpan(Global.Configuration.TimeBasedDimmingEndHour, Global.Configuration.TimeBasedDimmingEndMinute, 0);
-            if (Global.Configuration.TimeBasedDimmingEnabled &&
-                Time.IsCurrentTimeBetween(dimmingStartTime, dimmingEndTime))
-            {
-                StopUnUpdatedEvents();
-                return;
-            }
-
-            var rawProcessName = Path.GetFileName(processMonitor.ProcessPath);
-
-            UpdateProcess();
-            EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
-            debugTimer.Restart();
-
-
-            //TODO: Move these IdleEffects to an event
-            //this.UpdateIdleEffects(newFrame);
-
-            var profile = GetCurrentProfile(out var preview);
-
-            // If the current foreground process is excluded from Aurora, disable the lighting manager
-            if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(rawProcessName))
-            {
-                StopUnUpdatedEvents();
-                Global.dev_manager.ShutdownDevices();
-                lock (Effects.CanvasChangedLock)
-                {
-                    Global.effengine.PushFrame(newFrame);
-                }
-                return;
-            }
-            Global.dev_manager.InitializeOnce();
-            debugTimer.Restart();
-
-            //Need to do another check in case Desktop is disabled or the selected preview is disabled
-            if (profile.IsEnabled)
-                UpdateEvent(profile, newFrame);
-
-            // Overlay layers
-            if (!preview || Global.Configuration.OverlaysInPreview)
-            {
-                foreach (var @event in GetOverlayActiveProfiles())
-                    @event.UpdateOverlayLights(newFrame);
-
-                //Add the Light event that we're previewing to be rendered as an overlay (assuming it's not already active)
-                if (preview && Global.Configuration.OverlaysInPreview && !GetOverlayActiveProfiles().Contains(profile))
-                    profile.UpdateOverlayLights(newFrame);
-
-                UpdateIdleEffects(newFrame);
-            }
-
+            StopUnUpdatedEvents();
+            Global.dev_manager.ShutdownDevices();
             lock (Effects.CanvasChangedLock)
             {
                 Global.effengine.PushFrame(newFrame);
             }
+            return;
+        }
+        Global.dev_manager.InitializeOnce();
+        debugTimer.Restart();
 
-            StopUnUpdatedEvents();
-            PostUpdate?.Invoke(this, null);
-            debugTimer.Restart();
+        //Need to do another check in case Desktop is disabled or the selected preview is disabled
+        if (profile.IsEnabled)
+            UpdateEvent(profile, newFrame);
+
+        // Overlay layers
+        if (!preview || Global.Configuration.OverlaysInPreview)
+        {
+            foreach (var @event in GetOverlayActiveProfiles())
+                @event.UpdateOverlayLights(newFrame);
+
+            //Add the Light event that we're previewing to be rendered as an overlay (assuming it's not already active)
+            if (preview && Global.Configuration.OverlaysInPreview && !GetOverlayActiveProfiles().Contains(profile))
+                profile.UpdateOverlayLights(newFrame);
+
+            UpdateIdleEffects(newFrame);
         }
 
-        /// <summary>Gets the current application.</summary>
-        /// <param name="preview">Boolean indicating whether the application is selected because it is previewing (true) or because the process is open (false).</param>
-        private ILightEvent GetCurrentProfile(out bool preview)
+        lock (Effects.CanvasChangedLock)
         {
-            var processName = Path.GetFileName(processMonitor.ProcessPath).ToLower();
-            var processTitle = processMonitor.GetActiveWindowsProcessTitle();
-            ILightEvent profile = null;
-            ILightEvent tempProfile = null;
-            preview = false;
-
-            //TODO: GetProfile that checks based on event type
-            if ((tempProfile = GetProfileFromProcessData(processName, processTitle)) != null && tempProfile.IsEnabled)
-                profile = tempProfile;
-            else if ((tempProfile = GetProfileFromProcessName(previewModeProfileKey)) != null) //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
-            {
-                profile = tempProfile;
-                preview = true;
-            }
-            else if (Global.Configuration.AllowWrappersInBackground
-                     && _ipcListener.Result is {IsWrapperConnected: true}
-                     && (tempProfile = GetProfileFromProcessName(_ipcListener.Result.WrappedProcess)) != null
-                     && tempProfile.IsEnabled)
-                profile = tempProfile;
-
-            profile ??= DesktopProfile;
-
-            return profile;
+            Global.effengine.PushFrame(newFrame);
         }
 
-        /// <summary>Gets the current application.</summary>
-        public ILightEvent GetCurrentProfile() => GetCurrentProfile(out var _);
-        /// <summary>
-        /// Returns a list of all profiles that should have their overlays active. This will include processes that running but not in the foreground.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<ILightEvent> GetOverlayActiveProfiles()
+        StopUnUpdatedEvents();
+        PostUpdate?.Invoke(this, EventArgs.Empty);
+        debugTimer.Restart();
+    }
+
+    /// <summary>Gets the current application.</summary>
+    /// <param name="preview">Boolean indicating whether the application is selected because it is previewing (true)
+    /// or because the process is open (false).</param>
+    private ILightEvent GetCurrentProfile(out bool preview)
+    {
+        var processName = Path.GetFileName(_processMonitor.ProcessPath).ToLower();
+        var processTitle = _processMonitor.GetActiveWindowsProcessTitle();
+        ILightEvent profile = null;
+        ILightEvent tempProfile;
+        preview = false;
+
+        //TODO: GetProfile that checks based on event type
+        if ((tempProfile = GetProfileFromProcessData(processName, processTitle)) != null && tempProfile.IsEnabled)
+            profile = tempProfile;
+        //Don't check for it being Enabled as a preview should always end-up with the previewed profile regardless of it being disabled
+        else if ((tempProfile = GetProfileFromProcessName(_previewModeProfileKey)) != null)
         {
-            return Events.Values.Where(_isOverlayActiveProfile);
+            profile = tempProfile;
+            preview = true;
         }
-        //.Where(evt => evt.Config.ProcessTitles == null || ProcessUtils.AnyProcessWithTitleExists(evt.Config.ProcessTitles));
+        else if (Global.Configuration.AllowWrappersInBackground
+                 && _ipcListener.Result is {IsWrapperConnected: true} 
+                 && (tempProfile = GetProfileFromProcessName(_ipcListener.Result!.WrappedProcess)) != null 
+                 && tempProfile.IsEnabled)
+            profile = tempProfile;
 
-        /// <summary>KeyDown handler that checks the current application's profiles for keybinds.
-        /// In the case of multiple profiles matching the keybind, it will pick the next one as specified in the Application.Profile order.</summary>
-        public void CheckProfileKeybinds(object sender, SharpDX.RawInput.KeyboardInputEventArgs e)
-        {
-            ILightEvent profile = GetCurrentProfile();
+        profile ??= DesktopProfile;
 
-            // Check profile is valid and do not switch profiles if the user is trying to enter a keybind
-            if (profile is Application && Controls.Control_Keybind._ActiveKeybind == null)
-            {
+        return profile;
+    }
 
-                // Find all profiles that have their keybinds pressed
-                List<ApplicationProfile> possibleProfiles = new List<ApplicationProfile>();
-                foreach (var prof in (profile as Application).Profiles)
-                    if (prof.TriggerKeybind.IsPressed())
-                        possibleProfiles.Add(prof);
+    /// <summary>Gets the current application.</summary>
+    private ILightEvent GetCurrentProfile() => GetCurrentProfile(out _);
+    /// <summary>
+    /// Returns a list of all profiles that should have their overlays active. This will include processes that running but not in the foreground.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerable<ILightEvent> GetOverlayActiveProfiles()
+    {
+        return Events.Values.Where(_isOverlayActiveProfile);
+    }
 
-                // If atleast one profile has it's key pressed
-                if (possibleProfiles.Count > 0)
-                {
-                    // The target profile is the NEXT valid profile after the currently selected one (or the first valid one if the currently selected one doesn't share this keybind)
-                    int trg = (possibleProfiles.IndexOf((profile as Application).Profile) + 1) % possibleProfiles.Count;
-                    (profile as Application).SwitchToProfile(possibleProfiles[trg]);
-                }
-            }
-        }
+    /// <summary>KeyDown handler that checks the current application's profiles for keybinds.
+    /// In the case of multiple profiles matching the keybind, it will pick the next one as specified in the Application.Profile order.</summary>
+    private void CheckProfileKeybinds(object sender, SharpDX.RawInput.KeyboardInputEventArgs e)
+    {
+        ILightEvent profile = GetCurrentProfile();
 
+        // Check profile is valid and do not switch profiles if the user is trying to enter a keybind
+        if (profile is not Application application || Controls.Control_Keybind._ActiveKeybind != null) return;
+        // Find all profiles that have their keybinds pressed
+        List<ApplicationProfile> possibleProfiles = application.Profiles
+            .Where(prof => prof.TriggerKeybind.IsPressed())
+            .ToList();
 
-        public void GameStateUpdate(IGameState gs)
-        {
-            //Debug.WriteLine("Received gs!");
+        // If atleast one profile has it's key pressed
+        if (possibleProfiles.Count <= 0) return;
+        // The target profile is the NEXT valid profile after the currently selected one
+        // (or the first valid one if the currently selected one doesn't share this keybind)
+        int trg = (possibleProfiles.IndexOf(application.Profile) + 1) % possibleProfiles.Count;
+        application.SwitchToProfile(possibleProfiles[trg]);
+    }
 
-            //Global.logger.LogLine(gs.ToString(), Logging_Level.None, false);
-
-            //UpdateProcess();
-
-            //string process_name = System.IO.Path.GetFileName(processMonitor.ProcessPath).ToLowerInvariant();
-
-            //EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
+    public void GameStateUpdate(object sender, IGameState gs)
+    {
 #if DEBUG
 #else
-            try
-            {
+        try
+        {
 #endif
-            ILightEvent profile;// = this.GetProfileFromProcess(process_name);
+            ILightEvent profile;
 
-
-            JObject provider = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider"));
+            JObject provider = JObject.Parse(gs.GetNode("provider"));
             string appid = provider.GetValue("appid").ToString();
             string name = provider.GetValue("name").ToString().ToLowerInvariant();
 
-            if ((profile = GetProfileFromAppID(appid)) != null || (profile = GetProfileFromProcessName(name)) != null)
+            if ((profile = GetProfileFromAppId(appid)) != null || (profile = GetProfileFromProcessName(name)) != null)
             {
                 IGameState gameState = gs;
                 if (profile.Config.GameStateType != null)
@@ -586,16 +554,16 @@ namespace Aurora.Profiles
             }
             else if (gs is GameState_Wrapper && Global.Configuration.AllowAllLogitechBitmaps)
             {
-                string gs_process_name = Newtonsoft.Json.Linq.JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
+                string gsProcessName = JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
                 lock (Events)
                 {
-                    profile = profile ?? GetProfileFromProcessName(gs_process_name);
+                    profile = GetProfileFromProcessName(gsProcessName);
 
                     if (profile == null)
                     {
-                        Events.Add(gs_process_name, new GameEvent_Aurora_Wrapper(
-                            new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gs_process_name } }));
-                        profile = Events[gs_process_name];
+                        Events.Add(gsProcessName, new GameEvent_Aurora_Wrapper(
+                            new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gsProcessName } }));
+                        profile = Events[gsProcessName];
                     }
 
                     profile.SetGameState(gs);
@@ -603,98 +571,71 @@ namespace Aurora.Profiles
             }
 #if DEBUG
 #else
-            }
-            catch (Exception e)
-            {
-                Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
-            }
+        }
+        catch (Exception e)
+        {
+            Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
+        }
 #endif
-        }
-
-        public void ResetGameState(string process)
-        {
-            ILightEvent profile;
-            if (((profile = GetProfileFromProcessName(process)) != null))
-                profile.ResetGameState();
-        }
-
-        public void AddOverlayForDuration(LightEvent overlay_event, int duration, bool isUnique = true)
-        {
-            if (isUnique)
-            {
-                TimedListObject[] overlays_array = overlays.ToArray();
-                bool isFound = false;
-
-                foreach (TimedListObject obj in overlays_array)
-                {
-                    if (obj.item.GetType() == overlay_event.GetType())
-                    {
-                        isFound = true;
-                        obj.AdjustDuration(duration);
-                        break;
-                    }
-                }
-
-                if (!isFound)
-                {
-                    overlays.Add(new TimedListObject(overlay_event, duration, overlays));
-                }
-            }
-            else
-            {
-                overlays.Add(new TimedListObject(overlay_event, duration, overlays));
-            }
-        }
-
-        public void Dispose()
-        {
-            updateTimer.Dispose();
-            updateTimer = null;
-            SaveAll();
-            foreach (var app in this.Events)
-                app.Value.Dispose();
-        }
     }
 
-
-    /// <summary>
-    /// POCO that stores data about a type of layer.
-    /// </summary>
-    public class LayerHandlerMeta
+    public void ResetGameState(object sender, string process)
     {
-
-        /// <summary>Creates a new LayerHandlerMeta object from the given meta attribute and type.</summary>
-        public LayerHandlerMeta(Type type, LayerHandlerMetaAttribute attribute)
-        {
-            Name = attribute?.Name ?? type.Name.CamelCaseToSpaceCase().TrimEndStr(" Layer Handler");
-            Type = type;
-            IsDefault = attribute?.IsDefault ?? type.Namespace == "Aurora.Settings.Layers"; // if the layer is in the Aurora.Settings.Layers namespace, make the IsDefault true unless otherwise specified. If it is in another namespace, it's probably a custom application layer and so make IsDefault false unless otherwise specified
-            Order = attribute?.Order ?? 0;
-        }
-
-        public string Name { get; }
-        public Type Type { get; }
-        public bool IsDefault { get; }
-        public int Order { get; }
+        ILightEvent profile;
+        if ((profile = GetProfileFromProcessName(process)) != null)
+            profile.ResetGameState();
     }
 
-
-    /// <summary>
-    /// Attribute to provide additional meta data about layers for them to be registered.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class LayerHandlerMetaAttribute : Attribute
+    public void Dispose()
     {
-        /// <summary>A different name for the layer. If not specified, will automatically take it from the layer's class name.</summary>
-        public string Name { get; set; }
-
-        /// <summary>If true, this layer will be excluded from automatic registration. Default false.</summary>
-        public bool Exclude { get; set; } = false;
-
-        /// <summary>If true, this layer will be registered as a 'default' layer for all applications. Default true.</summary>
-        public bool IsDefault { get; set; } = false;
-
-        /// <summary>A number used when ordering the layer entry in the list. Only to be used for layers that need to appear at the top/bottom of the list.</summary>
-        public int Order { get; set; } = 0;
+        _updateTimer.Dispose();
+        _updateTimer = null;
+        SaveAll();
+        foreach (var app in this.Events)
+            app.Value.Dispose();
     }
+}
+
+/// <summary>
+/// POCO that stores data about a type of layer.
+/// </summary>
+public class LayerHandlerMeta
+{
+
+    /// <summary>Creates a new LayerHandlerMeta object from the given meta attribute and type.</summary>
+    public LayerHandlerMeta(Type type, LayerHandlerMetaAttribute? attribute)
+    {
+        Name = attribute?.Name ?? type.Name.CamelCaseToSpaceCase().TrimEndStr(" Layer Handler");
+        Type = type;
+        // if the layer is in the Aurora.Settings.Layers namespace, make the IsDefault true unless otherwise specified.
+        // If it is in another namespace, it's probably a custom application layer and so make IsDefault false unless otherwise specified
+        IsDefault = attribute?.IsDefault ?? type.Namespace == "Aurora.Settings.Layers";
+        Order = attribute?.Order ?? 0;
+    }
+
+    public string Name { get; }
+    public Type Type { get; }
+    public bool IsDefault { get; }
+    public int Order { get; }
+}
+
+
+/// <summary>
+/// Attribute to provide additional meta data about layers for them to be registered.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public class LayerHandlerMetaAttribute : Attribute
+{
+    /// <summary>A different name for the layer. If not specified, will automatically take it from the layer's class name.</summary>
+    public string Name { get; set; }
+
+    /// <summary>If true, this layer will be excluded from automatic registration. Default false.</summary>
+    public bool Exclude { get; set; }
+
+    /// <summary>If true, this layer will be registered as a 'default' layer for all applications. Default true.</summary>
+    public bool IsDefault { get; set; }
+
+    /// <summary>A number used when ordering the layer entry in the list.
+    /// Only to be used for layers that need to appear at the top/bottom of the list.</summary>
+    public int Order { get; set; }
 }

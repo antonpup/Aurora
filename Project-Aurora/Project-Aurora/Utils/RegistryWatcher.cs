@@ -8,7 +8,7 @@ namespace Aurora.Utils;
 
 public class RegistryChangedEventArgs : EventArgs
 {
-    [CanBeNull] public readonly object Data;
+    public readonly object? Data;
 
     public RegistryChangedEventArgs(object data)
     {

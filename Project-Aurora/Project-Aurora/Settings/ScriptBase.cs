@@ -9,7 +9,7 @@ namespace Aurora.Settings
 {
     public interface IEffectScript
     {
-        string ID { get; }
+        string? ID { get; }
 
         VariableRegistry Properties { get; }
 

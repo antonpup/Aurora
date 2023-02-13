@@ -144,7 +144,7 @@ public partial class App
                 NamedPipeClientStream client = new NamedPipeClientStream(".", "aurora\\interface", PipeDirection.Out);
                 client.Connect(30);
                 if (!client.IsConnected)
-                    throw new Exception();
+                    throw new InvalidOperationException();
                 byte[] command = Encoding.ASCII.GetBytes("restore");
                 client.Write(command, 0, command.Length);
                 client.Close();
@@ -159,7 +159,6 @@ public partial class App
 
     private static void ShutdownApp(int exitCode)
     {
-        
         Environment.ExitCode = exitCode;
         Current?.Shutdown();
         Environment.Exit(exitCode);
@@ -216,43 +215,43 @@ public partial class App
 
     private static void PrintSystemInfo()
     {
-        StringBuilder systeminfo_sb = new StringBuilder(string.Empty);
-        systeminfo_sb.Append("\r\n========================================\r\n");
+        StringBuilder systeminfoSb = new StringBuilder(string.Empty);
+        systeminfoSb.Append("\r\n========================================\r\n");
 
         try
         {
-            var win_reg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            string productName = (string) win_reg.GetValue("ProductName");
+            var winReg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            string productName = (string) winReg.GetValue("ProductName");
 
-            systeminfo_sb.AppendFormat("Operation System: {0}\r\n", productName);
+            systeminfoSb.AppendFormat("Operation System: {0}\r\n", productName);
         }
         catch (Exception exc)
         {
-            systeminfo_sb.AppendFormat("Operation System: Could not be retrieved. [Exception: {0}]\r\n", exc.Message);
+            systeminfoSb.AppendFormat("Operation System: Could not be retrieved. [Exception: {0}]\r\n", exc.Message);
         }
 
-        systeminfo_sb.AppendFormat("System Architecture: " + (Environment.Is64BitOperatingSystem ? "64 bit" : "32 bit") +
+        systeminfoSb.AppendFormat("System Architecture: " + (Environment.Is64BitOperatingSystem ? "64 bit" : "32 bit") +
                                    "\r\n");
 
-        systeminfo_sb.AppendFormat("Environment OS Version: {0}\r\n", Environment.OSVersion);
+        systeminfoSb.AppendFormat("Environment OS Version: {0}\r\n", Environment.OSVersion);
 
-        systeminfo_sb.AppendFormat("System Directory: {0}\r\n", Environment.SystemDirectory);
-        systeminfo_sb.AppendFormat("Executing Directory: {0}\r\n", Global.ExecutingDirectory);
-        systeminfo_sb.AppendFormat("Launch Directory: {0}\r\n", Directory.GetCurrentDirectory());
-        systeminfo_sb.AppendFormat("Processor Count: {0}\r\n", Environment.ProcessorCount);
+        systeminfoSb.AppendFormat("System Directory: {0}\r\n", Environment.SystemDirectory);
+        systeminfoSb.AppendFormat("Executing Directory: {0}\r\n", Global.ExecutingDirectory);
+        systeminfoSb.AppendFormat("Launch Directory: {0}\r\n", Directory.GetCurrentDirectory());
+        systeminfoSb.AppendFormat("Processor Count: {0}\r\n", Environment.ProcessorCount);
 
-        systeminfo_sb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);
-        systeminfo_sb.AppendFormat("Environment Version: {0}\r\n", Environment.Version);
+        systeminfoSb.AppendFormat("SystemPageSize: {0}\r\n", Environment.SystemPageSize);
+        systeminfoSb.AppendFormat("Environment Version: {0}\r\n", Environment.Version);
 
         WindowsIdentity identity = WindowsIdentity.GetCurrent();
         WindowsPrincipal principal = new WindowsPrincipal(identity);
-        systeminfo_sb.Append($"Is Elevated: {principal.IsInRole(WindowsBuiltInRole.Administrator)}\r\n");
-        systeminfo_sb.Append($"Aurora Assembly Version: {Assembly.GetExecutingAssembly().GetName().Version}\r\n");
-        systeminfo_sb.Append(
+        systeminfoSb.Append($"Is Elevated: {principal.IsInRole(WindowsBuiltInRole.Administrator)}\r\n");
+        systeminfoSb.Append($"Aurora Assembly Version: {Assembly.GetExecutingAssembly().GetName().Version}\r\n");
+        systeminfoSb.Append(
             $"Aurora File Version: {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}\r\n");
 
-        systeminfo_sb.Append("========================================\r\n");
-        Global.logger.Info(systeminfo_sb.ToString());
+        systeminfoSb.Append("========================================\r\n");
+        Global.logger.Info(systeminfoSb.ToString());
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -305,7 +304,7 @@ public partial class App
         if (!Global.Configuration.CloseProgramOnException) return;
         MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
         //Perform exit operations
-        Current?.Shutdown();
+        Current.Shutdown();
     }
 
     private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -340,15 +339,15 @@ public partial class App
         }
 
         //Patch 32-bit
-        string logitech_path = (string)Registry.GetValue(
+        string logitechPath = (string)Registry.GetValue(
             @"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary",
             null, null);//null gets the default value
-        if (logitech_path == null || logitech_path == @"C:\Program Files\LGHUB\sdk_legacy_led_x86.dll")
+        if (logitechPath == null || logitechPath == @"C:\Program Files\LGHUB\sdk_legacy_led_x86.dll")
         {
-            logitech_path = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
+            logitechPath = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
 
-            if (!Directory.Exists(Path.GetDirectoryName(logitech_path)))
-                Directory.CreateDirectory(Path.GetDirectoryName(logitech_path));
+            if (!Directory.Exists(Path.GetDirectoryName(logitechPath)))
+                Directory.CreateDirectory(Path.GetDirectoryName(logitechPath));
 
             RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
 
@@ -367,22 +366,22 @@ public partial class App
             key.CreateSubKey("ServerBinary");
             key = key.OpenSubKey("ServerBinary", true);
 
-            key.SetValue(null, logitech_path);//null to set the default value
+            key.SetValue(null, logitechPath);//null to set the default value
         }
 
-        if (File.Exists(logitech_path) && !File.Exists(logitech_path + ".aurora_backup"))
-            File.Move(logitech_path, logitech_path + ".aurora_backup");
+        if (File.Exists(logitechPath) && !File.Exists(logitechPath + ".aurora_backup"))
+            File.Move(logitechPath, logitechPath + ".aurora_backup");
 
-        using (BinaryWriter logitech_wrapper_86 = new BinaryWriter(new FileStream(logitech_path, FileMode.Create, FileAccess.Write)))
+        using (BinaryWriter logitechWrapper86 = new BinaryWriter(new FileStream(logitechPath, FileMode.Create, FileAccess.Write)))
         {
-            logitech_wrapper_86.Write(Aurora.Properties.Resources.Aurora_LogiLEDWrapper86);
+            logitechWrapper86.Write(Aurora.Properties.Resources.Aurora_LogiLEDWrapper86);
         }
 
         //Patch 64-bit
         var logitechPath64 = (string)Registry.GetValue(
             @"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary",
             null, null);
-        if (logitechPath64 == null || logitechPath64 == @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
+        if (logitechPath64 is null or @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
         {
             logitechPath64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
 

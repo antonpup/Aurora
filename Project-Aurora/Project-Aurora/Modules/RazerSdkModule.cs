@@ -9,10 +9,10 @@ namespace Aurora.Modules;
 
 public sealed partial class RazerSdkModule : IAuroraModule
 {
-    private readonly TaskCompletionSource<RzSdkManager> _sdkTaskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    private RzSdkManager _razerSdkManager;
+    private readonly TaskCompletionSource<RzSdkManager?> _sdkTaskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private RzSdkManager? _razerSdkManager;
 
-    public Task<RzSdkManager> RzSdkManager => _sdkTaskSource.Task;
+    public Task<RzSdkManager?> RzSdkManager => _sdkTaskSource.Task;
 
     [Async]
     public void Initialize()
@@ -22,20 +22,7 @@ public sealed partial class RazerSdkModule : IAuroraModule
         {
             try
             {
-                _razerSdkManager = new RzSdkManager
-                {
-                    KeyboardEnabled = true,
-                    MouseEnabled = true,
-                    MousepadEnabled = true,
-                    AppListEnabled = true,
-                };
-                Global.razerSdkManager = _razerSdkManager;
-
-                _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
-
-                var appList = _razerSdkManager.GetDataProvider<RzAppListDataProvider>();
-                appList.Update();
-                RzHelper.CurrentAppExecutable = appList.CurrentAppExecutable;
+                TryLoadChroma();
 
                 Global.logger.Info("RazerSdkManager loaded successfully!");
                 _sdkTaskSource.SetResult(_razerSdkManager);
@@ -49,9 +36,28 @@ public sealed partial class RazerSdkModule : IAuroraModule
         }
         else
         {
-            Global.logger.Warn("Currently installed razer sdk version \"{0}\" is not supported by the RazerSdkManager!", RzHelper.GetSdkVersion());
+            Global.logger.Warn("Currently installed razer sdk version \"{RzVersion}\" is not supported by the RazerSdkManager!",
+                RzHelper.GetSdkVersion());
             _sdkTaskSource.SetResult(null);
         }
+    }
+
+    private void TryLoadChroma()
+    {
+        _razerSdkManager = new RzSdkManager
+        {
+            KeyboardEnabled = true,
+            MouseEnabled = true,
+            MousepadEnabled = true,
+            AppListEnabled = true,
+        };
+        Global.razerSdkManager = _razerSdkManager;
+
+        _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
+
+        var appList = _razerSdkManager.GetDataProvider<RzAppListDataProvider>();
+        appList.Update();
+        RzHelper.CurrentAppExecutable = appList.CurrentAppExecutable;
     }
 
 
@@ -60,6 +66,7 @@ public sealed partial class RazerSdkModule : IAuroraModule
     {
         try
         {
+            _razerSdkManager.DataUpdated -= RzHelper.OnDataUpdated;
             _razerSdkManager?.Dispose();
             Global.razerSdkManager = null;
         }
