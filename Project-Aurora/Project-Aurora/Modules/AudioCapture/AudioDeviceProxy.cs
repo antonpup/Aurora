@@ -148,16 +148,17 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
             WaveIn = fallbackWaveIn;
             Device = fallbackDevice;
             DeviceName = Device?.FriendlyName ?? "";
+            DeviceChanged?.Invoke(this, EventArgs.Empty);
             Global.logger.Error("Error while switching sound device", e);
         }
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     private void WaveInOnRecordingStopped(object sender, StoppedEventArgs e)
     {
         var audioException = e.Exception;
         if (audioException == null)
         {
-            DisposeCurrentDevice();
             return;
         }
 
@@ -165,7 +166,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         {
             SetDevice(Device);
         }
-        else
+        else if (Device != null)
         {
             Global.logger.Error("Audio proxy error", audioException);
             DisposeCurrentDevice();
