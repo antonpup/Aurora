@@ -24,7 +24,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     private EventHandler<WaveInEventArgs>? _waveInDataAvailable;
 
     // ID of currently selected device.
-    private string _deviceId = AudioDevices.DefaultDeviceId;
+    private string? _deviceId;
     private bool _defaultDeviceChanged;
 
     /// <summary>Creates a new reference to the default audio device with the given flow direction.</summary>
