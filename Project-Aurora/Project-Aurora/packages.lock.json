@@ -1,7 +1,7 @@
 {
   "version": 1,
   "dependencies": {
-    "net6.0-windows10.0.17763": {
+    "net6.0-windows10.0.19041": {
       "Colore": {
         "type": "Direct",
         "requested": "[5.2.0, )",
@@ -258,50 +258,50 @@
       },
       "RGB.NET.Devices.Asus": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "lMWKfPBwhbB9rkCQ+HgJc1KWo2OdgwJGv5oiJw2hBdcjQDdWBvH/Dhw0IlgABAWN+cqvuOIcHee8eLq5ytZZ2w==",
+        "requested": "[2.0.0-prerelease.12, )",
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "jL2l80ZS1+Qhh3DFE2HrCfqOxYcPAeenrmsVBMiJliUZvq6K3xfHw+5ZHMgwNwcuWyd33LET8LIoP/kNj863jQ==",
         "dependencies": {
-          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.Core": "2.0.0-prerelease.12",
           "System.Management": "5.0.0"
         }
       },
       "RGB.NET.Devices.CoolerMaster": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "cIl80zdpG7vw+vV2MfDYjaIamvt3U0QNszlauSba3Xm7xTbGwwYyWMwnIDHYoWoFQopG6z40pAy+z0pPeBZvkg==",
+        "requested": "[2.0.0-prerelease.12, )",
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "IBEbB+HBmWV0XAF3EsmzpAIJ1NrHMcLw3iS0jB5VO76SBc3tNKyzWLIe+AYZgyxp2q7iGP1KU7r2f6b3F5o/lA==",
         "dependencies": {
-          "RGB.NET.Core": "1.0.0"
+          "RGB.NET.Core": "2.0.0-prerelease.12"
         }
       },
       "RGB.NET.Devices.Corsair": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "KMyPyPL/qwDS8qoTViJBWHJlJY9ANb4dH7pe5wKybFXkPeaJETN+CARBUIjJfD/9sHK2zw14/h1pMOM4rHNhlA==",
+        "requested": "[2.0.0-prerelease.12, )",
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "mbZ3ezpyURY6zGNYP0f+bf7X0cAO9YzvT7BTOck7CwJFMOEvst4qFtFDSSyc1su7a34RuJ5w3b2qcN3WruKxCg==",
         "dependencies": {
-          "RGB.NET.Core": "1.0.0"
+          "RGB.NET.Core": "2.0.0-prerelease.12"
         }
       },
       "RGB.NET.Devices.Logitech": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "Ga63eUXZRCpGyQKgmS+khfKq8CNRRElDacymoOewbTJk74nwWeX6Gel/kYXivLJurmhN51aG/vaeLX8jcHyXbA==",
+        "requested": "[2.0.0-prerelease.12, )",
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "Yl4qZkKmVp6/4aT3M2XIF66WYvy7445CDSxKeUx9OJc57+IE3WoimdAmWGr1g8wQHU8c3OZDuGso/omNSybxPQ==",
         "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "RGB.NET.HID": "1.0.0"
+          "RGB.NET.Core": "2.0.0-prerelease.12",
+          "RGB.NET.HID": "2.0.0-prerelease.12"
         }
       },
       "RGB.NET.Devices.SteelSeries": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "WVKNZsDZzV9cqBHmF0K/gUIQUxAH3NZOuC0T1LGA8njLD9yCe1ZlDCJkrd8RrWXbMOv1JjaavVFmXZu/nVr8tg==",
+        "requested": "[2.0.0-prerelease.12, )",
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "Dwd1j33qhfPjqupOfmbWhnY5rbz0ROcRh6EB1KdTAgoyySxbPoTyKL8jcXJty4QAFtUKWr4shq6C+/OHKQMz1w==",
         "dependencies": {
-          "RGB.NET.Core": "1.0.0",
-          "RGB.NET.HID": "1.0.0"
+          "RGB.NET.Core": "2.0.0-prerelease.12",
+          "RGB.NET.HID": "2.0.0-prerelease.12"
         }
       },
       "SemanticVersioning": {
@@ -623,16 +623,16 @@
       },
       "RGB.NET.Core": {
         "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "wQd1tSyldamEhKAAU/E+zraiz5FRttcDYnQ3uQiat9Uf1tx8obV4MkFOKh2wY0JLZbOD832cCg3RQttHkbEbdw=="
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "fG3fcbsbXTzhsAM3FheiAqmks7BcoQw5GgscbU3HlbCYcL6I9xyrueWOQ3KiG5QhuPkj69OTv0vxjhxxwTc64g=="
       },
       "RGB.NET.HID": {
         "type": "Transitive",
-        "resolved": "1.0.0",
-        "contentHash": "I13nZuYOvgFQkMl5IeCRKsombSS2MMUFY9AgGoG2LW6tiH9cCx88Vdw5otBYGCpQpHUd0nveRWQdF0xj88/7Hw==",
+        "resolved": "2.0.0-prerelease.12",
+        "contentHash": "X8f4SWddap2E/OYp0pJycctLzz+9BS6nEqXBljJU65MtIp+SLnR0tYaRHbD8kdSNr/T/O+nepMoU6PgnDbTD5g==",
         "dependencies": {
           "HidSharp": "2.1.0",
-          "RGB.NET.Core": "1.0.0"
+          "RGB.NET.Core": "2.0.0-prerelease.12"
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
@@ -1916,7 +1916,7 @@
         }
       }
     },
-    "net6.0-windows10.0.17763/win10-x64": {
+    "net6.0-windows10.0.19041/win10-x64": {
       "System.Management": {
         "type": "Direct",
         "requested": "[6.0.0, )",
