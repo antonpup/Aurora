@@ -8,13 +8,13 @@ using SharpDX.Mathematics.Interop;
 
 namespace Aurora.Settings.Layers.Ambilight;
 
-internal class DxScreenCapture : IScreenCapture
+internal sealed class DxScreenCapture : IScreenCapture
 {
     private static readonly Semaphore Semaphore = new(1, 1);
-    private Rectangle _currentBounds;
-    private DesktopDuplicator _desktopDuplicator;
+    private Rectangle _currentBounds = Rectangle.Empty;
+    private DesktopDuplicator? _desktopDuplicator;
 
-    public Bitmap Capture(Rectangle desktopRegion)
+    public Bitmap? Capture(Rectangle desktopRegion)
     {
         SetTarget(desktopRegion);
         try{
@@ -92,10 +92,10 @@ internal class DxScreenCapture : IScreenCapture
         return fac.Adapters1.SelectMany(m => m.Outputs.Select(n => (M: m, n.QueryInterface<Output1>())));
     }
 
-    private static bool RectangleContains(RawRectangle containingRactangle, Rectangle rec)
+    private static bool RectangleContains(RawRectangle containingRectangle, Rectangle rec)
     {
-        return containingRactangle.Left <= rec.X && containingRactangle.Right > rec.X &&
-               containingRactangle.Top <= rec.Y && containingRactangle.Bottom > rec.Y;
+        return containingRectangle.Left <= rec.X && containingRectangle.Right > rec.X &&
+               containingRectangle.Top <= rec.Y && containingRectangle.Bottom > rec.Y;
     }
 
     public void Dispose()

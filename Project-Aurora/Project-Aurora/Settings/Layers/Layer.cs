@@ -20,25 +20,25 @@ namespace Aurora.Settings.Layers
     public class Layer : INotifyPropertyChanged, ICloneable, IDisposable
     {
         [DoNotNotify, JsonIgnore]
-        public Application AssociatedApplication { get; private set; }
+        public Application? AssociatedApplication { get; private set; }
 
         public string Name { get; set; } = "New Layer";
 
         [OnChangedMethod(nameof(OnHandlerChanged))]
-        public ILayerHandler Handler { get; set; } = new DefaultLayerHandler();
+        public ILayerHandler? Handler { get; set; } = new DefaultLayerHandler();
 
         [JsonIgnore]
         public UserControl Control => Handler.Control;
 
         public bool Enabled { get; set; } = true;
 
-        public Dictionary<string, IOverrideLogic> OverrideLogic { get; set; }
+        public Dictionary<string, IOverrideLogic>? OverrideLogic { get; set; }
         // private void OnOverrideLogicChanged() => // Make the logic collection changed event trigger a property change to ensure it gets saved?
 
         #region Constructors
         public Layer() { }
 
-        public Layer(string name, ILayerHandler handler = null) : this() {
+        public Layer(string name, ILayerHandler? handler = null) : this() {
             Name = name;
             Handler = handler ?? Handler;
         }

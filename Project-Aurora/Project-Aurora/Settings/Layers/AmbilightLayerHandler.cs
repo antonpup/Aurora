@@ -111,7 +111,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
     }
 
     [JsonIgnore]
-    private string _specificProcess;
+    private string? _specificProcess;
         
     [JsonProperty("_SpecificProcess")]
     public string SpecificProcess
@@ -240,25 +240,22 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
 [DoNotNotify]
 public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
 {
-    private IScreenCapture _screenCapture;
+    private IScreenCapture? _screenCapture;
 
     private readonly SmartThreadPool _captureWorker = new(1000, 1);
-    private TimeSpan _screenshotInterval;
     private readonly WorkItemCallback _screenshotWork;
 
-    private Brush _screenBrush;
+    private Brush? _screenBrush;
     private IntPtr _specificProcessHandle = IntPtr.Zero;
     private Rectangle _cropRegion = new(8, 8, 8, 8);
     private ImageAttributes _imageAttributes = new();
 
     private bool _invalidated; //properties changed
+    private bool _brushChanged = true;
 
-    #region Bindings
+    private readonly Stopwatch _captureStopwatch = new();
+
     public IEnumerable<string> Displays => _screenCapture.GetDisplays();
-
-    public bool UseDx => Properties.ExperimentalMode;
-
-    #endregion
 
     public AmbilightLayerHandler() : base("Ambilight Layer")
     {
@@ -270,7 +267,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     private void Initialize()
     {
         _screenCapture?.Dispose();
-        _screenCapture = Properties.ExperimentalMode ? new DxScreenCapture() : new GDIScreenCapture();
+        _screenCapture = Properties.ExperimentalMode ? new DxScreenCapture() : new GdiScreenCapture();
         Global.logger.Info("Started regular ambilight mode");
         InvokePropertyChanged(nameof(Displays));
     }
@@ -300,52 +297,24 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         if (_cropRegion.IsEmpty)
             return EffectLayer.EmptyLayer;
 
-        switch (Properties.AmbilightType)
+        if (!_brushChanged)
         {
-            case AmbilightType.Default:
-                lock (_screenBrush)
-                    EffectLayer.DrawTransformed(Properties.Sequence,
-                        m =>
-                        {
-                            if (Properties.FlipVertically)
-                            {
-                                m.Scale(1, -1, MatrixOrder.Prepend);
-                                m.Translate(0, -_cropRegion.Height, MatrixOrder.Prepend);
-                            }
-                        },
-                        g =>
-                        {
-                            g.Clear(Color.Transparent);
-                            g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
-                        },
-                        _cropRegion with {X = 0, Y = 0}
-                    );
-                break;
-
-            case AmbilightType.AverageColor:
-                var oneColorBitmap = new Bitmap(1, 1);
-                using (var g = Graphics.FromImage(oneColorBitmap))
-                {
-                    g.CompositingMode = CompositingMode.SourceCopy;
-                    g.InterpolationMode = InterpolationMode.Default;
-                    g.SmoothingMode = SmoothingMode.Default;
-                    g.FillRectangle(_screenBrush, 0, 0, 1, 1);
-                }
-                    
-                var average = oneColorBitmap.GetPixel(0, 0);
-
-                if (Properties.BrightenImage)
-                    average = ColorUtils.ChangeBrightness(average,  Properties.BrightnessChange);
-
-                if (Properties.SaturateImage)
-                    average = ColorUtils.ChangeSaturation(average, Properties.SaturationChange);
-
-                if (Properties.HueShiftImage)
-                    average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
-
-                EffectLayer.Set(Properties.Sequence, average);
-                break;
+            return EffectLayer;
         }
+        EffectLayer.DrawTransformed(Properties.Sequence,
+            m =>
+            {
+                if (!Properties.FlipVertically) return;
+                m.Scale(1, -1, MatrixOrder.Prepend);
+                m.Translate(0, -_cropRegion.Height, MatrixOrder.Prepend);
+            },
+            g =>
+            {
+                g.Clear(Color.Transparent);
+                g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
+            },
+            _cropRegion with {X = 0, Y = 0}
+        );
 
         return EffectLayer;
     }
@@ -355,7 +324,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         return new Control_AmbilightLayer(this);
     }
 
-    private readonly Stopwatch _captureStopwatch = new();
     private object TakeScreenshot(object sender)
     {
         try
@@ -364,29 +332,29 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
             return null;
         }
     }
 
     private object TryTakeScreenshot()
     {
-        _captureStopwatch.Restart();
         var bigScreen = _screenCapture.Capture(_cropRegion);
-        WaitTimer(_captureStopwatch.Elapsed);
         if (bigScreen is null)
             return null;
 
         CreateScreenBrush(bigScreen, _cropRegion);
+        WaitTimer(_captureStopwatch.Elapsed);
+        _captureStopwatch.Restart();
         return null;
     }
 
     private void WaitTimer(TimeSpan elapsed)
     {
-        if (_screenshotInterval > elapsed)
-            Thread.Sleep(_screenshotInterval - elapsed);
+        var screenshotInterval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
+        if (screenshotInterval > elapsed)
+            Thread.Sleep(screenshotInterval - elapsed);
         else
-            Thread.Sleep(_screenshotInterval);
+            Thread.Sleep(screenshotInterval);
     }
 
     private void CreateScreenBrush(Bitmap bigScreen, Rectangle cropRegion)
@@ -407,6 +375,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                     average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
 
                 _screenBrush = new SolidBrush(average);
+                _brushChanged = true;
                 break;
         }
     }
@@ -414,8 +383,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
     {
         base.PropertiesChanged(sender, args);
-
-        _screenshotInterval = GetIntervalFromFps(Properties.AmbiLightUpdatesPerSecond);
             
         Initialize();
 
@@ -548,7 +515,7 @@ internal interface IScreenCapture : IDisposable
     /// Captures a screenshot of the full screen, returning a full resolution bitmap
     /// </summary>
     /// <returns></returns>
-    Bitmap Capture(Rectangle desktopRegion);
+    Bitmap? Capture(Rectangle desktopRegion);
 
     IEnumerable<string> GetDisplays();
 }

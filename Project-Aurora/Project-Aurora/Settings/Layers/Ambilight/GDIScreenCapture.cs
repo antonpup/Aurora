@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Aurora.Settings.Layers.Ambilight;
 
-internal class GDIScreenCapture : IScreenCapture
+internal sealed class GdiScreenCapture : IScreenCapture
 {
     private Bitmap _targetBitmap = new(8, 8);
     private Size _targetSize = new(8, 8);
@@ -23,7 +23,7 @@ internal class GDIScreenCapture : IScreenCapture
             _graphics = Graphics.FromImage(_targetBitmap);
         }
         _graphics.CompositingMode = CompositingMode.SourceCopy;
-        _graphics.CopyFromScreen(desktopRegion.X, desktopRegion.Y, 0, 0, desktopRegion.Size);
+        _graphics.CopyFromScreen(desktopRegion.Location, Point.Empty, _targetSize);
 
         return _targetBitmap;
     }
