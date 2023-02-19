@@ -90,7 +90,7 @@ namespace Aurora.Devices.OpenRGB
             }
             catch (Exception e)
             {
-                LogError("error in OpenRGB device: " + e);
+                LogError("error in OpenRGB device", e);
                 IsInitialized = false;
                 _openRgb = null;
                 return false;
@@ -172,7 +172,7 @@ namespace Aurora.Devices.OpenRGB
                     }
                     catch (Exception exc)
                     {
-                        LogError($"Failed to update OpenRGB device {device.OrgbDevice.Name}: " + exc);
+                        LogError($"Failed to update OpenRGB device {device.OrgbDevice.Name}", exc);
                         Reset();
                     }
                 }

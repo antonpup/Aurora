@@ -44,7 +44,7 @@ public class YeeLightDevice : DefaultDevice
         }
         catch (Exception exc)
         {
-            LogError($"Encountered an error while initializing. Exception: {exc}");
+            LogError($"Encountered an error while initializing", exc);
             IsInitialized = false;
 
             return false;

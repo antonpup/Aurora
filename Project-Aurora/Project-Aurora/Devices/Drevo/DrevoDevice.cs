@@ -32,7 +32,7 @@ namespace Aurora.Devices.Drevo
             }
             catch (Exception exc)
             {
-                LogError($"There was an error initializing Drevo Radi SDK: {exc.Message}");
+                LogError($"There was an error initializing Drevo Radi SDK", exc);
                 return IsInitialized = false;
             }
         }
@@ -49,7 +49,7 @@ namespace Aurora.Devices.Drevo
             }
             catch (Exception exc)
             {
-                LogError("Exception during Shutdown: " + exc);
+                LogError("Exception during Shutdown", exc);
                 IsInitialized = false;
             }
         }
@@ -84,7 +84,7 @@ namespace Aurora.Devices.Drevo
             }
             catch (Exception exc)
             {
-                LogError($"Error when updating device: {exc}");
+                LogError($"Error when updating device", exc);
                 return false;
             }
         }

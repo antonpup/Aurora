@@ -40,7 +40,7 @@ namespace Aurora.Devices.Wooting
             }
             catch (Exception exc)
             {
-                LogError("There was an error initializing Wooting SDK.\r\n" + exc.Message);
+                LogError("There was an error initializing Wooting SDK", exc);
 
                 IsInitialized = false;
             }
@@ -84,7 +84,7 @@ namespace Aurora.Devices.Wooting
             }
             catch (Exception exc)
             {
-                LogError("Failed to Update Device" + exc.ToString());
+                LogError("Failed to Update Device", exc);
                 return false;
             }
         }
