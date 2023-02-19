@@ -44,7 +44,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception e)
             {
-                LogError("Error initializing:" + e.Message);
+                LogError("Error initializing:", e);
                 return IsInitialized = false;
             }
 
@@ -72,7 +72,7 @@ namespace Aurora.Devices.Razer
             }
             catch (Exception e)
             {
-                LogError(e.Message);
+                LogError("Error shutting down", e);
             }
         }
 
@@ -141,7 +141,7 @@ namespace Aurora.Devices.Razer
                 }
                 catch (Corale.Colore.Razer.NativeCallException e)
                 {
-                    LogError("Error querying device: " + e.Message);
+                    LogError("Error querying device: ", e);
                 }
             }
         }
