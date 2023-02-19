@@ -124,6 +124,15 @@ partial class ConfigUI : INotifyPropertyChanged
     {
         ShowInTaskbar = true;
         WindowStyle = WindowStyle.SingleBorderWindow;
+        if (Top <= 0)
+        {
+            Top = 0;
+        }
+
+        if (Left <= 0)
+        {
+            Left = 0;
+        }
         Show();
         Focus();
     }
@@ -683,15 +692,6 @@ partial class ConfigUI : INotifyPropertyChanged
             return;
         }
 
-        if (Top <= 0)
-        {
-            Top = 0;
-        }
-
-        if (Left <= 0)
-        {
-            Left = 0;
-        }
         base.OnStateChanged(e);
     }
 
