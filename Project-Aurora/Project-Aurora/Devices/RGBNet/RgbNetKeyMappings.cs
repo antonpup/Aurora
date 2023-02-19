@@ -70,6 +70,7 @@ public static class RgbNetKeyMappings
         {LedId.Keyboard_CommaAndLessThan , DeviceKeys.COMMA},
         {LedId.Keyboard_PeriodAndBiggerThan , DeviceKeys.PERIOD},
         {LedId.Keyboard_SlashAndQuestionMark , DeviceKeys.FORWARD_SLASH},
+        {LedId.Keyboard_NonUsBackslash , DeviceKeys.BACKSLASH_UK},
         {LedId.Keyboard_LeftCtrl , DeviceKeys.LEFT_CONTROL},
         {LedId.Keyboard_LeftGui , DeviceKeys.LEFT_WINDOWS},
         {LedId.Keyboard_LeftAlt , DeviceKeys.LEFT_ALT},
