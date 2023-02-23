@@ -11,10 +11,9 @@
         <TabControl>
             <TabItem Header="Overview for Guild Wars 2">
                 <Grid>
-                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="824" Text="In order for Guild Wars 2 support to work, you have to apply the Aurora Wrapper Patch for LightFX in order for Aurora to receive lighting information. Please press &quot;Patch Guild Wars 2 (for 32-bit version)&quot; if you have a 32-bit client, or press &quot;Patch Guild Wars 2 (for 64-bit version)&quot; if you have a 64-bit client. Then select your Guild Wars 2 install location, folder you select should have the Guild Wars 2 exe in it. Then Aurora will install the LightFX Wrapper. After patching, make sure to enable LightFX in the game settings (for Guild Wars 2, enable LightFX at the bottom of keyboard settings)."/>
-                    <Button x:Name="patch_32bit_button" Content="Patch Guild Wars 2 (for 32-bit version)" HorizontalAlignment="Left" Margin="10,99,0,0" VerticalAlignment="Top" Click="patch_32bit_button_Click"/>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="824" Text="In order for Guild Wars 2 support to work, you have to apply the Aurora Wrapper Patch for LightFX in order for Aurora to receive lighting information. Please press press &quot;Patch Guild Wars 2&quot; then select your Guild Wars 2 install location, wrapper dll must be in Guild Wars 2/bin64. After patching, make sure to enable LightFX in the game settings (for Guild Wars 2, enable LightFX at the bottom of keyboard settings)."/>
                     <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with Guild Wars 2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
-                    <Button x:Name="patch_64bit_button" Content="Patch Guild Wars 2 (for 64-bit version)" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Click="patch_64bit_button_Click"/>
+                    <Button Content="Patch Guild Wars 2 (64-bit)" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top" Click="patch_64bit_button_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
