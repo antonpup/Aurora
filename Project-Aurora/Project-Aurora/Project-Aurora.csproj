@@ -113,6 +113,7 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
     <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
     <PackageReference Include="TaskScheduler" Version="2.10.1" />

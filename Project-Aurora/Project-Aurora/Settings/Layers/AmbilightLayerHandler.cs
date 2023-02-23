@@ -242,10 +242,10 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
 {
     private IScreenCapture? _screenCapture;
 
-    private readonly SmartThreadPool _captureWorker = new(1000, 1);
+    private readonly SmartThreadPool _captureWorker;
     private readonly WorkItemCallback _screenshotWork;
 
-    private Brush? _screenBrush;
+    private Brush _screenBrush = Brushes.Transparent;
     private IntPtr _specificProcessHandle = IntPtr.Zero;
     private Rectangle _cropRegion = new(8, 8, 8, 8);
     private ImageAttributes _imageAttributes = new();
@@ -259,6 +259,14 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
 
     public AmbilightLayerHandler() : base("Ambilight Layer")
     {
+        STPStartInfo stpStartInfo = new STPStartInfo();
+        stpStartInfo.ApartmentState = ApartmentState.STA;
+        stpStartInfo.IdleTimeout = 1000;
+        
+        _captureWorker = new(stpStartInfo)
+        {
+            MaxThreads = 1,
+        };
         Initialize();
         _screenshotWork = TakeScreenshot;
         RunningProcessMonitor.Instance.RunningProcessesChanged += ProcessesChanged; //TODO this is memory leak. WeakEventHandler doesnt work
@@ -277,7 +285,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         if (_invalidated)
         {
             EffectLayer.Clear();
-            _screenBrush = null;
             _invalidated = false;
         }
 
@@ -286,7 +293,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
             _captureWorker.QueueWorkItem(_screenshotWork);
         }
 
-        if (_screenBrush is null || Properties.Sequence.GetAffectedRegion().IsEmpty)
+        if (Properties.Sequence.GetAffectedRegion().IsEmpty)
             return EffectLayer.EmptyLayer;
 
         //This is needed to prevent the layer from disappearing
@@ -301,20 +308,32 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         {
             return EffectLayer;
         }
-        EffectLayer.DrawTransformed(Properties.Sequence,
-            m =>
-            {
-                if (!Properties.FlipVertically) return;
-                m.Scale(1, -1, MatrixOrder.Prepend);
-                m.Translate(0, -_cropRegion.Height, MatrixOrder.Prepend);
-            },
-            g =>
-            {
-                g.Clear(Color.Transparent);
-                g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
-            },
-            _cropRegion with {X = 0, Y = 0}
-        );
+
+        lock (_screenBrush)
+        {
+            EffectLayer.DrawTransformed(Properties.Sequence,
+                m =>
+                {
+                    if (!Properties.FlipVertically) return;
+                    m.Scale(1, -1, MatrixOrder.Prepend);
+                    m.Translate(0, -_cropRegion.Height, MatrixOrder.Prepend);
+                },
+                g =>
+                {
+                    try
+                    {
+                        g.Clear(Color.Transparent);
+                        g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
+                    }
+                    catch (Exception e)
+                    {
+                        //rarely matrix
+                    }
+                },
+                _cropRegion with {X = 0, Y = 0}
+            );
+        }
+        _brushChanged = false;
 
         return EffectLayer;
     }
@@ -328,24 +347,24 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     {
         try
         {
-            return TryTakeScreenshot();
+            TryTakeScreenshot();
         }
         catch (Exception e)
         {
-            return null;
         }
+        return null;
     }
 
-    private object TryTakeScreenshot()
+    private void TryTakeScreenshot()
     {
-        var bigScreen = _screenCapture.Capture(_cropRegion);
-        if (bigScreen is null)
-            return null;
+        _screenCapture.Capture(_cropRegion, bitmap =>
+        {
+            if (bitmap is null) return;
 
-        CreateScreenBrush(bigScreen, _cropRegion);
+            CreateScreenBrush(bitmap, _cropRegion);
+        });
         WaitTimer(_captureStopwatch.Elapsed);
         _captureStopwatch.Restart();
-        return null;
     }
 
     private void WaitTimer(TimeSpan elapsed)
@@ -357,15 +376,20 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
             Thread.Sleep(screenshotInterval);
     }
 
-    private void CreateScreenBrush(Bitmap bigScreen, Rectangle cropRegion)
+    private void CreateScreenBrush(Bitmap screenCapture, Rectangle cropRegion)
     {
         switch (Properties.AmbilightType)
         {
             case AmbilightType.Default:
-                _screenBrush = new TextureBrush(bigScreen, new Rectangle(0, 0, bigScreen.Width, bigScreen.Height), _imageAttributes);
+                lock (_screenBrush)
+                {
+                    _screenBrush.Dispose();
+                    _screenBrush = new TextureBrush(screenCapture, new Rectangle(0, 0, screenCapture.Width, screenCapture.Height), _imageAttributes);
+                }
+                _brushChanged = true;
                 break;
             case AmbilightType.AverageColor:
-                var average = BitmapUtils.GetRegionColor(bigScreen, new Rectangle(Point.Empty, cropRegion.Size));
+                var average = BitmapUtils.GetRegionColor(screenCapture, new Rectangle(Point.Empty, cropRegion.Size));
 
                 if (Properties.BrightenImage)
                     average = ColorUtils.ChangeBrightness(average, Properties.BrightnessChange);
@@ -374,7 +398,11 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 if (Properties.HueShiftImage)
                     average = ColorUtils.ChangeHue(average, Properties.HueShiftAngle);
 
-                _screenBrush = new SolidBrush(average);
+                lock (_screenBrush)
+                {
+                    _screenBrush.Dispose();
+                    _screenBrush = new SolidBrush(average);
+                }
                 _brushChanged = true;
                 break;
         }
@@ -440,8 +468,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 if (handle == IntPtr.Zero)
                     return false;//happens when alt tabbing
 
-                var appRect = new User32.Rect();
-                User32.GetWindowRect(handle, ref appRect);
+                var appRect = GetWindowRectangle(handle);
 
                 crop = new Rectangle(
                     appRect.Left,
@@ -501,6 +528,52 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     }
     #endregion
 
+    #region DWM
+
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out RECT pvAttribute, int cbAttribute);
+
+    public struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+
+    [Flags]
+    private enum DwmWindowAttribute : uint
+    {
+        DWMWA_NCRENDERING_ENABLED = 1,
+        DWMWA_NCRENDERING_POLICY,
+        DWMWA_TRANSITIONS_FORCEDISABLED,
+        DWMWA_ALLOW_NCPAINT,
+        DWMWA_CAPTION_BUTTON_BOUNDS,
+        DWMWA_NONCLIENT_RTL_LAYOUT,
+        DWMWA_FORCE_ICONIC_REPRESENTATION,
+        DWMWA_FLIP3D_POLICY,
+        DWMWA_EXTENDED_FRAME_BOUNDS,
+        DWMWA_HAS_ICONIC_BITMAP,
+        DWMWA_DISALLOW_PEEK,
+        DWMWA_EXCLUDED_FROM_PEEK,
+        DWMWA_CLOAK,
+        DWMWA_CLOAKED,
+        DWMWA_FREEZE_REPRESENTATION,
+        DWMWA_LAST
+    }
+
+    public static RECT GetWindowRectangle(IntPtr hWnd)
+    {
+        RECT rect;
+
+        int size = Marshal.SizeOf(typeof(RECT));
+        DwmGetWindowAttribute(hWnd, (int)DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, out rect, size);
+
+        return rect;
+    }
+
+    #endregion
+
     #region PropertyChanged
     public event PropertyChangedEventHandler PropertyChanged;
 
@@ -515,7 +588,7 @@ internal interface IScreenCapture : IDisposable
     /// Captures a screenshot of the full screen, returning a full resolution bitmap
     /// </summary>
     /// <returns></returns>
-    Bitmap? Capture(Rectangle desktopRegion);
+    void Capture(Rectangle desktopRegion, Action<Bitmap?> action);
 
     IEnumerable<string> GetDisplays();
 }

@@ -55,7 +55,7 @@
                 Grid.Column="1" 
                 VerticalAlignment="Center" 
                 IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=EntireMonitor}" 
-                SelectedIndex="{Binding Properties._AmbilightOutputId, Mode=TwoWay}"
+                SelectedIndex="{Binding Properties.AmbilightOutputId, Mode=TwoWay}"
                 ItemsSource="{Binding Displays, Mode=OneWay}" Height="22" Margin="0,3"
             />
             

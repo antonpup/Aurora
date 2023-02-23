@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -13,7 +14,7 @@ internal sealed class GdiScreenCapture : IScreenCapture
 
     private Graphics _graphics = Graphics.FromImage(new Bitmap(8, 8));
 
-    public Bitmap Capture(Rectangle desktopRegion)
+    public void Capture(Rectangle desktopRegion, Action<Bitmap?> action)
     {
         if (_targetSize != desktopRegion.Size)
         {
@@ -25,7 +26,7 @@ internal sealed class GdiScreenCapture : IScreenCapture
         _graphics.CompositingMode = CompositingMode.SourceCopy;
         _graphics.CopyFromScreen(desktopRegion.Location, Point.Empty, _targetSize);
 
-        return _targetBitmap;
+        action.Invoke(_targetBitmap);
     }
 
     public IEnumerable<string> GetDisplays() =>

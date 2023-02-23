@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Windows;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -12,22 +13,32 @@ using MapFlags = SharpDX.Direct3D11.MapFlags;
 
 namespace Aurora.Settings.Layers.Ambilight;
 
-public class DesktopDuplicator : IDisposable
+public sealed class DesktopDuplicator : IDisposable
 {
-    private static readonly IDictionary<Adapter1, OutputDuplication> Duplicators = new Dictionary<Adapter1, OutputDuplication>();
+    private static readonly IDictionary<Adapter1, Device> Devices = new Dictionary<Adapter1, Device>();
 
     private readonly Device _device;
     private readonly OutputDuplication _deskDupl;
 
     private readonly Texture2D _desktopImageTexture;
 
-    private readonly Rectangle _rect;
-
-    public DesktopDuplicator(Adapter1 adapter, Output1 output, Rectangle rect)
+    public DesktopDuplicator(Output5 output, Adapter1 adapter1)
     {
+        WeakEventManager<Output5, EventArgs>.AddHandler(output, nameof(output.Disposing), (_, _) =>
+        {
+            Dispose();
+        });
+        WeakEventManager<Adapter1, EventArgs>.AddHandler(adapter1, nameof(adapter1.Disposing), (_, _) =>
+        {
+            Dispose();
+        });
+        if (!Devices.TryGetValue(adapter1, out _device))
+        {
+            _device = new Device(adapter1, DeviceCreationFlags.Debug);
+            Devices.Add(adapter1, _device);
+        }
         Global.logger.Info("Starting desktop duplicator");
-        _rect = rect;
-        _device = new Device(adapter);
+        _device.ExceptionMode = 1;
         var textureDesc = new Texture2DDescription
         {
             CpuAccessFlags = CpuAccessFlags.Read,
@@ -42,23 +53,27 @@ public class DesktopDuplicator : IDisposable
             Usage = ResourceUsage.Staging
         };
 
-        if (!Duplicators.TryGetValue(adapter, out _deskDupl))
-        {
-            _deskDupl = output.DuplicateOutput(_device);
-            Duplicators.Add(adapter, _deskDupl);
-        }
-
+        _deskDupl = output.DuplicateOutput1(_device, 0, 1, new [] { Format.B8G8R8A8_UNorm });
         _desktopImageTexture = new Texture2D(_device, textureDesc);
     }
 
-    public Bitmap Capture(int timeout)
+    public Bitmap Capture(Rectangle desktopRegion, int timeout)
     {
-        SharpDX.DXGI.Resource desktopResource;
         if (_deskDupl.IsDisposed || _device.IsDisposed) 
             return null;
 
-        try {
-            _deskDupl.TryAcquireNextFrame(timeout, out _, out desktopResource);
+        try
+        {
+            ReleaseFrame();
+            var tryAcquireNextFrame = _deskDupl.TryAcquireNextFrame(timeout, out var frameInformation, out var desktopResource);
+            if (tryAcquireNextFrame.Failure || frameInformation.LastPresentTime == 0)
+            {
+                return null;
+            }
+            tryAcquireNextFrame.CheckError();
+            using var tempTexture = desktopResource.QueryInterface<Texture2D>();
+            _device.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
+            desktopResource.Dispose();
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
         {
@@ -81,42 +96,45 @@ public class DesktopDuplicator : IDisposable
             return null;
         }
 
-        using (desktopResource) {
-            using (var tempTexture = desktopResource.QueryInterface<Texture2D>())
-                _device.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
-        }
-
-        bool disposed = ReleaseFrame();
-        if (disposed)
-            return null;
-
         var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
+        if (mapSource.IsEmpty)
+        {
+            return null;
+        }
 
         try
         {
-            return ProcessFrame(mapSource.DataPointer, mapSource.RowPitch);
+            return ProcessFrame(mapSource, desktopRegion);
         }
         finally
         {
-            if (!_device.IsDisposed && !_device.ImmediateContext.IsDisposed && !_desktopImageTexture.IsDisposed)
+            if (_device is { IsDisposed: false, ImmediateContext.IsDisposed: false } && !_desktopImageTexture.IsDisposed)
             {
                 _device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
             }
         }
     }
 
-    Bitmap ProcessFrame(IntPtr sourcePtr, int SourceRowPitch)
+    Bitmap ProcessFrame(DataBox mapSource, Rectangle rect)
     {
-        var frame = new Bitmap(_rect.Width, _rect.Height, PixelFormat.Format32bppRgb);
+        IntPtr sourcePtr = mapSource.DataPointer;
+        int sourceRowPitch = mapSource.RowPitch;
+
+        var frame = new Bitmap(rect.Width, rect.Height, PixelFormat.Format32bppRgb);
         // Copy pixels from screen capture Texture to GDI bitmap
-        var mapDest = frame.LockBits(_rect with {X = 0, Y = 0}, ImageLockMode.WriteOnly, frame.PixelFormat);
-        var screenY = _rect.Top;
-        var sizeInBytesToCopy = _rect.Width * 4;
-        for (var y = 0; screenY < _rect.Bottom; screenY++, y++)
+        var mapDest = frame.LockBits(rect with {X = 0, Y = 0}, ImageLockMode.WriteOnly, frame.PixelFormat);
+
+        var destPtr = mapDest.Scan0;
+        sourcePtr = IntPtr.Add(sourcePtr, rect.Y * sourceRowPitch);
+        sourcePtr = IntPtr.Add(sourcePtr, rect.X * 4);
+        for (var y = 0; y < rect.Height; y++)
         {
-            var mapDestStride = mapDest.Scan0 + y * mapDest.Stride;
-            var sourceRowPitch = sourcePtr + screenY * SourceRowPitch + _rect.Left * 4;
-            Utilities.CopyMemory(mapDestStride, sourceRowPitch, sizeInBytesToCopy);
+            // Copy a single line 
+            Utilities.CopyMemory(destPtr, sourcePtr, mapDest.Stride);
+
+            // Advance pointers
+            sourcePtr = IntPtr.Add(sourcePtr, sourceRowPitch);
+            destPtr = IntPtr.Add(destPtr, mapDest.Stride);
         }
         // Release source and dest locks
         frame.UnlockBits(mapDest);
@@ -124,12 +142,11 @@ public class DesktopDuplicator : IDisposable
         return frame;
     }
 
-    bool ReleaseFrame()
+    void ReleaseFrame()
     {
         try
         {
             _deskDupl.ReleaseFrame();
-            return _deskDupl.IsDisposed;
         }
         catch (SharpDXException e)
         {
@@ -137,14 +154,24 @@ public class DesktopDuplicator : IDisposable
             {
                 Global.logger.Warn(e.Message);
             }
-            return true;
         }
     }
 
     public void Dispose()
     {
-        _device?.Dispose();
-        _deskDupl?.Dispose();
-        _desktopImageTexture?.Dispose();
+        ReleaseFrame();
+        if (!_deskDupl.IsDisposed)
+        {
+            _deskDupl.Dispose();
+        }
+        if (!_desktopImageTexture.IsDisposed)
+        {
+            _desktopImageTexture.Dispose();
+        }
+
+        if (!_desktopImageTexture.IsDisposed)
+        {
+            _desktopImageTexture.Dispose();
+        }
     }
 }
