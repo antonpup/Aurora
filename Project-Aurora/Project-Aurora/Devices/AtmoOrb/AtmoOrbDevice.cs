@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Threading.Tasks;
 using Aurora.Settings;
 
 namespace Aurora.Devices.AtmoOrb;
@@ -22,16 +23,16 @@ public class AtmoOrbDevice : DefaultDevice
 
     public override string DeviceName => "AtmoOrb";
 
-    public override bool Initialize()
+    protected override async Task<bool> DoInitialize()
     {
-        if (_isConnected) return _isConnected;
+        if (_isConnected) return true;
         try
         {
-            Connect();
+            await Connect();
         }
         catch (Exception exc)
         {
-            Global.logger.Error($"Device {DeviceName} encountered an error during Connecting. Exception: {exc}");
+            Global.logger.Error(exc, $"Device {DeviceName} encountered an error during Connecting.");
             _isConnected = false;
 
             return false;
@@ -42,27 +43,35 @@ public class AtmoOrbDevice : DefaultDevice
 
     public override bool IsInitialized => _isConnected;
 
-    private void Reconnect()
+    public async Task<bool> Reconnect()
     {
         if (_socket != null)
         {
+            await _socket.DisconnectAsync(false);
             _socket.Close();
             _socket = null;
         }
 
         _isConnected = false;
 
-        Connect();
+        await Connect();
+        return true;
     }
 
-    public override void Shutdown()
+    public override async Task Reset()
+    {
+        await Reconnect();
+    }
+
+    public override async Task Shutdown()
     {
         if (_socket != null)
         {
             // Set color to black
-            SendColorsToOrb(0, 0, 0);
+            await SendColorsToOrb(0, 0, 0);
 
             // Close all connections
+            await _socket.DisconnectAsync(false);
             _socket.Close();
             _socket = null;
         }
@@ -70,12 +79,14 @@ public class AtmoOrbDevice : DefaultDevice
         _isConnected = false;
     }
 
-    private void Connect()
+    public async Task Connect(DoWorkEventArgs token = null)
     {
+        if (_isConnecting)
+            return;
+
         try
         {
-            if (_isConnecting)
-                return;
+
 
             _isConnecting = true;
             var multiCastIp = IPAddress.Parse("239.15.18.2");
@@ -87,45 +98,44 @@ public class AtmoOrbDevice : DefaultDevice
                 new MulticastOption(multiCastIp));
             _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
 
-            _socket.Connect(ipClientEndpoint);
+            await _socket.ConnectAsync(ipClientEndpoint);
 
             _isConnected = true;
             _isConnecting = false;
         }
         catch (Exception)
         {
-            Thread.Sleep(2500);
+            await Task.Delay(2500);
             _isConnecting = false;
         }
     }
 
-    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+    protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
         if (e.Cancel) return false;
 
         // Connect if needed
         if (!_isConnected)
-            Connect();
-
-        if (e.Cancel) return false;
-
-        if (e.Cancel) return false;
+        {
+            await Connect(e);
+        }
 
         if (Watch.ElapsedMilliseconds <= Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"))
-            return !e.Cancel;
+            return true;
         if (!keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT1)) return false;
         var averageColor = keyColors[DeviceKeys.ADDITIONALLIGHT1];   //TODO add 1 zone kb
-        SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
+
+        await SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
 
         return !e.Cancel;
     }
 
-    private void SendColorsToOrb(byte red, byte green, byte blue, DoWorkEventArgs e = null)
+    public async Task SendColorsToOrb(byte red, byte green, byte blue, DoWorkEventArgs e = null)
     {
         if (e?.Cancel ?? false) return;
         if (!_isConnected)
         {
-            Reconnect();
+            await Reconnect();
             return;
         }
 
@@ -176,7 +186,7 @@ public class AtmoOrbDevice : DefaultDevice
                 bytes[7] = blue;
 
                 if (e?.Cancel ?? false) return;
-                _socket.Send(bytes, bytes.Length, SocketFlags.None);
+                _ = await _socket.SendAsync(bytes, SocketFlags.None);
             }
             catch (Exception)
             {

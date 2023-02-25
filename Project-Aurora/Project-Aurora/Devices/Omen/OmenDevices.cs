@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 
@@ -12,6 +13,7 @@ namespace Aurora.Devices.Omen
 {
     public class OmenDevices : DefaultDevice
     {
+        private readonly SemaphoreSlim _thisLock = new(1);
         bool kbConnected = false;
         bool peripheralConnected = false;
 
@@ -45,7 +47,7 @@ namespace Aurora.Devices.Omen
 
         public VariableRegistry RegisteredVariables => new VariableRegistry();
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             Global.kbLayout.KeyboardLayoutUpdated -= DeviceChangedHandler;
             Global.kbLayout.KeyboardLayoutUpdated += DeviceChangedHandler;
@@ -89,49 +91,51 @@ namespace Aurora.Devices.Omen
                     IsInitialized = (devices.Count != 0);
                 }
             }
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
         private void DeviceChangedHandler(object sender)
         {
             Global.logger.Info("Devices is changed. Reset Omen Devices");
-            Shutdown();
-            Initialize();
+            // Event handler is fire and forget
+            Task.WaitAll(new[] { Shutdown(), Initialize()});
         }
 
-        public override void Shutdown()
-        {
-            lock (this)
-            {
-                try
-                {
-                    if (IsInitialized)
-                    {
-                        Reset();
-
-                        foreach (var dev in devices)
-                        {
-                            dev.Shutdown();
-                        }
-                        devices.Clear();
-                        devices = null;
-                        kbConnected = peripheralConnected = false;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Global.logger.Error("OMEN device, Exception during Shutdown. Message: " + e);
-                }
-
-                IsInitialized = false;
-            }
-        }
-
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        public override async Task Shutdown()
         {
             try
             {
-                if (e.Cancel || !IsInitialized) return false;
+                await this._thisLock.WaitAsync();
+                if (IsInitialized)
+                {
+                    await Reset();
+
+                    foreach (var dev in devices)
+                    {
+                        dev.Shutdown();
+                    }
+                    devices.Clear();
+                    devices = null;
+                    kbConnected = peripheralConnected = false;
+                }
+            }
+            catch (Exception e)
+            {
+                Global.logger.Error("OMEN device, Exception during Shutdown. Message: " + e);
+            }
+            finally
+            {
+                _thisLock.Release();
+            }
+
+            IsInitialized = false;
+        }
+
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        {
+            try
+            {
+                if (e.Cancel || !IsInitialized) return Task.FromResult(false);
 
                 foreach (var dev in devices)
                 {
@@ -143,7 +147,7 @@ namespace Aurora.Devices.Omen
                 Global.logger.Error("OMEN device, Exception during update device. Message: " + ex);
             }
 
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

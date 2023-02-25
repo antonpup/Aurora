@@ -20,7 +20,7 @@ namespace Aurora.Devices
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
-        public readonly object ActionLock = new();
+        public readonly SemaphoreSlim ActionLock = new(1);
         private readonly Action _updateAction;
 
         public DeviceContainer(IDevice device)
@@ -36,16 +36,17 @@ namespace Aurora.Devices
 
         private async void WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
         {
-            if (Device.InitializeTask == null)
+            if (!Device.IsInitialized)
             {
-                return;
+                await Device.Initialize();
             }
-            await Device.InitializeTask;
-            lock(ActionLock)
-            {
-                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
-            }
+
+            await ActionLock.WaitAsync();
+            await Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+
+            ActionLock.Release();
         }
+
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
@@ -250,10 +251,10 @@ namespace Aurora.Devices
                 .Where(device => !device.IsInitialized && !Global.Configuration.DevicesDisabled.Contains(device.GetType()));
             foreach (var device in devices)
             {
-                device.InitializeTask = Task.Run(device.Initialize);
-                device.InitializeTask.ContinueWith(task =>
+                var task = Task.Run(device.Initialize);
+                task.ContinueWith(task =>
                 {
-                    if (task.IsCompletedSuccessfully)
+                    if (task.IsCompletedSuccessfully && task.Result)
                     {
                         Global.logger.Info($"[Device][{device.DeviceName}] Initialized Successfully.");
                     }
@@ -271,34 +272,33 @@ namespace Aurora.Devices
         {
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.ActionLock)
-                {
-                    DisableDevice(dc.Device);
-                }
+                dc.ActionLock.Wait();
+                DisableDevice(dc.Device);
+                dc.ActionLock.Release();
+
                 Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
             }
         }
 
-        public Task ResetDevices()
+        public async Task ResetDevices()
         {
+            List<Task> resetTasks = new();
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.Device.InitializeTask = Task.Run(dc.Device.Reset);
+                resetTasks.Add(dc.Device.Reset());
             }
-            
-            return Task.WhenAll(InitializedDeviceContainers.Select(container => container.Device.InitializeTask));
+
+            await Task.WhenAll(resetTasks);
         }
 
-        public Task EnableDevice(IDevice device)
+        public async Task EnableDevice(IDevice device)
         {
-            device.InitializeTask = Task.Run(device.Initialize);
-            return device.InitializeTask;
+            await device.Initialize();
         }
 
-        public void DisableDevice(IDevice device)
+        public async Task DisableDevice(IDevice device)
         {
-            device.InitializeTask = null;
-            device.Shutdown();
+            await device.Shutdown();
         }
 
         public void UpdateDevices(DeviceColorComposition composition, bool forced = false)

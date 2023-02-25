@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Aurora.Settings;
 using Aurora.Utils;
 using Microsoft.Win32;
@@ -112,11 +109,11 @@ namespace Aurora.Devices.Uniwill
 
         public override string DeviceName => devicename;
 
-        public string DeviceDetails => IsInitialized
+        public override string DeviceDetails => IsInitialized
             ? "Initialized"
             : "Not Initialized";
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             if (!IsInitialized && CheckGCPower())
             {
@@ -130,11 +127,11 @@ namespace Aurora.Devices.Uniwill
                         bRefreshOnce = true;
                         IsInitialized = true;
                         //SetBrightness();
-                        return true;
+                        return Task.FromResult(true);
                     }
 
                     IsInitialized = false;
-                    return false;
+                    return Task.FromResult(false);
                 }
                 catch
                 {
@@ -142,28 +139,13 @@ namespace Aurora.Devices.Uniwill
                 }
                 // Mark Initialized = FALSE
                 IsInitialized = false;
-                return false;
+                return Task.FromResult(false);
             }
 
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
-        public override void Shutdown()
-        {
-            if (this.IsInitialized)
-            {
-                if (CheckGCPower())
-                {
-                    keyboard?.release();
-                }
-
-                bRefreshOnce = true;
-                IsInitialized = false;
-
-            }
-        }
-
-        public void Reset()
+        public override Task Shutdown()
         {
             if (this.IsInitialized)
             {
@@ -175,13 +157,30 @@ namespace Aurora.Devices.Uniwill
                 bRefreshOnce = true;
                 IsInitialized = false;
             }
+
+            return Task.CompletedTask;
+        }
+
+        public override Task Reset()
+        {
+            if (this.IsInitialized)
+            {
+                if (CheckGCPower())
+                {
+                    keyboard?.release();
+                }
+
+                bRefreshOnce = true;
+                IsInitialized = false;
+            }
+            return Task.CompletedTask;
         }
 
         bool bRefreshOnce = true; // This is used to refresh effect between Row-Type and Fw-Type change or layout light level change
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
 
             //Alpha necessary for Global Brightness modifier
             var adjustedColors = keyColors.Select(kc => AdjustBrightness(kc));
@@ -190,7 +189,7 @@ namespace Aurora.Devices.Uniwill
 
             bRefreshOnce = false;
 
-            return ret;
+            return Task.FromResult(ret);
         }
 
         private KeyValuePair<DeviceKeys, Color> AdjustBrightness(KeyValuePair<DeviceKeys, Color> kc)

@@ -110,11 +110,14 @@ namespace Aurora.Devices.LightFX
 
         int byteDataLength = 9;
         bool usingHID;
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
-            lock (action_lock) {
-                if (!IsInitialized) {
-                    try {
+            lock (action_lock)
+            {
+                if (!IsInitialized)
+                {
+                    try
+                    {
                         int result = LightFXSDK.LightFXInitialize(0x187c);
                         if (result != -1) {
                             byteDataLength = result;
@@ -172,19 +175,19 @@ namespace Aurora.Devices.LightFX
                             SetColor(1, (int)BITMASK.leftZone, 255, 255, 255);
                             IsInitialized = true;
                         }
-
-                        return IsInitialized;
-                    } catch (Exception ex) {
+                    } 
+                    catch (Exception ex) 
+                    {
                         Global.logger.Error("LIGHTFX device, Exception! Message: " + ex);
                         IsInitialized = false;
-                        return IsInitialized;
                     }
                 }
-                return IsInitialized;
+
+                return Task.FromResult(IsInitialized);
             }
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             lock (action_lock) {
                 try {
@@ -202,14 +205,18 @@ namespace Aurora.Devices.LightFX
                     IsInitialized = false;
                 }
             }
+
+            return Task.CompletedTask;
         }
 
-        public void Reset()
+        public override Task Reset()
         {
             if (this.IsInitialized&& (keyboard_updated || peripheral_updated)) {
                 keyboard_updated = false;
                 peripheral_updated = false;
             }
+
+            return Task.CompletedTask;
         }
 
         int ALIENFX_BUSY = 17;
@@ -280,7 +287,7 @@ namespace Aurora.Devices.LightFX
         private readonly List<Color> midRightColor = new List<Color>();
         private readonly List<Color> rightColor = new List<Color>();
         private readonly List<Color> numpadColor = new List<Color>();
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (e.Cancel) return false;
 
@@ -328,7 +335,7 @@ namespace Aurora.Devices.LightFX
                                 return false;
                             }
                         } else {
-                            Thread.Sleep(50);
+                            await Task.Delay(50);
                             // continue;
                             return false;
                         }

@@ -23,7 +23,7 @@ namespace Aurora.Devices.Bloody
 
         private event EventHandler<Dictionary<DeviceKeys, Color>> DeviceUpdated;
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             _keyboard = BloodyKeyboard.Initialize();
             if(_keyboard != null)
@@ -35,10 +35,11 @@ namespace Aurora.Devices.Bloody
             DeviceUpdated += UpdatePeripherals;
             _updateDelayStopWatch.Start();
 
-            return IsInitialized = _keyboard != null || _peripherals.Any();
+            IsInitialized = (_keyboard != null) || (_peripherals.Any());
+            return Task.FromResult(IsInitialized);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             _keyboard?.Disconnect();
             DeviceUpdated -= UpdateKeyboard;
@@ -48,17 +49,18 @@ namespace Aurora.Devices.Bloody
             _updateDelayStopWatch.Stop();
 
             IsInitialized = false;
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             var sendDelay = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay");
             if (_updateDelayStopWatch.ElapsedMilliseconds <= sendDelay)
-                return false;
+                return Task.FromResult(false);
 
             DeviceUpdated?.Invoke(this, keyColors);
             _updateDelayStopWatch.Restart();
-            return true;
+            return Task.FromResult(true);
         }
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {

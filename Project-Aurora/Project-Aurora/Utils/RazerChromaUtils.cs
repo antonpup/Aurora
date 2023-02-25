@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
-using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 using System.Xml;
-using RazerSdkHelper;
-using System.Net.Http;
-using System.Net.Http.Json;
-using Octokit.Internal;
 using Aurora.Modules.Razer;
+using Microsoft.Win32;
+using Newtonsoft.Json.Linq;
 
 namespace Aurora.Utils
 {

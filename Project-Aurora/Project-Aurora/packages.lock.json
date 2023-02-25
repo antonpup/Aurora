@@ -4,9 +4,20 @@
     "net6.0-windows10.0.19041": {
       "Colore": {
         "type": "Direct",
-        "requested": "[5.2.0, )",
-        "resolved": "5.2.0",
-        "contentHash": "bd7+CgSyiIX/oyBsjNpTBCzybLNG1cMHxqFFbSbfgntXrEa0wAc1/M0nSmw7J33b+KqqGrCQijhPEwp9fci5vA=="
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "vU2Gy6fjgnYMINx596pUZYTsJ9X0bilYv9jsvHIKhIyodmi//8Qzx7u9fj7f4vUn56uO+4lwB28/onLJDEOgkg==",
+        "dependencies": {
+          "JetBrains.Annotations": "2020.1.0",
+          "Microsoft.CSharp": "4.7.0",
+          "Microsoft.Win32.Registry": "4.7.0",
+          "Newtonsoft.Json": "12.0.3",
+          "System.Reflection": "4.3.0",
+          "System.Reflection.Extensions": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.7.0",
+          "System.Runtime.InteropServices.RuntimeInformation": "4.3.0",
+          "System.ValueTuple": "4.5.0"
+        }
       },
       "CorsairRGB.NET": {
         "type": "Direct",
@@ -237,15 +248,15 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[4.7.10, )",
-        "resolved": "4.7.10",
-        "contentHash": "rcegW7kYOCjl7wX0SzsqpPBqnJ51JKi1WkYb6QBVX0Wc5IgH19Pv4t/co+T0s06OS0Ne44xgkY/mHg0PdrmJow=="
+        "requested": "[5.0.4, )",
+        "resolved": "5.0.4",
+        "contentHash": "hMyC7jq1m7c339DZXTRz96b+0YsIYSwAUB8sAWMtqXd2uwJjYe+y1k74fbItODPqDuE/krd6A4mxew9gLMS+PQ=="
       },
       "Octokit": {
         "type": "Direct",
-        "requested": "[2.0.1, )",
-        "resolved": "2.0.1",
-        "contentHash": "JVlfUY+sfItl6RSyVKDJTutuy28cDydUwKKfzcelwNMor2Sa18pYVKna6phO8lug1b+ep+pcuFh/FPayuImsQw=="
+        "requested": "[3.0.0, )",
+        "resolved": "3.0.0",
+        "contentHash": "IM7sDD1DSu+6jiFKcRyB8Tb0CZlPJ7nnBdPnhCXEToEZWJAlr/01PVk/UTRiCutF62Dni3n2gZWJrusLytxzpw=="
       },
       "PropertyChanged.Fody": {
         "type": "Direct",
@@ -323,11 +334,11 @@
       },
       "SharpDX.RawInput": {
         "type": "Direct",
-        "requested": "[4.0.1, )",
-        "resolved": "4.0.1",
-        "contentHash": "LfvLa2bJBAKY8qwBT4EBB3APYGi89Lp3/VSIeaLcLhm1Xlu2FWRGO2f/4CrxmidHzLkT5cLKqGdOIeKf4Cnixw==",
+        "requested": "[4.2.0, )",
+        "resolved": "4.2.0",
+        "contentHash": "giUwSLrOaMiiFE2OobsXnwIq6P21KbNWo5YYJ4azGRX3qBCsiQ9HcuwqFA195Xe3RNEqYUwzx3eTvxbHrCodyg==",
         "dependencies": {
-          "SharpDX": "4.0.1"
+          "SharpDX": "4.2.0"
         }
       },
       "SmartThreadPool.dll": {
@@ -1444,12 +1455,8 @@
       },
       "System.Reflection.TypeExtensions": {
         "type": "Transitive",
-        "resolved": "4.3.0",
-        "contentHash": "7u6ulLcZbyxB5Gq0nMkQttcdBTx57ibzw+4IOXEfR+sXYQoHvjW5LTLyNr8O22UIMrqYbchJQJnos4eooYzYJA==",
-        "dependencies": {
-          "System.Reflection": "4.3.0",
-          "System.Runtime": "4.3.0"
-        }
+        "resolved": "4.7.0",
+        "contentHash": "VybpaOQQhqE6siHppMktjfGBw1GCwvCqiufqmP8F1nj7fTUNtW35LOEt3UZTEsECfo+ELAl/9o9nJx3U91i7vA=="
       },
       "System.Resources.ResourceManager": {
         "type": "Transitive",

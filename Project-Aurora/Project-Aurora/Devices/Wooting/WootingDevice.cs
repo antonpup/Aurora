@@ -3,10 +3,7 @@ using Aurora.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Wooting;
 
@@ -18,10 +15,11 @@ namespace Aurora.Devices.Wooting
         protected override string DeviceInfo => _deviceInfo;
         private string _deviceInfo = "";
         private DisconnectedCallback cb;
-        public override bool Initialize()
+
+        protected override Task<bool> DoInitialize()
         {
             if (IsInitialized)
-                return IsInitialized;
+                return Task.FromResult(true);
 
             try
             {
@@ -45,23 +43,24 @@ namespace Aurora.Devices.Wooting
                 IsInitialized = false;
             }
 
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             if (!IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             RGBControl.Close();
             _deviceInfo = "";
             IsInitialized = false;
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
-                return false;
+                return Task.FromResult(false);
 
             double rScalar = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_r") / 100.0;
             double gScalar = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_scalar_g") / 100.0;
@@ -80,12 +79,12 @@ namespace Aurora.Devices.Wooting
                     }
                 }
                 RGBControl.UpdateKeyboard();
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception exc)
             {
                 LogError("Failed to Update Device", exc);
-                return false;
+                return Task.FromResult(false);
             }
         }
 

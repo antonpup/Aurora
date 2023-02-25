@@ -98,14 +98,28 @@ namespace Aurora.Devices.Dualshock
         private DeviceKeys key;
         private bool isDisconnecting;
 
-        public override bool Initialize()
+
+        private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
+        {
+            if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) || 
+                (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
+            {
+                return;
+            }
+
+            if (isDisconnecting)
+                return;
+
+            LogInfo("Detected device list changed, rescanning for controllers...");
+            DS4Devices.findControllers();
+            if (DS4Devices.getDS4Controllers().Count() != devices.Count)
+                Reset().GetAwaiter().GetResult();
+        }
+
+        protected override Task<bool> DoInitialize()
         {
             if (IsInitialized)
-                return true;
-
-            //dummy call, we just need hidsharp to scan for devices once
-            HidSharp.DeviceList.Local.GetAllDevices();
-            HidSharp.DeviceList.Local.Changed += DeviceListChanged;
+                return Task.FromResult(true);
 
             key = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             DS4Devices.findControllers();
@@ -115,31 +129,16 @@ namespace Aurora.Devices.Dualshock
             foreach (var controller in DS4Devices.getDS4Controllers())
                 devices.Add(new DS4Container(controller, restore));
 
-            return IsInitialized = devices.Count > 0;
+            return Task.FromResult(IsInitialized = devices.Count > 0);
         }
 
-        private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
-        {
-            if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) || 
-                (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
-            {
-                return;
-            }
-                
-
-            if (isDisconnecting)
-                return;
-
-            LogInfo("Detected device list changed, rescanning for controllers...");
-            DS4Devices.findControllers();
-            if (DS4Devices.getDS4Controllers().Count() != devices.Count)
-                Reset();
-        }
-
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             if (!IsInitialized)
-                return;
+            {
+                return Task.CompletedTask;
+            }
+
             HidSharp.DeviceList.Local.Changed -= DeviceListChanged;
 
             isDisconnecting = true;
@@ -150,9 +149,10 @@ namespace Aurora.Devices.Dualshock
             devices.Clear();
             IsInitialized = false;
             isDisconnecting = false;
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (keyColors.TryGetValue(key, out var clr))
             {
@@ -161,7 +161,7 @@ namespace Aurora.Devices.Dualshock
                     dev.sendColor = ColorUtils.CorrectWithAlpha(clr);
                     if (dev.device.isDisconnectingStatus())
                     {
-                        Reset();
+                        await Reset();
                         return false;
                     }
                 }

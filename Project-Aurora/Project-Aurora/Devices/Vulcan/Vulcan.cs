@@ -20,14 +20,14 @@ namespace Aurora.Devices.Vulcan
 
         private List<IVulcanKeyboard> _keyboards;
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             _keyboards = VulcanFinder.FindKeyboards().ToList();
 
-            return IsInitialized = _keyboards.Count > 0;
+            return Task.FromResult(IsInitialized = _keyboards.Count > 0);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             foreach (var keyboard in _keyboards)
             {
@@ -35,12 +35,13 @@ namespace Aurora.Devices.Vulcan
             }
 
             _keyboards.Clear();
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
-                return false;
+                return Task.FromResult(false);
 
             foreach (var key in keyColors)
             {
@@ -58,7 +59,7 @@ namespace Aurora.Devices.Vulcan
                 keyboard.Update();
             }
 
-            return true;
+            return Task.FromResult(true);
         }
     }
 }

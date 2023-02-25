@@ -1,13 +1,9 @@
 ﻿using System;
-using DrevoRadi;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Aurora.Settings;
+using DrevoRadi;
 
 namespace Aurora.Devices.Drevo
 {
@@ -15,32 +11,35 @@ namespace Aurora.Devices.Drevo
     {
         public override string DeviceName => "Drevo";
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             if (IsInitialized)
-                return IsInitialized;
+                return Task.FromResult(true);
 
             try
             {
                 if (!DrevoRadiSDK.DrevoRadiInit())
                 {
                     LogError("Drevo Radi SDK could not be initialized.");
-                    return IsInitialized = false;
+                    IsInitialized = false; 
+                    return Task.FromResult(false);
                 }
 
-                return IsInitialized = true;
+                IsInitialized = true;
+                return Task.FromResult(true);
             }
             catch (Exception exc)
             {
                 LogError($"There was an error initializing Drevo Radi SDK", exc);
-                return IsInitialized = false;
+                IsInitialized = false;
+                return Task.FromResult(false);
             }
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             if (!IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             try
             {
@@ -52,12 +51,14 @@ namespace Aurora.Devices.Drevo
                 LogError("Exception during Shutdown", exc);
                 IsInitialized = false;
             }
+
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
-                return false;
+                return Task.FromResult(false);
 
             try
             {
@@ -80,12 +81,12 @@ namespace Aurora.Devices.Drevo
                     }
                 }
 
-                return DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392);
+                return Task.FromResult(DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392));
             }
             catch (Exception exc)
             {
                 LogError($"Error when updating device", exc);
-                return false;
+                return Task.FromResult(false);
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using Aurora.Settings;
 using Aurora.Utils;
 using Microsoft.Win32;
@@ -36,9 +37,9 @@ namespace Aurora.Devices.Clevo
 
         public override string DeviceName => "Clevo Keyboard";
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
-            if (IsInitialized) return IsInitialized;
+            if (IsInitialized) return Task.FromResult(true);
             try
             {
                 // Initialize Clevo WMI Interface Connection
@@ -56,7 +57,7 @@ namespace Aurora.Devices.Clevo
 
                 // Mark Initialized = TRUE
                 IsInitialized = true;
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
@@ -65,8 +66,7 @@ namespace Aurora.Devices.Clevo
 
             // Mark Initialized = FALSE
             IsInitialized = false;
-            return false;
-
+            return Task.FromResult(false);
         }
 
         // Handle Logon Event
@@ -78,36 +78,38 @@ namespace Aurora.Devices.Clevo
             }
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
-            if (!IsInitialized) return;
+            if (!IsInitialized) return Task.CompletedTask;
             // Release Clevo Connection
             _clevo.ResetKBLEDColors();
             _clevo.Release();
 
             // Uninstantiate Session Switch
-            if (_sseh == null) return;
+            if (_sseh == null) return Task.CompletedTask;
             SystemEvents.SessionSwitch -= _sseh;
             _sseh = null;
+            return Task.CompletedTask;
         }
 
-        public override void Reset()
+        public override Task Reset()
         {
             if (IsInitialized)
                 _clevo.ResetKBLEDColors();
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
             bool updateResult;
 
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
             try
             {
                 foreach (KeyValuePair<DeviceKeys, Color> pair in keyColors)
                 {
-                    if (e.Cancel) return false;
+                    if (e.Cancel) return Task.FromResult(false);
                     if (_useGlobalPeriphericColors)
                     {
                         if (pair.Key == DeviceKeys.Peripheral) // This is not working anymore. Was working in MASTER
@@ -130,7 +132,7 @@ namespace Aurora.Devices.Clevo
                     }
                 }
 
-                if (e.Cancel) return false;
+                if (e.Cancel) return Task.FromResult(false);
                 if (!_useGlobalPeriphericColors)
                 {
                     // Clevo 3 region keyboard
@@ -144,7 +146,7 @@ namespace Aurora.Devices.Clevo
                         _colorUpdated = true;
                     }
 
-                    if (e.Cancel) return false;
+                    if (e.Cancel) return Task.FromResult(false);
 
                     // Center (Other Half of Spacebar to F11) - Clevo keyboards are very compact and the right side color bleeds over to the up/left/right/down keys)
                     Color regionCenterColor = keyColors[DeviceKeys.ADDITIONALLIGHT2];
@@ -155,7 +157,7 @@ namespace Aurora.Devices.Clevo
                         _colorUpdated = true;
                     }
 
-                    if (e.Cancel) return false;
+                    if (e.Cancel) return Task.FromResult(false);
 
                     // Right Side
                     Color regionRightColor = keyColors[DeviceKeys.ADDITIONALLIGHT3];
@@ -167,7 +169,7 @@ namespace Aurora.Devices.Clevo
                     }
                 }
 
-                if (e.Cancel) return false;
+                if (e.Cancel) return Task.FromResult(false);
                 SendColorsToKeyboard(forced);
                 updateResult = true;
             }
@@ -177,7 +179,7 @@ namespace Aurora.Devices.Clevo
                 updateResult = false;
             }
 
-            return updateResult;
+            return Task.FromResult(updateResult);
         }
 
         private void SendColorsToKeyboard(bool forced = false)

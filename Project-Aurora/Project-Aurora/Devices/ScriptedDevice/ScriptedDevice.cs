@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.ScriptedDevice;
 
@@ -49,7 +50,7 @@ public class ScriptedDevice : DefaultDevice
 
     public override string DeviceName => devicename;
 
-    public override bool Initialize()
+    protected override Task<bool> DoInitialize()
     {
         if (!isInitialized)
         {
@@ -63,16 +64,20 @@ public class ScriptedDevice : DefaultDevice
                 crashed = true;
                 isInitialized = false;
 
-                return false;
+                return Task.FromResult(false);
             }
         }
 
-        return isInitialized && !crashed;
+        return Task.FromResult(isInitialized && !crashed);
     }
 
-    public override void Reset()
+    public override Task Reset()
     {
-        if (!isInitialized) return;
+        if (!isInitialized)
+        {
+            return Task.CompletedTask;
+        }
+
         try
         {
             script.Reset();
@@ -83,14 +88,20 @@ public class ScriptedDevice : DefaultDevice
             crashed = true;
             isInitialized = false;
         }
+
+        return Task.CompletedTask;
     }
 
-    public override void Shutdown()
+    public override async Task Shutdown()
     {
-        if (!isInitialized) return;
+        if (!isInitialized)
+        {
+            return;
+        }
+
         try
         {
-            Reset();
+            await this.Reset();
             script.Shutdown();
             isInitialized = false;
         }
@@ -102,21 +113,22 @@ public class ScriptedDevice : DefaultDevice
         }
     }
 
-    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+    protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
-        if (!isInitialized) return false;
+        if (!isInitialized) return Task.FromResult(false);
+
         try
         {
-            return script.UpdateDevice(keyColors, forced);
+            return Task.FromResult(script.UpdateDevice(keyColors, forced));
         }
         catch (Exception exc)
         {
-            Global.logger.Error(exc, 
+            Global.logger.Error(exc,
                 "Device script for {DeviceName} encountered an error during UpdateDevice", devicename);
             crashed = true;
             isInitialized = false;
 
-            return false;
+            return Task.FromResult(false);
         }
     }
 }

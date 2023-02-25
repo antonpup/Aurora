@@ -1,73 +1,120 @@
-﻿using Corale.Colore.Core;
-using Corale.Colore.Razer.Keyboard;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
-using KeyboardCustom = Corale.Colore.Razer.Keyboard.Effects.Custom;
-using MousepadCustom = Corale.Colore.Razer.Mousepad.Effects.Custom;
-using MouseCustom = Corale.Colore.Razer.Mouse.Effects.CustomGrid;
-using KeypadCustom = Corale.Colore.Razer.Keypad.Effects.Custom;
-using ChromaLinkCustom = Corale.Colore.Razer.ChromaLink.Effects.Custom;
-using System.ComponentModel;
-using System.Linq;
-using Corale.Colore.Razer.Mouse;
+using Colore;
+using Colore.Data;
+using Colore.Effects.ChromaLink;
+using Colore.Effects.Keyboard;
+using Colore.Effects.Keypad;
+using Colore.Effects.Mouse;
+using Colore.Effects.Mousepad;
+using Colore.Native;
 
 namespace Aurora.Devices.Razer
 {
     public class RazerDevice : DefaultDevice
     {
-        public override string DeviceName => "Razer";
+        private static readonly AppInfo appInfo = new("Aurora-RGB", string.Empty, string.Empty, string.Empty, Category.Application);
+        private static SemaphoreSlim initializeSemaphore = new(1);
+        private static IChroma chroma;
 
-        private readonly List<(string Name, Guid Guid)> DeviceGuids = typeof(Corale.Colore.Razer.Devices)
+        private readonly List<(string Name, Guid Guid)> DeviceGuids = typeof(RazerDevice)
             .GetFields()
             .Select(f => (f.Name, (Guid)f.GetValue(null)))
             .ToList();
+        private readonly List<string> deviceNames = new();
 
-        private KeyboardCustom keyboard = KeyboardCustom.Create();
-        private MousepadCustom mousepad = MousepadCustom.Create();
-        private MouseCustom mouse = MouseCustom.Create();
+        private CustomKeyboardEffect keyboard = CustomKeyboardEffect.Create();
+        private CustomMousepadEffect mousepad = CustomMousepadEffect.Create();
+        private CustomMouseEffect mouse = CustomMouseEffect.Create();
         private Color headset = Color.Black;
-        private KeypadCustom keypad = KeypadCustom.Create();
-        private ChromaLinkCustom chromalink = ChromaLinkCustom.Create();
+        private CustomKeypadEffect keypad = CustomKeypadEffect.Create();
+        private CustomChromaLinkEffect chromalink = CustomChromaLinkEffect.Create();
 
-        private readonly List<string> deviceNames = new List<string>();
+        public override string DeviceName => "Razer";
 
         protected override string DeviceInfo => string.Join(", ", deviceNames);
 
-        public override bool Initialize()
+        protected override async Task<bool> DoInitialize()
         {
-            try
+            if (chroma is null)
             {
-                Chroma.Instance.Initialize();
-            }
-            catch (Exception e)
-            {
-                LogError("Error initializing:", e);
-                return IsInitialized = false;
+                await initializeSemaphore.WaitAsync();
+                if (chroma is null)
+                {
+                    try
+                    {
+                        chroma = await ColoreProvider.CreateNativeAsync();
+                    }
+                    catch (ColoreException ce) when (ce.Message.Contains("126"))
+                    {
+                        LogInfo("Chroma SDK unavailable.");
+                        IsInitialized = false;
+                        return false;
+                    }
+                    catch (Exception ex)
+                    {
+                        LogError($"Error initializing: {ex.Message}");
+                        IsInitialized = false;
+                        return false;
+                    }
+                    finally
+                    {
+                        initializeSemaphore.Release();
+                    }
+                }
             }
 
-            if (!Chroma.Instance.Initialized)
+            if (!chroma.Initialized)
             {
-                LogError("Failed to Initialize Razer Chroma sdk");
-                return IsInitialized = false;
+                await initializeSemaphore.WaitAsync();
+                if (!chroma.Initialized)
+                {
+                    try
+                    {
+                        await chroma.InitializeAsync(appInfo);
+                        IsInitialized = true;
+                    }
+                    catch (Exception e)
+                    {
+                        LogError("Error initializing:", e);
+                        IsInitialized = false;
+                        return false;
+                    }
+                    finally
+                    {
+                        initializeSemaphore.Release();
+                    }
+                }
+
+                if (!chroma.Initialized)
+                {
+                    LogError("Failed to Initialize Razer Chroma sdk");
+                    IsInitialized = false;
+                    return false;
+                }
             }
 
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_query"))
-                DetectDevices();
+            {
+                await DetectDevices();
+            }
 
-            return IsInitialized = true;
+            return true;
         }
 
-        public override void Shutdown()
+        public override async Task Shutdown()
         {
             if (!IsInitialized)
                 return;
 
             try
             {
-                Chroma.Instance.Uninitialize();
+                await chroma.UninitializeAsync();
                 IsInitialized = false;
             }
             catch (Exception e)
@@ -76,7 +123,7 @@ namespace Aurora.Devices.Razer
             }
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, System.Drawing.Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
@@ -103,17 +150,20 @@ namespace Aurora.Devices.Razer
                     mouse[mouseIndex] = ToColore(key.Value);
             }
 
+            List<Task> tasks = new();
             if (!Global.Configuration.DevicesDisableKeyboard)
-                Chroma.Instance.Keyboard.SetCustom(keyboard);
+                tasks.Add(chroma.Keyboard.SetCustomAsync(keyboard));
             if (!Global.Configuration.DevicesDisableMouse)
-                Chroma.Instance.Mousepad.SetCustom(mousepad);
+                tasks.Add(chroma.Mousepad.SetCustomAsync(mousepad));
             if (!Global.Configuration.DevicesDisableMouse)
-                Chroma.Instance.Mouse.SetGrid(mouse);
+                tasks.Add(chroma.Mouse.SetGridAsync(mouse));
             if (!Global.Configuration.DevicesDisableHeadset)
-                Chroma.Instance.Headset.SetAll(headset);
+                tasks.Add(chroma.Headset.SetAllAsync(headset));
 
-            Chroma.Instance.Keypad.SetCustom(keypad);
-            Chroma.Instance.ChromaLink.SetCustom(chromalink);
+            tasks.Add(chroma.Keypad.SetCustomAsync(keypad));
+            tasks.Add(chroma.ChromaLink.SetCustomAsync(chromalink));
+
+            await Task.WhenAll(tasks);
 
             return true;
         }
@@ -125,7 +175,7 @@ namespace Aurora.Devices.Razer
 
         private Color ToColore(System.Drawing.Color value) => new Color(value.R, value.G, value.B);
 
-        private void DetectDevices()
+        private async Task DetectDevices()
         {
             deviceNames.Clear();
 
@@ -133,13 +183,13 @@ namespace Aurora.Devices.Razer
             {
                 try
                 {
-                    var devInfo = Chroma.Instance.Query(device.Guid);
+                    var devInfo = await chroma.QueryAsync(device.Guid);
                     if (devInfo.Connected)
                     {
                         deviceNames.Add(device.Name);
                     }
                 }
-                catch (Corale.Colore.Razer.NativeCallException e)
+                catch (NativeCallException e)
                 {
                     LogError("Error querying device: ", e);
                 }

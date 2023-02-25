@@ -110,7 +110,7 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.InitializeTask is {IsCompleted: false})
+            if (Device.Device.IsInitializing)
             {
                 btnStart.Content = "Working...";
                 btnStart.IsEnabled = false;

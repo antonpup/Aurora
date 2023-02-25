@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using SBAuroraReactive;
 
 namespace Aurora.Devices.Creative;
@@ -47,7 +48,7 @@ public class SoundBlasterXDevice : DefaultDevice
     }
     
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public override bool Initialize()
+    protected override Task<bool> DoInitialize()
     {
         EnumeratedDevice[] devicesArr;
         try
@@ -59,7 +60,7 @@ public class SoundBlasterXDevice : DefaultDevice
         {
             Global.logger.Error("There was an error scanning for SoundBlasterX devices", exc);
             IsInitialized = false;
-            return false;
+            return Task.FromResult(false);
         }
 
         if (_sbKeyboard == null)
@@ -100,7 +101,7 @@ public class SoundBlasterXDevice : DefaultDevice
         if (_sbMouse != null)
         {
             IsInitialized = _sbKeyboard != null || _sbMouse != null;
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
         int moosIdx;
@@ -115,7 +116,7 @@ public class SoundBlasterXDevice : DefaultDevice
         if (moosIdx >= devicesArr.Length)
         {
             IsInitialized = _sbKeyboard != null || _sbMouse != null;
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
         LEDManager newMouse = null;
@@ -137,7 +138,7 @@ public class SoundBlasterXDevice : DefaultDevice
         }
 
         IsInitialized = _sbKeyboard != null || _sbMouse != null;
-        return IsInitialized;
+        return Task.FromResult(IsInitialized);
     }
 
     static SoundBlasterXDevice()
@@ -154,7 +155,7 @@ public class SoundBlasterXDevice : DefaultDevice
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public override void Shutdown()
+    public override Task Shutdown()
     {
         if (_sbMouse != null)
         {
@@ -246,9 +247,11 @@ public class SoundBlasterXDevice : DefaultDevice
                 _sbScanner = null;
             }
         }
+
+        return Task.CompletedTask;
     }
 
-    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e,
+    protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e,
         bool forced = false)
     {
         uint maxKbLength = 0;
@@ -259,7 +262,7 @@ public class SoundBlasterXDevice : DefaultDevice
         LedColour[] mouseColors = null;
         foreach (KeyValuePair<DeviceKeys, Color> kv in keyColors)
         {
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
 
             if (kbIndices != null)
             {
@@ -289,7 +292,7 @@ public class SoundBlasterXDevice : DefaultDevice
 
         uint numKbGroups = 0;
         if (kbIndices == null)
-            return Update(e, numKbGroups, maxKbLength, null, null, null, mouseColors);
+            return Task.FromResult(Update(e, numKbGroups, maxKbLength, null, null, null, mouseColors));
         numKbGroups = (uint)kbIndices.Count;
         var kbGroupsArr = new uint[numKbGroups * (maxKbLength + 1)];
         var kbPatterns = new LedPattern[numKbGroups];
@@ -297,7 +300,7 @@ public class SoundBlasterXDevice : DefaultDevice
         uint currGroup = 0;
         foreach (var kv in kbIndices)
         {
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
 
             kbPatterns[currGroup] = LedPattern.Static;
             kbColors[currGroup].a = kv.Key.A;
@@ -312,7 +315,7 @@ public class SoundBlasterXDevice : DefaultDevice
             currGroup++;
         }
 
-        return Update(e, numKbGroups, maxKbLength, kbPatterns, kbGroupsArr, kbColors, mouseColors);
+        return Task.FromResult(Update(e, numKbGroups, maxKbLength, kbPatterns, kbGroupsArr, kbColors, mouseColors));
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
