@@ -121,6 +121,10 @@ namespace Aurora.Devices.Dualshock
             if (IsInitialized)
                 return Task.FromResult(true);
 
+            //dummy call, we just need hidsharp to scan for devices once
+            HidSharp.DeviceList.Local.GetAllDevices();
+            HidSharp.DeviceList.Local.Changed += DeviceListChanged;
+
             key = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             DS4Devices.findControllers();
 
