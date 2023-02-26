@@ -109,7 +109,8 @@
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.12" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.RawInput" Version="4.2.0" />
+    <!-- Locked to version 4.0.1 due to an unresolved issue with interop https://github.com/sharpdx/SharpDX/issues/1050 -->
+    <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />

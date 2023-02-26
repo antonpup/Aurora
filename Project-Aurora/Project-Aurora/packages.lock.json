@@ -334,11 +334,11 @@
       },
       "SharpDX.RawInput": {
         "type": "Direct",
-        "requested": "[4.2.0, )",
-        "resolved": "4.2.0",
-        "contentHash": "giUwSLrOaMiiFE2OobsXnwIq6P21KbNWo5YYJ4azGRX3qBCsiQ9HcuwqFA195Xe3RNEqYUwzx3eTvxbHrCodyg==",
+        "requested": "[4.0.1, )",
+        "resolved": "4.0.1",
+        "contentHash": "LfvLa2bJBAKY8qwBT4EBB3APYGi89Lp3/VSIeaLcLhm1Xlu2FWRGO2f/4CrxmidHzLkT5cLKqGdOIeKf4Cnixw==",
         "dependencies": {
-          "SharpDX": "4.2.0"
+          "SharpDX": "4.0.1"
         }
       },
       "SmartThreadPool.dll": {
