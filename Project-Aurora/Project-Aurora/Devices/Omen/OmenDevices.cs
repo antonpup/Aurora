@@ -98,7 +98,8 @@ namespace Aurora.Devices.Omen
         {
             Global.logger.Info("Devices is changed. Reset Omen Devices");
             // Event handler is fire and forget
-            Task.WaitAll(new[] { Shutdown(), Initialize()});
+            var resetTask = Shutdown().ContinueWith(_ => Initialize());
+            resetTask.Wait();
         }
 
         public override async Task Shutdown()
