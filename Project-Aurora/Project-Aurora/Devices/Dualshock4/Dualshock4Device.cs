@@ -98,24 +98,6 @@ namespace Aurora.Devices.Dualshock
         private DeviceKeys key;
         private bool isDisconnecting;
 
-
-        private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
-        {
-            if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) || 
-                (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
-            {
-                return;
-            }
-
-            if (isDisconnecting)
-                return;
-
-            LogInfo("Detected device list changed, rescanning for controllers...");
-            DS4Devices.findControllers();
-            if (DS4Devices.getDS4Controllers().Count() != devices.Count)
-                Reset().GetAwaiter().GetResult();
-        }
-
         protected override Task<bool> DoInitialize()
         {
             if (IsInitialized)
@@ -134,6 +116,23 @@ namespace Aurora.Devices.Dualshock
                 devices.Add(new DS4Container(controller, restore));
 
             return Task.FromResult(IsInitialized = devices.Count > 0);
+        }
+
+        private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
+        {
+            if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) ||
+                (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
+            {
+                return;
+            }
+
+            if (isDisconnecting)
+                return;
+
+            LogInfo("Detected device list changed, rescanning for controllers...");
+            DS4Devices.findControllers();
+            if (DS4Devices.getDS4Controllers().Count() != devices.Count)
+                Reset().GetAwaiter().GetResult();
         }
 
         public override Task Shutdown()
