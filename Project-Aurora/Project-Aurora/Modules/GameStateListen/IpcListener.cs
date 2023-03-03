@@ -74,10 +74,10 @@ public class IpcListener
     {
         IsWrapperConnected = false;
         WrappedProcess = "";
-        Global.logger.Info("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
 
         _ipcPipeStream = CreatePipe();
         _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
+        Global.logger.Info("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
     }
 
     private void ReceiveGameState(IAsyncResult result)
