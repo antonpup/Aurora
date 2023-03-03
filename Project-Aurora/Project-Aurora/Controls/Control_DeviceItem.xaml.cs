@@ -46,8 +46,10 @@ namespace Aurora.Controls
             InitializeComponent();
 
             Timer update_controls_timer = new Timer(1000); //Update every second
-            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(update_controls_timer,
-                nameof(update_controls_timer.Elapsed), Update_controls_timer_Elapsed);
+            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(
+                update_controls_timer,
+                nameof(update_controls_timer.Elapsed),
+                Update_controls_timer_Elapsed);
             update_controls_timer.Start();
         }
 
@@ -67,22 +69,22 @@ namespace Aurora.Controls
         {
             if (sender is Button)
             {
-                lock (Device.ActionLock)
+                btnStart.Content = "Working...";
+                btnStart.IsEnabled = false;
+                var device = Device;
+                Task.Run(async () =>
                 {
-                    if (Device.Device.IsInitialized)
-                    {
-                        Global.dev_manager.DisableDevice(Device.Device);
+                    await device.ActionLock.WaitAsync();
 
-                        UpdateControls();
-                    }
-                    else
+                    if (device.Device.IsInitialized)
                     {
-                        var enableTask = Global.dev_manager.EnableDevice(Device.Device);
-                        UpdateControls();
-                        btnStart.IsEnabled = false;
-                        enableTask.ContinueWith(_ => UpdateControls());
+                        await Global.dev_manager.DisableDevice(device.Device);
+                    } else { 
+                        await Global.dev_manager.EnableDevice(device.Device);
                     }
-                }
+
+                    device.ActionLock.Release();
+                });
             }
         }
 
@@ -93,11 +95,17 @@ namespace Aurora.Controls
             else
             {
                 Global.Configuration.DevicesDisabled.Add(Device.Device.GetType());
-                lock (Device.ActionLock)
+                var device = Device;
+                Task.Run(async () =>
                 {
-                    if (Device.Device.IsInitialized)
-                        Device.Device.Shutdown();
-                }
+                    await device.ActionLock.WaitAsync();
+                    if (device.Device.IsInitialized)
+                    {
+                        await device.Device.Shutdown();
+                    }
+
+                    device.ActionLock.Release();
+                });
             }
 
             UpdateControls();
