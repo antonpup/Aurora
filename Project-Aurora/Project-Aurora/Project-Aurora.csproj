@@ -106,7 +106,7 @@
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.12" />
     <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-prerelease.12" />
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.12" />
-    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.12" />
+    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
