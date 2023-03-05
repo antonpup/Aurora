@@ -27,12 +27,14 @@ namespace Aurora.Devices.OpenRGB
         private List<HelperOpenRgbDevice> _devices;
 
         private SemaphoreSlim _updateLock = new(1);
+        private SemaphoreSlim _initializeLock = new(1);
 
         protected override async Task<bool> DoInitialize()
         {
             if (IsInitialized)
                 return true;
 
+            await _initializeLock.WaitAsync();
             try
             {
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
@@ -97,16 +99,16 @@ namespace Aurora.Devices.OpenRGB
                 _openRgb = null;
                 return false;
             }
-
+            finally {
+                _initializeLock.Release();
+            }
             IsInitialized = true;
             return IsInitialized;
         }
 
         private void OnDeviceListUpdated(object sender, EventArgs e)
         {
-            _updateLock.Wait();
             UpdateDeviceList();
-            _updateLock.Release();
         }
 
         private void UpdateDeviceList()
@@ -115,13 +117,15 @@ namespace Aurora.Devices.OpenRGB
             {
                 return;
             }
-            
+
             _devices = new List<HelperOpenRgbDevice>();
             Queue<DeviceKeys> mouseLights = new Queue<DeviceKeys>(OpenRgbKeyNames.MouseLights);
-            
+
             var fallbackKey = Global.Configuration.VarRegistry.GetVariable<DK>($"{DeviceName}_fallback_key");
             _updateLock.Wait();
-            foreach (var device in _openRgb.GetAllControllerData())
+            try
+            {
+                foreach (var device in _openRgb.GetAllControllerData())
                 {
                     var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
                     if (directMode == null) continue;
@@ -130,32 +134,48 @@ namespace Aurora.Devices.OpenRGB
                     helper.ProcessMappings(fallbackKey);
                     _devices.Add(helper);
                 }
-            Thread.Sleep(500);
+                Thread.Sleep(500);
+            }
+            finally
+            {
             _updateLock.Release();
+            }
         }
 
-        public override Task Shutdown()
+        public override async Task Shutdown()
         {
             if (!IsInitialized)
-                return Task.CompletedTask;
+                return;
 
-            lock (_updateLock)
-                foreach (var d in _devices)
+            await _initializeLock.WaitAsync();
+            foreach (var d in _devices)
+            {
+                try
                 {
-                    try
-                    {
-                        _openRgb.UpdateLeds(d.Index, d.OrgbDevice.Colors);
-                    }
-                    catch
-                    {
-                        //we tried.
-                    }
+                    _openRgb.UpdateLeds(d.Index, d.OrgbDevice.Colors);
                 }
+                catch
+                {
+                    //we tried.
+                }
+            }
 
-            _openRgb?.Dispose();
+            try
+            {
+                _openRgb?.Dispose();
+            }
+            catch
+            {
+                // NOOP
+            }
+            finally
+            {
+                _initializeLock.Release();
+            }
+
             _openRgb = null;
             IsInitialized = false;
-            return Task.CompletedTask;
+            return;
         }
 
         protected override async Task<bool> UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
@@ -223,10 +243,13 @@ namespace Aurora.Devices.OpenRGB
 
         public override IEnumerable<string> GetDevices()
         {
-            lock (_updateLock)
-                return from device in _devices
-                       from zone in device.OrgbDevice.Zones
-                       select CalibrationName(device, zone);
+            _updateLock.Wait();
+            var names =
+                from device in _devices
+                from zone in device.OrgbDevice.Zones
+                select CalibrationName(device, zone);
+            _updateLock.Release();
+            return names;
         }
 
         private string CalibrationName(HelperOpenRgbDevice device, Zone zone)

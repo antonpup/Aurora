@@ -96,13 +96,13 @@ namespace Aurora.Devices.Uniwill
                 SwitchOn = newSwtich;
                 if (CheckGCPower())
                 {
-                    Initialize();
+                    Initialize().Wait();
                 }
                 else
                 {
                     bRefreshOnce = true;
                     IsInitialized = false;
-                    Shutdown();
+                    Shutdown().Wait();
                 }
             }
         }

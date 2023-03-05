@@ -65,9 +65,12 @@ namespace Aurora.Controls
 
         private void btnRestartAll_Click(object sender, RoutedEventArgs e)
         {
-            Global.dev_manager.ShutdownDevices();
-            Global.dev_manager.InitializeDevices();
-            UpdateControls();
+            Task.Run(async () =>
+            {
+                await Global.dev_manager.ShutdownDevices();
+                await Global.dev_manager.InitializeDevices();
+                Dispatcher.Invoke(() => UpdateControls());
+            });
         }
 
         private void btnCalibrate_Click(object sender, RoutedEventArgs e)

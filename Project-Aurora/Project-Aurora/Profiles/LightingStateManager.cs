@@ -444,7 +444,7 @@ public sealed class LightingStateManager : IInit
         if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(rawProcessName))
         {
             StopUnUpdatedEvents();
-            Global.dev_manager.ShutdownDevices();
+            Task.Run(async () => await Global.dev_manager.ShutdownDevices());
             lock (Effects.CanvasChangedLock)
             {
                 Global.effengine.PushFrame(newFrame);

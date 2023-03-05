@@ -248,9 +248,9 @@
       },
       "NLog": {
         "type": "Direct",
-        "requested": "[5.0.4, )",
-        "resolved": "5.0.4",
-        "contentHash": "hMyC7jq1m7c339DZXTRz96b+0YsIYSwAUB8sAWMtqXd2uwJjYe+y1k74fbItODPqDuE/krd6A4mxew9gLMS+PQ=="
+        "requested": "[4.7.10, )",
+        "resolved": "4.7.10",
+        "contentHash": "rcegW7kYOCjl7wX0SzsqpPBqnJ51JKi1WkYb6QBVX0Wc5IgH19Pv4t/co+T0s06OS0Ne44xgkY/mHg0PdrmJow=="
       },
       "Octokit": {
         "type": "Direct",

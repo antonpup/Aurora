@@ -124,7 +124,7 @@ public partial class App
 
             Global.logger.Info("Loading Device Manager");
             Global.dev_manager.RegisterVariables();
-            Global.dev_manager.InitializeDevices();
+            Global.dev_manager.InitializeDevices().Wait();
 
             Global.logger.Info("Loading ConfigUI...");
 
@@ -265,7 +265,7 @@ public partial class App
         var tasks = _modules.ConvertAll(m => m.DisposeAsync());
         Task.WhenAll(tasks).Wait();
 
-        Global.dev_manager?.ShutdownDevices();
+        Global.dev_manager?.ShutdownDevices().Wait();
         Global.dev_manager?.Dispose();
         Environment.ExitCode = 0;
 

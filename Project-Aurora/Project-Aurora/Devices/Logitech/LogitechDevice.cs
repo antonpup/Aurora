@@ -70,7 +70,7 @@ namespace Aurora.Devices.Logitech
         // Handle Logon Event
         void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            Reset();
+            Reset().Wait();
         }
 
         protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)

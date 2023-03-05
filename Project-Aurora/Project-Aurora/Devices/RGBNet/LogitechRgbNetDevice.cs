@@ -35,12 +35,12 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
             return;
 
         if (e.Reason == SessionSwitchReason.SessionUnlock && _suspended)
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 // Give LGS a moment to think about its sins
-                Thread.Sleep(5000);
+                await Task.Delay(5000);
                 _suspended = false;
-                Initialize();
+                await Initialize();
             });
     }
 

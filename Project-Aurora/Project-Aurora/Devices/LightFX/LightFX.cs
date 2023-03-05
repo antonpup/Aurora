@@ -211,7 +211,7 @@ namespace Aurora.Devices.LightFX
 
         public override Task Reset()
         {
-            if (this.IsInitialized&& (keyboard_updated || peripheral_updated)) {
+            if (this.IsInitialized && (keyboard_updated || peripheral_updated)) {
                 keyboard_updated = false;
                 peripheral_updated = false;
             }

@@ -56,7 +56,7 @@ public class YeeLightDevice : DefaultDevice
 
     private void DeviceDetected(object sender, DeviceDetectedEventArgs e)
     {
-        YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress);
+        Task.Run(async () => await YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress).ConfigureAwait(false));
     }
 
     private void InitiateState()
@@ -89,7 +89,7 @@ public class YeeLightDevice : DefaultDevice
         {
             return TryUpdate(keyColors);
         }
-        catch (Exception exc)
+        catch (Exception)
         {
             await Reset();
             return TryUpdate(keyColors);
