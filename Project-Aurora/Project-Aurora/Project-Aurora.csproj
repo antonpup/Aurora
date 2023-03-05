@@ -104,7 +104,7 @@
    <!-- <PackageReference Include="OpenRGB.NET" Version="1.7.0" /> -->
     <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.12" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.12" />
-    <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-prerelease.12" />
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0" />
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.12" />
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
