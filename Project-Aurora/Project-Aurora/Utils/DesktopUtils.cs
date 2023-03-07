@@ -17,7 +17,7 @@ public static class DesktopUtils {
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
     }
 
-    private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    private static async void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
         if (e.Reason == SessionSwitchReason.SessionLock)
             IsDesktopLocked = true;
@@ -38,9 +38,11 @@ public static class DesktopUtils {
         if (!File.Exists(updaterPath)) return;
         try
         {
-            ProcessStartInfo updaterProc = new ProcessStartInfo();
-            updaterProc.FileName = updaterPath;
-            updaterProc.Arguments = "-silent";
+            var updaterProc = new ProcessStartInfo
+            {
+                FileName = updaterPath,
+                Arguments = "-silent"
+            };
             Process.Start(updaterProc);
         }
         catch (Exception exc)

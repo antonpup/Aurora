@@ -44,7 +44,7 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
             });
     }
 
-    private void SystemEventsPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+    private async void SystemEventsPowerModeChanged(object sender, PowerModeChangedEventArgs e)
     {
         if (!IsInitialized)
             return;
