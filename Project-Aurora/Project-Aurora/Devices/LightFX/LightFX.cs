@@ -39,7 +39,7 @@ namespace Aurora.Devices.LightFX
                 int status = LightFXSDK.HIDRead(Buffer, Buffer.Length);
                 bool read = LightFXSDK.getReadStatus();
                 if (!read) {
-                    Global.logger.Info("Error Code: " + Marshal.GetLastWin32Error());
+                    Global.logger.Info("Error Code: " + Marshal.GetLastPInvokeError());
                     return -1;
                 }
 
