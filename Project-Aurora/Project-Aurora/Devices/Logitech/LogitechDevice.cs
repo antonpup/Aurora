@@ -21,7 +21,7 @@ namespace Aurora.Devices.Logitech
         private readonly Color[] headset = new Color[3];
         private DeviceKeys genericKey;
 
-        protected override Task<bool> DoInitialize()
+        protected override async Task<bool> DoInitialize()
         {
             genericKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             var ghubRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lghub.exe");
@@ -30,7 +30,7 @@ namespace Aurora.Devices.Logitech
             if (!ghubRunning && !lgsRunning)
             {
                 IsInitialized = false;
-                return Task.FromResult(false);
+                return false;
             }
 
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_override_dll"))
@@ -45,17 +45,17 @@ namespace Aurora.Devices.Logitech
                 //logitech says to wait a bit of time between Init() and SetLighting()
                 //This didnt seem to be needed in the past but I feel like 100ms might 
                 //fix some weird issues without any noticeable disadvantages
-                Thread.Sleep(100);
+                await Task.Delay(100);
                 if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_set_default"))
                     LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
                 IsInitialized = true;
-                return Task.FromResult(true);
+                return true;
             }
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
             IsInitialized = false;
-            return Task.FromResult(false);
+            return false;
         }
 
         public override Task Shutdown()

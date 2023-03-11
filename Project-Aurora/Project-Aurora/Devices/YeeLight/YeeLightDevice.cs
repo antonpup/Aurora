@@ -33,13 +33,15 @@ public class YeeLightDevice : DefaultDevice
         {
             var ipListString = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP");
             var autoDiscover = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_discovery");
-            await YeeLightConnector.PopulateDevices(_lights, autoDiscover ? null : ipListString);
+            await YeeLightConnector.PopulateDevices(_lights, autoDiscover ? null : ipListString).ConfigureAwait(false);
 
             InitiateState();
             _updateDelayStopWatch.Start();
             IsInitialized = true;
-            _connectionListener = autoDiscover ? new YeelightConnectionListener() :
-                new YeelightConnectionListener(ipListString.Split(','));
+            _connectionListener = autoDiscover
+                ? new YeelightConnectionListener()
+                : new YeelightConnectionListener(ipListString.Split(','));
+
             _connectionListener.DeviceDetected += DeviceDetected;
             _connectionListener.StartListeningConnections();
         }

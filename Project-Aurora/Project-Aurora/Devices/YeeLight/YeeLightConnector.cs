@@ -14,7 +14,7 @@ public static class YeeLightConnector
 {
     private const int LightListenPort = 55443;
 
-    public static async Task PopulateDevices(List<YeeLightAPI.YeeLightDevice> lights, string ipListString)
+    public static async Task PopulateDevices(List<YeeLightAPI.YeeLightDevice> lights, string? ipListString)
     {
         lights.Clear();
 
@@ -40,7 +40,7 @@ public static class YeeLightConnector
         {
             try
             {
-                await ConnectNewDevice(lights, ipAddress);
+                await ConnectNewDevice(lights, ipAddress).ConfigureAwait(false);
             }
             catch (Exception exc)
             {
@@ -62,7 +62,7 @@ public static class YeeLightConnector
         var light = new YeeLightAPI.YeeLightDevice();
         light.SetLightIPAddressAndPort(lightIp, Constants.DefaultCommandPort);
 
-        var connected = await LightConnectAndEnableMusicMode(light);
+        var connected = await LightConnectAndEnableMusicMode(light).ConfigureAwait(false);
         if (!connected)
         {
             return;
@@ -80,14 +80,14 @@ public static class YeeLightConnector
 
         using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, 0);
         var lightIp = light.GetLightIPAddressAndPort().ipAddress;
-        await socket.ConnectAsync(lightIp, LightListenPort);
+        await socket.ConnectAsync(lightIp, LightListenPort).ConfigureAwait(false);
         var localIp = ((IPEndPoint)socket.LocalEndPoint).Address;
 
         light.Connect();
         int connectionTries = 200;
         do
         {
-            await Task.Delay(200);
+            await Task.Delay(200).ConfigureAwait(false);
         } while (!light.IsConnected() && --connectionTries > 0);
 
         if (!light.IsConnected())
@@ -100,10 +100,21 @@ public static class YeeLightConnector
             light.SetMusicMode(localIp, (ushort)localMusicModeListenPort, true);
             return true;
         }
-        catch (Exception e)
+        catch
         {
-            return true;
+            LogError($"Couldn't set MusicMode for device with address '{lightIp}'");
+            try
+            {
+                light.Connect();
+                return true;
+            }
+            catch
+            {
+                LogError($"Connect failed for device with address '{lightIp}'");
+            }
         }
+
+        return false;
     }
 
     private static int GetFreeTcpPort()
