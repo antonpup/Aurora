@@ -62,7 +62,7 @@ public partial class App
         if (Mutex.WaitOne(TimeSpan.Zero, true))
         {
 #if DEBUG
-                Global.isDebug = true;
+            Global.isDebug = true;
 #endif
             Global.Initialize();
             new UserSettingsBackup().BackupIfNew();
@@ -95,7 +95,8 @@ public partial class App
                 Global.Configuration = new Configuration();
             }
 
-            Global.Configuration.PropertyChanged += (_, _) => {
+            Global.Configuration.PropertyChanged += (_, _) =>
+            {
                 ConfigManager.Save(Global.Configuration);
             };
 
@@ -124,7 +125,7 @@ public partial class App
 
             Global.logger.Info("Loading Device Manager");
             Global.dev_manager.RegisterVariables();
-            Global.dev_manager.InitializeDevices().Wait();
+            Task.Run(async () => await Global.dev_manager.InitializeDevices());
 
             Global.logger.Info("Loading ConfigUI...");
 
@@ -221,7 +222,7 @@ public partial class App
         try
         {
             var winReg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            string productName = (string) winReg.GetValue("ProductName");
+            string productName = (string)winReg.GetValue("ProductName");
 
             systeminfoSb.AppendFormat("Operation System: {0}\r\n", productName);
         }
@@ -274,7 +275,8 @@ public partial class App
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             Thread.Sleep(5000);
-            if (stopwatch.ElapsedMilliseconds > 4500) {
+            if (stopwatch.ElapsedMilliseconds > 4500)
+            {
                 ShutdownApp(0);
             }
         });
@@ -292,7 +294,7 @@ public partial class App
         {
             return;
         }
-        
+
         if (exc is SEHException sehException && sehException.CanResume())
         {
             return;

@@ -269,6 +269,8 @@ namespace Aurora.Devices
                             Global.logger.Info($"[Device][{device.DeviceName}] Failed to initialize.");
                         }
                     });
+                task.ConfigureAwait(false);
+
                 initializeTasks.Add(task);
             }
 
@@ -283,10 +285,10 @@ namespace Aurora.Devices
             {
                 var task = Task.Run(async () =>
                 {
-                    await dc.ActionLock.WaitAsync();
+                    await dc.ActionLock.WaitAsync().ConfigureAwait(false);
                     try
                     {
-                        await DisableDevice(dc.Device);
+                        await DisableDevice(dc.Device).ConfigureAwait(false);
                     }
                     finally
                     {
@@ -294,6 +296,7 @@ namespace Aurora.Devices
                     }
                     Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
                 });
+                task.ConfigureAwait(false);
 
                 shutdownTasks.Add(task);
             }
@@ -306,7 +309,9 @@ namespace Aurora.Devices
             List<Task> resetTasks = new();
             foreach (var dc in InitializedDeviceContainers)
             {
-                resetTasks.Add(dc.Device.Reset());
+                var task = dc.Device.Reset();
+                task.ConfigureAwait(false);
+                resetTasks.Add(task);
             }
 
             await Task.WhenAll(resetTasks).ConfigureAwait(false);
@@ -314,12 +319,12 @@ namespace Aurora.Devices
 
         public async Task EnableDevice(IDevice device)
         {
-            await device.Initialize();
+            await device.Initialize().ConfigureAwait(false);
         }
 
         public async Task DisableDevice(IDevice device)
         {
-            await device.Shutdown();
+            await device.Shutdown().ConfigureAwait(false);
         }
 
         public void UpdateDevices(DeviceColorComposition composition, bool forced = false)

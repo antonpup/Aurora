@@ -103,6 +103,6 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     protected void LogError(string s) => Global.logger.Error($"[Device][{DeviceName}] {s}");
 
-    protected void LogError(string s, Exception e) => Global.logger.Error($"[Device][{DeviceName}] {s}", e);
+    protected void LogError(string s, Exception e) => Global.logger.Error(e, $"[Device][{DeviceName}] {s}");
     #endregion
 }
