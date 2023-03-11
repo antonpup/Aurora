@@ -71,21 +71,10 @@ namespace Aurora.EffectsEngine.Animations
         [Newtonsoft.Json.JsonProperty]
         internal float _angle;
 
-
-        protected float _scale = 1.0f;
         protected PointF _offset;
 
         internal Matrix _transformationMatrix;
 
-        public float Scale
-        {
-            get => _scale;
-            set
-            {
-                _scale = value;
-                _invalidated = true;
-            }
-        }
         public PointF Offset => _offset;
 
         public Color Color => _color;
@@ -109,7 +98,6 @@ namespace Aurora.EffectsEngine.Animations
             _color = frame.Color;
             _duration = frame.Duration;
             _width = frame.Width;
-            _scale = frame.Scale;
             _offset = frame.Offset;
             _angle = frame.Angle;
             _transitionType = frame.TransitionType;
@@ -141,7 +129,6 @@ namespace Aurora.EffectsEngine.Animations
             _transformationMatrix = new Matrix();
             
             _transformationMatrix.RotateAt(-_angle, _dimension.Location, MatrixOrder.Append);
-            _transformationMatrix.Scale(_scale, _scale, MatrixOrder.Append);
             _transformationMatrix.Translate(-_offset.X, -_offset.Y, MatrixOrder.Append);
 
             _invalidated = false;
@@ -224,7 +211,6 @@ namespace Aurora.EffectsEngine.Animations
             );
 
             float newAngle = CalculateNewValue(_angle, otherAnim._angle, amount);
-            float newScale = CalculateNewValue(_scale, otherAnim._scale, amount);
             int newWidth = CalculateNewValue(_width, otherAnim._width, amount);
 
             AnimationFrame newframe = new AnimationFrame();
@@ -232,7 +218,6 @@ namespace Aurora.EffectsEngine.Animations
             newframe._offset = newOffset;
 
             newframe._angle = newAngle;
-            newframe._scale = newScale;
             newframe._width = newWidth;
             newframe._color = Utils.ColorUtils.BlendColors(_color, otherAnim._color, amount);
             

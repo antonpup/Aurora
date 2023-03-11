@@ -30,10 +30,7 @@ namespace Aurora.Controls
 
         public AnimationMix ContextMix
         {
-            get
-            {
-                return (AnimationMix)GetValue(ContextMixProperty);
-            }
+            get => (AnimationMix)GetValue(ContextMixProperty);
             set
             {
                 SetValue(ContextMixProperty, value);
@@ -49,8 +46,6 @@ namespace Aurora.Controls
                     stkPanelTracks.Children.Add(newTrack);
                     //stkPanelTracks.Children.Add(new Separator());
                 }
-
-                ContextMix.SetScale(AnimationScale);
                 AnimationMixUpdated?.Invoke(this, ContextMix);
             }
         }
@@ -94,18 +89,11 @@ namespace Aurora.Controls
 
         public Bitmap RenderedBitmap;
 
-        private float _animationScale = 1.0f;
-        public float AnimationScale {
-            get => _animationScale;
-            set {
-                _animationScale = value;
-                ContextMix?.SetScale(AnimationScale);
-            }
-        }
+        public float AnimationScale { get; set; } = 1.0f;
 
-        private float _currentPlaybackTime = 0.0f;
+        private float _currentPlaybackTime;
 
-        private Timer _playbackTimer = new Timer(Global.Configuration.UpdateDelay);
+        private readonly Timer _playbackTimer = new(Global.Configuration.UpdateDelay);
 
         public Control_AnimationMixPresenter()
         {
@@ -187,7 +175,7 @@ namespace Aurora.Controls
 
             this.txtblkCurrentTime.Text = $"{seconds};{milliseconds}";
 
-            Bitmap newBitmap = new Bitmap((int)(Effects.CanvasWidth * AnimationScale), (int)(Effects.CanvasHeight * AnimationScale));
+            Bitmap newBitmap = new Bitmap((int)(Effects.CanvasWidth / AnimationScale), (int)(Effects.CanvasHeight / AnimationScale));
 
             using (Graphics g = Graphics.FromImage(newBitmap))
             {

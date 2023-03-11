@@ -61,7 +61,7 @@ namespace Aurora.EffectsEngine.Animations
             {
                 var region = Effects.GetBitmappingFromDeviceKey(kvp.Key);
 
-                g.FillRectangle(new SolidBrush(kvp.Value), region.Left * Scale, region.Top * Scale, region.Width * Scale, region.Height * Scale);
+                g.FillRectangle(new SolidBrush(kvp.Value), region.Left, region.Top, region.Width, region.Height);
             }
         }
 
