@@ -206,7 +206,7 @@ public partial class Control_Settings
         }
     }
 
-    private async void ResetDevices(object sender, RoutedEventArgs e) => await Global.dev_manager.ResetDevices();
+    private void ResetDevices(object sender, RoutedEventArgs e) => Task.Run(async () => await Global.dev_manager.ResetDevices());
 
     private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
     {
