@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Amib.Threading;
 using CSScriptLib;
 
@@ -64,34 +65,22 @@ namespace Aurora.Devices
 
     public sealed class DeviceManager: IDisposable
     {
-        private const int RETRY_ATTEMPTS = 6;
         private bool _InitializeOnceAllowed;
         private bool suspended;
         private bool resumed;
-        private int _retryAttempts = RETRY_ATTEMPTS;
-        public int RetryAttempts
-        {
-            get => _retryAttempts;
-            private set
-            {
-                _retryAttempts = value;
-                RetryAttemptsChanged?.Invoke(this, null);
-            }
-        }
 
         public List<DeviceContainer> DeviceContainers { get; } = new();
 
         public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
 
-        public event EventHandler RetryAttemptsChanged;
-
         public DeviceManager()
         {
             AddDevicesFromAssembly();
-            AddDevicesFromScripts(Path.Combine(Global.ExecutingDirectory, "Scripts", "Devices"));
-            AddDevicesFromScripts(Path.Combine(Global.AppDataDirectory, "Scripts", "Devices"));
-            AddDevicesFromDlls(Path.Combine(Global.ExecutingDirectory, "Plugins", "Devices"));
-            AddDevicesFromDlls(Path.Combine(Global.AppDataDirectory, "Plugins", "Devices"));
+            const string devicesPath = "Devices";
+            AddDevicesFromScripts(Path.Combine(Global.ExecutingDirectory, "Scripts", devicesPath));
+            AddDevicesFromScripts(Path.Combine(Global.AppDataDirectory, "Scripts", devicesPath));
+            AddDevicesFromDlls(Path.Combine(Global.ExecutingDirectory, "Plugins", devicesPath));
+            AddDevicesFromDlls(Path.Combine(Global.AppDataDirectory, "Plugins", devicesPath));
 
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
@@ -108,45 +97,78 @@ namespace Aurora.Devices
 
             Global.logger.Info($"Loading device scripts from {scriptFolder}");
 
-            foreach (string device_script in files)
+            foreach (var deviceScript in files)
             {
                 try
                 {
-                    string ext = Path.GetExtension(device_script);
-                    switch (ext)
-                    {
-                        case ".py":
-                            var scope = Global.PythonEngine.ExecuteFile(device_script);
-                            dynamic main_type;
-                            if (scope.TryGetVariable("main", out main_type))
-                            {
-                                dynamic script = Global.PythonEngine.Operations.CreateInstance(main_type);
-
-                                IDevice scriptedDevice = new Devices.ScriptedDevice.ScriptedDevice(script);
-
-                                DeviceContainers.Add(new DeviceContainer(scriptedDevice));
-                                Global.logger.Info($"Loaded device script {device_script}");
-                            }
-                            else
-                                Global.logger.Error("Script \"{0}\" does not contain a public 'main' class", device_script);
-
-                            break;
-                        case ".cs":
-                            dynamic script_assembly = CSScript.Evaluator.LoadFile(device_script);
-                            IDevice csDevice = new Devices.ScriptedDevice.ScriptedDevice(script_assembly);
-                            DeviceContainers.Add(new DeviceContainer(csDevice));
-                            Global.logger.Info($"Loaded device script {device_script}");
-                            break;
-                        default:
-                            Global.logger.Error("Script with path {0} has an unsupported type/ext! ({1})", device_script, ext);
-                            break;
-                    }
+                    LoadScript(deviceScript);
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("An error occured while trying to load script {0}. Exception: {1}", device_script, exc);
+                    Global.logger.Error(exc, "An error occured while trying to load script {Path}", deviceScript);
                 }
             }
+        }
+
+        private void LoadScript(string deviceScript)
+        {
+            var ext = Path.GetExtension(deviceScript);
+            switch (ext)
+            {
+                case ".py":
+                    LoadPython(deviceScript);
+                    break;
+                case ".cs":
+                    CompileCs(deviceScript);
+                    break;
+                case ".dll":
+                    LoadDll(deviceScript);
+                    break;
+                default:
+                    Global.logger.Error("Script with path {Path} has an unsupported type/ext! ({Extension})",
+                        deviceScript, ext);
+                    break;
+            }
+        }
+
+        private void LoadPython(string deviceScript)
+        {
+            var scope = Global.PythonEngine.ExecuteFile(deviceScript);
+            if (scope.TryGetVariable("main", out var mainType))
+            {
+                var script = Global.PythonEngine.Operations.CreateInstance(mainType);
+
+                IDevice scriptedDevice = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+                DeviceContainers.Add(new DeviceContainer(scriptedDevice));
+                Global.logger.Info($"Loaded device script {deviceScript}");
+            }
+            else
+                Global.logger.Error("Script \"{Script}\" does not contain a public 'main' class", deviceScript);
+        }
+
+        private static void CompileCs(string deviceScript)
+        {
+            CSScript.RoslynEvaluator.CompileAssemblyFromFile(deviceScript, deviceScript + ".dll");
+            File.Delete(deviceScript);
+            MessageBox.Show(deviceScript + " is compiled. Aurora will crash but script will be loaded next time.");
+        }
+
+        private void LoadDll(string deviceScript)
+        {
+            dynamic scriptAssembly = Assembly.Load(deviceScript);
+            Type typ = scriptAssembly.ExportedTypes[1];
+            var constructorInfo = typ.GetConstructor(Type.EmptyTypes);
+            if (constructorInfo == null)
+            {
+                Global.logger.Info($"Script {deviceScript} does not have parameterless constructor or device class isn't the first one");
+                return;
+            }
+            dynamic script = Activator.CreateInstance(typ);
+            IDevice scriptedDevice = new Devices.ScriptedDevice.ScriptedDevice(script);
+
+            DeviceContainers.Add(new DeviceContainer(scriptedDevice));
+            Global.logger.Info($"Loaded device script {deviceScript}");
         }
 
         private void AddDevicesFromAssembly()
