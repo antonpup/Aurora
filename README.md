@@ -9,15 +9,14 @@
 [![Total Downloads](https://img.shields.io/github/downloads/Aurora-RGB/Aurora/total.svg)](https://github.com/Aurora-RGB/Aurora/releases/latest)
 ![Build status](https://img.shields.io/badge/language-C%23-178600.svg)
 
-## Available Forks
+## Alternatives
 Original Aurora's development paused for a while. During that time other forks have appeared while some of the Aurora's original contributors created more modern software *Artemis*.
 
 While Artemis is a much more advanced and cross-platform, it is currently missing some game integrations (GSI games).
 
-| Project                                                                     | Main features                                                                                                                                                                                           | Performance                                                         | Notes                                                                    |   |
-|-----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------------------------------|---|
-| [Artemis](https://github.com/Artemis-RGB/Artemis)                           | * Advanced animations<br/>* Minimal impact on games<br/>* Device layout editor<br/>* Linux support (incoming)<br/>* Modularity. Maintainable and fast partial updates<br/>* Active development          | Best                                                                | Some games that use GSI are not supported yet.                           |   |
-| [Predator4578 and<br/>Qwexx's fork](https://github.com/Predator4578/Aurora) | * Layout editor. You can add devices different than keyboard & mouse and edit their layouts<br/> You can even add multiple keyboards, adjust their locations etc.                                       | Same as original<br/>(Doesn't have the new optimizations this fork has) | Software data is not compatible with other forks.                        |   |
+| Project                                           | Main features                                                                                                                                                                                          |                                                |
+|---------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------|
+| [Artemis](https://github.com/Artemis-RGB/Artemis) | * Advanced animations<br/>* Minimal impact on games<br/>* Device layout editor<br/>* Linux support (work in progress)<br/>* Modularity. Maintainable and fast partial updates<br/>* Active development | Some games that use GSI are not supported yet. |
 
 # Project Aurora
 Project Aurora is a utility that unifies RGB lighting devices across different brands and enables them to work alongside each other, all while adding and improving RGB lighting support for various games that previous had none or little RGB lighting support. Aurora is mainly written in C#, but has C++ components to implement native support for other games.

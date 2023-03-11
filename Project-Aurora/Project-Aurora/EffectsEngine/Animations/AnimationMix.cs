@@ -65,14 +65,6 @@ public sealed class AnimationMix: IEquatable<AnimationMix>
             .Max();
     }
 
-    public void SetScale(float scale)
-    {
-        foreach (KeyValuePair<string, AnimationTrack> track in _tracks)
-        {
-            track.Value.SetScale(scale);
-        }
-    }
-
     public ConcurrentDictionary<string, AnimationTrack> GetTracks()
     {
         return _tracks;

@@ -538,7 +538,7 @@ namespace Aurora.Scripts.VoronScripts
 							}
 							else
 							{
-								throw new Win32Exception(Marshal.GetLastWin32Error());
+								throw new Win32Exception(Marshal.GetLastPInvokeError());
 							}
 							return 0;
 						});

@@ -50,15 +50,6 @@ namespace Aurora.EffectsEngine.Animations
             _shift = shift;
         }
 
-        public void SetScale(float scale)
-        {
-            foreach(var frame in _animations.Values)
-            {
-                frame.Scale = scale;
-            }
-            _blendCache.Clear();
-        }
-
         public AnimationTrack SetName(string name)
         {
             _track_name = name;

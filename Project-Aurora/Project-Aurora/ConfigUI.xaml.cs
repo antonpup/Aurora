@@ -134,7 +134,7 @@ partial class ConfigUI : INotifyPropertyChanged
             Left = 0;
         }
         Show();
-        Focus();
+        Activate();
     }
 
     private void CtrlProfileManager_ProfileSelected(ApplicationProfile profile)

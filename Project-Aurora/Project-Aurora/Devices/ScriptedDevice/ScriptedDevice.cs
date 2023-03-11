@@ -8,32 +8,30 @@ namespace Aurora.Devices.ScriptedDevice;
 
 public class ScriptedDevice : DefaultDevice
 {
-    private bool crashed;
-    private readonly dynamic script;
+    private bool _crashed;
+    private readonly dynamic _script;
 
-    private string devicename;
-    private bool isInitialized;
-
-    private long lastUpdateTime = 0;
+    private readonly string _deviceName;
+    private bool _isInitialized;
 
     public ScriptedDevice(dynamic script)
     {
         if (
-            (script != null) &&
-            (script.devicename != null) &&
+            script != null &&
+            script.devicename != null &&
             (script.enabled != null && script.enabled) &&
-            (script.GetType().GetMethod("Initialize") != null) &&
-            (script.GetType().GetMethod("Shutdown") != null) &&
-            (script.GetType().GetMethod("Reset") != null) &&
-            (script.GetType().GetMethod("UpdateDevice") != null)
+            script.GetType().GetMethod("Initialize") != null &&
+            script.GetType().GetMethod("Shutdown") != null &&
+            script.GetType().GetMethod("Reset") != null &&
+            script.GetType().GetMethod("UpdateDevice") != null
         )
         {
-            devicename = script.devicename;
-            this.script = script;
+            _deviceName = script.devicename;
+            _script = script;
         }
         else
         {
-            throw new Exception("Provided script, does not meet all the requirements");
+            throw new InvalidOperationException("Script does not meet all the requirements");
         }
     }
 
@@ -41,52 +39,46 @@ public class ScriptedDevice : DefaultDevice
     {
         get
         {
-            if (crashed)
+            if (_crashed)
                 return "Error!";
 
-            return isInitialized ? "Connected" : "Not initialized";
+            return _isInitialized ? "Connected" : "Not initialized";
         }
     }
 
-    public override string DeviceName => devicename;
+    public override string DeviceName => _deviceName;
 
     protected override Task<bool> DoInitialize()
     {
-        if (!isInitialized)
+        if (_isInitialized) return Task.FromResult(_isInitialized && !_crashed);
+        try
         {
-            try
-            {
-                isInitialized = script.Initialize();
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Initialization", devicename);
-                crashed = true;
-                isInitialized = false;
+            _isInitialized = _script.Initialize();
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Initialization", _deviceName);
+            _crashed = true;
+            _isInitialized = false;
 
-                return Task.FromResult(false);
-            }
+            return Task.FromResult(false);
         }
 
-        return Task.FromResult(isInitialized && !crashed);
+        return Task.FromResult(_isInitialized && !_crashed);
     }
 
     public override Task Reset()
     {
-        if (!isInitialized)
-        {
-            return Task.CompletedTask;
-        }
-
+        if (!_isInitialized) return Task.CompletedTask;
         try
         {
-            script.Reset();
+            _script.Reset();
         }
         catch (Exception exc)
         {
-            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Reset", devicename);
-            crashed = true;
-            isInitialized = false;
+            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Reset", _deviceName);
+            _crashed = true;
+            _isInitialized = false;
         }
 
         return Task.CompletedTask;
@@ -94,39 +86,34 @@ public class ScriptedDevice : DefaultDevice
 
     public override async Task Shutdown()
     {
-        if (!isInitialized)
-        {
-            return;
-        }
-
+        if (!_isInitialized) return;
         try
         {
             await this.Reset();
-            script.Shutdown();
-            isInitialized = false;
+            _script.Shutdown();
+            _isInitialized = false;
         }
         catch (Exception exc)
         {
-            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Shutdown", devicename);
-            crashed = true;
-            isInitialized = false;
+            Global.logger.Error(exc, "Device script for {DeviceName} encountered an error during Shutdown", _deviceName);
+            _crashed = true;
+            _isInitialized = false;
         }
     }
 
     protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
-        if (!isInitialized) return Task.FromResult(false);
-
+        if (!_isInitialized) return Task.FromResult(false);
         try
         {
-            return Task.FromResult(script.UpdateDevice(keyColors, forced));
+            return Task.FromResult(_script.UpdateDevice(keyColors, forced));
         }
         catch (Exception exc)
         {
-            Global.logger.Error(exc,
-                "Device script for {DeviceName} encountered an error during UpdateDevice", devicename);
-            crashed = true;
-            isInitialized = false;
+            Global.logger.Error(exc, 
+                "Device script for {DeviceName} encountered an error during UpdateDevice", _deviceName);
+            _crashed = true;
+            _isInitialized = false;
 
             return Task.FromResult(false);
         }

@@ -43,7 +43,7 @@ namespace Aurora.Modules.Inputs
                 Process.GetCurrentProcess().MainModule.BaseAddress, 0))
             {
                 if (lowLevelHookHandle.IsInvalid)
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    throw new Win32Exception(Marshal.GetLastPInvokeError());
 
                 thread.EnterMessageLoop();
             }

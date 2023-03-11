@@ -124,7 +124,7 @@ public sealed partial class ActiveProcessMonitor
 	{
 		var buffer = new StringBuilder(1024);
 		var hprocess = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, processId);
-		if (hprocess == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastWin32Error());
+		if (hprocess == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastPInvokeError());
 		try
 		{
 			var size = buffer.Capacity;
@@ -137,7 +137,7 @@ public sealed partial class ActiveProcessMonitor
 		{
 			CloseHandle(hprocess);
 		}
-		throw new Win32Exception(Marshal.GetLastWin32Error());
+		throw new Win32Exception(Marshal.GetLastPInvokeError());
 	}
 
 

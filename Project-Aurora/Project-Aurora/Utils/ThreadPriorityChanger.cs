@@ -46,27 +46,6 @@ namespace Aurora.Utils
 		[DllImport("kernel32.dll", SetLastError = true)]
 		static extern ThreadPriority GetThreadPriority(IntPtr hThread);
 
-		public static void SetCurrentThreadPriority(ThreadPriority priority)
-		{
-			IntPtr threadHandle = IntPtr.Zero;
-			try
-			{
-				threadHandle = OpenThread(THREAD_SET_INFORMATION | THREAD_SET_LIMITED_INFORMATION, false, GetCurrentThreadId());
-				if (!SetThreadPriority(threadHandle, priority))
-				{
-					var errorCode = Marshal.GetLastWin32Error();
-					throw new Win32Exception(errorCode);
-				}
-			}
-			finally
-			{
-				if (threadHandle != IntPtr.Zero)
-				{
-					CloseHandle(threadHandle);
-				}
-			}
-		}
-
 		private readonly System.Threading.ThreadPriority clrPriority;
 		private readonly ThreadPriority windowsPriority;
 		private readonly IntPtr threadHandle;
@@ -89,14 +68,14 @@ namespace Aurora.Utils
 					THREAD_QUERY_LIMITED_INFORMATION, false, GetCurrentThreadId());
 
 				if (threadHandle == IntPtr.Zero)
-					throw new Win32Exception(Marshal.GetLastWin32Error());
+					throw new Win32Exception(Marshal.GetLastPInvokeError());
 				
 				this.windowsPriority = GetThreadPriority(threadHandle);
 				if (this.windowsPriority == (ThreadPriority)THREAD_PRIORITY_ERROR_RETURN)
-					throw new Win32Exception(Marshal.GetLastWin32Error());
+					throw new Win32Exception(Marshal.GetLastPInvokeError());
 
 				if (!SetThreadPriority(threadHandle, windowsPriority))
-					throw new Win32Exception(Marshal.GetLastWin32Error());
+					throw new Win32Exception(Marshal.GetLastPInvokeError());
 			}
 			catch
 			{
