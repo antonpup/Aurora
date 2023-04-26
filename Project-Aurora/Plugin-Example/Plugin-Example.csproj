@@ -16,8 +16,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ColorBox\ColorBox.csproj" />
-    <ProjectReference Include="..\Project-Aurora\Project-Aurora.csproj" />
+    <ProjectReference Include="..\ColorBox\ColorBox.csproj" Private="false" />
+    <ProjectReference Include="..\Project-Aurora\Project-Aurora.csproj" Private="false" />
   </ItemGroup>
 
   <ItemGroup>

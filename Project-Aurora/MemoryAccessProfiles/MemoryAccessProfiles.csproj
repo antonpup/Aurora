@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
+        <Platforms>x64</Platforms>
+        <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>MemoryAccessProfiles</RootNamespace>
+        <AssemblyName>MemoryAccessProfiles</AssemblyName>
+        <Title>MemoryAccessProfiles</Title>
+        <Product>MemoryAccessProfiles</Product>
+        <Copyright>Copyright ©  2017</Copyright>
+        <UseWPF>true</UseWPF>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ColorBox\ColorBox.csproj" Private="false" />
+        <ProjectReference Include="..\Project-Aurora\Project-Aurora.csproj" Private="false" />
+    </ItemGroup>
+
+</Project>

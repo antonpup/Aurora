@@ -111,7 +111,6 @@ namespace Aurora.Settings
 
     public class PluginManager : ObjectSettings<PluginManagerSettings>, IInit, IPluginHost
     {
-
         public const string PluginDirectory = "Plugins";
 
         public Dictionary<string, IPlugin> Plugins { get; set; } = new Dictionary<string, IPlugin>();
@@ -128,8 +127,8 @@ namespace Aurora.Settings
             if (Initialized)
                 return true;
 
-            this.LoadSettings();
-            this.LoadPlugins();
+            LoadSettings();
+            LoadPlugins();
 
             return Initialized = true;
         }
@@ -144,14 +143,21 @@ namespace Aurora.Settings
                 }
                 catch(Exception e)
                 {
-                    Global.logger.Error($"Failed to load plugin {plugin.Key}: {e.Message}");
+                    Global.logger.Error($"Failed to load plugin {plugin.Key}", e);
                 }
             }
         }
 
         private void LoadPlugins()
         {
-            string dir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
+            string installationDir = Path.Combine(Global.ExecutingDirectory, PluginDirectory);
+            LoadPlugins(installationDir);
+            string userDir = Path.Combine(Global.AppDataDirectory, PluginDirectory);
+            LoadPlugins(userDir);
+        }
+
+        private void LoadPlugins(string dir)
+        {
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
@@ -164,6 +170,7 @@ namespace Aurora.Settings
             {
                 try
                 {
+                    Global.logger.Info("Loading plugin: {PathPlugin}", pathPlugin);
                     Assembly dllPlugin = Assembly.LoadFrom(pathPlugin);
 
                     foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())
@@ -171,26 +178,24 @@ namespace Aurora.Settings
 
                     foreach (Type typ in dllPlugin.GetExportedTypes())
                     {
-                        if (typeof(IPlugin).IsAssignableFrom(typ))
-                        {
-                            //Create an instance of the plugin type
-                            IPlugin objPlugin = (IPlugin)Activator.CreateInstance(typ);
+                        if (!typeof(IPlugin).IsAssignableFrom(typ)) continue;
+                        //Create an instance of the plugin type
+                        IPlugin objPlugin = (IPlugin)Activator.CreateInstance(typ);
 
-                            //Get the ID of the plugin
-                            string id = objPlugin.ID;
+                        //Get the ID of the plugin
+                        string id = objPlugin.ID;
 
-                            if (id != null && (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
-                                objPlugin.PluginHost = this;
+                        if ((!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
+                            objPlugin.PluginHost = this;
 
-                            this.Plugins.Add(id, objPlugin);
-                        }
+                        Plugins.Add(id, objPlugin);
                     }
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error(exc.ToString());
+                    Global.logger.Error(exc, "Failed loading plugin {PluginPath}", pathPlugin);
                     if (Global.isDebug)
-                        throw exc;
+                        throw;
                 }
             }
         }

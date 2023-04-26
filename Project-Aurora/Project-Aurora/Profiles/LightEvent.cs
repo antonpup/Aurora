@@ -34,8 +34,7 @@ namespace Aurora.Profiles
         public Application Application { get; set; }
         public LightEventConfig Config { get; protected set; }
 
-        internal IGameState _game_state;
-
+        public IGameState _game_state;
 
         public LightEvent()
         {
