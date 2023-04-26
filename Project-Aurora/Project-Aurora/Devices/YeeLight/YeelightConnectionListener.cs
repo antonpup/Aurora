@@ -18,9 +18,9 @@ public class DeviceDetectedEventArgs : EventArgs
 
 public class YeelightConnectionListener
 {
-    public event EventHandler<DeviceDetectedEventArgs> DeviceDetected;
+    public event EventHandler<DeviceDetectedEventArgs>? DeviceDetected;
 
-    private UdpClient _listener;
+    private UdpClient? _listener;
     private IPEndPoint _discoveryEndpoint = new(IPAddress.Parse("239.255.255.250"), 1982);
 
     private readonly IReadOnlyList<string> _deviceIps;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 using Lombok.NET;
 using YeeLightAPI.YeeLightConstants;
 
@@ -127,19 +128,21 @@ internal partial class YeeLightStateColor : IYeeLightState
         return this;
     }
 
+    private List<Task> _tasks = new();
     private void UpdateLights(Color color)
     {
         _lights.ForEach(x =>
         {
-            x.SetColor(color.R, color.G, color.B,
-                0,
-                Constants.EffectParamValues.SMOOTH
-            );
+            var colorAsync = x.SetColorAsync(color.R, color.G, color.B);
+            _tasks.Add(colorAsync);
             var brightness = Math.Max(color.R, Math.Max(color.G, Math.Max(color.B, (short) 1))) * 100 / 255;
             if (_previousBrightness == brightness) return;
             _previousBrightness = brightness;
-            x.SetBrightness(brightness);
+            var brightnessAsync = x.SetBrightnessAsync(brightness);
+            _tasks.Add(brightnessAsync);
         });
+        Task.WhenAll(_tasks).Wait();
+        _tasks.Clear();
     }
 }
     
@@ -155,10 +158,8 @@ internal partial class YeeLightStateWhite : IYeeLightState
 
     public void InitState()
     {
-        _lights.ForEach(x =>
-        {
-            x.SetColorTemperature(6500);
-        });
+        var tasks = _lights.ConvertAll(x => x.SetColorTemperatureAsync(6500));
+        Task.WhenAll(tasks).Wait();
     }
 
     public IYeeLightState Update(Color color)
@@ -194,10 +195,8 @@ internal partial class YeeLightStateWhite : IYeeLightState
 
     private void UpdateLights(Color color)
     {
-        _lights.ForEach(x =>
-        {
-            x.SetBrightness(color.R * 100 / 255);
-        });
+        var tasks = _lights.ConvertAll(x => x.SetBrightnessAsync(color.R * 100 / 255));
+        Task.WhenAll(tasks).Wait();
     }
 }
 
