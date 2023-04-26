@@ -23,9 +23,9 @@ namespace Aurora.Devices.UnifiedHID
         List<UnifiedBase> connectedDevices = new List<UnifiedBase>();
 
         public override string DeviceName => "UnifiedHID";
-        protected string DeviceInfo => string.Join(", ", connectedDevices.Select(hd => hd.PrettyName));
+        protected override string DeviceInfo => string.Join(", ", connectedDevices.Select(hd => hd.PrettyName));
 
-        public string DeviceDetails => IsInitialized
+        public override string DeviceDetails => IsInitialized
             ? $"Initialized{(string.IsNullOrWhiteSpace(DeviceInfo) ? "" : ": " + DeviceInfo)}"
             : "Not Initialized";
 
@@ -33,7 +33,7 @@ namespace Aurora.Devices.UnifiedHID
             ? lastUpdateTime + " ms"
             : "";
 
-        public bool IsInitialized => connectedDevices.Count != 0;
+        public override bool IsInitialized => connectedDevices.Count != 0;
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
         {
@@ -80,7 +80,7 @@ namespace Aurora.Devices.UnifiedHID
             }
         }
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             if (!IsInitialized)
             {
@@ -104,10 +104,10 @@ namespace Aurora.Devices.UnifiedHID
                 }
             }
 
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             try
             {
@@ -134,15 +134,11 @@ namespace Aurora.Devices.UnifiedHID
             {
                 Global.logger.Error("[UnifiedHID] there was an error shutting down devices" + ex);
             }
+
+            return Task.CompletedTask;
         }
 
-        public override void Reset()
-        {
-            Shutdown();
-            Initialize();
-        }
-
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_update_interval");
             sleepWatch.Stop();
@@ -155,7 +151,7 @@ namespace Aurora.Devices.UnifiedHID
             {
                 // Resume stopWatch
                 sleepWatch.Start();
-                return false;
+                return Task.FromResult(false);
             }
 
             try
@@ -197,12 +193,12 @@ namespace Aurora.Devices.UnifiedHID
                     }
                 }
 
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
                 Global.logger.Error("[UnifiedHID] error when updating device: " + ex);
-                return false;
+                return Task.FromResult(false);
             }
         }
     }

@@ -15,7 +15,7 @@ namespace Aurora.Utils
             if (self is ICloneable)
                 return ((ICloneable)self).Clone();
             else if (deep) {
-                var settings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, Binder = Aurora.Utils.JSONUtils.SerializationBinder };
+                var settings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace, TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder };
                 var json = JsonConvert.SerializeObject(self, Formatting.None, settings);
                 return JsonConvert.DeserializeObject(json, self.GetType(), settings);
             } else

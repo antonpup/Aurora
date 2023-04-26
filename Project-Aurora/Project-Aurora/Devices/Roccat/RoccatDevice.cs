@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Aurora.Settings;
 using Aurora.Utils;
 using Roccat_Talk.RyosTalkFX;
@@ -180,7 +181,7 @@ namespace Aurora.Devices.Roccat
             }
         }
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             if (!IsInitialized)
             {
@@ -203,7 +204,7 @@ namespace Aurora.Devices.Roccat
                         throw new Exception("No devices connected");
                     }
                     IsInitialized = true;
-                    return true;
+                    return Task.FromResult(true);
                 }
                 catch (Exception ex)
                 {
@@ -211,13 +212,13 @@ namespace Aurora.Devices.Roccat
                 }
 
                 IsInitialized = false;
-                return false;
+                return Task.FromResult(false);
             }
 
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             if (talkFX != null)
             {
@@ -229,14 +230,18 @@ namespace Aurora.Devices.Roccat
                 RyosTalkFX.ExitSdkMode();
             }
             IsInitialized = false;
+
+            return Task.CompletedTask;
         }
 
-        public override void Reset()
+        public override Task Reset()
         {
             if (IsInitialized)
             {
                 Restoregeneric();
             }
+
+            return Task.CompletedTask;
         }
 
         private void Restoregeneric()
@@ -254,12 +259,12 @@ namespace Aurora.Devices.Roccat
 
         byte[] stateStruct = new byte[110];
         Roccat_Talk.TalkFX.Color[] colorStruct = new Roccat_Talk.TalkFX.Color[110];
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (RyosTalkFX == null || !RyosInitialized)
-                return false;
+                return Task.FromResult(false);
 
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
 
             try
             {
@@ -273,7 +278,7 @@ namespace Aurora.Devices.Roccat
 
                 foreach (KeyValuePair<DeviceKeys, Color> key in keyColors)
                 {
-                    if (e.Cancel) return false;
+                    if (e.Cancel) return Task.FromResult(false);
                     DeviceKeys dev_key = key.Key;
                     //Solution to slightly different mapping rather than giving a whole different dictionary
                     if (layout == DeviceLayout.ANSI)
@@ -327,12 +332,12 @@ namespace Aurora.Devices.Roccat
                     RyosTalkFX.SetMkFxKeyboardState(stateStruct, colorStruct, (byte)layout);
                 }
 
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception exc)
             {
                 Global.logger.Error("Roccat device, error when updating device. Error: " + exc);
-                return false;
+                return Task.FromResult(false);
             }
         }
 

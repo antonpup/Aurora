@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using Aurora.Settings;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using SteelSeries.GameSenseSDK;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Threading.Tasks;
+using Aurora.Settings;
+using SteelSeries.GameSenseSDK;
 
 namespace Aurora.Devices.SteelSeries
 {
@@ -38,7 +36,7 @@ namespace Aurora.Devices.SteelSeries
         //Previous data
         private Color previous_peripheral_Color = Color.Black;
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             lock (action_lock)
             {
@@ -48,22 +46,22 @@ namespace Aurora.Devices.SteelSeries
                     {
                         gameSenseSDK.init("PROJECTAURORA", "Project Aurora", 7);
                         IsInitialized = true;
-                        return true;
+                        return Task.FromResult(true);
                     }
                     catch (Exception ex)
                     {
                         Global.logger.Error("SteelSeries GameSense SDK could not be initialized: " + ex);
 
                         IsInitialized = false;
-                        return false;
+                        return Task.FromResult(false);
                     }
                 }
 
-                return IsInitialized;
+                return Task.FromResult(IsInitialized);
             }
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             lock (action_lock)
             {
@@ -85,17 +83,21 @@ namespace Aurora.Devices.SteelSeries
                 if (keepaliveTimer.IsRunning)
                     keepaliveTimer.Stop();
             }
+
+            return Task.CompletedTask;
         }
 
         public override string DeviceName => "SteelSeries";
 
-        public void Reset()
+        public override Task Reset()
         {
             if (this.IsInitialized&& (keyboard_updated || peripheral_updated))
             {
                 keyboard_updated = false;
                 peripheral_updated = false;
             }
+
+            return Task.CompletedTask;
         }
 
         public bool Reconnect()
@@ -108,16 +110,16 @@ namespace Aurora.Devices.SteelSeries
             throw new NotImplementedException();
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
-            if (e.Cancel) return false;
+            if (e.Cancel) return Task.FromResult(false);
 
             try
             {
                 // workaround for heartbeat/keepalive events every 10sec
                 SendKeepalive();
 
-                if (e.Cancel) return false;
+                if (e.Cancel) return Task.FromResult(false);
 
                 List<byte> hids = new List<byte>();
                 List<Tuple<byte, byte, byte>> colors = new List<Tuple<byte, byte, byte>>();
@@ -133,7 +135,7 @@ namespace Aurora.Devices.SteelSeries
                 {
 
 
-                    if (e.Cancel) return false;
+                    if (e.Cancel) return Task.FromResult(false);
                     //CorsairLedId localKey = ToCorsair(key.Key);
 
                     Color color = (Color)key.Value;
@@ -141,7 +143,7 @@ namespace Aurora.Devices.SteelSeries
                     color = Color.FromArgb(255,
                         Utils.ColorUtils.MultiplyColorByScalar(color, color.A / 255.0D));
 
-                    if (e.Cancel) return false;
+                    if (e.Cancel) return Task.FromResult(false);
 
                     switch (key.Key)
                     {
@@ -180,19 +182,19 @@ namespace Aurora.Devices.SteelSeries
                     }
                 }
 
-                if (e.Cancel) return false;
+                if (e.Cancel) return Task.FromResult(false);
 
                 SendColorsToKeyboard(hids, colors, payload);
                 SendColorsToMousepad(colorsMousepad, payload);
 
                 gameSenseSDK.sendFullColorRequest(payload);
 
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception ex)
             {
                 Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
-                return false;
+                return Task.FromResult(false);
             }
         }
 

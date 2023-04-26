@@ -46,8 +46,10 @@ namespace Aurora.Controls
             InitializeComponent();
 
             Timer update_controls_timer = new Timer(1000); //Update every second
-            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(update_controls_timer,
-                nameof(update_controls_timer.Elapsed), Update_controls_timer_Elapsed);
+            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(
+                update_controls_timer,
+                nameof(update_controls_timer.Elapsed),
+                Update_controls_timer_Elapsed);
             update_controls_timer.Start();
         }
 
@@ -67,40 +69,64 @@ namespace Aurora.Controls
         {
             if (sender is Button)
             {
-                lock (Device.ActionLock)
+                btnStart.Content = "Working...";
+                btnStart.IsEnabled = false;
+                var device = Device;
+                Task.Run(async () =>
                 {
-                    if (Device.Device.IsInitialized)
+                    await device.ActionLock.WaitAsync();
+                    try
                     {
-                        Global.dev_manager.DisableDevice(Device.Device);
+                        if (device.Device.IsInitialized)
+                        {
+                            await Global.dev_manager.DisableDevice(device.Device);
+                        }
+                        else
+                        {
+                            await Global.dev_manager.EnableDevice(device.Device);
+                        }
+                    }
+                    finally
+                    {
+                        device.ActionLock.Release();
+                    }
 
-                        UpdateControls();
-                    }
-                    else
-                    {
-                        var enableTask = Global.dev_manager.EnableDevice(Device.Device);
-                        UpdateControls();
-                        btnStart.IsEnabled = false;
-                        enableTask.ContinueWith(_ => UpdateControls());
-                    }
-                }
+                    Dispatcher.Invoke(UpdateControls);
+                });
             }
         }
 
         private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
         {
             if (Global.Configuration.DevicesDisabled.Contains(Device.Device.GetType()))
+            {
                 Global.Configuration.DevicesDisabled.Remove(Device.Device.GetType());
+                UpdateControls();
+            }
             else
             {
                 Global.Configuration.DevicesDisabled.Add(Device.Device.GetType());
-                lock (Device.ActionLock)
+                var device = Device;
+                btnStart.Content = "Working...";
+                btnStart.IsEnabled = false;
+                Task.Run(async () =>
                 {
-                    if (Device.Device.IsInitialized)
-                        Device.Device.Shutdown();
-                }
-            }
+                    await device.ActionLock.WaitAsync();
+                    try
+                    {
+                        if (device.Device.IsInitialized)
+                        {
+                            await device.Device.Shutdown();
+                        }
+                    }
+                    finally
+                    {
+                        device.ActionLock.Release();
+                    }
 
-            UpdateControls();
+                    Dispatcher.Invoke(UpdateControls);
+                });
+            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -110,20 +136,23 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.InitializeTask is {IsCompleted: false})
+            if (Device.Device.IsInitializing)
             {
                 btnStart.Content = "Working...";
                 btnStart.IsEnabled = false;
+                btnEnable.IsEnabled = false;
             }
             else if (Device.Device.IsInitialized)
             {
                 btnStart.Content = "Stop";
                 btnStart.IsEnabled = true;
+                btnEnable.IsEnabled = true;
             }
             else
             {
                 btnStart.Content = "Start";
                 btnStart.IsEnabled = true;
+                btnEnable.IsEnabled = true;
             }
 
             deviceName.Text = Device.Device.DeviceName;
@@ -139,7 +168,7 @@ namespace Aurora.Controls
                     btnEnable.Content = "Enable";
                     btnStart.IsEnabled = false;
                 }
-                else
+                else if (!Device.Device.IsInitializing)
                 {
                     btnEnable.Content = "Disable";
                     btnStart.IsEnabled = true;

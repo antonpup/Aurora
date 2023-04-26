@@ -731,7 +731,7 @@ namespace Aurora.Settings
                 {
                     ObjectCreationHandling = ObjectCreationHandling.Replace,
                     TypeNameHandling = TypeNameHandling.All,
-                    Binder = JSONUtils.SerializationBinder,
+                    SerializationBinder = JSONUtils.SerializationBinder,
                 });
 
                 // Create a new profile on the current application (so that profiles can be imported from different applications)

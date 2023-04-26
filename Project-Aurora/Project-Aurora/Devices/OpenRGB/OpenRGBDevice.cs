@@ -1,12 +1,14 @@
-﻿using Aurora.Settings;
-using OpenRGB.NET;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using Aurora.Modules.ProcessMonitor;
+using System.Threading.Tasks;
+using Aurora.Settings;
+using Aurora.Utils;
 using Microsoft.Scripting.Utils;
+using OpenRGB.NET;
 using Color = System.Drawing.Color;
 using DK = Aurora.Devices.DeviceKeys;
 using OpenRGBColor = OpenRGB.NET.Color;
@@ -24,19 +26,21 @@ namespace Aurora.Devices.OpenRGB
         private OpenRgbClient _openRgb;
         private List<HelperOpenRgbDevice> _devices;
 
-        private readonly object _updateLock = new();
+        private SemaphoreSlim _updateLock = new(1);
+        private SemaphoreSlim _initializeLock = new(1);
 
-        public override bool Initialize()
+        protected override async Task<bool> DoInitialize()
         {
             if (IsInitialized)
                 return true;
 
+            await _initializeLock.WaitAsync().ConfigureAwait(false);
             try
             {
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
                 var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
                 var connectSleepTimeSeconds = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
-                
+
                 bool openrgbRunning = false;
                 var processMonitor = RunningProcessMonitor.Instance;
                 void OnProcessMonitorOnRunningProcessesChanged(object o, RunningProcessChanged runningProcessChanged)
@@ -52,11 +56,11 @@ namespace Aurora.Devices.OpenRGB
                     openrgbRunning = true;
                 }
                 processMonitor.RunningProcessesChanged += OnProcessMonitorOnRunningProcessesChanged;
-                
+
                 int remainingMillis = connectSleepTimeSeconds * 1000;
                 while (!openrgbRunning)
                 {
-                    Thread.Sleep(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                     remainingMillis -= 100;
                     if (remainingMillis <= 0)
                     {
@@ -95,17 +99,16 @@ namespace Aurora.Devices.OpenRGB
                 _openRgb = null;
                 return false;
             }
-
+            finally {
+                _initializeLock.Release();
+            }
             IsInitialized = true;
             return IsInitialized;
         }
 
         private void OnDeviceListUpdated(object sender, EventArgs e)
         {
-            lock (_updateLock)
-            {
-                UpdateDeviceList();
-            }
+            UpdateDeviceList();
         }
 
         private void UpdateDeviceList()
@@ -114,12 +117,13 @@ namespace Aurora.Devices.OpenRGB
             {
                 return;
             }
-            
+
             _devices = new List<HelperOpenRgbDevice>();
             Queue<DeviceKeys> mouseLights = new Queue<DeviceKeys>(OpenRgbKeyNames.MouseLights);
-            
+
             var fallbackKey = Global.Configuration.VarRegistry.GetVariable<DK>($"{DeviceName}_fallback_key");
-            lock (_updateLock)
+            _updateLock.Wait();
+            try
             {
                 foreach (var device in _openRgb.GetAllControllerData())
                 {
@@ -132,54 +136,72 @@ namespace Aurora.Devices.OpenRGB
                 }
                 Thread.Sleep(500);
             }
+            finally
+            {
+            _updateLock.Release();
+            }
         }
 
-        public override void Shutdown()
+        public override async Task Shutdown()
         {
             if (!IsInitialized)
                 return;
 
-            lock (_updateLock)
-                foreach (var d in _devices)
+            await _initializeLock.WaitAsync().ConfigureAwait(false);
+            foreach (var d in _devices)
+            {
+                try
                 {
-                    try
-                    {
-                        _openRgb.UpdateLeds(d.Index, d.OrgbDevice.Colors);
-                    }
-                    catch
-                    {
-                        //we tried.
-                    }
+                    _openRgb.UpdateLeds(d.Index, d.OrgbDevice.Colors);
                 }
+                catch
+                {
+                    //we tried.
+                }
+            }
 
-            _openRgb?.Dispose();
+            try
+            {
+                _openRgb?.Dispose();
+            }
+            catch
+            {
+                // NOOP
+            }
+            finally
+            {
+                _initializeLock.Release();
+            }
+
             _openRgb = null;
             IsInitialized = false;
+            return;
         }
 
-        protected override bool UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override async Task<bool> UpdateDevice(Dictionary<DK, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
                 return false;
 
-            lock (_updateLock)
-                foreach (var device in _devices)
+            await _updateLock.WaitAsync().ConfigureAwait(false);
+            foreach (var device in _devices)
+            {
+                try
                 {
-                    try
-                    {
-                        UpdateDevice(device, keyColors);
-                        _openRgb.UpdateLeds(device.Index, device.Colors);
-                    }
-                    catch (Exception exc)
-                    {
-                        LogError($"Failed to update OpenRGB device {device.OrgbDevice.Name}", exc);
-                        Reset();
-                    }
+                    UpdateDevice(device, keyColors);
+                    _openRgb.UpdateLeds(device.Index, device.Colors);
                 }
+                catch (Exception exc)
+                {
+                    LogError($"Failed to update OpenRGB device {device.OrgbDevice.Name}", exc);
+                    await Reset().ConfigureAwait(false);
+                }
+            }
+            _updateLock.Release();
 
             var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_sleep");
             if (sleep > 0)
-                Thread.Sleep(sleep);
+                await Task.Delay(sleep).ConfigureAwait(false);
 
             return true;
         }
@@ -221,10 +243,13 @@ namespace Aurora.Devices.OpenRGB
 
         public override IEnumerable<string> GetDevices()
         {
-            lock (_updateLock)
-                return from device in _devices
-                    from zone in device.OrgbDevice.Zones
-                    select CalibrationName(device, zone);
+            _updateLock.Wait();
+            var names =
+                from device in _devices
+                from zone in device.OrgbDevice.Zones
+                select CalibrationName(device, zone);
+            _updateLock.Release();
+            return names;
         }
 
         private string CalibrationName(HelperOpenRgbDevice device, Zone zone)

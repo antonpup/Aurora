@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Aurora.Devices.RGBNet.Config;
 using RGB.NET.Core;
 using Color = System.Drawing.Color;
@@ -20,7 +21,7 @@ public abstract class RgbNetDevice : DefaultDevice
         return Provider.Devices;
     }
 
-    public override bool Initialize()
+    protected override Task<bool> DoInitialize()
     {
         List<Exception> providerExceptions = new();
         void DeviceProviderOnException(object sender, ExceptionEventArgs e)
@@ -39,12 +40,12 @@ public abstract class RgbNetDevice : DefaultDevice
         Provider.Exception -= DeviceProviderOnException;
         if (providerExceptions.Count >= 1)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
         if (!IsInitialized)
         {
-            return false;
+            return Task.FromResult(false);
         }
 
         var rgbNetConfigDevices = DeviceMappingConfig.Config.Devices.ToDictionary(device => device.Name, device => device);
@@ -57,15 +58,17 @@ public abstract class RgbNetDevice : DefaultDevice
         }
         
         OnInitialized();
-        return true;
+        return Task.FromResult(true);
     }
 
-    public override void Shutdown()
+    public override Task Shutdown()
     {
         OnShutdown();
         Provider.Dispose();
         IsInitialized = false;
+        return Task.CompletedTask;
     }
+
     protected virtual void OnInitialized()
     {
     }
@@ -74,9 +77,9 @@ public abstract class RgbNetDevice : DefaultDevice
     {
     }
 
-    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+    protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
-        if (Disabled) return false;
+        if (Disabled) return Task.FromResult(false);
         foreach (var device in Provider.Devices)
         {
             foreach (var led in device)
@@ -95,13 +98,13 @@ public abstract class RgbNetDevice : DefaultDevice
             device.Update();
         }
 
-        return true;
+        return Task.FromResult(true);
     }
 
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
-        
+
         Provider.Dispose();
     }
 }

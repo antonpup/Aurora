@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
@@ -14,6 +14,7 @@
     <InformationalVersion>1.0.0</InformationalVersion>
     <Title>Aurora-Updater</Title>
     <Description>Update tool for Aurora utility</Description>
+    <ApplicationIcon>Resources\Aurora_updater.ico</ApplicationIcon>
     <Product>Aurora-Updater</Product>
     <Copyright>Copyright ©  2016</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -35,19 +36,12 @@
   <PropertyGroup>
     <StartupObject>Aurora_Updater.Program</StartupObject>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Resources\Aurora_updater.ico</ApplicationIcon>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="UpdateInfoNodes\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,9 +64,6 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="Octokit">
-      <Version>2.0.1</Version>
     </PackageReference>
     <PackageReference Include="SemanticVersioning">
       <Version>2.0.2</Version>

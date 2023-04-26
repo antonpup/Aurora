@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Threading.Tasks;
 using YeeLightAPI.YeeLightConstants;
 using YeeLightAPI.YeeLightDeviceLocator;
@@ -13,8 +13,8 @@ namespace Aurora.Devices.YeeLight;
 public static class YeeLightConnector
 {
     private const int LightListenPort = 55443;
-        
-    public static async Task PopulateDevices(List<YeeLightAPI.YeeLightDevice> lights, string ipListString)
+
+    public static async Task PopulateDevices(List<YeeLightAPI.YeeLightDevice> lights, string? ipListString)
     {
         lights.Clear();
 
@@ -84,10 +84,10 @@ public static class YeeLightConnector
 
         try
         {
-            light.SetMusicMode(localIp, (ushort) localMusicModeListenPort, true);
+            light.SetMusicMode(localIp, (ushort)localMusicModeListenPort, true);
             return light.IsConnected();
         }
-        catch (Exception e)
+        catch
         {
             LogError($"Couldn't set MusicMode for device with address '{lightIp}'");
             try
@@ -114,6 +114,6 @@ public static class YeeLightConnector
         listener.Stop();
         return freePort;
     }
-        
+
     private static void LogError(string s) => Global.logger.Error($"[YeelightConnector] {s}");
 }

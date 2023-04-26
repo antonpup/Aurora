@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using CUESDK = CorsairRGB.NET.CUE;
 
 namespace Aurora.Devices.Corsair
@@ -17,14 +18,15 @@ namespace Aurora.Devices.Corsair
 
         private readonly List<CorsairDeviceInfo> deviceInfos = new();
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             CUESDK.PerformProtocolHandshake();
             var error = CUESDK.GetLastError();
             if (error != CorsairError.Success)
             {
                 LogError("Error: " + error);
-                return IsInitialized = false;
+                IsInitialized = false;
+                return Task.FromResult(false);
             }
 
             for (int i = 0; i < CUESDK.GetDeviceCount(); i++)
@@ -36,21 +38,23 @@ namespace Aurora.Devices.Corsair
             }
             CUESDK.SetLayerPriority(255);
 
-            return IsInitialized = true;
+            IsInitialized = true;
+            return Task.FromResult(true);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             CUESDK.SetLayerPriority(0);
             deviceInfos.Clear();
             CUESDK.ReleaseControl();
             IsInitialized = false;
+            return Task.CompletedTask;
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (deviceInfos.Count != CUESDK.GetDeviceCount())
-                this.Reset();
+                await this.Reset().ConfigureAwait(false);
 
             for (int i = 0; i < deviceInfos.Count; i++)
             {

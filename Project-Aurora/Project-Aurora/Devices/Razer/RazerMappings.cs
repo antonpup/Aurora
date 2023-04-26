@@ -1,10 +1,6 @@
-﻿using Corale.Colore.Razer.Keyboard;
-using Corale.Colore.Razer.Mouse;
-using System;
+﻿using Colore.Effects.Keyboard;
+using Colore.Effects.Mouse;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aurora.Devices.Razer
 {

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.Logitech
 {
@@ -20,14 +21,17 @@ namespace Aurora.Devices.Logitech
         private readonly Color[] headset = new Color[3];
         private DeviceKeys genericKey;
 
-        public override bool Initialize()
+        protected override async Task<bool> DoInitialize()
         {
             genericKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
             var ghubRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lghub.exe");
             var lgsRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lcore.exe");
 
             if (!ghubRunning && !lgsRunning)
-                return IsInitialized = false;
+            {
+                IsInitialized = false;
+                return false;
+            }
 
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_override_dll"))
                 LogitechGSDK.GHUB = Global.Configuration.VarRegistry.GetVariable<LGDLL>($"{DeviceName}_override_dll_option") == LGDLL.GHUB;
@@ -41,35 +45,38 @@ namespace Aurora.Devices.Logitech
                 //logitech says to wait a bit of time between Init() and SetLighting()
                 //This didnt seem to be needed in the past but I feel like 100ms might 
                 //fix some weird issues without any noticeable disadvantages
-                Thread.Sleep(100);
+                await Task.Delay(100).ConfigureAwait(false);
                 if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_set_default"))
                     LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
-                return IsInitialized = true;
+                IsInitialized = true;
+                return true;
             }
 
             SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
 
-            return IsInitialized = false;
+            IsInitialized = false;
+            return false;
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             LogitechGSDK.LogiLedRestoreLighting();
             LogitechGSDK.LogiLedShutdown();
             SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
             IsInitialized = false;
+            return Task.CompletedTask;
         }
 
         // Handle Logon Event
         void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
-            Reset();
+            Reset().Wait();
         }
 
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (!IsInitialized)
-                return false;
+                return Task.FromResult(false);
 
             //reset keys to peripheral_logo here so if we dont find any better color for them,
             //at least the leds wont turn off :)
@@ -155,7 +162,7 @@ namespace Aurora.Devices.Logitech
                 IsInitialized &= LogitechGSDK.LogiLedSetLightingFromBitmap(logitechBitmap);
             }
 
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
         protected override void RegisterVariables(VariableRegistry variableRegistry)
