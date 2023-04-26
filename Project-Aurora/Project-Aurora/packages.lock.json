@@ -277,11 +277,11 @@
       },
       "RGB.NET.Devices.Corsair": {
         "type": "Direct",
-        "requested": "[2.0.0-prerelease.12, )",
-        "resolved": "2.0.0-prerelease.12",
-        "contentHash": "mbZ3ezpyURY6zGNYP0f+bf7X0cAO9YzvT7BTOck7CwJFMOEvst4qFtFDSSyc1su7a34RuJ5w3b2qcN3WruKxCg==",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "KMyPyPL/qwDS8qoTViJBWHJlJY9ANb4dH7pe5wKybFXkPeaJETN+CARBUIjJfD/9sHK2zw14/h1pMOM4rHNhlA==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.12"
+          "RGB.NET.Core": "1.0.0"
         }
       },
       "RGB.NET.Devices.Logitech": {
@@ -296,12 +296,12 @@
       },
       "RGB.NET.Devices.SteelSeries": {
         "type": "Direct",
-        "requested": "[2.0.0-prerelease.12, )",
-        "resolved": "2.0.0-prerelease.12",
-        "contentHash": "Dwd1j33qhfPjqupOfmbWhnY5rbz0ROcRh6EB1KdTAgoyySxbPoTyKL8jcXJty4QAFtUKWr4shq6C+/OHKQMz1w==",
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "WVKNZsDZzV9cqBHmF0K/gUIQUxAH3NZOuC0T1LGA8njLD9yCe1ZlDCJkrd8RrWXbMOv1JjaavVFmXZu/nVr8tg==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-prerelease.12",
-          "RGB.NET.HID": "2.0.0-prerelease.12"
+          "RGB.NET.Core": "1.0.0",
+          "RGB.NET.HID": "1.0.0"
         }
       },
       "SemanticVersioning": {
