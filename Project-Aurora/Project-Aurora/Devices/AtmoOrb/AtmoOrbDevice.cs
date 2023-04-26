@@ -28,7 +28,7 @@ public class AtmoOrbDevice : DefaultDevice
         if (_isConnected) return true;
         try
         {
-            await Connect();
+            await Connect().ConfigureAwait(false);
         }
         catch (Exception exc)
         {
@@ -47,20 +47,20 @@ public class AtmoOrbDevice : DefaultDevice
     {
         if (_socket != null)
         {
-            await _socket.DisconnectAsync(false);
+            await _socket.DisconnectAsync(false).ConfigureAwait(false);
             _socket.Close();
             _socket = null;
         }
 
         _isConnected = false;
 
-        await Connect();
+        await Connect().ConfigureAwait(false);
         return true;
     }
 
     public override async Task Reset()
     {
-        await Reconnect();
+        await Reconnect().ConfigureAwait(false);
     }
 
     public override async Task Shutdown()
@@ -68,10 +68,21 @@ public class AtmoOrbDevice : DefaultDevice
         if (_socket != null)
         {
             // Set color to black
-            await SendColorsToOrb(0, 0, 0);
+            await SendColorsToOrb(0, 0, 0).ConfigureAwait(false);
 
             // Close all connections
-            await _socket.DisconnectAsync(false);
+            if (_socket.Connected)
+            {
+                try
+                {
+                    await _socket.DisconnectAsync(false).ConfigureAwait(false);
+                }
+                catch (Exception exc)
+                {
+                    this.LogError(DeviceName, exc);
+                }
+            }
+
             _socket.Close();
             _socket = null;
         }
@@ -98,14 +109,14 @@ public class AtmoOrbDevice : DefaultDevice
                 new MulticastOption(multiCastIp));
             _socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 2);
 
-            await _socket.ConnectAsync(ipClientEndpoint);
+            await _socket.ConnectAsync(ipClientEndpoint).ConfigureAwait(false);
 
             _isConnected = true;
             _isConnecting = false;
         }
         catch (Exception)
         {
-            await Task.Delay(2500);
+            await Task.Delay(2500).ConfigureAwait(false);
             _isConnecting = false;
         }
     }
@@ -117,7 +128,7 @@ public class AtmoOrbDevice : DefaultDevice
         // Connect if needed
         if (!_isConnected)
         {
-            await Connect(e);
+            await Connect(e).ConfigureAwait(false);
         }
 
         if (Watch.ElapsedMilliseconds <= Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_send_delay"))
@@ -125,7 +136,7 @@ public class AtmoOrbDevice : DefaultDevice
         if (!keyColors.ContainsKey(DeviceKeys.ADDITIONALLIGHT1)) return false;
         var averageColor = keyColors[DeviceKeys.ADDITIONALLIGHT1];   //TODO add 1 zone kb
 
-        await SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e);
+        await SendColorsToOrb(averageColor.R, averageColor.G, averageColor.B, e).ConfigureAwait(false);
 
         return !e.Cancel;
     }
@@ -135,7 +146,7 @@ public class AtmoOrbDevice : DefaultDevice
         if (e?.Cancel ?? false) return;
         if (!_isConnected)
         {
-            await Reconnect();
+            await Reconnect().ConfigureAwait(false);
             return;
         }
 
@@ -186,7 +197,7 @@ public class AtmoOrbDevice : DefaultDevice
                 bytes[7] = blue;
 
                 if (e?.Cancel ?? false) return;
-                _ = await _socket.SendAsync(bytes, SocketFlags.None);
+                _ = await _socket.SendAsync(bytes, SocketFlags.None).ConfigureAwait(false);
             }
             catch (Exception)
             {

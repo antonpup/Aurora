@@ -45,7 +45,7 @@ namespace Aurora.Devices.Logitech
                 //logitech says to wait a bit of time between Init() and SetLighting()
                 //This didnt seem to be needed in the past but I feel like 100ms might 
                 //fix some weird issues without any noticeable disadvantages
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
                 if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_set_default"))
                     LogitechGSDK.LogiLedSetLighting(Global.Configuration.VarRegistry.GetVariable<RealColor>($"{DeviceName}_default_color").GetDrawingColor());
                 IsInitialized = true;

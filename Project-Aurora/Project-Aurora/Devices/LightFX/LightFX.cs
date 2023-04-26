@@ -335,7 +335,7 @@ namespace Aurora.Devices.LightFX
                                 return false;
                             }
                         } else {
-                            await Task.Delay(50);
+                            await Task.Delay(50).ConfigureAwait(false);
                             // continue;
                             return false;
                         }

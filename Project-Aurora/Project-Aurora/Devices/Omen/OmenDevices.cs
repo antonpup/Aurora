@@ -106,10 +106,10 @@ namespace Aurora.Devices.Omen
         {
             try
             {
-                await this._thisLock.WaitAsync();
+                await this._thisLock.WaitAsync().ConfigureAwait(false);
                 if (IsInitialized)
                 {
-                    await Reset();
+                    await Reset().ConfigureAwait(false);
 
                     foreach (var dev in devices)
                     {

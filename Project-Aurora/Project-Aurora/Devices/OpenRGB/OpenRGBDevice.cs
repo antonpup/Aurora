@@ -34,7 +34,7 @@ namespace Aurora.Devices.OpenRGB
             if (IsInitialized)
                 return true;
 
-            await _initializeLock.WaitAsync();
+            await _initializeLock.WaitAsync().ConfigureAwait(false);
             try
             {
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
@@ -60,7 +60,7 @@ namespace Aurora.Devices.OpenRGB
                 int remainingMillis = connectSleepTimeSeconds * 1000;
                 while (!openrgbRunning)
                 {
-                    await Task.Delay(100);
+                    await Task.Delay(100).ConfigureAwait(false);
                     remainingMillis -= 100;
                     if (remainingMillis <= 0)
                     {
@@ -147,7 +147,7 @@ namespace Aurora.Devices.OpenRGB
             if (!IsInitialized)
                 return;
 
-            await _initializeLock.WaitAsync();
+            await _initializeLock.WaitAsync().ConfigureAwait(false);
             foreach (var d in _devices)
             {
                 try
@@ -183,7 +183,7 @@ namespace Aurora.Devices.OpenRGB
             if (!IsInitialized)
                 return false;
 
-            await _updateLock.WaitAsync();
+            await _updateLock.WaitAsync().ConfigureAwait(false);
             foreach (var device in _devices)
             {
                 try
@@ -194,14 +194,14 @@ namespace Aurora.Devices.OpenRGB
                 catch (Exception exc)
                 {
                     LogError($"Failed to update OpenRGB device {device.OrgbDevice.Name}", exc);
-                    await Reset();
+                    await Reset().ConfigureAwait(false);
                 }
             }
             _updateLock.Release();
 
             var sleep = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_sleep");
             if (sleep > 0)
-                await Task.Delay(sleep);
+                await Task.Delay(sleep).ConfigureAwait(false);
 
             return true;
         }

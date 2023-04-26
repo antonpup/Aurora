@@ -43,12 +43,12 @@ namespace Aurora.Devices.Razer
         {
             if (chroma is null)
             {
-                await initializeSemaphore.WaitAsync();
+                await initializeSemaphore.WaitAsync().ConfigureAwait(false);
                 if (chroma is null)
                 {
                     try
                     {
-                        chroma = await ColoreProvider.CreateNativeAsync();
+                        chroma = await ColoreProvider.CreateNativeAsync().ConfigureAwait(false);
                     }
                     catch (ColoreException ce) when (ce.Message.Contains("126"))
                     {
@@ -71,12 +71,12 @@ namespace Aurora.Devices.Razer
 
             if (!chroma.Initialized)
             {
-                await initializeSemaphore.WaitAsync();
+                await initializeSemaphore.WaitAsync().ConfigureAwait(false);
                 if (!chroma.Initialized)
                 {
                     try
                     {
-                        await chroma.InitializeAsync(appInfo);
+                        await chroma.InitializeAsync(appInfo).ConfigureAwait(false);
                         IsInitialized = true;
                     }
                     catch (Exception e)
@@ -101,7 +101,7 @@ namespace Aurora.Devices.Razer
 
             if (Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_query"))
             {
-                await DetectDevices();
+                await DetectDevices().ConfigureAwait(false);
             }
 
             return true;
@@ -114,7 +114,7 @@ namespace Aurora.Devices.Razer
 
             try
             {
-                await chroma.UninitializeAsync();
+                await chroma.UninitializeAsync().ConfigureAwait(false);
                 IsInitialized = false;
             }
             catch (Exception e)
@@ -163,7 +163,7 @@ namespace Aurora.Devices.Razer
             tasks.Add(chroma.Keypad.SetCustomAsync(keypad));
             tasks.Add(chroma.ChromaLink.SetCustomAsync(chromalink));
 
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return true;
         }
@@ -183,7 +183,7 @@ namespace Aurora.Devices.Razer
             {
                 try
                 {
-                    var devInfo = await chroma.QueryAsync(device.Guid);
+                    var devInfo = await chroma.QueryAsync(device.Guid).ConfigureAwait(false);
                     if (devInfo.Connected)
                     {
                         deviceNames.Add(device.Name);

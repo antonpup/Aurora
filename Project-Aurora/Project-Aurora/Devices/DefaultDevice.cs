@@ -33,8 +33,14 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     public async Task<bool> Initialize() {
         this.IsInitializing = true;
-        this.IsInitialized = await this.DoInitialize();
-        this.IsInitializing = false;
+        try
+        {
+            this.IsInitialized = await this.DoInitialize().ConfigureAwait(false);
+        }
+        finally
+        {
+            this.IsInitializing = false;
+        }
 
         return this.IsInitialized;
     }
@@ -43,14 +49,14 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     public virtual async Task Reset()
     {
-        await Shutdown();
-        await Initialize();
+        await Shutdown().ConfigureAwait(false);
+        await Initialize().ConfigureAwait(false);
     }
 
     public async Task<bool> UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
     {
         _updateWatch.Restart();
-        var updateResult = await UpdateDevice(colorComposition.KeyColors, e, forced);
+        var updateResult = await UpdateDevice(colorComposition.KeyColors, e, forced).ConfigureAwait(false);
 
         if (!updateResult) return false;
         _lastUpdateTime = Watch.ElapsedMilliseconds;

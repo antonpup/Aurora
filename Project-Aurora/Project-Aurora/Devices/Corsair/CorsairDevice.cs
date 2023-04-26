@@ -54,7 +54,7 @@ namespace Aurora.Devices.Corsair
         protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             if (deviceInfos.Count != CUESDK.GetDeviceCount())
-                await this.Reset();
+                await this.Reset().ConfigureAwait(false);
 
             for (int i = 0; i < deviceInfos.Count; i++)
             {

@@ -89,7 +89,7 @@ public class ScriptedDevice : DefaultDevice
         if (!_isInitialized) return;
         try
         {
-            await this.Reset();
+            await this.Reset().ConfigureAwait(false);
             _script.Shutdown();
             _isInitialized = false;
         }

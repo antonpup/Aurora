@@ -39,13 +39,13 @@ namespace Aurora.Devices
         {
             if (!Device.IsInitialized)
             {
-                await Device.Initialize();
+                await Device.Initialize().ConfigureAwait(false);
             }
 
-            await ActionLock.WaitAsync();
+            await ActionLock.WaitAsync().ConfigureAwait(false);
             try
             {
-                await Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+                await Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2).ConfigureAwait(false);
             }
             finally
             {
@@ -296,8 +296,8 @@ namespace Aurora.Devices
                 initializeTasks.Add(task);
             }
 
-            await Task.WhenAll(initializeTasks).ConfigureAwait(false);
             _InitializeOnceAllowed = false;
+            await Task.WhenAll(initializeTasks).ConfigureAwait(false);
         }
 
         public async Task ShutdownDevices()

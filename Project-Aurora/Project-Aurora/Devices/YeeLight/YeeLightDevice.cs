@@ -93,7 +93,7 @@ public class YeeLightDevice : DefaultDevice
         }
         catch (Exception)
         {
-            await Reset();
+            await Reset().ConfigureAwait(false);
             return TryUpdate(keyColors);
         }
     }

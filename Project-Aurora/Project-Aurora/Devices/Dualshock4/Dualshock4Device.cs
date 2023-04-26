@@ -164,7 +164,7 @@ namespace Aurora.Devices.Dualshock
                     dev.sendColor = ColorUtils.CorrectWithAlpha(clr);
                     if (dev.device.isDisconnectingStatus())
                     {
-                        await Reset();
+                        await Reset().ConfigureAwait(false);
                         return false;
                     }
                 }
