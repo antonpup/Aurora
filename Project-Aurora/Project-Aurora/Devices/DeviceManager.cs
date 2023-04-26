@@ -21,7 +21,7 @@ namespace Aurora.Devices
 
         private Tuple<DeviceColorComposition, bool> currentComp;
 
-        public readonly object ActionLock = new();
+        public readonly SemaphoreSlim ActionLock = new(1);
         private readonly Action _updateAction;
 
         public DeviceContainer(IDevice device)
@@ -37,16 +37,22 @@ namespace Aurora.Devices
 
         private async void WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
         {
-            if (Device.InitializeTask == null)
+            if (!Device.IsInitialized)
             {
-                return;
+                await Device.Initialize().ConfigureAwait(false);
             }
-            await Device.InitializeTask;
-            lock(ActionLock)
+
+            await ActionLock.WaitAsync().ConfigureAwait(false);
+            try
             {
-                Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
+                await Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2).ConfigureAwait(false);
+            }
+            finally
+            {
+                ActionLock.Release();
             }
         }
+
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
@@ -258,11 +264,11 @@ namespace Aurora.Devices
         {
             if (!InitializedDeviceContainers.Any() && _InitializeOnceAllowed)
             {
-                InitializeDevices();
+                Task.Run(async () => await InitializeDevices());
             }
         }
 
-        public void InitializeDevices()
+        public async Task InitializeDevices()
         {
             if (suspended)
                 return;
@@ -270,57 +276,77 @@ namespace Aurora.Devices
             var devices = DeviceContainers
                 .Select(dc => dc.Device)
                 .Where(device => !device.IsInitialized && !Global.Configuration.DevicesDisabled.Contains(device.GetType()));
+            var initializeTasks = new List<Task>();
             foreach (var device in devices)
             {
-                device.InitializeTask = Task.Run(device.Initialize);
-                device.InitializeTask.ContinueWith(task =>
-                {
-                    if (task.IsCompletedSuccessfully)
+                var task = device.Initialize()
+                    .ContinueWith(initTask =>
                     {
-                        Global.logger.Info($"[Device][{device.DeviceName}] Initialized Successfully.");
-                    }
-                    else
-                    {
-                        Global.logger.Info($"[Device][{device.DeviceName}] Failed to initialize.");
-                    }
-                });
+                        if (initTask.IsCompletedSuccessfully && initTask.Result)
+                        {
+                            Global.logger.Info($"[Device][{device.DeviceName}] Initialized Successfully.");
+                        }
+                        else
+                        {
+                            Global.logger.Info($"[Device][{device.DeviceName}] Failed to initialize.");
+                        }
+                    });
+                task.ConfigureAwait(false);
+
+                initializeTasks.Add(task);
             }
 
             _InitializeOnceAllowed = false;
+            await Task.WhenAll(initializeTasks).ConfigureAwait(false);
         }
 
-        public void ShutdownDevices()
+        public async Task ShutdownDevices()
         {
+            var shutdownTasks = new List<Task>();
             foreach (var dc in InitializedDeviceContainers)
             {
-                lock (dc.ActionLock)
+                var task = Task.Run(async () =>
                 {
-                    DisableDevice(dc.Device);
-                }
-                Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
+                    await dc.ActionLock.WaitAsync().ConfigureAwait(false);
+                    try
+                    {
+                        await DisableDevice(dc.Device).ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        dc.ActionLock.Release();
+                    }
+                    Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
+                });
+                task.ConfigureAwait(false);
+
+                shutdownTasks.Add(task);
             }
+
+            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
         }
 
-        public Task ResetDevices()
+        public async Task ResetDevices()
         {
+            List<Task> resetTasks = new();
             foreach (var dc in InitializedDeviceContainers)
             {
-                dc.Device.InitializeTask = Task.Run(dc.Device.Reset);
+                var task = dc.Device.Reset();
+                task.ConfigureAwait(false);
+                resetTasks.Add(task);
             }
-            
-            return Task.WhenAll(InitializedDeviceContainers.Select(container => container.Device.InitializeTask));
+
+            await Task.WhenAll(resetTasks).ConfigureAwait(false);
         }
 
-        public Task EnableDevice(IDevice device)
+        public async Task EnableDevice(IDevice device)
         {
-            device.InitializeTask = Task.Run(device.Initialize);
-            return device.InitializeTask;
+            await device.Initialize().ConfigureAwait(false);
         }
 
-        public void DisableDevice(IDevice device)
+        public async Task DisableDevice(IDevice device)
         {
-            device.InitializeTask = null;
-            device.Shutdown();
+            await device.Shutdown().ConfigureAwait(false);
         }
 
         public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
@@ -340,7 +366,7 @@ namespace Aurora.Devices
                 Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
                 suspended = false;
                 resumed = false;
-                InitializeDevices();
+                Task.Run(async () => await InitializeDevices());
             }
         }
 
@@ -351,14 +377,14 @@ namespace Aurora.Devices
                 case PowerModes.Suspend:
                     Global.logger.Info("Suspending Devices");
                     suspended = true;
-                    this.ShutdownDevices();
+                    Task.Run(async () => await this.ShutdownDevices());
                     break;
                 case PowerModes.Resume:
                     Global.logger.Info("Resuming Devices -- PowerModes.Resume");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    this.InitializeDevices();
+                    Task.Run(async () => await this.InitializeDevices());
                     break;
             }
         }

@@ -38,14 +38,17 @@ namespace Aurora.Devices
         /// </summary>
         /// <returns>Details about device's update performance</returns>
         string DeviceUpdatePerformance { get; }
-        
-        Task InitializeTask { get; set; }
+
+        /// <summary>
+        /// Indicates that initialization is in progress for this device instance.
+        /// </summary>
+        bool IsInitializing { get; }
 
         /// <summary>
         /// Gets the initialization status of this device instance.
         /// </summary>
         /// <returns>A boolean value representing the initialization status of this device</returns>
-        bool IsInitialized => InitializeTask.IsCompletedSuccessfully;
+        bool IsInitialized { get; }
 
         /// <summary>
         /// Gets registered variables by this device.
@@ -57,17 +60,17 @@ namespace Aurora.Devices
         /// Attempts to initialize the device instance.
         /// </summary>
         /// <returns>A boolean value representing the success of this call</returns>
-        bool Initialize();
+        Task<bool> Initialize();
 
         /// <summary>
         /// Shuts down the device instance.
         /// </summary>
-        void Shutdown();
+        Task Shutdown();
 
         /// <summary>
         /// Resets the device instance.
         /// </summary>
-        void Reset();
+        Task Reset();
 
         /// <summary>
         /// Updates the device with a specified color composition.
@@ -76,7 +79,7 @@ namespace Aurora.Devices
         /// <param name="e"></param>
         /// <param name="forced">A boolean value indicating whether or not to forcefully update this device</param>
         /// <returns></returns>
-        void UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
+        Task<bool> UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false);
 
         IEnumerable<string> GetDevices();
     }

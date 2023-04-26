@@ -520,7 +520,7 @@ namespace Aurora.Profiles.Dota_2.Layers
 
             //Begin rendering
 
-            if (_currentAbilityEffect != null && _abilityEffectKeyframe >= _abilityEffectTime)
+            if (_abilityEffectKeyframe >= _abilityEffectTime)
             {
                 _currentAbilityEffect = Dota2AbilityEffects.None;
                 _abilityEffectKeyframe = 0.0f;

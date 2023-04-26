@@ -76,7 +76,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Colore" Version="5.2.0" />
+    <PackageReference Include="Colore" Version="6.0.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="4.6.2" />
     <PackageReference Include="Dubya.WindowsMediaController" Version="2.3.2" />
@@ -98,10 +98,11 @@
     <PackageReference Include="MouseKeyHook.NetCore" Version="5.6.1.1" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <!-- TODO: Logger initialization changes when updating to NLog 5 -->
     <PackageReference Include="NLog" Version="4.7.10" />
-    <PackageReference Include="Octokit" Version="2.0.1" />
+    <PackageReference Include="Octokit" Version="3.0.0" />
+    <!-- <PackageReference Include="OpenRGB.NET" Version="1.7.0" /> -->
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
-   <!-- <PackageReference Include="OpenRGB.NET" Version="1.7.0" /> -->
     <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.12" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.12" />
     <PackageReference Include="RGB.NET.Devices.Corsair" Version="1.0.0" />
@@ -109,6 +110,7 @@
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="1.0.0" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
+    <!-- Locked to version 4.0.1 due to an unresolved issue with interop https://github.com/sharpdx/SharpDX/issues/1050 -->
     <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />

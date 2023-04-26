@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.YeeLight;
 
@@ -25,20 +26,22 @@ public class YeeLightDevice : DefaultDevice
                                 (light.IsMusicMode() ? "(m)" : ""))
     );
 
-    public override bool Initialize()
+    protected override async Task<bool> DoInitialize()
     {
         if (IsInitialized) return IsInitialized;
         try
         {
             var ipListString = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_IP");
             var autoDiscover = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_auto_discovery");
-            YeeLightConnector.PopulateDevices(_lights, autoDiscover ? null : ipListString);
+            await YeeLightConnector.PopulateDevices(_lights, autoDiscover ? null : ipListString).ConfigureAwait(false);
 
             InitiateState();
             _updateDelayStopWatch.Start();
             IsInitialized = true;
-            _connectionListener = autoDiscover ? new YeelightConnectionListener() :
-                new YeelightConnectionListener(ipListString.Split(','));
+            _connectionListener = autoDiscover
+                ? new YeelightConnectionListener()
+                : new YeelightConnectionListener(ipListString.Split(','));
+
             _connectionListener.DeviceDetected += DeviceDetected;
             _connectionListener.StartListeningConnections();
         }
@@ -55,7 +58,7 @@ public class YeeLightDevice : DefaultDevice
 
     private void DeviceDetected(object sender, DeviceDetectedEventArgs e)
     {
-        YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress);
+        Task.Run(async () => await YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress).ConfigureAwait(false));
     }
 
     private void InitiateState()
@@ -63,7 +66,7 @@ public class YeeLightDevice : DefaultDevice
         _yeeLightState = YeeLightStateBuilder.Build(_lights, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay"));
     }
 
-    public override void Shutdown()
+    public override Task Shutdown()
     {
         foreach (var light in _lights.Where(x => x.IsConnected()))
         {
@@ -78,16 +81,19 @@ public class YeeLightDevice : DefaultDevice
         {
             _updateDelayStopWatch.Stop();
         }
+
+        return Task.CompletedTask;
     }
 
-    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+    protected override async Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
         try
         {
             return TryUpdate(keyColors);
-        }catch(Exception exc)
+        }
+        catch (Exception)
         {
-            Reset();
+            await Reset().ConfigureAwait(false);
             return TryUpdate(keyColors);
         }
     }
@@ -104,7 +110,7 @@ public class YeeLightDevice : DefaultDevice
 
         _yeeLightState = _yeeLightState.Update(targetColor);
         _updateDelayStopWatch.Restart();
-            
+
         return true;
     }
 
@@ -127,7 +133,7 @@ public class YeeLightDevice : DefaultDevice
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
-            
+
         _connectionListener.StopListeningConnections();
         _connectionListener.DeviceDetected -= DeviceDetected;
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.ScriptedDevice;
 
@@ -47,9 +48,9 @@ public class ScriptedDevice : DefaultDevice
 
     public override string DeviceName => _deviceName;
 
-    public override bool Initialize()
+    protected override Task<bool> DoInitialize()
     {
-        if (_isInitialized) return _isInitialized && !_crashed;
+        if (_isInitialized) return Task.FromResult(_isInitialized && !_crashed);
         try
         {
             _isInitialized = _script.Initialize();
@@ -60,15 +61,15 @@ public class ScriptedDevice : DefaultDevice
             _crashed = true;
             _isInitialized = false;
 
-            return false;
+            return Task.FromResult(false);
         }
 
-        return _isInitialized && !_crashed;
+        return Task.FromResult(_isInitialized && !_crashed);
     }
 
-    public override void Reset()
+    public override Task Reset()
     {
-        if (!_isInitialized) return;
+        if (!_isInitialized) return Task.CompletedTask;
         try
         {
             _script.Reset();
@@ -79,14 +80,16 @@ public class ScriptedDevice : DefaultDevice
             _crashed = true;
             _isInitialized = false;
         }
+
+        return Task.CompletedTask;
     }
 
-    public override void Shutdown()
+    public override async Task Shutdown()
     {
         if (!_isInitialized) return;
         try
         {
-            Reset();
+            await this.Reset().ConfigureAwait(false);
             _script.Shutdown();
             _isInitialized = false;
         }
@@ -98,12 +101,12 @@ public class ScriptedDevice : DefaultDevice
         }
     }
 
-    protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+    protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
     {
-        if (!_isInitialized) return false;
+        if (!_isInitialized) return Task.FromResult(false);
         try
         {
-            return _script.UpdateDevice(keyColors, forced);
+            return Task.FromResult(_script.UpdateDevice(keyColors, forced));
         }
         catch (Exception exc)
         {
@@ -112,7 +115,7 @@ public class ScriptedDevice : DefaultDevice
             _crashed = true;
             _isInitialized = false;
 
-            return false;
+            return Task.FromResult(false);
         }
     }
 }

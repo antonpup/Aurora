@@ -1,15 +1,16 @@
 ﻿using System;
-using Aurora.Settings;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
+using Aurora.Settings;
 
 namespace Aurora.Devices;
 
 public abstract class DefaultDevice : IDevice, IDisposable
 {
+    private readonly Stopwatch _updateWatch = new();
     protected readonly Stopwatch Watch = new();
     private long _lastUpdateTime;
     private long _updateTime;
@@ -26,39 +27,43 @@ public abstract class DefaultDevice : IDevice, IDisposable
         ? _lastUpdateTime + "(" + _updateTime + ")" + " ms"
         : "";
 
-    public Task InitializeTask
-    {
-        get => _initializeTask;
-        set
-        {
-            _initializeTask?.Wait();
-            _initializeTask = value;
-        }
-    }
+    public virtual bool IsInitializing { get; protected set; }
 
     public virtual bool IsInitialized { get; protected set; }
 
-    public abstract bool Initialize();
-    public abstract void Shutdown();
+    public async Task<bool> Initialize() {
+        this.IsInitializing = true;
+        try
+        {
+            this.IsInitialized = await this.DoInitialize().ConfigureAwait(false);
+        }
+        finally
+        {
+            this.IsInitializing = false;
+        }
 
-    public virtual void Reset()
-    {
-        Shutdown();
-        Initialize();
+        return this.IsInitialized;
     }
 
-    protected abstract bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
+    public abstract Task Shutdown();
 
-    private readonly Stopwatch _tempStopWatch = new();
-    public void UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+    public virtual async Task Reset()
     {
-        _tempStopWatch.Restart();
-        var updateResult = UpdateDevice(colorComposition.KeyColors, e, forced);
+        await Shutdown().ConfigureAwait(false);
+        await Initialize().ConfigureAwait(false);
+    }
 
-        if (!updateResult) return;
+    public async Task<bool> UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
+    {
+        _updateWatch.Restart();
+        var updateResult = await UpdateDevice(colorComposition.KeyColors, e, forced).ConfigureAwait(false);
+
+        if (!updateResult) return false;
         _lastUpdateTime = Watch.ElapsedMilliseconds;
-        _updateTime = _tempStopWatch.ElapsedMilliseconds;
+        _updateTime = _updateWatch.ElapsedMilliseconds;
         Watch.Restart();
+
+        return true;
     }
 
     public virtual IEnumerable<string> GetDevices()
@@ -66,12 +71,12 @@ public abstract class DefaultDevice : IDevice, IDisposable
         yield break;
     }
 
+    protected abstract Task<bool> DoInitialize();
+
+    protected abstract Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false);
+
     protected virtual void Dispose(bool disposing)
     {
-        if (disposing)
-        {
-            _initializeTask?.Dispose();
-        }
     }
 
     public void Dispose()
@@ -82,24 +87,28 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     #region Variables
     private VariableRegistry _variableRegistry;
-    private Task _initializeTask;
 
     public VariableRegistry RegisteredVariables
     {
         get
         {
-            if (_variableRegistry is not null) return _variableRegistry;
+            if (_variableRegistry is not null)
+            {
+                return _variableRegistry;
+            }
+
             _variableRegistry = new VariableRegistry();
             RegisterVariables(_variableRegistry);
             return _variableRegistry;
         }
     }
+
     protected virtual void RegisterVariables(VariableRegistry variableRegistry) { }
 
     protected void LogInfo(string s) => Global.logger.Info($"[Device][{DeviceName}] {s}");
 
     protected void LogError(string s) => Global.logger.Error($"[Device][{DeviceName}] {s}");
 
-    protected void LogError(string s, Exception e) => Global.logger.Error($"[Device][{DeviceName}] {s}", e);
+    protected void LogError(string s, Exception e) => Global.logger.Error(e, $"[Device][{DeviceName}] {s}");
     #endregion
 }

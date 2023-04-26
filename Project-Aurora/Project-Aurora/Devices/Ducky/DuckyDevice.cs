@@ -1,15 +1,14 @@
-using Aurora.Settings;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using HidSharp;
-using Aurora.Utils;
 using System.Threading;
+using System.Threading.Tasks;
+using Aurora.Utils;
+using HidSharp;
 
 namespace Aurora.Devices.Ducky
 {
@@ -28,7 +27,7 @@ namespace Aurora.Devices.Ducky
 
         public override string DeviceName => "Ducky";
 
-        public override bool Initialize()
+        protected override Task<bool> DoInitialize()
         {
             //Sets the initialize colour change packet
             DuckyRGBMappings.DuckyStartingPacket.CopyTo(colourMessage, Packet(0) + 1);
@@ -67,13 +66,13 @@ namespace Aurora.Devices.Ducky
                 }
             }
 
-            return IsInitialized;
+            return Task.FromResult(IsInitialized);
         }
 
-        public override void Shutdown()
+        public override Task Shutdown()
         {
             if (!IsInitialized)
-                return;
+                return Task.CompletedTask;
 
             //This one is a little smaller, 81 packets. This tells the keyboard to no longer allow USB HID control of the LEDs.
             //You can tell both the takeover and release work because the keyboard will flash the same as switching to profile 1. (The same lights when you push FN + 1)
@@ -87,15 +86,10 @@ namespace Aurora.Devices.Ducky
             packetStream?.Close();
             progress = -2;
             IsInitialized = false;
+            return Task.CompletedTask;
         }
 
-        public override void Reset()
-        {
-            Shutdown();
-            Initialize();
-        }
-
-        protected override bool UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
+        protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
         {
             foreach (KeyValuePair<DeviceKeys, Color> kc in keyColors)
             {
@@ -178,9 +172,9 @@ namespace Aurora.Devices.Ducky
                     }
                 }
                 
-                return updateSuccess;
+                return Task.FromResult(updateSuccess);
             }
-            return true;
+            return Task.FromResult(true);
         }
 
         private int Packet(int packetNum) => packetNum * 64;
