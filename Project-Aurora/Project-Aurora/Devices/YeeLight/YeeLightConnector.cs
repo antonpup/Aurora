@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Threading.Tasks;
 using YeeLightAPI.YeeLightConstants;
 using YeeLightAPI.YeeLightDeviceLocator;
 
