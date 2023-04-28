@@ -288,9 +288,15 @@ public partial class App
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         Exception exc = (Exception)e.ExceptionObject;
+
+        if (exc is COMException { Message: "0x88890004" })
+        {
+            return;
+        }
+
         Global.logger.Fatal(exc, "Fatal Exception caught : ");
 
-        if (Current == null || _closing)
+        if (!e.IsTerminating || Current == null || _closing)
         {
             return;
         }
