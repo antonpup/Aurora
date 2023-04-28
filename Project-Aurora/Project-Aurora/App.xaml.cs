@@ -312,6 +312,13 @@ public partial class App
     private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
         var exc = e.Exception;
+
+        if (exc is COMException { Message: "0x88890004" })
+        {
+            e.Handled = true;
+            return;
+        }
+
         Global.logger.Fatal(exc, "Fatal Exception caught : " + exc);
         LogManager.Flush();
         if (!Global.isDebug)
