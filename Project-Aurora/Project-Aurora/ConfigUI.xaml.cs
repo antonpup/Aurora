@@ -107,7 +107,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     internal void DisplayIfNotSilent()
     {
-        if (App.IsSilent)
+        if (App.IsSilent || Global.Configuration.StartSilently)
         {
             Visibility = Visibility.Hidden;
             WindowStyle = WindowStyle.None;

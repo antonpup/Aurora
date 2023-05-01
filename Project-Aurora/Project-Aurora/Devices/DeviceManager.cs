@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Amib.Threading;
 using CSScriptLib;
+using System.Windows.Threading;
 
 namespace Aurora.Devices
 {
@@ -366,7 +367,7 @@ namespace Aurora.Devices
                 Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
                 suspended = false;
                 resumed = false;
-                Task.Run(async () => await InitializeDevices());
+                Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
             }
         }
 
@@ -377,14 +378,14 @@ namespace Aurora.Devices
                 case PowerModes.Suspend:
                     Global.logger.Info("Suspending Devices");
                     suspended = true;
-                    Task.Run(async () => await this.ShutdownDevices());
+                    Dispatcher.CurrentDispatcher.Invoke(async () => await this.ShutdownDevices());
                     break;
                 case PowerModes.Resume:
                     Global.logger.Info("Resuming Devices -- PowerModes.Resume");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    Task.Run(async () => await this.InitializeDevices());
+                    Dispatcher.CurrentDispatcher.Invoke(async () => await this.InitializeDevices());
                     break;
             }
         }
