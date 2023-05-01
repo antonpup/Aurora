@@ -74,7 +74,7 @@ public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerL
         set => _secondaryColor = value;
     }
 
-    [JsonIgnore] private EffectBrush _gradient;
+    [JsonIgnore] private EffectBrush? _gradient;
     [LogicOverridable("Gradient")]
     [JsonProperty("_Gradient")]
     public EffectBrush Gradient
@@ -122,7 +122,7 @@ public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerL
     [JsonIgnore]
     public Color DimColor => Logic._DimColor ?? _DimColor ?? Color.Empty;
 
-    [JsonIgnore] private SortedSet<float> _frequencies;
+    [JsonIgnore] private SortedSet<float>? _frequencies;
     [JsonProperty("_Frequencies")]
     public SortedSet<float> Frequencies
     {
@@ -130,7 +130,7 @@ public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerL
         set => _frequencies = value;
     }
 
-    [JsonIgnore] private string _deviceId;
+    [JsonIgnore] private string? _deviceId;
     [JsonProperty("_DeviceId", NullValueHandling = NullValueHandling.Ignore)]
     public string DeviceId
     {
@@ -165,7 +165,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
 {
     public event NewLayerRendered NewLayerRender = delegate { };
 
-    private AudioDeviceProxy _deviceProxy;
+    private AudioDeviceProxy? _deviceProxy;
     private int _channels;
     private int _bitsPerSample;
     private int _bufferIncrement;
@@ -204,7 +204,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
     private Complex[] _ffts;
     private Complex[] _fftsPrev;
 
-    private float[] _previousFreqResults;
+    private float[]? _previousFreqResults;
     private int _freq;
 
     public EqualizerLayerHandler(): base("EqualizerLayer")
@@ -224,7 +224,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
     {
         if (_disposed) return EffectLayer.EmptyLayer;
 
-        if (_deviceProxy?.Device == null)
+        if (DeviceProxy.Device == null)
             return EffectLayer.EmptyLayer;
 
         // The system sound as a value between 0.0 and 1.0
