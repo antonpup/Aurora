@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project-Aurora", "Project-A
 		{40085232-ACED-4CBE-945B-90BA8153C151} = {40085232-ACED-4CBE-945B-90BA8153C151}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoryAccessProfiles", "MemoryAccessProfiles\MemoryAccessProfiles.csproj", "{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -38,6 +40,8 @@ Global
 		{18D2D471-3F57-4ECE-9C62-836A801473D8}.Debug|x64.Build.0 = Debug|x64
 		{18D2D471-3F57-4ECE-9C62-836A801473D8}.Release|x64.ActiveCfg = Release|x64
 		{18D2D471-3F57-4ECE-9C62-836A801473D8}.Release|x64.Build.0 = Release|x64
+		{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}.Release|x64.ActiveCfg = Release|x64
+		{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
