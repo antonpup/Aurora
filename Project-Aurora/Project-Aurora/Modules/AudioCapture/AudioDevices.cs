@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using CSScripting;
 using NAudio.CoreAudioApi;
@@ -61,46 +62,42 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
 
     public void OnDeviceRemoved(string deviceId)
     {
-        var device = _deviceEnumerator.GetDevice(deviceId);
-        switch (device.DataFlow)
-        {
-            case DataFlow.Render:
-                RemovePlaybackDevice(device);
-                break;
-            case DataFlow.Capture:
-                RemoveRecordingDevice(device);
-                break;
-        }
+        PlaybackDevices.Remove(deviceId);
+        RecordingDevices.Remove(deviceId);
     }
 
     public void OnDeviceStateChanged(string deviceId, DeviceState newState)
     {
-        var mmDevice = _deviceEnumerator.GetDevice(deviceId);
         switch (newState)
         {
             case DeviceState.Active:
-                switch (mmDevice.DataFlow)
+                var addedDevice = _deviceEnumerator.GetDevice(deviceId);
+                switch (addedDevice.DataFlow)
                 {
                     case DataFlow.Render:
-                        AddPlaybackDevice(mmDevice);
+                        AddPlaybackDevice(addedDevice);
                         break;
                     case DataFlow.Capture:
-                        AddRecordingDevice(mmDevice);
+                        AddRecordingDevice(addedDevice);
                         break;
                 }
                 break;
             case DeviceState.Disabled:
             case DeviceState.Unplugged:
-            case DeviceState.NotPresent:
-                switch (mmDevice.DataFlow)
+                var removedDevice = _deviceEnumerator.GetDevice(deviceId);
+                switch (removedDevice.DataFlow)
                 {
                     case DataFlow.Render:
-                        RemovePlaybackDevice(mmDevice);
+                        RemovePlaybackDevice(removedDevice);
                         break;
                     case DataFlow.Capture:
-                        RemoveRecordingDevice(mmDevice);
+                        RemoveRecordingDevice(removedDevice);
                         break;
                 }
+                break;
+            case DeviceState.NotPresent:
+                RecordingDevices.Remove(deviceId);
+                PlaybackDevices.Remove(deviceId);
                 break;
         }
     }
@@ -109,7 +106,7 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
 
     #region unused
 
-    public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+    public void OnDefaultDeviceChanged(DataFlow flow, Role role, string? defaultDeviceId)
     {
         //unused
     }
@@ -125,7 +122,7 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
 
     private void AddPlaybackDevice(MMDevice device)
     {
-        PlaybackDevices.Add(device.ID, device.FriendlyName);
+        PlaybackDevices.TryAdd(device.ID, device.FriendlyName);
     }
 
     private void RemovePlaybackDevice(MMDevice device)
@@ -135,7 +132,7 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
 
     private void AddRecordingDevice(MMDevice device)
     {
-        RecordingDevices.Add(device.ID, device.FriendlyName);
+        RecordingDevices.TryAdd(device.ID, device.FriendlyName);
     }
 
     private void RemoveRecordingDevice(MMDevice device)
