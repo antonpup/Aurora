@@ -233,10 +233,14 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     /// Update the device when changed by the system.
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public void OnDefaultDeviceChanged(DataFlow flow, Role role, string defaultDeviceId)
+    public void OnDefaultDeviceChanged(DataFlow flow, Role role, string? defaultDeviceId)
     {
         if (Flow != flow || !AudioDevices.DefaultDeviceId.Equals(DeviceId)) return;
         DisposeCurrentDevice();
+        if (defaultDeviceId == null)
+        {
+            return;
+        }
         var mmDevice = _deviceEnumerator.GetDevice(defaultDeviceId);
         if (mmDevice.State == DeviceState.Active)
         {
