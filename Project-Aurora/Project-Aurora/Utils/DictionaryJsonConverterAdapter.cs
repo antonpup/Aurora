@@ -59,6 +59,7 @@ public class SortedDictionaryAdapter : JsonConverter<SortedDictionary<double, Co
         var valueType = genericTypes[1];
 
         var map = existingValue ?? new SortedDictionary<double, Color>();
+        map.Clear();
             
         var item = serializer.Deserialize<JObject>(reader);
         foreach (var prop in item.Children<JProperty>())
