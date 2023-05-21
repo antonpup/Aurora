@@ -153,15 +153,14 @@ public partial class App
             catch
             {
                 MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
-                ShutdownApp(0);
+                ForceShutdownApp(0);
             }
         }
     }
 
-    private static void ShutdownApp(int exitCode)
+    private void ForceShutdownApp(int exitCode)
     {
         Environment.ExitCode = exitCode;
-        Current?.Shutdown();
         Environment.Exit(exitCode);
     }
 
@@ -208,7 +207,7 @@ public partial class App
                         MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
                     }
 
-                    ShutdownApp(0);
+                    ForceShutdownApp(0);
                     break;
             }
         }
@@ -264,25 +263,35 @@ public partial class App
             ConfigManager.Save(Global.Configuration);
 
         var tasks = _modules.ConvertAll(m => m.DisposeAsync());
-        Task.WhenAll(tasks).Wait();
-
-        Global.dev_manager?.ShutdownDevices().Wait();
-        Global.dev_manager?.Dispose();
+        var devicesShutdown = Global.dev_manager?.ShutdownDevices().ContinueWith(_ => Global.dev_manager.Dispose());
+        tasks.Add(devicesShutdown);
+        
         Environment.ExitCode = 0;
+        var forceExitTimer = StartForceExitTimer();
+        forceExitTimer.DisableComObjectEagerCleanup();
 
+        Task.WhenAll(tasks).Wait();
+    }
+
+    private Thread StartForceExitTimer()
+    {
         var thread = new Thread(() =>
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            Thread.Sleep(5000);
-            if (stopwatch.ElapsedMilliseconds > 4500)
+            Thread.Sleep(3000);
+            if (stopwatch.ElapsedMilliseconds > 2500)
             {
-                ShutdownApp(0);
+                ForceShutdownApp(0);
             }
-        });
-        thread.IsBackground = true;
-        thread.Name = "Exit timer";
+        })
+        {
+            IsBackground = true,
+            Name = "Exit timer"
+        };
         thread.Start();
+
+        return thread;
     }
 
     private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -350,7 +359,7 @@ public partial class App
         {
             Global.logger.Error("Program does not have admin rights");
             MessageBox.Show("Program does not have admin rights");
-            ShutdownApp(1);
+            ForceShutdownApp(1);
         }
 
         //Patch 32-bit
