@@ -52,7 +52,7 @@ namespace Aurora.EffectsEngine.Animations
         {
             base.VirtUpdate();
 
-            SortedDictionary<float, Color> newColorGradients = new SortedDictionary<float, Color>();
+            SortedDictionary<double, Color> newColorGradients = new SortedDictionary<double, Color>();
             ColorSpectrum spectrum = _gradientBrush.GetColorSpectrum();
 
             float _cutOffPoint = _width / _radius;

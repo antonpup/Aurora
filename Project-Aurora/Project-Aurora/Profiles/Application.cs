@@ -306,11 +306,13 @@ namespace Aurora.Profiles
                             ObjectCreationHandling = ObjectCreationHandling.Replace,
                             TypeNameHandling = TypeNameHandling.Objects,
                             //MetadataPropertyHandling = MetadataPropertyHandling.ReadAhead,
+                            FloatParseHandling = FloatParseHandling.Double,
                             SerializationBinder = binder,
                             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
                             Error = LoadProfilesError
                         };
                         jsonSerializerSettings.Converters.Add(new EnumConverter());
+                        jsonSerializerSettings.Converters.Add(new SingleToDoubleConverter());
                         jsonSerializerSettings.Converters.Add(new OverrideTypeConverter());
                         jsonSerializerSettings.Converters.Add(new TypeAnnotatedObjectConverter());
                         jsonSerializerSettings.Converters.Add(new DictionaryJsonConverterAdapter());

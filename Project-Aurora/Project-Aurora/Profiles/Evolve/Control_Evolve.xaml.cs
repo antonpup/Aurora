@@ -36,11 +36,6 @@ namespace Aurora.Profiles.Evolve
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void patch_button_Click(object sender, RoutedEventArgs e)
-        {
-            App.InstallLogitech();
-        }
-
         private void game_enabled_Checked(object sender, RoutedEventArgs e)
         {
             if (IsLoaded)

@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using Aurora.Utils;
 
 namespace Aurora.EffectsEngine
 {
@@ -24,34 +26,35 @@ namespace Aurora.EffectsEngine
         public BrushType type = BrushType.None;
         public BrushWrap wrap = BrushWrap.None;
         [JsonProperty("color_gradients")]
-        public SortedDictionary<float, System.Drawing.Color> colorGradients = new SortedDictionary<float, System.Drawing.Color>();
-        public System.Drawing.PointF start;
-        public System.Drawing.PointF end;
-        public System.Drawing.PointF center;
+        [JsonConverter(typeof(SortedDictionaryAdapter))]
+        public SortedDictionary<double, Color> colorGradients = new SortedDictionary<double, Color>();
+        public PointF start;
+        public PointF end;
+        public PointF center;
 
-        private System.Drawing.Brush _drawingBrush = null;
+        private Brush _drawingBrush = null;
         private System.Windows.Media.Brush _mediaBrush = null;
 
         public EffectBrush()
         {
             type = BrushType.Solid;
 
-            colorGradients.Add(0.0f, System.Drawing.Color.Red);
-            colorGradients.Add(1.0f, System.Drawing.Color.Blue);
+            colorGradients.Add(0.0f, Color.Red);
+            colorGradients.Add(1.0f, Color.Blue);
 
-            start = new System.Drawing.PointF(0, 0);
-            end = new System.Drawing.PointF(1, 0);
-            center = new System.Drawing.PointF(0.0f, 0.0f);
+            start = new PointF(0, 0);
+            end = new PointF(1, 0);
+            center = new PointF(0.0f, 0.0f);
         }
 
         public EffectBrush(EffectBrush otherBrush)
         {
-            this.type = otherBrush.type;
-            this.wrap = otherBrush.wrap;
-            this.colorGradients = otherBrush.colorGradients;
-            this.start = otherBrush.start;
-            this.end = otherBrush.end;
-            this.center = otherBrush.center;
+            type = otherBrush.type;
+            wrap = otherBrush.wrap;
+            colorGradients = otherBrush.colorGradients;
+            start = otherBrush.start;
+            end = otherBrush.end;
+            center = otherBrush.center;
         }
 
         public EffectBrush(ColorSpectrum spectrum)
@@ -61,19 +64,20 @@ namespace Aurora.EffectsEngine
             foreach(var color in spectrum.GetSpectrumColors())
                 colorGradients.Add(color.Key, color.Value);
 
-            start = new System.Drawing.PointF(0, 0);
-            end = new System.Drawing.PointF(1, 0);
-            center = new System.Drawing.PointF(0.0f, 0.0f);
+            start = new PointF(0, 0);
+            end = new PointF(1, 0);
+            center = new PointF(0.0f, 0.0f);
         }
 
-        public EffectBrush(System.Drawing.Brush brush)
+        public EffectBrush(Brush brush)
         {
-            if (brush is System.Drawing.SolidBrush)
+            colorGradients = new SortedDictionary<double, Color>();
+            if (brush is SolidBrush)
             {
                 type = BrushType.Solid;
 
-                colorGradients.Add(0.0f, (brush as System.Drawing.SolidBrush).Color);
-                colorGradients.Add(1.0f, (brush as System.Drawing.SolidBrush).Color);
+                colorGradients.Add(0.0f, (brush as SolidBrush).Color);
+                colorGradients.Add(1.0f, (brush as SolidBrush).Color);
 
                 wrap = BrushWrap.Repeat;
             }
@@ -84,8 +88,8 @@ namespace Aurora.EffectsEngine
                 System.Drawing.Drawing2D.LinearGradientBrush lgb = (brush as System.Drawing.Drawing2D.LinearGradientBrush);
 
                 start = lgb.Rectangle.Location;
-                end = new System.Drawing.PointF(lgb.Rectangle.Width, lgb.Rectangle.Height);
-                center = new System.Drawing.PointF(0.0f, 0.0f);
+                end = new PointF(lgb.Rectangle.Width, lgb.Rectangle.Height);
+                center = new PointF(0.0f, 0.0f);
 
                 switch (lgb.WrapMode)
                 {
@@ -137,8 +141,8 @@ namespace Aurora.EffectsEngine
                 System.Drawing.Drawing2D.PathGradientBrush pgb = (brush as System.Drawing.Drawing2D.PathGradientBrush);
 
                 start = pgb.Rectangle.Location;
-                end = new System.Drawing.PointF(pgb.Rectangle.Width, pgb.Rectangle.Height);
-                center = new System.Drawing.PointF(
+                end = new PointF(pgb.Rectangle.Width, pgb.Rectangle.Height);
+                center = new PointF(
                     pgb.CenterPoint.X,
                     pgb.CenterPoint.Y
                     );
@@ -195,8 +199,8 @@ namespace Aurora.EffectsEngine
             if(colorGradients.Count > 0)
             {
                 bool firstFound = false;
-                System.Drawing.Color first_color = new System.Drawing.Color();
-                System.Drawing.Color last_color = new System.Drawing.Color();
+                Color first_color = new Color();
+                Color last_color = new Color();
 
                 foreach(var kvp in colorGradients)
                 {
@@ -218,10 +222,10 @@ namespace Aurora.EffectsEngine
             else
             {
                 if (!colorGradients.ContainsKey(0.0f))
-                    colorGradients.Add(0.0f, System.Drawing.Color.Transparent);
+                    colorGradients.Add(0.0f, Color.Transparent);
 
                 if (!colorGradients.ContainsKey(1.0f))
-                    colorGradients.Add(1.0f, System.Drawing.Color.Transparent);
+                    colorGradients.Add(1.0f, Color.Transparent);
             }
 
             
@@ -235,8 +239,8 @@ namespace Aurora.EffectsEngine
 
                 wrap = BrushWrap.Repeat;
 
-                colorGradients.Add(0.0f, Utils.ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
-                colorGradients.Add(1.0f, Utils.ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
+                colorGradients.Add(0.0f, ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
+                colorGradients.Add(1.0f, ColorUtils.MediaColorToDrawingColor((brush as System.Windows.Media.SolidColorBrush).Color));
             }
             else if (brush is System.Windows.Media.LinearGradientBrush)
             {
@@ -244,9 +248,9 @@ namespace Aurora.EffectsEngine
 
                 System.Windows.Media.LinearGradientBrush lgb = (brush as System.Windows.Media.LinearGradientBrush);
 
-                start = new System.Drawing.PointF((float)lgb.StartPoint.X, (float)lgb.StartPoint.Y);
-                end = new System.Drawing.PointF((float)lgb.EndPoint.X, (float)lgb.EndPoint.Y);
-                center = new System.Drawing.PointF(0.0f, 0.0f);
+                start = new PointF((float)lgb.StartPoint.X, (float)lgb.StartPoint.Y);
+                end = new PointF((float)lgb.EndPoint.X, (float)lgb.EndPoint.Y);
+                center = new PointF(0.0f, 0.0f);
 
                 switch (lgb.SpreadMethod)
                 {
@@ -266,7 +270,7 @@ namespace Aurora.EffectsEngine
                     if (!colorGradients.ContainsKey((float)grad.Offset) && ((float)grad.Offset >= 0.0f && (float)grad.Offset <= 1.0f))
                         colorGradients.Add(
                             (float)grad.Offset,
-                            Utils.ColorUtils.MediaColorToDrawingColor(grad.Color)
+                            ColorUtils.MediaColorToDrawingColor(grad.Color)
                             );
                 }
             }
@@ -276,9 +280,9 @@ namespace Aurora.EffectsEngine
 
                 System.Windows.Media.RadialGradientBrush rgb = (brush as System.Windows.Media.RadialGradientBrush);
 
-                start = new System.Drawing.PointF(0, 0);
-                end = new System.Drawing.PointF((float)rgb.RadiusX * 2.0f, (float)rgb.RadiusY * 2.0f);
-                center = new System.Drawing.PointF(
+                start = new PointF(0, 0);
+                end = new PointF((float)rgb.RadiusX * 2.0f, (float)rgb.RadiusY * 2.0f);
+                center = new PointF(
                     (float)rgb.Center.X,
                     (float)rgb.Center.Y
                     );
@@ -301,7 +305,7 @@ namespace Aurora.EffectsEngine
                     if (!colorGradients.ContainsKey((float)grad.Offset) && ((float)grad.Offset >= 0.0f && (float)grad.Offset <= 1.0f))
                         colorGradients.Add(
                             (float)grad.Offset,
-                            Utils.ColorUtils.MediaColorToDrawingColor(grad.Color)
+                            ColorUtils.MediaColorToDrawingColor(grad.Color)
                             );
                 }
             }
@@ -313,8 +317,8 @@ namespace Aurora.EffectsEngine
             if (colorGradients.Count > 0)
             {
                 bool firstFound = false;
-                System.Drawing.Color first_color = new System.Drawing.Color();
-                System.Drawing.Color last_color = new System.Drawing.Color();
+                Color first_color = new Color();
+                Color last_color = new Color();
 
                 foreach (var kvp in colorGradients)
                 {
@@ -336,10 +340,10 @@ namespace Aurora.EffectsEngine
             else
             {
                 if (!colorGradients.ContainsKey(0.0f))
-                    colorGradients.Add(0.0f, System.Drawing.Color.Transparent);
+                    colorGradients.Add(0.0f, Color.Transparent);
 
                 if (!colorGradients.ContainsKey(1.0f))
-                    colorGradients.Add(1.0f, System.Drawing.Color.Transparent);
+                    colorGradients.Add(1.0f, Color.Transparent);
             }
         }
 
@@ -355,29 +359,29 @@ namespace Aurora.EffectsEngine
             return this;
         }
 
-        public System.Drawing.Brush GetDrawingBrush()
+        public Brush GetDrawingBrush()
         {
             if (true/*_drawingbrush == null*/)
             {
                 if (type == BrushType.Solid)
                 {
-                    _drawingBrush = new System.Drawing.SolidBrush(colorGradients[0.0f]);
+                    _drawingBrush = new SolidBrush(colorGradients[0.0f]);
                 }
                 else if (type == BrushType.Linear)
                 {
                     System.Drawing.Drawing2D.LinearGradientBrush brush = new System.Drawing.Drawing2D.LinearGradientBrush(
                         start,
                         end,
-                        System.Drawing.Color.Red,
-                        System.Drawing.Color.Red
+                        Color.Red,
+                        Color.Red
                         );
 
-                    List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
+                    List<Color> brush_colors = new List<Color>();
                     List<float> brush_positions = new List<float>();
 
                     foreach (var kvp in colorGradients)
                     {
-                        brush_positions.Add(kvp.Key);
+                        brush_positions.Add((float)kvp.Key);
                         brush_colors.Add(kvp.Value);
                     }
 
@@ -405,7 +409,7 @@ namespace Aurora.EffectsEngine
                 {
                     System.Drawing.Drawing2D.GraphicsPath g_path = new System.Drawing.Drawing2D.GraphicsPath();
                     g_path.AddEllipse(
-                        new System.Drawing.RectangleF(
+                        new RectangleF(
                         start.X,
                         start.Y,
                         end.X,
@@ -430,12 +434,12 @@ namespace Aurora.EffectsEngine
                             break;
                     }
 
-                    List<System.Drawing.Color> brush_colors = new List<System.Drawing.Color>();
+                    List<Color> brush_colors = new List<Color>();
                     List<float> brush_positions = new List<float>();
 
                     foreach (var kvp in colorGradients)
                     {
-                        brush_positions.Add(1.0f - kvp.Key);
+                        brush_positions.Add(1.0f - (float)kvp.Key);
                         brush_colors.Add(kvp.Value);
                     }
 
@@ -456,7 +460,7 @@ namespace Aurora.EffectsEngine
                 }
                 else
                 {
-                    _drawingBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Transparent);
+                    _drawingBrush = new SolidBrush(Color.Transparent);
                 }
             }
 
@@ -470,7 +474,7 @@ namespace Aurora.EffectsEngine
                 if (type == BrushType.Solid)
                 {
                     System.Windows.Media.SolidColorBrush brush = new System.Windows.Media.SolidColorBrush(
-                        Utils.ColorUtils.DrawingColorToMediaColor(colorGradients[0.0f])
+                        ColorUtils.DrawingColorToMediaColor(colorGradients[0.0f])
                         );
                     brush.Freeze();
 
@@ -484,7 +488,7 @@ namespace Aurora.EffectsEngine
                     {
                         collection.Add(
                             new System.Windows.Media.GradientStop(
-                                Utils.ColorUtils.DrawingColorToMediaColor(kvp.Value),
+                                ColorUtils.DrawingColorToMediaColor(kvp.Value),
                                 kvp.Key)
                             );
                     }
@@ -516,7 +520,7 @@ namespace Aurora.EffectsEngine
                     {
                         collection.Add(
                             new System.Windows.Media.GradientStop(
-                                Utils.ColorUtils.DrawingColorToMediaColor(kvp.Value),
+                                ColorUtils.DrawingColorToMediaColor(kvp.Value),
                                 kvp.Key)
                             );
                     }
@@ -590,18 +594,18 @@ namespace Aurora.EffectsEngine
 
             foreach (var kvp in otherBrush.colorGradients)
             {
-                System.Drawing.Color bgColor = currentSpectrum.GetColorAt(kvp.Key);
-                System.Drawing.Color fgColor = kvp.Value;
+                Color bgColor = currentSpectrum.GetColorAt(kvp.Key);
+                Color fgColor = kvp.Value;
 
-                newSpectrum.SetColorAt(kvp.Key, Utils.ColorUtils.BlendColors(bgColor, fgColor, percent));
+                newSpectrum.SetColorAt(kvp.Key, ColorUtils.BlendColors(bgColor, fgColor, percent));
             }
 
             EffectBrush returnBrush = new EffectBrush(newSpectrum);
             returnBrush.SetBrushType(type).SetWrap(wrap);
 
-            returnBrush.start = new System.Drawing.PointF((float)(start.X * (1.0 - percent) + otherBrush.start.X * (percent)), (float)(start.Y * (1.0 - percent) + otherBrush.start.Y * (percent)));
-            returnBrush.end = new System.Drawing.PointF((float)(end.X * (1.0 - percent) + otherBrush.end.X * (percent)), (float)(end.Y * (1.0 - percent) + otherBrush.end.Y * (percent)));
-            returnBrush.center = new System.Drawing.PointF((float)(center.X * (1.0 - percent) + otherBrush.center.X * (percent)), (float)(center.Y * (1.0 - percent) + otherBrush.center.Y * (percent)));
+            returnBrush.start = new PointF((float)(start.X * (1.0 - percent) + otherBrush.start.X * (percent)), (float)(start.Y * (1.0 - percent) + otherBrush.start.Y * (percent)));
+            returnBrush.end = new PointF((float)(end.X * (1.0 - percent) + otherBrush.end.X * (percent)), (float)(end.Y * (1.0 - percent) + otherBrush.end.Y * (percent)));
+            returnBrush.center = new PointF((float)(center.X * (1.0 - percent) + otherBrush.center.X * (percent)), (float)(center.Y * (1.0 - percent) + otherBrush.center.Y * (percent)));
 
             return returnBrush;
         }
@@ -610,7 +614,7 @@ namespace Aurora.EffectsEngine
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((EffectBrush)obj);
         }
 

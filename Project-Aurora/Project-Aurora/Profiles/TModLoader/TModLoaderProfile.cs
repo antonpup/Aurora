@@ -49,7 +49,7 @@ namespace Aurora.Profiles.TModLoader {
                             type = EffectBrush.BrushType.Linear,
                             start = new PointF(0, 0),
                             end = new PointF(1, 0),
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0, Color.White },
                                 { 1, Color.DarkGray }
                             }
@@ -84,7 +84,7 @@ namespace Aurora.Profiles.TModLoader {
                 type = EffectBrush.BrushType.Linear,
                 start = new PointF(0, 0),
                 end = new PointF(1, 0),
-                colorGradients = new SortedDictionary<float, Color> {
+                colorGradients = new SortedDictionary<double, Color> {
                     { 0, start },
                     { 1, end }
                 }

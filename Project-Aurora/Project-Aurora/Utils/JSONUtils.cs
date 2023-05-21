@@ -173,7 +173,8 @@ public class OverrideTypeConverter : JsonConverter
 
 public class TypeAnnotatedObjectConverter : JsonConverter
 {
-    public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Color).FullName || objectType.IsAssignableFrom(typeof(object));
+    public override bool CanConvert(Type objectType) => objectType.FullName == typeof(Color).FullName ||
+                                                        objectType.IsAssignableFrom(typeof(object));
 
     public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
     {
@@ -192,9 +193,9 @@ public class TypeAnnotatedObjectConverter : JsonConverter
         switch (readerTokenType)
         {
             case JsonToken.String:
-                return reader.Value.ToString().StartsWith("\"") ?
-                    JsonConvert.DeserializeObject(reader.Value.ToString(), objectType) :
-                    JsonConvert.DeserializeObject("\"" + reader.Value + "\"", objectType);
+                return reader.Value.ToString().StartsWith("\"")
+                    ? JsonConvert.DeserializeObject(reader.Value.ToString(), objectType)
+                    : JsonConvert.DeserializeObject("\"" + reader.Value + "\"", objectType);
             case JsonToken.StartObject:
                 var item = serializer.Deserialize<JObject>(reader);
                 var type = serializer.Deserialize<Type>(item["$type"].CreateReader());
@@ -218,6 +219,7 @@ public class TypeAnnotatedObjectConverter : JsonConverter
                         {
                             return JsonConvert.DeserializeObject(s, type);
                         }
+
                         return JsonConvert.DeserializeObject("\"" + value + "\"", type);
                 }
             case JsonToken.Boolean:
@@ -227,5 +229,35 @@ public class TypeAnnotatedObjectConverter : JsonConverter
         }
 
         return JsonConvert.DeserializeObject(reader.Value.ToString(), objectType);
+    }
+}
+
+public class SingleToDoubleConverter : JsonConverter
+{
+    public override bool CanConvert(Type objectType) => objectType == typeof(Double);
+
+    public override bool CanRead => true;
+
+    public override bool CanWrite => false;
+
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        throw new NotImplementedException("Unnecessary because CanWrite is false. The type will skip the converter.");
+    }
+
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        switch (reader.TokenType)
+        {
+            case JsonToken.Float:
+            case JsonToken.Integer:
+                return (double)reader.Value;
+            case JsonToken.String:
+
+                double.TryParse(reader.ReadAsString(), out var value);
+                return value;
+        }
+
+        throw new NotImplementedException("Unnecessary because CanWrite is false. The type will skip the converter.");
     }
 }

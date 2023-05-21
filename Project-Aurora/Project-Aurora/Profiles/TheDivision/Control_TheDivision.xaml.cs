@@ -26,11 +26,6 @@ namespace Aurora.Profiles.TheDivision
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void patch_button_Click(object sender, RoutedEventArgs e)
-        {
-            App.InstallLogitech();
-        }
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
         }

@@ -62,7 +62,7 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new EffectBrush() {
                             type = EffectBrush.BrushType.Linear,
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0, Color.FromArgb(0, 255, 255) },
                                 { 1, Color.FromArgb(0, 255, 0) }
                             }
@@ -78,7 +78,7 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new EffectBrush() {
                             type = EffectBrush.BrushType.Linear,
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0, Color.FromArgb(0, 255, 255) },
                                 { 1, Color.FromArgb(255, 0, 0) }
                             }
@@ -106,7 +106,7 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new EffectBrush() {
                             type = EffectBrush.BrushType.Linear,
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0, Color.FromArgb(65, 255, 0) },
                                 { 0.65f, Color.FromArgb(67, 255, 0) },
                                 { 0.75f, Color.FromArgb(0, 100, 255) },
@@ -242,7 +242,7 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new EffectBrush() {
                             type = EffectBrush.BrushType.Linear,
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0f, Color.FromArgb(255, 0, 0) },
                                 { 0.25f, Color.FromArgb(255, 0, 0) },
                                 { 0.375f, Color.FromArgb(255, 255, 0) },
@@ -262,7 +262,7 @@ namespace Aurora.Profiles.ETS2 {
                     Properties = new PercentGradientLayerHandlerProperties {
                         _Gradient = new EffectBrush() {
                             type = EffectBrush.BrushType.Linear,
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0f, Color.FromArgb(255, 0, 0) },
                                 { 0.25f, Color.FromArgb(255, 0, 0) },
                                 { 0.375f, Color.FromArgb(255, 255, 0) },

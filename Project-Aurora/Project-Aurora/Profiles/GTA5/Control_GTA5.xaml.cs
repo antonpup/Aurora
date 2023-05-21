@@ -1,7 +1,6 @@
 ﻿using Aurora.Controls;
 using Aurora.Profiles.GTA5.GSI;
 using Aurora.Settings;
-using System;
 using System.Diagnostics;
 using System.Timers;
 using System.Windows;
@@ -78,18 +77,6 @@ namespace Aurora.Profiles.GTA5
                     preview_wantedlevel_timer.Interval = 600D - 50D * value;
                     (profile_manager.Config.Event._game_state as GameState_GTA5).HasCops = true;
                 }
-            }
-        }
-
-        private void patch_button_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                App.InstallLogitech();
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not start Aurora Logitech Patcher. Error: " + exc);
             }
         }
 

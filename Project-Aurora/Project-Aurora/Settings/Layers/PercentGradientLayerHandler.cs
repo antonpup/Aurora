@@ -40,15 +40,15 @@ namespace Aurora.Settings.Layers
         protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
-            _invalidated = true;
+            Invalidated = true;
         }
         public override EffectLayer Render(IGameState state)
         {
-            if (_invalidated)
+            if (Invalidated)
             {
                 EffectLayer.Clear();
             }
-            _invalidated = false;
+            Invalidated = false;
             
             var value = Properties.Logic._Value ?? state.GetNumber(Properties.VariablePath);
             var maxvalue = Properties.Logic._MaxValue ?? state.GetNumber(Properties.MaxVariablePath);

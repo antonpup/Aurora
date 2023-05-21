@@ -38,7 +38,7 @@ namespace Aurora.EffectsEngine
 			Color.FromArgb(255, 0, 0)
 			);
 
-		private readonly Dictionary<float, Color> colors = new Dictionary<float, Color>();
+		private readonly Dictionary<double, Color> colors = new();
 		private float shift = 0.0f;
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace Aurora.EffectsEngine
 		/// <param name="otherspectrum">The passed ColorSpectrum</param>
 		public ColorSpectrum(ColorSpectrum otherspectrum)
 		{
-			colors = new Dictionary<float, Color>(otherspectrum.colors);
+			colors = new Dictionary<double, Color>(otherspectrum.colors);
 		}
 
 		/// <summary>
@@ -100,11 +100,11 @@ namespace Aurora.EffectsEngine
 		/// <returns>Itself</returns>
 		public ColorSpectrum Flip()
 		{
-			Dictionary<float, Color> newcolors = new Dictionary<float, Color>();
+			Dictionary<double, Color> newcolors = new Dictionary<double, Color>();
 
-			foreach (KeyValuePair<float, Color> kvp in colors)
+			foreach (var kvp in colors)
 			{
-				newcolors[1.0f - kvp.Key] = kvp.Value;
+				newcolors[1.0 - kvp.Key] = kvp.Value;
 			}
 
 			colors.Clear();
@@ -132,9 +132,9 @@ namespace Aurora.EffectsEngine
 		/// </summary>
 		/// <param name="position">The position value to be corrected</param>
 		/// <returns>The corrected position value of range [0.0f, 1.0f]</returns>
-		private float CorrectPosition(float position)
+		private double CorrectPosition(double position)
 		{
-			float ret_pos = position;
+			var ret_pos = position;
 
 			if (ret_pos > 1.0f)
 				ret_pos -= (int)ret_pos;
@@ -150,7 +150,7 @@ namespace Aurora.EffectsEngine
 		/// <param name="position">The position value of range [0.0f, 1.0f]</param>
 		/// <param name="color">The color to be set</param>
 		/// <returns>Itself</returns>
-		public ColorSpectrum SetColorAt(float position, Color color)
+		public ColorSpectrum SetColorAt(double position, Color color)
 		{
 			if (position <= 0.0f)
 				position = 0.0f;
@@ -170,14 +170,14 @@ namespace Aurora.EffectsEngine
 		/// <param name="max_position">The maxiumum position value, used to calculate a value in [0.0f , 1.0f] range</param>
 		/// /// <param name="opacity">The opacity amount [0.0D - 1.0D]</param>
 		/// <returns>The color</returns>
-		public Color GetColorAt(float position, float max_position = 1.0f, double opacity = 1.0D)
+		public Color GetColorAt(double position, float max_position = 1.0f, double opacity = 1.0D)
 		{
-			position = CorrectPosition((position / max_position) + shift);
+			position = CorrectPosition(position / max_position + shift);
 
-			float closest_lower = 0.0f;
-			float closest_higher = 1.0f;
+			var closest_lower = 0.0;
+			var closest_higher = 1.0;
 
-			foreach (KeyValuePair<float, Color> kvp in colors)
+			foreach (var kvp in colors)
 			{
 				if (kvp.Key == position)
 				{
@@ -197,7 +197,7 @@ namespace Aurora.EffectsEngine
 
 			return Utils.ColorUtils.MultiplyColorByScalar(
 				Utils.ColorUtils.BlendColors(
-					colors[closest_lower], colors[closest_higher], ((double)(position - closest_lower) / (double)(closest_higher - closest_lower))
+					colors[closest_lower], colors[closest_higher], (position - closest_lower) / (closest_higher - closest_lower)
 					),
 				opacity
 				);
@@ -215,39 +215,39 @@ namespace Aurora.EffectsEngine
 		public LinearGradientBrush ToLinearGradient(float width, float height = 0.0f, float x = 0.0f, float y = 0.0f, double opacity = 1.0D)
 		{
 			var newColors = colors.Keys
-				.Select(val => new KeyValuePair<float, Color>(val, Utils.ColorUtils.MultiplyColorByScalar(colors[val], opacity)))
+				.Select(val => new KeyValuePair<double, Color>(val, Utils.ColorUtils.MultiplyColorByScalar(colors[val], opacity)))
 				.OrderBy(val => val.Key)
 				.ToList();
 
 			if (newColors.First().Key != 0.0f)
 			{
-				newColors.Insert(0, new KeyValuePair<float, Color>(0.0f, newColors.First().Value));
+				newColors.Insert(0, new KeyValuePair<double, Color>(0.0f, newColors.First().Value));
 			}
 
 			if (newColors.Last().Key != 1.0f)
 			{
-				newColors.Add(new KeyValuePair<float, Color>(1.0f, newColors.Last().Value));
+				newColors.Add(new KeyValuePair<double, Color>(1.0f, newColors.Last().Value));
 			}
 
 			if (shift != 0.0f)
 			{
-				newColors = newColors.Select(val => new KeyValuePair<float, Color>(CorrectPosition(val.Key + shift), val.Value))
+				newColors = newColors.Select(val => new KeyValuePair<double, Color>(CorrectPosition(val.Key + shift), val.Value))
 					.Distinct()
 					.OrderBy(val => val.Key)
 					.ToList();
 
 				var endColor = Utils.ColorUtils.BlendColors(
 					newColors.First().Value, newColors.Last().Value,
-					((double) (newColors.First().Key) / (double) (newColors.First().Key + 1.0f - newColors.Last().Key)));
+					(newColors.First().Key / (newColors.First().Key + 1.0f - newColors.Last().Key)));
 
 				if (newColors.First().Key != 0.0f)
 				{
-					newColors.Insert(0, new KeyValuePair<float, Color>(0.0f, endColor));
+					newColors.Insert(0, new KeyValuePair<double, Color>(0.0f, endColor));
 				}
 
 				if (newColors.Last().Key != 1.0f)
 				{
-					newColors.Add(new KeyValuePair<float, Color>(1.0f, endColor));
+					newColors.Add(new KeyValuePair<double, Color>(1.0f, endColor));
 				}
 			}
 
@@ -259,7 +259,7 @@ namespace Aurora.EffectsEngine
 				InterpolationColors = new ColorBlend
 				{
 					Colors = newColors.Select(val => val.Value).ToArray(),
-					Positions = newColors.Select(val => val.Key).ToArray()
+					Positions = newColors.Select(val => (float)val.Key).ToArray()
 				}
 			};
 		}
@@ -268,9 +268,9 @@ namespace Aurora.EffectsEngine
 		/// Retrieves the colors and their positions on the spectrum
 		/// </summary>
 		/// <returns>Dictionary with position within the spectrum and color</returns>
-		public Dictionary<float, Color> GetSpectrumColors()
+		public Dictionary<double, Color> GetSpectrumColors()
 		{
-			return new Dictionary<float, Color>(colors);
+			return new Dictionary<double, Color>(colors);
 		}
 
 		/// <summary>
@@ -279,9 +279,9 @@ namespace Aurora.EffectsEngine
 		/// <returns></returns>
 		public ColorSpectrum MultiplyByScalar(double scalar)
 		{
-			Dictionary<float, Color> newcolors = new Dictionary<float, Color>();
+			Dictionary<double, Color> newcolors = new Dictionary<double, Color>();
 
-			foreach (KeyValuePair<float, Color> kvp in colors)
+			foreach (KeyValuePair<double, Color> kvp in colors)
 				newcolors[kvp.Key] = Utils.ColorUtils.MultiplyColorByScalar(kvp.Value, scalar);
 
 			colors.Clear();

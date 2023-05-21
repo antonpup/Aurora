@@ -133,7 +133,7 @@ namespace Aurora.Profiles.Osu {
                         MaxAmplitude = 25,
                         Gradient = new EffectsEngine.EffectBrush {
                             type = EffectsEngine.EffectBrush.BrushType.Linear,
-                            colorGradients = new SortedDictionary<float, Color> {
+                            colorGradients = new SortedDictionary<double, Color> {
                                 { 0, Color.Magenta },
                                 { 0.5f, Color.Cyan },
                                 { 1, Color.Magenta }

@@ -433,12 +433,12 @@ namespace Aurora.Scripts.VoronScripts
 			var colors = spectrum.GetSpectrumColors()
 				.Where(x => x.Key > start && x.Key < end)
 				.Concat(new[]
-					{new KeyValuePair<float, Color>(start, spectrum.GetColorAt(start)), new KeyValuePair<float, Color>(end, spectrum.GetColorAt(end))})
+					{new KeyValuePair<double, Color>(start, spectrum.GetColorAt(start)), new KeyValuePair<double, Color>(end, spectrum.GetColorAt(end))})
 				.OrderBy(x => x.Key).ToArray();
-			float red = 0;
-			float green = 0;
-			float blue = 0;
-			float alpha = 0;
+			double red = 0;
+			double green = 0;
+			double blue = 0;
+			double alpha = 0;
 			for (var i = 1; i < colors.Length; i++)
 			{
 				var subcolor = spectrum.GetColorAt(((colors[i].Key - colors[i - 1].Key) / 2f) + colors[i - 1].Key);

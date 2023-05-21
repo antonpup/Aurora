@@ -779,10 +779,9 @@ namespace Aurora.EffectsEngine
                 _previousSequenceType = sequence.Type;
             }
             if (sequence.Type == KeySequenceType.Sequence)
-                PercentEffect(spectrum, sequence.Keys.ToArray(), value, total, percentEffectType, flashPast,
-                    flashReversed);
+                PercentEffect(spectrum, sequence.Keys.ToArray(), value, total, percentEffectType, flashPast, flashReversed);
             else
-                PercentEffect(spectrum, sequence.Freeform, value, total, percentEffectType, flashPast, flashReversed);
+                PercentEffect(spectrum, sequence.Freeform,       value, total, percentEffectType, flashPast, flashReversed);
         }
 
         /// <summary>
@@ -803,16 +802,13 @@ namespace Aurora.EffectsEngine
 
             var progress = progressTotal * keys.Count;
 
-            if (flashPast > 0.0)
+            if (flashPast > 0.0 && ((flashReversed && progressTotal >= flashPast) || (!flashReversed && progressTotal <= flashPast)))
             {
-                if ((flashReversed && progressTotal >= flashPast) || (!flashReversed && progressTotal <= flashPast))
-                {
-                    var percent = Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI);
-                    if (blinkBackground)
-                        backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, percent);
-                    else
-                        foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, percent);
-                }
+                var percent = Math.Sin(Time.GetMillisecondsSinceEpoch() % 1000.0D / 1000.0D * Math.PI);
+                if (blinkBackground)
+                    backgroundColor = ColorUtils.BlendColors(backgroundColor, Color.Empty, percent);
+                else
+                    foregroundColor = ColorUtils.BlendColors(backgroundColor, foregroundColor, percent);
             }
 
             if (percentEffectType is PercentEffectType.Highest_Key or PercentEffectType.Highest_Key_Blend && keys.Count > 0)
@@ -863,11 +859,17 @@ namespace Aurora.EffectsEngine
             PercentEffectType percentEffectType = PercentEffectType.Progressive, double flashPast = 0.0,
             bool flashReversed = false)
         {
-            var progressTotal = value / total;
-            if (progressTotal < 0.0)
-                progressTotal = 0.0;
-            else if (progressTotal > 1.0)
-                progressTotal = 1.0;
+            var progressTotal = (value / total) switch
+            {
+                < 0.0 => 0.0,
+                > 1.0 => 1.0,
+                _ => value / total
+            };
+            if (progressTotal < _percentProgress)
+            {
+                Clear();
+            }
+            _percentProgress = progressTotal;
 
             var progress = progressTotal * keys.Length;
 
@@ -894,16 +896,17 @@ namespace Aurora.EffectsEngine
                     for (var i = 0; i < keys.Length; i++)
                     {
                         var currentKey = keys[i];
+                        var color = spectrum.GetColorAt((float)i / (keys.Length - 1), 1.0f, flashAmount);
                         if (i == (int)progress)
                         {
                             var percent = progress - i;
                             SetOneKey(
                                 currentKey,
-                                ColorUtils.MultiplyColorByScalar(spectrum.GetColorAt((float)i / (keys.Length - 1), 1.0f, flashAmount), percent)
+                                ColorUtils.MultiplyColorByScalar(color, percent)
                             );
                         }
                         else if (i < (int)progress)
-                            SetOneKey(currentKey, spectrum.GetColorAt((float)i / (keys.Length - 1), 1.0f, flashAmount));
+                            SetOneKey(currentKey, color);
                     }
                     break;
                 default:
@@ -1010,6 +1013,7 @@ namespace Aurora.EffectsEngine
             Invalidate();
         }
 
+        private double _percentProgress = -1;
         /// <summary>
         ///  Draws a percent effect on the layer bitmap using a FreeFormObject and a ColorSpectrum.
         /// </summary>
@@ -1022,6 +1026,11 @@ namespace Aurora.EffectsEngine
             bool flashReversed = false)
         {
             var progressTotal = MathUtils.Clamp(value / total, 0, 1);
+            if (progressTotal < _percentProgress)
+            {
+                Clear();
+            }
+            _percentProgress = progressTotal;
 
             var flashAmount = 1.0;
 
@@ -1038,8 +1047,8 @@ namespace Aurora.EffectsEngine
             var width = freeform.Width * Effects.EditorToCanvasWidth;
             var height = freeform.Height * Effects.EditorToCanvasHeight;
 
-            if (width < 3) width = 3;
-            if (height < 3) height = 3;
+            if (width < 2) width = 2;
+            if (height < 2) height = 2;
 
             using var g = Graphics.FromImage(_colormap);
             if (percentEffectType == PercentEffectType.AllAtOnce)

@@ -11,11 +11,6 @@ namespace MemoryAccessProfiles.Profiles.CloneHero;
 
 public class CloneHeroProfile : ApplicationProfile
 {
-    public CloneHeroProfile() : base()
-    {
-            
-    }
-
     public override void Reset()
     {
         base.Reset();
@@ -55,7 +50,7 @@ public class CloneHeroProfile : ApplicationProfile
                             {
                                 type = EffectBrush.BrushType.Linear,
                                 wrap = EffectBrush.BrushWrap.Repeat,
-                                colorGradients = new SortedDictionary<float, Color>()
+                                colorGradients = new SortedDictionary<double, Color>()
                                 {
                                     {0, Color.FromArgb(9, 43, 83) },
                                     {0.298960835f, Color.FromArgb(187, 18, 194) },
