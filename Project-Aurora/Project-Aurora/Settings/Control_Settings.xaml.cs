@@ -332,53 +332,6 @@ public partial class Control_Settings
         await RazerChromaUtils.DisableDeviceControlAsync();
     }
 
-    private void wrapper_install_logitech_Click(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            App.InstallLogitech();
-        }
-        catch (Exception exc)
-        {
-            Global.logger.Error("Exception during Logitech Wrapper install. Exception: " + exc);
-            MessageBox.Show("Aurora Wrapper Patch for Logitech could not be applied.\r\nException: " + exc.Message);
-        }
-    }
-
-    private void wrapper_install_razer_Click(object sender, RoutedEventArgs e)
-    {
-        var dialog = new FolderBrowserDialog();
-        DialogResult result = dialog.ShowDialog();
-
-        if (result != DialogResult.OK) return;
-        try
-        {
-            TryInstallRazerWrapper(dialog);
-
-            MessageBox.Show("Aurora Wrapper Patch for Razer applied to\r\n" + dialog.SelectedPath);
-        }
-        catch (Exception exc)
-        {
-            Global.logger.Error("Exception during Razer Wrapper install", exc);
-            MessageBox.Show("Aurora Wrapper Patch for Razer could not be applied.\r\nException: " + exc.Message);
-        }
-    }
-
-    private static void TryInstallRazerWrapper(FolderBrowserDialog dialog)
-    {
-        using (var razerWrapper86 =
-               new BinaryWriter(new FileStream(Path.Combine(dialog.SelectedPath, "RzChromaSDK.dll"), FileMode.Create)))
-        {
-            razerWrapper86.Write(Properties.Resources.Aurora_RazerLEDWrapper86);
-        }
-
-        using (var razerWrapper64 =
-               new BinaryWriter(new FileStream(Path.Combine(dialog.SelectedPath, "RzChromaSDK64.dll"), FileMode.Create)))
-        {
-            razerWrapper64.Write(Properties.Resources.Aurora_RazerLEDWrapper64);
-        }
-    }
-
     private void wrapper_install_lightfx_32_Click(object sender, RoutedEventArgs e)
     {
         try

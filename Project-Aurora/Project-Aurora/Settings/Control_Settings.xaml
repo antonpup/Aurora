@@ -218,8 +218,6 @@
                                 <TextBlock TextWrapping="Wrap" Margin="4" Text="Wrappers are not needed for Aurora to connect to your RGB devices. Only use these if you know what you're doing, otherwise you could cause issues in games or other applications! Read the wiki for more information."/>
                                 <Button Content="Patch for LightFX (32 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_32_Click"/>
                                 <Button Content="Patch for LightFX (64 bit)" Margin="4" Width="200" Click="wrapper_install_lightfx_64_Click"/>
-                                <Button Content="Patch for Logitech"         Margin="4" Width="200" Click="wrapper_install_logitech_Click"/>
-                                <Button Content="Patch for Razer (Legacy, deprecated)" Margin="4" Width="200" Click="wrapper_install_razer_Click"/>
                             </StackPanel>
                         </GroupBox>
                     </DockPanel>

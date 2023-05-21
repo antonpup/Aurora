@@ -193,21 +193,6 @@ public partial class App
                         _delayTime = 5000;
 
                     Global.logger.Info("Program started with '-delay' parameter with delay of " + _delayTime + " ms");
-
-                    break;
-                case "-install_logitech":
-                    Global.logger.Info("Program started with '-install_logitech' parameter");
-
-                    try
-                    {
-                        InstallLogitech();
-                    }
-                    catch (Exception exc)
-                    {
-                        MessageBox.Show("Could not patch Logitech LED SDK. Error: \r\n\r\n" + exc, "Aurora Error");
-                    }
-
-                    ForceShutdownApp(0);
                     break;
             }
         }
@@ -345,99 +330,5 @@ public partial class App
         MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
         //Perform exit operations
         Current?.Shutdown();
-    }
-
-    public static void InstallLogitech()
-    {
-        //Check for Admin
-        bool isElevated;
-        WindowsIdentity identity = WindowsIdentity.GetCurrent();
-        WindowsPrincipal principal = new WindowsPrincipal(identity);
-        isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
-
-        if (!isElevated)
-        {
-            Global.logger.Error("Program does not have admin rights");
-            MessageBox.Show("Program does not have admin rights");
-            ForceShutdownApp(1);
-        }
-
-        //Patch 32-bit
-        string logitechPath = (string)Registry.GetValue(
-            @"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary",
-            null, null);//null gets the default value
-        if (logitechPath == null || logitechPath == @"C:\Program Files\LGHUB\sdk_legacy_led_x86.dll")
-        {
-            logitechPath = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x86\LogitechLed.dll";
-
-            if (!Directory.Exists(Path.GetDirectoryName(logitechPath)))
-                Directory.CreateDirectory(Path.GetDirectoryName(logitechPath));
-
-            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
-
-            key.CreateSubKey("Classes");
-            key = key.OpenSubKey("Classes", true);
-
-            key.CreateSubKey("WOW6432Node");
-            key = key.OpenSubKey("WOW6432Node", true);
-
-            key.CreateSubKey("CLSID");
-            key = key.OpenSubKey("CLSID", true);
-
-            key.CreateSubKey("{a6519e67-7632-4375-afdf-caa889744403}");
-            key = key.OpenSubKey("{a6519e67-7632-4375-afdf-caa889744403}", true);
-
-            key.CreateSubKey("ServerBinary");
-            key = key.OpenSubKey("ServerBinary", true);
-
-            key.SetValue(null, logitechPath);//null to set the default value
-        }
-
-        if (File.Exists(logitechPath) && !File.Exists(logitechPath + ".aurora_backup"))
-            File.Move(logitechPath, logitechPath + ".aurora_backup");
-
-        using (BinaryWriter logitechWrapper86 = new BinaryWriter(new FileStream(logitechPath, FileMode.Create, FileAccess.Write)))
-        {
-            logitechWrapper86.Write(Aurora.Properties.Resources.Aurora_LogiLEDWrapper86);
-        }
-
-        //Patch 64-bit
-        var logitechPath64 = (string)Registry.GetValue(
-            @"HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary",
-            null, null);
-        if (logitechPath64 is null or @"C:\Program Files\LGHUB\sdk_legacy_led_x64.dll")
-        {
-            logitechPath64 = @"C:\Program Files\Logitech Gaming Software\SDK\LED\x64\LogitechLed.dll";
-
-            if (!Directory.Exists(Path.GetDirectoryName(logitechPath64)))
-                Directory.CreateDirectory(Path.GetDirectoryName(logitechPath64));
-
-            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
-
-            key.CreateSubKey("Classes");
-            key = key.OpenSubKey("Classes", true);
-
-            key.CreateSubKey("CLSID");
-            key = key.OpenSubKey("CLSID", true);
-
-            key.CreateSubKey("{a6519e67-7632-4375-afdf-caa889744403}");
-            key = key.OpenSubKey("{a6519e67-7632-4375-afdf-caa889744403}", true);
-
-            key.CreateSubKey("ServerBinary");
-            key = key.OpenSubKey("ServerBinary", true);
-
-            key.SetValue(null, logitechPath64);
-        }
-
-        if (File.Exists(logitechPath64) && !File.Exists(logitechPath64 + ".aurora_backup"))
-            File.Move(logitechPath64, logitechPath64 + ".aurora_backup");
-
-        using (BinaryWriter logitechWrapper64 = new BinaryWriter(new FileStream(logitechPath64, FileMode.Create, FileAccess.Write)))
-        {
-            logitechWrapper64.Write(Aurora.Properties.Resources.Aurora_LogiLEDWrapper64);
-        }
-
-        Global.logger.Info("Logitech LED SDK patched successfully");
-        MessageBox.Show("Logitech LED SDK patched successfully");
     }
 }
