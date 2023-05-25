@@ -43,7 +43,7 @@ jobs:
           
       - name: Authenticate for Aytackydln's rgb.net repo
         run: |
-          dotnet nuget add source --username Aytackydln --password ${{ secrets.AYTAC_REPO }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Aytackydln/index.json"
+          dotnet nuget add source "https://nuget.pkg.github.com/Aytackydln/index.json" --username Aytackydln --password ${{ secrets.AYTAC_REPO }} --store-password-in-clear-text --name github
         
         # Restore the application to populate the obj folder with RuntimeIdentifiers
       - name: Restore the application
