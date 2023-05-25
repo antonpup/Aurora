@@ -39,7 +39,7 @@ namespace Aurora.Devices.Bloody
             return Task.FromResult(IsInitialized);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             _keyboard?.Disconnect();
             DeviceUpdated -= UpdateKeyboard;

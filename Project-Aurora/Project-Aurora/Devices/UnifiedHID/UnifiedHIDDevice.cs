@@ -25,10 +25,6 @@ namespace Aurora.Devices.UnifiedHID
         public override string DeviceName => "UnifiedHID";
         protected override string DeviceInfo => string.Join(", ", connectedDevices.Select(hd => hd.PrettyName));
 
-        public override string DeviceDetails => IsInitialized
-            ? $"Initialized{(string.IsNullOrWhiteSpace(DeviceInfo) ? "" : ": " + DeviceInfo)}"
-            : "Not Initialized";
-
         public string DeviceUpdatePerformance => IsInitialized
             ? lastUpdateTime + " ms"
             : "";
@@ -107,7 +103,7 @@ namespace Aurora.Devices.UnifiedHID
             return Task.FromResult(IsInitialized);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             try
             {

@@ -187,7 +187,7 @@ namespace Aurora.Devices.LightFX
             }
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             lock (action_lock) {
                 try {

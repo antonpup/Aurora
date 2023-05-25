@@ -107,7 +107,7 @@ namespace Aurora.Devices.Razer
             return true;
         }
 
-        public override async Task Shutdown()
+        protected override async Task Shutdown()
         {
             if (!IsInitialized)
                 return;

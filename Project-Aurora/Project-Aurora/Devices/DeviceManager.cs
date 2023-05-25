@@ -36,17 +36,17 @@ namespace Aurora.Devices
             };
         }
 
-        private async void WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
+        private async Task WorkerOnDoWork(DoWorkEventArgs doWorkEventArgs)
         {
-            if (!Device.IsInitialized)
+            if (Device is { IsInitialized: false, isDoingWork: false })
             {
-                await Device.Initialize().ConfigureAwait(false);
+                await Device.Initialize();
             }
 
-            await ActionLock.WaitAsync().ConfigureAwait(false);
+            await ActionLock.WaitAsync();
             try
             {
-                await Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2).ConfigureAwait(false);
+                await Device.UpdateDevice(currentComp.Item1, doWorkEventArgs, currentComp.Item2);
             }
             finally
             {
@@ -57,16 +57,26 @@ namespace Aurora.Devices
         public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
         {
             currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
-            if (_worker.WaitingCallbacks < 1)
+            if (_worker.WaitingCallbacks < 1 && !Device.isDoingWork)
             {
                 _worker.QueueWorkItem(_updateAction);
             }
         }
 
+        public async Task EnableDevice()
+        {
+            await Device.Initialize();
+        }
+
+        public async Task DisableDevice()
+        {
+            await Device.ShutdownDevice();
+        }
+
         public void Dispose()
         {
             _worker.Shutdown(250);
-            _worker?.Dispose();
+            _worker.Dispose();
         }
     }
 
@@ -276,7 +286,7 @@ namespace Aurora.Devices
 
             var devices = DeviceContainers
                 .Select(dc => dc.Device)
-                .Where(device => !device.IsInitialized && !Global.Configuration.DevicesDisabled.Contains(device.GetType()));
+                .Where(device => !device.IsInitialized && Global.Configuration.EnabledDevices.Contains(device.GetType()));
             var initializeTasks = new List<Task>();
             foreach (var device in devices)
             {
@@ -291,40 +301,47 @@ namespace Aurora.Devices
                         {
                             Global.logger.Info($"[Device][{device.DeviceName}] Failed to initialize.");
                         }
-                    });
-                task.ConfigureAwait(false);
+                    });;
 
                 initializeTasks.Add(task);
             }
 
             _InitializeOnceAllowed = false;
-            await Task.WhenAll(initializeTasks).ConfigureAwait(false);
+            await Task.WhenAll(initializeTasks);
         }
 
         public async Task ShutdownDevices()
         {
-            var shutdownTasks = new List<Task>();
-            foreach (var dc in InitializedDeviceContainers)
+            var shutdownTasks = InitializedDeviceContainers.Select(dc =>
             {
-                var task = Task.Run(async () =>
+                return Task.Run(async () =>
                 {
-                    await dc.ActionLock.WaitAsync().ConfigureAwait(false);
-                    try
+                    var deviceReleased = await dc.ActionLock.WaitAsync(500);
+                    if (deviceReleased)
                     {
-                        await DisableDevice(dc.Device).ConfigureAwait(false);
+                        try
+                        {
+                            await dc.DisableDevice();
+                        }
+                        finally
+                        {
+                            dc.ActionLock.Release();
+                        }
                     }
-                    finally
+                    else
                     {
-                        dc.ActionLock.Release();
+                        try
+                        {
+                            await dc.DisableDevice();
+                        }
+                        catch { /* just end it... */ }
                     }
+
                     Global.logger.Info($"[Device][{dc.Device.DeviceName}] Shutdown");
                 });
-                task.ConfigureAwait(false);
+            });
 
-                shutdownTasks.Add(task);
-            }
-
-            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
+            await Task.WhenAll(shutdownTasks);
         }
 
         public async Task ResetDevices()
@@ -333,21 +350,10 @@ namespace Aurora.Devices
             foreach (var dc in InitializedDeviceContainers)
             {
                 var task = dc.Device.Reset();
-                task.ConfigureAwait(false);
                 resetTasks.Add(task);
             }
 
-            await Task.WhenAll(resetTasks).ConfigureAwait(false);
-        }
-
-        public async Task EnableDevice(IDevice device)
-        {
-            await device.Initialize().ConfigureAwait(false);
-        }
-
-        public async Task DisableDevice(IDevice device)
-        {
-            await device.Shutdown().ConfigureAwait(false);
+            await Task.WhenAll(resetTasks);
         }
 
         public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
@@ -378,14 +384,14 @@ namespace Aurora.Devices
                 case PowerModes.Suspend:
                     Global.logger.Info("Suspending Devices");
                     suspended = true;
-                    Dispatcher.CurrentDispatcher.Invoke(async () => await this.ShutdownDevices());
+                    Dispatcher.CurrentDispatcher.Invoke(async () => await ShutdownDevices());
                     break;
                 case PowerModes.Resume:
                     Global.logger.Info("Resuming Devices -- PowerModes.Resume");
                     Thread.Sleep(TimeSpan.FromSeconds(2));
                     resumed = true;
                     suspended = false;
-                    Dispatcher.CurrentDispatcher.Invoke(async () => await this.InitializeDevices());
+                    Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
                     break;
             }
         }

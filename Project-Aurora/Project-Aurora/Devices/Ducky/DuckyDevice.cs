@@ -69,7 +69,7 @@ namespace Aurora.Devices.Ducky
             return Task.FromResult(IsInitialized);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (!IsInitialized)
                 return Task.CompletedTask;

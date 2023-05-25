@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using Newtonsoft.Json;
 
 namespace Aurora.Devices.RGBNet.Config;
@@ -9,7 +10,7 @@ namespace Aurora.Devices.RGBNet.Config;
 [Serializable]
 public class DeviceMappingConfig
 {
-    private static Lazy<DeviceMappingConfig> _configLoader = new(LoadConfig);
+    private static Lazy<DeviceMappingConfig> _configLoader = new(LoadConfig, LazyThreadSafetyMode.ExecutionAndPublication);
     public static DeviceMappingConfig Config => _configLoader.Value;
         
     [JsonIgnore]

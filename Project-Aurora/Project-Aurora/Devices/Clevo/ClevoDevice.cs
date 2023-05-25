@@ -78,7 +78,7 @@ namespace Aurora.Devices.Clevo
             }
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (!IsInitialized) return Task.CompletedTask;
             // Release Clevo Connection

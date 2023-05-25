@@ -1,38 +1,26 @@
 ﻿using Aurora.Devices;
 using Aurora.Settings;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Aurora.Controls
 {
     /// <summary>
     /// Interaction logic for Control_DeviceItem.xaml
     /// </summary>
-    public partial class Control_DeviceItem : UserControl
+    public partial class Control_DeviceItem
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceContainer), typeof(Control_DeviceItem));
 
         public DeviceContainer Device
         {
-            get
-            {
-                return (DeviceContainer)GetValue(DeviceProperty);
-            }
+            get => (DeviceContainer)GetValue(DeviceProperty);
             set
             {
                 SetValue(DeviceProperty, value);
@@ -79,11 +67,11 @@ namespace Aurora.Controls
                     {
                         if (device.Device.IsInitialized)
                         {
-                            await Global.dev_manager.DisableDevice(device.Device);
+                            await device.DisableDevice().ConfigureAwait(false);
                         }
                         else
                         {
-                            await Global.dev_manager.EnableDevice(device.Device);
+                            await device.EnableDevice();
                         }
                     }
                     finally
@@ -98,14 +86,14 @@ namespace Aurora.Controls
 
         private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
         {
-            if (Global.Configuration.DevicesDisabled.Contains(Device.Device.GetType()))
+            if (!Global.Configuration.EnabledDevices.Contains(Device.Device.GetType()))
             {
-                Global.Configuration.DevicesDisabled.Remove(Device.Device.GetType());
+                Global.Configuration.EnabledDevices.Add(Device.Device.GetType());
                 UpdateControls();
             }
             else
             {
-                Global.Configuration.DevicesDisabled.Add(Device.Device.GetType());
+                Global.Configuration.EnabledDevices.Remove(Device.Device.GetType());
                 var device = Device;
                 btnStart.Content = "Working...";
                 btnStart.IsEnabled = false;
@@ -116,7 +104,7 @@ namespace Aurora.Controls
                     {
                         if (device.Device.IsInitialized)
                         {
-                            await device.Device.Shutdown();
+                            await device.Device.ShutdownDevice();
                         }
                     }
                     finally
@@ -136,7 +124,7 @@ namespace Aurora.Controls
 
         private void UpdateControls()
         {
-            if (Device.Device.IsInitializing)
+            if (Device.Device.isDoingWork)
             {
                 btnStart.Content = "Working...";
                 btnStart.IsEnabled = false;
@@ -163,34 +151,34 @@ namespace Aurora.Controls
                 btnEnable.IsEnabled = false;
             else
             {
-                if (Global.Configuration.DevicesDisabled.Contains(Device.Device.GetType()))
+                if (!Global.Configuration.EnabledDevices.Contains(Device.Device.GetType()))
                 {
                     btnEnable.Content = "Enable";
                     btnStart.IsEnabled = false;
                 }
-                else if (!Device.Device.IsInitializing)
+                else if (!Device.Device.isDoingWork)
                 {
                     btnEnable.Content = "Disable";
                     btnStart.IsEnabled = true;
                 }
             }
 
-            if (Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Count() == 0)
+            if (!Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Any())
                 btnOptions.IsEnabled = false;
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)
         {
-            Window_VariableRegistryEditor options_window = new Window_VariableRegistryEditor();
-            options_window.Title = $"{Device.Device.DeviceName} - Options";
-            options_window.SizeToContent = SizeToContent.WidthAndHeight;
-            options_window.VarRegistryEditor.RegisteredVariables = Device.Device.RegisteredVariables;
-            options_window.Closing += (_sender, _eventArgs) =>
+            Window_VariableRegistryEditor optionsWindow = new Window_VariableRegistryEditor();
+            optionsWindow.Title = $"{Device.Device.DeviceName} - Options";
+            optionsWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            optionsWindow.VarRegistryEditor.RegisteredVariables = Device.Device.RegisteredVariables;
+            optionsWindow.Closing += (_, _) =>
             {
                 ConfigManager.Save(Global.Configuration);
             };
 
-            options_window.ShowDialog();
+            optionsWindow.ShowDialog();
         }
     }
 }

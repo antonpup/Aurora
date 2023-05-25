@@ -5,25 +5,28 @@ using System.Windows;
 
 namespace Aurora.Controls;
 
-public partial class Control_DeviceCalibration : Window
+public partial class Control_DeviceCalibration
 {
     public Control_DeviceCalibration()
     {
         InitializeComponent();
-
         RefreshLists();
     }
 
     private void RefreshLists()
     {
-        var devices = Global.dev_manager.DeviceContainers.Where(c => c.Device.IsInitialized).Select(c => c.Device);
+        var devices = Global.dev_manager.DeviceContainers
+            .Where(c => c.Device.IsInitialized)
+            .Select(c => c.Device);
 
-        ComboBox.ItemsSource = devices.SelectMany(a => a.GetDevices()).Except(Global.Configuration.DeviceCalibrations.Keys);
+        ComboBox.ItemsSource = devices
+            .SelectMany(a => a.GetDevices())
+            .Except(Global.Configuration.DeviceCalibrations.Keys);
         DeviceList.Items.Refresh();
         InvalidateVisual();
     }
 
-    private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+    private void ButtonBase_OnClick(object? sender, RoutedEventArgs e)
     {
         var value = (string)ComboBox.SelectionBoxItem;
         if (string.IsNullOrEmpty(value))
@@ -34,7 +37,7 @@ public partial class Control_DeviceCalibration : Window
         RefreshLists();
     }
 
-    private void Control_DeviceCalibrationItem_OnItemRemoved(object sender, KeyValuePair<string, Color> e)
+    private void Control_DeviceCalibrationItem_OnItemRemoved(object? sender, KeyValuePair<string, Color> e)
     {
         Global.Configuration.DeviceCalibrations.Remove(e.Key);
         Global.Configuration.DeviceCalibrations.TrimExcess();

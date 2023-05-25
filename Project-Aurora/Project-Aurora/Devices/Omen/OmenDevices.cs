@@ -25,23 +25,18 @@ namespace Aurora.Devices.Omen
         {
             get
             {
-                if (IsInitialized)
+                if (!IsInitialized) return "";
+                string result = "";
+                foreach (var dev in devices)
                 {
-                    string result = "";
-                    foreach (var dev in devices)
+                    if (dev.GetDeviceName() != string.Empty)
                     {
-                        if (dev.GetDeviceName() != string.Empty)
-                        {
-                            result += (" " + dev.GetDeviceName() + ";");
-                        }
+                        result += (" " + dev.GetDeviceName() + ";");
                     }
+                }
 
-                    return result;
-                }
-                else
-                {
-                    return "Not Initialized";
-                }
+                return result;
+
             }
         }
 
@@ -102,7 +97,7 @@ namespace Aurora.Devices.Omen
             resetTask.Wait();
         }
 
-        public override async Task Shutdown()
+        protected override async Task Shutdown()
         {
             try
             {

@@ -46,7 +46,7 @@ namespace Aurora.Devices.Wooting
             return Task.FromResult(IsInitialized);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (!IsInitialized)
                 return Task.CompletedTask;

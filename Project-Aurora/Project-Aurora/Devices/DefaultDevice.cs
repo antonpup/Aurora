@@ -19,44 +19,60 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     protected virtual string DeviceInfo => "";
 
-    public virtual string DeviceDetails => IsInitialized
-        ? $"Initialized{(string.IsNullOrWhiteSpace(DeviceInfo) ? "" : ": " + DeviceInfo)}"
-        : "Not Initialized";
+    public virtual string DeviceDetails => DeviceInfo ?? "";
 
     public string DeviceUpdatePerformance => IsInitialized
         ? _lastUpdateTime + "(" + _updateTime + ")" + " ms"
         : "";
 
-    public virtual bool IsInitializing { get; protected set; }
+    public virtual bool isDoingWork { get; protected set; }
 
     public virtual bool IsInitialized { get; protected set; }
 
     public async Task<bool> Initialize() {
-        this.IsInitializing = true;
+        isDoingWork = true;
         try
         {
-            this.IsInitialized = await this.DoInitialize().ConfigureAwait(false);
+            IsInitialized = await DoInitialize();
         }
         finally
         {
-            this.IsInitializing = false;
+            isDoingWork = false;
         }
 
-        return this.IsInitialized;
+        return IsInitialized;
     }
 
-    public abstract Task Shutdown();
+    public async Task ShutdownDevice()
+    {
+        try
+        {
+            isDoingWork = true;
+            await Shutdown();
+        }
+        finally
+        {
+            isDoingWork = false;
+        }
+    }
+
+    protected abstract Task Shutdown();
 
     public virtual async Task Reset()
     {
-        await Shutdown().ConfigureAwait(false);
-        await Initialize().ConfigureAwait(false);
+        await Shutdown()
+            .ContinueWith(_ => Initialize())
+            .ConfigureAwait(false);
     }
 
     public async Task<bool> UpdateDevice(DeviceColorComposition colorComposition, DoWorkEventArgs e, bool forced = false)
     {
+        if (isDoingWork)
+        {
+            return false;
+        }
         _updateWatch.Restart();
-        var updateResult = await UpdateDevice(colorComposition.KeyColors, e, forced).ConfigureAwait(false);
+        var updateResult = await UpdateDevice(colorComposition.KeyColors, e, forced);
 
         if (!updateResult) return false;
         _lastUpdateTime = Watch.ElapsedMilliseconds;
@@ -86,7 +102,7 @@ public abstract class DefaultDevice : IDevice, IDisposable
     }
 
     #region Variables
-    private VariableRegistry _variableRegistry;
+    private VariableRegistry? _variableRegistry;
 
     public VariableRegistry RegisteredVariables
     {

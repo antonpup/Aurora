@@ -177,7 +177,7 @@ namespace Aurora.Devices.Roccat
                     return (talkFX != null ? "TalkFX Initialized " : "") + (RyosTalkFX != null && RyosInitialized ? "RyosTalkFX Initialized " : "");
                 }
 
-                return "Not Initialized";
+                return "";
             }
         }
 
@@ -218,7 +218,7 @@ namespace Aurora.Devices.Roccat
             return Task.FromResult(IsInitialized);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (talkFX != null)
             {

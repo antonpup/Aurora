@@ -32,7 +32,7 @@ public class SoundBlasterXDevice : DefaultDevice
         {
             if (_sbKeyboard == null && _sbMouse == null)
             {
-                return "Not Initialized";
+                return "";
             }
 
             var outDetails = "";
@@ -155,7 +155,7 @@ public class SoundBlasterXDevice : DefaultDevice
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public override Task Shutdown()
+    protected override Task Shutdown()
     {
         if (_sbMouse != null)
         {

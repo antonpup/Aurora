@@ -120,7 +120,7 @@ namespace Aurora.Devices.Dualshock
 
         private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
         {
-            if ((Global.Configuration?.DevicesDisabled?.Contains(typeof(DualshockDevice)) ?? false) ||
+            if ((!Global.Configuration?.EnabledDevices?.Contains(typeof(DualshockDevice)) ?? false) ||
                 (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))
             {
                 return;
@@ -135,7 +135,7 @@ namespace Aurora.Devices.Dualshock
                 Reset().GetAwaiter().GetResult();
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (!IsInitialized)
             {

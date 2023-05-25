@@ -84,7 +84,7 @@ public class ScriptedDevice : DefaultDevice
         return Task.CompletedTask;
     }
 
-    public override async Task Shutdown()
+    protected override async Task Shutdown()
     {
         if (!_isInitialized) return;
         try

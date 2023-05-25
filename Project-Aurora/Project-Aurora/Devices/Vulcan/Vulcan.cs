@@ -18,7 +18,7 @@ namespace Aurora.Devices.Vulcan
 
         protected override string DeviceInfo => string.Join(",", _keyboards.Select(kb => kb.KeyboardType));
 
-        private List<IVulcanKeyboard> _keyboards;
+        private List<IVulcanKeyboard> _keyboards = new();
 
         protected override Task<bool> DoInitialize()
         {
@@ -27,7 +27,7 @@ namespace Aurora.Devices.Vulcan
             return Task.FromResult(IsInitialized = _keyboards.Count > 0);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             foreach (var keyboard in _keyboards)
             {

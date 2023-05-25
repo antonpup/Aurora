@@ -58,7 +58,7 @@ namespace Aurora.Devices.Logitech
             return false;
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             LogitechGSDK.LogiLedRestoreLighting();
             LogitechGSDK.LogiLedShutdown();

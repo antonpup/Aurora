@@ -109,10 +109,6 @@ namespace Aurora.Devices.Uniwill
 
         public override string DeviceName => devicename;
 
-        public override string DeviceDetails => IsInitialized
-            ? "Initialized"
-            : "Not Initialized";
-
         protected override Task<bool> DoInitialize()
         {
             if (!IsInitialized && CheckGCPower())
@@ -145,7 +141,7 @@ namespace Aurora.Devices.Uniwill
             return Task.FromResult(IsInitialized);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (this.IsInitialized)
             {

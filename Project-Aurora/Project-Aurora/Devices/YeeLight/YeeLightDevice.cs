@@ -66,7 +66,7 @@ public class YeeLightDevice : DefaultDevice
         _yeeLightState = YeeLightStateBuilder.Build(_lights, Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_white_delay"));
     }
 
-    public override Task Shutdown()
+    protected override Task Shutdown()
     {
         foreach (var light in _lights.Where(x => x.IsConnected()))
         {

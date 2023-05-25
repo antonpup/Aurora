@@ -42,7 +42,7 @@ namespace Aurora.Devices
         /// <summary>
         /// Indicates that initialization is in progress for this device instance.
         /// </summary>
-        bool IsInitializing { get; }
+        bool isDoingWork { get; }
 
         /// <summary>
         /// Gets the initialization status of this device instance.
@@ -65,7 +65,7 @@ namespace Aurora.Devices
         /// <summary>
         /// Shuts down the device instance.
         /// </summary>
-        Task Shutdown();
+        Task ShutdownDevice();
 
         /// <summary>
         /// Resets the device instance.

@@ -36,7 +36,7 @@ namespace Aurora.Devices.Drevo
             }
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             if (!IsInitialized)
                 return Task.CompletedTask;

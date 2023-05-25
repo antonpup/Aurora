@@ -17,10 +17,6 @@ public class AtmoOrbDevice : DefaultDevice
     private bool _isConnected;
     private bool _isConnecting;
 
-    public override string DeviceDetails => IsInitialized
-        ? "Initialized"
-        : "Not Initialized";
-
     public override string DeviceName => "AtmoOrb";
 
     protected override async Task<bool> DoInitialize()
@@ -63,7 +59,7 @@ public class AtmoOrbDevice : DefaultDevice
         await Reconnect().ConfigureAwait(false);
     }
 
-    public override async Task Shutdown()
+    protected override async Task Shutdown()
     {
         if (_socket != null)
         {

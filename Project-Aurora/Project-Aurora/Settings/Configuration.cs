@@ -9,7 +9,9 @@ using Aurora.Utils;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
+using Aurora.Devices;
 using Aurora.Devices.AtmoOrb;
 using Aurora.Devices.OpenRGB;
 using Aurora.Devices.RGBNet;
@@ -221,6 +223,8 @@ namespace Aurora.Settings
         Corsair_STRAFE_MK2 = 207,
         [Description("Corsair - K100")]
         Corsair_K100 = 208,
+        [Description("Corsair - K70 PRO")]
+        Corsair_K70_PRO = 209,
 
         //Razer range is 300-399
         [Description("Razer - Blackwidow")]
@@ -509,7 +513,7 @@ namespace Aurora.Settings
 
     public class Configuration : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         //General Program Settings
         [JsonProperty("allow_peripheral_devices")] public bool AllowPeripheralDevices { get; set; } = true;
@@ -555,33 +559,13 @@ namespace Aurora.Settings
 
         public ObservableCollection<string> ExcludedPrograms { get; set; } = new();
 
-        public ObservableCollection<Type> DevicesDisabled { get; set; } = new()
-        {
-            typeof(AsusDevice),
-            typeof(AtmoOrbDevice),
-            typeof(Devices.Bloody.BloodyDevice),
-            typeof(Devices.Clevo.ClevoDevice),
-            typeof(CorsairRgbNetDevice),
-            typeof(Devices.Drevo.DrevoDevice),
-            typeof(Devices.Ducky.DuckyDevice),
-            typeof(RgbNetDevice),
-            typeof(Devices.Razer.RazerDevice),
-            typeof(Devices.Roccat.RoccatDevice),
-            //typeof(Devices.RGBNet.BloodyRgbNetDevice),
-            typeof(CorsairRgbNetDevice),
-            typeof(LogitechRgbNetDevice),
-            typeof(SteelSeriesRgbNetDevice),
-            typeof(Devices.Omen.OmenDevices),
-            typeof(Devices.Dualshock.DualshockDevice),
-            typeof(Devices.UnifiedHID.UnifiedHIDDevice),
-            typeof(Devices.Uniwill.UniwillDevice),
-            typeof(Devices.Vulcan.VulcanDevice),
-            typeof(Devices.Wooting.WootingDevice),
-            typeof(Devices.YeeLight.YeeLightDevice),
-            typeof(Devices.Creative.SoundBlasterXDevice),
-        };
+        [Obsolete("Use EnabledDevices")]
+        [JsonProperty]
+        private ObservableCollection<Type>? DevicesDisabled { get; set; }
+        
+        public ObservableCollection<Type>? EnabledDevices { get; set; }
 
-        public List<BitmapAccuracy> BitmapAccuracies { get; } = new List<BitmapAccuracy>()
+        public List<BitmapAccuracy> BitmapAccuracies { get; } = new()
         {
             BitmapAccuracy.Good,
             BitmapAccuracy.Okay,
@@ -647,19 +631,51 @@ namespace Aurora.Settings
         [JsonProperty("GSIAudioCaptureDevice", NullValueHandling = NullValueHandling.Ignore)]
         public string GsiAudioCaptureDevice { get; set; } = AudioDevices.DefaultDeviceId;
 
+        private readonly List<Type> _defaultEnabledDevices = new()
+        {
+            typeof(AsusDevice),
+            typeof(CorsairRgbNetDevice),
+            typeof(LogitechRgbNetDevice),
+            typeof(OpenRgbNetDevice),
+        };
+
+        private void EnabledDevicesListMigration()
+        {
+            EnabledDevices ??= MigrateEnabledDevices();
+        }
+
+        private ObservableCollection<Type> MigrateEnabledDevices()
+        {
+            if (DevicesDisabled == null)
+            {
+                return new ObservableCollection<Type>(_defaultEnabledDevices);
+            }
+            return new ObservableCollection<Type>(
+                from type in Assembly.GetExecutingAssembly().GetTypes()
+                where typeof(IDevice).IsAssignableFrom(type)
+                      && !type.IsAbstract
+                      && !DevicesDisabled.Contains(type)
+                select type
+            );
+        }
+
         /// <summary>
         /// Called after the configuration file has been deserialized or created for the first time.
         /// </summary>
         public void OnPostLoad() {
             if (!UnifiedHidDisabled) {
-                DevicesDisabled.Add(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
+                EnabledDevices.Remove(typeof(Devices.UnifiedHID.UnifiedHIDDevice));
                 UnifiedHidDisabled = true;
             }
+            EnabledDevicesListMigration();
 
             // Setup events that will trigger PropertyChanged when child collections change (to trigger a save)
-            ExcludedPrograms.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ExcludedPrograms)));
-            DevicesDisabled.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DevicesDisabled)));
-            EvaluatableTemplates.CollectionChanged += (sender, e) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluatableTemplates)));
+            ExcludedPrograms.CollectionChanged += (_, e) =>
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ExcludedPrograms)));
+            EnabledDevices.CollectionChanged += (_, e) =>
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EnabledDevices)));
+            EvaluatableTemplates.CollectionChanged += (_, e) =>
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(EvaluatableTemplates)));
         }
     }
 
@@ -667,12 +683,7 @@ namespace Aurora.Settings
     {
         public static bool IsAutomaticGeneration(this PreferredKeyboardLocalization self)
         {
-            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.iso;
-        }
-
-        public static bool IsANSI(this PreferredKeyboardLocalization self)
-        {
-            return self == PreferredKeyboardLocalization.ansi || self == PreferredKeyboardLocalization.dvorak || self == PreferredKeyboardLocalization.us;
+            return self is PreferredKeyboardLocalization.ansi or PreferredKeyboardLocalization.iso;
         }
     }
 
@@ -742,16 +753,21 @@ namespace Aurora.Settings
             {
                 e.ErrorContext.Handled = true;
             }
+
+            if (e.ErrorContext.Error.Message.Contains("to type 'System.Type'. Path 'DevicesDisabled.$values"))
+            {
+                e.ErrorContext.Handled = true;
+            }
         }
 
         public static void Save(Configuration configuration)
         {
-            long current_time = Utils.Time.GetMillisecondsSinceEpoch();
+            long currentTime = Time.GetMillisecondsSinceEpoch();
 
-            if (_last_save_time + _save_interval > current_time)
+            if (_last_save_time + _save_interval > currentTime)
                 return;
             else
-                _last_save_time = current_time;
+                _last_save_time = currentTime;
 
             var configPath = ConfigPath + ConfigExtension;
             string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder });
@@ -766,7 +782,7 @@ namespace Aurora.Settings
             var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder });
             var configPath = ConfigPath + ConfigExtension;
 
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, configData, Encoding.UTF8);
 
             return config;

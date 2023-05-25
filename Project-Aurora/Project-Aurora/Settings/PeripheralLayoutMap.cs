@@ -19,6 +19,7 @@ public static class PeripheralLayoutMap
         {PreferredKeyboard.Corsair_K95_PL, "corsair_k95_platinum.json"},
         {PreferredKeyboard.Corsair_K70, "corsair_k70.json"},
         {PreferredKeyboard.Corsair_K70MK2, "corsair_k70_mk2.json"},
+        {PreferredKeyboard.Corsair_K70_PRO, "corsair_k70_pro.json"},
         {PreferredKeyboard.Corsair_K65, "corsair_k65.json"},
         {PreferredKeyboard.Corsair_STRAFE, "corsair_strafe.json"},
         {PreferredKeyboard.Corsair_STRAFE_MK2, "corsair_strafe_mk2.json"},

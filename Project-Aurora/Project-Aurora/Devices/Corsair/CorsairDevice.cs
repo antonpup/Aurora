@@ -42,7 +42,7 @@ namespace Aurora.Devices.Corsair
             return Task.FromResult(true);
         }
 
-        public override Task Shutdown()
+        protected override Task Shutdown()
         {
             CUESDK.SetLayerPriority(0);
             deviceInfos.Clear();

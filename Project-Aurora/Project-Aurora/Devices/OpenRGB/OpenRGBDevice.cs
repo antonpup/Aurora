@@ -23,18 +23,18 @@ namespace Aurora.Devices.OpenRGB
         public override string DeviceName => "OpenRGB";
         protected override string DeviceInfo => string.Join(", ", _devices.Select(d => d.OrgbDevice.Name));
 
-        private OpenRgbClient _openRgb;
-        private List<HelperOpenRgbDevice> _devices;
+        private OpenRgbClient? _openRgb;
+        private readonly List<HelperOpenRgbDevice> _devices = new();
 
-        private SemaphoreSlim _updateLock = new(1);
-        private SemaphoreSlim _initializeLock = new(1);
+        private readonly SemaphoreSlim _updateLock = new(1);
+        private readonly SemaphoreSlim _initializeLock = new(1);
 
         protected override async Task<bool> DoInitialize()
         {
             if (IsInitialized)
                 return true;
 
-            await _initializeLock.WaitAsync().ConfigureAwait(false);
+            await _initializeLock.WaitAsync();
             try
             {
                 var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
@@ -60,7 +60,7 @@ namespace Aurora.Devices.OpenRGB
                 int remainingMillis = connectSleepTimeSeconds * 1000;
                 while (!openrgbRunning)
                 {
-                    await Task.Delay(100).ConfigureAwait(false);
+                    await Task.Delay(100);
                     remainingMillis -= 100;
                     if (remainingMillis <= 0)
                     {
@@ -74,7 +74,7 @@ namespace Aurora.Devices.OpenRGB
                 {
                     try
                     {
-                        _openRgb = new OpenRgbClient(name: "Aurora", ip: ip, port: port, autoconnect: true);
+                        _openRgb = new OpenRgbClient(name: "Aurora", ip: ip, port: port);
                     }
                     catch (Exception)
                     {
@@ -118,7 +118,7 @@ namespace Aurora.Devices.OpenRGB
                 return;
             }
 
-            _devices = new List<HelperOpenRgbDevice>();
+            _devices.Clear();
             Queue<DeviceKeys> mouseLights = new Queue<DeviceKeys>(OpenRgbKeyNames.MouseLights);
 
             var fallbackKey = Global.Configuration.VarRegistry.GetVariable<DK>($"{DeviceName}_fallback_key");
@@ -127,9 +127,9 @@ namespace Aurora.Devices.OpenRGB
             {
                 foreach (var device in _openRgb.GetAllControllerData())
                 {
-                    var directMode = device.Modes.FirstOrDefault(m => m.Name.Equals("Direct"));
-                    if (directMode == null) continue;
-                    _openRgb.SetMode(device.Index, device.Modes.FindIndex(mode => mode == directMode));
+                    var directMode = device.Modes.FindIndex(mode => mode.Name.Trim() == "Direct");
+                    if (directMode == -1) continue;
+                    _openRgb.UpdateMode(device.Index, directMode);
                     var helper = new HelperOpenRgbDevice(device.Index, device, fallbackKey, mouseLights);
                     helper.ProcessMappings(fallbackKey);
                     _devices.Add(helper);
@@ -138,16 +138,16 @@ namespace Aurora.Devices.OpenRGB
             }
             finally
             {
-            _updateLock.Release();
+                _updateLock.Release();
             }
         }
 
-        public override async Task Shutdown()
+        protected override async Task Shutdown()
         {
             if (!IsInitialized)
                 return;
 
-            await _initializeLock.WaitAsync().ConfigureAwait(false);
+            await _initializeLock.WaitAsync();
             foreach (var d in _devices)
             {
                 try
