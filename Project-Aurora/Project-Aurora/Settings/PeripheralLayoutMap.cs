@@ -111,6 +111,7 @@ public static class PeripheralLayoutMap
         {PreferredMousepad.SteelSeries_QcK_Prism, "steelseries_qck_prism_features.json"},
         {PreferredMousepad.SteelSeries_QcK_2_Zone, "steelseries_qck_2zone_features.json"},
         {PreferredMousepad.Bloody_MP50RS, "bloody_mp-50rs.json"},
+        {PreferredMousepad.Razer_19_Led, "razer_19_leds.json"},
     };
 
     public static readonly IReadOnlyDictionary<PreferredMousepad, string> MousepadLayoutMap = new ReadOnlyDictionary<PreferredMousepad, string>(MousepadLayouts);

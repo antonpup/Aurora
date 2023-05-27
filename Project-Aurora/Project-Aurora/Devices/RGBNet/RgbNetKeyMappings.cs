@@ -172,6 +172,12 @@ public static class RgbNetKeyMappings
         {LedId.Mousepad13 , DeviceKeys.MOUSEPADLIGHT13},
         {LedId.Mousepad14 , DeviceKeys.MOUSEPADLIGHT14},
         {LedId.Mousepad15 , DeviceKeys.MOUSEPADLIGHT15},
+        {LedId.Mousepad16 , DeviceKeys.MOUSEPADLIGHT16},
+        {LedId.Mousepad17 , DeviceKeys.MOUSEPADLIGHT17},
+        {LedId.Mousepad18 , DeviceKeys.MOUSEPADLIGHT18},
+        {LedId.Mousepad19 , DeviceKeys.MOUSEPADLIGHT19},
+        {LedId.Mousepad20 , DeviceKeys.MOUSEPADLIGHT20},
+        {LedId.Mousepad21 , DeviceKeys.MOUSEPADLIGHT21},
     };
     public static readonly ReadOnlyDictionary<LedId, DeviceKeys> KeyNames = new(KeyNameMap);
 }

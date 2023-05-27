@@ -466,7 +466,7 @@ namespace Aurora.Settings
         [Description("2 Zone + Logo Mousepad")]
         Two_Zone_Plus_Logo_Mousepad = 2,
         
-        [Description("Custom Mouse")]
+        [Description("Custom Mousepad")]
         Custom = 3,
 
         //Steelseries range is 100-299
@@ -476,6 +476,9 @@ namespace Aurora.Settings
         SteelSeries_QcK_2_Zone = 101,
         [Description("Bloody - MP-50RS")]
         Bloody_MP50RS = 102,
+
+        [Description("Razer 19 Led")]
+        Razer_19_Led = 103,
     }
 
 

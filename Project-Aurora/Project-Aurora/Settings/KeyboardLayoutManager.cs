@@ -689,11 +689,6 @@ public class KeyboardLayoutManager
         return (int) Math.Round(pixel / (double) Global.Configuration.BitmapAccuracy);
     }
 
-    private static int BestPixelToByte(double pixel)
-    {
-        return (int) Math.Round(pixel);
-    }
-
     private int PixelToByte(double pixel)
     {
         return _pixelToByte(pixel);
@@ -702,14 +697,7 @@ public class KeyboardLayoutManager
     private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e is not {PropertyName: nameof(Configuration.BitmapAccuracy)}) return;
-        if (Global.Configuration.BitmapAccuracy == BitmapAccuracy.Best)
-        {
-            _pixelToByte = BestPixelToByte;
-        }
-        else
-        {
-            _pixelToByte = DefaultPixelToByte;
-        }
+        _pixelToByte = DefaultPixelToByte;
 
         Global.LightingStateManager.PostUpdate += LightingStateManager_PostUpdate;
     }

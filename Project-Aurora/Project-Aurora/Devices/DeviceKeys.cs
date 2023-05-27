@@ -1430,6 +1430,42 @@ namespace Aurora.Devices
         PERIPHERAL_DPI = 237, 
 
         /// <summary>
+        /// Mousepad Light 2
+        /// </summary>
+        [Description("Mousepad Light 16")]
+        MOUSEPADLIGHT16 = 238,
+
+        /// <summary>
+        /// Mousepad Light 2
+        /// </summary>
+        [Description("Mousepad Light 17")]
+        MOUSEPADLIGHT17 = 239,
+
+        /// <summary>
+        /// Mousepad Light 1
+        /// </summary>
+        [Description("Mousepad Light 18")]
+        MOUSEPADLIGHT18 = 240,
+
+        /// <summary>
+        /// Mousepad Light 2
+        /// </summary>
+        [Description("Mousepad Light 19")]
+        MOUSEPADLIGHT19 = 241,
+
+        /// <summary>
+        /// Mousepad Light 1
+        /// </summary>
+        [Description("Mousepad Light 20")]
+        MOUSEPADLIGHT20 = 242,
+
+        /// <summary>
+        /// Mousepad Light 2
+        /// </summary>
+        [Description("Mousepad Light 21")]
+        MOUSEPADLIGHT21 = 243,
+
+        /// <summary>
         /// Additional Light 33
         /// </summary>
         [Description("Additional Light 33")]
