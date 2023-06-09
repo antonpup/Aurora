@@ -279,16 +279,6 @@
         "resolved": "2.0.0-z.1",
         "contentHash": "r5bH2ligwwT9JA/+2F6mRRNWnn7P1xTxSG71AGeLoVT6nfXosu3SlmqVQW3JxwfBqcLGi4J9nVofXirLQ/zrKw=="
       },
-      "RGB.NET.Devices.Asus": {
-        "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "RjYm7GYs7/lxKv+DEAJq8Hr9+OgkDJxeRf4EOo9ZRI7T74zGO9DGiGEH2ZKOSXABJXwb2cfZqDYAoXt0pElzQg==",
-        "dependencies": {
-          "RGB.NET.Core": "2.0.0-z.1",
-          "System.Management": "6.0.0"
-        }
-      },
       "RGB.NET.Devices.CoolerMaster": {
         "type": "Direct",
         "requested": "[2.0.0-z.1, )",
@@ -371,9 +361,9 @@
       },
       "System.Management": {
         "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "sHsESYMmPDhQuOC66h6AEOs/XowzKsbT9srMbX71TCXP58hkpn1BqBjdmKj1+DCA/WlBETX1K5WjQHwmV0Txrg==",
+        "requested": "[6.0.1, )",
+        "resolved": "6.0.1",
+        "contentHash": "10J1D0h/lioojphfJ4Fuh5ZUThT/xOVHdV9roGBittKKNP2PMjrvibEdbVTGZcPra1399Ja3tqIJLyQrc5Wmhg==",
         "dependencies": {
           "System.CodeDom": "6.0.0"
         }
@@ -1965,9 +1955,9 @@
     "net6.0-windows10.0.19041/win10-x64": {
       "System.Management": {
         "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "sHsESYMmPDhQuOC66h6AEOs/XowzKsbT9srMbX71TCXP58hkpn1BqBjdmKj1+DCA/WlBETX1K5WjQHwmV0Txrg==",
+        "requested": "[6.0.1, )",
+        "resolved": "6.0.1",
+        "contentHash": "10J1D0h/lioojphfJ4Fuh5ZUThT/xOVHdV9roGBittKKNP2PMjrvibEdbVTGZcPra1399Ja3tqIJLyQrc5Wmhg==",
         "dependencies": {
           "System.CodeDom": "6.0.0"
         }
