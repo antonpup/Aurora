@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Aurora.Settings;
+﻿using Aurora.Settings;
 using RGB.NET.Devices.OpenRGB;
 
 namespace Aurora.Devices.RGBNet;
@@ -23,7 +22,7 @@ public class OpenRgbNetDevice : RgbNetDevice
         _openRgbServerDefinition.Ip = ip;
         _openRgbServerDefinition.Port = port;
 
-        Provider.DeviceDefinitions.Add(_openRgbServerDefinition);
+        Provider.AddDeviceDefinition(_openRgbServerDefinition);
     }
 
     protected override void RegisterVariables(VariableRegistry variableRegistry)

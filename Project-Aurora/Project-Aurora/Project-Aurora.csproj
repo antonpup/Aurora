@@ -59,9 +59,6 @@
     <Reference Include="YeeLightAPI">
       <HintPath>.\YeeLightAPI.dll</HintPath>
     </Reference>
-    <Reference Include="OpenRGB.NET">
-      <HintPath>.\OpenRGB.NET.dll</HintPath>
-    </Reference>
     <Reference Include="Bloody.NET">
       <HintPath>.\x64\Bloody.NET.dll</HintPath>
     </Reference>

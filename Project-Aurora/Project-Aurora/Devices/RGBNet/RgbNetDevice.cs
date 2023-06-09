@@ -106,6 +106,7 @@ public abstract class RgbNetDevice : DefaultDevice
             return false;
         }
 
+        ErrorMessage = null;
         OnInitialized();
         return true;
     }
