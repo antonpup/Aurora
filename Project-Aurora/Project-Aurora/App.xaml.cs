@@ -70,6 +70,7 @@ public partial class App
             UseArgs(e);
 
             AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.AppendPrivatePath("x64");
             if (!Global.isDebug)
                 currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 

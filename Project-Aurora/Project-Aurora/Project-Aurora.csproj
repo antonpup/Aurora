@@ -39,23 +39,23 @@
   <ItemGroup>
     <Reference Include="DS4WindowsApi, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\DS4WindowsApi.dll</HintPath>
+      <HintPath>.\x64\DS4WindowsApi.dll</HintPath>
     </Reference>
     <Reference Include="OmenFourZoneLighting, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\OmenFourZoneLighting.dll</HintPath>
+      <HintPath>.\x64\OmenFourZoneLighting.dll</HintPath>
     </Reference>
     <Reference Include="RazerSdkWrapper, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\RazerSdkWrapper.dll</HintPath>
+      <HintPath>.\x64\RazerSdkWrapper.dll</HintPath>
     </Reference>
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\Roccat-Talk.dll</HintPath>
+      <HintPath>.\x64\Roccat-Talk.dll</HintPath>
     </Reference>
     <Reference Include="UniwillSDKDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\UniwillSDKDLL.dll</HintPath>
+      <HintPath>.\x64\UniwillSDKDLL.dll</HintPath>
     </Reference>
     <Reference Include="YeeLightAPI">
       <HintPath>.\YeeLightAPI.dll</HintPath>
@@ -64,14 +64,14 @@
       <HintPath>.\OpenRGB.NET.dll</HintPath>
     </Reference>
     <Reference Include="Bloody.NET">
-      <HintPath>.\Bloody.NET.dll</HintPath>
+      <HintPath>.\x64\Bloody.NET.dll</HintPath>
     </Reference>
     <Reference Include="SBAuroraReactive">
-      <HintPath>.\SBAuroraReactive.dll</HintPath>
+      <HintPath>.\x64\SBAuroraReactive.dll</HintPath>
     </Reference>
     <!-- https://github.com/Aytackydln/Artemis.Plugins.Games.Witcher3 -->
     <Reference Include="Artemis.Plugins.Games.Witcher3">
-      <HintPath>.\Witcher3Gsi.dll</HintPath>
+      <HintPath>.\x64\Witcher3Gsi.dll</HintPath>
     </Reference>
   </ItemGroup>
 
@@ -152,10 +152,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="x64\iCUESDK.x64_2019.dll">
+    <Content Include="x64\Interop.AuraServiceLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CUESDK.x64_2017.dll">
+    <Content Include="x64\iCUESDK.x64_2019.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="x64\CMSDK.dll">
@@ -164,16 +164,16 @@
     <Content Include="x64\LogitechLedEnginesWrapper.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="DrevoRadi.dll">
+    <Content Include="x64\DrevoRadi.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="LightFX_SDK.dll">
+    <Content Include="x64\LightFX_SDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="OmenLightingSDK.dll">
+    <Content Include="x64\OmenLightingSDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="wooting-rgb-sdk.dll">
+    <Content Include="x64\wooting-rgb-sdk.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CroccatTalkWrapper\win32-x86-64\talkfx-c.dll">
@@ -185,22 +185,22 @@
     <Content Include="Logi\LGS\LogitechLed.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ClplLEDController.dll">
+    <Content Include="x64\ClplLEDController.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CTDrvLedMgr.dll">
+    <Content Include="x64\CTDrvLedMgr.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CTHID.dll">
+    <Content Include="x64\CTHID.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CTHIDRpA.dll">
+    <Content Include="x64\CTHIDRpA.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CTIntrfu.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CTLEDMgr.dll">
+    <Content Include="x64\CTLEDMgr.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
