@@ -451,7 +451,6 @@ public sealed class LightingStateManager : IInit
             }
             return;
         }
-        Global.dev_manager.InitializeOnce();
         debugTimer.Restart();
 
         //Need to do another check in case Desktop is disabled or the selected preview is disabled

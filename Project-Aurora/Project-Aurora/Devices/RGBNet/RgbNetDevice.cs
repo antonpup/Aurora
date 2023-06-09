@@ -52,9 +52,9 @@ public abstract class RgbNetDevice : DefaultDevice
 
         void DeviceProviderOnException(object sender, ExceptionEventArgs e)
         {
-            providerExceptions.Add(e.Exception);
-            ErrorMessage = e.Exception.Message;
             Global.logger.Error(e.Exception, "Device provider {DeviceProvider} threw exception", DeviceName);
+            ErrorMessage = e.Exception.Message;
+            providerExceptions.Add(e.Exception);
 
             if (e.IsCritical)
             {
@@ -62,42 +62,50 @@ public abstract class RgbNetDevice : DefaultDevice
             }
         }
 
-        ConfigureProvider();
-
-        Provider.DeviceAdded += ProviderOnDeviceAdded;
-        Provider.DeviceRemoved += ProviderOnDeviceRemoved;
-        Provider.Exception += DeviceProviderOnException;
-        var connectSleepTimeSeconds =
-            Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
-        var remainingMillis = connectSleepTimeSeconds * 1000;
-        do
+        try
         {
-            providerExceptions.Clear();
-            criticalExceptions.Clear();
-            Provider.Initialize();
-            if (criticalExceptions.Any())
-            {
-                break;
-            }
-            if (providerExceptions.Count == 0)
-            {
-                IsInitialized = true;
-                break;
-            }
+            ConfigureProvider();
 
-            await Task.Delay(1000);
-            remainingMillis -= 1000;
-        } while (remainingMillis > 0);
+            Provider.Exception += DeviceProviderOnException;
+            Provider.DeviceAdded += ProviderOnDeviceAdded;
+            Provider.DeviceRemoved += ProviderOnDeviceRemoved;
+            var connectSleepTimeSeconds =
+                Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
+            var remainingMillis = connectSleepTimeSeconds * 1000;
+            
+            do
+            {
+                providerExceptions.Clear();
+                criticalExceptions.Clear();
+                Provider.Initialize();
+                if (criticalExceptions.Count != 0)
+                {
+                    break;
+                }
+
+                if (providerExceptions.Count == 0)
+                {
+                    IsInitialized = true;
+                    break;
+                }
+
+                await Task.Delay(1000);
+                remainingMillis -= 1000;
+            } while (remainingMillis > 0);
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = e.Message;
+        }
         Provider.Exception -= DeviceProviderOnException;
 
-        if (!IsInitialized || providerExceptions.Count >= 1)
+        if (!IsInitialized)
         {
             Provider.DeviceAdded -= ProviderOnDeviceAdded;
             Provider.DeviceRemoved -= ProviderOnDeviceRemoved;
             return false;
         }
 
-        ErrorMessage = null;
         OnInitialized();
         return true;
     }
@@ -134,33 +142,29 @@ public abstract class RgbNetDevice : DefaultDevice
             DeviceCountMap.Add(deviceName, 1);
         }
 
-        var rgbNetConfigDevices =
-            DeviceMappingConfig.Config.Devices.ToDictionary(device1 => device1.Name, device2 => device2);
-        RemapDeviceKeys(rgbNetConfigDevices, device);
-    }
-
-    private void RemapKeys()
-    {
-        var rgbNetConfigDevices =
-            DeviceMappingConfig.Config.Devices.ToDictionary(device => device.Name, device => device);
-        foreach (var rgbDevice in Devices())
+        Task.Run(() =>
         {
-            RemapDeviceKeys(rgbNetConfigDevices, rgbDevice);
-        }
+            var rgbNetConfigDevices =
+                DeviceMappingConfig.Config.Devices.ToDictionary(device1 => device1.Name, device2 => device2);
+            RemapDeviceKeys(rgbNetConfigDevices, device);
+        });
     }
 
     private void RemapDeviceKeys(IReadOnlyDictionary<string, RgbNetConfigDevice> rgbNetConfigDevices, IRGBDevice rgbDevice)
     {
         if (rgbNetConfigDevices.TryGetValue(rgbDevice.DeviceInfo.DeviceName, out var configDevice))
         {
-            DeviceKeyRemap.Add(rgbDevice, configDevice.KeyMapper);
+            DeviceKeyRemap.TryAdd(rgbDevice, configDevice.KeyMapper);
         }
     }
 
     protected override Task Shutdown()
     {
         OnShutdown();
-        Provider.Dispose();
+        if (Provider.IsInitialized)
+        {
+            Provider.Dispose();
+        }
         Provider.DeviceAdded -= ProviderOnDeviceAdded;
         Provider.DeviceRemoved -= ProviderOnDeviceRemoved;
         
@@ -253,6 +257,9 @@ public abstract class RgbNetDevice : DefaultDevice
     {
         base.Dispose(disposing);
 
-        Provider.Dispose();
+        if (IsInitialized)
+        {
+            ShutdownDevice();
+        }
     }
 }

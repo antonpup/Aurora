@@ -19,7 +19,7 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     protected virtual string DeviceInfo => "";
 
-    public virtual string DeviceDetails => DeviceInfo ?? "";
+    public virtual string DeviceDetails => DeviceInfo;
 
     public string DeviceUpdatePerformance => IsInitialized
         ? _lastUpdateTime + "(" + _updateTime + ")" + " ms"
@@ -48,7 +48,10 @@ public abstract class DefaultDevice : IDevice, IDisposable
         try
         {
             isDoingWork = true;
-            await Shutdown();
+            if (IsInitialized)
+            {
+                await Shutdown();
+            }
         }
         finally
         {
