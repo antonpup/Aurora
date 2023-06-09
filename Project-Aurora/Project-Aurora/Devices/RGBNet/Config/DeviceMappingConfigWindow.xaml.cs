@@ -121,7 +121,7 @@ public partial class DeviceMappingConfigWindow
                 if (!rgbNetDevice.DeviceKeyRemap.TryGetValue(device, out var deviceKeyMap))
                 {
                     deviceKeyMap = new Dictionary<LedId, DeviceKeys>();
-                    rgbNetDevice.DeviceKeyRemap.Add(device, deviceKeyMap);
+                    rgbNetDevice.DeviceKeyRemap.TryAdd(device, deviceKeyMap);
                 }
 
                 if (newKey == null)

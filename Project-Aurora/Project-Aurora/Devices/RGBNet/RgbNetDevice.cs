@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,7 +15,7 @@ public abstract class RgbNetDevice : DefaultDevice
 {
     public bool Disabled { get; set; }
     protected abstract IRGBDeviceProvider Provider { get; }
-    public Dictionary<IRGBDevice, Dictionary<LedId, DeviceKeys>> DeviceKeyRemap { get; } = new();
+    public ConcurrentDictionary<IRGBDevice, Dictionary<LedId, DeviceKeys>> DeviceKeyRemap { get; } = new();
     protected string? ErrorMessage { get; set; }
     protected override string DeviceInfo => ErrorMessage ?? GetDeviceStatus();
 
