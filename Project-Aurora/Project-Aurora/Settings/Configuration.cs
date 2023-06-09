@@ -13,13 +13,12 @@ using System.Reflection;
 using System.Windows;
 using Aurora.Devices;
 using Aurora.Devices.AtmoOrb;
+using Aurora.Devices.Corsair;
 using Aurora.Devices.OpenRGB;
 using Aurora.Devices.RGBNet;
+using Aurora.Devices.SteelSeries;
 using Aurora.Modules.AudioCapture;
-using Aurora.Profiles;
 using Aurora.Settings.Overrides.Logic;
-using Define;
-using static Aurora.Modules.HardwareMonitor.HardwareMonitor;
 
 namespace Aurora.Settings
 {
@@ -649,17 +648,34 @@ namespace Aurora.Settings
 
         private ObservableCollection<Type> MigrateEnabledDevices()
         {
+            ObservableCollection<Type> enabledDevices;
             if (DevicesDisabled == null)
             {
-                return new ObservableCollection<Type>(_defaultEnabledDevices);
+                enabledDevices = new ObservableCollection<Type>(_defaultEnabledDevices);
             }
-            return new ObservableCollection<Type>(
-                from type in Assembly.GetExecutingAssembly().GetTypes()
-                where typeof(IDevice).IsAssignableFrom(type)
-                      && !type.IsAbstract
-                      && !DevicesDisabled.Contains(type)
-                select type
-            );
+            else
+            {
+                enabledDevices = new ObservableCollection<Type>(
+                    from type in Assembly.GetExecutingAssembly().GetTypes()
+                    where typeof(IDevice).IsAssignableFrom(type)
+                          && !type.IsAbstract
+                          && !DevicesDisabled.Contains(type)
+                    select type
+                );
+            }
+            if (enabledDevices.Contains(typeof(OpenRgbNetDevice)))
+            {
+                enabledDevices.Remove(typeof(OpenRgbAuroraDevice));
+            }
+            if (enabledDevices.Contains(typeof(CorsairRgbNetDevice)))
+            {
+                enabledDevices.Remove(typeof(CorsairDevice));
+            }
+            if (enabledDevices.Contains(typeof(SteelSeriesRgbNetDevice)))
+            {
+                enabledDevices.Remove(typeof(SteelSeriesDevice));
+            }
+            return enabledDevices;
         }
 
         /// <summary>
