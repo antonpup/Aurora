@@ -7,7 +7,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <WarningLevel>0</WarningLevel>
     <OutputType>WinExe</OutputType>
-    <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Aurora</RootNamespace>
@@ -79,7 +78,7 @@
     <PackageReference Include="Colore" Version="6.0.0" />
     <PackageReference Include="CorsairRGB.NET" Version="1.1.0" />
     <PackageReference Include="CS-Script" Version="4.6.2" />
-    <PackageReference Include="Dubya.WindowsMediaController" Version="2.3.2" />
+    <PackageReference Include="Dubya.WindowsMediaController" Version="2.5.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="Fody" Version="6.6.4" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
