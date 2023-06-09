@@ -242,6 +242,10 @@ public partial class App
 
     protected override void OnExit(ExitEventArgs e)
     {
+        if (_closing)
+        {
+            return;
+        }
         _closing = true;
         base.OnExit(e);
 
@@ -252,11 +256,10 @@ public partial class App
         var devicesShutdown = Global.dev_manager?.ShutdownDevices().ContinueWith(_ => Global.dev_manager.Dispose());
         tasks.Add(devicesShutdown);
         
-        Environment.ExitCode = 0;
         var forceExitTimer = StartForceExitTimer();
-        forceExitTimer.DisableComObjectEagerCleanup();
 
         Task.WhenAll(tasks).Wait();
+        forceExitTimer.GetApartmentState(); //statement just to keep referenced
     }
 
     private Thread StartForceExitTimer()
