@@ -137,7 +137,6 @@
 
   <!-- *********************************  AccordionButton Style  ********************************* -->
   <Style x:Key="AccordionButtonStyle" TargetType="layoutToolkitPrimitives:AccordionButton">
-    <Setter Property="FontFamily" Value="Segoe UI" />
     <Setter Property="FontSize" Value="14.667" />
     <Setter Property="Foreground" Value="{StaticResource LightForegroundBrush}" />
     <Setter Property="Background" Value="{StaticResource AccordionButtonBackgroundBrush}" />
@@ -477,7 +476,6 @@
 
 	<!-- *********************************  ExpandableContentControl Style  ********************************* -->
 	<Style x:Key="ExpandableContentControlStyle" TargetType="layoutToolkitPrimitives:ExpandableContentControl">
-		<Setter Property="FontFamily" Value="Segoe UI" />
 		<Setter Property="FontSize" Value="13.333" />
 		<Setter Property="BorderThickness" Value="0" />
 		<Setter Property="Padding" Value="15,7" />
@@ -497,7 +495,6 @@
 
 	<!-- *********************************  AccordionItem Style  ********************************* -->
 	<Style x:Key="AccordionItemStyle" TargetType="layoutToolkit:AccordionItem">
-		<Setter Property="FontFamily" Value="Segoe UI" />
 		<Setter Property="FontSize" Value="14.667" />
 		<Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
         <Setter Property="Background" Value="{StaticResource AccordionItemBackgroundBrush}" />
@@ -826,7 +823,6 @@
 
   <!-- *********************************  AutoCompleteBox Style  ********************************* -->
   <Style x:Key="AutoCompleteBoxStyle" TargetType="{x:Type inputToolkit:AutoCompleteBox}">
-    <Setter Property="FontFamily" Value="Segoe UI" />
     <Setter Property="FontSize" Value="14.667" />
     <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
     <Setter Property="Background" Value="{StaticResource TextBoxBackgroundBrush}" />

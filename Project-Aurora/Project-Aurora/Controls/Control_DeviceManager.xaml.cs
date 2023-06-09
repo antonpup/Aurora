@@ -13,11 +13,6 @@ public partial class Control_DeviceManager
         InitializeComponent();
     }
 
-    private void btnRefresh_Click(object sender, RoutedEventArgs e)
-    {
-        UpdateControls();
-    }
-
     private void UserControl_Loaded(object sender, RoutedEventArgs e)
     {
         UpdateControls();
@@ -35,7 +30,7 @@ public partial class Control_DeviceManager
             {
                 await Global.dev_manager.ShutdownDevices();
                 await Global.dev_manager.InitializeDevices();
-                Dispatcher.Invoke(() => UpdateControls());
+                Dispatcher.Invoke(UpdateControls);
             });
         }
 

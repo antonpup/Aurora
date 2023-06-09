@@ -55,33 +55,22 @@ namespace Aurora.Controls
 
         private void btnToggleOnOff_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button)
+            btnStart.Content = "Working...";
+            btnStart.IsEnabled = false;
+            var device = Device;
+            Task.Run(async () =>
             {
-                btnStart.Content = "Working...";
-                btnStart.IsEnabled = false;
-                var device = Device;
-                Task.Run(async () =>
+                if (device.Device.IsInitialized)
                 {
-                    await device.ActionLock.WaitAsync();
-                    try
-                    {
-                        if (device.Device.IsInitialized)
-                        {
-                            await device.DisableDevice().ConfigureAwait(false);
-                        }
-                        else
-                        {
-                            await device.EnableDevice();
-                        }
-                    }
-                    finally
-                    {
-                        device.ActionLock.Release();
-                    }
+                    await device.DisableDevice().ConfigureAwait(false);
+                }
+                else
+                {
+                    await device.EnableDevice();
+                }
 
-                    Dispatcher.Invoke(UpdateControls);
-                });
-            }
+                Dispatcher.Invoke(UpdateControls);
+            });
         }
 
         private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
@@ -99,17 +88,9 @@ namespace Aurora.Controls
                 btnStart.IsEnabled = false;
                 Task.Run(async () =>
                 {
-                    await device.ActionLock.WaitAsync();
-                    try
+                    if (device.Device.IsInitialized)
                     {
-                        if (device.Device.IsInitialized)
-                        {
-                            await device.Device.ShutdownDevice();
-                        }
-                    }
-                    finally
-                    {
-                        device.ActionLock.Release();
+                        await device.DisableDevice();
                     }
 
                     Dispatcher.Invoke(UpdateControls);

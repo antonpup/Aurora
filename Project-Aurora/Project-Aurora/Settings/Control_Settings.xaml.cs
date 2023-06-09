@@ -98,7 +98,6 @@ public partial class Control_Settings
         LnkContributors.NavigateUri = new Uri($"https://github.com/{o}/{r}#contributors-");
 
         var rzVersion = RzHelper.GetSdkVersion();
-        var rzSdkEnabled = RzHelper.IsSdkEnabled();
 
         ChromaInstalledVersionLabel.Content = rzVersion.ToString();
         ChromaInstalledVersionLabel.Foreground = new SolidColorBrush(
@@ -107,9 +106,6 @@ public partial class Control_Settings
 
         if (rzVersion == new RzSdkVersion())
             ChromaUninstallButton.Visibility = Visibility.Hidden;
-
-        ChromaEnabledLabel.Content = rzSdkEnabled ? "Enabled" : "Disabled";
-        ChromaEnabledLabel.Foreground = rzSdkEnabled ? new SolidColorBrush(Colors.LightGreen) : new SolidColorBrush(Colors.DarkGray);
 
         var razerManager = rzSdkManager.Result;
         if (razerManager != null)

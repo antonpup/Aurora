@@ -29,26 +29,6 @@ namespace Aurora.Modules.Razer
         /// </summary>
         public static RzSdkVersion SupportedToVersion => new(4, 0, 0);
 
-        public static bool IsSdkEnabled()
-        {
-            try
-            {
-                using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-                var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-                if (key is null)
-                {
-                    return false;
-                }
-                return (int)key.GetValue("Enable", 0) == 1;
-            }
-            catch
-            {
-                // NOOP
-            }
-
-            return false;
-        }
-
         public static RzSdkVersion GetSdkVersion()
         {
             try
