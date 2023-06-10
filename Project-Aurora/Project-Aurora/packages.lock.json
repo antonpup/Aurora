@@ -76,12 +76,6 @@
         "resolved": "3.3.40",
         "contentHash": "8KEiKYk4nmK3OyV+kQr8DwLcl8L+sPUPqENhtWTzQJrhFzGSaKe1F4VDG/bRBSfkbS0AxkM5+AN8xanxsAWfWA=="
       },
-      "Infragistics.Themes.MetroDark.Wpf": {
-        "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "uYKbGZ3m5ogeuhoJoGu79kTnRrq9gEeImKCHUj8MY5OF2pv2XMHPPs0HrGT5AER4mX72Bl3oi4qTEsNQ3citrQ=="
-      },
       "IronPython": {
         "type": "Direct",
         "requested": "[2.7.12, )",
@@ -222,6 +216,12 @@
           "System.Threading.AccessControl": "6.0.0",
           "System.Web.Services.Description": "4.9.0"
         }
+      },
+      "ModernWpfUI": {
+        "type": "Direct",
+        "requested": "[0.9.6, )",
+        "resolved": "0.9.6",
+        "contentHash": "eWe90HciyudQQtZVbZ9QFssS74BwK69W7cBd52AEZHmrsS4hrSA+/BpUbAFWzzFDH6FBE1xsHPiRC+wHS7xgJw=="
       },
       "MouseKeyHook.NetCore": {
         "type": "Direct",
@@ -447,6 +447,12 @@
         "requested": "[1.2.0, )",
         "resolved": "1.2.0",
         "contentHash": "9hxNTjymcvHf6S/Bc1NK5DwH7fwytspmWf7LhClfNA2l5Asrkct4jyLhVcmDjhg+TzfuFTkQ7u/qxb87SS6JcQ=="
+      },
+      "WPFToolkits": {
+        "type": "Direct",
+        "requested": "[3.5.50211.1, )",
+        "resolved": "3.5.50211.1",
+        "contentHash": "CJ2hQCO4gBlMd4OyagGwVYETd99OsG0cn7d0ZlJFLlTK9R5qcLQp4R8+Tp3ZL6Lf3JxZhMTWWsJG0+4KJ97Spg=="
       },
       "DynamicLanguageRuntime": {
         "type": "Transitive",

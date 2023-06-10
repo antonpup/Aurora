@@ -14,11 +14,11 @@
   <Color x:Key="Color_002">#FFBABABA</Color>
   <Color x:Key="Color_003">#FF858585</Color>
   <Color x:Key="Color_004">#FF747474</Color>
-  <Color x:Key="Color_005">#FF565656</Color>
-  <Color x:Key="Color_006">#FF454545</Color>
-  <Color x:Key="Color_007">#FF333333</Color>
-  <Color x:Key="Color_008">#FF292929</Color>
-  <Color x:Key="Color_009">#FF181818</Color>
+  <Color x:Key="Color_005">#66565656</Color>
+  <Color x:Key="Color_006">#66454545</Color>
+  <Color x:Key="Color_007">#99333333</Color>
+  <Color x:Key="Color_008">#66181818</Color>
+  <Color x:Key="Color_009">#99181818</Color>
 
   <!--Transparent and Whites with transparency-->
   <Color x:Key="Color_010">#E5FFFFFF</Color>

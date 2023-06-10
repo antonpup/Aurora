@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:Aurora"
              xmlns:tb="http://www.hardcodet.net/taskbar"
              xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.ConfigUI"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
+             ui:WindowHelper.FixMaximizedWindow="True"
+             WindowStyle="SingleBorderWindow"
              Height="{Binding Source={x:Static local:Global.Configuration}, Path=Height, Mode=TwoWay}"
              Width="{Binding Source={x:Static local:Global.Configuration}, Path=Width, Mode=TwoWay}"
              Left="{Binding Source={x:Static local:Global.Configuration}, Path=Left, Mode=TwoWay}"
@@ -14,17 +17,27 @@
              mc:Ignorable="d" Title="Aurora" Loaded="Window_Loaded" Initialized="Window_Initialized"
              Closing="Window_Closing" Activated="Window_Activated" Deactivated="Window_Deactivated" HorizontalContentAlignment="Stretch"
              MinWidth="800" MinHeight="575" 
-             DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeChanged="Window_SizeChanged">
-    <DockPanel x:Name="bg_grid" Background="#FF660000">
+             DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeChanged="Window_SizeChanged"
+             Background="Transparent"
+             >
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="20"
+            ResizeBorderThickness="8"
+            CornerRadius="0"
+            GlassFrameThickness="-1"
+            UseAeroCaptionButtons="True" />
+    </WindowChrome.WindowChrome>
+    <DockPanel x:Name="bg_grid" Background="#AA660000" Margin="0, 25, 0, 0">
         <tb:TaskbarIcon x:Name="trayicon"
 			Visibility="Visible"
 			ToolTipText="Aurora"
 			IconSource="Resources/aurora_icon.ico" TrayMouseDoubleClick="trayicon_TrayMouseDoubleClick">
             <tb:TaskbarIcon.ContextMenu>
-                <ContextMenu Background="#FF181818" HorizontalContentAlignment="Center">
+                <ContextMenu Background="#88181818" HorizontalContentAlignment="Center">
                     <ContextMenu.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Background="#FF181818" />
+                            <StackPanel Background="#88181818" />
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
                     <ContextMenu.ItemTemplate>
@@ -47,7 +60,7 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
         <Grid x:Name="profiles_background" HorizontalAlignment="Left" Width="56" Background="#3F000000">
-            <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0" ScrollChanged="ScrollViewer_ScrollChanged" SizeChanged="ScrollViewer_SizeChanged">
+            <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0">
                 <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0">
                     <StackPanel.ContextMenu>
                         <ContextMenu x:Name="cmenuProfiles" Opened="ContextMenu_Opened" ContextMenuOpening="cmenuProfiles_ContextMenuOpening">

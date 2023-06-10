@@ -3,10 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:s="clr-namespace:System;assembly=mscorlib"
              xmlns:u="clr-namespace:Aurora.Utils"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
              DispatcherUnhandledException="App_DispatcherUnhandledException">
 
     <Application.Resources>
         <ResourceDictionary>
+            <!-- modern wpf -->
+            <ResourceDictionary.MergedDictionaries>
+                <ui:ThemeResources />
+                <ui:XamlControlsResources />
+            </ResourceDictionary.MergedDictionaries>
+            
             <!-- Global converters -->
             <u:DrawingMediaColorConverter x:Key="DrawingToMediaColorConv" />
             <u:EffectMediaBrushConverter x:Key="EffectToMediaBrushConv" />

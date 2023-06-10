@@ -13,6 +13,7 @@ using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Controls;
@@ -25,7 +26,6 @@ using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
 using Hardcodet.Wpf.TaskbarNotification;
-using JetBrains.Annotations;
 using PropertyChanged;
 using RazerSdkWrapper;
 using Application = Aurora.Profiles.Application;
@@ -42,10 +42,10 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Control_LayerControlPresenter _layerPresenter = new();
     private readonly Control_ProfileControlPresenter _profilePresenter = new();
 
-    private readonly EffectColor _desktopColorScheme = new(0, 0, 0);
+    private readonly EffectColor _desktopColorScheme = new(0, 0, 0, 0);
 
     private readonly EffectColor _transitionColor = new();
-    private EffectColor _currentColor = new();
+    private EffectColor _currentColor = new(0, 0, 0, 0);
 
     private float _transitionAmount;
 
@@ -89,6 +89,46 @@ partial class ConfigUI : INotifyPropertyChanged
         }
     }
 
+    #region Mica
+
+    [Flags]
+    public enum DwmWindowAttribute : uint
+    {
+        DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
+        DWMWA_MICA_EFFECT = 1029
+    }
+    
+    [DllImport("dwmapi.dll")]
+    public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
+
+    private void Window_ContentRendered(object sender, EventArgs e)
+    {
+        IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+        HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
+        
+        // Apply Mica brush
+        UpdateStyleAttributes(mainWindowSrc);
+    }
+
+    public static void UpdateStyleAttributes(HwndSource hwnd)
+    {
+        int falseValue = 0x00;
+        int trueValue = 0x01;
+        DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+        DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+    }
+
+    private void Window_Loaded_Mica(object sender, RoutedEventArgs e)
+    {
+        // Get PresentationSource
+        PresentationSource presentationSource = PresentationSource.FromVisual((Visual)sender);
+
+        // Subscribe to PresentationSource's ContentRendered event
+        presentationSource.ContentRendered += Window_ContentRendered;
+    }
+
+    #endregion
+
     public ConfigUI(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
         Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener)
     {
@@ -96,6 +136,7 @@ partial class ConfigUI : INotifyPropertyChanged
         _layoutManager = layoutManager;
         _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener);
         InitializeComponent();
+        ContentRendered += Window_ContentRendered;
 
         _layoutManager.Result.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
 
@@ -110,7 +151,6 @@ partial class ConfigUI : INotifyPropertyChanged
         if (App.IsSilent)
         {
             Visibility = Visibility.Hidden;
-            WindowStyle = WindowStyle.None;
             ShowInTaskbar = false;
             Hide();
         }
@@ -123,7 +163,6 @@ partial class ConfigUI : INotifyPropertyChanged
     private void Display()
     {
         ShowInTaskbar = true;
-        WindowStyle = WindowStyle.SingleBorderWindow;
         if (Top <= 0)
         {
             Top = 0;
@@ -180,7 +219,7 @@ partial class ConfigUI : INotifyPropertyChanged
         keyboard_record_message.Visibility = Visibility.Hidden;
 
         _currentColor = _desktopColorScheme;
-        bg_grid.Background = new SolidColorBrush(Color.FromRgb(_desktopColorScheme.Red, _desktopColorScheme.Green, _desktopColorScheme.Blue));
+        bg_grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
 
         _virtualKb = _layoutManager.Result.VirtualKeyboard;
 
@@ -210,6 +249,9 @@ partial class ConfigUI : INotifyPropertyChanged
                 break;
             }
         }
+        
+        Window_Loaded_Mica(sender, e);
+
     }
 
     public static bool ApplicationIsActivated()
@@ -243,8 +285,8 @@ partial class ConfigUI : INotifyPropertyChanged
                 {
                     _transitionColor.BlendColors(_currentColor, _transitionAmount += 0.07f);
 
-                    bg_grid.Background = new SolidColorBrush(Color.FromRgb(_transitionColor.Red,
-                        _transitionColor.Green, _transitionColor.Blue));
+                    bg_grid.Background = new SolidColorBrush(Color.FromArgb((byte)(_transitionColor.Alpha * 140 / 255),
+                        _transitionColor.Red, _transitionColor.Green, _transitionColor.Blue));
                     bg_grid.UpdateLayout();
                 }
 
@@ -509,8 +551,6 @@ partial class ConfigUI : INotifyPropertyChanged
         _currentColor *= 0.85f;
 
         _transitionAmount = 0.0f;
-
-        UpdateProfileStackBackground(source);
     }
 
     private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs? e)
@@ -609,75 +649,9 @@ partial class ConfigUI : INotifyPropertyChanged
 
         _currentColor = _desktopColorScheme;
         _transitionAmount = 0.0f;
-
-        UpdateProfileStackBackground(sender as FrameworkElement);
     }
     private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
     private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
-
-    private void UpdateProfileStackBackground(FrameworkElement? item)
-    {
-        _selectedItem = item;
-
-        if (_selectedItem == null) return;
-        DrawingBrush mask = new DrawingBrush();
-        GeometryDrawing visibleRegion =
-            new GeometryDrawing(
-                new SolidColorBrush(Color.FromArgb(64, 0, 0, 0)),
-                null,
-                new RectangleGeometry(new Rect(0, 0, profiles_background.ActualWidth, profiles_background.ActualHeight)));
-
-        DrawingGroup drawingGroup = new DrawingGroup();
-        drawingGroup.Children.Add(visibleRegion);
-
-        Point relativePoint = _selectedItem.TransformToAncestor(profiles_background)
-            .Transform(new Point(0, 0));
-
-        double x = 0.0D;
-        double y = relativePoint.Y - 2.0D;
-        double width = profiles_background.ActualWidth;
-        double height = _selectedItem.ActualHeight + 4.0D;
-
-        if (item.Parent != null && item.Parent.Equals(profiles_stack))
-        {
-            Point relativePointWithinStack = profiles_stack.TransformToAncestor(profiles_background)
-                .Transform(new Point(0, 0));
-
-            if (y < relativePointWithinStack.Y)
-            {
-                height -= relativePointWithinStack.Y - y;
-                y = 0;
-            }
-            else if (y + height > profiles_background.ActualHeight - 40)
-                height -= (y + height) - (profiles_background.ActualHeight - 40);
-
-        }
-        else
-        {
-            x = 0.0D;
-            y = relativePoint.Y - 2.0D;
-            width = profiles_background.ActualWidth;
-            height = _selectedItem.ActualHeight + 4.0D;
-
-            if (y + height > profiles_background.ActualHeight - 40)
-                height -= (y + height) - (profiles_background.ActualHeight - 40);
-        }
-                
-        if (height > 0 && width > 0)
-        {
-            GeometryDrawing transparentRegion =
-                new GeometryDrawing(
-                    new SolidColorBrush((Color)_currentColor),
-                    null,
-                    new RectangleGeometry(new Rect(x, y, width, height)));
-
-            drawingGroup.Children.Add(transparentRegion);
-        }
-
-        mask.Drawing = drawingGroup;
-
-        profiles_background.Background = mask;
-    }
 
     private void ShowWindow()
     {
@@ -698,16 +672,6 @@ partial class ConfigUI : INotifyPropertyChanged
     private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
     {
         ShowWindow();
-    }
-
-    private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
-    {
-        UpdateProfileStackBackground(_selectedItem);
-    }
-
-    private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        UpdateProfileStackBackground(_selectedItem);
     }
 
     private void UpdateManagerStackFocus(object focusedElement, bool forced = false)
