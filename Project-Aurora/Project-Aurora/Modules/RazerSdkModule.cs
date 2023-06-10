@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Aurora.Modules.Razer;
 using Lombok.NET;
 using RazerSdkWrapper;
-using RazerSdkWrapper.Data;
 
 namespace Aurora.Modules;
 
@@ -55,9 +54,7 @@ public sealed partial class RazerSdkModule : IAuroraModule
 
         _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
 
-        var appList = _razerSdkManager.GetDataProvider<RzAppListDataProvider>();
-        appList.Update();
-        RzHelper.CurrentAppExecutable = appList.CurrentAppExecutable;
+        RzHelper.Initialize();
     }
 
 

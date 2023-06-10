@@ -4,6 +4,8 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using CSScripting;
+using Microsoft.Scripting.Utils;
 using Microsoft.Win32;
 
 namespace Aurora.Profiles.Chroma;
@@ -19,7 +21,6 @@ public partial class Control_Chroma : INotifyPropertyChanged
     public string SelectedExcludedProgram { get; set; }
 
     private readonly ChromaApplication _profile;
-
     private readonly ChromaApplicationSettings _settings;
 
     public Control_Chroma(Application profile)
@@ -33,7 +34,7 @@ public partial class Control_Chroma : INotifyPropertyChanged
         _settings.ExcludedPrograms.CollectionChanged += ExcludedProgramsOnCollectionChanged;
         _profile.ChromaAppsChanged += ProfileOnChromaAppsChanged;
 
-        profile.ProfileChanged += (_, e) => SetSettings();
+        profile.ProfileChanged += (_, _) => SetSettings();
         RefreshEnabledPrograms();
     }
 
@@ -52,10 +53,7 @@ public partial class Control_Chroma : INotifyPropertyChanged
         Dispatcher.Invoke(() =>
         {
             EnabledPrograms.Clear();
-            foreach (var configProcessName in _profile.Config.ProcessNames)
-            {
-                EnabledPrograms.Add(configProcessName);
-            }
+            EnabledPrograms.AddRange(_profile.AllChromaApps.Except(_settings.ExcludedPrograms));
         });
     }
 
@@ -82,6 +80,8 @@ public partial class Control_Chroma : INotifyPropertyChanged
     {
         if (string.IsNullOrEmpty(SelectedExcludedProgram)) return;
         _settings.ExcludedPrograms.Remove(SelectedExcludedProgram);
+        _profile.Config.ProcessNames.AddItem(SelectedExcludedProgram);
+        ReorderChromaRegistry();
     }
 
     private void ReorderChromaRegistry()

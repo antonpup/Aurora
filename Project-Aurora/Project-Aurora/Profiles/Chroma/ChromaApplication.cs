@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Linq;
+using Aurora.Modules.Razer;
 using Aurora.Utils;
 
 namespace Aurora.Profiles.Chroma;
 
 public class ChromaApplication : Application
 {
-    public event EventHandler<EventArgs> ChromaAppsChanged;
+    public event EventHandler<EventArgs>? ChromaAppsChanged;
 
     public const string AppsKey = @"SOFTWARE\\WOW6432Node\\Razer Chroma SDK\\Apps";
     public const string PriorityValue = "PriorityList";
 
     private readonly RegistryWatcher _registryWatcher = new(RegistryHiveOpt.LocalMachine, AppsKey, PriorityValue);
 
-    private string[] _allChromaApps = { };
+    public string[] AllChromaApps { get; private set; } = Array.Empty<string>();
 
     public ChromaApplication() : base(new LightEventConfig
     {
         Name = "Chroma Apps",
         ID = "chroma",
-        ProcessNames = new string[] { },
+        ProcessNames = Array.Empty<string>(),
         ProfileType = typeof(RazerChromaProfile),
         OverviewControlType = typeof(Control_Chroma),
         GameStateType = typeof(GameState_Wrapper),
@@ -31,15 +32,20 @@ public class ChromaApplication : Application
     {
         _registryWatcher.RegistryChanged += RegistryWatcherOnRegistryChanged;
         _registryWatcher.StartWatching();
+
+        RzHelper.ChromaAppChanged += RzHelperOnChromaAppChanged;
+    }
+
+    private void RzHelperOnChromaAppChanged(object? sender, ChromaAppChangedEventArgs e)
+    {
+        FilterAndSetProcesses();
     }
 
     public override void Dispose()
     {
         base.Dispose();
         ((ChromaApplicationSettings)Settings).ExcludedPrograms.CollectionChanged -= ExcludedProgramsOnCollectionChanged;
-
-        _registryWatcher.StopWatching();
-        _registryWatcher.RegistryChanged -= RegistryWatcherOnRegistryChanged;
+        RzHelper.ChromaAppChanged -= RzHelperOnChromaAppChanged;
     }
 
     protected override void LoadSettings(Type settingsType)
@@ -62,22 +68,15 @@ public class ChromaApplication : Application
             return;
         }
 
-        _allChromaApps = chromaAppList.Split(';');
+        AllChromaApps = chromaAppList.Split(';');
         FilterAndSetProcesses();
     }
 
     private void FilterAndSetProcesses()
     {
-        Config.ProcessNames = _allChromaApps.Where(process =>
-            {
-                if (Settings is ChromaApplicationSettings chromaApplicationSettings)
-                {
-                    return !chromaApplicationSettings.ExcludedPrograms.Contains(process);
-                }
-
-                return true;
-            })
+        Config.ProcessNames = new []{ RzHelper.CurrentAppExecutable }
             .Where(processName => !string.IsNullOrWhiteSpace(processName))
+            .Where(s => !((ChromaApplicationSettings)Settings).ExcludedPrograms.Contains(s))
             .ToArray();
 
         ChromaAppsChanged?.Invoke(this, EventArgs.Empty);
