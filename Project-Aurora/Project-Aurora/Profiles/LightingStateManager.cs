@@ -414,6 +414,7 @@ public sealed class LightingStateManager : IInit
         _startedEvents.AddRange(_updatedEvents);
     }
 
+    private bool _profilesDisabled;
     private void Update()
     {
         Stopwatch debugTimer = new Stopwatch();
@@ -443,13 +444,24 @@ public sealed class LightingStateManager : IInit
         // If the current foreground process is excluded from Aurora, disable the lighting manager
         if ((profile is Desktop.Desktop && !profile.IsEnabled) || Global.Configuration.ExcludedPrograms.Contains(rawProcessName))
         {
-            StopUnUpdatedEvents();
-            Task.Run(async () => await Global.dev_manager.ShutdownDevices());
-            lock (Effects.CanvasChangedLock)
+            if (!_profilesDisabled)
             {
-                Global.effengine.PushFrame(newFrame);
+                StopUnUpdatedEvents();
+                lock (Effects.CanvasChangedLock)
+                {
+                    Global.effengine.PushFrame(newFrame);
+                }
+                Global.dev_manager.ShutdownDevices();
             }
+
+            _profilesDisabled = true;
             return;
+        }
+
+        if (_profilesDisabled)
+        {
+            Global.dev_manager.InitializeDevices();
+            _profilesDisabled = false;
         }
         debugTimer.Restart();
 
