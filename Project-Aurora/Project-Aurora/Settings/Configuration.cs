@@ -171,6 +171,9 @@ namespace Aurora.Settings
         [Description("Custom Json")]
         Custom = 4,
 
+        [Description("Generic 60% (US)")]
+        Generic60 = 5,
+
         /*
         [Description("Logitech")]
         Logitech = 1,

@@ -48,6 +48,7 @@ public static class PeripheralLayoutMap
         {PreferredKeyboard.GenericLaptopNumpad, "generic_laptop_numpad.json"},
         {PreferredKeyboard.Debug, "additional_lights.json"},
         {PreferredKeyboard.Custom, "custom_keyboard.json"},
+        {PreferredKeyboard.Generic60, "generic_60_percent.json"},
         {PreferredKeyboard.Drevo_BladeMaster, "drevo_blademaster.json"},
         {PreferredKeyboard.Wooting_Two, "wooting_two.json"},
         {PreferredKeyboard.MSI_GP66_US, "msi_gp66_us.json"},
