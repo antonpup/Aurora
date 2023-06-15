@@ -185,8 +185,8 @@ public sealed class DeviceManager: IDisposable
     private void LoadDll(string deviceScript)
     {
         byte[] data = File.ReadAllBytes(deviceScript);
-        dynamic scriptAssembly = Assembly.Load(data);
-        Type typ = scriptAssembly.ExportedTypes[1];
+        Assembly scriptAssembly = Assembly.Load(data);
+        Type typ = scriptAssembly.ExportedTypes.First( type => type.FullName?.StartsWith("css_root+") ?? false);
         var constructorInfo = typ.GetConstructor(Type.EmptyTypes);
         if (constructorInfo == null)
         {
