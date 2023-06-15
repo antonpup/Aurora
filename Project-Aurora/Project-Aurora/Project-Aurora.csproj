@@ -106,7 +106,9 @@
     <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-z.1" />
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-z.1" />
     <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="2.0.0-z.1" />
+    <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-z.1" />
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-z.1" />
+    <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-z.1" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <!-- Locked to version 4.0.1 due to an unresolved issue with interop https://github.com/sharpdx/SharpDX/issues/1050 -->
