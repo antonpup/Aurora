@@ -103,19 +103,41 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void Window_ContentRendered(object sender, EventArgs e)
     {
-        IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-        HwndSource mainWindowSrc = HwndSource.FromHwnd(mainWindowPtr);
-        
-        // Apply Mica brush
-        UpdateStyleAttributes(mainWindowSrc);
+        UpdateStyleAttributes();
     }
 
-    public static void UpdateStyleAttributes(HwndSource hwnd)
+    public void UpdateStyleAttributes()
     {
-        int falseValue = 0x00;
-        int trueValue = 0x01;
-        DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
-        DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+        _lightThemeRegistryWatcher = new RegistryWatcher(RegistryHiveOpt.CurrentUser,
+            @"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            "AppsUseLightTheme");
+        _lightThemeRegistryWatcher.RegistryChanged += LightThemeRegistryWatcherOnRegistryChanged;
+        _lightThemeRegistryWatcher.StartWatching();
+    }
+
+    private void LightThemeRegistryWatcherOnRegistryChanged(object? sender, RegistryChangedEventArgs e)
+    {
+        if (e.Data is not int lightThemeEnabled)
+        {
+            return;
+        }
+
+        Dispatcher.Invoke(() =>
+        {
+            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
+            HwndSource hwnd = HwndSource.FromHwnd(mainWindowPtr);
+            var darkThemeEnabled = lightThemeEnabled == 0;
+
+            int trueValue = 0x01;
+            int falseValue = 0x00;
+
+            // Set dark mode before applying the material, otherwise you'll get an ugly flash when displaying the window.
+            if (darkThemeEnabled)
+                DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+            else
+                DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref falseValue, Marshal.SizeOf(typeof(int)));
+            DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+        });
     }
 
     private void Window_Loaded_Mica(object sender, RoutedEventArgs e)
@@ -765,5 +787,7 @@ partial class ConfigUI : INotifyPropertyChanged
     /// <summary>The control that is currently displayed underneath they device preview panel. This could be an overview control or a layer presenter etc.</summary>
     public Control? SelectedControl { get => _selectedControl; set => SetField(ref _selectedControl, value); }
     private Control? _selectedControl;
+    private RegistryWatcher _lightThemeRegistryWatcher;
+
     #endregion
 }
