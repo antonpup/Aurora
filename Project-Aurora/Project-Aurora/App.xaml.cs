@@ -26,13 +26,13 @@ namespace Aurora;
 /// </summary>
 public partial class App
 {
+    public static bool Closing;
     private static readonly Mutex Mutex = new(true, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
 
     public static bool IsSilent { get; private set; }
     private bool _isDelayed;
     private int _delayTime = 5000;
     private bool _ignoreUpdate;
-    private bool _closing;
 
     private static readonly PluginsModule PluginsModule = new();
     private static readonly IpcListenerModule IpcListenerModule = new();
@@ -242,11 +242,11 @@ public partial class App
 
     protected override void OnExit(ExitEventArgs e)
     {
-        if (_closing)
+        if (Closing)
         {
             return;
         }
-        _closing = true;
+        Closing = true;
         base.OnExit(e);
 
         if (Global.Configuration != null)
@@ -294,7 +294,7 @@ public partial class App
 
         Global.logger.Fatal(exc, "Fatal Exception caught : ");
 
-        if (!e.IsTerminating || Current == null || _closing)
+        if (!e.IsTerminating || Current == null || Closing)
         {
             return;
         }
@@ -330,7 +330,7 @@ public partial class App
         else
             throw exc;
         if (!Global.Configuration.CloseProgramOnException) return;
-        if (_closing) return;
+        if (Closing) return;
         MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
         //Perform exit operations
         Current?.Shutdown();

@@ -14,8 +14,15 @@ public class CorsairRgbNetDevice : RgbNetDevice
     protected override void RegisterVariables(VariableRegistry variableRegistry)
     {
         base.RegisterVariables(variableRegistry);
-        
+
         variableRegistry.Register($"{DeviceName}_exclusive", false, "Request exclusive control");
+    }
+
+    protected override bool OnShutdown()
+    {
+        base.OnShutdown();
+
+        return !App.Closing;
     }
 
     protected override void ConfigureProvider()
@@ -27,13 +34,14 @@ public class CorsairRgbNetDevice : RgbNetDevice
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");
 
         CorsairDeviceProvider.ExclusiveAccess = exclusive;
-        CorsairDeviceProvider.ConnectionTimeout = new TimeSpan(0, 0,5);
-        
+        CorsairDeviceProvider.ConnectionTimeout = new TimeSpan(0, 0, 5);
+
         Provider.SessionStateChanged += SessionStateChanged;
     }
 
     private void SessionStateChanged(object? sender, CorsairSessionState e)
     {
+        if (e != CorsairSessionState.Closed) return;
         Provider.SessionStateChanged -= SessionStateChanged;
 
         IsInitialized = false;

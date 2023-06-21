@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Aurora.Devices.RGBNet.Config;
 using Aurora.Settings;
@@ -159,9 +160,14 @@ public abstract class RgbNetDevice : DefaultDevice
         }
     }
 
+    [MethodImpl(MethodImplOptions.Synchronized)]
     protected override Task Shutdown()
     {
-        OnShutdown();
+        if (!OnShutdown())
+        {
+            return Task.CompletedTask;
+        }
+
         if (Provider.IsInitialized)
         {
             Provider.Dispose();
@@ -181,8 +187,13 @@ public abstract class RgbNetDevice : DefaultDevice
     {
     }
 
-    protected virtual void OnShutdown()
+    /// <summary>
+    /// Do shutdown tasks
+    /// </summary>
+    /// <returns>Whether shutdown should continue</returns>
+    protected virtual bool OnShutdown()
     {
+        return true;
     }
 
     protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e,

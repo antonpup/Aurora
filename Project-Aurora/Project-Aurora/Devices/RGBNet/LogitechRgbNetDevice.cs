@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using RGB.NET.Core;
@@ -22,11 +20,13 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
         SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
     }
 
-    protected override void OnShutdown()
+    protected override bool OnShutdown()
     {
         SystemEvents.PowerModeChanged -= SystemEventsPowerModeChanged;
+
+        return true;
     }
-    
+
     #region Event handlers
 
     private void SystemEventsOnSessionSwitch(object sender, SessionSwitchEventArgs e)
