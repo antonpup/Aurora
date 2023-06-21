@@ -44,7 +44,7 @@ public abstract class RgbNetDevice : DefaultDevice
     {
         return Devices().Select(CalibrationName);
     }
-    
+
     protected override async Task<bool> DoInitialize()
     {
         Global.logger.Info($"Initializing {DeviceName}");
@@ -68,12 +68,11 @@ public abstract class RgbNetDevice : DefaultDevice
             ConfigureProvider();
 
             Provider.Exception += DeviceProviderOnException;
-            Provider.DeviceAdded += ProviderOnDeviceAdded;
-            Provider.DeviceRemoved += ProviderOnDeviceRemoved;
+            Provider.DevicesChanged += ProviderOnDevicesChanged;
             var connectSleepTimeSeconds =
                 Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
             var remainingMillis = connectSleepTimeSeconds * 1000;
-            
+
             do
             {
                 providerExceptions.Clear();
@@ -98,12 +97,12 @@ public abstract class RgbNetDevice : DefaultDevice
         {
             ErrorMessage = e.Message;
         }
+
         Provider.Exception -= DeviceProviderOnException;
 
         if (!IsInitialized)
         {
-            Provider.DeviceAdded -= ProviderOnDeviceAdded;
-            Provider.DeviceRemoved -= ProviderOnDeviceRemoved;
+            Provider.DevicesChanged -= ProviderOnDevicesChanged;
             return false;
         }
 
@@ -112,11 +111,23 @@ public abstract class RgbNetDevice : DefaultDevice
         return true;
     }
 
-    private void ProviderOnDeviceRemoved(object? sender, RGBDeviceRemovedEventArgs e)
+    private void ProviderOnDevicesChanged(object? sender, DevicesChangedEventArgs e)
     {
-        var device = e.Device;
+        switch (e.Action)
+        {
+            case DevicesChangedEventArgs.DevicesChangedAction.Added:
+                ProviderOnDeviceAdded(e.Device);
+                break;
+            case DevicesChangedEventArgs.DevicesChangedAction.Removed:
+                ProviderOnDeviceRemoved(e.Device);
+                break;
+        }
+    }
+
+    private void ProviderOnDeviceRemoved(IRGBDevice device)
+    {
         DeviceList.Remove(device);
-        
+
         var deviceName = device.DeviceInfo.Manufacturer + " " + device.DeviceInfo.Model;
         DeviceCountMap.TryGetValue(deviceName, out var count);
         if (--count == 0)
@@ -129,11 +140,10 @@ public abstract class RgbNetDevice : DefaultDevice
         }
     }
 
-    private void ProviderOnDeviceAdded(object? sender, RGBDeviceAddedEventArgs e)
+    private void ProviderOnDeviceAdded(IRGBDevice device)
     {
-        var device = e.Device;
         DeviceList.Add(device);
-        
+
         var deviceName = device.DeviceInfo.Manufacturer + " " + device.DeviceInfo.Model;
         if (DeviceCountMap.TryGetValue(deviceName, out var count))
         {
@@ -172,9 +182,9 @@ public abstract class RgbNetDevice : DefaultDevice
         {
             Provider.Dispose();
         }
-        Provider.DeviceAdded -= ProviderOnDeviceAdded;
-        Provider.DeviceRemoved -= ProviderOnDeviceRemoved;
-        
+
+        Provider.DevicesChanged -= ProviderOnDevicesChanged;
+
         IsInitialized = false;
         return Task.CompletedTask;
     }
@@ -257,7 +267,7 @@ public abstract class RgbNetDevice : DefaultDevice
     {
         base.RegisterVariables(variableRegistry);
 
-        variableRegistry.Register($"{DeviceName}_connect_sleep_time", 30, "Connection timeout seconds");
+        variableRegistry.Register($"{DeviceName}_connect_sleep_time", 40, "Connection timeout seconds");
     }
 
     private static string CalibrationName(IRGBDevice device)

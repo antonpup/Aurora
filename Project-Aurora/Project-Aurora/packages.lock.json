@@ -273,68 +273,52 @@
           "Fody": "6.6.4"
         }
       },
-      "RGB.NET.Core": {
-        "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "r5bH2ligwwT9JA/+2F6mRRNWnn7P1xTxSG71AGeLoVT6nfXosu3SlmqVQW3JxwfBqcLGi4J9nVofXirLQ/zrKw=="
-      },
       "RGB.NET.Devices.CoolerMaster": {
         "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "bXPYy2c0wUf6MTFO2Lu5tY8glIeG4Fk1IH8Gdk/ltWMKkMie99dSI7jpg2ctMyhKYUrchx/+a5ktW0sPk6CVRw==",
+        "requested": "[2.0.0-prerelease.83, )",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "SmfA+HeEb0ondHyIvzfS53QpECJG45LqYsdGTCwU6oK1PGhHutEOs5Qz44wA9nFdeB64NoF/F7CA8BJGPtbUXw==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-z.1"
+          "RGB.NET.Core": "2.0.0-prerelease.83"
         }
       },
       "RGB.NET.Devices.Logitech": {
         "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "MtiT0EX3WMYTtqE3dwZJsHYzdU3dBkOf2TilEFhJppUDSSbSHUQE00fjlp25L/PgRhqd4MIPgWH1flXg8O3SNg==",
+        "requested": "[2.0.0-prerelease.83, )",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "M8H4KW2VbofkJsLc1YHPTcmUBl1c7UMk08+SSY9kI++N98LeEh29DJQnxHINi4wJrcTRrlsFmEsdB5RxTSvdhQ==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-z.1",
-          "RGB.NET.HID": "2.0.0-z.1"
-        }
-      },
-      "RGB.NET.Devices.OpenRGB": {
-        "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "NP8/VDF9VmKTV2/wfww57sGb3m58Pg+/GTdTBmCO26M6OPCWu76Uhk5ghmfS/HwwdmTPz5AVSy1wnHVYCxfzKA==",
-        "dependencies": {
-          "OpenRGB.NET": "2.1.0",
-          "RGB.NET.Core": "2.0.0-z.1"
+          "RGB.NET.Core": "2.0.0-prerelease.83",
+          "RGB.NET.HID": "2.0.0-prerelease.83"
         }
       },
       "RGB.NET.Devices.Razer": {
         "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "wl1hmBV4ppUTy+5kTfM5VuIEUYlkRsln6okiXWLGyYEYnC+sn6oMvsByLZMZTSnRgNZPhZOvYG0cvXvQt0JYQw==",
+        "requested": "[2.0.0-prerelease.83, )",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "J2aP7AYkAaEF9VtbXZvGCxcEcyzl+kzExzIqRAvi56WI1lTpC19Y9ARZA1ZkVK+SKazKpIohpjMRElJm162LEw==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-z.1",
-          "RGB.NET.HID": "2.0.0-z.1"
+          "RGB.NET.Core": "2.0.0-prerelease.83",
+          "RGB.NET.HID": "2.0.0-prerelease.83"
         }
       },
       "RGB.NET.Devices.SteelSeries": {
         "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "1xQlM9WGn1PLy73x6VPvAmJ1PAIZAiuDB51C2xgf31KJ0S2t6HJEtpeJheGUmOwGmSeW/FuABUVqMVpEwNxngA==",
+        "requested": "[2.0.0-prerelease.83, )",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "49ZllB7b3ODvUTDIjz4iWoj6jfQ4BETKDGJZ+iEVje+586Xeg/B49BVnN1VjhnT2YQ5LztSk72llvh+H3wm7lw==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-z.1",
-          "RGB.NET.HID": "2.0.0-z.1"
+          "RGB.NET.Core": "2.0.0-prerelease.83",
+          "RGB.NET.HID": "2.0.0-prerelease.83"
         }
       },
       "RGB.NET.Devices.Wooting": {
         "type": "Direct",
-        "requested": "[2.0.0-z.1, )",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "yWiP7CCJZe/7pO/Vm7DeXaz3M6lBZltppnJ7M+Q8JSlgBONvjFLsziRw9C9SGJKHIFYxplOuFL833b/iw0x0Ww==",
+        "requested": "[2.0.0-prerelease.83, )",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "tDpCqiIlaTcsI1dASSANLD7UgiyyHeCsoFmUlGjSArhWQzN5XGymWD7C5wfQUY2U36uQKV6o5px+HMdO+TBRxg==",
         "dependencies": {
-          "RGB.NET.Core": "2.0.0-z.1"
+          "RGB.NET.Core": "2.0.0-prerelease.83"
         }
       },
       "SemanticVersioning": {
@@ -685,13 +669,18 @@
           "System.Xml.XDocument": "4.3.0"
         }
       },
+      "RGB.NET.Core": {
+        "type": "Transitive",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "m1nHpBwsMJFK732cCmc55SZPoKGP0xIPbaA+UiGS5bMN2YH8OMg+RYQIq0eo7cfbKNbUj2cYODcJfsW4ALomWA=="
+      },
       "RGB.NET.HID": {
         "type": "Transitive",
-        "resolved": "2.0.0-z.1",
-        "contentHash": "vHC7GJmW7mHB6kDnYz5il6bS5oJOBgWxVTRfzMer1BtF4TCOm8gfAmO64HeHvq7ssm8FXUWezmcsbxKgpQDAYA==",
+        "resolved": "2.0.0-prerelease.83",
+        "contentHash": "mfZZ8KbkoGHMJ/rJ2GbtwrF/GxnMx9Wsg8dF7GWezUvYq98gUQQaxH3x6FMRJzY+0VwQEvFfUj7g/yUENAUL1w==",
         "dependencies": {
           "HidSharp": "2.1.0",
-          "RGB.NET.Core": "2.0.0-z.1"
+          "RGB.NET.Core": "2.0.0-prerelease.83"
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
