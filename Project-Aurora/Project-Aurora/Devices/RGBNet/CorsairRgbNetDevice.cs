@@ -1,5 +1,6 @@
 ﻿using System;
 using Aurora.Settings;
+using Aurora.Utils;
 using RGB.NET.Devices.Corsair;
 
 namespace Aurora.Devices.RGBNet;
@@ -20,7 +21,9 @@ public class CorsairRgbNetDevice : RgbNetDevice
     protected override void ConfigureProvider()
     {
         base.ConfigureProvider();
-        
+
+        DesktopUtils.WaitSessionUnlock();
+
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");
 
         CorsairDeviceProvider.ExclusiveAccess = exclusive;
