@@ -12,7 +12,8 @@ public static class BitmapUtils
      */
     public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
     {
-        if (rectangle.Width == 0 || rectangle.Height == 0)
+        var graphicsUnit = GraphicsUnit.Pixel;
+        if (rectangle.Width == 0 || rectangle.Height == 0 || !map.GetBounds(ref graphicsUnit).Contains(rectangle))
             return Color.Black;
 
         //B, G, R
