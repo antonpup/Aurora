@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Aurora.Settings;
 using Aurora.Utils;
 using RGB.NET.Devices.Corsair;
@@ -25,11 +26,12 @@ public class CorsairRgbNetDevice : RgbNetDevice
         return !App.Closing;
     }
 
-    protected override void ConfigureProvider()
+    protected override async Task ConfigureProvider()
     {
         base.ConfigureProvider();
 
-        DesktopUtils.WaitSessionUnlock();
+        await DesktopUtils.WaitSessionUnlock();
+        Global.logger.Info("Lock released");
 
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");
 

@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using System.Threading.Tasks;
+using Aurora.Settings;
 using RGB.NET.Devices.OpenRGB;
 
 namespace Aurora.Devices.RGBNet;
@@ -14,7 +15,7 @@ public class OpenRgbNetDevice : RgbNetDevice
         ClientName = "Aurora (RGB.NET)"
     };
 
-    protected override void ConfigureProvider()
+    protected override Task ConfigureProvider()
     {
         var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
         var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
@@ -23,6 +24,7 @@ public class OpenRgbNetDevice : RgbNetDevice
         _openRgbServerDefinition.Port = port;
 
         Provider.AddDeviceDefinition(_openRgbServerDefinition);
+        return Task.CompletedTask;
     }
 
     protected override void RegisterVariables(VariableRegistry variableRegistry)

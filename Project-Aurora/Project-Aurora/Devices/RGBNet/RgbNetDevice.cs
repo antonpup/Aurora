@@ -65,7 +65,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
         try
         {
-            ConfigureProvider();
+            await ConfigureProvider();
 
             Provider.Exception += DeviceProviderOnException;
             Provider.DevicesChanged += ProviderOnDevicesChanged;
@@ -189,8 +189,9 @@ public abstract class RgbNetDevice : DefaultDevice
         return Task.CompletedTask;
     }
 
-    protected virtual void ConfigureProvider()
+    protected virtual Task ConfigureProvider()
     {
+        return Task.CompletedTask;
     }
 
     protected virtual void OnInitialized()

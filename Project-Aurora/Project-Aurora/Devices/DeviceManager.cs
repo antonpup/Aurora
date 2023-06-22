@@ -292,23 +292,24 @@ public sealed class DeviceManager: IDisposable
         }
     }
 
-    public async Task InitializeDevices()
+    public Task InitializeDevices()
     {
         if (_suspended)
-            return;
+            return Task.CompletedTask;
 
-        var devices = DeviceContainers
-            .Where(dc => !dc.Device.IsInitialized && Global.Configuration.EnabledDevices.Contains(dc.Device.GetType()));
-        var initializeTasks = devices.Select(deviceContainer => deviceContainer.EnableDevice()).ToList();
+        var initializeTasks = DeviceContainers
+            .Where(dc => dc.Device is { IsInitialized: false, isDoingWork: false })
+            .Where(dc => Global.Configuration.EnabledDevices.Contains(dc.Device.GetType()))
+            .Select(deviceContainer => deviceContainer.EnableDevice());
 
-        await Task.WhenAll(initializeTasks);
+        return Task.WhenAll(initializeTasks);
     }
 
-    public async Task ShutdownDevices()
+    public Task ShutdownDevices()
     {
         var shutdownTasks = InitializedDeviceContainers.Select(dc => dc.DisableDevice());
 
-        await Task.WhenAll(shutdownTasks);
+        return Task.WhenAll(shutdownTasks);
     }
 
     public async Task ResetDevices()

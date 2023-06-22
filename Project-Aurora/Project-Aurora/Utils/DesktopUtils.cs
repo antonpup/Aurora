@@ -12,7 +12,7 @@ public static class DesktopUtils
 {
     public static bool IsDesktopLocked { get; private set; }
 
-    private static Lazy<TaskCompletionSource> _lazyUnlockSource = CreateLazyUnlockSource();
+    private static readonly Lazy<TaskCompletionSource> LazyUnlockSource = CreateLazyUnlockSource();
 
     private static Lazy<TaskCompletionSource> CreateLazyUnlockSource()
     {
@@ -22,8 +22,7 @@ public static class DesktopUtils
             {
                 if (e.Reason != SessionSwitchReason.SessionUnlock) return;
                 Global.logger.Info("Releasing session unlock lock");
-                _lazyUnlockSource.Value.SetResult();
-                _lazyUnlockSource = CreateLazyUnlockSource();
+                LazyUnlockSource.Value.SetResult();
                 SystemEvents.SessionSwitch -= ResetLazyUnlockSource;
             }
 
@@ -39,19 +38,22 @@ public static class DesktopUtils
 
     public static async Task WaitSessionUnlock()
     {
-        if (IsSystemLocked())
-        {
-            await _lazyUnlockSource.Value.Task;
-        }
+        if (!IsSystemLocked()) return;
+        await LazyUnlockSource.Value.Task;
     }
 
     private static bool IsSystemLocked()
     {
-        return OpenInputDesktop(0, false, 0) != IntPtr.Zero;
+        var input = OpenInputDesktop(0x0001, false, 0);
+        CloseDesktop(input);
+        return input == IntPtr.Zero;
     }
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern IntPtr OpenInputDesktop(uint dwFlags, bool fInherit, uint dwDesiredAccess);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr CloseDesktop(IntPtr desktop);
 
     private static async void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
