@@ -9,12 +9,6 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            <!-- modern wpf -->
-            <ResourceDictionary.MergedDictionaries>
-                <ui:ThemeResources />
-                <ui:XamlControlsResources />
-            </ResourceDictionary.MergedDictionaries>
-            
             <!-- Global converters -->
             <u:DrawingMediaColorConverter x:Key="DrawingToMediaColorConv" />
             <u:EffectMediaBrushConverter x:Key="EffectToMediaBrushConv" />

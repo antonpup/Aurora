@@ -6,8 +6,6 @@
              xmlns:local="clr-namespace:Aurora"
              xmlns:tb="http://www.hardcodet.net/taskbar"
              xmlns:Settings="clr-namespace:Aurora.Settings" x:Class="Aurora.ConfigUI"
-             xmlns:ui="http://schemas.modernwpf.com/2019"
-             ui:WindowHelper.FixMaximizedWindow="True"
              WindowStyle="SingleBorderWindow"
              Height="{Binding Source={x:Static local:Global.Configuration}, Path=Height, Mode=TwoWay}"
              Width="{Binding Source={x:Static local:Global.Configuration}, Path=Width, Mode=TwoWay}"
