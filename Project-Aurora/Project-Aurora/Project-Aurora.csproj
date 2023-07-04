@@ -78,7 +78,6 @@
     <PackageReference Include="Dubya.WindowsMediaController" Version="2.5.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
-    <PackageReference Include="Fody" Version="6.6.4" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" PrivateAssets="all" />
     <PackageReference Include="hidlibrary" Version="3.3.40" />
     <PackageReference Include="IronPython" Version="2.7.12" />
     <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
@@ -89,7 +88,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.6.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.6.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.6.0" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.3" />
     <PackageReference Include="MouseKeyHook.NetCore" Version="5.6.1.1" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -119,8 +117,7 @@
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="7.0.2" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-    <PackageReference Include="System.Xml.ReaderWriter" Version="4.3.1" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.1" />
     <PackageReference Include="TaskScheduler" Version="2.10.1" />
     <PackageReference Include="Vulcan.NET" Version="2.2.0" />
     <PackageReference Include="Wooting.NET" Version="1.2.0" />
@@ -254,8 +251,6 @@
     <Resource Include="Resources\aurora_icon.ico" />
 
     <Resource Include="Resources\Win64\Aurora-LightFXWrapper.dll" />
-    <Resource Include="Resources\Win64\Aurora-LogiLEDWrapper.dll" />
-    <Resource Include="Resources\Win64\Aurora-RazerLEDWrapper.dll" />
   </ItemGroup>
 
 </Project>
