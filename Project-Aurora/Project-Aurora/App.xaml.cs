@@ -329,7 +329,7 @@ public partial class App
             e.Handled = true;
         else
             throw exc;
-        if (!Global.Configuration.CloseProgramOnException) return;
+        if (!Global.Configuration?.CloseProgramOnException ?? false) return;
         if (Closing) return;
         MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
         //Perform exit operations
