@@ -1191,7 +1191,7 @@
         <Setter Property="Background" Value="{StaticResource ComboBoxBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource ComboBoxBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Foreground" Value="{StaticResource ComboBoxHoverBackgroundBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
         <Setter Property="HorizontalContentAlignment" Value="Right" />
         <Setter Property="Focusable" Value="False" />
         <Setter Property="VerticalContentAlignment" Value="Center" />

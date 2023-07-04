@@ -51,7 +51,7 @@
     <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="{StaticResource Color_009}" />
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource Color_006}" />
     <SolidColorBrush x:Key="ComboBoxReadOnlyBorderBrush" Color="{StaticResource Color_006}" />
-    <SolidColorBrush x:Key="ComboBoxHoverBackgroundBrush" Color="{StaticResource Color_001}" />
+    <SolidColorBrush x:Key="ComboBoxHoverBackgroundBrush" Color="{StaticResource Color_006}" />
     <SolidColorBrush x:Key="ComboBoxHoverBorderBrush" Color="{StaticResource Color_004}" />
     <SolidColorBrush x:Key="ComboBoxFocusedBorderBrush" Color="{StaticResource Color_024}" />
     <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="{StaticResource Color_009}" Opacity="0.6" />
