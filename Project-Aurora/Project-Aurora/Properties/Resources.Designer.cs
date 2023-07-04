@@ -111,26 +111,6 @@ namespace Aurora.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Aurora_LogiLEDWrapper64 {
-            get {
-                object obj = ResourceManager.GetObject("Aurora_LogiLEDWrapper64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Aurora_LogiLEDWrapper86 {
-            get {
-                object obj = ResourceManager.GetObject("Aurora_LogiLEDWrapper86", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap aurora_logo {
