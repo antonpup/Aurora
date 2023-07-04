@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace LightFXAPI
 {
@@ -48,6 +43,10 @@ namespace LightFXAPI
 
         public static LFX_COLOR color, color1, color2, color3, color4, color5 = new LFX_COLOR();
 
+        private const string LightfxSdkDll = "x64\\LightFX_SDK.dll";
+
+        private const string LightfxDll = "x64\\LightFX.dll";
+
         public static void ResetColors()
         {
             color1.Reset();
@@ -57,60 +56,60 @@ namespace LightFXAPI
             color5.Reset();
         }
 
-        [DllImport("LightFX.dll")]
+        [DllImport(LightfxDll)]
         public static extern uint LFX_Initialize();
 
-        [DllImport("LightFX.dll")]
+        [DllImport(LightfxDll)]
         public static extern uint LFX_Release();
 
-        [DllImport("LightFX.dll")]
+        [DllImport(LightfxDll)]
         public static extern uint LFX_Reset();
 
-        [DllImport("LightFX.dll")]
+        [DllImport(LightfxDll)]
         public static extern uint LFX_Update();
 
-        [DllImport("LightFX.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint LFX_GetNumDevices(ref uint numDevices);
 
-        [DllImport("LightFX.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint LFX_GetDeviceDescription(uint devIndex, ref char description, uint descSize, ref byte devtype);
 
-        [DllImport("LightFX.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint LFX_SetTiming(int timing);
 
-        [DllImport("LightFX.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint LFX_GetNumLights(uint devIndex, ref uint numLights);
 
-        [DllImport("LightFX.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint LFX_GetLightColor(uint devIndex, uint lightIndex, ref LFX_COLOR color);
 
-        [DllImport("LightFX.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern uint LFX_SetLightColor(uint devIndex, uint lightIndex, ref LFX_COLOR color);
 
-        [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxSdkDll, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool HIDInitialize(int vid, int pid);
 
-        [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxSdkDll, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I4)]
         public static extern int LightFXInitialize(int vid);
 
-        [DllImport("LightFX_SDK.dll")]
+        [DllImport(LightfxSdkDll)]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool HIDClose();
 
-        [DllImport("LightFX_SDK.dll")]
+        [DllImport(LightfxSdkDll)]
         public static extern int GetError();
 
-        [DllImport("LightFX_SDK.dll")]
+        [DllImport(LightfxSdkDll)]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool getReadStatus();
 
-        [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxSdkDll, CallingConvention = CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.I1)]
         public static extern bool HIDWrite(byte[] Buffer, int len);
 
-        [DllImport("LightFX_SDK.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(LightfxSdkDll, CallingConvention = CallingConvention.Cdecl)]
         public static extern int HIDRead(byte[] Buffer, int len);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]

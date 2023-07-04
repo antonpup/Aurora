@@ -13,6 +13,7 @@ namespace Aurora.Devices.Omen
 {
     public class OmenMouse : IOmenDevice
     {
+        private const string OmenLightingSdkDll = "OmenLightingSDK.dll";
         private IntPtr hMouse = IntPtr.Zero;
 
         ConcurrentDictionary<int, Color> cachedColors = new ConcurrentDictionary<int, Color>();
@@ -144,16 +145,16 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_Mouse_Open();
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_Mouse_OpenByName([MarshalAsAttribute(UnmanagedType.LPWStr)] string deviceName);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern void OmenLighting_Mouse_Close(IntPtr hMouse);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern int OmenLighting_Mouse_SetStatic(IntPtr hMouse, int zone, LightingColor color, IntPtr property);
     }
 }

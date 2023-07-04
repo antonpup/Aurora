@@ -12,6 +12,7 @@ namespace Aurora.Devices.Omen
 {
     class OmenSpeaker : IOmenDevice
     {
+        private const string OmenLightingSdkDll = "x64\\OmenLightingSDK.dll";
         private IntPtr hSpeaker = IntPtr.Zero;
 
         private OmenSpeaker(IntPtr hSpeaker)
@@ -86,13 +87,13 @@ namespace Aurora.Devices.Omen
             return (hSpeaker != IntPtr.Zero ? "Speaker Connected" : string.Empty);
         }
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_Speaker_Open();
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern void OmenLighting_Speaker_Close(IntPtr hSpeaker);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern int OmenLighting_Speaker_SetStatic(IntPtr hSpeaker, LightingColor color, IntPtr property);
     }
 }

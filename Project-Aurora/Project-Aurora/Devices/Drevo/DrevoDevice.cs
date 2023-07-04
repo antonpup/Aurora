@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading.Tasks;
-using DrevoRadi;
 
 namespace Aurora.Devices.Drevo
 {
@@ -18,7 +17,7 @@ namespace Aurora.Devices.Drevo
 
             try
             {
-                if (!DrevoRadiSDK.DrevoRadiInit())
+                if (!DrevoRadiSdk.DrevoRadiInit())
                 {
                     LogError("Drevo Radi SDK could not be initialized.");
                     IsInitialized = false; 
@@ -43,7 +42,7 @@ namespace Aurora.Devices.Drevo
 
             try
             {
-                DrevoRadiSDK.DrevoRadiShutdown();
+                DrevoRadiSdk.DrevoRadiShutdown();
                 IsInitialized = false;
             }
             catch (Exception exc)
@@ -71,7 +70,7 @@ namespace Aurora.Devices.Drevo
 
                 foreach (var key in keyColors)
                 {
-                    index = DrevoRadiSDK.ToDrevoBitmap((int)key.Key);
+                    index = DrevoRadiSdk.ToDrevoBitmap((int)key.Key);
                     if (index != -1)
                     {
                         index = index * 3 + 4;
@@ -81,7 +80,7 @@ namespace Aurora.Devices.Drevo
                     }
                 }
 
-                return Task.FromResult(DrevoRadiSDK.DrevoRadiSetRGB(bitmap, 392));
+                return Task.FromResult(DrevoRadiSdk.DrevoRadiSetRGB(bitmap, 392));
             }
             catch (Exception exc)
             {

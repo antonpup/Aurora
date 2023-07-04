@@ -11,6 +11,7 @@ namespace Aurora.Devices.Omen
 {
     public class OmenChassis : IOmenDevice
     {
+        private const string OmenLightingSdkDll = "x64\\OmenLightingSDK.dll";
         private IntPtr hChassis = IntPtr.Zero;
 
         private OmenChassis(IntPtr hChassis)
@@ -105,13 +106,13 @@ namespace Aurora.Devices.Omen
             return ChassisZone.CHASSIS_ZONE_ALL;
         }
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_Chassis_Open();
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern void OmenLighting_Chassis_Close(IntPtr hChassis);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern int OmenLighting_Chassis_SetStatic(IntPtr hChassis, int zone, LightingColor color, IntPtr property);
     }
 }

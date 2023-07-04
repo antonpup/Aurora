@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
 
+namespace Aurora.Devices.Drevo;
 
-namespace DrevoRadi
+public static class DrevoRadiSdk
 {
-    public class DrevoRadiSDK
-    {
-        [DllImport("DrevoRadi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool DrevoRadiInit();
+    private const string DllName = "x64\\DrevoRadi";
 
-        [DllImport("DrevoRadi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool DrevoRadiSetRGB(byte[] bitmap, int length);
+    [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern bool DrevoRadiInit();
 
-        [DllImport("DrevoRadi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool DrevoRadiShutdown();
+    [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern bool DrevoRadiSetRGB(byte[] bitmap, int length);
 
-        [DllImport("DrevoRadi", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int ToDrevoBitmap(int key);
-    }
+    [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern bool DrevoRadiShutdown();
+
+    [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern int ToDrevoBitmap(int key);
 }

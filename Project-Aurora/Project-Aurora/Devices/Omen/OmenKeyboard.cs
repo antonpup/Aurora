@@ -12,6 +12,7 @@ namespace Aurora.Devices.Omen
 {
     public class OmenKeyboard : IOmenDevice
     {
+        private const string OmenLightingSdkDll = "x64\\OmenLightingSDK.dll";
         private IntPtr hKB = IntPtr.Zero;
 
         private OmenKeyboard(IntPtr hKB)
@@ -109,16 +110,16 @@ namespace Aurora.Devices.Omen
             }
         }
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern void OmenLighting_Keyboard_Close(IntPtr hKeyboard);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern int OmenLighting_Keyboard_SetStatic(IntPtr hKeyboard, StaticKeyEffect[] staticEffect, int count, IntPtr keyboardLightingEffectProperty);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_Keyboard_Open();
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_Keyboard_OpenByName([MarshalAsAttribute(UnmanagedType.LPWStr)] string deviceName);
     }
 

@@ -13,6 +13,7 @@ namespace Aurora.Devices.Omen
 {
     public class OmenMousePad : IOmenDevice
     {
+        private const string OmenLightingSdkDll = "x64\\OmenLightingSDK.dll";
         private IntPtr hMousePad = IntPtr.Zero;
 
         ConcurrentDictionary<int, Color> cachedColors = new ConcurrentDictionary<int, Color>();
@@ -123,16 +124,16 @@ namespace Aurora.Devices.Omen
             MOUSE_PAD_ZONE_0,                                       /* Zone 0 */
         }
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_MousePad_Open();
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern IntPtr OmenLighting_MousePad_OpenByName([MarshalAsAttribute(UnmanagedType.LPWStr)] string deviceName);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern void OmenLighting_MousePad_Close(IntPtr hMousePad);
 
-        [DllImport("OmenLightingSDK.dll")]
+        [DllImport(OmenLightingSdkDll)]
         static extern int OmenLighting_MousePad_SetStatic(IntPtr hMousePad, int zone, LightingColor color, IntPtr property);
     }
 }
