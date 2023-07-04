@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:s="clr-namespace:System;assembly=mscorlib"
              xmlns:u="clr-namespace:Aurora.Utils"
-             xmlns:ui="http://schemas.modernwpf.com/2019"
-             xmlns:system="clr-namespace:System;assembly=System.Runtime"
-             DispatcherUnhandledException="App_DispatcherUnhandledException">
+             DispatcherUnhandledException="App_DispatcherUnhandledException"
+             ShutdownMode="OnExplicitShutdown"
+             >
 
     <Application.Resources>
         <ResourceDictionary>
@@ -20,6 +20,10 @@
                 <SolidColorBrush x:Key="{x:Type s:String}" Color="#55DB3453" />
             </ResourceDictionary>
             <SolidColorBrush x:Key="OverridesTypeFallbackColor" Color="#88DBDBDB" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>
+                <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

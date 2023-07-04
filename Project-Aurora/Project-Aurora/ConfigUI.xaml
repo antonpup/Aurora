@@ -28,9 +28,10 @@
     </WindowChrome.WindowChrome>
     <DockPanel x:Name="bg_grid" Background="#AA660000" Margin="0, 25, 0, 0">
         <tb:TaskbarIcon x:Name="trayicon"
-			Visibility="Visible"
-			ToolTipText="Aurora"
-			IconSource="Resources/aurora_icon.ico" TrayMouseDoubleClick="trayicon_TrayMouseDoubleClick">
+                        Visibility="Visible"
+                        ToolTipText="Aurora"
+                        IconSource="Resources/aurora_icon.ico"
+                        TrayMouseDoubleClick="trayicon_TrayMouseDoubleClick">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu Background="#88181818" HorizontalContentAlignment="Center">
                     <ContextMenu.ItemsPanel>
@@ -52,8 +53,9 @@
                         </DataTemplate>
                     </ContextMenu.ItemTemplate>
 
-                    <MenuItem x:Name="trayicon_menu_settings" Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
-                    <MenuItem x:Name="trayicon_menu_quit" Header="Quit" Click="trayicon_menu_quit_Click" Foreground="White" />
+                    <MenuItem Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
+                    <MenuItem Header="Restart" Click="trayicon_menu_restart_Click" Foreground="White" />
+                    <MenuItem Header="Quit" Click="trayicon_menu_quit_Click" Foreground="White" />
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>

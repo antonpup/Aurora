@@ -6,9 +6,7 @@ using Aurora.Modules.AudioCapture;
 using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Settings;
-using Aurora.Utils;
 using IronPython.Hosting;
-using JetBrains.Annotations;
 using Microsoft.Scripting.Hosting;
 using NLog;
 using RazerSdkWrapper;
@@ -113,6 +111,9 @@ public static class Global
 
     public static void Initialize()
     {
+#if DEBUG
+        isDebug = true;
+#endif
         logger = LogManager.GetLogger("global");
     }
 }

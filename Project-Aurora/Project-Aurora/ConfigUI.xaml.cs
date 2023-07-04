@@ -31,7 +31,6 @@ using RazerSdkWrapper;
 using Application = Aurora.Profiles.Application;
 using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
-using Point = System.Windows.Point;
 
 namespace Aurora;
 
@@ -152,7 +151,8 @@ partial class ConfigUI : INotifyPropertyChanged
     #endregion
 
     public ConfigUI(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
-        Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener)
+        Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener,
+        Task<IpcListener?> ipcListener)
     {
         _httpListener = httpListener;
         _layoutManager = layoutManager;
@@ -166,6 +166,11 @@ partial class ConfigUI : INotifyPropertyChanged
 
         GenerateProfileStack();
         _settingsControl.DataContext = this;
+
+        if (ipcListener.Result != null)
+        {
+            ipcListener.Result.AuroraCommandReceived += OnAuroraCommandReceived;
+        }
     }
 
     internal void DisplayIfNotSilent()
@@ -179,6 +184,16 @@ partial class ConfigUI : INotifyPropertyChanged
         else
         {
             Display();
+        }
+    }
+
+    private void OnAuroraCommandReceived(object? sender, string e)
+    {
+        switch (e)
+        {
+            case "restore":
+                Dispatcher.Invoke(Display);
+                break;
         }
     }
 
@@ -196,6 +211,21 @@ partial class ConfigUI : INotifyPropertyChanged
         }
         Show();
         Activate();
+    }
+
+    private void Restart()
+    {
+        var auroraPath = Path.Combine(Global.ExecutingDirectory, "Aurora.exe");
+
+        var currentProcess = Environment.ProcessId;
+        var minimizedArg = Visibility == Visibility.Visible ? "" : " -minimized";
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = auroraPath,
+            Arguments = "-restart " + currentProcess + minimizedArg
+        });
+
+        ExitApp();
     }
 
     private void CtrlProfileManager_ProfileSelected(ApplicationProfile profile)
@@ -330,6 +360,11 @@ partial class ConfigUI : INotifyPropertyChanged
     private void trayicon_menu_settings_Click(object sender, RoutedEventArgs e)
     {
         Display();
+    }
+
+    private void trayicon_menu_restart_Click(object sender, RoutedEventArgs e)
+    {
+        Restart();
     }
 
     private void Window_Initialized(object sender, EventArgs e)

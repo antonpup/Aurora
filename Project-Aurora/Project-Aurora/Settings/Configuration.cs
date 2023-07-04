@@ -709,22 +709,46 @@ namespace Aurora.Settings
         }
     }
 
-    public class ConfigManager
+    public static class ConfigManager
     {
-        private static string ConfigPath = Path.Combine(Global.AppDataDirectory, "Config");
+        private static readonly string ConfigPath = Path.Combine(Global.AppDataDirectory, "Config");
         private const string ConfigExtension = ".json";
 
-        private static long _last_save_time = 0L;
-        private readonly static long _save_interval = 300L;
+        private static long _lastSaveTime;
+        private const long SaveInterval = 300L;
 
         public static Configuration Load()
+        {
+            Configuration config;
+            try
+            {
+                config = TryLoad();
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error("Exception during ConfigManager.Load(). Error: ", exc);
+                MessageBox.Show("Exception during ConfigManager.Load().Error: " + exc.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
+
+                config = new Configuration();
+            }
+
+            config.PropertyChanged += (_, _) =>
+            {
+                Save(config);
+            };
+
+            return config;
+        }
+
+        private static Configuration TryLoad()
         {
             Configuration config;
             var configPath = ConfigPath + ConfigExtension;
 
             if (!File.Exists(configPath))
                 config = CreateDefaultConfigurationFile();
-            else {
+            else
+            {
                 var content = File.ReadAllText(configPath, Encoding.UTF8);
                 config = string.IsNullOrWhiteSpace(content)
                     ? CreateDefaultConfigurationFile()
@@ -784,24 +808,29 @@ namespace Aurora.Settings
 
         public static void Save(Configuration configuration)
         {
-            long currentTime = Time.GetMillisecondsSinceEpoch();
+            var currentTime = Time.GetMillisecondsSinceEpoch();
 
-            if (_last_save_time + _save_interval > currentTime)
+            if (_lastSaveTime + SaveInterval > currentTime)
                 return;
-            else
-                _last_save_time = currentTime;
+            _lastSaveTime = currentTime;
 
             var configPath = ConfigPath + ConfigExtension;
-            string content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder });
+            var content = JsonConvert.SerializeObject(configuration, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder
+            });
 
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(configPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(configPath));
             File.WriteAllText(configPath, content, Encoding.UTF8);
         }
 
         private static Configuration CreateDefaultConfigurationFile()
         {
-            Configuration config = new Configuration();
-            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder });
+            var config = new Configuration();
+            var configData = JsonConvert.SerializeObject(config, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All, SerializationBinder = JSONUtils.SerializationBinder
+            });
             var configPath = ConfigPath + ConfigExtension;
 
             Directory.CreateDirectory(Path.GetDirectoryName(configPath));

@@ -1,4 +1,9 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:vsm ="clr-namespace:System.Windows;assembly=PresentationFramework" mc:Ignorable="d">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:vsm ="clr-namespace:System.Windows;assembly=PresentationFramework"
+                    mc:Ignorable="d">
 
     <!-- *********************************  COLORS  ********************************* -->
     <ResourceDictionary.MergedDictionaries>
@@ -742,7 +747,9 @@
                         <Rectangle x:Name="focused" Opacity="0" Stroke="{StaticResource CheckBoxFocusedBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxFocusedBackgroundBrush}" Width="14" Height="14" />
                         <Rectangle x:Name="invalidUnfocused" Opacity="0" Stroke="{StaticResource CheckBoxInvalidUnfocusedBackgroundBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxInvalidUnfocusedBackgroundBrush}" Width="14" Height="14" />
                         <Rectangle x:Name="invalidFocused" Opacity="0" Stroke="{StaticResource CheckBoxInvalidFocusedBorderBrush}" StrokeThickness="1" Fill="{StaticResource CheckBoxInvalidFocusedBackgroundBrush}" Width="14" Height="14" />
-                        <Path x:Name="checkBox" Height="10" Width="12" Stretch="Fill" Opacity="0" Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z" Fill="{StaticResource CheckBoxCheckBackgroundBrush}" UseLayoutRounding="False" />
+                        <Path x:Name="checkBox" Height="10" Width="12" Stretch="Fill" Opacity="0"
+Data="M 1145.607177734375,430 C1145.607177734375,430 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1141.449951171875,435.0772705078125 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1139.232177734375,433.0999755859375 1138,434.5538330078125 1138,434.5538330078125 1138,434.5538330078125 1141.482177734375,438 1141.482177734375,438 1141.482177734375,438 1141.96875,437.9375 1141.96875,437.9375 1141.96875,437.9375 1147,431.34619140625 1147,431.34619140625 1147,431.34619140625 1145.607177734375,430 1145.607177734375,430 z"
+                              Fill="{StaticResource CheckBoxCheckBackgroundBrush}" UseLayoutRounding="False" />
                         <Rectangle x:Name="IndeterminateCheck" Fill="{StaticResource CheckBoxIndeterminateCheckBackgroundBrush}" Height="3" Width="8" Opacity="0" />
                         <Rectangle x:Name="disabled" Opacity="0" StrokeThickness="1" Fill="{StaticResource DisabledVisualElement}" Width="14" Height="14" />
                         <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="1" Margin="{TemplateBinding Padding}" />
