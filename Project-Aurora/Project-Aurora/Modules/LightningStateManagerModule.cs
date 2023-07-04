@@ -48,6 +48,7 @@ public sealed partial class LightningStateManagerModule : IAuroraModule
         {
             httpListener.NewGameState += lightingStateManager.GameStateUpdate;
         }
+        lightingStateManager.InitUpdate();
     }
 
     [Async]

@@ -121,9 +121,6 @@
   <data name="aurora_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\aurora_icon.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Aurora_LogiLEDWrapper64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\Win64\aurora-logiledwrapper.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="aurora_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\aurora_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -165,15 +162,6 @@
   </data>
   <data name="FreeForm_RectangleFilled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\freeform_rectanglefilled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Aurora_LogiLEDWrapper86" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\win32\aurora-logiledwrapper.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Aurora_RazerLEDWrapper64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\Win64\aurora-razerledwrapper.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="Aurora_RazerLEDWrapper86" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\win32\aurora-razerledwrapper.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="pd2_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\pd2_64x64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

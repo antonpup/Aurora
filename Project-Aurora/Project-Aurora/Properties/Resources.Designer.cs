@@ -141,26 +141,6 @@ namespace Aurora.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Aurora_RazerLEDWrapper64 {
-            get {
-                object obj = ResourceManager.GetObject("Aurora_RazerLEDWrapper64", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Aurora_RazerLEDWrapper86 {
-            get {
-                object obj = ResourceManager.GetObject("Aurora_RazerLEDWrapper86", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Borderlands2_256x256 {

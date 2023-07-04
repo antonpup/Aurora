@@ -10,6 +10,8 @@ namespace Aurora.Modules.GameStateListen;
 
 public class IpcListener
 {
+    public const string AuroraInterfacePipe = "aurora\\interface";
+    
     private bool _isRunning;
 
     /// <summary>
@@ -18,6 +20,8 @@ public class IpcListener
     public event EventHandler<IGameState>? NewGameState;
 
     public event EventHandler<string>? WrapperConnectionClosed;
+
+    public event EventHandler<string>? AuroraCommandReceived; 
 
     /// <summary>
     /// Returns whether or not the wrapper is connected through IPC
@@ -30,8 +34,9 @@ public class IpcListener
     public string WrappedProcess { get; private set; } = "";
 
     private NamedPipeServerStream? _ipcPipeStream;
+    private NamedPipeServerStream? _auroraInterfacePipeStream;
 
-    private static NamedPipeServerStream CreatePipe()
+    private static NamedPipeServerStream CreatePipe(string pipeName)
     {
         var securityIdentifier = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
 
@@ -41,7 +46,7 @@ public class IpcListener
             AccessControlType.Allow));
 
         return NamedPipeServerStreamAcl.Create(
-            "Aurora\\server", PipeDirection.In,
+            pipeName, PipeDirection.In,
             NamedPipeServerStream.MaxAllowedServerInstances,
             PipeTransmissionMode.Message, PipeOptions.Asynchronous, 5 * 1024, 5 * 1024, pipeSecurity);
     }
@@ -66,8 +71,13 @@ public class IpcListener
         _isRunning = false;
 
         _ipcPipeStream.Close();
-        await _ipcPipeStream.DisposeAsync();
-        _ipcPipeStream = null;
+        _auroraInterfacePipeStream.Close();
+
+        var ipcTask = _ipcPipeStream.DisposeAsync().AsTask()
+            .ContinueWith(_ => _ipcPipeStream = null);
+        var auroraTask = _auroraInterfacePipeStream.DisposeAsync().AsTask()
+            .ContinueWith(_ => _auroraInterfacePipeStream = null);
+        await Task.WhenAll(ipcTask, auroraTask);
     }
 
     private void BeginIpcServer()
@@ -75,9 +85,13 @@ public class IpcListener
         IsWrapperConnected = false;
         WrappedProcess = "";
 
-        _ipcPipeStream = CreatePipe();
+        _ipcPipeStream = CreatePipe("Aurora\\server");
         _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
         Global.logger.Info("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
+
+        _auroraInterfacePipeStream = CreatePipe(AuroraInterfacePipe);
+        _auroraInterfacePipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
+        Global.logger.Info("[AuroraCommandsServerIPC] Pipe created {}", _auroraInterfacePipeStream?.GetHashCode() ?? -1);
     }
 
     private void ReceiveGameState(IAsyncResult result)
@@ -103,7 +117,7 @@ public class IpcListener
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("[IPCServer] HandleNewIPCGameState Exception, " + exc);
+                    Global.logger.Error("[IPCServer] ReceiveGameState Exception, ", exc);
                     Global.logger.Info("Recieved data that caused error:\n\r" + temp);
                 }
             }
@@ -118,7 +132,28 @@ public class IpcListener
         {
             return;
         }
-        _ipcPipeStream = CreatePipe();
+        _ipcPipeStream = CreatePipe("Aurora\\server");
         _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
+    }
+
+    private void ReceiveAuroraCommand(IAsyncResult result)
+    {
+        if (!_isRunning)
+        {
+            return;
+        }
+        Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");
+
+        using var sr = new StreamReader(_auroraInterfacePipeStream);
+        while (sr.ReadLine() is { } command)
+        {
+            AuroraCommandReceived?.Invoke(this, command);
+        }
+        if (!_isRunning)
+        {
+            return;
+        }
+        _auroraInterfacePipeStream = CreatePipe(AuroraInterfacePipe);
+        _auroraInterfacePipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
     }
 }
