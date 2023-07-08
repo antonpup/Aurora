@@ -73,7 +73,7 @@ public sealed class LightingStateManager : IInit
              evt.Config.ProcessNames.Any(_isRunningProcess));
 
         // Register all Application types in the assembly
-        var profileTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+        var profileTypes = from type in Assembly.GetExecutingAssembly().GetLoadableTypes()
             where type.BaseType == typeof(Application) && type != typeof(GenericApplication)
             let inst = (Application)Activator.CreateInstance(type)
             orderby inst.Config.Name
@@ -83,7 +83,7 @@ public sealed class LightingStateManager : IInit
 
         // Register all layer types that are in the Aurora.Settings.Layers namespace.
         // Do not register all that are inside the assembly since some are application-specific (e.g. minecraft health layer)
-        var layerTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+        var layerTypes = from type in Assembly.GetExecutingAssembly().GetLoadableTypes()
             where type.GetInterfaces().Contains(typeof(ILayerHandler))
             let name = type.Name.CamelCaseToSpaceCase()
             let meta = type.GetCustomAttribute<LayerHandlerMetaAttribute>()

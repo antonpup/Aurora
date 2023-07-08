@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Aurora.Utils;
 
 namespace Aurora.Devices;
 
@@ -20,7 +21,7 @@ internal class AssemblyDeviceLoader : IDeviceLoader
 
     private static IEnumerable<IDevice> LoadAssemblyDevices(Assembly assembly)
     {
-        return from type in assembly.GetTypes()
+        return from type in assembly.GetLoadableTypes()
             where typeof(IDevice).IsAssignableFrom(type)
                   && !type.IsAbstract
                   && type != typeof(ScriptedDevice.ScriptedDevice)

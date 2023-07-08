@@ -659,7 +659,7 @@ namespace Aurora.Settings
             else
             {
                 enabledDevices = new ObservableCollection<Type>(
-                    from type in Assembly.GetExecutingAssembly().GetTypes()
+                    from type in Assembly.GetExecutingAssembly().GetLoadableTypes()
                     where typeof(IDevice).IsAssignableFrom(type)
                           && !type.IsAbstract
                           && !DevicesDisabled.Contains(type)
