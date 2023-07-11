@@ -150,4 +150,28 @@ public static class RazerLayoutMap
         {DeviceKeys.PERIPHERAL_LIGHT13,           new[]{6, 6} },
         {DeviceKeys.PERIPHERAL_LIGHT14,           new[]{7, 6} },
     };
+
+    public static readonly IReadOnlyDictionary<DeviceKeys, int[]> Mousepad = new Dictionary<DeviceKeys, int[]>
+    {
+        {DeviceKeys.MOUSEPADLIGHT1,               new[]{0, 0} },
+        {DeviceKeys.MOUSEPADLIGHT2,               new[]{1, 0} },
+        {DeviceKeys.MOUSEPADLIGHT3,               new[]{2, 0} },
+        {DeviceKeys.MOUSEPADLIGHT4,               new[]{3, 0} },
+        {DeviceKeys.MOUSEPADLIGHT5,               new[]{4, 0} },
+        {DeviceKeys.MOUSEPADLIGHT6,               new[]{5, 0} },
+        {DeviceKeys.MOUSEPADLIGHT7,               new[]{6, 0} },
+        {DeviceKeys.MOUSEPADLIGHT8,               new[]{7, 0} },
+        {DeviceKeys.MOUSEPADLIGHT9,               new[]{8, 0} },
+        {DeviceKeys.MOUSEPADLIGHT10,              new[]{9, 0} },
+        {DeviceKeys.MOUSEPADLIGHT11,              new[]{10, 0} },
+        {DeviceKeys.MOUSEPADLIGHT12,              new[]{11, 0} },
+        {DeviceKeys.MOUSEPADLIGHT13,              new[]{12, 0} },
+        {DeviceKeys.MOUSEPADLIGHT14,              new[]{13, 0} },
+        {DeviceKeys.MOUSEPADLIGHT15,              new[]{14, 0} },
+        {DeviceKeys.MOUSEPADLIGHT16,              new[]{15, 0} },
+        {DeviceKeys.MOUSEPADLIGHT17,              new[]{16, 0} },
+        {DeviceKeys.MOUSEPADLIGHT18,              new[]{17, 0} },
+        {DeviceKeys.MOUSEPADLIGHT19,              new[]{18, 0} },
+        {DeviceKeys.MOUSEPADLIGHT20,              new[]{19, 0} },
+    };
 }

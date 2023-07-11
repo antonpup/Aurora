@@ -18,7 +18,7 @@ public class ChromaAppChangedEventArgs : EventArgs
 public static class RzHelper
 {
     public static readonly (byte r, byte g, byte b)[] KeyboardColors = new (byte r, byte g, byte b)[22 * 6];
-    public static readonly (byte r, byte g, byte b)[] MousepadColors = new (byte r, byte g, byte b)[16];
+    public static readonly (byte r, byte g, byte b)[] MousepadColors = new (byte r, byte g, byte b)[20];
     public static readonly (byte r, byte g, byte b)[] MouseColors = new (byte r, byte g, byte b)[9 * 7];
 
     public static event EventHandler<ChromaAppChangedEventArgs>? ChromaAppChanged;

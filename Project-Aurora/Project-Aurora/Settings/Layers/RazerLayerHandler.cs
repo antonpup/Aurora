@@ -98,11 +98,11 @@ namespace Aurora.Settings.Layers
 
         private bool TryGetColor(DeviceKeys key, out Color color)
         {
-            (byte r, byte g, byte b) rColor = (0, 0, 0);
+            (byte r, byte g, byte b) rColor;
             if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
                 rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
-            else if (key >= DeviceKeys.MOUSEPADLIGHT1 && key <= DeviceKeys.MOUSEPADLIGHT15)
-                rColor = RzHelper.MousepadColors[DeviceKeys.MOUSEPADLIGHT15 - key];
+            else if (RazerLayoutMap.Mousepad.TryGetValue(key, out position))
+                rColor = RzHelper.MousepadColors[position[0]];
             else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
                 rColor = RzHelper.MouseColors[position[1] + position[0] * 7];
             else
