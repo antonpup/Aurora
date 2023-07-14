@@ -29,6 +29,13 @@ namespace Aurora.Devices.OpenRGB
         private readonly SemaphoreSlim _updateLock = new(1);
         private readonly SemaphoreSlim _initializeLock = new(1);
 
+        public OpenRgbAuroraDevice()
+        {
+            var info = "Sdk server needs to be enabled in OpenRGB";
+            var sdkLink = "https://openrgb.org/";
+            _tooltips = new DeviceTooltips(false, false, info, sdkLink);
+        }
+
         protected override async Task<bool> DoInitialize()
         {
             if (IsInitialized)

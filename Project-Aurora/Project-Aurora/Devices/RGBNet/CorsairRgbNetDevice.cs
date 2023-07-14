@@ -12,6 +12,12 @@ public class CorsairRgbNetDevice : RgbNetDevice
 
     public override string DeviceName => "Corsair (RGB.NET)";
 
+    public CorsairRgbNetDevice()
+    {
+        const string sdkLink = "https://www.corsair.com/ww/en/s/downloads";
+        _tooltips = new DeviceTooltips(false, true, null, sdkLink);
+    }
+
     protected override void RegisterVariables(VariableRegistry variableRegistry)
     {
         base.RegisterVariables(variableRegistry);

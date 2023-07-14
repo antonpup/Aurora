@@ -14,6 +14,13 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
 
     public override string DeviceName => "Logitech (RGB.NET)";
 
+    public LogitechRgbNetDevice()
+    {
+        const string info = "LGS can also work";
+        const string sdkLink = "https://www.logitechg.com/en-us/innovation/g-hub.html";
+        _tooltips = new DeviceTooltips(false, true, info, sdkLink);
+    }
+
     protected override void OnInitialized()
     {
         SystemEvents.PowerModeChanged += SystemEventsPowerModeChanged;

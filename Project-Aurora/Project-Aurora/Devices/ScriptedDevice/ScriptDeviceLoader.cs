@@ -72,7 +72,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
     private void CompileCs(string deviceScript)
     {
         CSScript.RoslynEvaluator.CompileAssemblyFromFile(deviceScript, deviceScript + ".dll");
-        File.Delete(deviceScript);
+        File.Delete(deviceScript);  //TODO DON'T DELETE!!! create new process for compiling
         MessageBox.Show(deviceScript + " is compiled. Aurora will crash but script will be loaded next time.");
     }
 

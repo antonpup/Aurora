@@ -1713,6 +1713,48 @@ namespace Aurora.Devices
         PROFILESWITCH = 290,
 
         /// <summary>
+        /// Chroma Link 1
+        /// </summary>
+        [Description("Chroma Link 1")]
+        CL1 = 291,
+
+        /// <summary>
+        /// Chroma Link 2
+        /// </summary>
+        [Description("Chroma Link 2")]
+        CL2 = 292,
+
+        /// <summary>
+        /// Chroma Link 3
+        /// </summary>
+        [Description("Chroma Link 3")]
+        CL3 = 293,
+
+        /// <summary>
+        /// Chroma Link 4
+        /// </summary>
+        [Description("Chroma Link 4")]
+        CL4 = 294,
+
+        /// <summary>
+        /// Chroma Link 5
+        /// </summary>
+        [Description("Chroma Link 5")]
+        CL5 = 295,
+
+        /// <summary>
+        /// Headset 1
+        /// </summary>
+        [Description("Headset 1")]
+        HEADSET1 = 296,
+
+        /// <summary>
+        /// Headset 2
+        /// </summary>
+        [Description("Headset 2")]
+        HEADSET2 = 297,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

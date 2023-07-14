@@ -39,6 +39,12 @@ namespace Aurora.Devices.Razer
 
         protected override string DeviceInfo => string.Join(", ", deviceNames);
 
+        public RazerDevice()
+        {
+            const string info = "You can install chroma inside \"Devices & Wrappers\" -> Chroma and use this";
+            _tooltips = new DeviceTooltips(false, false, info, null);
+        }
+
         protected override async Task<bool> DoInitialize()
         {
             if (chroma is null)

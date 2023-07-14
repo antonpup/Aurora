@@ -11,8 +11,10 @@ namespace Aurora.Devices;
 
 public abstract class DefaultDevice : IDevice, IDisposable
 {
-    private readonly Stopwatch _updateWatch = new();
     protected readonly Stopwatch Watch = new();
+    protected DeviceTooltips _tooltips = new ();
+    
+    private readonly Stopwatch _updateWatch = new();
     private long _lastUpdateTime;
     private long _updateTime;
 
@@ -29,6 +31,8 @@ public abstract class DefaultDevice : IDevice, IDisposable
     public virtual bool isDoingWork { get; protected set; }
 
     public virtual bool IsInitialized { get; protected set; }
+
+    public DeviceTooltips Tooltips => _tooltips;
 
     public async Task<bool> Initialize() {
         if (IsInitialized)

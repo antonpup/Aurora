@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Aurora.Controls
 {
@@ -17,6 +17,8 @@ namespace Aurora.Controls
     {
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceContainer), typeof(Control_DeviceItem));
+
+        private static MouseButtonEventHandler _sdkLinkOnMouseDoubleClick;
 
         public DeviceContainer Device
         {
@@ -128,6 +130,35 @@ namespace Aurora.Controls
             deviceDetails.Text = Device.Device.DeviceDetails;
             devicePerformance.Text = Device.Device.DeviceUpdatePerformance;
 
+            Beta.Visibility = Device.Device.Tooltips.Beta ? Visibility.Visible : Visibility.Hidden;
+            
+            var infoTooltip = Device.Device.Tooltips.Info;
+            if (infoTooltip != null)
+            {
+                InfoTooltip.HintTooltip = infoTooltip;
+                InfoTooltip.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                InfoTooltip.Visibility = Visibility.Hidden;
+            }
+
+
+            var sdkLink = Device.Device.Tooltips.SdkLink;
+            if (sdkLink != null)
+            {
+                SdkLink.MouseDoubleClick -= SdkLink_Clicked;
+                SdkLink.MouseDoubleClick += SdkLink_Clicked;
+                SdkLink.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                SdkLink.MouseDoubleClick -= SdkLink_Clicked;
+                SdkLink.Visibility = Visibility.Hidden;
+            }
+
+            Recommended.Visibility = Device.Device.Tooltips.Recommended ? Visibility.Visible : Visibility.Hidden;
+
             if (Device is Devices.ScriptedDevice.ScriptedDevice)
                 btnEnable.IsEnabled = false;
             else
@@ -146,6 +177,11 @@ namespace Aurora.Controls
 
             if (!Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Any())
                 btnOptions.IsEnabled = false;
+        }
+
+        private void SdkLink_Clicked(object sender, MouseButtonEventArgs e)
+        {
+            System.Diagnostics.Process.Start("explorer", Device.Device.Tooltips.SdkLink);
         }
 
         private void btnViewOptions_Click(object sender, RoutedEventArgs e)

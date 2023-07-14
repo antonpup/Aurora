@@ -18,6 +18,12 @@ namespace Aurora.Devices.Corsair
 
         private readonly List<CorsairDeviceInfo> deviceInfos = new();
 
+        public CorsairDevice()
+        {
+            const string sdkLink = "https://www.corsair.com/ww/en/s/downloads";
+            _tooltips = new DeviceTooltips(false, false, null, sdkLink);
+        }
+
         protected override Task<bool> DoInitialize()
         {
             CUESDK.PerformProtocolHandshake();
