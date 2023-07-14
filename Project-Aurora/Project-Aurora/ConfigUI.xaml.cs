@@ -9,7 +9,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -28,9 +27,12 @@ using Aurora.Utils;
 using Hardcodet.Wpf.TaskbarNotification;
 using PropertyChanged;
 using RazerSdkWrapper;
+using SourceChord.FluentWPF;
+using static Aurora.Utils.Win32Transparency;
 using Application = Aurora.Profiles.Application;
 using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
+using Timer = System.Timers.Timer;
 
 namespace Aurora;
 
@@ -66,6 +68,9 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Task<KeyboardLayoutManager> _layoutManager;
     private readonly Task<AuroraHttpListener?> _httpListener;
 
+    private HwndSource _hwHandle;
+    private readonly bool _useMica;
+
     public Application? FocusedApplication
     {
         get => (Application)GetValue(FocusedApplicationProperty);
@@ -90,16 +95,6 @@ partial class ConfigUI : INotifyPropertyChanged
 
     #region Mica
 
-    [Flags]
-    public enum DwmWindowAttribute : uint
-    {
-        DWMWA_USE_IMMERSIVE_DARK_MODE = 20,
-        DWMWA_MICA_EFFECT = 1029
-    }
-    
-    [DllImport("dwmapi.dll")]
-    public static extern int DwmSetWindowAttribute(IntPtr hwnd, DwmWindowAttribute dwAttribute, ref int pvAttribute, int cbAttribute);
-
     private void Window_ContentRendered(object sender, EventArgs e)
     {
         UpdateStyleAttributes();
@@ -116,6 +111,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void LightThemeRegistryWatcherOnRegistryChanged(object? sender, RegistryChangedEventArgs e)
     {
+        
         if (e.Data is not int lightThemeEnabled)
         {
             return;
@@ -124,18 +120,34 @@ partial class ConfigUI : INotifyPropertyChanged
         Dispatcher.Invoke(() =>
         {
             IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-            HwndSource hwnd = HwndSource.FromHwnd(mainWindowPtr);
+            _hwHandle = HwndSource.FromHwnd(mainWindowPtr);
             var darkThemeEnabled = lightThemeEnabled == 0;
 
-            int trueValue = 0x01;
-            int falseValue = 0x00;
+            NoiseOpacity = 0.005;
 
-            // Set dark mode before applying the material, otherwise you'll get an ugly flash when displaying the window.
-            if (darkThemeEnabled)
-                DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref trueValue, Marshal.SizeOf(typeof(int)));
+            if (_useMica)
+            {
+                var trueValue = 0x01;
+                var falseValue = 0x00;
+
+                SetAcrylicAccentState(this, AcrylicAccentState.Disabled);
+
+                // Set dark mode before applying the material, otherwise you'll get an ugly flash when displaying the window.
+                if (darkThemeEnabled)
+                    DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                        ref trueValue, Marshal.SizeOf(typeof(int)));
+                else
+                    DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE,
+                        ref falseValue, Marshal.SizeOf(typeof(int)));
+
+                DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue,
+                    Marshal.SizeOf(typeof(int)));
+            }
             else
-                DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE, ref falseValue, Marshal.SizeOf(typeof(int)));
-            DwmSetWindowAttribute(hwnd.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue, Marshal.SizeOf(typeof(int)));
+            {
+                EnableAcrylicBlur(_hwHandle.Handle, new EffectColor(128, 128, 128, 240));
+                Activate();
+            }
         });
     }
 
@@ -157,11 +169,12 @@ partial class ConfigUI : INotifyPropertyChanged
         _httpListener = httpListener;
         _layoutManager = layoutManager;
         _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener);
+
+        _useMica = Environment.OSVersion.Version.Build >= 22000;
         InitializeComponent();
+
         ContentRendered += Window_ContentRendered;
-
         _layoutManager.Result.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
-
         ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
         GenerateProfileStack();
@@ -271,7 +284,7 @@ partial class ConfigUI : INotifyPropertyChanged
         keyboard_record_message.Visibility = Visibility.Hidden;
 
         _currentColor = _desktopColorScheme;
-        bg_grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+        bg_grid.Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
 
         _virtualKb = _layoutManager.Result.VirtualKeyboard;
 
@@ -325,6 +338,8 @@ partial class ConfigUI : INotifyPropertyChanged
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
+    private int _lastTick = DateTime.UtcNow.Millisecond;
+
     private void virtual_keyboard_timer_Tick(object sender, EventArgs e)
     {
         if (!ApplicationIsActivated())
@@ -335,19 +350,28 @@ partial class ConfigUI : INotifyPropertyChanged
             {
                 if (_transitionAmount <= 1.0f)
                 {
-                    _transitionColor.BlendColors(_currentColor, _transitionAmount += 0.07f);
+                    _transitionAmount += (float)(DateTime.UtcNow.Millisecond - _lastTick) / 1000;
+                    _transitionColor.BlendColors(_currentColor, Math.Min(_transitionAmount, 1f));
 
-                    bg_grid.Background = new SolidColorBrush(Color.FromArgb((byte)(_transitionColor.Alpha * 140 / 255),
-                        _transitionColor.Red, _transitionColor.Green, _transitionColor.Blue));
-                    bg_grid.UpdateLayout();
+                    if (_useMica)
+                    {
+                        bg_grid.Background = new SolidColorBrush(Color.FromArgb(
+                            (byte)(_transitionColor.Alpha * 140 / 255),
+                            _transitionColor.Red, _transitionColor.Green, _transitionColor.Blue));
+                    }
+                    else
+                    {
+                        EnableAcrylicBlur(_hwHandle.Handle, _transitionColor);
+                    }
                 }
 
-                Dictionary<DeviceKeys, System.Drawing.Color> keylights = Global.effengine.GetKeyboardLights();
+                var keylights = Global.effengine.GetKeyboardLights();
                 _layoutManager.Result.SetKeyboardColors(keylights);
 
                 keyboard_record_message.Visibility =
                     Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
             });
+        _lastTick = DateTime.UtcNow.Millisecond;
     }
 
     ////Misc
@@ -488,7 +512,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
                 Grid profileGrid = new Grid
                 {
-                    Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)),
+                    Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0)),
                     Margin = new Thickness(0, 5, 0, 0),
                     Tag = profileRemove
                 };
@@ -704,31 +728,15 @@ partial class ConfigUI : INotifyPropertyChanged
         FocusedApplication = null;
         SelectedControl = _settingsControl;
 
-        _currentColor = _desktopColorScheme;
+        _currentColor = _useMica ? _desktopColorScheme : EffectColor.FromRGBA(0, 0, 0, 184);
         _transitionAmount = 0.0f;
     }
     private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
     private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
 
-    private void ShowWindow()
-    {
-        Global.logger.Info("Show Window called");
-        Display();
-    }
-
-    protected override void OnStateChanged(EventArgs e)
-    {
-        if (WindowState != WindowState.Normal)
-        {
-            return;
-        }
-
-        base.OnStateChanged(e);
-    }
-
     private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
     {
-        ShowWindow();
+        Display();
     }
 
     private void UpdateManagerStackFocus(object focusedElement, bool forced = false)
@@ -825,4 +833,14 @@ partial class ConfigUI : INotifyPropertyChanged
     private RegistryWatcher _lightThemeRegistryWatcher;
 
     #endregion
+
+    private void ConfigUI_OnMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (_useMica)
+        {
+            return;
+        }
+
+        Dispatcher.Invoke(() => EnableAcrylicBlur(_hwHandle.Handle, _transitionColor));
+    }
 }

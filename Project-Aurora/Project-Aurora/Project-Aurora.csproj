@@ -78,6 +78,7 @@
     <PackageReference Include="Dubya.WindowsMediaController" Version="2.5.0" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
+    <PackageReference Include="FluentWPF" Version="0.10.2" />
     <PackageReference Include="hidlibrary" Version="3.3.40" />
     <PackageReference Include="IronPython" Version="2.7.12" />
     <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
@@ -159,9 +160,18 @@
     <None Update="ver_minor.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="kb_layouts\Extra Features\2led_headset.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="kb_layouts\Extra Features\chroma.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="RGB.NET.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="x64\Interop.AuraServiceLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

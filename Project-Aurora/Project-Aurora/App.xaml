@@ -21,6 +21,8 @@
             </ResourceDictionary>
             <SolidColorBrush x:Key="OverridesTypeFallbackColor" Color="#88DBDBDB" />
             <ResourceDictionary.MergedDictionaries>
+                <!--  FluentWPF Controls  -->
+                <ResourceDictionary Source="pack://application:,,,/FluentWPF;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Core.Implicit.xaml"/>
                 <ResourceDictionary Source="Themes/MetroDark/MetroDark.MSControls.Toolkit.Implicit.xaml"/>
             </ResourceDictionary.MergedDictionaries>

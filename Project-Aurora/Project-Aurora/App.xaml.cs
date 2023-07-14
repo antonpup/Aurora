@@ -140,8 +140,6 @@ public partial class App
 
     private void ForceShutdownApp(int exitCode)
     {
-        Mutex.ReleaseMutex();
-        Mutex.Dispose();
         Environment.ExitCode = exitCode;
         Environment.Exit(exitCode);
     }

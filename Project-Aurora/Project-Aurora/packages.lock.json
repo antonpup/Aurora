@@ -58,6 +58,12 @@
         "resolved": "1.5.0",
         "contentHash": "Db80coUbys8VgmcrR9mxUR+EInTpweoLM0GFJXIBuj8+PTgqV+ygq+EOM3HME83tob1+RR9XlBcEkpfFyypdHg=="
       },
+      "FluentWPF": {
+        "type": "Direct",
+        "requested": "[0.10.2, )",
+        "resolved": "0.10.2",
+        "contentHash": "6bDzdj08dRW4Ynm4GycC2E2MlKFlnH9FPJKRlrIC+a3h+V6a6W7bRiMraviqIZd21JiN6+YggRb76qu/0Zdd0w=="
+      },
       "Hardcodet.NotifyIcon.Wpf": {
         "type": "Direct",
         "requested": "[1.1.0, )",
