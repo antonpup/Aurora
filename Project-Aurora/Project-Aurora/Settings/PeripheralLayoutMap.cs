@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace Aurora.Settings;
 
 public static class PeripheralLayoutMap
 {
-    private static readonly Dictionary<PreferredKeyboard, string> KeyboardLayouts = new()
+    public static readonly IReadOnlyDictionary<PreferredKeyboard, string> KeyboardLayoutMap = new Dictionary<PreferredKeyboard, string>
     {
         {PreferredKeyboard.Logitech_G910, "logitech_g910.json"},
         {PreferredKeyboard.Logitech_G810, "logitech_g810.json"},
@@ -75,9 +74,7 @@ public static class PeripheralLayoutMap
         {PreferredKeyboard.Keychron_Q1_Knob_Ansi, "keychron_q1_knob_ansi.json"},
     };
 
-    public static readonly IReadOnlyDictionary<PreferredKeyboard, string> KeyboardLayoutMap = new ReadOnlyDictionary<PreferredKeyboard, string>(KeyboardLayouts);
-
-    private static readonly Dictionary<PreferredMouse, string> MouseLayouts = new()
+    public static readonly IReadOnlyDictionary<PreferredMouse, string> MouseLayoutMap = new Dictionary<PreferredMouse, string>
     {
           {PreferredMouse.Generic_Peripheral, "generic_peripheral.json"},
           {PreferredMouse.Generic_Openrgb_Mouse, "generic_openrgb_mouse.json"},
@@ -102,9 +99,7 @@ public static class PeripheralLayoutMap
           {PreferredMouse.Razer_naga_Pro, "razer_naga_pro_features.json"},
     };
 
-    public static readonly IReadOnlyDictionary<PreferredMouse, string> MouseLayoutMap = new ReadOnlyDictionary<PreferredMouse, string>(MouseLayouts);
-
-    private static readonly Dictionary<PreferredMousepad, string> MousepadLayouts = new()
+    public static readonly IReadOnlyDictionary<PreferredMousepad, string> MousepadLayoutMap = new Dictionary<PreferredMousepad, string>()
     {
         {PreferredMousepad.Generic_Mousepad, "generic_mousepad.json"},
         {PreferredMousepad.Custom, "custom_mousepad.json"},
@@ -115,5 +110,16 @@ public static class PeripheralLayoutMap
         {PreferredMousepad.Razer_19_Led, "razer_19_leds.json"},
     };
 
-    public static readonly IReadOnlyDictionary<PreferredMousepad, string> MousepadLayoutMap = new ReadOnlyDictionary<PreferredMousepad, string>(MousepadLayouts);
+    public static readonly IReadOnlyDictionary<PreferredHeadset, string> HeadsetLayoutMap = new Dictionary<PreferredHeadset, string>()
+    {
+        {PreferredHeadset.One_Led_Headset, "1led_headset.json"},
+        {PreferredHeadset.Two_Led_Headset, "2led_headset.json"},
+        {PreferredHeadset.Custom, "custom_headset.json"},
+    };
+
+    public static readonly IReadOnlyDictionary<PreferredChromaLeds, string> ChromaLayoutMap = new Dictionary<PreferredChromaLeds, string>
+    {
+        {PreferredChromaLeds.Suggested, "chroma.json"},
+        {PreferredChromaLeds.Custom, "custom_chroma.json"},
+    };
 }

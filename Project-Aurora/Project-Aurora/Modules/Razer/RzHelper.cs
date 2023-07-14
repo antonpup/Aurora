@@ -20,6 +20,8 @@ public static class RzHelper
     public static readonly (byte r, byte g, byte b)[] KeyboardColors = new (byte r, byte g, byte b)[22 * 6];
     public static readonly (byte r, byte g, byte b)[] MousepadColors = new (byte r, byte g, byte b)[20];
     public static readonly (byte r, byte g, byte b)[] MouseColors = new (byte r, byte g, byte b)[9 * 7];
+    public static readonly (byte r, byte g, byte b)[] HeadsetColors = new (byte r, byte g, byte b)[5];
+    public static readonly (byte r, byte g, byte b)[] ChromaLinkColors = new (byte r, byte g, byte b)[5];
 
     public static event EventHandler<ChromaAppChangedEventArgs>? ChromaAppChanged;
 
@@ -81,14 +83,16 @@ public static class RzHelper
 
     public static void UpdateIfStale()
     {
-        if (UpdateStopwatch.ElapsedMilliseconds < Global.Configuration.UpdateDelay)
+        if (Global.razerSdkManager == null || UpdateStopwatch.ElapsedMilliseconds < Global.Configuration.UpdateDelay)
         {
             return;
         }
-        foreach (AbstractColorDataProvider provider in new AbstractColorDataProvider[]{
+        foreach (var provider in new AbstractColorDataProvider[]{
                      Global.razerSdkManager.GetDataProvider<RzKeyboardDataProvider>(),
                      Global.razerSdkManager.GetDataProvider<RzMouseDataProvider>(),
-                     Global.razerSdkManager.GetDataProvider<RzMousepadDataProvider>()
+                     Global.razerSdkManager.GetDataProvider<RzMousepadDataProvider>(),
+                     Global.razerSdkManager.GetDataProvider<RzHeadsetDataProvider>(),
+                     Global.razerSdkManager.GetDataProvider<RzChromaLinkDataProvider>()
                  })
         {
             provider.Update();
@@ -122,6 +126,18 @@ public static class RzHelper
                     MousepadColors[i] = mousePad.GetZoneColor(i);
                 break;
             }
+            case RzHeadsetDataProvider headset:
+                for (var i = 0; i < headset.Grids[0].Height * headset.Grids[0].Width; i++)
+                {
+                    HeadsetColors[i] = headset.GetZoneColor(i);
+                }
+                break;
+            case RzChromaLinkDataProvider chromaLink:
+                for (var i = 0; i < chromaLink.Grids[0].Height * chromaLink.Grids[0].Width; i++)
+                {
+                    ChromaLinkColors[i] = chromaLink.GetZoneColor(i);
+                }
+                break;
             case RzAppListDataProvider appList:
                 CurrentAppExecutable = appList.CurrentAppExecutable;
                 break;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Aurora.Devices;
 
-namespace Aurora.Devices.Razer;
+namespace Aurora.Modules.Razer;
 
 // https://developer.razer.com/works-with-chroma/razer-chroma-led-profiles/
 public static class RazerLayoutMap
@@ -173,5 +174,23 @@ public static class RazerLayoutMap
         {DeviceKeys.MOUSEPADLIGHT18,              new[]{17, 0} },
         {DeviceKeys.MOUSEPADLIGHT19,              new[]{18, 0} },
         {DeviceKeys.MOUSEPADLIGHT20,              new[]{19, 0} },
+    };
+
+    public static readonly IReadOnlyDictionary<DeviceKeys, int[]> Headset = new Dictionary<DeviceKeys, int[]>
+    {
+        {DeviceKeys.HEADSET1,               new[]{0, 0} },
+        {DeviceKeys.HEADSET2,               new[]{0, 1} },
+        //{DeviceKeys.HEADSET3,               new[]{0, 2} },
+        //{DeviceKeys.HEADSET4,               new[]{0, 3} },
+        //{DeviceKeys.HEADSET5,               new[]{0, 4} },
+    };
+
+    public static readonly IReadOnlyDictionary<DeviceKeys, int[]> ChromaLink = new Dictionary<DeviceKeys, int[]>
+    {
+        {DeviceKeys.CL1,               new[]{0, 0} },
+        {DeviceKeys.CL2,               new[]{1, 0} },
+        {DeviceKeys.CL3,               new[]{2, 0} },
+        {DeviceKeys.CL4,               new[]{3, 0} },
+        {DeviceKeys.CL5,               new[]{4, 0} },
     };
 }

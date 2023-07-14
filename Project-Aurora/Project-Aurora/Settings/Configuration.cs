@@ -483,6 +483,35 @@ namespace Aurora.Settings
         Razer_19_Led = 103,
     }
 
+    public enum PreferredHeadset
+    {
+        [Description("None")]
+        None = 0,
+        
+        [Description("One Led Headset")]
+        One_Led_Headset = 1,
+        
+        [Description("Two Led Headset")]
+        Two_Led_Headset = 2,
+        
+        [Description("Custom Headset")]
+        Custom = 10,
+    }
+
+    public enum PreferredChromaLeds
+    {
+        [Description("None")]
+        Automatic = 0,
+        
+        [Description("None")]
+        None = 1,
+        
+        [Description("Suggested")]
+        Suggested = 2,
+        
+        [Description("Custom Headset")]
+        Custom = 10,
+    }
 
     public enum KeycapType
     {
@@ -554,6 +583,8 @@ namespace Aurora.Settings
         [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.Generic_Peripheral;
         [JsonProperty("mousepad_preference")] public PreferredMousepad MousepadPreference { get; set; } = PreferredMousepad.None;
+        public PreferredHeadset HeadsetPreference { get; set; } = PreferredHeadset.None;
+        public PreferredChromaLeds ChromaLedsPreference { get; set; } = PreferredChromaLeds.Automatic;
         [JsonProperty("virtualkeyboard_keycap_type")] public KeycapType VirtualkeyboardKeycapType { get; set; } = KeycapType.Default;
         [JsonProperty("detection_mode")] public ApplicationDetectionMode DetectionMode { get; set; } = ApplicationDetectionMode.WindowsEvents;
         [JsonProperty("devices_disable_keyboard")] public bool DevicesDisableKeyboard { get; set; }

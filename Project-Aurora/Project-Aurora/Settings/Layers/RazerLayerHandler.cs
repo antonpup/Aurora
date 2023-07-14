@@ -1,5 +1,4 @@
 using Aurora.Devices;
-using Aurora.Devices.Razer;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using Aurora.Settings.Overrides;
@@ -12,132 +11,166 @@ using System.Windows.Controls;
 using Aurora.Modules.Razer;
 using Aurora.Settings.Layers.Controls;
 
-namespace Aurora.Settings.Layers
+namespace Aurora.Settings.Layers;
+
+public class RazerLayerHandlerProperties : LayerHandlerProperties<RazerLayerHandlerProperties>
 {
-    public class RazerLayerHandlerProperties : LayerHandlerProperties<RazerLayerHandlerProperties>
+
+    [JsonIgnore]
+    private bool? _transparencyEnabled;
+    [JsonProperty("_TransparencyEnabled")]
+    [LogicOverridable("Enable Transparency")]
+    public bool TransparencyEnabled
     {
-        
-        [LogicOverridable("Enable Transparency")] public bool? _TransparencyEnabled { get; set; }
-        [JsonIgnore] public bool TransparencyEnabled => Logic._TransparencyEnabled ?? false;
-
-        public bool? _ColorPostProcessEnabled { get; set; }
-        [JsonIgnore]
-        public bool ColorPostProcessEnabled => Logic._ColorPostProcessEnabled ?? _ColorPostProcessEnabled ?? false;
-
-        public double? _BrightnessChange { get; set; }
-        [JsonIgnore]
-        public double BrightnessChange => Logic._BrightnessChange ?? _BrightnessChange ?? 0;
-
-        public double? _SaturationChange { get; set; }
-        [JsonIgnore]
-        public double SaturationChange => Logic._SaturationChange ?? _SaturationChange ?? 0;
-
-        public double? _HueShift { get; set; }
-        [JsonIgnore]
-        public double HueShift => Logic._HueShift ?? _HueShift ?? 0;
-
-        public Dictionary<DeviceKeys, DeviceKeys> _KeyCloneMap { get; set; }
-        [JsonIgnore]
-        public Dictionary<DeviceKeys, DeviceKeys> KeyCloneMap => Logic._KeyCloneMap ?? _KeyCloneMap ?? new Dictionary<DeviceKeys, DeviceKeys>();
-
-        public RazerLayerHandlerProperties() : base() { }
-
-        public RazerLayerHandlerProperties(bool arg = false) : base(arg) { }
-
-        public override void Default()
-        {
-            base.Default();
-
-            _ColorPostProcessEnabled = false;
-            _BrightnessChange = 0;
-            _SaturationChange = 0;
-            _HueShift = 0;
-            _KeyCloneMap = new Dictionary<DeviceKeys, DeviceKeys>();
-        }
+        get => Logic._transparencyEnabled ?? false;
+        set => _transparencyEnabled = value;
     }
 
-    [LogicOverrideIgnoreProperty("_PrimaryColor")]
-    [LogicOverrideIgnoreProperty("_Sequence")]
-    [LayerHandlerMeta(Name = "Razer Chroma", IsDefault = true)]
-    public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
+    [JsonIgnore]
+    private bool? _colorPostProcessEnabled;
+    [JsonProperty("_ColorPostProcessEnabled")]
+    public bool ColorPostProcessEnabled
     {
-        public RazerLayerHandler() : base("Chroma Layer")
+        get => Logic._colorPostProcessEnabled ?? _colorPostProcessEnabled ?? false;
+        set => _colorPostProcessEnabled = value;
+    }
+
+    [JsonIgnore]
+    private double? _brightnessChange;
+    [JsonProperty("_BrightnessChange")]
+    public double BrightnessChange
+    {
+        get => Logic._brightnessChange ?? _brightnessChange ?? 0;
+        set => _brightnessChange = value;
+    }
+
+    [JsonIgnore]
+    private double? _saturationChange;
+    [JsonProperty("_SaturationChange")]
+    public double SaturationChange
+    {
+        get => Logic._saturationChange ?? _saturationChange ?? 0;
+        set => _saturationChange = value;
+    }
+
+    [JsonIgnore]
+    private double? _hueShift;
+    [JsonProperty("_HueShift")]
+    public double HueShift
+    {
+        get => Logic._hueShift ?? _hueShift ?? 0;
+        set => _hueShift = value;
+    }
+
+    [JsonIgnore]
+    private Dictionary<DeviceKeys, DeviceKeys>? _keyCloneMap;
+    [JsonProperty("_KeyCloneMap")]
+    public Dictionary<DeviceKeys, DeviceKeys> KeyCloneMap
+    {
+        get => Logic._keyCloneMap ?? (_keyCloneMap ??= new Dictionary<DeviceKeys, DeviceKeys>());
+        set => _keyCloneMap = value;
+    }
+
+    public RazerLayerHandlerProperties() { }
+
+    public RazerLayerHandlerProperties(bool arg = false) : base(arg) { }
+
+    public override void Default()
+    {
+        base.Default();
+
+        _colorPostProcessEnabled = false;
+        _brightnessChange = 0;
+        _saturationChange = 0;
+        _hueShift = 0;
+        _keyCloneMap = new Dictionary<DeviceKeys, DeviceKeys>();
+    }
+}
+
+[LogicOverrideIgnoreProperty("_PrimaryColor")]
+[LogicOverrideIgnoreProperty("_Sequence")]
+[LayerHandlerMeta(Name = "Razer Chroma", IsDefault = true)]
+public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
+{
+    public RazerLayerHandler() : base("Chroma Layer")
+    {
+    }
+
+    protected override UserControl CreateControl()
+    {
+        return new Control_RazerLayer(this);
+    }
+
+    private bool _empty = true;
+    public override EffectLayer Render(IGameState gamestate)
+    {
+        if (!RzHelper.IsCurrentAppValid())
         {
+            return EffectLayer.EmptyLayer;
         }
+        _empty = false;
+        RzHelper.UpdateIfStale();
 
-        protected override UserControl CreateControl()
+        foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
         {
-            return new Control_RazerLayer(this);
-        }
-
-        private bool _empty = true;
-        public override EffectLayer Render(IGameState gamestate)
-        {
-            if (!RzHelper.IsCurrentAppValid())
-            {
-                return EffectLayer.EmptyLayer;
-            }
-            _empty = false;
-            RzHelper.UpdateIfStale();
-
-            foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
-            {
-                if (!TryGetColor(key, out var color))
-                    continue;
+            if (!TryGetColor(key, out var color))
+                continue;
                 
-                EffectLayer.Set(key, color);
-            }
-
-            if (Properties.KeyCloneMap == null) return EffectLayer;
-            foreach (var target in Properties.KeyCloneMap)
-                if(TryGetColor(target.Value, out var clr))
-                    EffectLayer.Set(target.Key, clr);
-
-            return EffectLayer;
+            EffectLayer.Set(key, color);
         }
 
-        private bool TryGetColor(DeviceKeys key, out Color color)
+        foreach (var target in Properties.KeyCloneMap)
+            if(TryGetColor(target.Value, out var clr))
+                EffectLayer.Set(target.Key, clr);
+
+        return EffectLayer;
+    }
+
+    private bool TryGetColor(DeviceKeys key, out Color color)
+    {
+        (byte r, byte g, byte b) rColor;
+        if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
+            rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
+        else if (RazerLayoutMap.Mousepad.TryGetValue(key, out position))
+            rColor = RzHelper.MousepadColors[position[0]];
+        else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
+            rColor = RzHelper.MouseColors[position[1] + position[0] * 7];
+        else if (RazerLayoutMap.Headset.TryGetValue(key, out position))
+            rColor = RzHelper.HeadsetColors[position[1]];
+        else if (RazerLayoutMap.ChromaLink.TryGetValue(key, out position))
+            rColor = RzHelper.ChromaLinkColors[position[0]];
+        else
         {
-            (byte r, byte g, byte b) rColor;
-            if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
-                rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
-            else if (RazerLayoutMap.Mousepad.TryGetValue(key, out position))
-                rColor = RzHelper.MousepadColors[position[0]];
-            else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
-                rColor = RzHelper.MouseColors[position[1] + position[0] * 7];
-            else
-            {
-                color = Color.Transparent;
-                return false;
-            }
-
-            if (Properties.ColorPostProcessEnabled)
-                rColor = PostProcessColor(rColor);
-            color = FastTransform(rColor);
-
-            return true;
+            color = Color.Transparent;
+            return false;
         }
 
-        private (byte r, byte g, byte b) PostProcessColor((byte r, byte g, byte b) color)
-        {
-            if (color.r == 0 && color.g == 0 && color.b == 0)
-                return color;
+        if (Properties.ColorPostProcessEnabled)
+            rColor = PostProcessColor(rColor);
+        color = FastTransform(rColor);
 
-            if (Properties.BrightnessChange != 0)
-                color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
-            if (Properties.SaturationChange != 0)
-                color = ColorUtils.ChangeSaturation(color, Properties.SaturationChange);
-            if (Properties.HueShift != 0)
-                color = ColorUtils.ChangeHue(color, Properties.HueShift);
+        return true;
+    }
 
+    private (byte r, byte g, byte b) PostProcessColor((byte r, byte g, byte b) color)
+    {
+        if (color is { r: 0, g: 0, b: 0 })
             return color;
-        }
 
-        private Color FastTransform((byte r, byte g, byte b) color)
-        {
-            return Properties.TransparencyEnabled ?
-                ColorUtils.FastColorTransparent(color.r, color.g, color.b) :
-                ColorUtils.FastColor(color.r, color.g, color.b);
-        }
+        if (Properties.BrightnessChange != 0)
+            color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
+        if (Properties.SaturationChange != 0)
+            color = ColorUtils.ChangeSaturation(color, Properties.SaturationChange);
+        if (Properties.HueShift != 0)
+            color = ColorUtils.ChangeHue(color, Properties.HueShift);
+
+        return color;
+    }
+
+    private Color FastTransform((byte r, byte g, byte b) color)
+    {
+        return Properties.TransparencyEnabled ?
+            ColorUtils.FastColorTransparent(color.r, color.g, color.b) :
+            ColorUtils.FastColor(color.r, color.g, color.b);
     }
 }

@@ -370,14 +370,19 @@ public class KeyboardLayoutManager
             Global.Configuration.KeyboardBrand,
             Global.Configuration.MousePreference,
             Global.Configuration.MousepadPreference,
-            Global.Configuration.MouseOrientation
+            Global.Configuration.MouseOrientation,
+            Global.Configuration.HeadsetPreference,
+            Global.Configuration.ChromaLedsPreference
         );
     }
 
     private void LoadBrand(PreferredKeyboard keyboardPreference = PreferredKeyboard.None,
         PreferredMouse mousePreference = PreferredMouse.None,
         PreferredMousepad mousepadPreference = PreferredMousepad.None,
-        MouseOrientationType mouseOrientation = MouseOrientationType.RightHanded)
+        MouseOrientationType mouseOrientation = MouseOrientationType.RightHanded,
+        PreferredHeadset headsetPreference = PreferredHeadset.None,
+        PreferredChromaLeds chromaLeds = PreferredChromaLeds.Automatic
+    )
     {
 #if !DEBUG
         try
@@ -540,7 +545,21 @@ public class KeyboardLayoutManager
             {
                 var mousepadFeaturePath = Path.Combine(_layoutsPath, "Extra Features", mousepadLayoutJsonFile);
 
-                LoadMousepad(mouseOrientation, mousepadFeaturePath);
+                LoadGenericLayout(mousepadFeaturePath);
+            }
+
+            if (PeripheralLayoutMap.HeadsetLayoutMap.TryGetValue(headsetPreference, out var headsetLayoutJsonFile))
+            {
+                var headsetFeaturePath = Path.Combine(_layoutsPath, "Extra Features", headsetLayoutJsonFile);
+
+                LoadGenericLayout(headsetFeaturePath);
+            }
+
+            if (PeripheralLayoutMap.ChromaLayoutMap.TryGetValue(chromaLeds, out var chromaLayoutJsonFile))
+            {
+                var headsetFeaturePath = Path.Combine(_layoutsPath, "Extra Features", chromaLayoutJsonFile);
+
+                LoadGenericLayout(headsetFeaturePath);
             }
 #if !DEBUG
         }
@@ -575,37 +594,6 @@ public class KeyboardLayoutManager
         layout = JsonConvert.DeserializeObject<VirtualGroup>(featureContent,
             new JsonSerializerSettings {ObjectCreationHandling = ObjectCreationHandling.Replace})!;
         return true;
-    }
-
-    private void LoadMousepad(MouseOrientationType mouseOrientation, string mousepadFeaturePath)
-    {
-        if (!LoadLayout(mousepadFeaturePath, out var featureConfig))
-        {
-            return;
-        }
-
-        if (mouseOrientation == MouseOrientationType.LeftHanded)
-        {
-            if (featureConfig.OriginRegion == KeyboardRegion.TopRight)
-                featureConfig.OriginRegion = KeyboardRegion.TopLeft;
-            else if (featureConfig.OriginRegion == KeyboardRegion.BottomRight)
-                featureConfig.OriginRegion = KeyboardRegion.BottomLeft;
-
-            double outlineWidth = 0.0;
-
-            foreach (var key in featureConfig.GroupedKeys)
-            {
-                if (outlineWidth == 0.0 && key.Tag == DeviceKeys.NONE)
-                {
-                    //We found outline (NOTE: Outline has to be first in the grouped keys)
-                    outlineWidth = key.Width + 2 * key.MarginLeft;
-                }
-
-                key.MarginLeft -= outlineWidth;
-            }
-        }
-
-        _virtualKeyboardGroup.AddFeature(featureConfig.GroupedKeys.ToArray(), featureConfig.OriginRegion);
     }
 
     private void LoadKeyboard(string layoutConfigPath)
@@ -677,6 +665,16 @@ public class KeyboardLayoutManager
 
                 key.MarginLeft -= outlineWidth;
             }
+        }
+
+        _virtualKeyboardGroup.AddFeature(featureConfig.GroupedKeys.ToArray(), featureConfig.OriginRegion);
+    }
+
+    private void LoadGenericLayout(string headsetFeaturePath)
+    {
+        if (!LoadLayout(headsetFeaturePath, out var featureConfig))
+        {
+            return;
         }
 
         _virtualKeyboardGroup.AddFeature(featureConfig.GroupedKeys.ToArray(), featureConfig.OriginRegion);

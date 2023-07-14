@@ -49,6 +49,8 @@ public sealed partial class RazerSdkModule : IAuroraModule
             MouseEnabled = true,
             MousepadEnabled = true,
             AppListEnabled = true,
+            HeadsetEnabled = true,
+            ChromaLinkEnabled = true,
         };
         Global.razerSdkManager = _razerSdkManager;
 

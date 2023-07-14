@@ -1,0 +1,81 @@
+﻿{
+  "group_tag": "headset",
+  "origin_region": 4,
+  "grouped_keys": [
+    {
+      "visualName": "CL1",
+      "tag": 291,
+      "font_size": 12,
+      "margin_left": 40.0,
+      "margin_top": -30.0,
+      "width": 30.0,
+      "height": 30.0,
+      "width_bits": 6,
+      "height_bits": 6,
+      "margin_left_bits": 2,
+      "margin_top_bits": -6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "CL2",
+      "tag": 292,
+      "font_size": 12,
+      "margin_left": 20.0,
+      "margin_top": -70.0,
+      "width": 30.0,
+      "height": 30.0,
+      "width_bits": 6,
+      "height_bits": 6,
+      "margin_left_bits": 2,
+      "margin_top_bits": -6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "CL3",
+      "tag": 293,
+      "font_size": 12,
+      "margin_left": 60.0,
+      "margin_top": -70.0,
+      "width": 30.0,
+      "height": 30.0,
+      "width_bits": 6,
+      "height_bits": 6,
+      "margin_left_bits": 2,
+      "margin_top_bits": -6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "CL4",
+      "tag": 294,
+      "font_size": 12,
+      "margin_left": 20.0,
+      "margin_top": -110.0,
+      "width": 30.0,
+      "height": 30.0,
+      "width_bits": 6,
+      "height_bits": 6,
+      "margin_left_bits": 2,
+      "margin_top_bits": -6,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "CL5",
+      "tag": 295,
+      "font_size": 12,
+      "margin_left": 60.0,
+      "margin_top": -110.0,
+      "width": 30.0,
+      "height": 30.0,
+      "width_bits": 6,
+      "height_bits": 6,
+      "margin_left_bits": 2,
+      "margin_top_bits": -6,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}

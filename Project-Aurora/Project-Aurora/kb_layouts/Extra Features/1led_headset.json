@@ -1,0 +1,21 @@
+﻿{
+  "group_tag": "headset",
+  "origin_region": 4,
+  "grouped_keys": [
+    {
+      "visualName": "Headset",
+      "tag": 296,
+      "font_size": 10,
+      "margin_left": 20.0,
+      "margin_top": -90.0,
+      "width": 40.0,
+      "height": 40.0,
+      "width_bits": 6,
+      "height_bits": 6,
+      "margin_left_bits": 2,
+      "margin_top_bits": -6,
+      "enabled": true,
+      "absolute_location": true
+    }
+  ]
+}
