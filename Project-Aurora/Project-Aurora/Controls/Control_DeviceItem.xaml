@@ -15,13 +15,13 @@
         <TextBlock x:Name="deviceDetails" Grid.Column="1" Margin="1" Text="Device Details" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" />
         <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <TextBlock x:Name="devicePerformance" Text="000 ms" Margin="1" Width="80" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-            <controls:Control_DeviceHint x:Name="Beta"
+            <controls:Control_DeviceHint x:Name="Beta" Visibility="Hidden"
                                          Text="!" CircleBackground="Chocolate"
                                          HintTooltip="This device is currently beta, there might be bugs and you may need to remap some keys"
                                          />
-            <controls:Control_DeviceHint x:Name="InfoTooltip" Text="i"/>
-            <controls:Control_DeviceHint x:Name="SdkLink" Text="🔗" HintTooltip="Double click to download the sdk"/>
-            <controls:Control_DeviceHint x:Name="Recommended"
+            <controls:Control_DeviceHint x:Name="InfoTooltip" Text="i" Visibility="Hidden"/>
+            <controls:Control_DeviceHint x:Name="SdkLink" Visibility="Hidden" Text="🔗" HintTooltip="Double click to download the sdk"/>
+            <controls:Control_DeviceHint x:Name="Recommended" Visibility="Hidden"
                                          Text="✔" CircleBackground="Green"
                                          HintTooltip="Using this is recommended compared to other sdks"/>
             <Button x:Name="btnStart" Content="Start" Margin="1" Width="55" Click="btnToggleOnOff_Click" />
