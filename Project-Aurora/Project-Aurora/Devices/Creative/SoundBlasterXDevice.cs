@@ -16,33 +16,33 @@ public class SoundBlasterXDevice : DefaultDevice
 
     public override string DeviceName => "SoundBlasterX";
 
-    private LEDManager _sbScanner;
+    private LEDManager? _sbScanner;
 
-    private LEDManager _sbKeyboard;
-    private EnumeratedDevice _sbKeyboardInfo;
-    private LedSettings _sbKeyboardSettings;
+    private LEDManager? _sbKeyboard;
+    private EnumeratedDevice? _sbKeyboardInfo;
+    private LedSettings? _sbKeyboardSettings;
 
-    private LEDManager _sbMouse;
-    private EnumeratedDevice _sbMouseInfo;
-    private LedSettings _sbMouseSettings;
+    private LEDManager? _sbMouse;
+    private EnumeratedDevice? _sbMouseInfo;
+    private LedSettings? _sbMouseSettings;
     
     public override string DeviceDetails
     {
         get
         {
-            if (_sbKeyboard == null && _sbMouse == null)
+            if (!IsInitialized && _sbKeyboard == null && _sbMouse == null)
             {
                 return "";
             }
 
             var outDetails = "";
             if (_sbKeyboard != null)
-                outDetails += _sbKeyboardInfo.friendlyName;
+                outDetails += _sbKeyboardInfo?.friendlyName;
             if (_sbMouse == null) return outDetails + ": Initialized";
             if (outDetails.Length > 0)
                 outDetails += " and ";
 
-            outDetails += _sbMouseInfo.friendlyName;
+            outDetails += _sbMouseInfo?.friendlyName;
             return outDetails + ": Initialized";
         }
     }
@@ -165,11 +165,11 @@ public class SoundBlasterXDevice : DefaultDevice
                 try
                 {
                     _sbMouseSettings.payloadData = _sbMouse.LedPayloadCleanup(_sbMouseSettings.payloadData.Value,
-                        _sbMouseInfo.totalNumLeds);
+                        _sbMouseInfo?.totalNumLeds ?? 0);
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error freeing " + _sbMouseInfo.friendlyName, exc);
+                    Global.logger.Error("There was an error freeing " + _sbMouseInfo?.friendlyName, exc);
                 }
             }
 
@@ -182,7 +182,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error("There was an error closing " + _sbMouseInfo.friendlyName, exc);
+                Global.logger.Error("There was an error closing " + _sbMouseInfo?.friendlyName, exc);
             }
             finally
             {
@@ -206,7 +206,7 @@ public class SoundBlasterXDevice : DefaultDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error freeing " + _sbKeyboardInfo.friendlyName, exc);
+                    Global.logger.Error(exc, "There was an error freeing " + _sbKeyboardInfo?.friendlyName);
                 }
             }
 
@@ -219,7 +219,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error("There was an error closing " + _sbKeyboardInfo.friendlyName, exc.Message);
+                Global.logger.Error(exc, "There was an error closing " + _sbKeyboardInfo?.friendlyName);
             }
             finally
             {
@@ -231,21 +231,19 @@ public class SoundBlasterXDevice : DefaultDevice
             }
         }
 
-        if (_sbScanner != null)
+        if (_sbScanner == null) return Task.CompletedTask;
+        try
         {
-            try
-            {
-                _sbScanner.Dispose();
-                _sbScanner = null;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("There was an error closing SoundBlasterX scanner.", exc);
-            }
-            finally
-            {
-                _sbScanner = null;
-            }
+            _sbScanner.Dispose();
+            _sbScanner = null;
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error("There was an error closing SoundBlasterX scanner.", exc);
+        }
+        finally
+        {
+            _sbScanner = null;
         }
 
         return Task.CompletedTask;
@@ -320,7 +318,7 @@ public class SoundBlasterXDevice : DefaultDevice
 
     [MethodImpl(MethodImplOptions.Synchronized)]
     private bool Update(DoWorkEventArgs e, uint numKbGroups, uint maxKbLength, LedPattern[] kbPatterns, uint[] kbGroupsArr,
-        LedColour[] kbColors, LedColour[] mouseColors)
+        LedColour[] kbColors, LedColour[]? mouseColors)
     {
         if (e.Cancel) return false;
         if (_sbKeyboard != null && numKbGroups > 0)
@@ -346,7 +344,7 @@ public class SoundBlasterXDevice : DefaultDevice
             catch (Exception exc)
             {
                 Global.logger.Error(
-                    "Failed to Update Device " + _sbKeyboardInfo.friendlyName + ": " + exc);
+                    "Failed to Update Device " + _sbKeyboardInfo?.friendlyName + ": " + exc);
                 return false;
             }
             finally
@@ -359,73 +357,71 @@ public class SoundBlasterXDevice : DefaultDevice
         }
 
         if (e.Cancel) return false;
-        if (_sbMouse != null && mouseColors != null)
+        if (_sbMouse == null || mouseColors == null) return true;
+        if (_sbMouseSettings == null)
         {
-            if (_sbMouseSettings == null)
-            {
-                _sbMouseSettings = new LedSettings();
-                _sbMouseSettings.persistentInDevice = false;
-                _sbMouseSettings.globalPatternMode = false;
-                _sbMouseSettings.pattern = LedPattern.Static;
-                _sbMouseSettings.payloadData = new LedPayloadData();
-            }
+            _sbMouseSettings = new LedSettings();
+            _sbMouseSettings.persistentInDevice = false;
+            _sbMouseSettings.globalPatternMode = false;
+            _sbMouseSettings.pattern = LedPattern.Static;
+            _sbMouseSettings.payloadData = new LedPayloadData();
+        }
 
-            if (_sbMouseSettings.payloadData.Value.opaqueSize == 0)
+        if (_sbMouseSettings.payloadData.Value.opaqueSize == 0)
+        {
+            var mousePatterns = new LedPattern[mouseColors.Length];
+            var mouseGroups = new uint[SoundBlasterMappings.MouseMapping.Length * 2];
+            for (int i = 0; i < SoundBlasterMappings.MouseMapping.Length; i++)
             {
-                var mousePatterns = new LedPattern[mouseColors.Length];
-                var mouseGroups = new uint[SoundBlasterMappings.MouseMapping.Length * 2];
-                for (int i = 0; i < SoundBlasterMappings.MouseMapping.Length; i++)
-                {
-                    mouseGroups[i * 2 + 0] = 1; //1 LED in group
-                    mouseGroups[i * 2 + 1] = (uint)SoundBlasterMappings.MouseMapping[i].Key; //Which LED it is
-                    mousePatterns[i] = LedPattern.Static; //LED has a host-controlled static color
-                }
-
-                try
-                {
-                    _sbMouseSettings.payloadData = _sbMouse.LedPayloadInitialize(
-                        _sbMouseSettings.payloadData.Value,
-                        _sbMouseInfo.totalNumLeds,
-                        1, 1);
-                    _sbMouseSettings.payloadData = _sbMouse.LedPayloadFillupAll(
-                        _sbMouseSettings.payloadData.Value,
-                        (uint)mouseColors.Length, mousePatterns,
-                        2, mouseGroups, 1, 1, mouseColors);
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Failed to setup data for " + _sbMouseInfo.friendlyName + ": ", exc);
-                    if (_sbMouseSettings.payloadData.Value.opaqueSize > 0)
-                        _sbMouseSettings.payloadData = _sbMouse.LedPayloadCleanup(_sbMouseSettings.payloadData.Value,
-                            _sbMouseInfo.totalNumLeds);
-
-                    return false;
-                }
-            }
-            else
-            {
-                try
-                {
-                    for (int i = 0; i < mouseColors.Length; i++)
-                        _sbMouseSettings.payloadData = _sbMouse.LedPayloadFillupLedColour(
-                            _sbMouseSettings.payloadData.Value, (uint)i, 1, mouseColors[i], false);
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Failed to fill color data for " + _sbMouseInfo.friendlyName + ": ", exc);
-                    return false;
-                }
+                mouseGroups[i * 2 + 0] = 1; //1 LED in group
+                mouseGroups[i * 2 + 1] = (uint)SoundBlasterMappings.MouseMapping[i].Key; //Which LED it is
+                mousePatterns[i] = LedPattern.Static; //LED has a host-controlled static color
             }
 
             try
             {
-                _sbMouse.SetLedSettings(_sbMouseSettings);
+                _sbMouseSettings.payloadData = _sbMouse.LedPayloadInitialize(
+                    _sbMouseSettings.payloadData.Value,
+                    _sbMouseInfo?.totalNumLeds ?? 0,
+                    1, 1);
+                _sbMouseSettings.payloadData = _sbMouse.LedPayloadFillupAll(
+                    _sbMouseSettings.payloadData.Value,
+                    (uint)mouseColors.Length, mousePatterns,
+                    2, mouseGroups, 1, 1, mouseColors);
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Failed to Update Device " + _sbMouseInfo.friendlyName + ": ", exc);
+                Global.logger.Error(exc, "Failed to setup data for " + _sbMouseInfo?.friendlyName);
+                if (_sbMouseSettings.payloadData.Value.opaqueSize > 0)
+                    _sbMouseSettings.payloadData = _sbMouse.LedPayloadCleanup(_sbMouseSettings.payloadData.Value,
+                        _sbMouseInfo?.totalNumLeds ?? 0);
+
                 return false;
             }
+        }
+        else
+        {
+            try
+            {
+                for (int i = 0; i < mouseColors.Length; i++)
+                    _sbMouseSettings.payloadData = _sbMouse.LedPayloadFillupLedColour(
+                        _sbMouseSettings.payloadData.Value, (uint)i, 1, mouseColors[i], false);
+            }
+            catch (Exception exc)
+            {
+                Global.logger.Error(exc, "Failed to fill color data for " + _sbMouseInfo?.friendlyName);
+                return false;
+            }
+        }
+
+        try
+        {
+            _sbMouse.SetLedSettings(_sbMouseSettings);
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "Failed to Update Device " + _sbMouseInfo?.friendlyName);
+            return false;
         }
 
         return true;
@@ -433,7 +429,7 @@ public class SoundBlasterXDevice : DefaultDevice
 
     private Keyboard_LEDIndex GetKeyboardMappingLedIndex(DeviceKeys devKey)
     {
-        var mapping = _sbKeyboardInfo.deviceId.Equals(EnumeratedDevice.SoundBlasterXVanguardK08_USEnglish)
+        var mapping = _sbKeyboardInfo?.deviceId.Equals(EnumeratedDevice.SoundBlasterXVanguardK08_USEnglish) ?? true
             ? KeyboardMappingUs
             : KeyboardMappingEuropean;
         foreach (var t in mapping)
