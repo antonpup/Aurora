@@ -45,10 +45,10 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private readonly EffectColor _desktopColorScheme = new(0, 0, 0, 0);
 
-    private readonly EffectColor _transitionColor = new();
+    private EffectColor _previousColor = new(0, 0, 0, 0);
     private EffectColor _currentColor = new(0, 0, 0, 0);
 
-    private float _transitionAmount;
+    private double _transitionAmount;
 
     private FrameworkElement? _selectedItem;
     private FrameworkElement? _selectedManager;
@@ -145,7 +145,7 @@ partial class ConfigUI : INotifyPropertyChanged
             }
             else
             {
-                EnableAcrylicBlur(_hwHandle.Handle, new EffectColor(128, 128, 128, 240));
+                TintColor = Color.FromArgb(240, 128, 128, 128);
                 Activate();
             }
         });
@@ -221,6 +221,10 @@ partial class ConfigUI : INotifyPropertyChanged
         if (Left <= 0)
         {
             Left = 0;
+        }
+        if (WindowStyle != WindowStyle.None)
+        {
+            WindowStyle = WindowStyle.None;
         }
         Show();
         Activate();
@@ -339,7 +343,7 @@ partial class ConfigUI : INotifyPropertyChanged
     private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
     private int _lastTick = DateTime.UtcNow.Millisecond;
-
+    private readonly Stopwatch _keyboardTimer = Stopwatch.StartNew();
     private void virtual_keyboard_timer_Tick(object sender, EventArgs e)
     {
         if (!ApplicationIsActivated())
@@ -350,18 +354,18 @@ partial class ConfigUI : INotifyPropertyChanged
             {
                 if (_transitionAmount <= 1.0f)
                 {
-                    _transitionAmount += (float)(DateTime.UtcNow.Millisecond - _lastTick) / 1000;
-                    _transitionColor.BlendColors(_currentColor, Math.Min(_transitionAmount, 1f));
+                    _transitionAmount += _keyboardTimer.Elapsed.TotalSeconds;
+                    var a = EffectColor.BlendColors(_previousColor, _currentColor, Math.Min(_transitionAmount, 1d));
 
                     if (_useMica)
                     {
                         bg_grid.Background = new SolidColorBrush(Color.FromArgb(
-                            (byte)(_transitionColor.Alpha * 140 / 255),
-                            _transitionColor.Red, _transitionColor.Green, _transitionColor.Blue));
+                            (byte)(a.Alpha * 140 / 255),
+                            a.Red, a.Green, a.Blue));
                     }
                     else
                     {
-                        EnableAcrylicBlur(_hwHandle.Handle, _transitionColor);
+                        TintColor = (Color)a;
                     }
                 }
 
@@ -371,7 +375,7 @@ partial class ConfigUI : INotifyPropertyChanged
                 keyboard_record_message.Visibility =
                     Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
             });
-        _lastTick = DateTime.UtcNow.Millisecond;
+        _keyboardTimer.Restart();
     }
 
     ////Misc
@@ -628,10 +632,11 @@ partial class ConfigUI : INotifyPropertyChanged
         var bitmap = (BitmapSource)source.Source;
         var color = ColorUtils.GetAverageColor(bitmap);
 
+        _previousColor = _currentColor;
         _currentColor = new EffectColor(color);
         _currentColor *= 0.85f;
 
-        _transitionAmount = 0.0f;
+        _transitionAmount = 0.0;
     }
 
     private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs? e)
@@ -728,8 +733,9 @@ partial class ConfigUI : INotifyPropertyChanged
         FocusedApplication = null;
         SelectedControl = _settingsControl;
 
+        _previousColor = _currentColor;
         _currentColor = _useMica ? _desktopColorScheme : EffectColor.FromRGBA(0, 0, 0, 184);
-        _transitionAmount = 0.0f;
+        _transitionAmount = 0.0;
     }
     private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
     private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
@@ -833,14 +839,4 @@ partial class ConfigUI : INotifyPropertyChanged
     private RegistryWatcher _lightThemeRegistryWatcher;
 
     #endregion
-
-    private void ConfigUI_OnMouseUp(object sender, MouseButtonEventArgs e)
-    {
-        if (_useMica)
-        {
-            return;
-        }
-
-        Dispatcher.Invoke(() => EnableAcrylicBlur(_hwHandle.Handle, _transitionColor));
-    }
 }

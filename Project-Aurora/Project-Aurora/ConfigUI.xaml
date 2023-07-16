@@ -12,7 +12,7 @@
              Enabled="True"
              FallbackColor="Transparent"
              TintColor="Transparent"
-             TintOpacity="0.75"
+             TintOpacity="1"
              NoiseOpacity="0.01"
              AcrylicAccentState="BlurBehind"
              WindowStyle="None"
@@ -27,7 +27,6 @@
              Closing="Window_Closing" Activated="Window_Activated" Deactivated="Window_Deactivated" HorizontalContentAlignment="Stretch"
              MinWidth="800" MinHeight="575" 
              DataContext="{Binding RelativeSource={RelativeSource Self}}" SizeChanged="Window_SizeChanged"
-             MouseUp="ConfigUI_OnMouseUp"
              >
     <WindowChrome.WindowChrome>
         <WindowChrome
