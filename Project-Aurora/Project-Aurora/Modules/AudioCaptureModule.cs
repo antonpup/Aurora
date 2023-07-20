@@ -15,16 +15,12 @@ public sealed partial class AudioCaptureModule : IAuroraModule
     private AudioDeviceProxy? _renderProxy;
     private AudioDeviceProxy? _captureProxy;
 
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
-        Thread thread = new Thread(InitializeLocalInfoProxies);
+        var thread = new Thread(InitializeLocalInfoProxies);
         thread.SetApartmentState(ApartmentState.MTA);
         thread.Name = "3rd aprty API spooler";
         thread.Start();
-        
-        Application.Current.Dispatcher.InvokeAsync(InitializeDeviceListProxy).Wait();
-        
         thread.Join();
         
         Global.Configuration.PropertyChanged += DefaultDeviceChanged;
@@ -50,6 +46,7 @@ public sealed partial class AudioCaptureModule : IAuroraModule
 
     private void InitializeLocalInfoProxies()
     {
+        InitializeDeviceListProxy();
         try
         {
             _renderProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioRenderDevice, DataFlow.Render);
@@ -80,7 +77,7 @@ public sealed partial class AudioCaptureModule : IAuroraModule
     }
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         Global.Configuration.PropertyChanged -= DefaultDeviceChanged;
         

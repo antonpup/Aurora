@@ -14,8 +14,7 @@ public sealed partial class IpcListenerModule : IAuroraModule
 
     public Task<IpcListener?> IpcListener => _taskSource.Task;
 
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         if (!Global.Configuration.EnableIpcListener)
         {
@@ -51,12 +50,12 @@ public sealed partial class IpcListenerModule : IAuroraModule
         _taskSource.SetResult(_listener);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         _listener?.Stop().Wait();
     }
 
-    public async Task DisposeAsync()
+    public override async Task DisposeAsync()
     {
         await _listener?.Stop();
     }

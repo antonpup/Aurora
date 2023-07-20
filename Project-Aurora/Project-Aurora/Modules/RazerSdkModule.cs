@@ -13,8 +13,7 @@ public sealed partial class RazerSdkModule : IAuroraModule
 
     public Task<RzSdkManager?> RzSdkManager => _sdkTaskSource.Task;
 
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         Global.logger.Info("Loading RazerSdkManager");
         if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
@@ -61,7 +60,7 @@ public sealed partial class RazerSdkModule : IAuroraModule
 
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         try
         {

@@ -3,6 +3,7 @@ using Aurora.Modules.GameStateListen;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Lombok.NET;
+using Application = System.Windows.Application;
 
 namespace Aurora.Modules;
 
@@ -25,14 +26,22 @@ public sealed partial class LightningStateManagerModule : IAuroraModule
         _httpListener = httpListener;
     }
 
-    [Async]
-    public void Initialize()
+    public override Task<bool> InitializeAsync()
+    {
+        Initialize();
+        return Task.FromResult(true);
+    }
+
+    public override void Initialize()
     {
         Global.logger.Info("Loading Applications");
         var lightingStateManager = new LightingStateManager(_pluginManager, _ipcListener);
         _manager = lightingStateManager;
         Global.LightingStateManager = lightingStateManager;
-        lightingStateManager.Initialize();
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            lightingStateManager.Initialize();
+        });
         
         _taskSource.SetResult(lightingStateManager);
 
@@ -52,7 +61,7 @@ public sealed partial class LightningStateManagerModule : IAuroraModule
     }
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         _manager?.Dispose();
         Global.LightingStateManager = null;

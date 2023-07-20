@@ -5,8 +5,7 @@ namespace Aurora.Modules;
 
 public sealed partial class PointerUpdateModule : IAuroraModule
 {
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         if (!Global.Configuration.GetPointerUpdates) return;
         Global.logger.Info("Fetching latest pointers");
@@ -15,7 +14,7 @@ public sealed partial class PointerUpdateModule : IAuroraModule
 
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         //noop
     }

@@ -7,8 +7,7 @@ namespace Aurora.Modules;
 public sealed partial class HardwareMonitorModule : IAuroraModule
 {
     
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         if (Global.Configuration.EnableHardwareInfo)
         {
@@ -18,7 +17,7 @@ public sealed partial class HardwareMonitorModule : IAuroraModule
 
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         LocalPcInformation.HardwareMonitor = new NoopHardwareMonitor();
     }

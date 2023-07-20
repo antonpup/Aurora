@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using Aurora.Utils;
@@ -11,19 +12,22 @@ namespace Aurora.Modules;
 
 public sealed partial class InputsModule : IAuroraModule
 {
+    private static TaskCompletionSource<IInputEvents> tcs = new();
+    private static Lazy<Task<IInputEvents>> l = new(() => tcs.Task, LazyThreadSafetyMode.ExecutionAndPublication);
+    public static Task<IInputEvents> Instance => l.Value;
+
     private static InputInterceptor? InputInterceptor;
 
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         if (!Global.Configuration.EnableInputCapture)
         {
-            Global.InputEvents = new NoopInputEvents();
+            tcs.SetResult(new NoopInputEvents());
         }
         else
         {
             Global.logger.Info("Loading Input Hooking");
-            Global.InputEvents = new InputEvents();
+            tcs.SetResult(new InputEvents());
             Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
             SetupVolumeAsBrightness(Global.Configuration,
                 new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
@@ -36,7 +40,7 @@ public sealed partial class InputsModule : IAuroraModule
     }
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         Global.key_recorder?.Dispose();
         Global.InputEvents?.Dispose();

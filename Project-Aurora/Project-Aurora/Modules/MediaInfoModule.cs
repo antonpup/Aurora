@@ -9,8 +9,7 @@ public sealed partial class MediaInfoModule : IAuroraModule
 {
     private MediaMonitor? _mediaMonitor;
     
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         if (!Global.Configuration.EnableMediaInfo)
         {
@@ -30,7 +29,7 @@ public sealed partial class MediaInfoModule : IAuroraModule
 
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         _mediaMonitor?.Dispose();
         _mediaMonitor = null;

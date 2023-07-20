@@ -6,8 +6,7 @@ namespace Aurora.Modules;
 
 public partial class UpdateCleanup : IAuroraModule
 {
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         Directory.SetCurrentDirectory(path);
@@ -17,7 +16,7 @@ public partial class UpdateCleanup : IAuroraModule
     }
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         //noop
     }

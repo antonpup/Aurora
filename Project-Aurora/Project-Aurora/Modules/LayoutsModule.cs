@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
 using Aurora.Settings;
 using Lombok.NET;
 
@@ -11,11 +12,19 @@ public sealed partial class LayoutsModule : IAuroraModule
 
     public Task<KeyboardLayoutManager> LayoutManager => _taskCompletionSource.Task;
 
-    [Async]
-    public void Initialize()
+    public override Task InitializeAsync()
+    {
+        Initialize();
+        return Task.CompletedTask;
+    }
+
+    public override void Initialize()
     {
         Global.logger.Info("Loading KB Layouts");
-        _layoutManager = new KeyboardLayoutManager();
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            _layoutManager = new KeyboardLayoutManager();
+        });
         Global.kbLayout = _layoutManager;
         Global.kbLayout.LoadBrandDefault();
         Global.logger.Info("Loaded KB Layouts");
@@ -23,7 +32,7 @@ public sealed partial class LayoutsModule : IAuroraModule
     }
 
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         //noop
     }

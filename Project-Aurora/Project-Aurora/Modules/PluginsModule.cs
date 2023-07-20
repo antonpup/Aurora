@@ -12,8 +12,7 @@ public sealed partial class PluginsModule : IAuroraModule
 
     private PluginManager? _pluginManager;
 
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         Global.logger.Info("Loading Plugins");
         _pluginManager = new PluginManager();
@@ -23,7 +22,7 @@ public sealed partial class PluginsModule : IAuroraModule
     }
     
     [Async]
-    public void Dispose()
+    public override void Dispose()
     {
         _pluginManager.SaveSettings();
     }

@@ -13,8 +13,7 @@ public sealed partial class HttpListenerModule : IAuroraModule
 
     public Task<AuroraHttpListener?> HttpListener => _taskSource.Task;
 
-    [Async]
-    public void Initialize()
+    public override void Initialize()
     {
         if (!Global.Configuration.EnableHttpListener)
         {
@@ -46,12 +45,12 @@ public sealed partial class HttpListenerModule : IAuroraModule
         _taskSource.SetResult(_listener);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         _listener?.Stop().Wait();
     }
 
-    public async Task DisposeAsync()
+    public override async Task DisposeAsync()
     {
         await _listener?.Stop();
     }

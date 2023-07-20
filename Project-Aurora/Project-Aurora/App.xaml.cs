@@ -117,7 +117,8 @@ public partial class App
             DesktopUtils.CheckUpdate();
         }
 
-        var initModules = _modules.Select(m => m.InitializeAsync());
+        var initModules = _modules.Select(async m => await m.InitializeAsync())
+            .Where(t => t!= null).ToArray();
 
         Global.dev_manager.RegisterVariables();
         RazerSdkModule.RzSdkManager.ContinueWith(_ => //Razer device needs this
@@ -128,10 +129,10 @@ public partial class App
 
         MainWindow = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
             HttpListenerModule.HttpListener, IpcListenerModule.IpcListener);
-        Task.WhenAll(initModules).Wait();
 
         Global.logger.Info("Loading ConfigUI...");
         ((ConfigUI)MainWindow).DisplayIfNotSilent();
+        //Task.WaitAll(initModules);    //FIXME figure out this
 
         //Debug Windows on Startup
         if (Global.Configuration.BitmapWindowOnStartUp)
