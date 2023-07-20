@@ -72,7 +72,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.Error("[UnifiedHID] class could not be constructed: " + exc);
+                Global.logger.Error("[UnifiedHID] class could not be constructed:", exc);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Aurora.Devices.UnifiedHID
                 }
                 catch (Exception e)
                 {
-                    Global.logger.Error($"[UnifiedHID] device could not be initialized: " + e);
+                    Global.logger.Error($"[UnifiedHID] device could not be initialized:", e);
                 }
             }
 
@@ -128,7 +128,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception ex)
             {
-                Global.logger.Error("[UnifiedHID] there was an error shutting down devices" + ex);
+                Global.logger.Error("[UnifiedHID] there was an error shutting down devices", ex);
             }
 
             return Task.CompletedTask;
@@ -193,7 +193,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception ex)
             {
-                Global.logger.Error("[UnifiedHID] error when updating device: " + ex);
+                Global.logger.Error("[UnifiedHID] error when updating device:", ex);
                 return Task.FromResult(false);
             }
         }

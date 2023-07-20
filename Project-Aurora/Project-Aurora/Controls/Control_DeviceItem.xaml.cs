@@ -51,7 +51,7 @@ namespace Aurora.Controls
             }
             catch (Exception ex)
             {
-                Global.logger.Warn(ex.ToString());
+                Global.logger.Warn("DeviceItem update error:", ex);
             }
         }
 

@@ -55,9 +55,7 @@ namespace Aurora.Controls
             }
             catch(Exception exc)
             {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-
-                //this.gradient_editor.Brush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+                Global.logger.Error("Could not set brush:", exc);
             }
 
             gradient_editor.BrushChanged += Gradient_editor_BrushChanged;

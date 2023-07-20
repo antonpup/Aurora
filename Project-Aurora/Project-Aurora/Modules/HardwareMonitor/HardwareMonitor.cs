@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using LibreHardwareMonitor.Hardware;
-using Lombok.NET;
 
 namespace Aurora.Modules.HardwareMonitor;
 
@@ -66,7 +65,7 @@ public partial class HardwareMonitor: IHardwareMonitor
         }
         catch (Exception e)
         {
-            Global.logger.Error(e);
+            Global.logger.Error("Error instantiating hardware monitor:", e);
         }
     }
 

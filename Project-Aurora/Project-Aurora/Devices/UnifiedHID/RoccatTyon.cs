@@ -92,7 +92,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:\n{exc}");
+                Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:", exc);
             }
 
             return false;
@@ -114,7 +114,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:\n{exc}");
+                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:", exc);
             }
 
             return !IsConnected;
@@ -145,7 +145,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when writing to device {PrettyName}:\n{exc}");
+                Global.logger.Error($"[UnifiedHID] error when writing to device {PrettyName}:", exc);
                 return false;
             }
         }

@@ -50,7 +50,7 @@ namespace Aurora.Devices.SteelSeries
                     }
                     catch (Exception ex)
                     {
-                        Global.logger.Error("SteelSeries GameSense SDK could not be initialized: " + ex);
+                        Global.logger.Error("SteelSeries GameSense SDK could not be initialized:", ex);
 
                         IsInitialized = false;
                         return Task.FromResult(false);
@@ -76,7 +76,7 @@ namespace Aurora.Devices.SteelSeries
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error("There was an error shutting down SteelSeries GameSense SDK: " + ex);
+                    Global.logger.Error("There was an error shutting down SteelSeries GameSense SDK:", ex);
                     IsInitialized = false;
                 }
 
@@ -193,7 +193,7 @@ namespace Aurora.Devices.SteelSeries
             }
             catch (Exception ex)
             {
-                Global.logger.Error("SteelSeries GameSense SDK, error when updating device: " + ex);
+                Global.logger.Error("SteelSeries GameSense SDK, error when updating device:", ex);
                 return Task.FromResult(false);
             }
         }
