@@ -51,8 +51,8 @@ public sealed partial class HttpListenerModule : IAuroraModule
         _listener?.Stop().Wait();
     }
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
-        return _listener?.Stop();
+        await _listener?.Stop();
     }
 }

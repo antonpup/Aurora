@@ -67,7 +67,7 @@ public class AuroraHttpListener
         }
         _isRunning = true;
 
-        BeginRun();
+        _netListener.BeginGetContext(ReceiveGameState, null);
         return true;
     }
 
@@ -83,11 +83,6 @@ public class AuroraHttpListener
         return Task.CompletedTask;
     }
 
-    private void BeginRun()
-    {
-        _netListener.BeginGetContext(ReceiveGameState, _netListener);
-    }
-
     private void ReceiveGameState(IAsyncResult result)
     {
         if (_netListener == null || !_isRunning)
@@ -98,23 +93,7 @@ public class AuroraHttpListener
         try
         {
             var context = _netListener.EndGetContext(result);
-            var request = context.Request;
-            string json;
-
-            using (var inputStream = request.InputStream)
-            {
-                using (var sr = new StreamReader(inputStream))
-                    json = sr.ReadToEnd();
-            }
-
-            using (var response = context.Response)
-            {
-                response.StatusCode = (int) HttpStatusCode.OK;
-                response.StatusDescription = "OK";
-                response.ContentType = "text/html";
-                response.ContentLength64 = 0;
-                response.Close();
-            }
+            var json = TryProcessRequest(context);
 
             CurrentGameState = new EmptyGameState(json);
         }
@@ -122,6 +101,29 @@ public class AuroraHttpListener
         {
             Global.logger.Error(e, "[NetworkListener] ReceiveGameState error:");
         }
-        _netListener.BeginGetContext(ReceiveGameState, null);
+
+        //run in another thread to reset stack
+        Task.Run(() => _netListener.BeginGetContext(ReceiveGameState, null));
+    }
+
+    private string TryProcessRequest(HttpListenerContext context)
+    {
+        var request = context.Request;
+        string json;
+
+        using (var sr = new StreamReader(request.InputStream))
+        {
+            json = sr.ReadToEnd();
+        }
+
+        using (var response = context.Response)
+        {
+            response.StatusCode = (int)HttpStatusCode.OK;
+            response.StatusDescription = "OK";
+            response.ContentType = "text/html";
+            response.ContentLength64 = 0;
+        }
+
+        return json;
     }
 }
