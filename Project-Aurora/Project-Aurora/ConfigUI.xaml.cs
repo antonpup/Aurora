@@ -341,6 +341,7 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Stopwatch _keyboardTimer = Stopwatch.StartNew();
     private void virtual_keyboard_timer_Tick(object sender, EventArgs e)
     {
+        if (Visibility != Visibility.Visible) return;
         Dispatcher.Invoke(_keyboardTimerCallback);
         _keyboardTimer.Restart();
     }

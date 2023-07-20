@@ -10,7 +10,7 @@
              x:Class="Aurora.ConfigUI"
              AcrylicWindowStyle="NoIcon"
              Enabled="True"
-             FallbackColor="Transparent"
+             FallbackColor="#09000000"
              TintColor="Transparent"
              TintOpacity="1"
              NoiseOpacity="0"
