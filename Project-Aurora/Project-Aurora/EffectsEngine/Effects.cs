@@ -112,7 +112,7 @@ namespace Aurora
     public class Effects
     {
         //Optimization: used to mitigate dictionary resizing
-        private static readonly int MaxDeviceId = (int)Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>().Max();
+        private static readonly int MaxDeviceId = Enum.GetValues(typeof(DeviceKeys)).Cast<int>().Max();
 
         private static readonly DeviceKeys[] PossiblePeripheralKeys = {
                     DeviceKeys.Peripheral,
