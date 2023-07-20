@@ -13,7 +13,7 @@
              FallbackColor="Transparent"
              TintColor="Transparent"
              TintOpacity="1"
-             NoiseOpacity="0.01"
+             NoiseOpacity="0"
              AcrylicAccentState="BlurBehind"
              WindowStyle="None"
              AllowsTransparency="True"
@@ -32,11 +32,11 @@
         <WindowChrome
             CaptionHeight="20"
             ResizeBorderThickness="8"
-            CornerRadius="0"
+            CornerRadius="5"
             GlassFrameThickness="-1"
             UseAeroCaptionButtons="True" />
     </WindowChrome.WindowChrome>
-    <DockPanel x:Name="bg_grid" Background="#AA660000" Margin="0, 25, 0, 0" IsHitTestVisible="True">
+    <DockPanel x:Name="bg_grid" Background="#AA660000" IsHitTestVisible="True">
         <tb:TaskbarIcon x:Name="trayicon"
                         Visibility="Visible"
                         ToolTipText="Aurora"
@@ -69,7 +69,8 @@
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
-        <Grid x:Name="profiles_background" HorizontalAlignment="Left" Width="56" Background="#3F000000">
+        <Grid Width="Auto" Height="25" Background="#10000000" DockPanel.Dock="Top"></Grid>
+        <Grid HorizontalAlignment="Left" Width="56" Background="#3F000000" DockPanel.Dock="Left">
             <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0">
                 <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0">
                     <StackPanel.ContextMenu>
@@ -96,7 +97,7 @@
             </Image>
         </Grid>
 
-        <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200">
+        <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200" DockPanel.Dock="Left">
             <StackPanel x:Name="stackPanelManagers">
                 <Border x:Name="brdOverview" Background="#A5000000" CornerRadius="8" VerticalAlignment="Top" Height="25" PreviewMouseDown="brdOverview_PreviewMouseDown">
                     <Border Background="#54A8A8A8" CornerRadius="8">
@@ -120,7 +121,7 @@
             </StackPanel>
         </Grid>
         
-        <Grid Margin="5,0,0,0">
+        <Grid Margin="5,0,0,0" DockPanel.Dock="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>

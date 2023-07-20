@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -16,7 +15,6 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Controls;
-using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Modules.GameStateListen;
 using Aurora.Profiles.Aurora_Wrapper;
@@ -53,12 +51,12 @@ partial class ConfigUI : INotifyPropertyChanged
     private FrameworkElement? _selectedItem;
     private FrameworkElement? _selectedManager;
 
-    private bool _settingsLoaded;
     private bool _shownHiddenMessage;
 
     private string _savedPreviewKey = "";
 
-    private Timer? _virtualKeyboardTimer;
+    private readonly Timer? _virtualKeyboardTimer = new(8);
+    private readonly Action _keyboardTimerCallback;
     private Grid _virtualKb = new();
 
     public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register(
@@ -184,6 +182,32 @@ partial class ConfigUI : INotifyPropertyChanged
         {
             ipcListener.Result.AuroraCommandReceived += OnAuroraCommandReceived;
         }
+
+        _keyboardTimerCallback = () =>
+        {
+            if (_transitionAmount <= 1.0f)
+            {
+                _transitionAmount += _keyboardTimer.Elapsed.TotalSeconds;
+                var smooth = 1 - Math.Pow(1 - Math.Min(_transitionAmount, 1d), 3);
+                var a = EffectColor.BlendColors(_previousColor, _currentColor, smooth);
+
+                if (_useMica)
+                {
+                    bg_grid.Background =
+                        new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 140 / 255), a.Red, a.Green, a.Blue));
+                }
+                else
+                {
+                    TintColor = (Color)a;
+                }
+            }
+
+            var keylights = Global.effengine.GetKeyboardLights();
+            _layoutManager.Result.SetKeyboardColors(keylights);
+
+            keyboard_record_message.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
+        };
+        _virtualKeyboardTimer.Elapsed += virtual_keyboard_timer_Tick;
     }
 
     internal void DisplayIfNotSilent()
@@ -192,6 +216,7 @@ partial class ConfigUI : INotifyPropertyChanged
         {
             Visibility = Visibility.Hidden;
             ShowInTaskbar = false;
+            _virtualKeyboardTimer.Stop();
             Hide();
         }
         else
@@ -228,6 +253,7 @@ partial class ConfigUI : INotifyPropertyChanged
         }
         Show();
         Activate();
+        _virtualKeyboardTimer.Start();
     }
 
     private void Restart()
@@ -276,15 +302,6 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        if (!_settingsLoaded)
-        {
-            _virtualKeyboardTimer = new Timer(8);
-            _virtualKeyboardTimer.Elapsed += virtual_keyboard_timer_Tick;
-            _virtualKeyboardTimer.Start();
-
-            _settingsLoaded = true;
-        }
-
         keyboard_record_message.Visibility = Visibility.Hidden;
 
         _currentColor = _desktopColorScheme;
@@ -312,69 +329,19 @@ partial class ConfigUI : INotifyPropertyChanged
 
         foreach (Image child in profiles_stack.Children)
         {
-            if (child.Visibility == Visibility.Visible)
-            {
-                ProfileImage_MouseDown(child, null);
-                break;
-            }
+            if (child.Visibility != Visibility.Visible) continue;
+            ProfileImage_MouseDown(child, null);
+            break;
         }
         
         Window_Loaded_Mica(sender, e);
 
     }
 
-    public static bool ApplicationIsActivated()
-    {
-        var activatedHandle = GetForegroundWindow();
-        if (activatedHandle == IntPtr.Zero)
-            return false;       // No window is currently activated
-
-        var procId = Process.GetCurrentProcess().Id;
-        int activeProcId;
-        GetWindowThreadProcessId(activatedHandle, out activeProcId);
-
-        return activeProcId == procId;
-    }
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-    private static extern IntPtr GetForegroundWindow();
-
-    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
-
-    private int _lastTick = DateTime.UtcNow.Millisecond;
     private readonly Stopwatch _keyboardTimer = Stopwatch.StartNew();
     private void virtual_keyboard_timer_Tick(object sender, EventArgs e)
     {
-        if (!ApplicationIsActivated())
-            return;
-
-        Dispatcher.Invoke(
-            () =>
-            {
-                if (_transitionAmount <= 1.0f)
-                {
-                    _transitionAmount += _keyboardTimer.Elapsed.TotalSeconds;
-                    var a = EffectColor.BlendColors(_previousColor, _currentColor, Math.Min(_transitionAmount, 1d));
-
-                    if (_useMica)
-                    {
-                        bg_grid.Background = new SolidColorBrush(Color.FromArgb(
-                            (byte)(a.Alpha * 140 / 255),
-                            a.Red, a.Green, a.Blue));
-                    }
-                    else
-                    {
-                        TintColor = (Color)a;
-                    }
-                }
-
-                var keylights = Global.effengine.GetKeyboardLights();
-                _layoutManager.Result.SetKeyboardColors(keylights);
-
-                keyboard_record_message.Visibility =
-                    Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
-            });
+        Dispatcher.Invoke(_keyboardTimerCallback);
         _keyboardTimer.Restart();
     }
 

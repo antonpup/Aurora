@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -116,7 +117,7 @@ public partial class App
             DesktopUtils.CheckUpdate();
         }
 
-        _modules.ForEach(m => m.InitializeAsync());
+        var initModules = _modules.Select(m => m.InitializeAsync());
 
         Global.dev_manager.RegisterVariables();
         RazerSdkModule.RzSdkManager.ContinueWith(_ => //Razer device needs this
@@ -127,6 +128,7 @@ public partial class App
 
         MainWindow = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
             HttpListenerModule.HttpListener, IpcListenerModule.IpcListener);
+        Task.WhenAll(initModules).Wait();
 
         Global.logger.Info("Loading ConfigUI...");
         ((ConfigUI)MainWindow).DisplayIfNotSilent();
@@ -237,8 +239,8 @@ public partial class App
         if (Global.Configuration != null)
             ConfigManager.Save(Global.Configuration);
 
-        var tasks = _modules.ConvertAll(m => m.DisposeAsync());
         var devicesShutdown = Global.dev_manager?.ShutdownDevices().ContinueWith(_ => Global.dev_manager.Dispose());
+        var tasks = _modules.ConvertAll(m => m.DisposeAsync());
         tasks.Add(devicesShutdown);
         
         var forceExitTimer = StartForceExitTimer();
@@ -257,7 +259,7 @@ public partial class App
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             Thread.Sleep(3000);
-            if (stopwatch.ElapsedMilliseconds > 2500)
+            if (stopwatch.ElapsedMilliseconds > 2000)
             {
                 ForceShutdownApp(0);
             }
@@ -267,7 +269,6 @@ public partial class App
             Name = "Exit timer"
         };
         thread.Start();
-
         return thread;
     }
 
