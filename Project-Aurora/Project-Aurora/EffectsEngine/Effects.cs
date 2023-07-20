@@ -1,6 +1,7 @@
 ﻿using System;
 using Aurora.EffectsEngine;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
@@ -110,7 +111,8 @@ namespace Aurora
 
     public class Effects
     {
-        private const int MaxDeviceId = (int)DeviceKeys.PROFILESWITCH;    //Optimization: used to block dictionary resizing
+        //Optimization: used to mitigate dictionary resizing
+        private static readonly int MaxDeviceId = (int)Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>().Max();
 
         private static readonly DeviceKeys[] PossiblePeripheralKeys = {
                     DeviceKeys.Peripheral,
@@ -185,6 +187,10 @@ namespace Aurora
             get => _canvasWidth;
             private set
             {
+                if (_canvasWidth == value)
+                {
+                    return;
+                }
                 lock (CanvasChangedLock)
                 {
                     _canvasWidth = value;
@@ -198,6 +204,10 @@ namespace Aurora
             get => _canvasHeight;
             private set
             {
+                if (_canvasHeight == value)
+                {
+                    return;
+                }
                 lock (CanvasChangedLock)
                 {
                     _canvasHeight = value;
@@ -286,7 +296,7 @@ namespace Aurora
                 g.DrawImage(_forcedFrame, 0, 0, CanvasWidth, CanvasHeight);
             }
 
-            var allKeys = _bitmapMap.Keys.ToArray();
+            var allKeys = _bitmapMap.Keys;
 
             foreach (var key in allKeys)
                 _keyColors[key] = Background.Get(key);

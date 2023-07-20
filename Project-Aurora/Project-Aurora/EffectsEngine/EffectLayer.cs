@@ -650,9 +650,12 @@ namespace Aurora.EffectsEngine
                 return;
             }
 
-            using Graphics g = Graphics.FromImage(_colormap);
-            g.CompositingMode = CompositingMode.SourceCopy;
-            g.FillRectangle(brush, keymaping.Rectangle);
+            try
+            {
+                using var g = Graphics.FromImage(_colormap);
+                g.CompositingMode = CompositingMode.SourceCopy;
+                g.FillRectangle(brush, keymaping.Rectangle);
+            }catch { /* ignore */}
         }
 
         /// <summary>
