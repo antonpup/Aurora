@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.RawInput;
 
-namespace Aurora;
+namespace Aurora.Modules.Inputs;
 
 public interface IInputEvents : IDisposable
 {
@@ -31,7 +32,7 @@ public interface IInputEvents : IDisposable
     /// </summary>
     event EventHandler<MouseInputEventArgs> Scroll;
 
-    Keys[] PressedKeys { get; }
+    IReadOnlyList<Keys> PressedKeys { get; }
     MouseButtons[] PressedButtons { get; }
     bool Shift { get; }
     bool Alt { get; }

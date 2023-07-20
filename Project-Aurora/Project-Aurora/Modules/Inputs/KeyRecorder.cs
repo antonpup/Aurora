@@ -4,135 +4,116 @@ using Aurora.Devices;
 using Aurora.Utils;
 using SharpDX.RawInput;
 
-namespace Aurora.Modules.Inputs
+namespace Aurora.Modules.Inputs;
+
+public sealed class KeyRecorder : IDisposable
 {
-    public sealed class KeyRecorder : IDisposable
+    private readonly IInputEvents _inputEvents;
+    private string _recordingType = "";
+    private bool _isSingleKey;
+    private List<DeviceKeys> _recordedKeys = new();
+    public delegate void RecordingFinishedHandler(DeviceKeys[] resultingKeys);
+    public event RecordingFinishedHandler? FinishedRecording;
+
+    public KeyRecorder(IInputEvents inputEvents)
     {
-	    private readonly IInputEvents inputEvents;
-	    private String recordingType = "";
-        private bool isSingleKey = false;
-        private List<DeviceKeys> recordedKeys = new List<DeviceKeys>();
-        public delegate void RecordingFinishedHandler(DeviceKeys[] resulting_keys);
-        public event RecordingFinishedHandler FinishedRecording;
+        _inputEvents = inputEvents;
+        Reset();
 
-        public KeyRecorder(IInputEvents inputEvents)
-        {
-	        this.inputEvents = inputEvents;
-	        Reset();
-
-	        inputEvents.KeyUp += InputEventsOnKeyUp;
-        }
+        inputEvents.KeyUp += InputEventsOnKeyUp;
+    }
         
-        private void InputEventsOnKeyUp(object sender, KeyboardInputEventArgs e)
-        {
-            if (IsRecording())
-            {
-                DeviceKeys key = e.GetDeviceKey();
+    private void InputEventsOnKeyUp(object sender, KeyboardInputEventArgs e)
+    {
+        if (!IsRecording()) return;
+        var key = e.GetDeviceKey();
 
-                if(key != DeviceKeys.NONE)
-                {
-                    if (HasRecorded(key))
-                        RemoveKey(key);
-                    else
-                        AddKey(key);
-                }
-            }
+        if (key == DeviceKeys.NONE) return;
+        if (HasRecorded(key))
+            RemoveKey(key);
+        else
+            AddKey(key);
+    }
+
+    public void AddKey(DeviceKeys key)
+    {
+        if (!IsRecording())
+            return;
+
+        if (HasRecorded(key)) return;
+        _recordedKeys.Add(key);
+
+        if(_isSingleKey)
+        {
+            StopRecording();
+        }
+    }
+
+    public void RemoveKey(DeviceKeys key)
+    {
+        if (!IsRecording())
+            return;
+
+        if (HasRecorded(key))
+        {
+            _recordedKeys.Remove(key);
+        }
+    }
+
+    public bool HasRecorded(DeviceKeys key)
+    {
+        return _recordedKeys.Contains(key);
+    }
+
+    public DeviceKeys[] GetKeys()
+    {
+        return _recordedKeys.ToArray();
+    }
+
+    public void StartRecording(string type, bool isSingleKey = false)
+    {
+        Reset();
+
+        _recordingType = type;
+        _isSingleKey = isSingleKey;
+    }
+
+    public void StopRecording()
+    {
+        _recordingType = "";
+        _isSingleKey = false;
+
+        FinishedRecording?.Invoke(GetKeys());
+    }
+
+    public bool IsRecording(string type = "")
+    {
+        if(string.IsNullOrWhiteSpace(type))
+        {
+            return !string.IsNullOrWhiteSpace(_recordingType);
         }
 
-        public void AddKey(DeviceKeys key)
-        {
-            if (!IsRecording())
-                return;
+        return _recordingType.Equals(type);
+    }
 
-            if (!HasRecorded(key))
-            {
-                recordedKeys.Add(key);
+    public string GetRecordingType()
+    {
+        return _recordingType;
+    }
 
-                if(isSingleKey)
-                {
-                    StopRecording();
-                }
-            }
-        }
+    public void Reset()
+    {
+        _recordingType = "";
+        _isSingleKey = false;
+        _recordedKeys = new List<DeviceKeys>();
+    }
 
-        public void RemoveKey(DeviceKeys key)
-        {
-            if (!IsRecording())
-                return;
+    private bool _disposed;
 
-            if (HasRecorded(key))
-            {
-                recordedKeys.Remove(key);
-            }
-        }
-
-        public bool HasRecorded(DeviceKeys key)
-        {
-            return recordedKeys.Contains(key);
-        }
-
-        public DeviceKeys[] GetKeys()
-        {
-            return recordedKeys.ToArray();
-        }
-
-        public void StartRecording(String type, bool isSingleKey = false)
-        {
-            Reset();
-
-            recordingType = type;
-            this.isSingleKey = isSingleKey;
-        }
-
-        public void StopRecording()
-        {
-            recordingType = "";
-            isSingleKey = false;
-
-            if (FinishedRecording != null)
-            {
-                FinishedRecording(GetKeys());
-            }
-        }
-
-        public bool IsRecording(String type = "")
-        {
-            if(String.IsNullOrWhiteSpace(type))
-            {
-                return !String.IsNullOrWhiteSpace(recordingType);
-            }
-            else
-            {
-                return recordingType.Equals(type);
-            }
-        }
-
-        public string GetRecordingType()
-        {
-            return recordingType;
-        }
-
-        public void Reset()
-        {
-            recordingType = "";
-            isSingleKey = false;
-            recordedKeys = new List<DeviceKeys>();
-        }
-
-        public bool IsSingleKey()
-        {
-            return isSingleKey;
-        }
-
-	    private bool disposed;
-
-	    public void Dispose()
-	    {
-		    if (!disposed)
-		    {
-			    disposed = true;
-			    inputEvents.KeyUp -= InputEventsOnKeyUp;
-			}
-		}
+    public void Dispose()
+    {
+        if (_disposed) return;
+        _disposed = true;
+        _inputEvents.KeyUp -= InputEventsOnKeyUp;
     }
 }

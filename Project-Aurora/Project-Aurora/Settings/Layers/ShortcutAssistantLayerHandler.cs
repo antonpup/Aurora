@@ -139,22 +139,14 @@ namespace Aurora.Settings.Layers
         /// <returns>true if layer is active</returns>
         protected bool IsLayerActive()
         {
-            Keys[] heldKeys = Global.InputEvents.PressedKeys;
+            var heldKeys = Global.InputEvents.PressedKeys;
 
-            if (heldKeys.Length > 0)
-            {
-                Keys keyToCheck = heldKeys.First();
+            var keyToCheck = heldKeys.FirstOrDefault();
 
-                if (Properties.ShortcutKeysTree.ContainsItem(Properties.MergeModifierKey ? KeyUtils.GetStandardKey(keyToCheck) : keyToCheck) != null)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Properties.ShortcutKeysTree.ContainsItem(Properties.MergeModifierKey ? KeyUtils.GetStandardKey(keyToCheck) : keyToCheck) != null;
         }
 
-        public Keys[] MatchHeldKeysToShortcutTree(Keys[] heldKeys, Tree<Keys> shortcuts)
+        public Keys[] MatchHeldKeysToShortcutTree(IEnumerable<Keys> heldKeys, Tree<Keys> shortcuts)
         {
             Tree<Keys> currentShortcutNode = shortcuts;
             Keys[] heldKeysToHighlight = { };
@@ -185,7 +177,7 @@ namespace Aurora.Settings.Layers
 
             // The layer is active. At this point we have at least 1 key to highlight
 
-            Keys[] heldKeys = Global.InputEvents.PressedKeys;
+            var heldKeys = Global.InputEvents.PressedKeys;
             Keys[] heldKeysToHighlight = MatchHeldKeysToShortcutTree(heldKeys, Properties.ShortcutKeysTree); // This is also the path in shortcut tree
 
             Tree<Keys> currentShortcutNode = Properties.ShortcutKeysTree.GetNodeByPath(heldKeysToHighlight);

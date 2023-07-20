@@ -3,29 +3,105 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Aurora.Controls"
              xmlns:settings="clr-namespace:Aurora.Settings"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:a="clr-namespace:Aurora"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ResourceDictionary>
             <settings:PluginEnabledConverter x:Key="PluginEnabledConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Plugins" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Right" Foreground="Red" TextWrapping="Wrap" Text="A restart is required for changes to take affect" VerticalAlignment="Top"/>
-        <ListBox x:Name="lstPlugins" Margin="0,26,0,0" ItemsSource="{Binding Path=Plugins}">
-            <ListBox.ItemTemplate>
-                <HierarchicalDataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock x:Name="txtPluginName" TextWrapping="Wrap" Text="{Binding Path=Value.Title}" Width="100"/>
-                        <TextBlock x:Name="txtAuthor" TextWrapping="Wrap" Text="{Binding Path=Value.Author}" Width="55"/>
-                        <TextBlock x:Name="txtVersion" TextWrapping="Wrap" Text="{Binding Path=Value.Version}" Width="55"/>
-                        <CheckBox x:Name="chkEnabled" Content="Enabled" VerticalAlignment="Center" IsThreeState="False" IsChecked="{Binding Path=Value, Mode=OneWay, Converter={StaticResource PluginEnabledConverter}}" Checked="chkEnabled_Checked" Unchecked="chkEnabled_Checked"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Grid Margin="7,7,7,7" DataContext="{x:Static a:Global.Configuration}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Hardware Info"></TextBlock>
+                <CheckBox Content="Enabled" IsChecked="{Binding EnableHardwareInfo}" Margin="0, 20, 0, 0"></CheckBox>
+
+                <Grid Grid.Column="1" Grid.Row="0" Margin="7,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                </Grid>
+
+                <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,7,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,7,0" Text="Hardware sensors update interval (ms):" ToolTip="Used for CPU and GPU usage, etc" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <xctk:IntegerUpDown Grid.Column="1" Grid.Row="0" Value="{Binding HardwareMonitorUpdateRate}" Minimum="100" Maximum="2000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,7,0" Text="Maximum queue size for average values:" ToolTip="Used for CPU temp and load" HorizontalAlignment="Left" VerticalAlignment="Center" />
+                    <xctk:IntegerUpDown Grid.Column="1" Grid.Row="1" Value="{Binding HardwareMonitorMaxQueue}" Minimum="2" Maximum="1000" Width="50" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <CheckBox Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" FlowDirection="RightToLeft"
+                              IsChecked="{Binding HardwareMonitorUseAverageValues}" Content="Use average hardware sensor values instead of real-time ones"
+                              ToolTip="This option should make sudden transitions in CPU / GPU usage smoother" HorizontalAlignment="Left" Margin="0,3,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                </Grid>
+                
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <StackPanel>
+                        <TextBlock Text="Other modules (these changes need restart of Aurora)"></TextBlock>
+                        <CheckBox Content="Input Capture" IsChecked="{Binding EnableInputCapture}"></CheckBox>
+                        <CheckBox Content="Media Info" IsChecked="{Binding EnableMediaInfo}"></CheckBox>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="HTTP listener" IsChecked="{Binding EnableHttpListener}"></CheckBox>
+                            <TextBlock Text="?" TextDecorations="Underline" ToolTip="Needed for most GSI games"
+                                       ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="IPC listener" IsChecked="{Binding EnableIpcListener}"></CheckBox>
+                            <TextBlock Text="?" TextDecorations="Underline" ToolTip="Needed for wrappers"
+                                       ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </StackPanel>
                     </StackPanel>
-                </HierarchicalDataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                </Grid>
+            </Grid>
+        
+        <Grid Grid.Row="1">
+            <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Plugins" VerticalAlignment="Top"/>
+            <TextBlock HorizontalAlignment="Right" Foreground="Red" TextWrapping="Wrap" Text="A restart is required for changes to take affect" VerticalAlignment="Top"/>
+            <ListBox x:Name="lstPlugins" Margin="0,26,0,0" ItemsSource="{Binding Path=Plugins}">
+                <ListBox.ItemTemplate>
+                    <HierarchicalDataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="txtPluginName" TextWrapping="Wrap" Text="{Binding Path=Value.Title}" Width="100"/>
+                            <TextBlock x:Name="txtAuthor" TextWrapping="Wrap" Text="{Binding Path=Value.Author}" Width="55"/>
+                            <TextBlock x:Name="txtVersion" TextWrapping="Wrap" Text="{Binding Path=Value.Version}" Width="55"/>
+                            <CheckBox x:Name="chkEnabled" Content="Enabled" VerticalAlignment="Center" IsThreeState="False"
+                                      IsChecked="{Binding Path=Value, Mode=OneWay, Converter={StaticResource PluginEnabledConverter}}" Checked="chkEnabled_Checked" Unchecked="chkEnabled_Checked"/>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
     </Grid>
 </UserControl>

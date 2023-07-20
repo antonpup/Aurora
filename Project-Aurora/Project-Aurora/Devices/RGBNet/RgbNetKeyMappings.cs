@@ -134,7 +134,12 @@ public static class RgbNetKeyMappings
         {LedId.Keyboard_Profile , DeviceKeys.PROFILESWITCH},
         {LedId.Keyboard_Brightness , DeviceKeys.BRIGHTNESS_SWITCH},
         {LedId.Keyboard_WinLock , DeviceKeys.LOCK_SWITCH},
-        {LedId.Custom1 , DeviceKeys.Peripheral_Logo},
+
+        {LedId.Custom1 , DeviceKeys.CL1},
+        {LedId.Custom2 , DeviceKeys.CL2},
+        {LedId.Custom3 , DeviceKeys.CL3},
+        {LedId.Custom4 , DeviceKeys.CL4},
+        {LedId.Custom5 , DeviceKeys.CL5},
 
         {LedId.Mouse1 , DeviceKeys.PERIPHERAL_LIGHT1},
         {LedId.Mouse2 , DeviceKeys.PERIPHERAL_LIGHT2},

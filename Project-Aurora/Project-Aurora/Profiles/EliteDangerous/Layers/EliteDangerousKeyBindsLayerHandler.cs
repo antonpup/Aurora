@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using Aurora.EffectsEngine;
 using Aurora.Settings.Layers;
 using System.Drawing;
-using System.Windows.Controls;
+using System.Linq;
+using System.Windows.Forms;
 using Aurora.Devices;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Utils;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
@@ -334,14 +336,10 @@ namespace Aurora.Profiles.EliteDangerous.Layers
                             {
                                 SetKey(keyBindsLayer, modifierKey, Properties.ShipStuffColor);
                                 leftoverBlendStates.Remove(modifierKey);
-                                if (Array.IndexOf(
-                                        Global.InputEvents.PressedKeys,
-                                        KeyUtils.GetFormsKey(modifierKey)
-                                    ) == -1)
-                                {
-                                    allModifiersPressed = false;
-                                    break;
-                                }
+                                if (Global.InputEvents.PressedKeys.Contains(KeyUtils.GetFormsKey(modifierKey)))
+                                    continue;
+                                allModifiersPressed = false;
+                                break;
                             }
 
                             if (!allModifiersPressed) continue;

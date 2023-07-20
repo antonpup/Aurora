@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using SharpDX.RawInput;
 
@@ -16,7 +17,7 @@ public class NoopInputEvents : IInputEvents
     public event EventHandler<MouseInputEventArgs> MouseButtonDown;
     public event EventHandler<MouseInputEventArgs> MouseButtonUp;
     public event EventHandler<MouseInputEventArgs> Scroll;
-    public Keys[] PressedKeys { get; } = Array.Empty<Keys>();
+    public IReadOnlyList<Keys> PressedKeys { get; } = Array.Empty<Keys>();
     public MouseButtons[] PressedButtons { get; } = Array.Empty<MouseButtons>();
     public bool Shift => false;
     public bool Alt => false;

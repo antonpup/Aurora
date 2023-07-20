@@ -1,86 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+public class Keybind
 {
-    public class Keybind
+    [Newtonsoft.Json.JsonProperty("_AssignedKeys")]
+    private Queue<Keys> _assignedKeys = new();
+
+    public Keybind()
     {
-        [Newtonsoft.Json.JsonProperty]
-        private Queue<Keys> _AssignedKeys = new Queue<Keys>();
+    }
 
-        public Keybind()
+    public Keybind(IEnumerable<Keys> keys)
+    {
+        _assignedKeys = new Queue<Keys>(keys);
+    }
+
+    public void SetKeys(IEnumerable<Keys> keys)
+    {
+        _assignedKeys = new Queue<Keys>(keys);
+    }
+
+    private bool IsEmpty()
+    {
+        return _assignedKeys.Count == 0;
+    }
+
+    public bool IsPressed()
+    {
+        var pressedKeys = Global.InputEvents.PressedKeys;
+
+        if (pressedKeys.Count <= 0 || pressedKeys.Count != _assignedKeys.Count) return false;
+        return !_assignedKeys.Where((_, i) => pressedKeys[i] != _assignedKeys.ElementAt(i)).Any();
+    }
+
+    public Keys[] ToArray()
+    {
+        return _assignedKeys.ToArray();
+    }
+
+    public override string ToString()
+    {
+        if (IsEmpty())
+            return "[EMPTY]";
+
+        var sb = new StringBuilder();
+        var keysCopy = new Queue<Keys>(_assignedKeys);
+
+        while (keysCopy.Count > 0)
         {
+            var key = keysCopy.Dequeue();
+
+            sb.Append(key.ToString());
+
+            if (keysCopy.Count > 0)
+                sb.Append(" + ");
         }
 
-        public Keybind(Keys[] keys)
-        {
-            _AssignedKeys = new Queue<Keys>(keys);
-        }
+        return sb.ToString();
+    }
 
-        public Keybind SetKeys(Keys[] keys)
-        {
-            _AssignedKeys = new Queue<Keys>(keys);
-
-            return this;
-        }
-
-        public bool IsEmpty()
-        {
-            return _AssignedKeys.Count == 0;
-        }
-
-        public bool IsPressed()
-        {
-            Keys[] PressedKeys = Global.InputEvents.PressedKeys;
-
-            if (PressedKeys.Length > 0 && PressedKeys.Length == _AssignedKeys.Count)
-            {
-                for(int i = 0; i < _AssignedKeys.Count; i++)
-                {
-                    if(PressedKeys[i] != _AssignedKeys.ElementAt(i))
-                        return false;
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public Keys[] ToArray()
-        {
-            return _AssignedKeys.ToArray();
-        }
-
-        public override string ToString()
-        {
-            if (IsEmpty())
-                return "[EMPTY]";
-
-            StringBuilder _sb = new StringBuilder();
-
-            Queue<Keys> _KeysCopy = new Queue<Keys>(_AssignedKeys);
-
-            while (_KeysCopy.Count > 0)
-            {
-                Keys key = _KeysCopy.Dequeue();
-
-                _sb.Append(key.ToString());
-
-                if (_KeysCopy.Count > 0)
-                    _sb.Append(" + ");
-            }
-
-            return _sb.ToString();
-        }
-
-        public Keybind Clone()
-        {
-            return new Keybind(_AssignedKeys.ToArray());
-        }
+    public Keybind Clone()
+    {
+        return new Keybind(_assignedKeys.ToArray());
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -16,7 +17,7 @@ namespace Aurora
     /// </summary>
     public sealed class InputEvents : IInputEvents
     {
-        private readonly MessagePumpThread thread = new MessagePumpThread();
+        private readonly MessagePumpThread thread = new();
 
         /// <summary>
         /// Event for a Key pressed Down on a keyboard
@@ -47,7 +48,7 @@ namespace Aurora
 
         private readonly List<MouseButtons> pressedMouseButtons = new();
 
-        public Keys[] PressedKeys => pressedKeySequence.ToArray();
+        public IReadOnlyList<Keys> PressedKeys => new ReadOnlyCollection<Keys>(pressedKeySequence.ToArray());
 
         public MouseButtons[] PressedButtons => pressedMouseButtons.ToArray();
 

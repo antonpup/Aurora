@@ -12,7 +12,7 @@ namespace Aurora.Devices.RGBNet.Config;
 /// <summary>
 /// Interaction logic for AsusConfigWindow.xaml
 /// </summary>
-public partial class DeviceMappingConfigWindow
+public partial class DeviceMapping
 {
     private readonly Dictionary<IRGBDevice, RgbNetDevice> _devices = new();
     private readonly List<RgbNetKeyToDeviceKeyControl> _keys = new();
@@ -23,11 +23,11 @@ public partial class DeviceMappingConfigWindow
         .Select(container => container.Device)
         .OfType<RgbNetDevice>();
         
-    public DeviceMappingConfigWindow()
+    public DeviceMapping()
     {
         InitializeComponent();
         Loaded += OnLoaded;
-        Closed += OnClosed;
+        Unloaded += OnClosed;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -98,7 +98,7 @@ public partial class DeviceMappingConfigWindow
 
         foreach (var led in device)
         {
-            var keyControl = new RgbNetKeyToDeviceKeyControl();
+            var keyControl = new RgbNetKeyToDeviceKeyControl(configDevice, led);
                 
             keyControl.BlinkCallback += () =>
             {
@@ -112,9 +112,6 @@ public partial class DeviceMappingConfigWindow
                         }
                     );
             };
-            keyControl.KeyIdValue.Text = led.Id.ToString();
-            keyControl.DeviceKey.SelectedValue = configDevice.KeyMapper.TryGetValue(led.Id, out var deviceKey)
-                ? deviceKey : DeviceKeys.NONE;
 
             keyControl.DeviceKeyChanged += (_, newKey) =>
             {
@@ -142,7 +139,7 @@ public partial class DeviceMappingConfigWindow
         }
     }
         
-    private CancellationTokenSource _tokenSource;
+    private CancellationTokenSource? _tokenSource;
     private const int BlinkCount = 7;
 
     private async Task BlinkKey(IRGBDevice device, Led led)
@@ -210,13 +207,13 @@ public partial class DeviceMappingConfigWindow
     private void SetAllNone_Click(object sender, RoutedEventArgs e)
     {
         foreach (var key in _keys)
-            key.DeviceKey.SelectedValue = DeviceKeys.NONE;
+            key.DeviceKey = DeviceKeys.NONE;
     }
         
     private void SetAllLogo_Click(object sender, RoutedEventArgs e)
     {
         foreach (var key in _keys)
-            key.DeviceKey.SelectedValue = DeviceKeys.Peripheral_Logo;
+            key.DeviceKey = DeviceKeys.Peripheral_Logo;
     }
     #endregion
 }

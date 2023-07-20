@@ -1,0 +1,162 @@
+﻿<UserControl x:Class="Aurora.Settings.Control_SettingsDevicesAndWrappers"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Aurora.Settings"
+             xmlns:a="clr-namespace:Aurora"
+             xmlns:utils="clr-namespace:Aurora.Utils"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid DataContext="{x:Static a:Global.Configuration}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="7,7,0,7">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Vertical">
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Preferred Keyboard Layout:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Preferred Keyboard:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Preferred Mouse:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Preferred Mousepad:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Preferred Headset:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Chroma Leds:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Keycap type:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Mouse Orientation:" VerticalAlignment="Top" />
+                    <TextBlock HorizontalAlignment="Left" Margin="0,1,0,1" Height="22" TextWrapping="Wrap"
+                               Text="Bitmap Accuracy/Ratio: " VerticalAlignment="Top"
+                               ToolTip="Determines how accurate the Freestyle key sequence option will map to the keys it is drawn over. Better accuracy comes at the cost of CPU/RAM usage, will likely only be a problem at Best" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Vertical">
+                    <ComboBox SelectedValue="{Binding KeyboardLocalization}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:PreferredKeyboardLocalization}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding KeyboardBrand}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:PreferredKeyboard}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding MousePreference}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:PreferredMouse}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding MousepadPreference}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:PreferredMousepad}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding HeadsetPreference}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:PreferredHeadset}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding ChromaLedsPreference}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:PreferredChromaLeds}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding VirtualkeyboardKeycapType}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:KeycapType}}" DisplayMemberPath="Text"
+                              SelectedValuePath="Value" SelectionChanged="LoadBrandDefault" Margin="0,1,0,1"
+                              Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding MouseOrientation}"
+                              ItemsSource="{utils:EnumToItemsSource {x:Type local:MouseOrientationType}}"
+                              DisplayMemberPath="Text" SelectedValuePath="Value" SelectionChanged="LoadBrandDefault"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <ComboBox SelectedValue="{Binding BitmapAccuracy}" ItemsSource="{Binding BitmapAccuracies}"
+                              Margin="0,1,0,1" Width="192" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                </StackPanel>
+                <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1">
+                    <CheckBox Content="Allow Aurora wrappers to take priority over desktop profile while active"
+                              IsChecked="{Binding AllowWrappersInBackground}" Grid.Row="1" Margin="0,1,0,1"
+                              HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <CheckBox Content="Disable Keyboard Lighting" IsChecked="{Binding DevicesDisableKeyboard}"
+                              Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                    <CheckBox Content="Disable Mouse Lighting" IsChecked="{Binding DevicesDisableMouse}"
+                              Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                    <CheckBox Content="Disable Headset Lighting" IsChecked="{Binding DevicesDisableHeadset}"
+                              Checked="ResetDevices" Unchecked="ResetDevices" Margin="0,1,0,1" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1" Margin="0,7,7,7">
+            <DockPanel>
+                <GroupBox DockPanel.Dock="Top" Height="Auto" Margin="0,10,0,0" Header="Chroma"
+                          VerticalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="10*" />
+                            <ColumnDefinition Width="20*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Grid.Column="0" Content="Supported Versions:" Margin="5 0 5 0" Padding="0"
+                               VerticalAlignment="Center" />
+                        <Label x:Name="ChromaSupportedVersionsLabel" Grid.Row="0" Grid.Column="1" Padding="0"
+                               Margin="5 0 5 0" VerticalAlignment="Center" />
+                        <Button x:Name="ChromaInstallButton" Grid.Row="0" Grid.Column="2" Content="Install" Width="75"
+                                Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                Click="razer_wrapper_install_button_Click" />
+                        <Button x:Name="ChromaUninstallButton" Grid.Row="0" Grid.Column="2" Content="Uninstall"
+                                Width="75" Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Right"
+                                Click="razer_wrapper_uninstall_button_Click" />
+
+                        <Button Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" x:Name="ChromaDisableDeviceControlButton"
+                                HorizontalAlignment="Right"
+                                Content="Disable Device Control" Width="160"
+                                ToolTipService.InitialShowDelay="0"
+                                ToolTip="Disabling device control will stop ChromaSDK from controlling Razer Devices.&#x0a; After this you have to control them with OpenRGB. To enable it back reinstall ChromaSDK"
+                                Margin="0 0 0 0" VerticalAlignment="Center"
+                                Click="razer_wrapper_disable_device_control_button_Click" />
+
+                        <Label Grid.Row="1" Grid.Column="0" Content="Installed Version:" Margin="5 0 5 0" Padding="0"
+                               VerticalAlignment="Center" />
+                        <Label x:Name="ChromaInstalledVersionLabel" Grid.Row="1" Grid.Column="1" Margin="5 0 5 0"
+                               Padding="0" VerticalAlignment="Center" />
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Connection:" Margin="5 0 5 0" Padding="0"
+                               VerticalAlignment="Center" />
+                        <Label x:Name="ChromaConnectionStatusLabel" Grid.Row="2" Grid.Column="2" Margin="5 0 5 0"
+                               Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0"
+                               VerticalAlignment="Center" />
+                        <Label x:Name="ChromaCurrentApplicationLabel" Grid.Row="3" Grid.Column="2" Width="300"
+                               Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox DockPanel.Dock="Bottom" Header="Wrappers" VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock TextWrapping="Wrap" Margin="4"
+                                   Text="Wrappers are not needed for Aurora to connect to your RGB devices. Only use these if you know what you're doing, otherwise you could cause issues in games or other applications! Read the wiki for more information." />
+                        <Button Content="Patch for LightFX (32 bit)" Margin="4" Width="200"
+                                Click="wrapper_install_lightfx_32_Click" />
+                        <Button Content="Patch for LightFX (64 bit)" Margin="4" Width="200"
+                                Click="wrapper_install_lightfx_64_Click" />
+                    </StackPanel>
+                </GroupBox>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</UserControl>

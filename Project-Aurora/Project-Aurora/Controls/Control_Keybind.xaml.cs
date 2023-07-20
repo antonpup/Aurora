@@ -47,7 +47,7 @@ public partial class Control_Keybind
             () =>
             {
                 if (!Equals(_ActiveKeybind)) return;
-                System.Windows.Forms.Keys[] pressedKeys = Global.InputEvents.PressedKeys;
+                var pressedKeys = Global.InputEvents.PressedKeys;
 
                 if (ContextKeybind != null)
                 {
