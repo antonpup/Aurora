@@ -175,7 +175,7 @@ public sealed partial class ActiveProcessMonitor
 			if (GetWindowText(windowHandle, text, text.Capacity) > 0)
 				return text.ToString();
 		} catch (Exception exc) {
-			Global.logger.Error("Exception in GetActiveWindowsProcessTitle" + exc);
+			Global.logger.Error("Exception in GetActiveWindowsProcessTitle", exc);
 		}
 		return "";
 	}
@@ -187,8 +187,7 @@ public sealed partial class ActiveProcessMonitor
 			if (GetWindowThreadProcessId(windowHandle, out var processId) > 0)
 			{
 				var process = Process.GetProcessById((int)processId);
-				var exePath = process.MainModule.FileName;
-				return exePath.Remove(0, exePath.LastIndexOf('\\') + 1);
+				return process.ProcessName + ".exe";
 			}
 		} catch (Exception exc) {
 			Global.logger.Error("Exception in GetActiveWindowsProcessTitle", exc);

@@ -80,7 +80,7 @@ public partial class Control_Chroma : INotifyPropertyChanged
     {
         if (string.IsNullOrEmpty(SelectedExcludedProgram)) return;
         _settings.ExcludedPrograms.Remove(SelectedExcludedProgram);
-        _profile.Config.ProcessNames.AddItem(SelectedExcludedProgram);
+        _profile.Config.ProcessNames.AddItem(SelectedExcludedProgram.ToLower());
         ReorderChromaRegistry();
     }
 

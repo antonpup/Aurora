@@ -52,12 +52,14 @@ public sealed partial class RunningProcessMonitor : IDisposable {
             .ToDictionary(g => g.First(), g => g.Count());
 
         // Listen for new processes
-        _startWatcher = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStartTrace");
+        const string startQuery = "SELECT * FROM __InstanceCreationEvent WITHIN .025 WHERE TargetInstance ISA 'Win32_Process'";
+        _startWatcher = new ManagementEventWatcher(@"\\.\root\CIMV2", startQuery);
         _startWatcher.EventArrived += ProcessStarted;
         _startWatcher.Start();
 
-        // Listen for closed processes
-        _stopWatcher = new ManagementEventWatcher("SELECT * FROM Win32_ProcessStopTrace");
+        // Listen for closed processes 
+        const string stopQuery = "SELECT * FROM __InstanceDeletionEvent WITHIN .025 WHERE TargetInstance ISA 'Win32_Process'";
+        _stopWatcher = new ManagementEventWatcher(@"\\.\root\CIMV2", stopQuery);
         _stopWatcher.EventArrived += ProcessStopped;
         _stopWatcher.Start();
     }
@@ -66,7 +68,12 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     private void ProcessStarted(object sender, EventArrivedEventArgs e)
     {
         // Get the name of the started process
-        var name = e.NewEvent.Properties["ProcessName"].Value.ToString().ToLower();
+        var targetInstance = (ManagementBaseObject)e.NewEvent.Properties["TargetInstance"].Value;
+        if (targetInstance.Properties["Caption"].Value is not string name)
+        {
+            return;
+        }
+        name = name.ToLower();
         // Set the dictionary to be the existing value + 1 or simply 1 if it doesn't exist already.
         _runningProcesses[name] = _runningProcesses.TryGetValue(name, out int i) ? i + 1 : 1;
         RunningProcessesChanged?.Invoke(sender, new RunningProcessChanged(name));
@@ -76,7 +83,12 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     private void ProcessStopped(object sender, EventArrivedEventArgs e)
     {
         // Get the name of the terminated process
-        var name = e.NewEvent.Properties["ProcessName"].Value.ToString().ToLower();
+        var targetInstance = (ManagementBaseObject)e.NewEvent.Properties["TargetInstance"].Value;
+        if (targetInstance.Properties["Caption"].Value is not string name)
+        {
+            return;
+        }
+        name = name.ToLower();
         // Ensure the process exists in our dictionary
         if (_runningProcesses.TryGetValue(name, out int count))
         {
@@ -93,7 +105,7 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     /// Returns whether the given process name is detected as running or not.
     /// </summary>
     [MethodImpl(MethodImplOptions.Synchronized)]
-    public bool IsProcessRunning(string name) => _runningProcesses.ContainsKey(name.ToLower());
+    public bool IsProcessRunning(string name) => _runningProcesses.ContainsKey(name);
 
     public void Dispose()
     {

@@ -33,12 +33,12 @@ namespace Aurora.Profiles
             get => _processNames;
             set
             {
-                _processNames = value;
+                _processNames = value.Select(s => s.ToLower()).ToArray();
                 ProcessNamesChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        public event EventHandler<EventArgs> ProcessNamesChanged; 
+        public event EventHandler<EventArgs>? ProcessNamesChanged; 
 
         /// <summary>One or more REGULAR EXPRESSIONS that can be used to match the title of an application</summary>
         public string[]? ProcessTitles { get; set; }
