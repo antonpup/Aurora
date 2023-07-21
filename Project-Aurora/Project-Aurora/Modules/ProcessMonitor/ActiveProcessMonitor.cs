@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,12 +17,11 @@ public sealed partial class ActiveProcessMonitor
 {
 	private const uint WinEventOutOfContext = 0;
 	private const uint EventSystemForeground = 3;
-	private const uint EventSystemMinimizeStart = 0x0016;
 	private const uint EventSystemMinimizeEnd = 0x0017;
 
 	private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
 	private string _processPath = string.Empty;
-	public string ProcessPath {
+	public string ProcessName {
 		get => _processPath;
 		private set
 		{
@@ -36,25 +34,28 @@ public sealed partial class ActiveProcessMonitor
 			}
 		}
 	}
-	public static event EventHandler? ActiveProcessChanged;
+	public string ProcessTitle { get; private set; }
+	public event EventHandler? ActiveProcessChanged;
 
-	public string ActiveProcessName { get; set; } = "";
+	public string ActiveProcessName { get; private set; } = "";
 
-	private WinEventDelegate? dele;
+	private readonly WinEventDelegate _dele;
 
 	private ActiveProcessMonitor()
 	{
-		dele = WinEventProc;
-		SetWinEventHook(EventSystemForeground, EventSystemForeground, IntPtr.Zero, dele, 0, 0, WinEventOutOfContext);
-		SetWinEventHook(EventSystemMinimizeStart, EventSystemMinimizeEnd, IntPtr.Zero, dele, 0, 0, WinEventOutOfContext);
+		_dele = WinEventProc;
+		SetWinEventHook(EventSystemForeground, EventSystemForeground, IntPtr.Zero, _dele, 0, 0, WinEventOutOfContext);
+		SetWinEventHook(EventSystemMinimizeEnd, EventSystemMinimizeEnd, IntPtr.Zero, _dele, 0, 0, WinEventOutOfContext);
 	}
 
 	private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 	{
-		if (Global.Configuration.DetectionMode == Settings.ApplicationDetectionMode.WindowsEvents)
-		{
-			UpdateActiveWindowsProcessPath();
-		}
+		if (Global.Configuration.DetectionMode != Settings.ApplicationDetectionMode.WindowsEvents) return; //TODO unhook instead
+		ProcessName = GetWindowProcessName(hwnd);
+		
+		var text = new StringBuilder(256);
+		if (GetWindowText(hwnd, text, text.Capacity) > 0)
+			ProcessTitle = text.ToString();
 	}
 
 	[DllImport("user32.dll")]
@@ -73,40 +74,10 @@ public sealed partial class ActiveProcessMonitor
 	[DllImport("user32.dll")]
 	static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-	public void UpdateActiveWindowsProcessPath()
+	public void UpdateActiveProcessPolling()
 	{
-		string activeProcess = GetActiveWindowsProcessPath();
-
-		if (!String.IsNullOrWhiteSpace(activeProcess))
-			ProcessPath = activeProcess;
+		ProcessName = GetActiveWindowProcessName();
 	}
-
-	[Flags]
-	private enum ProcessAccessFlags : uint
-	{
-		All = 0x001F0FFF,
-		Terminate = 0x00000001,
-		CreateThread = 0x00000002,
-		VirtualMemoryOperation = 0x00000008,
-		VirtualMemoryRead = 0x00000010,
-		DuplicateHandle = 0x00000040,
-		CreateProcess = 0x000000080,
-		SetQuota = 0x00000100,
-		SetInformation = 0x00000200,
-		QueryInformation = 0x00000400,
-		QueryLimitedInformation = 0x00001000,
-		Synchronize = 0x00100000
-	}
-
-	[DllImport("kernel32.dll")]
-	private static extern bool QueryFullProcessImageName(IntPtr hprocess, int dwFlags,
-		StringBuilder lpExeName, out int size);
-	[DllImport("kernel32.dll")]
-	private static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess,
-		bool bInheritHandle, int dwProcessId);
-
-	[DllImport("kernel32.dll", SetLastError = true)]
-	private static extern bool CloseHandle(IntPtr hHandle);
 
 	public static TimeSpan GetTimeSinceLastInput() {
 		var inf = new tagLASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<tagLASTINPUTINFO>() };
@@ -115,74 +86,40 @@ public sealed partial class ActiveProcessMonitor
 			new TimeSpan(0, 0, 0, 0, Environment.TickCount - inf.dwTime);
 	}
 
-	private static string GetExecutablePath(Process process)
+	private string GetActiveWindowProcessName()
 	{
-		return GetExecutablePathAboveVista(process.Id);
-	}
-
-	private static string GetExecutablePathAboveVista(int processId)
-	{
-		var buffer = new StringBuilder(1024);
-		var hprocess = OpenProcess(ProcessAccessFlags.QueryLimitedInformation, false, processId);
-		if (hprocess == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastPInvokeError());
-		try
-		{
-			var size = buffer.Capacity;
-			if (QueryFullProcessImageName(hprocess, 0, buffer, out size))
-			{
-				return buffer.ToString();
-			}
-		}
-		finally
-		{
-			CloseHandle(hprocess);
-		}
-		throw new Win32Exception(Marshal.GetLastPInvokeError());
-	}
-
-
-	private string GetActiveWindowsProcessPath()
-	{
-		IntPtr windowHandle = IntPtr.Zero;
+		var windowHandle = GetForegroundWindow();
+		
+		var text = new StringBuilder(256);
+		if (GetWindowText(windowHandle, text, text.Capacity) > 0)
+			ProcessTitle = text.ToString();
 
 		try
 		{
-			if (windowHandle.Equals(IntPtr.Zero))
-				windowHandle = GetForegroundWindow();
-			uint pid;
-			if (GetWindowThreadProcessId(windowHandle, out pid) > 0)
-			{
-				Process proc = Process.GetProcessById((int)pid);
-				string path = GetExecutablePath(proc);
-				if (!System.IO.File.Exists(path))
-					throw new InvalidOperationException($"Found file path does not exist! '{path}'");
-				return path;
-			}
+			return GetWindowProcessName(windowHandle);
 		}
 		catch (Exception exc)
 		{
 			Global.logger.Error("Exception in GetActiveWindowsProcessname" + exc);
 		}
 
-		return "";
+		return string.Empty;
 	}
 
-	public string GetActiveWindowsProcessTitle() {
-		try {
-			// Based on https://stackoverflow.com/a/115905
-			IntPtr windowHandle = GetForegroundWindow();
-			StringBuilder text = new StringBuilder(256);
-			if (GetWindowText(windowHandle, text, text.Capacity) > 0)
-				return text.ToString();
-		} catch (Exception exc) {
-			Global.logger.Error("Exception in GetActiveWindowsProcessTitle", exc);
-		}
-		return "";
+	private string GetWindowProcessName(IntPtr windowHandle)
+	{
+		if (GetWindowThreadProcessId(windowHandle, out var pid) <= 0) return "";
+		var proc = Process.GetProcessById((int)pid);
+		return proc.ProcessName + ".exe";
 	}
 
 	private string? GetActiveWindowsProcessName() {
 		try {
-			IntPtr windowHandle = GetForegroundWindow();
+			var windowHandle = GetForegroundWindow();
+			if (windowHandle == IntPtr.Zero)
+			{
+				return null;
+			}
 
 			if (GetWindowThreadProcessId(windowHandle, out var processId) > 0)
 			{

@@ -171,6 +171,12 @@
           "Microsoft.CodeAnalysis.Workspaces.Common": "[4.6.0]"
         }
       },
+      "Microsoft.Experimental.Collections": {
+        "type": "Direct",
+        "requested": "[1.0.6-e190117-3, )",
+        "resolved": "1.0.6-e190117-3",
+        "contentHash": "S2IfWAo5bnXSgpr8o0LR3aMqo7QD83VQUPbgta6aOYIBq8M85Hpk8hVUco22GFhSRuf4ZhP8jUs2wPlO0Dbdow=="
+      },
       "MouseKeyHook.NetCore": {
         "type": "Direct",
         "requested": "[5.6.1.1, )",

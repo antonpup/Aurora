@@ -5,9 +5,10 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Amib.Threading;
 using Aurora.EffectsEngine;
@@ -238,7 +239,7 @@ public class AmbilightLayerHandlerProperties : LayerHandlerProperties2Color<Ambi
 [LogicOverrideIgnoreProperty("_SecondaryColor")]
 [LogicOverrideIgnoreProperty("_Sequence")]
 [DoNotNotify]
-public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>, INotifyPropertyChanged
+public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerProperties>
 {
     private IScreenCapture? _screenCapture;
 
@@ -247,7 +248,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
 
     private Brush _screenBrush = Brushes.Transparent;
     private IntPtr _specificProcessHandle = IntPtr.Zero;
-    private Rectangle _cropRegion = new(8, 8, 8, 8);
+    private Rectangle _cropRegion = Rectangle.Empty;
     private ImageAttributes _imageAttributes = new();
 
     private bool _invalidated; //properties changed
@@ -259,7 +260,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
 
     public AmbilightLayerHandler() : base("Ambilight Layer")
     {
-        STPStartInfo stpStartInfo = new STPStartInfo();
+        var stpStartInfo = new STPStartInfo();
         stpStartInfo.ApartmentState = ApartmentState.STA;
         stpStartInfo.IdleTimeout = 1000;
         
@@ -269,15 +270,13 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         };
         Initialize();
         _screenshotWork = TakeScreenshot;
-        RunningProcessMonitor.Instance.RunningProcessesChanged += ProcessesChanged; //TODO this is memory leak. WeakEventHandler doesnt work
     }
 
     private void Initialize()
     {
         _screenCapture?.Dispose();
         _screenCapture = Properties.ExperimentalMode ? new DxScreenCapture() : new GdiScreenCapture();
-        Global.logger.Info("Started regular ambilight mode");
-        InvokePropertyChanged(nameof(Displays));
+        _screenCapture.ScreenshotTaken += ScreenshotAction;
     }
 
     public override EffectLayer Render(IGameState gamestate)
@@ -300,6 +299,10 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         //for a frame when the user alt-tabs with the foregroundapp option selected
         if (TryGetCropRegion(out var newCropRegion))
             _cropRegion = newCropRegion;
+        else
+        {
+            UpdateSpecificProcessHandle(Properties.SpecificProcess);
+        }
         //and because of that, this should never happen 
         if (_cropRegion.IsEmpty)
             return EffectLayer.EmptyLayer;
@@ -349,22 +352,22 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         {
             TryTakeScreenshot();
         }
-        catch (Exception e)
-        {
+        catch{
+            // ignored
         }
         return null;
     }
 
     private void TryTakeScreenshot()
     {
-        _screenCapture.Capture(_cropRegion, bitmap =>
-        {
-            if (bitmap is null) return;
-
-            CreateScreenBrush(bitmap, _cropRegion);
-        });
+        _screenCapture.Capture(_cropRegion);
         WaitTimer(_captureStopwatch.Elapsed);
         _captureStopwatch.Restart();
+    }
+
+    private void ScreenshotAction(object sender, Bitmap bitmap)
+    {
+        CreateScreenBrush(bitmap, _cropRegion);
     }
 
     private void WaitTimer(TimeSpan elapsed)
@@ -425,15 +428,45 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         _imageAttributes.SetColorMatrix(new ColorMatrix(mtx));
         _imageAttributes.SetWrapMode(WrapMode.Clamp);
 
-        UpdateSpecificProcessHandle(Properties.SpecificProcess);
+        ClearEvents();
+        switch (Properties.AmbilightCaptureType)
+        {
+            case AmbilightCaptureType.SpecificProcess when !string.IsNullOrWhiteSpace(Properties.SpecificProcess):
+                UpdateSpecificProcessHandle(Properties.SpecificProcess);
+                
+                WindowListener.Instance.WindowCreated += WindowsChanged;
+                WindowListener.Instance.WindowDestroyed += WindowsChanged;
+                break;
+            case AmbilightCaptureType.ForegroundApp:
+                _specificProcessHandle = User32.GetForegroundWindow();
+                ActiveProcessMonitor.Instance.ActiveProcessChanged += ProcessChanged;
+                break;
+            case AmbilightCaptureType.Coordinates:
+            case AmbilightCaptureType.EntireMonitor:
+            default:
+                break;
+        }
 
         _invalidated = true;
     }
 
-    private void ProcessesChanged(object sender, RunningProcessChanged args)
+    private void ClearEvents()
     {
-        if (args.ProcessName.StartsWith(Properties.SpecificProcess))
-            UpdateSpecificProcessHandle(Properties.SpecificProcess);
+        ActiveProcessMonitor.Instance.ActiveProcessChanged -= ProcessChanged;
+        WindowListener.Instance.WindowCreated -= WindowsChanged;
+        WindowListener.Instance.WindowDestroyed -= WindowsChanged;
+    }
+
+    private void ProcessChanged(object? sender, EventArgs e)
+    {
+        _specificProcessHandle = User32.GetForegroundWindow();
+    }
+
+    private void WindowsChanged(object? sender, int e)
+    {
+        if (!WindowListener.Instance.ProcessWindowsMap.TryGetValue(Properties.SpecificProcess, out var windows)) return;
+        var targetWindow = windows.First();
+        _specificProcessHandle = new IntPtr(targetWindow.WindowHandle);
     }
 
     #region Helper Methods
@@ -462,9 +495,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 break;
             case AmbilightCaptureType.SpecificProcess:
             case AmbilightCaptureType.ForegroundApp:
-                var handle = Properties.AmbilightCaptureType == AmbilightCaptureType.ForegroundApp ?
-                    User32.GetForegroundWindow() : _specificProcessHandle;
-
+                var handle = _specificProcessHandle;
                 if (handle == IntPtr.Zero)
                     return false;//happens when alt tabbing
 
@@ -479,7 +510,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 break;
         }
 
-        return crop.Width > 4 && crop.Height > 4;
+        return crop is { Width: > 4, Height: > 4 };
     }
 
     /// <summary>
@@ -494,18 +525,32 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     /// Updates the handle of the window used to crop the screenshot
     /// </summary>
     /// <param name="process"></param>
-    public void UpdateSpecificProcessHandle(string process)
+    public async Task UpdateSpecificProcessHandle(string process)
     {
-        var a = Array.Find(
-            Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process)),
+        var processes = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process));
+        if (processes.Length == 0)
+        {
+            return;
+        }
+        var targetProcess = Array.Find(
+            processes,
             p => p.MainWindowHandle != IntPtr.Zero
         );
-
-        if (a != null)
+        if (targetProcess != null)  //target process is there but doesn't have window yet
         {
-            _specificProcessHandle = a.MainWindowHandle;
+            _specificProcessHandle = targetProcess.MainWindowHandle;
         }
     }
+    public async Task UpdateSpecificProcessHandle(int processId)
+    {
+        Process? targetProcess = Process.GetProcessById(processId);
+
+        if (targetProcess != null)  //target process is there but doesn't have window yet
+        {
+            _specificProcessHandle = targetProcess.MainWindowHandle;
+        }
+    }
+    
     #endregion
 
     #region User32
@@ -573,13 +618,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     }
 
     #endregion
-
-    #region PropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    private void InvokePropertyChanged([CallerMemberName] string propertyName = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    #endregion
 }
 
 internal interface IScreenCapture : IDisposable
@@ -588,7 +626,9 @@ internal interface IScreenCapture : IDisposable
     /// Captures a screenshot of the full screen, returning a full resolution bitmap
     /// </summary>
     /// <returns></returns>
-    void Capture(Rectangle desktopRegion, Action<Bitmap?> action);
+    void Capture(Rectangle desktopRegion);
+
+    event EventHandler<Bitmap> ScreenshotTaken;
 
     IEnumerable<string> GetDisplays();
 }

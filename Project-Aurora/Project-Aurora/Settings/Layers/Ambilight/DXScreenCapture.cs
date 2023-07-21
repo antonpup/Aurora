@@ -11,20 +11,26 @@ namespace Aurora.Settings.Layers.Ambilight;
 
 internal sealed class DxScreenCapture : IScreenCapture
 {
+    public event EventHandler<Bitmap>? ScreenshotTaken;
+    
     private static readonly IDictionary<Output5, DesktopDuplicator> Duplicators = new Dictionary<Output5, DesktopDuplicator>();
 
     private static readonly Semaphore Semaphore = new(1, 1);
     private Rectangle _currentBounds = Rectangle.Empty;
     private DesktopDuplicator? _desktopDuplicator;
 
-    public void Capture(Rectangle desktopRegion, Action<Bitmap?> action)
+    public void Capture(Rectangle desktopRegion)
     {
         SetTarget(desktopRegion);
         try{
             Semaphore.WaitOne();
             var bitmap = _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(_currentBounds, 5000);
-            action.Invoke(bitmap);
-            bitmap?.Dispose();
+            if (bitmap == null)
+            {
+                return;
+            }
+            ScreenshotTaken?.Invoke(this, bitmap);
+            bitmap.Dispose();
         }finally{
             Semaphore.Release();
         }

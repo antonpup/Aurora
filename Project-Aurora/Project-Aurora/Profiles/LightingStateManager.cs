@@ -362,7 +362,7 @@ public sealed class LightingStateManager : IInit
     {
         if (Global.Configuration.DetectionMode != ApplicationDetectionMode.ForegroroundApp ||
             _currentTick < _nextProcessNameUpdate) return;
-        _processMonitor.UpdateActiveWindowsProcessPath();
+        _processMonitor.UpdateActiveProcessPolling();
         _nextProcessNameUpdate = _currentTick + 1000L;
     }
 
@@ -433,7 +433,7 @@ public sealed class LightingStateManager : IInit
             return;
         }
 
-        var rawProcessName = Path.GetFileName(_processMonitor.ProcessPath);
+        var rawProcessName = _processMonitor.ProcessName;
 
         UpdateProcess();
         EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
@@ -497,8 +497,8 @@ public sealed class LightingStateManager : IInit
     /// or because the process is open (false).</param>
     private ILightEvent GetCurrentProfile(out bool preview)
     {
-        var processName = Path.GetFileName(_processMonitor.ProcessPath).ToLower();
-        var processTitle = _processMonitor.GetActiveWindowsProcessTitle();
+        var processName = _processMonitor.ProcessName.ToLower();
+        var processTitle = _processMonitor.ProcessTitle;
         ILightEvent profile = null;
         ILightEvent tempProfile;
         preview = false;

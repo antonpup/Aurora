@@ -9,12 +9,14 @@ namespace Aurora.Settings.Layers.Ambilight;
 
 internal sealed class GdiScreenCapture : IScreenCapture
 {
+    public event EventHandler<Bitmap>? ScreenshotTaken;
+
     private Bitmap _targetBitmap = new(8, 8);
     private Size _targetSize = new(8, 8);
 
     private Graphics _graphics = Graphics.FromImage(new Bitmap(8, 8));
 
-    public void Capture(Rectangle desktopRegion, Action<Bitmap?> action)
+    public void Capture(Rectangle desktopRegion)
     {
         if (_targetSize != desktopRegion.Size)
         {
@@ -26,7 +28,7 @@ internal sealed class GdiScreenCapture : IScreenCapture
         _graphics.CompositingMode = CompositingMode.SourceCopy;
         _graphics.CopyFromScreen(desktopRegion.Location, Point.Empty, _targetSize);
 
-        action.Invoke(_targetBitmap);
+        ScreenshotTaken?.Invoke(this, _targetBitmap);
     }
 
     public IEnumerable<string> GetDisplays() =>

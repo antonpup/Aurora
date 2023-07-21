@@ -167,7 +167,7 @@ namespace Aurora.Profiles {
         /// <summary>
         /// Returns focused window's name.
         /// </summary>
-        public string ActiveWindowName => ActiveProcessMonitor.Instance.GetActiveWindowsProcessTitle();
+        public string ActiveWindowName => ActiveProcessMonitor.Instance.ProcessTitle;
 
         /// <summary>
         /// Returns focused window's process name.
