@@ -194,7 +194,7 @@ partial class ConfigUI : INotifyPropertyChanged
                 if (_useMica)
                 {
                     bg_grid.Background =
-                        new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 140 / 255), a.Red, a.Green, a.Blue));
+                        new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
                 }
                 else
                 {
