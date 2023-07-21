@@ -96,7 +96,7 @@ public static class Global
     /// <summary>
     /// Input event subscriptions
     /// </summary>
-    public static IInputEvents InputEvents => InputsModule.Instance.Result;
+    public static IInputEvents InputEvents { get; set; }
 
     public static LightingStateManager? LightingStateManager { get; set; }     //TODO module access
     public static Configuration? Configuration { get; set; }

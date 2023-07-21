@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Modules.AudioCapture;
 using Aurora.Settings;
@@ -14,6 +15,12 @@ public sealed partial class AudioCaptureModule : IAuroraModule
     private AudioDevices? _audioDevices;
     private AudioDeviceProxy? _renderProxy;
     private AudioDeviceProxy? _captureProxy;
+
+    public override Task<bool> InitializeAsync()
+    {
+        Initialize();
+        return Task.FromResult(true);
+    }
 
     public override void Initialize()
     {

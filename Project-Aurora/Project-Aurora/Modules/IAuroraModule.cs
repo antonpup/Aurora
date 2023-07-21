@@ -15,14 +15,14 @@ public abstract class IAuroraModule : IDisposable
     })
     {
         Name = "Initialize Threads",
-        Concurrency = 6,
+        Concurrency = 10,
         MaxThreads = 6,
     };
     private TaskCompletionSource? _taskSource;
 
     private async Task QueueInit(Action action)
     {
-        _taskSource = new TaskCompletionSource();
+        _taskSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
         object WorkItemCallback(object _)
         {
@@ -43,13 +43,8 @@ public abstract class IAuroraModule : IDisposable
         {
             ModuleThreadPool.Start();
         }
-        
-        var cancellationTokenSource = new CancellationTokenSource();
-        var task = new Task(() => _taskSource.Task.Wait(cancellationTokenSource.Token), cancellationTokenSource.Token); // task.Status == TaskStatus.Created
 
-        task.Start(); // task.Status == TaskStatus.Running
-
-        await task;
+        await _taskSource.Task;
     }
 
     public virtual async Task InitializeAsync()

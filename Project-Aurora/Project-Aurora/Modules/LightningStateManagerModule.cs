@@ -3,7 +3,6 @@ using Aurora.Modules.GameStateListen;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Lombok.NET;
-using Application = System.Windows.Application;
 
 namespace Aurora.Modules;
 
@@ -38,10 +37,7 @@ public sealed partial class LightningStateManagerModule : IAuroraModule
         var lightingStateManager = new LightingStateManager(_pluginManager, _ipcListener);
         _manager = lightingStateManager;
         Global.LightingStateManager = lightingStateManager;
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            lightingStateManager.Initialize();
-        });
+        lightingStateManager.Initialize();
         
         _taskSource.SetResult(lightingStateManager);
 

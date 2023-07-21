@@ -15,6 +15,7 @@ using System.Windows.Threading;
 using Aurora.Devices;
 using Aurora.Modules;
 using Aurora.Modules.GameStateListen;
+using Aurora.Modules.ProcessMonitor;
 using Aurora.Settings;
 using Aurora.Utils;
 using Microsoft.Win32;
@@ -44,9 +45,9 @@ public partial class App
 
     private readonly List<IAuroraModule> _modules = new()
     {
-        new UpdateCleanup(),
         new InputsModule(),
-        new PointerUpdateModule(),
+        new UpdateCleanup(),
+        LayoutsModule,
         new MediaInfoModule(),
         new AudioCaptureModule(),
         PluginsModule,
@@ -54,7 +55,7 @@ public partial class App
         HttpListenerModule,
         LightningStateManagerModule,
         RazerSdkModule,
-        LayoutsModule,
+        new PointerUpdateModule(),
         new HardwareMonitorModule(),
     };
 
@@ -130,6 +131,7 @@ public partial class App
         MainWindow = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
             HttpListenerModule.HttpListener, IpcListenerModule.IpcListener);
 
+        //Task.WaitAll(initModules);    //FIXME figure out this
         Global.logger.Info("Loading ConfigUI...");
         ((ConfigUI)MainWindow).DisplayIfNotSilent();
         //Task.WaitAll(initModules);    //FIXME figure out this

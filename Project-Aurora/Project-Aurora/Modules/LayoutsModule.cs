@@ -21,10 +21,7 @@ public sealed partial class LayoutsModule : IAuroraModule
     public override void Initialize()
     {
         Global.logger.Info("Loading KB Layouts");
-        Application.Current.Dispatcher.Invoke(() =>
-        {
-            _layoutManager = new KeyboardLayoutManager();
-        });
+        _layoutManager = new KeyboardLayoutManager();
         Global.kbLayout = _layoutManager;
         Global.kbLayout.LoadBrandDefault();
         Global.logger.Info("Loaded KB Layouts");

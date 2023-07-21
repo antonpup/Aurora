@@ -12,22 +12,24 @@ namespace Aurora.Modules;
 
 public sealed partial class InputsModule : IAuroraModule
 {
-    private static TaskCompletionSource<IInputEvents> tcs = new();
-    private static Lazy<Task<IInputEvents>> l = new(() => tcs.Task, LazyThreadSafetyMode.ExecutionAndPublication);
-    public static Task<IInputEvents> Instance => l.Value;
-
     private static InputInterceptor? InputInterceptor;
+
+    public override Task<bool> InitializeAsync()
+    {
+        Initialize();
+        return Task.FromResult(true);
+    }
 
     public override void Initialize()
     {
         if (!Global.Configuration.EnableInputCapture)
         {
-            tcs.SetResult(new NoopInputEvents());
+            Global.InputEvents = new NoopInputEvents();
         }
         else
         {
             Global.logger.Info("Loading Input Hooking");
-            tcs.SetResult(new InputEvents());
+            Global.InputEvents = new InputEvents();
             Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
             SetupVolumeAsBrightness(Global.Configuration,
                 new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
