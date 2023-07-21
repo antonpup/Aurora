@@ -132,7 +132,7 @@
       <HintPath>.\RGB.NET.Devices.Asus.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="RGB.NET.Core, Version=2.0.1.1">
+    <Reference Include="RGB.NET.Core, Version=2.0.1.2">
       <HintPath>.\RGB.NET.Core.dll</HintPath>
       <Private>true</Private>
     </Reference>
