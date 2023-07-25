@@ -26,7 +26,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
         if (files.Length == 0)
             yield break;
 
-        Global.logger.Info($"Loading device scripts from {_scriptFolder}");
+        Global.logger.Information($"Loading device scripts from {_scriptFolder}");
 
         foreach (var deviceScript in files)
         {
@@ -61,7 +61,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
             var script = Global.PythonEngine.Operations.CreateInstance(mainType);
 
             IDevice scriptedDevice = new ScriptedDevice(script);
-            Global.logger.Info($"Loaded device script {deviceScript}");
+            Global.logger.Information($"Loaded device script {deviceScript}");
             return scriptedDevice;
         }
 
@@ -84,12 +84,12 @@ internal class ScriptDeviceLoader : IDeviceLoader
         var constructorInfo = typ.GetConstructor(Type.EmptyTypes);
         if (constructorInfo == null)
         {
-            Global.logger.Info($"Script {deviceScript} does not have parameterless constructor or device class isn't the first one");
+            Global.logger.Information($"Script {deviceScript} does not have parameterless constructor or device class isn't the first one");
             return null;
         }
         dynamic script = Activator.CreateInstance(typ);
         IDevice scriptedDevice = new ScriptedDevice(script);
-        Global.logger.Info($"Loaded device script {deviceScript}");
+        Global.logger.Information($"Loaded device script {deviceScript}");
         return scriptedDevice;
     }
 }

@@ -109,7 +109,8 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
             return EffectLayer.EmptyLayer;
         }
         _empty = false;
-        RzHelper.UpdateIfStale();
+        if (!RzHelper.UpdateIfStale())
+            return EffectLayer;
 
         foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
         {

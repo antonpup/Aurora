@@ -37,7 +37,7 @@ public sealed class DesktopDuplicator : IDisposable
             _device = new Device(adapter1, DeviceCreationFlags.Debug);
             Devices.Add(adapter1, _device);
         }
-        Global.logger.Info("Starting desktop duplicator");
+        Global.logger.Information("Starting desktop duplicator");
         _device.ExceptionMode = 1;
         var textureDesc = new Texture2DDescription
         {
@@ -92,7 +92,7 @@ public sealed class DesktopDuplicator : IDisposable
         }
         catch (SharpDXException e) when (e.ResultCode.Failure)
         {
-            Global.logger.Warn(e.Message);
+            Global.logger.Warning(e.Message);
             return null;
         }
 
@@ -152,7 +152,7 @@ public sealed class DesktopDuplicator : IDisposable
         {
             if (e.ResultCode.Failure)
             {
-                Global.logger.Warn(e.Message);
+                Global.logger.Warning(e.Message);
             }
         }
     }

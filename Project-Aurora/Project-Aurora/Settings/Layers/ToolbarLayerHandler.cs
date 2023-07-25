@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Input;
+using Aurora.Modules.Inputs;
 using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers {
@@ -70,7 +72,7 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Handler for when any keyboard button is pressed.
         /// </summary>
-        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        private void InputEvents_KeyDown(object sender, KeyEvent e) {
             if (Properties.Sequence.Keys.Contains(e.GetDeviceKey()))
                 _activeKey = e.GetDeviceKey();
         }
@@ -78,7 +80,7 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Handler for the ScrollWheel.
         /// </summary>
-        private void InputEvents_Scroll(object sender, SharpDX.RawInput.MouseInputEventArgs e) {
+        private void InputEvents_Scroll(object sender, MouseScrollEvent e) {
             if (Properties.EnableScroll && Properties.Sequence.Keys.Count > 1) {
                 // If there's no active key or the ks doesn't contain it (e.g. the sequence was just changed), make the first one active.
                 if (_activeKey == DeviceKeys.NONE || !Properties.Sequence.Keys.Contains(_activeKey))

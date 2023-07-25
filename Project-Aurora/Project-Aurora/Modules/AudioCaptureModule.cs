@@ -10,7 +10,7 @@ using NAudio.CoreAudioApi;
 
 namespace Aurora.Modules;
 
-public sealed partial class AudioCaptureModule : IAuroraModule
+public sealed partial class AudioCaptureModule : AuroraModule
 {
     private AudioDevices? _audioDevices;
     private AudioDeviceProxy? _renderProxy;
@@ -22,7 +22,7 @@ public sealed partial class AudioCaptureModule : IAuroraModule
         return Task.FromResult(true);
     }
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
         var thread = new Thread(InitializeLocalInfoProxies);
         thread.SetApartmentState(ApartmentState.MTA);

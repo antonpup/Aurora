@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Aurora.Devices;
 using Aurora.Utils;
-using SharpDX.RawInput;
 
 namespace Aurora.Modules.Inputs;
 
@@ -23,7 +22,7 @@ public sealed class KeyRecorder : IDisposable
         inputEvents.KeyUp += InputEventsOnKeyUp;
     }
         
-    private void InputEventsOnKeyUp(object sender, KeyboardInputEventArgs e)
+    private void InputEventsOnKeyUp(object sender, KeyEvent e)
     {
         if (!IsRecording()) return;
         var key = e.GetDeviceKey();

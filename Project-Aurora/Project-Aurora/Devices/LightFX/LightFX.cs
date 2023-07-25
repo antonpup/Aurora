@@ -39,11 +39,11 @@ namespace Aurora.Devices.LightFX
                 int status = LightFXSDK.HIDRead(Buffer, Buffer.Length);
                 bool read = LightFXSDK.getReadStatus();
                 if (!read) {
-                    Global.logger.Info("Error Code: " + Marshal.GetLastPInvokeError());
+                    Global.logger.Information("Error Code: " + Marshal.GetLastPInvokeError());
                     return -1;
                 }
 
-                // Global.logger.Info("Read Status: " + write + ": " + read);
+                // Global.logger.Information("Read Status: " + write + ": " + read);
 
                 return status;
             }
@@ -69,7 +69,7 @@ namespace Aurora.Devices.LightFX
                 Loop();
             }
             //bool result2 = ExecuteColors();
-            // Global.logger.Info("Color Status: " + result + ": " + result2);
+            // Global.logger.Information("Color Status: " + result + ": " + result2);
             //ExecuteColors();
         }
 
@@ -233,7 +233,7 @@ namespace Aurora.Devices.LightFX
                 Thread.Sleep(2);
                 status = DeviceStatus();
             }
-            // Global.logger.Info("Wait Bytes: " + status);
+            // Global.logger.Information("Wait Bytes: " + status);
             return status;
         }
 
@@ -247,7 +247,7 @@ namespace Aurora.Devices.LightFX
                 Thread.Sleep(2);
                 status = DeviceStatus();
             }
-            //  Global.logger.Info("Ready Bytes: " + status);
+            //  Global.logger.Information("Ready Bytes: " + status);
             return status;
         }
 
@@ -427,7 +427,7 @@ namespace Aurora.Devices.LightFX
                     if (!usingHID) {
                         LightFXSDK.LFX_SetLightColor(1, 2, ref LightFXSDK.color3);
                     }
-                    //Global.logger.Info("Mid Left Codes: " + color3.red + " : " + color3.green + " : " + color3.blue);
+                    //Global.logger.Information("Mid Left Codes: " + color3.red + " : " + color3.green + " : " + color3.blue);
                 } else {
                     SetColor(5, (int)BITMASK.LeftPanelBottom, 0, 0, 0);
                     SetColor(6, (int)BITMASK.leftMiddleZone, 0, 0, 0);
@@ -470,7 +470,7 @@ namespace Aurora.Devices.LightFX
                     if (!usingHID) {
                         LightFXSDK.LFX_SetLightColor(1, 4, ref LightFXSDK.color2);
                     }
-                    //Global.logger.Info("Mid Right Codes: " + color2.red + " : " + color2.green + " : " + color2.blue);
+                    //Global.logger.Information("Mid Right Codes: " + color2.red + " : " + color2.green + " : " + color2.blue);
                 } else {
                     if (!usingHID) {
                         LightFXSDK.color1.brightness = 0;

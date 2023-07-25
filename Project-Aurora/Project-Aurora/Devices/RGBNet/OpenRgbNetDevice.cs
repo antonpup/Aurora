@@ -24,6 +24,8 @@ public class OpenRgbNetDevice : RgbNetDevice
 
     protected override Task ConfigureProvider()
     {
+        base.ConfigureProvider();
+        
         var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
         var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
 

@@ -47,15 +47,9 @@ namespace Aurora.Settings {
         private Window_GSIHttpDebug(AuroraHttpListener httpListener)
         {
             _httpListener = httpListener;
-            SourceInitialized += Window_SetPlacement;
             Closed += Window_Closed;
             InitializeComponent();
             DataContext = Global.Configuration;
-        }
-
-        private void Window_SetPlacement(object sender, EventArgs e)
-        {
-            this.SetPlacement(Global.Configuration.HttpDebugPlacement);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
@@ -76,9 +70,6 @@ namespace Aurora.Settings {
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            //Save current window Placement
-            Global.Configuration.HttpDebugPlacement = this.GetPlacement();
-
             // When the window closes, we need to clean up our listener, otherwise it'll keep listening and
             // this window will never get garbage collected.
             _httpListener.NewGameState -= Net_listener_NewGameState;

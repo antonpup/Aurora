@@ -7,7 +7,7 @@
              xmlns:a="clr-namespace:Aurora"
              xmlns:utils="clr-namespace:Aurora.Utils"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid DataContext="{x:Static a:Global.Configuration}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -143,6 +143,33 @@
                         <Label Grid.Row="3" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0"
                                VerticalAlignment="Center" />
                         <Label x:Name="ChromaCurrentApplicationLabel" Grid.Row="3" Grid.Column="2" Width="300"
+                               Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox DockPanel.Dock="Top" Height="Auto" Margin="0,10,0,0" Header="Lightsync"
+                          VerticalAlignment="Stretch">
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="10*" />
+                            <ColumnDefinition Width="20*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button x:Name="LightsyncInstallButton" Grid.Row="0" Grid.Column="2" Content="Install" Width="75"
+                                Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                Click="Lightsync_install_button_Click" />
+
+                        <Label x:Name="LightsyncConnectionStatusLabel" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0"
+                               Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0"
+                               VerticalAlignment="Center" />
+                        <Label x:Name="LightsyncCurrentApplicationLabel" Grid.Row="2" Grid.Column="2" Width="300"
                                Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                     </Grid>
                 </GroupBox>

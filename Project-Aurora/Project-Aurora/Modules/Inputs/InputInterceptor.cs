@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using Aurora.Utils;
 using Gma.System.MouseKeyHook.WinApi;
@@ -15,7 +14,7 @@ namespace Aurora.Modules.Inputs
     /// </summary>
     internal sealed class InputInterceptor : IDisposable
     {
-        private readonly MessagePumpThread thread = new MessagePumpThread();
+        private readonly MessagePumpThread thread = new();
         private readonly HookProcedure hookProcedure;
 
         public event EventHandler<InputEventData> Input;
@@ -37,16 +36,12 @@ namespace Aurora.Modules.Inputs
 
         private void MessagePumpInit()
         {
-            using (new ThreadPriorityChanger(ThreadPriority.AboveNormal,
-                ThreadPriorityChanger.ThreadPriority.THREAD_PRIORITY_TIME_CRITICAL))
-            using (var lowLevelHookHandle = HookNativeMethods.SetWindowsHookEx(HookIds.WH_KEYBOARD_LL, hookProcedure,
-                Process.GetCurrentProcess().MainModule.BaseAddress, 0))
-            {
-                if (lowLevelHookHandle.IsInvalid)
-                    throw new Win32Exception(Marshal.GetLastPInvokeError());
+            using var lowLevelHookHandle = HookNativeMethods.SetWindowsHookEx(HookIds.WH_KEYBOARD_LL, hookProcedure,
+                Process.GetCurrentProcess().MainModule.BaseAddress, 0);
+            if (lowLevelHookHandle.IsInvalid)
+                throw new Win32Exception(Marshal.GetLastPInvokeError());
 
-                thread.EnterMessageLoop();
-            }
+            thread.EnterMessageLoop();
         }
 
         private IntPtr LowLevelHookProc(int nCode, IntPtr wParam, IntPtr lParam)
@@ -54,7 +49,7 @@ namespace Aurora.Modules.Inputs
             var passThrough = nCode != 0;
             if (passThrough)
             {
-                return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
             }
 
             var callbackData = new InputEventData
@@ -63,20 +58,13 @@ namespace Aurora.Modules.Inputs
                 Data = (KeyboardHookStruct)Marshal.PtrToStructure(lParam, typeof(KeyboardHookStruct))
             };
 
-            //Debug.WriteLine(
-            //    $@"LowLevelInput {(Keys)callbackData.Data.VirtualKeyCode} {callbackData.Data.ScanCode} {callbackData.Data.Flags} {
-            //            KeyUtils.GetDeviceKey(
-            //                (Keys)callbackData.Data.VirtualKeyCode, callbackData.Data.ScanCode,
-            //                ((ScanCodeFlags)callbackData.Data.Flags).HasFlag(ScanCodeFlags.E0))
-            //        }", "InputEvents");
-
             Input?.Invoke(this, callbackData);
 
             if (callbackData.Intercepted)
             {
                 return new IntPtr(-1);
             }
-            return HookNativeMethods.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+            return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
         public sealed class InputEventData
@@ -101,25 +89,6 @@ namespace Aurora.Modules.Inputs
 
         private static class HookNativeMethods
         {
-            /// <summary>
-            ///     The CallNextHookEx function passes the hook information to the next hook procedure in the current hook chain.
-            ///     A hook procedure can call this function either before or after processing the hook information.
-            /// </summary>
-            /// <param name="idHook">This parameter is ignored.</param>
-            /// <param name="nCode">[in] Specifies the hook code passed to the current hook procedure.</param>
-            /// <param name="wParam">[in] Specifies the wParam value passed to the current hook procedure.</param>
-            /// <param name="lParam">[in] Specifies the lParam value passed to the current hook procedure.</param>
-            /// <returns>This value is returned by the next hook procedure in the chain.</returns>
-            /// <remarks>
-            ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
-            /// </remarks>
-            [DllImport("user32.dll", CharSet = CharSet.Auto,
-                CallingConvention = CallingConvention.StdCall)]
-            internal static extern IntPtr CallNextHookEx(
-                IntPtr idHook,
-                int nCode,
-                IntPtr wParam,
-                IntPtr lParam);
 
             /// <summary>
             ///     The SetWindowsHookEx function installs an application-defined hook procedure into a hook chain.
@@ -171,12 +140,6 @@ namespace Aurora.Modules.Inputs
             ///     If the function succeeds, the return value is nonzero.
             ///     If the function fails, the return value is zero. To get extended error information, call GetLastError.
             /// </returns>
-            /// <remarks>
-            ///     http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/hooks/hookreference/hookfunctions/setwindowshookex.asp
-            /// </remarks>
-            [DllImport("user32.dll", CharSet = CharSet.Auto,
-                CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-            internal static extern int UnhookWindowsHookEx(IntPtr idHook);
         }
 
         private static class HookIds
@@ -256,7 +219,7 @@ namespace Aurora.Modules.Inputs
             {
                 //NOTE Calling Unhook during processexit causes delay
                 if (_closing) return true;
-                return HookNativeMethods.UnhookWindowsHookEx(handle) != 0;
+                return User32.UnhookWindowsHookEx(handle) != 0;
             }
         }
 

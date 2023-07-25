@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
+using Aurora.Devices;
 
 namespace Aurora.Controls;
 
@@ -8,8 +9,12 @@ namespace Aurora.Controls;
 /// </summary>
 public partial class Control_DeviceManager
 {
-    public Control_DeviceManager()
+    private readonly Task<DeviceManager> _deviceManager;
+
+    public Control_DeviceManager(Task<DeviceManager> deviceManager)
     {
+        _deviceManager = deviceManager;
+        
         InitializeComponent();
     }
 
@@ -20,7 +25,7 @@ public partial class Control_DeviceManager
 
     private void UpdateControls()
     {
-        lstDevices.ItemsSource = Global.dev_manager.DeviceContainers;
+        lstDevices.ItemsSource = _deviceManager.Result.DeviceContainers;
         lstDevices.Items.Refresh();
     }
 
@@ -28,14 +33,15 @@ public partial class Control_DeviceManager
         {
             Task.Run(async () =>
             {
-                await Global.dev_manager.ShutdownDevices();
-                await Global.dev_manager.InitializeDevices();
+                var devManager = await _deviceManager;
+                await devManager.ShutdownDevices();
+                await devManager.InitializeDevices();
                 Dispatcher.Invoke(UpdateControls);
             });
         }
 
     private void btnCalibrate_Click(object sender, RoutedEventArgs e)
     {
-        new Control_DeviceCalibration().Show();
+        new Control_DeviceCalibration(_deviceManager).Show();
     }
 }

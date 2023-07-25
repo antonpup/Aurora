@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using Aurora.Devices;
+using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Utils;
 
@@ -14,7 +15,7 @@ public sealed class InteractiveParticleLayerHandler : SimpleParticleLayerHandler
         Global.InputEvents.KeyDown += KeyDown;
     }
 
-    private void KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+    private void KeyDown(object sender, KeyEvent e) {
         _awaitingKeys.Enqueue(e.GetDeviceKey());
     }
 

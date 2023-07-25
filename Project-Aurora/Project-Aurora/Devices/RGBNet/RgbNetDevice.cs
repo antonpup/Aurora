@@ -47,7 +47,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     protected override async Task<bool> DoInitialize()
     {
-        Global.logger.Info($"Initializing {DeviceName}");
+        Global.logger.Information("Initializing {DeviceName}", DeviceName);
         List<Exception> providerExceptions = new();
         List<Exception> criticalExceptions = new();
 

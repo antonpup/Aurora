@@ -16,15 +16,18 @@ public partial class DeviceMapping
 {
     private readonly Dictionary<IRGBDevice, RgbNetDevice> _devices = new();
     private readonly List<RgbNetKeyToDeviceKeyControl> _keys = new();
+    private readonly Task<DeviceManager> _deviceManager;
 
     private DeviceMappingConfig _config;
 
-    private IEnumerable<RgbNetDevice> DeviceProviders => Global.dev_manager.InitializedDeviceContainers
+    private IEnumerable<RgbNetDevice> DeviceProviders => _deviceManager.Result.InitializedDeviceContainers
         .Select(container => container.Device)
         .OfType<RgbNetDevice>();
         
-    public DeviceMapping()
+    public DeviceMapping(Task<DeviceManager> deviceManager)
     {
+        _deviceManager = deviceManager;
+        
         InitializeComponent();
         Loaded += OnLoaded;
         Unloaded += OnClosed;

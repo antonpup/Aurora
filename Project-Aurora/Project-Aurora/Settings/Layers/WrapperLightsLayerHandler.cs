@@ -465,7 +465,7 @@ namespace Aurora.Settings.Layers
                     break;
                 }
                 default:
-                    Global.logger.Info("Unknown Wrapper Command: {Command} Data: {Data}", ngwState.Command, ngwState.Command_Data);
+                    Global.logger.Information("Unknown Wrapper Command: {Command} Data: {Data}", ngwState.Command, ngwState.Command_Data);
                     break;
             }
         }

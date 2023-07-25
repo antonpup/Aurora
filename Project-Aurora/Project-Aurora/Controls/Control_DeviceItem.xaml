@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="clr-namespace:Aurora.Controls"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d" Loaded="UserControl_Loaded" Unloaded="Control_DeviceItem_OnUnloaded">
     <Grid MinHeight="20" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

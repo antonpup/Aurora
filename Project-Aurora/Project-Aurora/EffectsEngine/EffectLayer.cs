@@ -457,8 +457,8 @@ namespace Aurora.EffectsEngine
                 }
 
                 using var g = Graphics.FromImage(_colormap);
-                var xPos = (float)Math.Round((sequence.Freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
-                var yPos = (float)Math.Round((sequence.Freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+                var xPos = (float)Math.Round((sequence.Freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
+                var yPos = (float)Math.Round((sequence.Freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
                 var width = (float)Math.Round(sequence.Freeform.Width * Effects.EditorToCanvasWidth);
                 var height = (float)Math.Round(sequence.Freeform.Height * Effects.EditorToCanvasHeight);
 
@@ -640,13 +640,13 @@ namespace Aurora.EffectsEngine
                 }
                 _keyColors[key] = solidBrush.Color;
             }
-            BitmapRectangle keymaping = Effects.GetBitmappingFromDeviceKey(key);
+            var keyRectangle = Effects.GetBitmappingFromDeviceKey(key);
             _needsRender = true;
 
-            if (keymaping.Top < 0 || keymaping.Bottom > Effects.CanvasHeight ||
-                keymaping.Left < 0 || keymaping.Right > Effects.CanvasWidth)
+            if (keyRectangle.Top < 0 || keyRectangle.Bottom > Effects.CanvasHeight ||
+                keyRectangle.Left < 0 || keyRectangle.Right > Effects.CanvasWidth)
             {
-                Global.logger.Warn("Coudln't set key color " + key + ". Key is outside canvas");
+                Global.logger.Warning("Coudln't set key color " + key + ". Key is outside canvas");
                 return;
             }
 
@@ -654,7 +654,7 @@ namespace Aurora.EffectsEngine
             {
                 using var g = Graphics.FromImage(_colormap);
                 g.CompositingMode = CompositingMode.SourceCopy;
-                g.FillRectangle(brush, keymaping.Rectangle);
+                g.FillRectangle(brush, keyRectangle.Rectangle);
             }catch { /* ignore */}
         }
 
@@ -960,8 +960,8 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
-            var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+            var xPos = (float)Math.Round((freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
+            var yPos = (float)Math.Round((freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
             var width = freeform.Width * Effects.EditorToCanvasWidth;
             var height = freeform.Height * Effects.EditorToCanvasHeight;
 
@@ -1045,8 +1045,8 @@ namespace Aurora.EffectsEngine
                 }
             }
 
-            var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
-            var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+            var xPos = (float)Math.Round((freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
+            var yPos = (float)Math.Round((freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
             var width = freeform.Width * Effects.EditorToCanvasWidth;
             var height = freeform.Height * Effects.EditorToCanvasHeight;
 
@@ -1122,8 +1122,8 @@ namespace Aurora.EffectsEngine
                 case KeySequenceType.FreeForm:
                     var freeform = sequence.Freeform;
                     
-                    var xPos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
-                    var yPos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+                    var xPos = (float)Math.Round((freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
+                    var yPos = (float)Math.Round((freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
                     var width = (float)Math.Round(freeform.Width * Effects.EditorToCanvasWidth);
                     var height = (float)Math.Round(freeform.Height * Effects.EditorToCanvasHeight);
 

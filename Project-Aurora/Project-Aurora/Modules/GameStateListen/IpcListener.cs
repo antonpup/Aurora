@@ -87,11 +87,11 @@ public class IpcListener
 
         _ipcPipeStream = CreatePipe("Aurora\\server");
         _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
-        Global.logger.Info("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
+        Global.logger.Information("[IPCServer] Pipe created {}", _ipcPipeStream?.GetHashCode() ?? -1);
 
         _auroraInterfacePipeStream = CreatePipe(AuroraInterfacePipe);
         _auroraInterfacePipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
-        Global.logger.Info("[AuroraCommandsServerIPC] Pipe created {}", _auroraInterfacePipeStream?.GetHashCode() ?? -1);
+        Global.logger.Information("[AuroraCommandsServerIPC] Pipe created {}", _auroraInterfacePipeStream?.GetHashCode() ?? -1);
     }
 
     private void ReceiveGameState(IAsyncResult result)
@@ -100,7 +100,7 @@ public class IpcListener
         {
             return;
         }
-        Global.logger.Info("[IPCServer] Pipe connection established");
+        Global.logger.Information("[IPCServer] Pipe connection established");
 
         try
         {
@@ -117,8 +117,8 @@ public class IpcListener
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("[IPCServer] ReceiveGameState Exception, ", exc);
-                    Global.logger.Info("Recieved data that caused error:\n\r" + temp);
+                    Global.logger.Error(exc, "[IPCServer] ReceiveGameState Exception, ");
+                    Global.logger.Information("Recieved data that caused error:\n\r" + temp);
                 }
             }
         }
@@ -142,7 +142,7 @@ public class IpcListener
         {
             return;
         }
-        Global.logger.Info("[AuroraCommandsServerIPC] Pipe connection established");
+        Global.logger.Information("[AuroraCommandsServerIPC] Pipe connection established");
 
         using var sr = new StreamReader(_auroraInterfacePipeStream);
         while (sr.ReadLine() is { } command)

@@ -34,10 +34,10 @@ public class CorsairRgbNetDevice : RgbNetDevice
 
     protected override async Task ConfigureProvider()
     {
-        base.ConfigureProvider();
+        await base.ConfigureProvider();
 
         await DesktopUtils.WaitSessionUnlock();
-        Global.logger.Info("Lock released");
+        Global.logger.Information("Lock released");
 
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");
 

@@ -271,7 +271,7 @@ public partial class ControlEqualizerLayer
         }
         catch (Exception ex)
         {
-            Global.logger.Warn(ex.ToString());
+            Global.logger.Warning(ex.ToString());
         }
     }
 }

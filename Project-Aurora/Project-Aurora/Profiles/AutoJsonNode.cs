@@ -37,7 +37,7 @@ namespace Aurora.Profiles {
                         )
                     );
                 else
-                    Global.logger.Warn($"Could not find an AutoNode getter method for field '{field.Name}' of type '{field.FieldType.Name}'. It will not be automatically populated.");
+                    Global.logger.Warning($"Could not find an AutoNode getter method for field '{field.Name}' of type '{field.FieldType.Name}'. It will not be automatically populated.");
             }
 
             // Compile and return the action

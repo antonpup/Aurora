@@ -4,7 +4,7 @@ using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public sealed partial class PluginsModule : IAuroraModule
+public sealed partial class PluginsModule : AuroraModule
 {
     private readonly TaskCompletionSource<PluginManager> _pluginManagerSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -12,13 +12,13 @@ public sealed partial class PluginsModule : IAuroraModule
 
     private PluginManager? _pluginManager;
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
-        Global.logger.Info("Loading Plugins");
+        Global.logger.Information("Loading Plugins");
         _pluginManager = new PluginManager();
         _pluginManager.Initialize();
         _pluginManagerSource.SetResult(_pluginManager);
-        Global.logger.Info("Loaded Plugins");
+        Global.logger.Information("Loaded Plugins");
     }
     
     [Async]

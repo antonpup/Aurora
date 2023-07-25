@@ -1,7 +1,7 @@
-﻿using Aurora.Utils;
-using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
+using Aurora.Modules.Inputs;
 using Keys = System.Windows.Forms.Keys;
 
 namespace Aurora.Controls {
@@ -36,7 +36,7 @@ namespace Aurora.Controls {
             assignButton.Content = assigning ? "Press a key" : "Assign";
         }
 
-        private static void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        private static void InputEvents_KeyDown(object sender, KeyEvent e) {
             if (listeningEditor != null)
                 listeningEditor.Dispatcher.Invoke(() => {
                     listeningEditor.SelectedKey = e.Key;

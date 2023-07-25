@@ -1,8 +1,10 @@
-﻿using Aurora.Settings;
+﻿using System;
+using Aurora.Settings;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
-using SharpDX.RawInput;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
 namespace Aurora.Controls;
 
@@ -41,7 +43,7 @@ public partial class Control_Keybind
         Global.InputEvents.KeyDown += InputEventsKeyDown;
     }
 
-    private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
+    private void InputEventsKeyDown(object? sender, EventArgs e)
     {
         Dispatcher.Invoke(
             () =>

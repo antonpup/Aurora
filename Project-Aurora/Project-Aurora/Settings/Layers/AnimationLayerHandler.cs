@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Controls;
+using Aurora.Modules.Inputs;
 using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers
@@ -293,7 +294,7 @@ namespace Aurora.Settings.Layers
         /// <summary>
         /// Event handler for when keys are pressed.
         /// </summary>
-        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        private void InputEvents_KeyDown(object sender, KeyEvent e) {
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
@@ -310,7 +311,7 @@ namespace Aurora.Settings.Layers
         /// <summary>
         /// Event handler for when keys are released.
         /// </summary>
-        private void InputEvents_KeyUp(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        private void InputEvents_KeyUp(object sender, KeyEvent e) {
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 

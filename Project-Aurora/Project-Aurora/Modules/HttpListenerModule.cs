@@ -6,18 +6,18 @@ using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public sealed partial class HttpListenerModule : IAuroraModule
+public sealed partial class HttpListenerModule : AuroraModule
 {
     private readonly TaskCompletionSource<AuroraHttpListener?> _taskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private AuroraHttpListener? _listener;
 
     public Task<AuroraHttpListener?> HttpListener => _taskSource.Task;
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
         if (!Global.Configuration.EnableHttpListener)
         {
-            Global.logger.Info("HttpListener is disabled");
+            Global.logger.Information("HttpListener is disabled");
             _taskSource.SetResult(null);
             return;
         }

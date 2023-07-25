@@ -1,15 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Modules.Media;
 using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public sealed partial class MediaInfoModule : IAuroraModule
+public sealed partial class MediaInfoModule : AuroraModule
 {
     private MediaMonitor? _mediaMonitor;
-    
-    public override void Initialize()
+
+    protected override async Task Initialize()
     {
         if (!Global.Configuration.EnableMediaInfo)
         {
@@ -26,7 +27,6 @@ public sealed partial class MediaInfoModule : IAuroraModule
             Global.logger.Error("MediaInfo error", e);
         }
     }
-
 
     [Async]
     public override void Dispose()

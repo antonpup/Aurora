@@ -2,27 +2,25 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Modules.GameStateListen;
-using JetBrains.Annotations;
-using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public sealed partial class IpcListenerModule : IAuroraModule
+public sealed class IpcListenerModule : AuroraModule
 {
     private readonly TaskCompletionSource<IpcListener?> _taskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private IpcListener? _listener;
 
     public Task<IpcListener?> IpcListener => _taskSource.Task;
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
         if (!Global.Configuration.EnableIpcListener)
         {
-            Global.logger.Info("IpcListener is disabled");
+            Global.logger.Information("IpcListener is disabled");
             _taskSource.SetResult(null);
             return;
         }
-        Global.logger.Info("Starting IpcListener");
+        Global.logger.Information("Starting IpcListener");
         try
         {
             _listener = new IpcListener();
@@ -46,7 +44,7 @@ public sealed partial class IpcListenerModule : IAuroraModule
             return;
         }
 
-        Global.logger.Info("Listening for wrapper integration calls...");
+        Global.logger.Information("Listening for wrapper integration calls...");
         _taskSource.SetResult(_listener);
     }
 

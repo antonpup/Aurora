@@ -412,7 +412,7 @@ namespace Aurora.Profiles.Aurora_Wrapper
                 }
                 else
                 {
-                    Global.logger.Info("Unknown Wrapper Command: " + ngw_state.Command);
+                    Global.logger.Information("Unknown Wrapper Command: " + ngw_state.Command);
                 }
             }
         }

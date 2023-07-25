@@ -93,11 +93,10 @@
     <PackageReference Include="MouseKeyHook.NetCore" Version="5.6.1.1" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <!-- TODO: Logger initialization changes when updating to NLog 5 -->
-    <PackageReference Include="NLog" Version="4.7.10" />
     <PackageReference Include="Octokit" Version="3.0.0" />
     <PackageReference Include="OpenRGB.NET" Version="2.2.0" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
+    <PackageReference Include="RawInput.Sharp" Version="0.1.1" />
     <!--
     Waiting for #338 and #339 on rgb.net
     <PackageReference Include="RGB.NET.Core" Version="2.0.0-prerelease.83" />
@@ -112,9 +111,11 @@
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.83" />
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.83" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <!-- Locked to version 4.0.1 due to an unresolved issue with interop https://github.com/sharpdx/SharpDX/issues/1050 -->
-    <PackageReference Include="SharpDX.RawInput" Version="4.0.1" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="7.0.2" />
@@ -146,6 +147,10 @@
     </Reference>
     <Reference Include="RGB.NET.Devices.Bloody">
       <HintPath>.\RGB.NET.Devices.Bloody.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="RGB.NET.YeeLightStates">
+      <HintPath>.\RGB.NET.YeeLightStates.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

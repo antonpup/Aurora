@@ -150,7 +150,7 @@ namespace Aurora.Settings
                                                             }
                                                             else
                                                             {
-                                                                Global.logger.Warn($"CorsairLedId not mapped, skipping {key.Value}");
+                                                                Global.logger.Warning($"CorsairLedId not mapped, skipping {key.Value}");
                                                             }
                                                             break;
                                                     }
@@ -703,7 +703,7 @@ namespace Aurora.Settings
                                             else
                                             {
                                                 //Null, it's unknown.
-                                                Global.logger.Warn("Unknown CUE Layer Type");
+                                                Global.logger.Warning("Unknown CUE Layer Type");
                                             }
                                         }
 
@@ -754,7 +754,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.Error(ex);
+                Global.logger.Error(ex, "Profile import error:");
                 System.Windows.Forms.MessageBox.Show("Error importing the profile: " + ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }

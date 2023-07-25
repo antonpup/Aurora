@@ -15,7 +15,7 @@ internal class AssemblyDeviceLoader : IDeviceLoader
 {
     public IEnumerable<IDevice> LoadDevices()
     {
-        Global.logger.Info("Loading devices from assembly...");
+        Global.logger.Information("Loading devices from assembly...");
         return AppDomain.CurrentDomain.GetAssemblies().SelectMany(LoadAssemblyDevices);
     }
 

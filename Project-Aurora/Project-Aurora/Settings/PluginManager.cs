@@ -170,7 +170,7 @@ namespace Aurora.Settings
             {
                 try
                 {
-                    Global.logger.Info("Loading plugin: {PathPlugin}", pathPlugin);
+                    Global.logger.Information("Loading plugin: {PathPlugin}", pathPlugin);
                     Assembly dllPlugin = Assembly.LoadFrom(pathPlugin);
 
                     foreach (AssemblyName name in dllPlugin.GetReferencedAssemblies())

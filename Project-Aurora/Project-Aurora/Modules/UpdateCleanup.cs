@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public partial class UpdateCleanup : IAuroraModule
+public partial class UpdateCleanup : AuroraModule
 {
-    public override void Initialize()
+    protected override async Task Initialize()
     {
         var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         Directory.SetCurrentDirectory(path);

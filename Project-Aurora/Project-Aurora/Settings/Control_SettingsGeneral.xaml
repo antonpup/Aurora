@@ -140,53 +140,44 @@
             </Grid>
 
             <Grid Grid.Column="1">
-                <TextBlock TextWrapping="Wrap" Text="Application Detection Method:" Margin="0,12,0,0"
-                           HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <ComboBox SelectedValue="{Binding DetectionMode}"
-                          ItemsSource="{utils:EnumToItemsSource {x:Type local:ApplicationDetectionMode}}"
-                          DisplayMemberPath="Text" SelectedValuePath="Value" Margin="165,10,0,0" Width="157"
-                          HorizontalAlignment="Left" VerticalAlignment="Top" />
-
-
                 <!-- Audio capture -->
                 <CheckBox Content="Enable Audio Capture for gamestates (restart required)"
                           IsChecked="{Binding EnableAudioCapture}"
                           ToolTip="Aurora only measures the activity level from your microphone for use with the 'LocalPCInfo' game state. None of this data is stored or transmitted elsewhere."
-                          Margin="0,39,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <TextBlock Text="GSI Playback Device:" Margin="0,62,0,0" HorizontalAlignment="Left"
+                          Margin="0,48,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="GSI Playback Device:" Margin="0,3,0,0" HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
                 <ComboBox SelectedValue="{Binding Path=GsiAudioRenderDevice, Mode=TwoWay}"
                           ItemsSource="{x:Static audioCapture:AudioDevices.PlaybackDevices}" DisplayMemberPath="Value"
-                          SelectedValuePath="Key" Margin="120,59,0,0" Width="185" HorizontalAlignment="Left"
+                          SelectedValuePath="Key" Margin="120,0,0,0" Width="185" HorizontalAlignment="Left"
                           VerticalAlignment="Top" />
                 <TextBlock Text="?" TextDecorations="Underline"
                            ToolTip="The audio playback device that will be used for the local PC information state values. Does not affect visualizer layer."
-                           ToolTipService.InitialShowDelay="0" Margin="310,62,0,0" HorizontalAlignment="Left"
+                           ToolTipService.InitialShowDelay="0" Margin="310,3,0,0" HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
-                <TextBlock Text="GSI Recording Device:" Margin="0,89,0,0" HorizontalAlignment="Left"
+                <TextBlock Text="GSI Recording Device:" Margin="0,27,0,0" HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
                 <ComboBox SelectedValue="{Binding Path=GsiAudioCaptureDevice, Mode=TwoWay}"
                           ItemsSource="{x:Static audioCapture:AudioDevices.RecordingDevices}" DisplayMemberPath="Value"
-                          SelectedValuePath="Key" Margin="120,86,0,0" Width="185" HorizontalAlignment="Left"
+                          SelectedValuePath="Key" Margin="120,24,0,0" Width="185" HorizontalAlignment="Left"
                           VerticalAlignment="Top" />
                 <TextBlock Text="?" TextDecorations="Underline"
                            ToolTip="The audio recording device that will be used for the local PC information state values. Does not affect visualizer layer."
-                           ToolTipService.InitialShowDelay="0" Margin="310,89,0,0" HorizontalAlignment="Left"
+                           ToolTipService.InitialShowDelay="0" Margin="310,27,0,0" HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
 
                 <!-- Excluded Programs List -->
                 <ListBox ItemsSource="{Binding ExcludedPrograms}"
                          SelectedItem="{Binding SelectedExcludedProgram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:Control_Settings}}, Mode=OneWayToSource}"
-                         Margin="0,139,0,0" Width="160" Height="199" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                <TextBlock Text="Excluded Processes" Margin="0,117,0,0" Width="113" HorizontalAlignment="Left"
+                         Margin="0,90,0,0" Width="160" Height="199" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <TextBlock Text="Excluded Processes" Margin="0,67,0,0" Width="113" HorizontalAlignment="Left"
                            VerticalAlignment="Top" />
-                <Button Content="Add Process" Click="ExcludedAdd_Click" Margin="165,139,0,0" HorizontalAlignment="Left"
+                <Button Content="Add Process" Click="ExcludedAdd_Click" Margin="165,90,0,0" HorizontalAlignment="Left"
                         VerticalAlignment="Top" />
-                <Button Content="Remove Process" Click="ExcludedRemove_Click" Margin="165,167,0,0"
+                <Button Content="Remove Process" Click="ExcludedRemove_Click" Margin="165,112,0,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top" />
             </Grid>
-
 
             <Grid Grid.Column="2">
                 <TextBlock Text="Away Effect Type:" Margin="10,12,0,0" HorizontalAlignment="Left"

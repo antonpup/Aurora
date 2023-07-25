@@ -180,9 +180,9 @@ public static class RazerLayoutMap
     {
         {DeviceKeys.HEADSET1,               new[]{0, 0} },
         {DeviceKeys.HEADSET2,               new[]{0, 1} },
-        //{DeviceKeys.HEADSET3,               new[]{0, 2} },
-        //{DeviceKeys.HEADSET4,               new[]{0, 3} },
-        //{DeviceKeys.HEADSET5,               new[]{0, 4} },
+        {DeviceKeys.HEADSET3,               new[]{0, 2} },
+        {DeviceKeys.HEADSET4,               new[]{0, 3} },
+        {DeviceKeys.HEADSET5,               new[]{0, 4} },
     };
 
     public static readonly IReadOnlyDictionary<DeviceKeys, int[]> ChromaLink = new Dictionary<DeviceKeys, int[]>

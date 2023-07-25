@@ -255,6 +255,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     private bool _brushChanged = true;
 
     private readonly Stopwatch _captureStopwatch = new();
+    private DateTime _lastProcessDetectTry = DateTime.Now;
 
     public IEnumerable<string> Displays => _screenCapture.GetDisplays();
 
@@ -299,7 +300,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         //for a frame when the user alt-tabs with the foregroundapp option selected
         if (TryGetCropRegion(out var newCropRegion))
             _cropRegion = newCropRegion;
-        else
+        else if (DateTime.Now - _lastProcessDetectTry > TimeSpan.FromSeconds(2))
         {
             UpdateSpecificProcessHandle(Properties.SpecificProcess);
         }
@@ -551,26 +552,6 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         }
     }
     
-    #endregion
-
-    #region User32
-    private static class User32
-    {
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Rect
-        {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
-    }
     #endregion
 
     #region DWM

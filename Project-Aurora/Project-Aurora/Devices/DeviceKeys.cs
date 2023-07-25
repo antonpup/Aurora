@@ -1755,6 +1755,24 @@ namespace Aurora.Devices
         HEADSET2 = 297,
 
         /// <summary>
+        /// Headset 1
+        /// </summary>
+        [Description("Headset 3")]
+        HEADSET3 = 298,
+
+        /// <summary>
+        /// Headset 2
+        /// </summary>
+        [Description("Headset 4")]
+        HEADSET4 = 299,
+
+        /// <summary>
+        /// Headset 2
+        /// </summary>
+        [Description("Headset 5")]
+        HEADSET5 = 300,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

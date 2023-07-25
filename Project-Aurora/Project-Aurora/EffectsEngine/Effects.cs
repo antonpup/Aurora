@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Aurora.Devices;
 using System.Drawing;
+using System.Threading.Tasks;
 using Aurora.Utils;
 
 namespace Aurora
@@ -143,6 +144,11 @@ namespace Aurora
                     DeviceKeys.MOUSEPADLIGHT13,
                     DeviceKeys.MOUSEPADLIGHT14,
                     DeviceKeys.MOUSEPADLIGHT15,
+                    DeviceKeys.MOUSEPADLIGHT16,
+                    DeviceKeys.MOUSEPADLIGHT17,
+                    DeviceKeys.MOUSEPADLIGHT18,
+                    DeviceKeys.MOUSEPADLIGHT19,
+                    DeviceKeys.MOUSEPADLIGHT20,
                     DeviceKeys.PERIPHERAL_LIGHT1,
                     DeviceKeys.PERIPHERAL_LIGHT2,
                     DeviceKeys.PERIPHERAL_LIGHT3,
@@ -174,9 +180,9 @@ namespace Aurora
                     DeviceKeys.PERIPHERAL_LIGHT20,
                 };
 
-        private Bitmap _forcedFrame;
+        private Bitmap? _forcedFrame;
         
-        public event NewLayerRendered NewLayerRender = delegate { };
+        public event NewLayerRendered? NewLayerRender = delegate { };
 
         public static event EventHandler<CanvasChangedArgs> CanvasChanged;
         public static readonly object CanvasChangedLock = new();
@@ -216,21 +222,21 @@ namespace Aurora
             }
         }
 
-        public static float grid_baseline_x = 0.0f;
-        public static float grid_baseline_y = 0.0f;
-        public static float grid_width = 1.0f;
-        public static float grid_height = 1.0f;
+        public static float GridBaselineX { get; set; }
+        public static float GridBaselineY { get; set; }
+        public static float GridWidth { get; set; } = 1.0f;
+        public static float GridHeight { get; set; } = 1.0f;
 
         public static float CanvasWidthCenter => CanvasWidth / 2.0f;
         public static float CanvasHeightCenter => CanvasHeight / 2.0f;
-        public static float EditorToCanvasWidth => CanvasWidth / grid_width;
-        public static float EditorToCanvasHeight => CanvasHeight / grid_height;
+        public static float EditorToCanvasWidth => CanvasWidth / GridWidth;
+        public static float EditorToCanvasHeight => CanvasHeight / GridHeight;
         public static int CanvasBiggest => CanvasWidth > CanvasHeight ? CanvasWidth : CanvasHeight;
 
         /// <summary>
         /// Creates a new FreeFormObject that perfectly occupies the entire canvas.
         /// </summary>
-        public static Settings.FreeFormObject WholeCanvasFreeForm => new(-grid_baseline_x, -grid_baseline_y, grid_width, grid_height);
+        public static Settings.FreeFormObject WholeCanvasFreeForm => new(-GridBaselineX, -GridBaselineY, GridWidth, GridHeight);
 
         private static Dictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
@@ -239,20 +245,23 @@ namespace Aurora
         private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
         private EffectLayer Background => _effectLayerFactory.Value;
 
-        public Effects()
+        private readonly Task<DeviceManager> _deviceManager;
+
+        public Effects(Task<DeviceManager> deviceManager)
         {
-            var allKeys = _bitmapMap.Keys.ToArray();
+            _deviceManager = deviceManager;
+            var allKeys = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>();
 
             foreach (var key in allKeys)
             {
-                _keyColors.Add(key, Color.Black);
+                _keyColors[key] = Color.Black;
             }
         }
 
-        public void ForceImageRender(Bitmap forcedframe)
+        public void ForceImageRender(Bitmap forcedFrame)
         {
             _forcedFrame?.Dispose();
-            _forcedFrame = (Bitmap) forcedframe?.Clone();
+            _forcedFrame = (Bitmap) forcedFrame?.Clone();
         }
 
         public void SetCanvasSize(int width, int height)
@@ -263,12 +272,12 @@ namespace Aurora
 
         public static BitmapRectangle GetBitmappingFromDeviceKey(DeviceKeys key)
         {
-            return _bitmapMap.ContainsKey(key) ? _bitmapMap[key] : BitmapRectangle.EmptyRectangle;
+            return _bitmapMap.TryGetValue(key, out var rect) ? rect : BitmapRectangle.EmptyRectangle;
         }
 
-        public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmap_map)
+        public void SetBitmapping(Dictionary<DeviceKeys, BitmapRectangle> bitmapMap)
         {
-            _bitmapMap = bitmap_map;
+            _bitmapMap = bitmapMap;
         }
 
         private readonly SolidBrush _keyboardDarknessBrush = new(Color.Empty);
@@ -296,9 +305,7 @@ namespace Aurora
                 g.DrawImage(_forcedFrame, 0, 0, CanvasWidth, CanvasHeight);
             }
 
-            var allKeys = _bitmapMap.Keys;
-
-            foreach (var key in allKeys)
+            foreach (var key in _bitmapMap.Keys)
                 _keyColors[key] = Background.Get(key);
 
             var peripheralDarkness = 1.0f - Global.Configuration.PeripheralBrightness * Global.Configuration.GlobalBrightness;
@@ -314,7 +321,7 @@ namespace Aurora
             {
                 KeyColors = _keyColors,
             };
-            Global.dev_manager.UpdateDevices(dcc);
+            _deviceManager.Result.UpdateDevices(dcc);
 
             NewLayerRender?.Invoke(Background.GetBitmap());
 

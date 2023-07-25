@@ -3,17 +3,16 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Windows.Forms;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
+using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Profiles.Desktop;
 using Aurora.Settings.Layers.Controls;
 using Aurora.Settings.Overrides;
 using Aurora.Utils;
 using Newtonsoft.Json;
-using SharpDX.RawInput;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace Aurora.Settings.Layers
@@ -148,7 +147,7 @@ namespace Aurora.Settings.Layers
             return new Control_InteractiveLayer(this);
         }
 
-        private void MouseKeyUp(object sender, MouseInputEventArgs mouseInputEventArgs)
+        private void MouseKeyUp(object sender, EventArgs mouseInputEventArgs)
         {
             if (Properties.MouseEffectKey == DeviceKeys.NONE)
                 return;
@@ -156,7 +155,7 @@ namespace Aurora.Settings.Layers
             DeviceKeyUp(Properties.MouseEffectKey);
         }
 
-        private void InputEventsKeyUp(object sender, KeyboardInputEventArgs e)
+        private void InputEventsKeyUp(object sender, KeyEvent e)
         {
             var deviceKey = e.GetDeviceKey();
             DeviceKeyUp(deviceKey);
@@ -183,7 +182,7 @@ namespace Aurora.Settings.Layers
         private readonly ConcurrentDictionary<DeviceKeys, long> _timeOfLastPress = new();
         private const long PressBuffer = 300L;
 
-        private void MouseKeyDown(object sender, MouseInputEventArgs mouseInputEventArgs)
+        private void MouseKeyDown(object sender, EventArgs mouseInputEventArgs)
         {
             if (Properties.MouseEffectKey == DeviceKeys.NONE)
                 return;
@@ -191,7 +190,7 @@ namespace Aurora.Settings.Layers
             DeviceKeyDown(Properties.MouseEffectKey);
         }
 
-        private void InputEventsKeyDown(object sender, KeyboardInputEventArgs e)
+        private void InputEventsKeyDown(object sender, KeyEvent e)
         {
             var deviceKey = e.GetDeviceKey();
 

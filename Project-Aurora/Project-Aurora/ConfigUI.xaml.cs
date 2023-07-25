@@ -15,6 +15,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Controls;
+using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Modules.GameStateListen;
 using Aurora.Profiles.Aurora_Wrapper;
@@ -60,11 +61,12 @@ partial class ConfigUI : INotifyPropertyChanged
     private Grid _virtualKb = new();
 
     public static readonly DependencyProperty FocusedApplicationProperty = DependencyProperty.Register(
-        "FocusedApplication", typeof(Application), typeof(ConfigUI),
+        nameof(FocusedApplication), typeof(Application), typeof(ConfigUI),
         new PropertyMetadata(null, FocusedProfileChanged));
 
     private readonly Task<KeyboardLayoutManager> _layoutManager;
     private readonly Task<AuroraHttpListener?> _httpListener;
+    private readonly Task<IpcListener?> _ipcListener;
 
     private HwndSource _hwHandle;
     private readonly bool _useMica;
@@ -162,26 +164,21 @@ partial class ConfigUI : INotifyPropertyChanged
 
     public ConfigUI(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
         Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener,
-        Task<IpcListener?> ipcListener)
+        Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager)
     {
         _httpListener = httpListener;
         _layoutManager = layoutManager;
-        _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener);
+        _ipcListener = ipcListener;
+        _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener, deviceManager);
 
         _useMica = Environment.OSVersion.Version.Build >= 22000;
         InitializeComponent();
 
         ContentRendered += Window_ContentRendered;
-        _layoutManager.Result.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
         ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
         GenerateProfileStack();
         _settingsControl.DataContext = this;
-
-        if (ipcListener.Result != null)
-        {
-            ipcListener.Result.AuroraCommandReceived += OnAuroraCommandReceived;
-        }
 
         _keyboardTimerCallback = () =>
         {
@@ -198,16 +195,31 @@ partial class ConfigUI : INotifyPropertyChanged
                 }
                 else
                 {
-                    TintColor = (Color)a;
+                    var color = (Color)a;
+                    TintColor = color;
+                    FallbackColor = color with {A = (byte)(color.A * 0.8)};
                 }
             }
 
-            var keylights = Global.effengine.GetKeyboardLights();
-            _layoutManager.Result.SetKeyboardColors(keylights);
+            var keyLights = Global.effengine.GetKeyboardLights();
+            _layoutManager.Result.SetKeyboardColors(keyLights);
 
-            keyboard_record_message.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
+            KeyboardRecordMessage.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
         };
         _virtualKeyboardTimer.Elapsed += virtual_keyboard_timer_Tick;
+    }
+
+    public async Task Initialize()
+    {
+        await _settingsControl.Initialize();
+        
+        (await _layoutManager).KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
+
+        var ipcListener = await _ipcListener;
+        if (ipcListener != null)
+        {
+            ipcListener.AuroraCommandReceived += OnAuroraCommandReceived;
+        }
     }
 
     internal void DisplayIfNotSilent()
@@ -279,9 +291,9 @@ partial class ConfigUI : INotifyPropertyChanged
             SelectedControl = _profilePresenter;   
     }
 
-    private void KbLayout_KeyboardLayoutUpdated(object sender)
+    private async void KbLayout_KeyboardLayoutUpdated(object sender)
     {
-        _virtualKb = _layoutManager.Result.VirtualKeyboard;
+        _virtualKb = (await _layoutManager).VirtualKeyboard;
 
         keyboard_grid.Children.Clear();
         keyboard_grid.Children.Add(_virtualKb);
@@ -300,14 +312,14 @@ partial class ConfigUI : INotifyPropertyChanged
         UpdateLayout();
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
+    private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        keyboard_record_message.Visibility = Visibility.Hidden;
+        KeyboardRecordMessage.Visibility = Visibility.Hidden;
 
         _currentColor = _desktopColorScheme;
         bg_grid.Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
 
-        _virtualKb = _layoutManager.Result.VirtualKeyboard;
+        _virtualKb = (await _layoutManager).VirtualKeyboard;
 
         keyboard_grid.Children.Clear();
         keyboard_grid.Children.Add(_virtualKb);

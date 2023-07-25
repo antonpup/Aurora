@@ -203,12 +203,6 @@
         "resolved": "13.0.3",
         "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
-      "NLog": {
-        "type": "Direct",
-        "requested": "[4.7.10, )",
-        "resolved": "4.7.10",
-        "contentHash": "rcegW7kYOCjl7wX0SzsqpPBqnJ51JKi1WkYb6QBVX0Wc5IgH19Pv4t/co+T0s06OS0Ne44xgkY/mHg0PdrmJow=="
-      },
       "Octokit": {
         "type": "Direct",
         "requested": "[3.0.0, )",
@@ -228,6 +222,15 @@
         "contentHash": "6v+f9cI8YjnZH2WBHuOqWEAo8DFFNGFIdU8xD3AsL6fhV6Y8oAmVWd7XKk49t8DpeUBwhR/X+97+6Epvek0Y3A==",
         "dependencies": {
           "Fody": "6.6.4"
+        }
+      },
+      "RawInput.Sharp": {
+        "type": "Direct",
+        "requested": "[0.1.1, )",
+        "resolved": "0.1.1",
+        "contentHash": "6XdLslr7dLDme3nz3PkbrdJn+R5cR8q0j1knww/xRFxdIgt828ISb9dgVAxBLte2CdoPnc6O2YymnZqOtDaTuA==",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1"
         }
       },
       "RGB.NET.Devices.CoolerMaster": {
@@ -284,6 +287,33 @@
         "resolved": "2.0.2",
         "contentHash": "4EQgYdNZ92SyaO7YFk6olVnebF5V+jrHyMUjvPq89tLeMo8NSfgDF+6Zwq/lgh9j/0yfQp9Lkm0ZA0rUATCZFA=="
       },
+      "Serilog.Sinks.Console": {
+        "type": "Direct",
+        "requested": "[4.1.0, )",
+        "resolved": "4.1.0",
+        "contentHash": "K6N5q+5fetjnJPvCmkWOpJ/V8IEIoMIB1s86OzBrbxwTyHxdx3pmz4H+8+O/Dc/ftUX12DM1aynx/dDowkwzqg==",
+        "dependencies": {
+          "Serilog": "2.10.0"
+        }
+      },
+      "Serilog.Sinks.Debug": {
+        "type": "Direct",
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "Y6g3OBJ4JzTyyw16fDqtFcQ41qQAydnEvEqmXjhwhgjsnG/FaJ8GUqF5ldsC/bVkK8KYmqrPhDO+tm4dF6xx4A==",
+        "dependencies": {
+          "Serilog": "2.10.0"
+        }
+      },
+      "Serilog.Sinks.File": {
+        "type": "Direct",
+        "requested": "[5.0.0, )",
+        "resolved": "5.0.0",
+        "contentHash": "uwV5hdhWPwUH1szhO8PJpFiahqXmzPzJT/sOijH/kFgUx+cyoDTMM8MHD0adw9+Iem6itoibbUXHYslzXsLEAg==",
+        "dependencies": {
+          "Serilog": "2.10.0"
+        }
+      },
       "SharpDX.Direct3D11": {
         "type": "Direct",
         "requested": "[4.2.0, )",
@@ -293,15 +323,6 @@
           "NETStandard.Library": "1.6.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0"
-        }
-      },
-      "SharpDX.RawInput": {
-        "type": "Direct",
-        "requested": "[4.0.1, )",
-        "resolved": "4.0.1",
-        "contentHash": "LfvLa2bJBAKY8qwBT4EBB3APYGi89Lp3/VSIeaLcLhm1Xlu2FWRGO2f/4CrxmidHzLkT5cLKqGdOIeKf4Cnixw==",
-        "dependencies": {
-          "SharpDX": "4.0.1"
         }
       },
       "SmartThreadPool.dll": {
@@ -761,6 +782,11 @@
         "type": "Transitive",
         "resolved": "4.3.0",
         "contentHash": "VB5cn/7OzUfzdnC8tqAIMQciVLiq2epm2NrAm1E9OjNRyG4lVhfR61SMcLizejzQP8R8Uf/0l5qOIbUEi+RdEg=="
+      },
+      "Serilog": {
+        "type": "Transitive",
+        "resolved": "2.10.0",
+        "contentHash": "+QX0hmf37a0/OZLxM3wL7V6/ADvC1XihXN4Kq/p6d8lCPfgkRdiuhbWlMaFjR9Av0dy5F0+MBeDmDdRZN/YwQA=="
       },
       "SharpDX": {
         "type": "Transitive",

@@ -99,8 +99,8 @@ public sealed class KeySequence : ICloneable, IEquatable<KeySequence>
         switch (Type)
         {
             case KeySequenceType.FreeForm:
-                return new RectangleF((Freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth,
-                    (Freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight,
+                return new RectangleF((Freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth,
+                    (Freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight,
                     Freeform.Width * Effects.EditorToCanvasWidth, Freeform.Height * Effects.EditorToCanvasHeight);
             default:
 

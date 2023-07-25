@@ -78,7 +78,7 @@ namespace Aurora.Devices.UnifiedHID
                     }
                     else
                     {
-                        Global.logger.Info($"[UnifiedHID] connected to device {PrettyNameFull}");
+                        Global.logger.Information($"[UnifiedHID] connected to device {PrettyNameFull}");
 
                         DeviceColorMap.Clear();
 
@@ -109,7 +109,7 @@ namespace Aurora.Devices.UnifiedHID
                 {
                     deviceLeds.CloseDevice();
 
-                    Global.logger.Info($"[UnifiedHID] disconnected from device {PrettyNameFull})");
+                    Global.logger.Information($"[UnifiedHID] disconnected from device {PrettyNameFull})");
                 }
             }
             catch (Exception exc)

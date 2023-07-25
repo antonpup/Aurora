@@ -49,6 +49,7 @@ namespace Aurora.Utils
             if (key != null)
             {
                 var filepath = (string)key.GetValue("UninstallPath", null);
+                key.Close();
 
                 var exitcode = DoUninstall(filepath);
                 if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
@@ -59,6 +60,7 @@ namespace Aurora.Utils
             if (key != null)
             {
                 var filepath = (string)key.GetValue("UninstallerPath", null);
+                key.Close();
 
                 var exitcode = DoUninstall(filepath);
                 if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)
@@ -70,6 +72,7 @@ namespace Aurora.Utils
             {
                 var path = (string)key.GetValue("UninstallPath", null);
                 var filename = (string)key.GetValue("UninstallFilename", null);
+                key.Close();
 
                 var exitcode = DoUninstall($@"{path}\{filename}");
                 if (exitcode == (int)RazerChromaInstallerExitCode.RestartRequired)

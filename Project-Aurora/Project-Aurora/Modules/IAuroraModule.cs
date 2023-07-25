@@ -1,41 +1,38 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Amib.Threading;
 
 namespace Aurora.Modules;
 
-public abstract class IAuroraModule : IDisposable
+public abstract class AuroraModule : IDisposable
 {
     private static readonly SmartThreadPool ModuleThreadPool = new(new STPStartInfo
     {
         AreThreadsBackground = true,
         ThreadPriority = ThreadPriority.AboveNormal,
-        IdleTimeout = 10000,
     })
     {
         Name = "Initialize Threads",
         Concurrency = 10,
         MaxThreads = 6,
     };
+
     private TaskCompletionSource? _taskSource;
 
-    private async Task QueueInit(Action action)
+    private async Task QueueInit(Func<Task> action)
     {
         _taskSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        object WorkItemCallback(object _)
+        async Task WorkItemCallback(object _)
         {
-            action.Invoke();
-            return null;
+            await action();
         }
 
         void PostExecuteWorkItemCallback(IWorkItemResult _)
         {
-            if (!_taskSource.TrySetResult())
-            {
-                Global.logger.Fatal("WTFFF");
-            }
+            Application.Current.Dispatcher.Invoke(() => { _taskSource.SetResult(); });
         }
 
         ModuleThreadPool.QueueWorkItem(WorkItemCallback, null, PostExecuteWorkItemCallback);
@@ -49,10 +46,15 @@ public abstract class IAuroraModule : IDisposable
 
     public virtual async Task InitializeAsync()
     {
-        await QueueInit(Initialize);
+        await QueueInit(InitButWait);
     }
 
-    public abstract void Initialize();
+    private async Task InitButWait()
+    {
+        await Initialize();
+    }
+
+    protected abstract Task Initialize();
     public abstract Task DisposeAsync();
     public abstract void Dispose();
 }

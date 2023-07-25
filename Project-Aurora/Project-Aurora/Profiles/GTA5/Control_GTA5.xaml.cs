@@ -116,7 +116,7 @@ public partial class Control_GTA5
             null, null);
         await Patch64(logitechPath64, httpClient);
 
-        Global.logger.Info("Logitech LED SDK patched successfully");
+        Global.logger.Information("Logitech LED SDK patched successfully");
         MessageBox.Show("Logitech LED SDK patched successfully");
     }
 
@@ -147,6 +147,7 @@ public partial class Control_GTA5
             key = key.OpenSubKey("ServerBinary", true);
 
             key.SetValue(null, logitechPath); //null to set the default value
+            key.Close();
         }
 
         if (File.Exists(logitechPath) && !File.Exists(logitechPath + ".aurora_backup"))

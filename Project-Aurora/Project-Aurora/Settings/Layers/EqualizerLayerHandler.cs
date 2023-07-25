@@ -151,7 +151,7 @@ public class EqualizerLayerHandlerProperties : LayerHandlerProperties<EqualizerL
         _gradient = new EffectBrush(ColorSpectrum.RainbowLoop).SetBrushType(EffectBrush.BrushType.Linear);
         _EQType = EqualizerType.PowerBars;
         _viewType = EqualizerPresentationType.SolidColor;
-        _maxAmplitude = 20.0f;
+        _maxAmplitude = 1.0f;
         _ScaleWithSystemVolume = false;
         _BackgroundMode = EqualizerBackgroundMode.Disabled;
         _DimColor = Color.FromArgb(169, 0, 0, 0);

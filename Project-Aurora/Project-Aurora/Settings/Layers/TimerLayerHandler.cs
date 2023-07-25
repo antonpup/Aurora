@@ -96,7 +96,7 @@ namespace Aurora.Settings.Layers {
             isActive = false;
         }
 
-        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e) {
+        private void InputEvents_KeyDown(object sender, EventArgs e) {
             foreach (var keybind in Properties.TriggerKeys) {
                 if (keybind.IsPressed()) {
                     switch (Properties.RepeatAction) {

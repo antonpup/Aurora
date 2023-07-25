@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Color = System.Windows.Media.Color;
+using Image = System.Windows.Controls.Image;
 
 namespace Aurora.Settings
 {
@@ -14,8 +17,8 @@ namespace Aurora.Settings
     public class Window_BitmapView : Window
     {
 
-        private static Window_BitmapView winBitmapView = null;
-        private Image imgBitmap = new Image();
+        private static Window_BitmapView? winBitmapView;
+        private Image imgBitmap = new();
 
         /// <summary>
         /// Opens the bitmap debug window if not already opened. If opened bring it to the foreground. 
@@ -36,30 +39,25 @@ namespace Aurora.Settings
 
         private Window_BitmapView()
         {
+            Closed += WinBitmapView_Closed;
+            ResizeMode = ResizeMode.CanResize;
 
-            this.SourceInitialized += WinBitmapView_SourceInitialized;
-            this.Closing += WinBitmapView_Closing;
-            this.Closed += WinBitmapView_Closed;
-            this.ResizeMode = ResizeMode.CanResize;
+            SetBinding(TopmostProperty, new Binding("BitmapDebugTopMost") { Source = Global.Configuration });
 
-            this.SetBinding(Window.TopmostProperty, new Binding("BitmapDebugTopMost") { Source = Global.Configuration });
-
-            this.Title = "Bitmap Debug Window";
-            this.Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            Title = "Bitmap Debug Window";
+            Background = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
             Global.effengine.NewLayerRender += Effengine_NewLayerRender;
 
             imgBitmap.SnapsToDevicePixels = true;
             imgBitmap.HorizontalAlignment = HorizontalAlignment.Stretch;
             imgBitmap.VerticalAlignment = VerticalAlignment.Stretch;
-            /*imgBitmap.MinWidth = 0;
-            imgBitmap.MinHeight = 0;*/
             imgBitmap.MinWidth = Effects.CanvasWidth;
             imgBitmap.MinHeight = Effects.CanvasHeight;
 
-            this.Content = imgBitmap;
+            Content = imgBitmap;
         }
 
-        private void Effengine_NewLayerRender(System.Drawing.Bitmap bitmap)
+        private void Effengine_NewLayerRender(Bitmap bitmap)
         {
             try
             {
@@ -69,7 +67,7 @@ namespace Aurora.Settings
                         lock (bitmap)
                         {
                             using MemoryStream memory = new MemoryStream();
-                            bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+                            bitmap.Save(memory, ImageFormat.Png);
                             memory.Position = 0;
                             BitmapImage bitmapimage = new BitmapImage();
                             bitmapimage.BeginInit();
@@ -83,17 +81,8 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.Warn(ex.ToString());
+                Global.logger.Warning(ex.ToString());
             }
-        }
-        private void WinBitmapView_SourceInitialized(object sender, EventArgs e)
-        {
-            Utils.WindowPlacement.SetPlacement(this, Global.Configuration.BitmapPlacement);
-        }
-
-        private void WinBitmapView_Closing(object sender, EventArgs e)
-        {
-            Global.Configuration.BitmapPlacement = Aurora.Utils.WindowPlacement.GetPlacement(this);
         }
 
         private void WinBitmapView_Closed(object sender, EventArgs e)

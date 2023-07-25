@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Amib.Threading;
 using System.Windows.Threading;
 using Aurora.Devices.ScriptedDevice;
+using RazerSdkWrapper;
 
 namespace Aurora.Devices;
 
@@ -64,7 +65,7 @@ public sealed class DeviceContainer : IDisposable
     public async Task EnableDevice()
     {
         var initTask = Device.Initialize();
-        Global.logger.Info(initTask is { IsCompletedSuccessfully: true, Result: true }
+        Global.logger.Information(initTask is { IsCompletedSuccessfully: true, Result: true }
             ? $"[Device][{Device.DeviceName}] Initialized Successfully."
             : $"[Device][{Device.DeviceName}] Failed to initialize.");
     }
@@ -75,7 +76,7 @@ public sealed class DeviceContainer : IDisposable
         try
         {
             await Device.ShutdownDevice();
-            Global.logger.Info($"[Device][{Device.DeviceName}] Shutdown");
+            Global.logger.Information($"[Device][{Device.DeviceName}] Shutdown");
         }
         finally
         {
@@ -99,8 +100,12 @@ public sealed class DeviceManager: IDisposable
 
     public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
 
-    public DeviceManager()
+    private Task<RzSdkManager?> _rzSdkManager;
+
+    public DeviceManager(Task<RzSdkManager?> rzSdkManager)
     {
+        _rzSdkManager = rzSdkManager;
+
         const string devicesPath = "Devices";
         IEnumerable<IDeviceLoader> deviceLoaders = new IDeviceLoader[]
         {
@@ -131,17 +136,19 @@ public sealed class DeviceManager: IDisposable
         }
     }
 
-    public Task InitializeDevices()
+    public async Task InitializeDevices()
     {
         if (_suspended)
-            return Task.CompletedTask;
+            return;
+
+        await _rzSdkManager;
 
         var initializeTasks = DeviceContainers
             .Where(dc => dc.Device is { IsInitialized: false, isDoingWork: false })
             .Where(dc => Global.Configuration.EnabledDevices.Contains(dc.Device.GetType()))
             .Select(deviceContainer => deviceContainer.EnableDevice());
 
-        return Task.WhenAll(initializeTasks);
+        await Task.WhenAll(initializeTasks);
     }
 
     public Task ShutdownDevices()
@@ -169,9 +176,9 @@ public sealed class DeviceManager: IDisposable
     #region SystemEvents
     private async void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
-        Global.logger.Info($"SessionSwitch triggered with {e.Reason}");
+        Global.logger.Information($"SessionSwitch triggered with {e.Reason}");
         if (!e.Reason.Equals(SessionSwitchReason.SessionUnlock) || (!_suspended && !_resumed)) return;
-        Global.logger.Info("Resuming Devices -- Session Switch Session Unlock");
+        Global.logger.Information("Resuming Devices -- Session Switch Session Unlock");
         _suspended = false;
         _resumed = false;
         Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
@@ -182,12 +189,12 @@ public sealed class DeviceManager: IDisposable
         switch (e.Mode)
         {
             case PowerModes.Suspend:
-                Global.logger.Info("Suspending Devices");
+                Global.logger.Information("Suspending Devices");
                 _suspended = true;
                 Dispatcher.CurrentDispatcher.Invoke(async () => await ShutdownDevices());
                 break;
             case PowerModes.Resume:
-                Global.logger.Info("Resuming Devices -- PowerModes.Resume");
+                Global.logger.Information("Resuming Devices -- PowerModes.Resume");
                 Thread.Sleep(TimeSpan.FromSeconds(2));
                 _resumed = true;
                 _suspended = false;

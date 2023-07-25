@@ -21,7 +21,7 @@ public static class DesktopUtils
             void ResetLazyUnlockSource(object sender, SessionSwitchEventArgs e)
             {
                 if (e.Reason != SessionSwitchReason.SessionUnlock) return;
-                Global.logger.Info("Releasing session unlock lock");
+                Global.logger.Information("Releasing session unlock lock");
                 LazyUnlockSource.Value.SetResult();
                 SystemEvents.SessionSwitch -= ResetLazyUnlockSource;
             }

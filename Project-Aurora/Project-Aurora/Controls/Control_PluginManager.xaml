@@ -6,6 +6,7 @@
              xmlns:settings="clr-namespace:Aurora.Settings"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:a="clr-namespace:Aurora"
+             xmlns:utils="clr-namespace:Aurora.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
@@ -82,6 +83,14 @@
                             <TextBlock Text="?" TextDecorations="Underline" ToolTip="Needed for wrappers"
                                        ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                         </StackPanel>
+                        
+                        <TextBlock TextWrapping="Wrap" Text="Application Detection Method:" Margin="0,12,0,0"
+                                   HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        <ComboBox SelectedValue="{Binding DetectionMode}"
+                                  ItemsSource="{utils:EnumToItemsSource {x:Type settings:ApplicationDetectionMode}}"
+                                  DisplayMemberPath="Text" SelectedValuePath="Value" Width="157"
+                                  HorizontalAlignment="Left" VerticalAlignment="Top" />
+
                     </StackPanel>
                 </Grid>
             </Grid>

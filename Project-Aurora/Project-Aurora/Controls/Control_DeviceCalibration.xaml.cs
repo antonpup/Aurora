@@ -1,21 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
+using Aurora.Devices;
 
 namespace Aurora.Controls;
 
 public partial class Control_DeviceCalibration
 {
-    public Control_DeviceCalibration()
+    private readonly Task<DeviceManager> _deviceManager;
+    
+    public Control_DeviceCalibration(Task<DeviceManager> deviceManager)
     {
+        _deviceManager = deviceManager;
+        
         InitializeComponent();
         RefreshLists();
     }
 
     private void RefreshLists()
     {
-        var devices = Global.dev_manager.DeviceContainers
+        var devices = _deviceManager.Result.DeviceContainers
             .Where(c => c.Device.IsInitialized)
             .Select(c => c.Device);
 

@@ -75,7 +75,6 @@ namespace Aurora.Scripts.VoronScripts
 		public PerformanceEffect()
 		{
 			AuroraInternal.Disk.Register();
-			AuroraInternal.Memory.Register();
 			AuroraInternal.Network.Register();
 			AuroraInternal.Gpu.Register();
 
@@ -86,7 +85,7 @@ namespace Aurora.Scripts.VoronScripts
 
 			Properties.RegProp("Effect type", (long)EffectTypes.ProgressiveGradual,
 				String.Join(Environment.NewLine,
-				Enum.GetValues(typeof(EffectTypes)).Cast<EffectTypes>().Select(x => string.Format("{0} - {1}", (int)x, x))),
+				Enum.GetValues(typeof(EffectTypes)).Cast<EffectTypes>().Select(x => $"{(int)x} - {x}")),
 				(long)Enum.GetValues(typeof(EffectTypes)).Cast<EffectTypes>().Min(),
 				(long)Enum.GetValues(typeof(EffectTypes)).Cast<EffectTypes>().Max());
 
@@ -97,7 +96,7 @@ namespace Aurora.Scripts.VoronScripts
 					"List of all available Windows counters can be found in Performance Monitor.",
 					"All Aurora Internal counters are listed below:"
 				}.Concat(PerformanceCounterManager.InternalRegisteredCounters
-				.Select(x => string.Format("{0} | {1} | {2}", x.Item1, x.Item2, x.Item3)).OrderBy(x => x)))
+				.Select(x => $"{x.Item1} | {x.Item2} | {x.Item3}").OrderBy(x => x)))
 			);
 
 			Properties.RegProp("Value expression", "x",
@@ -362,10 +361,8 @@ namespace Aurora.Scripts.VoronScripts
 								}
 								catch (Exception exc)
 								{
-									Global.logger.LogLine("IntervalPerformanceCounter exception in "
-														  + string.Format("{0}/{1}/{2}/{3}: {4}", counter.CategoryName, counter.CounterName,
-															  counter.InstanceName, counter.UpdateInterval, exc),
-										Logging_Level.Error);
+									Global.logger.Error(exc, "IntervalPerformanceCounter exception in {0}/{1}/{2}/{3}: {4}",
+										counter.CategoryName, counter.CounterName, counter.InstanceName, counter.UpdateInterval);
 								}
 								counter.counterUsage--;
 								activeCounters = true;
@@ -481,71 +478,6 @@ namespace Aurora.Scripts.VoronScripts
 			}
 		}
 
-		public class Memory
-		{
-			[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-			internal class MemoryStatusEx
-			{
-				public uint dwLength;
-				public uint dwMemoryLoad;
-				public ulong ullTotalPhys;
-				public ulong ullAvailPhys;
-				public ulong ullTotalPageFile;
-				public ulong ullAvailPageFile;
-				public ulong ullTotalVirtual;
-				public ulong ullAvailVirtual;
-				public ulong ullAvailExtendedVirtual;
-
-				public MemoryStatusEx()
-				{
-					this.dwLength = (uint)Marshal.SizeOf(typeof(MemoryStatusEx));
-				}
-			}
-
-			[return: MarshalAs(UnmanagedType.Bool)]
-			[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-			internal static extern Boolean GlobalMemoryStatusEx([In, Out] MemoryStatusEx lpBuffer);
-
-			public static void Register()
-			{
-				var propNames = new[] { "AvailablePhysicalMemoryInMiB", "AvailableVirtualMemoryInMiB",
-					"TotalPhysicalMemoryInMiB", "TotalVirtualMemoryInMiB", "% PhysicalMemoryUsed", "% VirtualMemoryUsed" };
-				for (var i = 0; i < propNames.Length; i++)
-				{
-					var indexCopy = i;
-
-					PerformanceCounterManager.RegisterInternal(CategoryName, "Memory",
-						propNames[i], () =>
-						{
-							MemoryStatusEx memStatus = new MemoryStatusEx();
-							if (GlobalMemoryStatusEx(memStatus))
-							{
-								switch (indexCopy)
-								{
-									case 0:
-										return memStatus.ullAvailPhys / 1048576f;
-									case 1:
-										return memStatus.ullAvailVirtual / 1048576f;
-									case 2:
-										return memStatus.ullTotalPhys / 1048576f;
-									case 3:
-										return memStatus.ullTotalVirtual / 1048576f;
-									case 4:
-										return (float)((memStatus.ullTotalPhys - memStatus.ullAvailPhys) * 100d / memStatus.ullTotalPhys);
-									case 5:
-										return (float)((memStatus.ullTotalVirtual - memStatus.ullAvailVirtual) * 100d / memStatus.ullTotalVirtual);
-								}
-							}
-							else
-							{
-								throw new Win32Exception(Marshal.GetLastPInvokeError());
-							}
-							return 0;
-						});
-				}
-			}
-		}
-
 		public class Network
 		{
 			public static void Register()
@@ -609,7 +541,7 @@ namespace Aurora.Scripts.VoronScripts
 
 				for (var i = 0; i < NvidiaGpus.Length; i++)
 				{
-					RegisterNvidiaGpuCounters(NvidiaGpus[i], string.Format("NvidiaGpu #{0}", i), false);
+					RegisterNvidiaGpuCounters(NvidiaGpus[i], $"NvidiaGpu #{i}", false);
 
 					if (registerGeneral)
 					{
@@ -620,7 +552,7 @@ namespace Aurora.Scripts.VoronScripts
 
 				for (var i = 0; i < AtiGpus.Length; i++)
 				{
-					RegisterAtiGpuCounters(AtiGpus[i], string.Format("AtiGpu #{0}", i), false);
+					RegisterAtiGpuCounters(AtiGpus[i], $"AtiGpu #{i}", false);
 
 					if (registerGeneral)
 					{
@@ -905,16 +837,12 @@ namespace Aurora.Scripts.VoronScripts
 				{
 					int status = ADL.ADL_Main_Control_Create(1);
 
-					Global.logger.LogLine("AMD Display Library");
-					Global.logger.LogLine("Status: " + (status == ADL.ADL_OK ?
-											  "OK" : status.ToString(CultureInfo.InvariantCulture)));
-
 					if (status == ADL.ADL_OK)
 					{
 						int numberOfAdapters = 0;
 						ADL.ADL_Adapter_NumberOfAdapters_Get(ref numberOfAdapters);
 
-						Global.logger.LogLine(string.Format("Number of adapters: {0}", numberOfAdapters));
+						Global.logger.Information("Number of adapters: {NumberOfAdapters}", numberOfAdapters);
 
 						if (numberOfAdapters > 0)
 						{
@@ -929,16 +857,16 @@ namespace Aurora.Scripts.VoronScripts
 									int adapterID;
 									ADL.ADL_Adapter_ID_Get(adapterInfo[i].AdapterIndex,
 										out adapterID);
-									Global.logger.LogLine(string.Format("AdapterIndex: {0}", i));
-									Global.logger.LogLine(string.Format("isActive: {0}", isActive));
-									Global.logger.LogLine(string.Format("AdapterName: {0}", adapterInfo[i].AdapterName));
-									Global.logger.LogLine(string.Format("UDID: {0}", adapterInfo[i].UDID));
-									Global.logger.LogLine(string.Format("Present: {0}", adapterInfo[i].Present));
-									Global.logger.LogLine(string.Format("VendorID: 0x{0}", adapterInfo[i].VendorID));
-									Global.logger.LogLine(string.Format("BusNumber: {0}", adapterInfo[i].BusNumber));
-									Global.logger.LogLine(string.Format("DeviceNumber: {0}", adapterInfo[i].DeviceNumber));
-									Global.logger.LogLine(string.Format("FunctionNumber: {0}", adapterInfo[i].FunctionNumber));
-									Global.logger.LogLine(string.Format("AdapterID: 0x{0}", adapterID));
+									Global.logger.Information("AdapterIndex: {I}", i);
+									Global.logger.Information("isActive: {IsActive}", isActive);
+									Global.logger.Information("AdapterName: {AdapterName}", adapterInfo[i].AdapterName);
+									Global.logger.Information("UDID: {Udid}", adapterInfo[i].UDID);
+									Global.logger.Information("Present: {Present}", adapterInfo[i].Present);
+									Global.logger.Information("VendorID: 0x{VendorId}", adapterInfo[i].VendorID);
+									Global.logger.Information("BusNumber: {BusNumber}", adapterInfo[i].BusNumber);
+									Global.logger.Information("DeviceNumber: {DeviceNumber}", adapterInfo[i].DeviceNumber);
+									Global.logger.Information("FunctionNumber: {FunctionNumber}", adapterInfo[i].FunctionNumber);
+									Global.logger.Information("AdapterID: 0x{AdapterId}", adapterID);
 
 									if (!string.IsNullOrEmpty(adapterInfo[i].UDID) &&
 										adapterInfo[i].VendorID == ADL.ATI_VENDOR_ID)
@@ -963,7 +891,7 @@ namespace Aurora.Scripts.VoronScripts
 				catch (DllNotFoundException) { }
 				catch (EntryPointNotFoundException e)
 				{
-					Global.logger.LogLine(string.Format("Error: {0}", e), Logging_Level.Error);
+					Global.logger.Error(e, $"Error: ");
 				}
 				return agpus.Select(x => x.AdapterIndex).ToArray();
 			}
@@ -973,12 +901,12 @@ namespace Aurora.Scripts.VoronScripts
 				var ngpus = new List<KeyValuePair<NvPhysicalGpuHandle, NvDisplayHandle>>();
 				if (NVAPI.IsAvailable)
 				{
-					Global.logger.LogLine("NVAPI");
+					Global.logger.Information("NVAPI");
 
 					string version;
 					if (NVAPI.NvAPI_GetInterfaceVersionString(out version) == NvStatus.OK)
 					{
-						Global.logger.LogLine(string.Format("Version: {0}", version));
+						Global.logger.Information($"Version: {version}");
 					}
 
 					NvPhysicalGpuHandle[] handles =
@@ -986,7 +914,7 @@ namespace Aurora.Scripts.VoronScripts
 					int count;
 					if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
 					{
-						Global.logger.LogLine("Error: NvAPI_EnumPhysicalGPUs not available", Logging_Level.Error);
+						Global.logger.Error("Error: NvAPI_EnumPhysicalGPUs not available");
 						return ngpus.ToArray();
 					}
 					else
@@ -994,7 +922,7 @@ namespace Aurora.Scripts.VoronScripts
 						NvStatus status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out count);
 						if (status != NvStatus.OK)
 						{
-							Global.logger.LogLine(string.Format("Status: {0}", status));
+							Global.logger.Information($"Status: {status}");
 							return ngpus.ToArray();
 						}
 					}
@@ -1030,7 +958,7 @@ namespace Aurora.Scripts.VoronScripts
 						}
 					}
 
-					Global.logger.LogLine(string.Format("Number of GPUs: {0}", count));
+					Global.logger.Information($"Number of GPUs: {count}");
 
 					for (int i = 0; i < count; i++)
 					{

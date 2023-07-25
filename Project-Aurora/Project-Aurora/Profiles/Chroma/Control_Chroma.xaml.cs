@@ -10,9 +10,6 @@ using Microsoft.Win32;
 
 namespace Aurora.Profiles.Chroma;
 
-/// <summary>
-/// Interaction logic for Control_Minecraft.xaml
-/// </summary>
 public partial class Control_Chroma : INotifyPropertyChanged
 {
     public ObservableCollection<string> EnabledPrograms { get; } = new();
@@ -93,7 +90,7 @@ public partial class Control_Chroma : INotifyPropertyChanged
             value += string.Join(';', ExcludedPrograms.Where(s => !s.Equals("Aurora.exe")));
         }
         
-        var registryKey = Registry.LocalMachine.OpenSubKey(ChromaApplication.AppsKey, true);
+        using var registryKey = Registry.LocalMachine.OpenSubKey(ChromaApplication.AppsKey, true);
         registryKey.SetValue(ChromaApplication.PriorityValue, value);
     }
 }

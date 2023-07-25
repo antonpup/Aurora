@@ -1,30 +1,19 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media;
 using System.Windows.Navigation;
-using System.Windows.Threading;
+using Aurora.Controls;
+using Aurora.Devices;
 using Aurora.Devices.RGBNet.Config;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.HardwareMonitor;
-using Aurora.Modules.Razer;
 using Aurora.Utils;
-using Microsoft.Win32.TaskScheduler;
 using RazerSdkWrapper;
-using RazerSdkWrapper.Data;
-using Xceed.Wpf.Toolkit;
-using Action = System.Action;
-using Application = System.Windows.Application;
 using Button = System.Windows.Controls.Button;
-using CheckBox = System.Windows.Controls.CheckBox;
 using MessageBox = System.Windows.MessageBox;
-using Task = System.Threading.Tasks.Task;
 
 namespace Aurora.Settings;
 
@@ -33,12 +22,12 @@ namespace Aurora.Settings;
 /// </summary>
 public partial class Control_Settings
 {
-
     private readonly Task<PluginManager> _pluginManager;
     private readonly Task<AuroraHttpListener?> _httpListener;
+    private readonly Control_SettingsDevicesAndWrappers _devicesAndWrappers;
 
     public Control_Settings(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
-        Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener)
+        Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener, Task<DeviceManager> deviceManager)
     {
         _pluginManager = pluginManager;
         _httpListener = httpListener;
@@ -53,12 +42,27 @@ public partial class Control_Settings
         LnkRepository.NavigateUri = new Uri($"https://github.com/{o}/{r}");
         LnkContributors.NavigateUri = new Uri($"https://github.com/{o}/{r}#contributors-");
 
-        DevicesAndWrappersTab.Content = new Control_SettingsDevicesAndWrappers(rzSdkManager, layoutManager);
+        _devicesAndWrappers = new Control_SettingsDevicesAndWrappers(rzSdkManager, layoutManager, deviceManager);
+        var controlDeviceManager = new Control_DeviceManager(deviceManager);
+        var deviceMapping = new DeviceMapping(deviceManager);
+        
+        DevicesAndWrappersTab.Content = _devicesAndWrappers;
+        DeviceManagerTab.Content = controlDeviceManager;
+        RemapDevicesTab.Content = deviceMapping;
+        
+        _devicesAndWrappers.BeginInit();
+        controlDeviceManager.BeginInit();
+        deviceMapping.BeginInit();
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    public async Task Initialize()
     {
-        ctrlPluginManager.Host = _pluginManager.Result;
+        await _devicesAndWrappers.Initialize();
+    }
+
+    private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        ctrlPluginManager.Host = await _pluginManager;
     }
 
     private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)

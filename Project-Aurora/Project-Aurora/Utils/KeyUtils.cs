@@ -6,8 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
-using Aurora.Modules.ProcessMonitor;
-using SharpDX.RawInput;
+using Aurora.Modules.Inputs;
 
 namespace Aurora.Utils
 {
@@ -41,9 +40,6 @@ namespace Aurora.Utils
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr GetKeyboardLayout(uint idThread);
 
-        [DllImport("user32.dll")]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
-
         [DllImport("user32", SetLastError = true, CharSet = CharSet.Unicode)]
         public static extern int GetKeyNameTextW(uint lParam, StringBuilder lpString, int nSize);
 
@@ -51,7 +47,7 @@ namespace Aurora.Utils
 
         static KeyUtils()
         {
-            leftControlScanCode = Utils.KeyUtils.GetScanCodeByKey(Keys.LControlKey);
+            leftControlScanCode = GetScanCodeByKey(Keys.LControlKey);
         }
 
         /// <summary>
@@ -74,46 +70,11 @@ namespace Aurora.Utils
             return key;
         }
 
-        static Dictionary<uint, DeviceKeys> scanCodeConversion = new Dictionary<uint, DeviceKeys>()
+        static Dictionary<uint, DeviceKeys> scanCodeConversion = new()
         {
-            /*{1, DeviceKeys.ESC},
-            {59, DeviceKeys.F1},
-            {60, DeviceKeys.F2},
-            {61, DeviceKeys.F3},
-            {62, DeviceKeys.F4},
-            {63, DeviceKeys.F5},
-            {64, DeviceKeys.F6},
-            {65, DeviceKeys.F7},
-            {66, DeviceKeys.F8},
-            {67, DeviceKeys.F9},
-            {68, DeviceKeys.F10},
-            {87, DeviceKeys.F11},
-            {88, DeviceKeys.F12},
-            {84, DeviceKeys.PRINT_SCREEN},
-            {70, DeviceKeys.SCROLL_LOCK},*/
-            //{0, DeviceKeys.PAUSE_BREAK},
             {40, DeviceKeys.TILDE},
-            /*{2, DeviceKeys.ONE},
-            {3, DeviceKeys.TWO},
-            {4, DeviceKeys.THREE},
-            {5, DeviceKeys.FOUR},
-            {6, DeviceKeys.FIVE},
-            {7, DeviceKeys.SIX},
-            {8, DeviceKeys.SEVEN},
-            {9, DeviceKeys.EIGHT},
-            {10, DeviceKeys.NINE},
-            {11, DeviceKeys.ZERO},*/
             {12, DeviceKeys.MINUS},
             {13, DeviceKeys.EQUALS},
-            /*{14, DeviceKeys.BACKSPACE},
-            {114, DeviceKeys.INSERT},
-            {103, DeviceKeys.HOME},
-            {105, DeviceKeys.PAGE_UP},
-            {69, DeviceKeys.NUM_LOCK},
-            //{53, DeviceKeys.NUM_SLASH},
-            {55, DeviceKeys.NUM_ASTERISK},
-            {74, DeviceKeys.NUM_MINUS},
-            {15, DeviceKeys.TAB},*/
             {16, DeviceKeys.Q},
             {17, DeviceKeys.W},
             {18, DeviceKeys.E},
@@ -127,14 +88,6 @@ namespace Aurora.Utils
             {26, DeviceKeys.OPEN_BRACKET},
             {27, DeviceKeys.CLOSE_BRACKET},
             {86, DeviceKeys.BACKSLASH},
-            /*{115, DeviceKeys.DELETE},
-            {111, DeviceKeys.END},
-            {113, DeviceKeys.PAGE_DOWN},
-            {71, DeviceKeys.NUM_SEVEN},
-            {72, DeviceKeys.NUM_EIGHT},
-            {73, DeviceKeys.NUM_NINE},
-            {78, DeviceKeys.NUM_PLUS},
-            {58, DeviceKeys.CAPS_LOCK},*/
             {30, DeviceKeys.A},
             {31, DeviceKeys.S},
             {32, DeviceKeys.D},
@@ -146,13 +99,6 @@ namespace Aurora.Utils
             {38, DeviceKeys.L},
             {39, DeviceKeys.SEMICOLON},
             {43, DeviceKeys.APOSTROPHE},
-            //{0, DeviceKeys.HASH},
-            /*{28, DeviceKeys.ENTER},
-            {75, DeviceKeys.NUM_FOUR},
-            {76, DeviceKeys.NUM_FIVE},
-            {77, DeviceKeys.NUM_SIX},
-            {42, DeviceKeys.LEFT_SHIFT},*/
-            //{0, DeviceKeys.BACKSLASH_UK},
             {44, DeviceKeys.Z},
             {45, DeviceKeys.X},
             {46, DeviceKeys.C},
@@ -163,51 +109,10 @@ namespace Aurora.Utils
             {51, DeviceKeys.COMMA},
             {52, DeviceKeys.PERIOD},
             {53, DeviceKeys.FORWARD_SLASH},
-            /*{54, DeviceKeys.RIGHT_SHIFT},
-            {104, DeviceKeys.ARROW_UP},
-            {79, DeviceKeys.NUM_ONE},
-            {80, DeviceKeys.NUM_TWO},
-            {81, DeviceKeys.NUM_THREE},
-            //{28, DeviceKeys.NUM_ENTER},
-            {29, DeviceKeys.LEFT_CONTROL},
-            {91, DeviceKeys.LEFT_WINDOWS},
-            {56, DeviceKeys.LEFT_ALT},
-            {57, DeviceKeys.SPACE},
-            //{56, DeviceKeys.RIGHT_ALT},
-            {92, DeviceKeys.RIGHT_WINDOWS},
-            {93, DeviceKeys.APPLICATION_SELECT},
-            //{29, DeviceKeys.RIGHT_CONTROL},
-            {107, DeviceKeys.ARROW_LEFT},
-            {112, DeviceKeys.ARROW_DOWN},
-            {109, DeviceKeys.ARROW_RIGHT},
-            {82, DeviceKeys.NUM_ZERO},
-            {83, DeviceKeys.NUM_PERIOD},*/
             {41, DeviceKeys.OEM8},
-            /*{34, DeviceKeys.MEDIA_PLAY_PAUSE},
-            {0, DeviceKeys.MEDIA_PLAY},
-            {0, DeviceKeys.MEDIA_PAUSE},
-            {36, DeviceKeys.MEDIA_STOP},
-            {16, DeviceKeys.MEDIA_PREVIOUS},
-            {25, DeviceKeys.MEDIA_NEXT},
-            {32, DeviceKeys.VOLUME_MUTE},
-            {46, DeviceKeys.VOLUME_DOWN},
-            {48, DeviceKeys.VOLUME_UP},
-            {0, DeviceKeys.JPN_HALFFULLWIDTH},
-            {0, DeviceKeys.JPN_MUHENKAN},
-            {0, DeviceKeys.JPN_HENKAN},
-            {0, DeviceKeys.JPN_HIRAGANA_KATAKANA},
-            {0, DeviceKeys.OEM5},
-            {0, DeviceKeys.OEMTilde},
-            {0, DeviceKeys.OEM102},
-            {0, DeviceKeys.OEM6},
-            {0, DeviceKeys.OEM6},
-            {0, DeviceKeys.OEM1},
-            {0, DeviceKeys.OEM1},
-            {0, DeviceKeys.OEMPlus},
-            {0, DeviceKeys.OEMPlus},*/
         };
 
-        static Dictionary<DeviceKeys, uint> KeyToScanCode = null;
+        static Dictionary<DeviceKeys, uint> KeyToScanCode;
 
         public static int GetScanCode(DeviceKeys key)
         {
@@ -226,63 +131,68 @@ namespace Aurora.Utils
         /// <summary>
         /// Correcting RawInput data according to an article https://blog.molecular-matters.com/2011/09/05/properly-handling-keyboard-input/
         /// </summary>
-        public static void CorrectRawInputData(KeyboardInputEventArgs e)
+        public static (Keys key, int makeCode) CorrectRawInputData(int virtualKey, int scanCode, uint flags)
         {
+            var key = (Keys)virtualKey;
+            var makeCode = -1;
+            
             // e0 and e1 are escape sequences used for certain special keys, such as PRINT and PAUSE/BREAK.
             // see http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
-            bool isE0 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E0);
-            bool isE1 = e.ScanCodeFlags.HasFlag(ScanCodeFlags.E1);
-            if (Global.kbLayout.LoadedLocalization.IsAutomaticGeneration() && ((e.Key >= Keys.A && e.Key <= Keys.Z) || (e.Key >= Keys.Oem1 && e.Key <= Keys.Oem102)))
+            bool isE0 = (flags & 2) != 0;
+            bool isE1 = (flags & 4) != 0;
+            if (Global.kbLayout.LoadedLocalization.IsAutomaticGeneration() && key is >= Keys.A and <= Keys.Z or >= Keys.Oem1 and <= Keys.Oem102)
             {
-                uint thread = GetWindowThreadProcessId(ActiveProcessMonitor.GetForegroundWindow(), IntPtr.Zero);
+                uint thread = User32.GetWindowThreadProcessId(User32.GetForegroundWindow(), out _);
                 var layout = GetKeyboardLayout(thread);
-                var scan_code_locale = MapVirtualKeyEx((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc, layout);
-                if (scan_code_locale == 0)
-                    Global.logger.Warn($"Unable to convert key: {e.Key} to scan_code_locale. layout: {layout}");
+                var scanCodeLocale = MapVirtualKeyEx((uint)key, MapVirtualKeyMapTypes.MapvkVkToVsc, layout);
+                if (scanCodeLocale == 0)
+                    Global.logger.Warning($"Unable to convert key: {key} to scan_code_locale. layout: {layout}");
                 else
                 {
-
-                    Keys k = (Keys)MapVirtualKey(scan_code_locale, MapVirtualKeyMapTypes.MapvkVscToVk);
+                    Keys k = (Keys)MapVirtualKey(scanCodeLocale, MapVirtualKeyMapTypes.MapvkVscToVk);
                     if (k != Keys.None)
-                        e.Key = k;
+                        key = k;
                     else
-                        Global.logger.Warn($"Unable to convert scan_code_locale: {scan_code_locale} to Keys. Key: {e.Key}, layout: {layout}");
+                        Global.logger.Warning($"Unable to convert scan_code_locale: {scanCodeLocale} to Keys. Key: {key}, layout: {layout}");
                 }
             }
             if (isE1)
             {
                 // for escaped sequences, turn the virtual key into the correct scan code using MapVirtualKey.
                 // however, MapVirtualKey is unable to map VK_PAUSE (this is a known bug), hence we map that by hand.
-                if (e.Key == Keys.Pause)
-                    e.MakeCode = 0x45;
+                if (key == Keys.Pause)
+                    makeCode = 0x45;
                 else
-                    e.MakeCode = (int)MapVirtualKey((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc);
+                    makeCode = (int)MapVirtualKey((uint)key, MapVirtualKeyMapTypes.MapvkVkToVsc);
             }
 
-            switch (e.Key)
+            switch (key)
             {
                 case Keys.NumLock:
                     // correct PAUSE/BREAK and NUM LOCK silliness, and set the extended bit
-                    e.MakeCode = (int)(MapVirtualKey((uint)e.Key, MapVirtualKeyMapTypes.MapvkVkToVsc) | 0x100);
+                    makeCode = (int)(MapVirtualKey((uint)key, MapVirtualKeyMapTypes.MapvkVkToVsc) | 0x100);
                     break;
                 case Keys.ShiftKey:
                     // correct left-hand / right-hand SHIFT
-                    e.Key = (Keys)MapVirtualKey((uint)e.MakeCode, MapVirtualKeyMapTypes.MapvkVscToVkEx);
+                    key = (Keys)MapVirtualKey((uint)makeCode, MapVirtualKeyMapTypes.MapvkVscToVkEx);
                     break;
                 case Keys.ControlKey:
-                    e.Key = isE0 ? Keys.RControlKey : Keys.LControlKey;
+                    key = isE0 ? Keys.RControlKey : Keys.LControlKey;
                     break;
                 case Keys.Menu:
-                    e.Key = isE0 ? Keys.RMenu : Keys.LMenu;
+                    key = isE0 ? Keys.RMenu : Keys.LMenu;
                     break;
             }
+
+            return (key, makeCode);
         }
+
         /// <summary>
         /// Converts Devices.DeviceKeys to Forms.Keys
         /// </summary>
         /// <param name="deviceKeys">The Forms.Key to be converted</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static Keys GetFormsKey(Devices.DeviceKeys deviceKeys)
+        public static Keys GetFormsKey(DeviceKeys deviceKeys)
         {
             switch (deviceKeys)
             {
@@ -577,9 +487,10 @@ namespace Aurora.Utils
         /// </summary>
         /// <param name="eventArgs">RawInput event data</param>
         /// <returns>The resulting Devices.DeviceKeys</returns>
-        public static DeviceKeys GetDeviceKey(this KeyboardInputEventArgs eventArgs)
+        public static DeviceKeys GetDeviceKey(this KeyEvent eventArgs)
         {
-            return GetDeviceKey(eventArgs.Key, eventArgs.MakeCode, eventArgs.ScanCodeFlags.HasFlag(ScanCodeFlags.E0));
+            return
+                GetDeviceKey(eventArgs.Key); //, eventArgs.MakeCode, eventArgs.ScanCodeFlags.HasFlag(ScanCodeFlags.E0));
         }
 
         /// <summary>
@@ -591,287 +502,243 @@ namespace Aurora.Utils
         {
             switch (forms_key)
             {
-                case (Keys.Escape):
+                case Keys.Escape:
                     return DeviceKeys.ESC;
-                case (Keys.Clear):
+                case Keys.Clear:
                     return DeviceKeys.NUM_FIVE;
-                case (Keys.Back):
+                case Keys.Back:
                     return DeviceKeys.BACKSPACE;
-                case (Keys.Tab):
+                case Keys.Tab:
                     return DeviceKeys.TAB;
-                case (Keys.Enter):
+                case Keys.Enter:
                     return isExtendedKey ? DeviceKeys.NUM_ENTER : DeviceKeys.ENTER;
-                case (Keys.LShiftKey):
+                case Keys.LShiftKey:
                     return DeviceKeys.LEFT_SHIFT;
-                case (Keys.LControlKey):
+                case Keys.LControlKey:
                     if (scanCode > 0 && leftControlScanCode > 0 && scanCode != leftControlScanCode) // Alt Graph
                         return DeviceKeys.NONE;
                     return DeviceKeys.LEFT_CONTROL;
-                case (Keys.LMenu):
+                case Keys.LMenu:
                     return DeviceKeys.LEFT_ALT;
-                case (Keys.IMENonconvert):
+                case Keys.IMENonconvert:
                     return DeviceKeys.JPN_MUHENKAN;
-                case (Keys.IMEConvert):
+                case Keys.IMEConvert:
                     return DeviceKeys.JPN_HENKAN;
-                case (Keys.IMEModeChange):
+                case Keys.IMEModeChange:
                     return DeviceKeys.JPN_HIRAGANA_KATAKANA;
-                case (Keys.RShiftKey):
+                case Keys.RShiftKey:
                     return DeviceKeys.RIGHT_SHIFT;
-                case (Keys.RControlKey):
+                case Keys.RControlKey:
                     return DeviceKeys.RIGHT_CONTROL;
-                case (Keys.RMenu):
+                case Keys.RMenu:
                     return DeviceKeys.RIGHT_ALT;
-                case (Keys.Pause):
+                case Keys.Pause:
                     return DeviceKeys.PAUSE_BREAK;
-                case (Keys.CapsLock):
+                case Keys.CapsLock:
                     return DeviceKeys.CAPS_LOCK;
-                case (Keys.Space):
+                case Keys.Space:
                     return DeviceKeys.SPACE;
-                case (Keys.PageUp):
+                case Keys.PageUp:
                     return isExtendedKey ? DeviceKeys.PAGE_UP : DeviceKeys.NUM_NINE;
-                case (Keys.PageDown):
+                case Keys.PageDown:
                     return isExtendedKey ? DeviceKeys.PAGE_DOWN : DeviceKeys.NUM_THREE;
-                case (Keys.End):
+                case Keys.End:
                     return isExtendedKey ? DeviceKeys.END : DeviceKeys.NUM_ONE;
-                case (Keys.Home):
+                case Keys.Home:
                     return isExtendedKey ? DeviceKeys.HOME : DeviceKeys.NUM_SEVEN;
-                case (Keys.Left):
+                case Keys.Left:
                     return isExtendedKey ? DeviceKeys.ARROW_LEFT : DeviceKeys.NUM_FOUR;
-                case (Keys.Up):
+                case Keys.Up:
                     return isExtendedKey ? DeviceKeys.ARROW_UP : DeviceKeys.NUM_EIGHT;
-                case (Keys.Right):
+                case Keys.Right:
                     return isExtendedKey ? DeviceKeys.ARROW_RIGHT : DeviceKeys.NUM_SIX;
-                case (Keys.Down):
+                case Keys.Down:
                     return isExtendedKey ? DeviceKeys.ARROW_DOWN : DeviceKeys.NUM_TWO;
-                case (Keys.PrintScreen):
+                case Keys.PrintScreen:
                     return DeviceKeys.PRINT_SCREEN;
-                case (Keys.Insert):
+                case Keys.Insert:
                     return isExtendedKey ? DeviceKeys.INSERT : DeviceKeys.NUM_ZERO;
-                case (Keys.Delete):
+                case Keys.Delete:
                     return isExtendedKey ? DeviceKeys.DELETE : DeviceKeys.NUM_PERIOD;
-                case (Keys.D0):
+                case Keys.D0:
                     return DeviceKeys.ZERO;
-                case (Keys.D1):
+                case Keys.D1:
                     return DeviceKeys.ONE;
-                case (Keys.D2):
+                case Keys.D2:
                     return DeviceKeys.TWO;
-                case (Keys.D3):
+                case Keys.D3:
                     return DeviceKeys.THREE;
-                case (Keys.D4):
+                case Keys.D4:
                     return DeviceKeys.FOUR;
-                case (Keys.D5):
+                case Keys.D5:
                     return DeviceKeys.FIVE;
-                case (Keys.D6):
+                case Keys.D6:
                     return DeviceKeys.SIX;
-                case (Keys.D7):
+                case Keys.D7:
                     return DeviceKeys.SEVEN;
-                case (Keys.D8):
+                case Keys.D8:
                     return DeviceKeys.EIGHT;
-                case (Keys.D9):
+                case Keys.D9:
                     return DeviceKeys.NINE;
-                case (Keys.A):
+                case Keys.A:
                     return DeviceKeys.A;
-                case (Keys.B):
+                case Keys.B:
                     return DeviceKeys.B;
-                case (Keys.C):
+                case Keys.C:
                     return DeviceKeys.C;
-                case (Keys.D):
+                case Keys.D:
                     return DeviceKeys.D;
-                case (Keys.E):
+                case Keys.E:
                     return DeviceKeys.E;
-                case (Keys.F):
+                case Keys.F:
                     return DeviceKeys.F;
-                case (Keys.G):
+                case Keys.G:
                     return DeviceKeys.G;
-                case (Keys.H):
+                case Keys.H:
                     return DeviceKeys.H;
-                case (Keys.I):
+                case Keys.I:
                     return DeviceKeys.I;
-                case (Keys.J):
+                case Keys.J:
                     return DeviceKeys.J;
-                case (Keys.K):
+                case Keys.K:
                     return DeviceKeys.K;
-                case (Keys.L):
+                case Keys.L:
                     return DeviceKeys.L;
-                case (Keys.M):
+                case Keys.M:
                     return DeviceKeys.M;
-                case (Keys.N):
+                case Keys.N:
                     return DeviceKeys.N;
-                case (Keys.O):
+                case Keys.O:
                     return DeviceKeys.O;
-                case (Keys.P):
+                case Keys.P:
                     return DeviceKeys.P;
-                case (Keys.Q):
+                case Keys.Q:
                     return DeviceKeys.Q;
-                case (Keys.R):
+                case Keys.R:
                     return DeviceKeys.R;
-                case (Keys.S):
+                case Keys.S:
                     return DeviceKeys.S;
-                case (Keys.T):
+                case Keys.T:
                     return DeviceKeys.T;
-                case (Keys.U):
+                case Keys.U:
                     return DeviceKeys.U;
-                case (Keys.V):
+                case Keys.V:
                     return DeviceKeys.V;
-                case (Keys.W):
+                case Keys.W:
                     return DeviceKeys.W;
-                case (Keys.X):
+                case Keys.X:
                     return DeviceKeys.X;
-                case (Keys.Y):
+                case Keys.Y:
                     return DeviceKeys.Y;
-                case (Keys.Z):
+                case Keys.Z:
                     return DeviceKeys.Z;
-                case (Keys.LWin):
+                case Keys.LWin:
                     return DeviceKeys.LEFT_WINDOWS;
-                case (Keys.RWin):
+                case Keys.RWin:
                     return DeviceKeys.RIGHT_WINDOWS;
-                case (Keys.Apps):
+                case Keys.Apps:
                     return DeviceKeys.APPLICATION_SELECT;
-                case (Keys.NumPad0):
+                case Keys.NumPad0:
                     return DeviceKeys.NUM_ZERO;
-                case (Keys.NumPad1):
+                case Keys.NumPad1:
                     return DeviceKeys.NUM_ONE;
-                case (Keys.NumPad2):
+                case Keys.NumPad2:
                     return DeviceKeys.NUM_TWO;
-                case (Keys.NumPad3):
+                case Keys.NumPad3:
                     return DeviceKeys.NUM_THREE;
-                case (Keys.NumPad4):
+                case Keys.NumPad4:
                     return DeviceKeys.NUM_FOUR;
-                case (Keys.NumPad5):
+                case Keys.NumPad5:
                     return DeviceKeys.NUM_FIVE;
-                case (Keys.NumPad6):
+                case Keys.NumPad6:
                     return DeviceKeys.NUM_SIX;
-                case (Keys.NumPad7):
+                case Keys.NumPad7:
                     return DeviceKeys.NUM_SEVEN;
-                case (Keys.NumPad8):
+                case Keys.NumPad8:
                     return DeviceKeys.NUM_EIGHT;
-                case (Keys.NumPad9):
+                case Keys.NumPad9:
                     return DeviceKeys.NUM_NINE;
-                case (Keys.Multiply):
+                case Keys.Multiply:
                     return DeviceKeys.NUM_ASTERISK;
-                case (Keys.Add):
+                case Keys.Add:
                     return DeviceKeys.NUM_PLUS;
-                case (Keys.Subtract):
+                case Keys.Subtract:
                     return DeviceKeys.NUM_MINUS;
-                case (Keys.Decimal):
+                case Keys.Decimal:
                     return DeviceKeys.NUM_PERIOD;
-                case (Keys.Divide):
+                case Keys.Divide:
                     return DeviceKeys.NUM_SLASH;
-                case (Keys.F1):
+                case Keys.F1:
                     return DeviceKeys.F1;
-                case (Keys.F2):
+                case Keys.F2:
                     return DeviceKeys.F2;
-                case (Keys.F3):
+                case Keys.F3:
                     return DeviceKeys.F3;
-                case (Keys.F4):
+                case Keys.F4:
                     return DeviceKeys.F4;
-                case (Keys.F5):
+                case Keys.F5:
                     return DeviceKeys.F5;
-                case (Keys.F6):
+                case Keys.F6:
                     return DeviceKeys.F6;
-                case (Keys.F7):
+                case Keys.F7:
                     return DeviceKeys.F7;
-                case (Keys.F8):
+                case Keys.F8:
                     return DeviceKeys.F8;
-                case (Keys.F9):
+                case Keys.F9:
                     return DeviceKeys.F9;
-                case (Keys.F10):
+                case Keys.F10:
                     return DeviceKeys.F10;
-                case (Keys.F11):
+                case Keys.F11:
                     return DeviceKeys.F11;
-                case (Keys.F12):
+                case Keys.F12:
                     return DeviceKeys.F12;
-                case (Keys.NumLock):
+                case Keys.NumLock:
                     return DeviceKeys.NUM_LOCK;
-                case (Keys.Scroll):
+                case Keys.Scroll:
                     return DeviceKeys.SCROLL_LOCK;
-                case (Keys.VolumeMute):
+                case Keys.VolumeMute:
                     return DeviceKeys.VOLUME_MUTE;
-                case (Keys.VolumeDown):
+                case Keys.VolumeDown:
                     return DeviceKeys.VOLUME_DOWN;
-                case (Keys.VolumeUp):
+                case Keys.VolumeUp:
                     return DeviceKeys.VOLUME_UP;
-                case (Keys.MediaNextTrack):
+                case Keys.MediaNextTrack:
                     return DeviceKeys.MEDIA_NEXT;
-                case (Keys.MediaPreviousTrack):
+                case Keys.MediaPreviousTrack:
                     return DeviceKeys.MEDIA_PREVIOUS;
-                case (Keys.MediaStop):
+                case Keys.MediaStop:
                     return DeviceKeys.MEDIA_STOP;
-                case (Keys.MediaPlayPause):
+                case Keys.MediaPlayPause:
                     return DeviceKeys.MEDIA_PLAY_PAUSE;
-                case (Keys.OemSemicolon):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.CLOSE_BRACKET;
-                    else*/
-                        return DeviceKeys.SEMICOLON;
-                case (Keys.Oemplus):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return DeviceKeys.CLOSE_BRACKET;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.MINUS;
-                    else*/
-                        return DeviceKeys.EQUALS;
-                case (Keys.Oemcomma):
+                case Keys.OemSemicolon:
+                    return DeviceKeys.SEMICOLON;
+                case Keys.Oemplus:
+                    return DeviceKeys.EQUALS;
+                case Keys.Oemcomma:
                     return DeviceKeys.COMMA;
-                case (Keys.OemMinus):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return DeviceKeys.FORWARD_SLASH;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.FORWARD_SLASH;
-                    else*/
-                        return DeviceKeys.MINUS;
-                case (Keys.OemPeriod):
+                case Keys.OemMinus:
+                    return DeviceKeys.MINUS;
+                case Keys.OemPeriod:
                     return DeviceKeys.PERIOD;
-                case (Keys.OemQuestion):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return DeviceKeys.HASHTAG;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.HASHTAG;
-                    else*/
-                        return DeviceKeys.FORWARD_SLASH;
-                case (Keys.ProcessKey):
+                case Keys.OemQuestion:
+                    return DeviceKeys.FORWARD_SLASH;
+                case Keys.ProcessKey:
                     return DeviceKeys.JPN_HALFFULLWIDTH;
-                case (Keys.Oemtilde):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
-                        return DeviceKeys.APOSTROPHE;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.SEMICOLON;
-                    else*/
-                        return DeviceKeys.TILDE;
-                case (Keys.OemOpenBrackets):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return DeviceKeys.MINUS;
-                    else if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.EQUALS;
-                    else*/
-                        return DeviceKeys.OPEN_BRACKET;
-                case (Keys.OemPipe):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
-                        return DeviceKeys.BACKSLASH_UK;
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.TILDE;
-                    else*/
-                        return DeviceKeys.BACKSLASH;
-                case (Keys.OemCloseBrackets):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.de)
-                        return DeviceKeys.EQUALS;
-                    if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.nordic)
-                        return DeviceKeys.OPEN_BRACKET;
-                    else*/
-                        return DeviceKeys.CLOSE_BRACKET;
-                case (Keys.OemQuotes):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
-                        return DeviceKeys.HASHTAG;
-                    else*/
-                        return DeviceKeys.APOSTROPHE;
-                case (Keys.OemBackslash):
+                case Keys.Oemtilde:
+                    return DeviceKeys.TILDE;
+                case Keys.OemOpenBrackets:
+                    return DeviceKeys.OPEN_BRACKET;
+                case Keys.OemPipe:
+                    return DeviceKeys.BACKSLASH;
+                case Keys.OemCloseBrackets:
+                    return DeviceKeys.CLOSE_BRACKET;
+                case Keys.OemQuotes:
+                    return DeviceKeys.APOSTROPHE;
+                case Keys.OemBackslash:
                     return DeviceKeys.BACKSLASH_UK;
-                case (Keys.Oem8):
-                    /*if (Global.kbLayout.Loaded_Localization == Settings.PreferredKeyboardLocalization.uk)
-                        return DeviceKeys.TILDE;
-                    else*/
-                        return DeviceKeys.OEM8;
-                case (Keys.Play):
+                case Keys.Oem8:
+                    return DeviceKeys.OEM8;
+                case Keys.Play:
                     return DeviceKeys.MEDIA_PLAY;
                 default:
                     return DeviceKeys.NONE;

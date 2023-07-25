@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using Aurora.EffectsEngine;
 using Aurora.Profiles;
@@ -67,7 +68,7 @@ namespace Aurora.Settings.Layers {
             _invalidated = true;
         }
 
-        private void InputEvents_KeyDown(object sender, SharpDX.RawInput.KeyboardInputEventArgs e)
+        private void InputEvents_KeyDown(object sender, EventArgs e)
         {
             foreach (var kb in Properties.TriggerKeys)
                 if (kb.IsPressed())

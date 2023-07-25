@@ -933,10 +933,10 @@ public class KeyboardLayoutManager
             VirtualKeyboard.Children.Clear();
             VirtualKeyboard = newVirtualKeyboard;
 
-            Effects.grid_baseline_x = (float) baselineX;
-            Effects.grid_baseline_y = (float) baselineY;
-            Effects.grid_height = (float) newVirtualKeyboard.Height;
-            Effects.grid_width = (float) newVirtualKeyboard.Width;
+            Effects.GridBaselineX = (float) baselineX;
+            Effects.GridBaselineY = (float) baselineY;
+            Effects.GridHeight = (float) newVirtualKeyboard.Height;
+            Effects.GridWidth = (float) newVirtualKeyboard.Width;
 
             _virtualKbInvalid = false;
         }

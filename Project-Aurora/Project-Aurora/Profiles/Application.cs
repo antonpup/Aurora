@@ -408,7 +408,7 @@ namespace Aurora.Profiles
 
             if (EffectScripts.ContainsKey(key))
             {
-                Global.logger.Warn(string.Format("Effect script with key {0} already exists!", key));
+                Global.logger.Warning(string.Format("Effect script with key {0} already exists!", key));
                 return false;
             }
 
@@ -527,7 +527,7 @@ namespace Aurora.Profiles
                                 if (Global.PythonEngine.Operations.CreateInstance(v.Value) is IEffectScript obj)
                                 {
                                     if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
-                                        Global.logger.Warn($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
+                                        Global.logger.Warning($"Script \"{script}\" must have a unique string ID variable for the effect {v.Key}");
                                     else
                                         anyLoaded = true;
                                 }
@@ -545,7 +545,7 @@ namespace Aurora.Profiles
                                 if (!effectType.IsAssignableFrom(typ)) continue;
                                 IEffectScript obj = (IEffectScript)Activator.CreateInstance(typ);
                                 if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
-                                    Global.logger.Warn("Script {Script} must have a unique string ID variable for the effect {FullName}",
+                                    Global.logger.Warning("Script {Script} must have a unique string ID variable for the effect {FullName}",
                                         script, typ.FullName);
                                 else
                                     anyLoaded = true;
@@ -553,12 +553,12 @@ namespace Aurora.Profiles
 
                             break;
                         default:
-                            Global.logger.Warn("Script with path {Script} has an unsupported type/ext! ({Ext})", script, ext);
+                            Global.logger.Warning("Script with path {Script} has an unsupported type/ext! ({Ext})", script, ext);
                             continue;
                     }
 
                     if (!anyLoaded)
-                        Global.logger.Warn($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
+                        Global.logger.Warning($"Script \"{script}\": No compatible effects found. Does this script need to be updated?");
                 }
                 catch (Exception exc)
                 {
@@ -619,7 +619,7 @@ namespace Aurora.Profiles
             }
             else
             {
-                Global.logger.Info(string.Format("Profiles directory for {0} does not exist.", Config.Name));
+                Global.logger.Information(string.Format("Profiles directory for {0} does not exist.", Config.Name));
             }
 
             if (Profile == null)

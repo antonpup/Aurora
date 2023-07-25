@@ -3,26 +3,27 @@ using System.Threading.Tasks;
 using Aurora.Modules.Razer;
 using Lombok.NET;
 using RazerSdkWrapper;
+using RazerSdkWrapper.Data;
 
 namespace Aurora.Modules;
 
-public sealed partial class RazerSdkModule : IAuroraModule
+public sealed partial class RazerSdkModule : AuroraModule
 {
     private readonly TaskCompletionSource<RzSdkManager?> _sdkTaskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private RzSdkManager? _razerSdkManager;
 
     public Task<RzSdkManager?> RzSdkManager => _sdkTaskSource.Task;
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
-        Global.logger.Info("Loading RazerSdkManager");
+        Global.logger.Information("Loading RazerSdkManager");
         if (RzHelper.IsSdkVersionSupported(RzHelper.GetSdkVersion()))
         {
             try
             {
                 TryLoadChroma();
 
-                Global.logger.Info("RazerSdkManager loaded successfully!");
+                Global.logger.Information("RazerSdkManager loaded successfully!");
                 _sdkTaskSource.SetResult(_razerSdkManager);
             }
             catch (Exception exc)
@@ -34,7 +35,7 @@ public sealed partial class RazerSdkModule : IAuroraModule
         }
         else
         {
-            Global.logger.Warn("Currently installed razer sdk version \"{RzVersion}\" is not supported by the RazerSdkManager!",
+            Global.logger.Warning("Currently installed razer sdk version \"{RzVersion}\" is not supported by the RazerSdkManager!",
                 RzHelper.GetSdkVersion());
             _sdkTaskSource.SetResult(null);
         }
@@ -51,13 +52,13 @@ public sealed partial class RazerSdkModule : IAuroraModule
             HeadsetEnabled = true,
             ChromaLinkEnabled = true,
         };
+        var rzKeyboardDataProvider = _razerSdkManager.GetDataProvider<RzKeyboardDataProvider>();
         Global.razerSdkManager = _razerSdkManager;
 
         _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
 
         RzHelper.Initialize();
     }
-
 
     [Async]
     public override void Dispose()

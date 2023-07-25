@@ -152,7 +152,7 @@ namespace Aurora.Profiles.GTA5.GSI
 
             if(stateColors.TryGetValue(state_color, out var newState))
             {
-               // Global.logger.Info("Set game state to " + newState);
+               // Global.logger.Information("Set game state to " + newState);
                 CurrentState = newState;
             }
             else

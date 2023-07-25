@@ -3,60 +3,55 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Aurora.Utils
+namespace Aurora.Utils;
+
+internal sealed class MessagePumpThread : IDisposable
 {
-	internal sealed class MessagePumpThread : IDisposable
+	private Thread? _thread;
+	private readonly TaskCompletionSource<Exception> _initResult = new();
+	private ApplicationContext? _applicationContext;
+
+	public void Start(Action init)
 	{
-		private Thread thread;
-		private readonly TaskCompletionSource<Exception> initResult = new();
-		private ApplicationContext applicationContext;
-
-		public void Start(Action init)
+		_thread = new Thread(() =>
 		{
-			thread = new Thread(() =>
+			try
 			{
-				try
+				using (_applicationContext = new ApplicationContext())
 				{
-					using (applicationContext = new ApplicationContext())
-					{
-						init();
-					}
-				}
-				catch (Exception e)
-				{
-					if (!initResult.TrySetResult(e))
-					{
-						Global.logger.Error("Exception in dedicated message pump thread. Exception: " + e);
-					}
-				}
-			});
-			thread.SetApartmentState(ApartmentState.STA);
-			thread.Start();
-
-			if (initResult.Task.Result != null)
-				throw initResult.Task.Result;
-		}
-
-		public void EnterMessageLoop()
-		{
-			initResult.SetResult(null);
-			Application.Run(applicationContext);
-		}
-
-		private bool disposed;
-
-		public void Dispose()
-		{
-			if (!disposed)
-			{
-				disposed = true;
-				if (applicationContext != null)
-				{
-					applicationContext.ExitThread();
-					thread.Join(TimeSpan.Zero);
-					applicationContext.Dispose();
+					init();
 				}
 			}
-		}
+			catch (Exception e)
+			{
+				if (!_initResult.TrySetResult(e))
+				{
+					Global.logger.Error("Exception in dedicated message pump thread. Exception: " + e);
+				}
+			}
+		});
+		_thread.SetApartmentState(ApartmentState.STA);
+		_thread.Start();
+
+		if (_initResult.Task.Result != null)
+			throw _initResult.Task.Result;
+	}
+
+	public void EnterMessageLoop()
+	{
+		_initResult.SetResult(null);
+		Application.Run(_applicationContext);
+	}
+
+	private bool _disposed;
+
+	public void Dispose()
+	{
+		if (_disposed) return;
+		_disposed = true;
+		if (_applicationContext == null) return;
+		_applicationContext.ExitThread();
+		_thread.Join(TimeSpan.Zero);
+		_applicationContext.Dispose();
 	}
 }

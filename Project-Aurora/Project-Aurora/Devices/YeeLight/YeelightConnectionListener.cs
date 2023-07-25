@@ -53,7 +53,7 @@ public class YeelightConnectionListener
         _listener.MulticastLoopback = true;
 
         _listener.BeginReceive(OnReceive, _listener);
-        Global.logger.Info("Listening for Yeelight broadcast messages on port 1982...");
+        Global.logger.Information("Listening for Yeelight broadcast messages on port 1982...");
     }
 
     public void StopListeningConnections()

@@ -9,6 +9,7 @@ using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
 using Aurora.Profiles.EliteDangerous.Journal;
+using Aurora.Utils;
 using CSScripting;
 using Newtonsoft.Json;
 
@@ -124,7 +125,7 @@ namespace Aurora.Profiles.EliteDangerous
                 
             if (newInfo.LastWriteTime > currentInfo.LastWriteTime)
             { 
-                Global.logger.Info("A newer journal file was created: " + e.FullPath);
+                Global.logger.Information("A newer journal file was created: " + e.FullPath);
                 currentJournalFile = e.FullPath;
                 FileWatcher.ReadFileLines(currentJournalFile, JournalReadCallback);
                 WatchJournalFile();
@@ -223,8 +224,8 @@ namespace Aurora.Profiles.EliteDangerous
                         currentGamePath = active.MainModule?.FileName;
                         defaultBindsDirectory = GetDefaultBindsDirectoryFromGamePath(currentGamePath);
                         
-                        Global.logger.Info("Game process path: " + currentGamePath);
-                        Global.logger.Info("Directory from process path: " + defaultBindsDirectory);
+                        Global.logger.Information("Game process path: " + currentGamePath);
+                        Global.logger.Information("Directory from process path: " + defaultBindsDirectory);
                     }
 
                     if (defaultBindsDirectory != null)
@@ -233,7 +234,7 @@ namespace Aurora.Profiles.EliteDangerous
                         currentBindFile = SearchForBindsFile(defaultBindsDirectory, currentBindPrefix[1]);
                         if (currentBindFile != null)
                         {
-                            Global.logger.Info("Found default binds file: " + currentBindFile);
+                            Global.logger.Information("Found default binds file: " + currentBindFile);
                         }
                     }
                 }
@@ -349,20 +350,13 @@ namespace Aurora.Profiles.EliteDangerous
             controls.bindToCommand = bindToCommand;
         }
         
-        [DllImport("user32.dll")]
-        static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll", SetLastError=true)]
-        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-        
         public Process GetActiveProcess()
         {
-            IntPtr handle = GetForegroundWindow();
-            uint pID;
-   
-            GetWindowThreadProcessId(handle, out pID);
+            IntPtr handle = User32.GetForegroundWindow();
 
-            return Process.GetProcessById((Int32)pID);
+            User32.GetWindowThreadProcessId(handle, out var pId);
+
+            return Process.GetProcessById((Int32)pId);
         }
 
         public override void OnStart()

@@ -2,200 +2,196 @@
 using Aurora.Settings;
 using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Aurora.Controls
+namespace Aurora.Controls;
+
+/// <summary>
+/// Interaction logic for Control_DeviceItem.xaml
+/// </summary>
+public partial class Control_DeviceItem
 {
-    /// <summary>
-    /// Interaction logic for Control_DeviceItem.xaml
-    /// </summary>
-    public partial class Control_DeviceItem
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register(nameof(Device), typeof(DeviceContainer), typeof(Control_DeviceItem));
+
+    private static MouseButtonEventHandler _sdkLinkOnMouseDoubleClick;
+    private readonly Timer _updateControlsTimer;
+
+    public DeviceContainer Device
     {
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-        public static readonly DependencyProperty DeviceProperty = DependencyProperty.Register("Device", typeof(DeviceContainer), typeof(Control_DeviceItem));
+        get => (DeviceContainer)GetValue(DeviceProperty);
+        set => SetValue(DeviceProperty, value);
+    }
 
-        private static MouseButtonEventHandler _sdkLinkOnMouseDoubleClick;
+    public Control_DeviceItem()
+    {
+        InitializeComponent();
 
-        public DeviceContainer Device
+        _updateControlsTimer = new Timer(1000);
+        WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(
+            _updateControlsTimer,
+            nameof(_updateControlsTimer.Elapsed),
+            Update_controls_timer_Elapsed);
+    }
+
+    private void Update_controls_timer_Elapsed(object sender, ElapsedEventArgs e)
+    {
+        try
         {
-            get => (DeviceContainer)GetValue(DeviceProperty);
-            set
-            {
-                SetValue(DeviceProperty, value);
-
-                UpdateControls();
-            }
+            Dispatcher.Invoke(() => { if (IsVisible) UpdateControls(); });
         }
-
-        public Control_DeviceItem()
+        catch (Exception ex)
         {
-            InitializeComponent();
-
-            Timer update_controls_timer = new Timer(1000); //Update every second
-            WeakEventManager<Timer, ElapsedEventArgs>.AddHandler(
-                update_controls_timer,
-                nameof(update_controls_timer.Elapsed),
-                Update_controls_timer_Elapsed);
-            update_controls_timer.Start();
+            Global.logger.Warning("DeviceItem update error:", ex);
         }
+    }
 
-        private void Update_controls_timer_Elapsed(object sender, ElapsedEventArgs e)
+    private void btnToggleOnOff_Click(object sender, RoutedEventArgs e)
+    {
+        btnStart.Content = "Working...";
+        btnStart.IsEnabled = false;
+        var device = Device;
+        Task.Run(async () =>
         {
-            try
+            if (device.Device.IsInitialized)
             {
-                Dispatcher.Invoke(() => { if (IsVisible) UpdateControls(); });
+                await device.DisableDevice().ConfigureAwait(false);
             }
-            catch (Exception ex)
+            else
             {
-                Global.logger.Warn("DeviceItem update error:", ex);
+                await device.EnableDevice();
             }
+
+            Dispatcher.Invoke(UpdateControls);
+        });
+    }
+
+    private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
+    {
+        if (!Global.Configuration.EnabledDevices.Contains(Device.Device.GetType()))
+        {
+            Global.Configuration.EnabledDevices.Add(Device.Device.GetType());
+            UpdateControls();
         }
-
-        private void btnToggleOnOff_Click(object sender, RoutedEventArgs e)
+        else
         {
+            Global.Configuration.EnabledDevices.Remove(Device.Device.GetType());
+            var device = Device;
             btnStart.Content = "Working...";
             btnStart.IsEnabled = false;
-            var device = Device;
             Task.Run(async () =>
             {
                 if (device.Device.IsInitialized)
                 {
-                    await device.DisableDevice().ConfigureAwait(false);
-                }
-                else
-                {
-                    await device.EnableDevice();
+                    await device.DisableDevice();
                 }
 
                 Dispatcher.Invoke(UpdateControls);
             });
         }
+    }
 
-        private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        UpdateControls();
+        _updateControlsTimer.Start();
+    }
+
+    private void Control_DeviceItem_OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        _updateControlsTimer.Stop();
+    }
+
+    private void UpdateControls()
+    {
+        if (Device.Device.isDoingWork)
+        {
+            btnStart.Content = "Working...";
+            btnStart.IsEnabled = false;
+            btnEnable.IsEnabled = false;
+        }
+        else if (Device.Device.IsInitialized)
+        {
+            btnStart.Content = "Stop";
+            btnStart.IsEnabled = true;
+            btnEnable.IsEnabled = true;
+        }
+        else
+        {
+            btnStart.Content = "Start";
+            btnStart.IsEnabled = true;
+            btnEnable.IsEnabled = true;
+        }
+
+        deviceName.Text = Device.Device.DeviceName;
+        deviceDetails.Text = Device.Device.DeviceDetails;
+        devicePerformance.Text = Device.Device.DeviceUpdatePerformance;
+
+        Beta.Visibility = Device.Device.Tooltips.Beta ? Visibility.Visible : Visibility.Hidden;
+            
+        var infoTooltip = Device.Device.Tooltips.Info;
+        if (infoTooltip != null)
+        {
+            InfoTooltip.HintTooltip = infoTooltip;
+            InfoTooltip.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            InfoTooltip.Visibility = Visibility.Hidden;
+        }
+
+
+        var sdkLink = Device.Device.Tooltips.SdkLink;
+        if (sdkLink != null)
+        {
+            SdkLink.MouseDoubleClick -= SdkLink_Clicked;
+            SdkLink.MouseDoubleClick += SdkLink_Clicked;
+            SdkLink.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            SdkLink.MouseDoubleClick -= SdkLink_Clicked;
+            SdkLink.Visibility = Visibility.Hidden;
+        }
+
+        Recommended.Visibility = Device.Device.Tooltips.Recommended ? Visibility.Visible : Visibility.Hidden;
+
+        if (Device is Devices.ScriptedDevice.ScriptedDevice)
+            btnEnable.IsEnabled = false;
+        else
         {
             if (!Global.Configuration.EnabledDevices.Contains(Device.Device.GetType()))
             {
-                Global.Configuration.EnabledDevices.Add(Device.Device.GetType());
-                UpdateControls();
-            }
-            else
-            {
-                Global.Configuration.EnabledDevices.Remove(Device.Device.GetType());
-                var device = Device;
-                btnStart.Content = "Working...";
+                btnEnable.Content = "Enable";
                 btnStart.IsEnabled = false;
-                Task.Run(async () =>
-                {
-                    if (device.Device.IsInitialized)
-                    {
-                        await device.DisableDevice();
-                    }
-
-                    Dispatcher.Invoke(UpdateControls);
-                });
             }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            UpdateControls();
-        }
-
-        private void UpdateControls()
-        {
-            if (Device.Device.isDoingWork)
+            else if (!Device.Device.isDoingWork)
             {
-                btnStart.Content = "Working...";
-                btnStart.IsEnabled = false;
-                btnEnable.IsEnabled = false;
-            }
-            else if (Device.Device.IsInitialized)
-            {
-                btnStart.Content = "Stop";
+                btnEnable.Content = "Disable";
                 btnStart.IsEnabled = true;
-                btnEnable.IsEnabled = true;
             }
-            else
-            {
-                btnStart.Content = "Start";
-                btnStart.IsEnabled = true;
-                btnEnable.IsEnabled = true;
-            }
-
-            deviceName.Text = Device.Device.DeviceName;
-            deviceDetails.Text = Device.Device.DeviceDetails;
-            devicePerformance.Text = Device.Device.DeviceUpdatePerformance;
-
-            Beta.Visibility = Device.Device.Tooltips.Beta ? Visibility.Visible : Visibility.Hidden;
-            
-            var infoTooltip = Device.Device.Tooltips.Info;
-            if (infoTooltip != null)
-            {
-                InfoTooltip.HintTooltip = infoTooltip;
-                InfoTooltip.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                InfoTooltip.Visibility = Visibility.Hidden;
-            }
-
-
-            var sdkLink = Device.Device.Tooltips.SdkLink;
-            if (sdkLink != null)
-            {
-                SdkLink.MouseDoubleClick -= SdkLink_Clicked;
-                SdkLink.MouseDoubleClick += SdkLink_Clicked;
-                SdkLink.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                SdkLink.MouseDoubleClick -= SdkLink_Clicked;
-                SdkLink.Visibility = Visibility.Hidden;
-            }
-
-            Recommended.Visibility = Device.Device.Tooltips.Recommended ? Visibility.Visible : Visibility.Hidden;
-
-            if (Device is Devices.ScriptedDevice.ScriptedDevice)
-                btnEnable.IsEnabled = false;
-            else
-            {
-                if (!Global.Configuration.EnabledDevices.Contains(Device.Device.GetType()))
-                {
-                    btnEnable.Content = "Enable";
-                    btnStart.IsEnabled = false;
-                }
-                else if (!Device.Device.isDoingWork)
-                {
-                    btnEnable.Content = "Disable";
-                    btnStart.IsEnabled = true;
-                }
-            }
-
-            if (!Device.Device.RegisteredVariables.GetRegisteredVariableKeys().Any())
-                btnOptions.IsEnabled = false;
         }
+    }
 
-        private void SdkLink_Clicked(object sender, MouseButtonEventArgs e)
+    private void SdkLink_Clicked(object sender, MouseButtonEventArgs e)
+    {
+        System.Diagnostics.Process.Start("explorer", Device.Device.Tooltips.SdkLink);
+    }
+
+    private void btnViewOptions_Click(object sender, RoutedEventArgs e)
+    {
+        Window_VariableRegistryEditor optionsWindow = new Window_VariableRegistryEditor();
+        optionsWindow.Title = $"{Device.Device.DeviceName} - Options";
+        optionsWindow.SizeToContent = SizeToContent.WidthAndHeight;
+        optionsWindow.VarRegistryEditor.RegisteredVariables = Device.Device.RegisteredVariables;
+        optionsWindow.Closing += (_, _) =>
         {
-            System.Diagnostics.Process.Start("explorer", Device.Device.Tooltips.SdkLink);
-        }
+            ConfigManager.Save(Global.Configuration);
+        };
 
-        private void btnViewOptions_Click(object sender, RoutedEventArgs e)
-        {
-            Window_VariableRegistryEditor optionsWindow = new Window_VariableRegistryEditor();
-            optionsWindow.Title = $"{Device.Device.DeviceName} - Options";
-            optionsWindow.SizeToContent = SizeToContent.WidthAndHeight;
-            optionsWindow.VarRegistryEditor.RegisteredVariables = Device.Device.RegisteredVariables;
-            optionsWindow.Closing += (_, _) =>
-            {
-                ConfigManager.Save(Global.Configuration);
-            };
-
-            optionsWindow.ShowDialog();
-        }
+        optionsWindow.ShowDialog();
     }
 }

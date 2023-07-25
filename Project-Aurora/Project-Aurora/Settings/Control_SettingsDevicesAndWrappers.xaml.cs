@@ -1,14 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Aurora.Devices.RGBNet.Config;
+using Aurora.Devices;
+using Aurora.Modules;
 using Aurora.Modules.Razer;
 using Aurora.Utils;
+using Microsoft.Win32;
 using RazerSdkWrapper;
 using RazerSdkWrapper.Data;
 using Application = System.Windows.Application;
@@ -19,10 +22,15 @@ namespace Aurora.Settings;
 public partial class Control_SettingsDevicesAndWrappers
 {
     private readonly Task<KeyboardLayoutManager> _layoutManager;
+    private readonly Task<RzSdkManager?> _rzSdkManager;
+    private readonly Task<DeviceManager> _deviceManager;
     
-    public Control_SettingsDevicesAndWrappers(Task<RzSdkManager?> rzSdkManager, Task<KeyboardLayoutManager> layoutManager)
+    public Control_SettingsDevicesAndWrappers(Task<RzSdkManager?> rzSdkManager, Task<KeyboardLayoutManager> layoutManager,
+        Task<DeviceManager> deviceManager)
     {
+        _rzSdkManager = rzSdkManager;
         _layoutManager = layoutManager;
+        _deviceManager = deviceManager;
 
         InitializeComponent();
 
@@ -35,14 +43,17 @@ public partial class Control_SettingsDevicesAndWrappers
 
         if (rzVersion == new RzSdkVersion())
             ChromaUninstallButton.Visibility = Visibility.Hidden;
+    }
 
-        var razerManager = rzSdkManager.Result;
+    public async Task Initialize()
+    {
+        var razerManager = await _rzSdkManager;
         if (razerManager != null)
         {
             ChromaConnectionStatusLabel.Content = "Success";
             ChromaConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.LightGreen);
 
-            var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
+            var appList = razerManager.GetDataProvider<RzAppListDataProvider>();
             appList.Update();
             ChromaCurrentApplicationLabel.Content = $"{appList.CurrentAppExecutable ?? "None"} [{appList.CurrentAppPid}]";
 
@@ -54,24 +65,48 @@ public partial class Control_SettingsDevicesAndWrappers
             ChromaConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
             ChromaDisableDeviceControlButton.IsEnabled = false;
         }
+
+        var logitechSdkListener = LogitechSdkModule.LogitechSdkListener;
+        LightsyncConnectionStatusLabel.Content = "Disconnected";
+        LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+        logitechSdkListener.ApplicationChanged += LogitechSdkListenerOnApplicationChanged;
     }
 
-    private void HandleChromaAppChange(object s, EventArgs _)
+    private void HandleChromaAppChange(object? s, EventArgs _)
     {
         if (s is not RzAppListDataProvider appList) return;
 
         appList.Update();
-        Global.logger.Debug("RazerManager current app: {Exe} [{Pid}]", appList.CurrentAppExecutable ?? "None", appList.CurrentAppPid);
         Dispatcher.BeginInvoke(DispatcherPriority.Background, 
-            (Action) (() => ChromaCurrentApplicationLabel.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]"));
+            () => ChromaCurrentApplicationLabel.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]");
     }
 
-    private void LoadBrandDefault(object sender, SelectionChangedEventArgs e)
+    private void LogitechSdkListenerOnApplicationChanged(object? sender, string? e)
     {
-        _layoutManager.Result.LoadBrandDefault();
+        Dispatcher.BeginInvoke(DispatcherPriority.Background, 
+            () =>
+            {
+                if (e == null)
+                {
+                    LightsyncConnectionStatusLabel.Content = "Disconnected";
+                    LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                    LightsyncCurrentApplicationLabel.Content = "";
+                }
+                else
+                {
+                    LightsyncConnectionStatusLabel.Content = "Connected";
+                    LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.LightGreen);
+                    LightsyncCurrentApplicationLabel.Content = Path.GetFileName(e);
+                }
+            });
     }
 
-    private void ResetDevices(object sender, RoutedEventArgs e) => Task.Run(async () => await Global.dev_manager.ResetDevices());
+    private async void LoadBrandDefault(object sender, SelectionChangedEventArgs e)
+    {
+        (await _layoutManager).LoadBrandDefault();
+    }
+
+    private void ResetDevices(object sender, RoutedEventArgs e) => Task.Run(async () => await (await _deviceManager).ResetDevices());
 
     private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
     {
@@ -105,14 +140,11 @@ public partial class Control_SettingsDevicesAndWrappers
                         return false;
                     }
 
-                    if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
-                    {
-                        ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.",
-                            "Restart required!");
-                        return false;
-                    }
+                    if (t.Result != (int)RazerChromaInstallerExitCode.RestartRequired) return true;
+                    ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.",
+                        "Restart required!");
+                    return false;
 
-                    return true;
                 })
                 .ConfigureAwait(false);
 
@@ -156,7 +188,7 @@ public partial class Control_SettingsDevicesAndWrappers
         {
             ShowMessageBox(ae.ToString(), "Exception!", MessageBoxImage.Error);
             ae.Handle(ex => {
-                Global.logger.Error(ex.ToString());
+                Global.logger.Error(ex, "Razer wrapper uninstall error");
                 return true;
             });
         }
@@ -197,6 +229,55 @@ public partial class Control_SettingsDevicesAndWrappers
         await RazerChromaUtils.DisableDeviceControlAsync();
     }
 
+    private void Lightsync_install_button_Click(object sender, RoutedEventArgs e)
+    {
+        const string wrapperFolder = "C:\\ProgramData\\Aurora";
+        const string dllName = "LogitechLed.dll";
+        
+        using var httpClient = new HttpClient();
+
+        try
+        {
+            {
+                const string logiX64 =
+                    "https://raw.githubusercontent.com/Artemis-RGB/Artemis.Plugins.Wrappers/04d1f6acf3a93b0c883118f174b18ced8e264a84/src/Logitech/Artemis.Plugins.Wrappers.Logitech/x64/LogitechLed.dll";
+                var x64DllFolder = Path.Combine(wrapperFolder, "x64");
+                var x64DllPath = Path.Combine(x64DllFolder, dllName);
+                
+                var x64Response = httpClient.GetAsync(new Uri(logiX64));
+                Directory.CreateDirectory(x64DllFolder);
+                using var fs = new FileStream(x64DllPath, FileMode.Create);
+                x64Response.Result.Content.CopyToAsync(fs).Wait();
+
+                using var key =
+                    Registry.LocalMachine.OpenSubKey(
+                        @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
+                key.SetValue(null, x64DllPath);
+            }
+
+            {
+                var logiX86 =
+                    "https://raw.githubusercontent.com/Artemis-RGB/Artemis.Plugins.Wrappers/04d1f6acf3a93b0c883118f174b18ced8e264a84/src/Logitech/Artemis.Plugins.Wrappers.Logitech/x86/LogitechLed.dll";
+                var x86DllFolder = Path.Combine(wrapperFolder, "x86");
+                
+                var x86Response = httpClient.GetAsync(new Uri(logiX86));
+                Directory.CreateDirectory(x86DllFolder);
+                var x86DllPath = Path.Combine(x86DllFolder, dllName);
+                using var fs = new FileStream(x86DllPath, FileMode.Create);
+                x86Response.Result.Content.CopyToAsync(fs).Wait();
+
+                using var key = Registry.LocalMachine.OpenSubKey(
+                    @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
+                key.SetValue(null, x86DllPath);
+            }
+            MessageBox.Show("Logitech wrapper installed!");
+        }
+        catch (Exception exc)
+        {
+            MessageBox.Show(exc.Message, "Error installing Lightsync wrapper!");
+        }
+    }
+
     private void wrapper_install_lightfx_32_Click(object sender, RoutedEventArgs e)
     {
         try
@@ -214,7 +295,7 @@ public partial class Control_SettingsDevicesAndWrappers
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Exception during LightFX (32 bit) Wrapper install. Exception: " + exc);
+            Global.logger.Error(exc, "Exception during LightFX (32 bit) Wrapper install. Exception: ");
             MessageBox.Show("Aurora Wrapper Patch for LightFX (32 bit) could not be applied.\r\nException: " + exc.Message);
         }
     }

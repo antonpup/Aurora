@@ -5,7 +5,7 @@ using Lombok.NET;
 
 namespace Aurora.Modules;
 
-public sealed partial class LayoutsModule : IAuroraModule
+public sealed partial class LayoutsModule : AuroraModule
 {
     private KeyboardLayoutManager _layoutManager;
     private readonly TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -18,13 +18,13 @@ public sealed partial class LayoutsModule : IAuroraModule
         return Task.CompletedTask;
     }
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
-        Global.logger.Info("Loading KB Layouts");
+        Global.logger.Information("Loading KB Layouts");
         _layoutManager = new KeyboardLayoutManager();
         Global.kbLayout = _layoutManager;
         Global.kbLayout.LoadBrandDefault();
-        Global.logger.Info("Loaded KB Layouts");
+        Global.logger.Information("Loaded KB Layouts");
         _taskCompletionSource.SetResult(_layoutManager);
     }
 

@@ -12,14 +12,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Aurora.Devices;
 using Aurora.Modules;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.ProcessMonitor;
 using Aurora.Settings;
 using Aurora.Utils;
 using Microsoft.Win32;
-using NLog;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Aurora;
@@ -38,28 +36,32 @@ public partial class App
     private static readonly PluginsModule PluginsModule = new();
     private static readonly IpcListenerModule IpcListenerModule = new();
     private static readonly HttpListenerModule HttpListenerModule = new();
-    private static readonly LightningStateManagerModule LightningStateManagerModule = new(
-        PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener);
     private static readonly RazerSdkModule RazerSdkModule = new();
+    private static readonly DevicesModule DevicesModule = new(RazerSdkModule.RzSdkManager);
+    private static readonly LightningStateManagerModule LightningStateManagerModule = new(
+        PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener, DevicesModule.DeviceManager);
     private static readonly LayoutsModule LayoutsModule = new();
 
-    private readonly List<IAuroraModule> _modules = new()
+    private readonly List<AuroraModule> _modules = new()
     {
-        new InputsModule(),
         new UpdateCleanup(),
-        LayoutsModule,
+        new InputsModule(),
         new MediaInfoModule(),
         new AudioCaptureModule(),
+        new PointerUpdateModule(),
+        new HardwareMonitorModule(),
+        new LogitechSdkModule(),
         PluginsModule,
         IpcListenerModule,
         HttpListenerModule,
-        LightningStateManagerModule,
         RazerSdkModule,
-        new PointerUpdateModule(),
-        new HardwareMonitorModule(),
+        DevicesModule,
+        LayoutsModule,
+        LightningStateManagerModule,
+        new PerformanceMonitor(Task.FromResult(RunningProcessMonitor.Instance)),
     };
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
@@ -102,11 +104,10 @@ public partial class App
         if (!Global.isDebug)
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-        Global.dev_manager = new DeviceManager();
-        Global.effengine = new Effects();
+        Global.effengine = new Effects(DevicesModule.DeviceManager);
 
         //Load config
-        Global.logger.Info("Loading Configuration");
+        Global.logger.Information("Loading Configuration");
         Global.Configuration = ConfigManager.Load();
 
         if (Global.Configuration.HighPriority)
@@ -118,23 +119,20 @@ public partial class App
             DesktopUtils.CheckUpdate();
         }
 
+        WindowListener.Instance = new WindowListener();
         var initModules = _modules.Select(async m => await m.InitializeAsync())
             .Where(t => t!= null).ToArray();
 
-        Global.dev_manager.RegisterVariables();
-        RazerSdkModule.RzSdkManager.ContinueWith(_ => //Razer device needs this
-        {
-            Global.logger.Info("Loading Device Manager");
-            return Global.dev_manager.InitializeDevices();
-        });
+        Global.logger.Information("Loading ConfigUI...");
+        var configUi = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
+            HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager);
+        MainWindow = configUi;
+        await configUi.Initialize();
 
-        MainWindow = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
-            HttpListenerModule.HttpListener, IpcListenerModule.IpcListener);
-
-        //Task.WaitAll(initModules);    //FIXME figure out this
-        Global.logger.Info("Loading ConfigUI...");
+        Global.logger.Information("Waiting for modules...");
+        await Task.WhenAll(initModules);
         ((ConfigUI)MainWindow).DisplayIfNotSilent();
-        //Task.WaitAll(initModules);    //FIXME figure out this
+        WindowListener.Instance.StartListening();
 
         //Debug Windows on Startup
         if (Global.Configuration.BitmapWindowOnStartUp)
@@ -159,7 +157,7 @@ public partial class App
             {
                 case "-debug":
                     Global.isDebug = true;
-                    Global.logger.Info("Program started in debug mode.");
+                    Global.logger.Information("Program started in debug mode.");
                     break;
                 case "-restart":
                     var pid = int.Parse(e.Args[++i]);
@@ -173,16 +171,16 @@ public partial class App
                 case "-minimized":
                 case "-silent":
                     IsSilent = true;
-                    Global.logger.Info("Program started with '-silent' parameter");
+                    Global.logger.Information("Program started with '-silent' parameter");
                     break;
                 case "-ignore_update":
                     _ignoreUpdate = true;
-                    Global.logger.Info("Program started with '-ignore_update' parameter");
+                    Global.logger.Information("Program started with '-ignore_update' parameter");
                     break;
                 case "-delay":
                     if (i + 1 >= e.Args.Length || !int.TryParse(e.Args[i++], out var delayTime))
                         delayTime = 5000;
-                    Global.logger.Info("Program started with '-delay' parameter with delay of " + delayTime + " ms");
+                    Global.logger.Information("Program started with '-delay' parameter with delay of " + delayTime + " ms");
                     Thread.Sleep(delayTime);
                     break;
             }
@@ -196,7 +194,7 @@ public partial class App
 
         try
         {
-            var winReg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
+            using var winReg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
             var productName = (string)winReg.GetValue("ProductName");
 
             systemInfoSb.Append($"Operation System: {productName}\r\n");
@@ -227,7 +225,7 @@ public partial class App
             $"Aurora File Version: {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}\r\n");
 
         systemInfoSb.Append("========================================\r\n");
-        Global.logger.Info(systemInfoSb.ToString());
+        Global.logger.Information(systemInfoSb.ToString());
     }
 
     protected override void OnExit(ExitEventArgs e)
@@ -242,15 +240,13 @@ public partial class App
         if (Global.Configuration != null)
             ConfigManager.Save(Global.Configuration);
 
-        var devicesShutdown = Global.dev_manager?.ShutdownDevices().ContinueWith(_ => Global.dev_manager.Dispose());
         var tasks = _modules.ConvertAll(m => m.DisposeAsync());
-        tasks.Add(devicesShutdown);
         
         var forceExitTimer = StartForceExitTimer();
 
         Task.WhenAll(tasks).Wait();
         forceExitTimer.GetApartmentState(); //statement just to keep referenced
-        LogManager.Flush();
+        //LogManager.Flush();
         Mutex.ReleaseMutex();
         Mutex.Dispose();
     }
@@ -297,7 +293,7 @@ public partial class App
         }
 
         Global.logger.Fatal($"Runtime terminating: {e.IsTerminating}");
-        LogManager.Flush();
+        //LogManager.Flush();
 
         if (!Global.Configuration.CloseProgramOnException) return;
         MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
@@ -316,7 +312,7 @@ public partial class App
         }
 
         Global.logger.Fatal(exc, "Fatal Exception caught : " + exc);
-        LogManager.Flush();
+        //LogManager.Flush();
         if (!Global.isDebug)
             e.Handled = true;
         else

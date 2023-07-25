@@ -1,39 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using SharpDX.RawInput;
 
 namespace Aurora.Modules.Inputs;
+
+public class KeyEvent : EventArgs
+{
+    public Keys Key { get; }
+
+    public KeyEvent(Keys key)
+    {
+        Key = key;
+    }
+}
+
+public class MouseScrollEvent : EventArgs
+{
+    public int WheelDelta { get; }
+
+    public MouseScrollEvent(int wheelDelta)
+    {
+        WheelDelta = wheelDelta;
+    }
+}
 
 public interface IInputEvents : IDisposable
 {
     /// <summary>
     /// Event for a Key pressed Down on a keyboard
     /// </summary>
-    event EventHandler<KeyboardInputEventArgs> KeyDown;
+    event EventHandler<KeyEvent> KeyDown;
 
     /// <summary>
     /// Event for a Key released on a keyboard
     /// </summary>
-    event EventHandler<KeyboardInputEventArgs> KeyUp;
+    event EventHandler<KeyEvent> KeyUp;
 
     /// <summary>
     /// Event that fires when a mouse button is pressed down.
     /// </summary>
-    event EventHandler<MouseInputEventArgs> MouseButtonDown;
+    event EventHandler<KeyEvent> MouseButtonDown;
 
     /// <summary>
     /// Event that fires when a mouse button is released.
     /// </summary>
-    event EventHandler<MouseInputEventArgs> MouseButtonUp;
+    event EventHandler<KeyEvent> MouseButtonUp;
 
     /// <summary>
     /// Event that fires when the mouse scroll wheel is scrolled.
     /// </summary>
-    event EventHandler<MouseInputEventArgs> Scroll;
+    event EventHandler<MouseScrollEvent> Scroll;
 
     IReadOnlyList<Keys> PressedKeys { get; }
-    MouseButtons[] PressedButtons { get; }
+    IReadOnlyList<MouseButtons> PressedButtons { get; }
     bool Shift { get; }
     bool Alt { get; }
     bool Control { get; }

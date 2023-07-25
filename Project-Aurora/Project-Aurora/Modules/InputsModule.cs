@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using Aurora.Utils;
@@ -10,9 +9,10 @@ using Aurora.Modules.Inputs;
 
 namespace Aurora.Modules;
 
-public sealed partial class InputsModule : IAuroraModule
+public sealed partial class InputsModule : AuroraModule
 {
-    private static InputInterceptor? InputInterceptor;
+    private static InputInterceptor? _inputInterceptor;
+    private IntPtr _hWnd;
 
     public override Task<bool> InitializeAsync()
     {
@@ -20,7 +20,7 @@ public sealed partial class InputsModule : IAuroraModule
         return Task.FromResult(true);
     }
 
-    public override void Initialize()
+    protected override async Task Initialize()
     {
         if (!Global.Configuration.EnableInputCapture)
         {
@@ -28,12 +28,12 @@ public sealed partial class InputsModule : IAuroraModule
         }
         else
         {
-            Global.logger.Info("Loading Input Hooking");
+            Global.logger.Information("Loading Input Hooking");
             Global.InputEvents = new InputEvents();
             Global.Configuration.PropertyChanged += SetupVolumeAsBrightness;
             SetupVolumeAsBrightness(Global.Configuration,
                 new PropertyChangedEventArgs(nameof(Global.Configuration.UseVolumeAsBrightness)));
-            Global.logger.Info("Loaded Input Hooking");
+            Global.logger.Information("Loaded Input Hooking");
         }
 
         DesktopUtils.StartSessionWatch();
@@ -46,22 +46,22 @@ public sealed partial class InputsModule : IAuroraModule
     {
         Global.key_recorder?.Dispose();
         Global.InputEvents?.Dispose();
-        InputInterceptor?.Dispose();
+        _inputInterceptor?.Dispose();
     }
 
     private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)
     {
-        if (eventArgs.PropertyName != nameof(Global.Configuration.UseVolumeAsBrightness)) return;
-        if (Global.Configuration.UseVolumeAsBrightness)
-        {
-            InputInterceptor = new InputInterceptor();
-            InputInterceptor.Input += InterceptVolumeAsBrightness;
-        }
-        else if (InputInterceptor != null)
-        {
-            InputInterceptor.Input -= InterceptVolumeAsBrightness;
-            InputInterceptor.Dispose();
-        }
+        //if (eventArgs.PropertyName != nameof(Global.Configuration.UseVolumeAsBrightness)) return;
+        //if (Global.Configuration.UseVolumeAsBrightness)
+        //{
+        //    InputInterceptor = new InputInterceptor();
+        //    InputInterceptor.Input += InterceptVolumeAsBrightness;
+        //}
+        //else if (InputInterceptor != null)
+        //{
+        //    InputInterceptor.Input -= InterceptVolumeAsBrightness;
+        //    InputInterceptor.Dispose();
+        //}
     }
 
     private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)

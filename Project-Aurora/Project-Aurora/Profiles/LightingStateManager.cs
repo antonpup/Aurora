@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Aurora.Devices;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.ProcessMonitor;
 
@@ -50,11 +51,13 @@ public sealed class LightingStateManager : IInit
 
     private readonly Task<PluginManager> _pluginManager;
     private readonly Task<IpcListener?> _ipcListener;
+    private readonly Task<DeviceManager> _deviceManager;
 
-    public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener)
+    public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager)
     {
         _pluginManager = pluginManager;
         _ipcListener = ipcListener;
+        _deviceManager = deviceManager;
     }
 
     public bool Initialized { get; private set; }
@@ -140,8 +143,15 @@ public sealed class LightingStateManager : IInit
                 Global.Configuration.ProfileOrder.Remove(key);
         }
 
-        Global.Configuration.ProfileOrder.Remove("desktop");
-        Global.Configuration.ProfileOrder.Insert(0, "desktop");
+        PutProfileTop("logitech");
+        PutProfileTop("chroma");
+        PutProfileTop("desktop");
+    }
+
+    private static void PutProfileTop(string profileId)
+    {
+        Global.Configuration.ProfileOrder.Remove(profileId);
+        Global.Configuration.ProfileOrder.Insert(0, profileId);
     }
 
     private void SaveAll()
@@ -281,7 +291,7 @@ public sealed class LightingStateManager : IInit
                 )
         {
             if (!Events.ContainsKey(value))
-                Global.logger.Warn($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles" +
+                Global.logger.Warning($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles" +
                                    $" but subsequently '{value}' does not in Events!");
             else
                 return Events[value]; // added in an else so we keep searching for more valid regexes.
@@ -294,7 +304,7 @@ public sealed class LightingStateManager : IInit
     {
         if (!EventAppIDs.ContainsKey(appid)) return Events.ContainsKey(appid) ? Events[appid] : null;
         if (!Events.ContainsKey(EventAppIDs[appid]))
-            Global.logger.Warn($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs" +
+            Global.logger.Warning($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs" +
                                $" but subsequently '{EventAppIDs[appid]}' does not in Events!");
         return Events[EventAppIDs[appid]];
 
@@ -360,7 +370,7 @@ public sealed class LightingStateManager : IInit
 
     private void UpdateProcess()
     {
-        if (Global.Configuration.DetectionMode != ApplicationDetectionMode.ForegroroundApp ||
+        if (Global.Configuration.DetectionMode != ApplicationDetectionMode.ForegroundApp ||
             _currentTick < _nextProcessNameUpdate) return;
         _processMonitor.UpdateActiveProcessPolling();
         _nextProcessNameUpdate = _currentTick + 1000L;
@@ -368,11 +378,11 @@ public sealed class LightingStateManager : IInit
 
     private void UpdateIdleEffects(EffectsEngine.EffectFrame newFrame)
     {
-        tagLASTINPUTINFO lastInput = new tagLASTINPUTINFO();
+        User32.tagLASTINPUTINFO lastInput = new User32.tagLASTINPUTINFO();
         lastInput.cbSize = (uint)Marshal.SizeOf(lastInput);
         lastInput.dwTime = 0;
 
-        if (!ActiveProcessMonitor.GetLastInputInfo(ref lastInput)) return;
+        if (!User32.GetLastInputInfo(ref lastInput)) return;
         var idleTime = Environment.TickCount - lastInput.dwTime;
 
         if (idleTime < Global.Configuration.IdleDelay * 60 * 1000) return;
@@ -451,7 +461,7 @@ public sealed class LightingStateManager : IInit
                 {
                     Global.effengine.PushFrame(newFrame);
                 }
-                Global.dev_manager.ShutdownDevices();
+                _deviceManager.Result.ShutdownDevices();
             }
 
             _profilesDisabled = true;
@@ -460,7 +470,7 @@ public sealed class LightingStateManager : IInit
 
         if (_profilesDisabled)
         {
-            Global.dev_manager.InitializeDevices();
+            _deviceManager.Result.InitializeDevices();
             _profilesDisabled = false;
         }
         debugTimer.Restart();
@@ -536,7 +546,7 @@ public sealed class LightingStateManager : IInit
 
     /// <summary>KeyDown handler that checks the current application's profiles for keybinds.
     /// In the case of multiple profiles matching the keybind, it will pick the next one as specified in the Application.Profile order.</summary>
-    private void CheckProfileKeybinds(object sender, SharpDX.RawInput.KeyboardInputEventArgs e)
+    private void CheckProfileKeybinds(object sender, EventArgs e)
     {
         ILightEvent profile = GetCurrentProfile();
 
@@ -597,7 +607,7 @@ public sealed class LightingStateManager : IInit
         }
         catch (Exception e)
         {
-            Global.logger.LogLine("Exception during GameStateUpdate(), error: " + e, Logging_Level.Warning);
+            Global.logger.Warning(e, "Exception during GameStateUpdate(), error: ");
         }
 #endif
     }

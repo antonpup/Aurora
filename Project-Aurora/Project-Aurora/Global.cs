@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
-using Aurora.Devices;
-using Aurora.Modules;
 using Aurora.Modules.AudioCapture;
 using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Settings;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
-using NLog;
 using RazerSdkWrapper;
+using Serilog;
 
 namespace Aurora;
 
@@ -27,71 +24,19 @@ public static class Global
     /// </summary>
     public static bool isDebug;
 
-    private static string _ExecutingDirectory = "";
-    private static string _AppDataDirectory = "";
-    private static string _LogsDirectory = "";
-
     /// <summary>
     /// The path to the application executing directory
     /// </summary>
-    public static string ExecutingDirectory
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(_ExecutingDirectory))
-                _ExecutingDirectory = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+    public static string ExecutingDirectory { get; } = Path.GetDirectoryName(Environment.ProcessPath);
 
-            return _ExecutingDirectory;
-        }
-    }
+    public static string AppDataDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
 
-    public static string AppDataDirectory
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(_AppDataDirectory))
-                _AppDataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
-
-            return _AppDataDirectory;
-        }
-    }
-
-    public static string LogsDirectory
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(_LogsDirectory))
-                _LogsDirectory = Path.Combine(AppDataDirectory, "Logs");
-
-            return _LogsDirectory;
-        }
-    }
+    public static string LogsDirectory { get; } = Path.Combine(AppDataDirectory, "Logs");
 
     /// <summary>
     /// Output logger for errors, warnings, and information
     /// </summary>
-    public static NLog.Logger logger;
-
-    public static void LogLine(this NLog.Logger logger, string text, Logging_Level level = Logging_Level.None)
-    {
-        switch (level)
-        {
-            case Logging_Level.Debug:
-                logger.Debug(text);
-                break;
-            case Logging_Level.External:
-            case Logging_Level.Error:
-                logger.Error(text);
-                break;
-            case Logging_Level.None:
-            case Logging_Level.Info:
-                logger.Info(text);
-                break;
-            case Logging_Level.Warning:
-                logger.Warn(text);
-                break;
-        }
-    }
+    public static ILogger logger;
 
     /// <summary>
     /// Input event subscriptions
@@ -99,8 +44,7 @@ public static class Global
     public static IInputEvents InputEvents { get; set; }
 
     public static LightingStateManager? LightingStateManager { get; set; }     //TODO module access
-    public static Configuration? Configuration { get; set; }
-    public static DeviceManager? dev_manager { get; set; }
+    public static Configuration Configuration { get; set; }
     public static KeyboardLayoutManager? kbLayout { get; set; }                //TODO module access
     public static Effects? effengine { get; set; }
     public static KeyRecorder? key_recorder { get; set; }
@@ -115,6 +59,17 @@ public static class Global
 #if DEBUG
         isDebug = true;
 #endif
-        logger = LogManager.GetLogger("global");
+        var logFile = $"{DateTime.Now:yyyy-MM-dd HH.mm.ss}.log";
+        var logPath = Path.Combine(AppDataDirectory, "Logs", logFile);
+        logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File(logPath,
+                rollingInterval: RollingInterval.Day,
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+#if DEBUG
+            .WriteTo.Debug()
+#endif
+            .CreateLogger();
     }
 }

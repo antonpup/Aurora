@@ -85,6 +85,8 @@ namespace Aurora.Devices.Dualshock
 
     public class DualshockDevice : DefaultDevice
     {
+        public static DualshockDevice? Instance;
+        
         public override string DeviceName => "Sony DualShock 4(PS4)";
 
         protected override string DeviceInfo =>
@@ -97,6 +99,11 @@ namespace Aurora.Devices.Dualshock
         private readonly List<DS4Container> devices = new List<DS4Container>();
         private DeviceKeys key;
         private bool isDisconnecting;
+
+        public DualshockDevice()
+        {
+            Instance = this;
+        }
 
         protected override Task<bool> DoInitialize()
         {

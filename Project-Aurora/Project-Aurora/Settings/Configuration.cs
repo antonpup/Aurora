@@ -533,7 +533,10 @@ namespace Aurora.Settings
         WindowsEvents = 0,
 
         [Description("Foreground App Scan")]
-        ForegroroundApp = 1
+        ForegroundApp = 1,
+        
+        [Description("None")]
+        None = -1,
     }
 
     public enum BitmapAccuracy
@@ -648,12 +651,10 @@ namespace Aurora.Settings
 
         //BitmapDebug Data
         public bool BitmapDebugTopMost { get; set; } = false;
-        public WINDOWPLACEMENT BitmapPlacement { get; set; }
         public bool BitmapWindowOnStartUp { get; set; } = false;
 
         //httpDebug Data
         public bool HttpDebugTopMost { get; set; } = false;
-        public WINDOWPLACEMENT HttpDebugPlacement { get; set; }
         public bool HttpWindowOnStartUp { get; set; } = false;
 
         public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();

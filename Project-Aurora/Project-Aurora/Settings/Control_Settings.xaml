@@ -21,11 +21,11 @@
         </TabItem>
         <TabItem x:Name="DevicesAndWrappersTab" Header="Devices &amp; Wrappers">
         </TabItem>
-        <TabItem Header="Device Manager">
-            <Controls:Control_DeviceManager Margin="10"/>
+        <TabItem Name="DeviceManagerTab" Header="Device Manager">
+            <!-- <Controls:Control_DeviceManager Margin="10"/> Added by constructor -->
         </TabItem>
-        <TabItem Header="Remap Devices">
-            <config:DeviceMapping />
+        <TabItem Name="RemapDevicesTab" Header="Remap Devices">
+            <!--  <config:DeviceMapping /> Added by constructor -->
         </TabItem>
         <TabItem Header="Plugin Management">
             <Controls:Control_PluginManager x:Name="ctrlPluginManager" Margin="10"/>

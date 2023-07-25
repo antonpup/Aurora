@@ -67,6 +67,7 @@ public static class RzHelper
             var major = (int)key.GetValue("MajorVersion", 0);
             var minor = (int)key.GetValue("MinorVersion", 0);
             var revision = (int)key.GetValue("RevisionNumber", 0);
+            key.Close();
 
             return new RzSdkVersion(major, minor, revision);
         }
@@ -81,11 +82,11 @@ public static class RzHelper
     public static bool IsSdkVersionSupported(RzSdkVersion version)
         => version >= SupportedFromVersion && version < SupportedToVersion;
 
-    public static void UpdateIfStale()
+    public static bool UpdateIfStale()
     {
         if (Global.razerSdkManager == null || UpdateStopwatch.ElapsedMilliseconds < Global.Configuration.UpdateDelay)
         {
-            return;
+            return false;
         }
         foreach (var provider in new AbstractColorDataProvider[]{
                      Global.razerSdkManager.GetDataProvider<RzKeyboardDataProvider>(),
@@ -99,6 +100,7 @@ public static class RzHelper
             OnDataUpdated(provider, EventArgs.Empty);
         }
         UpdateStopwatch.Restart();
+        return true;
     }
 
     public static void OnDataUpdated(object s, EventArgs e)

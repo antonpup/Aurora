@@ -1,13 +1,13 @@
-﻿using Aurora.Profiles;
+﻿using System.Threading.Tasks;
+using Aurora.Profiles;
 using Lombok.NET;
 using Aurora.Modules.HardwareMonitor;
 
 namespace Aurora.Modules;
 
-public sealed partial class HardwareMonitorModule : IAuroraModule
+public sealed partial class HardwareMonitorModule : AuroraModule
 {
-    
-    public override void Initialize()
+    protected override async Task Initialize()
     {
         if (Global.Configuration.EnableHardwareInfo)
         {

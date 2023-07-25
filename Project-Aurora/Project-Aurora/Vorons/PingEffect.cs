@@ -21,6 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
+using Aurora.Modules.ProcessMonitor;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Aurora.Utils;
@@ -581,8 +582,8 @@ namespace Aurora.Scripts.VoronScripts
 		{
 			using (Graphics g = effectLayer.GetGraphics())
 			{
-				float x_pos = (float)Math.Round((freeform.X + Effects.grid_baseline_x) * Effects.EditorToCanvasWidth);
-				float y_pos = (float)Math.Round((freeform.Y + Effects.grid_baseline_y) * Effects.EditorToCanvasHeight);
+				float x_pos = (float)Math.Round((freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
+				float y_pos = (float)Math.Round((freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
 				float width = (float)(freeform.Width * Effects.EditorToCanvasWidth);
 				float height = (float)(freeform.Height * Effects.EditorToCanvasHeight);
 
@@ -704,7 +705,7 @@ namespace Aurora.Scripts.VoronScripts
 					}
 					catch (Exception exc)
 					{
-						Global.logger.LogLine("PingCounter exception: " + exc, Logging_Level.Error);
+						Global.logger.Error(exc, "PingCounter exception: ");
 					}
 					await Task.Delay(500);
 				}
@@ -738,12 +739,12 @@ namespace Aurora.Scripts.VoronScripts
 		{
 			try
 			{
-				IntPtr handle = GetForegroundWindow();
+				IntPtr handle = User32.GetForegroundWindow();
 
-				var activeProcessName = GetActiveWindowsProcessname(handle);
+				var activeProcessName = ActiveProcessMonitor.Instance.ProcessName;
 				if (!string.IsNullOrWhiteSpace(activeProcessName))
 					activeProcessName = Path.GetFileName(activeProcessName).ToLower();
-				var activeWindowTitle = GetActiveWindowsTitle(handle).ToLower();
+				var activeWindowTitle = ActiveProcessMonitor.Instance.ProcessTitle;
 
 				if (HostsPerApplication != null)
 				{
@@ -757,61 +758,9 @@ namespace Aurora.Scripts.VoronScripts
 			}
 			catch (Exception exception)
 			{
-				Global.logger.LogLine(exception.ToString(), Logging_Level.Error);
+				Global.logger.Error(exception, "PingEffect error:");
 			}
 			return DefaultHost;
-		}
-
-		[DllImport("user32.dll")]
-		private static extern IntPtr GetForegroundWindow();
-
-		[DllImport("user32.dll", SetLastError = true)]
-		private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		public static extern int GetWindowTextLength(HandleRef hWnd);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		public static extern int GetWindowText(HandleRef hWnd, StringBuilder lpString, int nMaxCount);
-
-		private static string GetActiveWindowsProcessname(IntPtr handle)
-		{
-			try
-			{
-				uint processId;
-				return GetWindowThreadProcessId(handle, out processId) > 0
-					? Process.GetProcessById((int)processId).MainModule.FileName
-					: "";
-			}
-			catch (Exception exception)
-			{
-				if (exception.Message == "A 32 bit processes cannot access modules of a 64 bit process."
-					|| exception.Message == "Access is denied")
-				{
-					Global.logger.LogLine(exception.ToString(), Logging_Level.Debug);
-				}
-				else
-				{
-					Global.logger.LogLine(exception.ToString(), Logging_Level.Error);
-				}
-				return "";
-			}
-		}
-
-		private static string GetActiveWindowsTitle(IntPtr handle)
-		{
-			try
-			{
-				int capacity = GetWindowTextLength(new HandleRef(null, handle)) * 2;
-				var stringBuilder = new StringBuilder(capacity);
-				GetWindowText(new HandleRef(null, handle), stringBuilder, stringBuilder.Capacity);
-				return stringBuilder.ToString();
-			}
-			catch (Exception exception)
-			{
-				Global.logger.LogLine(exception.ToString(), Logging_Level.Error);
-				return "";
-			}
 		}
 	}
 }

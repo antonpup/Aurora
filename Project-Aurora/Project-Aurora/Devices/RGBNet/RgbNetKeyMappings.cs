@@ -186,6 +186,9 @@ public static class RgbNetKeyMappings
         
         {LedId.Headset1 , DeviceKeys.HEADSET1},
         {LedId.Headset2 , DeviceKeys.HEADSET2},
+        {LedId.Headset3 , DeviceKeys.HEADSET3},
+        {LedId.Headset4 , DeviceKeys.HEADSET4},
+        {LedId.Headset5 , DeviceKeys.HEADSET5},
     };
     public static readonly ReadOnlyDictionary<LedId, DeviceKeys> KeyNames = new(KeyNameMap);
 }
