@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using Aurora.Modules;
+
 namespace Aurora.Profiles.Logitech;
 
 public class LogitechApplication : Application
@@ -15,5 +18,11 @@ public class LogitechApplication : Application
         EnableByDefault = true,
     })
     {
+        LogitechSdkModule.LogitechSdkListener.ApplicationChanged += LogitechSdkListenerOnApplicationChanged;
+    }
+
+    private void LogitechSdkListenerOnApplicationChanged(object? sender, string? e)
+    {
+        Config.ProcessNames = e == null ? Array.Empty<string>() : new []{ Path.GetFileName(e) };
     }
 }

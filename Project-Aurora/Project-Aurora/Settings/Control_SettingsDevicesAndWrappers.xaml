@@ -160,7 +160,7 @@
                             <ColumnDefinition Width="20*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="LightsyncInstallButton" Grid.Row="0" Grid.Column="2" Content="Install" Width="75"
+                        <Button Grid.Row="0" Grid.Column="2" Content="Install" Width="75"
                                 Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left"
                                 Click="Lightsync_install_button_Click" />
 
@@ -173,6 +173,9 @@
                                Margin="5 0 5 0" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
                     </Grid>
                 </GroupBox>
+                <TextBlock DockPanel.Dock="Top">
+                    These wrappers are reverse-engineered and may not work as the original ones.
+                </TextBlock>
                 <GroupBox DockPanel.Dock="Bottom" Header="Wrappers" VerticalAlignment="Bottom">
                     <StackPanel Orientation="Vertical">
                         <TextBlock TextWrapping="Wrap" Margin="4"
