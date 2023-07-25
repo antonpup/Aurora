@@ -58,7 +58,7 @@ public partial class App
         DevicesModule,
         LayoutsModule,
         LightningStateManagerModule,
-        new PerformanceMonitor(Task.FromResult(RunningProcessMonitor.Instance)),
+        //new PerformanceMonitor(Task.FromResult(RunningProcessMonitor.Instance)),
     };
 
     protected override async void OnStartup(StartupEventArgs e)
