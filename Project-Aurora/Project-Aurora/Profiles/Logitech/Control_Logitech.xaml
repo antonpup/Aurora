@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Aurora.Profiles.Logitech.Control_Logitech"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="850" Height="Auto" Width="Auto">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for Chroma">
+                <StackPanel Margin="10">
+                    <TextBlock>
+                        Applications will be detected if Lightsync wrapper is installed. Install it in Aurora settings.
+                    </TextBlock>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
