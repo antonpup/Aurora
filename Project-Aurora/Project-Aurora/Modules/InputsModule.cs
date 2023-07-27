@@ -12,21 +12,16 @@ namespace Aurora.Modules;
 public sealed partial class InputsModule : AuroraModule
 {
     private static InputInterceptor? _inputInterceptor;
-    private IntPtr _hWnd;
 
-    public override Task<bool> InitializeAsync()
+    public override async Task<bool> InitializeAsync()
     {
-        Initialize();
-        return Task.FromResult(true);
+        await Initialize();
+        return true;
     }
 
-    protected override async Task Initialize()
+    protected override Task Initialize()
     {
-        if (!Global.Configuration.EnableInputCapture)
-        {
-            Global.InputEvents = new NoopInputEvents();
-        }
-        else
+        if (Global.Configuration.EnableInputCapture)
         {
             Global.logger.Information("Loading Input Hooking");
             Global.InputEvents = new InputEvents();
@@ -39,6 +34,7 @@ public sealed partial class InputsModule : AuroraModule
         DesktopUtils.StartSessionWatch();
 
         Global.key_recorder = new KeyRecorder(Global.InputEvents);
+        return Task.CompletedTask;
     }
 
     [Async]

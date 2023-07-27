@@ -55,7 +55,7 @@ public static class DesktopUtils
     [DllImport("user32.dll", SetLastError = true)]
     private static extern IntPtr CloseDesktop(IntPtr desktop);
 
-    private static async void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
     {
         switch (e.Reason)
         {
@@ -91,7 +91,7 @@ public static class DesktopUtils
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Could not start Aurora Updater. Error: " + exc);
+            Global.logger.Error(exc, "Could not start Aurora Updater");
         }
     }
 }
