@@ -14,6 +14,7 @@ using System.Windows;
 using Aurora.Devices;
 using Aurora.Devices.AtmoOrb;
 using Aurora.Devices.Corsair;
+using Aurora.Devices.Logitech;
 using Aurora.Devices.OpenRGB;
 using Aurora.Devices.RGBNet;
 using Aurora.Devices.SteelSeries;
@@ -679,6 +680,18 @@ namespace Aurora.Settings
         private void EnabledDevicesListMigration()
         {
             EnabledDevices ??= MigrateEnabledDevices();
+            PrioritizeDevice(typeof(OpenRgbNetDevice), typeof(OpenRgbAuroraDevice));
+            PrioritizeDevice(typeof(CorsairRgbNetDevice), typeof(CorsairDevice));
+            PrioritizeDevice(typeof(SteelSeriesRgbNetDevice), typeof(SteelSeriesDevice));
+            PrioritizeDevice(typeof(LogitechDevice), typeof(LogitechRgbNetDevice));
+        }
+
+        private void PrioritizeDevice(Type primary, Type secondary)
+        {
+            if (EnabledDevices.Contains(primary))
+            {
+                EnabledDevices.Remove(secondary);
+            }
         }
 
         private ObservableCollection<Type> MigrateEnabledDevices()
@@ -697,18 +710,6 @@ namespace Aurora.Settings
                           && !DevicesDisabled.Contains(type)
                     select type
                 );
-            }
-            if (enabledDevices.Contains(typeof(OpenRgbNetDevice)))
-            {
-                enabledDevices.Remove(typeof(OpenRgbAuroraDevice));
-            }
-            if (enabledDevices.Contains(typeof(CorsairRgbNetDevice)))
-            {
-                enabledDevices.Remove(typeof(CorsairDevice));
-            }
-            if (enabledDevices.Contains(typeof(SteelSeriesRgbNetDevice)))
-            {
-                enabledDevices.Remove(typeof(SteelSeriesDevice));
             }
             return enabledDevices;
         }
