@@ -16,8 +16,8 @@ namespace Aurora;
 /// </summary>
 public static class Global
 {
-    public static string ScriptDirectory = "Scripts";
-    public static ScriptEngine PythonEngine = Python.CreateEngine();
+    public static readonly string ScriptDirectory = "Scripts";
+    public static readonly ScriptEngine PythonEngine = Python.CreateEngine();
 
     /// <summary>
     /// A boolean indicating if Aurora was started with Debug parameter
@@ -27,7 +27,7 @@ public static class Global
     /// <summary>
     /// The path to the application executing directory
     /// </summary>
-    public static string ExecutingDirectory { get; } = Path.GetDirectoryName(Environment.ProcessPath);
+    public static string ExecutingDirectory { get; } = Path.GetDirectoryName(Environment.ProcessPath) ?? string.Empty;
 
     public static string AppDataDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora");
 
@@ -41,7 +41,7 @@ public static class Global
     /// <summary>
     /// Input event subscriptions
     /// </summary>
-    public static IInputEvents InputEvents { get; set; }
+    public static IInputEvents InputEvents { get; set; } = new NoopInputEvents();
 
     public static LightingStateManager? LightingStateManager { get; set; }     //TODO module access
     public static Configuration Configuration { get; set; }
@@ -51,8 +51,6 @@ public static class Global
     public static RzSdkManager? razerSdkManager { get; set; }                  //TODO module access
     public static AudioDeviceProxy? CaptureProxy { get; set; }
     public static AudioDeviceProxy? RenderProxy { get; set; }
-
-    public static object Clipboard { get; set; }
 
     public static void Initialize()
     {
@@ -66,7 +64,10 @@ public static class Global
             .WriteTo.Console()
             .WriteTo.File(logPath,
                 rollingInterval: RollingInterval.Day,
-                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}")
+                outputTemplate:
+                "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}",
+                retainedFileCountLimit: 8
+            )
 #if DEBUG
             .WriteTo.Debug()
 #endif

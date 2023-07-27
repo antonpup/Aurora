@@ -49,7 +49,6 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private double _transitionAmount;
 
-    private FrameworkElement? _selectedItem;
     private FrameworkElement? _selectedManager;
 
     private bool _shownHiddenMessage;
@@ -95,7 +94,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     #region Mica
 
-    private void Window_ContentRendered(object sender, EventArgs e)
+    private void Window_ContentRendered(object? sender, EventArgs e)
     {
         UpdateStyleAttributes();
     }
@@ -142,6 +141,8 @@ partial class ConfigUI : INotifyPropertyChanged
 
                 DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue,
                     Marshal.SizeOf(typeof(int)));
+                TintColor = Color.FromArgb(0, 0, 0, 0);
+                FallbackColor = Color.FromArgb(1, 0, 0, 0);
             }
             else
             {
@@ -362,6 +363,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void trayicon_menu_quit_Click(object sender, RoutedEventArgs e)
     {
+        //TODO make async
         ExitApp();
     }
 
@@ -459,7 +461,6 @@ partial class ConfigUI : INotifyPropertyChanged
         
     private void GenerateProfileStack(string focusedKey = null)
     {
-        _selectedItem = null;
         profiles_stack.Children.Clear();
 
         foreach (var application in Global.Configuration.ProfileOrder
