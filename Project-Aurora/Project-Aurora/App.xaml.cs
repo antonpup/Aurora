@@ -228,7 +228,7 @@ public partial class App
         Global.logger.Information(systemInfoSb.ToString());
     }
 
-    protected override void OnExit(ExitEventArgs e)
+    protected override async void OnExit(ExitEventArgs e)
     {
         if (Closing)
         {
@@ -240,11 +240,11 @@ public partial class App
         if (Global.Configuration != null)
             ConfigManager.Save(Global.Configuration);
 
-        var tasks = _modules.ConvertAll(m => m.DisposeAsync());
+        var tasks = _modules.Select(async m => await m.DisposeAsync());
         
         var forceExitTimer = StartForceExitTimer();
 
-        Task.WhenAll(tasks).Wait();
+        await Task.WhenAll(tasks);
         forceExitTimer.GetApartmentState(); //statement just to keep referenced
         //LogManager.Flush();
         Mutex.ReleaseMutex();
