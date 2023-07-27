@@ -60,26 +60,26 @@ public sealed class PipeListener : IDisposable
         }
 
         ClientDisconnected?.Invoke(this, EventArgs.Empty);
+        _pipeStream.Close();
         _pipeStream = CreatePipe(_pipeName);
         _pipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
     }
     
     private static NamedPipeServerStream CreatePipe(string pipeName)
     {
-        var securityIdentifier = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
-        
-        PipeAccessRule rule = new(
-            securityIdentifier,
+        var everyone = new SecurityIdentifier(WellKnownSidType.WorldSid, null);
+        PipeAccessRule allowEveryone = new(
+            everyone,
             PipeAccessRights.FullControl,
             AccessControlType.Allow
-            );
+        );
 
         var pipeSecurity = new PipeSecurity();
-        pipeSecurity.SetAccessRule(rule);
+        pipeSecurity.SetAccessRule(allowEveryone);
 
         return NamedPipeServerStreamAcl.Create(
             pipeName, PipeDirection.InOut,
-            -1,
+            1,
             PipeTransmissionMode.Message,
             PipeOptions.Asynchronous,
             BufferSize,
@@ -97,6 +97,7 @@ public sealed class PipeListener : IDisposable
         if (disposing)
         {
             _tokenSource.Cancel();
+            _pipeStream?.Close();
             try
             {
                 //dummy client to unblock the server
@@ -109,8 +110,6 @@ public sealed class PipeListener : IDisposable
             _tokenSource.Dispose();
         }
 
-        // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-        // TODO: set large fields to null
         _disposedValue = true;
     }
 
