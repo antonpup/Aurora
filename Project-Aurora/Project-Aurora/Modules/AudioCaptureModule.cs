@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,28 +21,10 @@ public sealed partial class AudioCaptureModule : AuroraModule
         return Task.FromResult(true);
     }
 
-    protected override async Task Initialize()
+    protected override Task Initialize()
     {
-        var thread = new Thread(InitializeLocalInfoProxies);
-        thread.SetApartmentState(ApartmentState.MTA);
-        thread.Name = "3rd aprty API spooler";
-        thread.Start();
-        thread.Join();
-        
-        Global.Configuration.PropertyChanged += DefaultDeviceChanged;
-    }
-
-    private void DefaultDeviceChanged(object sender, PropertyChangedEventArgs e)
-    {
-        switch (e.PropertyName)
-        {
-            case nameof(Configuration.GsiAudioRenderDevice):
-                _renderProxy.DeviceId = Global.Configuration.GsiAudioRenderDevice;
-                break;
-            case nameof(Configuration.GsiAudioCaptureDevice):
-                _captureProxy.DeviceId = Global.Configuration.GsiAudioCaptureDevice;
-                break;
-        }
+        Application.Current.Dispatcher.Invoke(InitializeLocalInfoProxies);
+        return Task.CompletedTask;
     }
 
     private void InitializeDeviceListProxy()
@@ -56,8 +37,7 @@ public sealed partial class AudioCaptureModule : AuroraModule
         InitializeDeviceListProxy();
         try
         {
-            _renderProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioRenderDevice, DataFlow.Render);
-            Global.RenderProxy = _renderProxy;
+            InitRender();
         }
         catch (Exception e)
         {
@@ -65,13 +45,12 @@ public sealed partial class AudioCaptureModule : AuroraModule
                             "Audio information such as output level won't be updated.\n" +
                             "Cause of this could be bad drivers or bad implementation", 
                 "Aurora - Warning");
-            Global.logger.Error("AudioCapture error", e);
+            Global.logger.Error(e, "AudioCapture error");
         }
         if (!Global.Configuration.EnableAudioCapture) return;
         try
         {
-            _captureProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioCaptureDevice, DataFlow.Capture);
-            Global.CaptureProxy = _captureProxy;
+            InitCapture();
         }
         catch (Exception e)
         {
@@ -79,15 +58,35 @@ public sealed partial class AudioCaptureModule : AuroraModule
                             "Audio capture information such as microphone level won't be updated.\n" +
                             "Cause of this could be bad drivers or bad implementation", 
                 "Aurora - Warning");
-            Global.logger.Error("AudioCapture error", e);
+            Global.logger.Error(e, "AudioCapture error");
         }
+    }
+
+    private void InitRender()
+    {
+        _renderProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioRenderDevice, DataFlow.Render);
+        Global.Configuration.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(Configuration.GsiAudioRenderDevice))
+                _renderProxy.DeviceId = Global.Configuration.GsiAudioRenderDevice;
+        };
+        Global.RenderProxy = _renderProxy;
+    }
+
+    private void InitCapture()
+    {
+        _captureProxy = new AudioDeviceProxy(Global.Configuration.GsiAudioCaptureDevice, DataFlow.Capture);
+        Global.Configuration.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(Configuration.GsiAudioCaptureDevice))
+                _captureProxy.DeviceId = Global.Configuration.GsiAudioCaptureDevice;
+        };
+        Global.CaptureProxy = _captureProxy;
     }
 
     [Async]
     public override void Dispose()
     {
-        Global.Configuration.PropertyChanged -= DefaultDeviceChanged;
-        
         _renderProxy?.Dispose();
         _renderProxy = null;
         Global.RenderProxy = null;

@@ -658,7 +658,7 @@ namespace Aurora.Settings
         public bool HttpDebugTopMost { get; set; } = false;
         public bool HttpWindowOnStartUp { get; set; } = false;
 
-        public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new ObservableConcurrentDictionary<string, IEvaluatable>();
+        public ObservableConcurrentDictionary<string, IEvaluatable> EvaluatableTemplates { get; set; } = new();
 
         public List<string> ProfileOrder { get; set; } = new List<string>();
 
