@@ -105,6 +105,11 @@
                 <TextBlock Text="FPS:" Margin="150,284,0,0" />
                 <TextBlock Text="{Binding Fps, UpdateSourceTrigger=PropertyChanged}" Margin="180,284,0,0" />
 
+                <StackPanel Orientation="Horizontal" Margin="11,306,0,0">
+                    <CheckBox Content="Enable UI Transparency"
+                              IsChecked="{Binding AllowTransparency}" />
+                </StackPanel>
+
                 <!-- Global brightness -->
                 <TextBlock Text="Global brightness modifier:" Margin="12,111,0,0" HorizontalAlignment="Left"
                            VerticalAlignment="Top" />

@@ -189,7 +189,14 @@ partial class ConfigUI : INotifyPropertyChanged
                 var smooth = 1 - Math.Pow(1 - Math.Min(_transitionAmount, 1d), 3);
                 var a = EffectColor.BlendColors(_previousColor, _currentColor, smooth);
 
-                if (_useMica)
+                if (!Global.Configuration.AllowTransparency)
+                {
+                    FallbackColor = Colors.Black;
+                    TintColor = Colors.Transparent;
+                    bg_grid.Background =
+                        new SolidColorBrush(Color.FromArgb(255, a.Red, a.Green, a.Blue));
+                }
+                else if (_useMica)
                 {
                     bg_grid.Background =
                         new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
