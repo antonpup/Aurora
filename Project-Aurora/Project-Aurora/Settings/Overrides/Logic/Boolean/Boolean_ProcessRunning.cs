@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Aurora.Modules.ProcessMonitor;
 
 namespace Aurora.Settings.Overrides.Logic {
 
@@ -36,7 +37,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         protected override bool Execute(IGameState gameState)
-            => Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning(ProcessName);
+            => RunningProcessMonitor.Instance.IsProcessRunning(ProcessName);
         
         public override Evaluatable<bool> Clone() => new BooleanProcessRunning { ProcessName = ProcessName };
     }

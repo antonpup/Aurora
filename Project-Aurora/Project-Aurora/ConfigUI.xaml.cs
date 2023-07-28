@@ -18,6 +18,7 @@ using Aurora.Controls;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Modules.GameStateListen;
+using Aurora.Profiles;
 using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Settings;
@@ -55,7 +56,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private string _savedPreviewKey = "";
 
-    private readonly Timer? _virtualKeyboardTimer = new(8);
+    private readonly Timer _virtualKeyboardTimer = new(8);
     private readonly Action _keyboardTimerCallback;
     private Grid _virtualKb = new();
 
@@ -66,6 +67,7 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Task<KeyboardLayoutManager> _layoutManager;
     private readonly Task<AuroraHttpListener?> _httpListener;
     private readonly Task<IpcListener?> _ipcListener;
+    private readonly Task<LightingStateManager> _lightingStateManager;
 
     private HwndSource _hwHandle;
     private readonly bool _useMica;
@@ -76,7 +78,7 @@ partial class ConfigUI : INotifyPropertyChanged
         set
         {
             SetValue(FocusedApplicationProperty, value);
-            Global.LightingStateManager.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
+            _lightingStateManager.Result.PreviewProfileKey = value != null ? value.Config.ID : string.Empty;
         }
     }
 
@@ -165,11 +167,12 @@ partial class ConfigUI : INotifyPropertyChanged
 
     public ConfigUI(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
         Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener,
-        Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager)
+        Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager, Task<LightingStateManager> lightingStateManager)
     {
         _httpListener = httpListener;
         _layoutManager = layoutManager;
         _ipcListener = ipcListener;
+        _lightingStateManager = lightingStateManager;
         _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener, deviceManager);
 
         _useMica = Environment.OSVersion.Version.Build >= 22000;
@@ -178,7 +181,6 @@ partial class ConfigUI : INotifyPropertyChanged
         ContentRendered += Window_ContentRendered;
         ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
 
-        GenerateProfileStack();
         _settingsControl.DataContext = this;
 
         _keyboardTimerCallback = () =>
@@ -200,6 +202,8 @@ partial class ConfigUI : INotifyPropertyChanged
                 {
                     bg_grid.Background =
                         new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
+                    FallbackColor = Colors.Transparent;
+                    TintColor = Colors.Transparent;
                 }
                 else
                 {
@@ -219,6 +223,8 @@ partial class ConfigUI : INotifyPropertyChanged
 
     public async Task Initialize()
     {
+        await GenerateProfileStack();
+
         await _settingsControl.Initialize();
         
         (await _layoutManager).KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
@@ -423,11 +429,11 @@ partial class ConfigUI : INotifyPropertyChanged
     private void ExitApp()
     {
         trayicon.Visibility = Visibility.Hidden;
-        _virtualKeyboardTimer?.Stop();
+        _virtualKeyboardTimer.Stop();
         System.Windows.Application.Current.Shutdown();
     }
 
-    private void MinimizeApp()
+    private async void MinimizeApp()
     {
         FocusedApplication?.SaveAll();
 
@@ -437,21 +443,24 @@ partial class ConfigUI : INotifyPropertyChanged
             _shownHiddenMessage = true;
         }
 
-        Global.LightingStateManager.PreviewProfileKey = string.Empty;
+        var lightingStateManager = await _lightingStateManager;
+        lightingStateManager.PreviewProfileKey = string.Empty;
 
         Visibility = Visibility.Hidden;
         Hide();
     }
 
-    private void Window_Activated(object sender, EventArgs e)
+    private async void Window_Activated(object sender, EventArgs e)
     {
-        Global.LightingStateManager.PreviewProfileKey = _savedPreviewKey;
+        var lightingStateManager = await _lightingStateManager;
+        lightingStateManager.PreviewProfileKey = _savedPreviewKey;
     }
 
-    private void Window_Deactivated(object sender, EventArgs e)
+    private async void Window_Deactivated(object sender, EventArgs e)
     {
-        _savedPreviewKey = Global.LightingStateManager.PreviewProfileKey;
-        Global.LightingStateManager.PreviewProfileKey = string.Empty;
+        var lightingStateManager = await _lightingStateManager;
+        _savedPreviewKey = lightingStateManager.PreviewProfileKey;
+        lightingStateManager.PreviewProfileKey = string.Empty;
     }
 
     private readonly Image _profileAdd = new()
@@ -466,13 +475,17 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly BitmapImage _visible = new(new Uri(@"Resources/Visible.png", UriKind.Relative));
     private readonly BitmapImage _notVisible = new(new Uri(@"Resources/Not Visible.png", UriKind.Relative));
         
-    private void GenerateProfileStack(string focusedKey = null)
+    private async Task GenerateProfileStack(string focusedKey = null)
     {
         profiles_stack.Children.Clear();
 
+        var lightingStateManager = await _lightingStateManager;
         foreach (var application in Global.Configuration.ProfileOrder
-                     .Where(profileName => Global.LightingStateManager.Events.ContainsKey(profileName))
-                     .Select(profileName => (Application)Global.LightingStateManager.Events[profileName])
+                     .Where(profileName =>
+                     {
+                         return lightingStateManager.Events.ContainsKey(profileName);
+                     })
+                     .Select(profileName => (Application)lightingStateManager.Events[profileName])
                      .OrderBy(item => item.Settings.Hidden))
         {
             ImageSource icon = application.Icon;
@@ -652,7 +665,7 @@ partial class ConfigUI : INotifyPropertyChanged
         th.SelectedControl = value.Control;
     }
 
-    private void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
+    private async void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
     {
         if (sender is not Image { Tag: string } image)
         {
@@ -661,34 +674,35 @@ partial class ConfigUI : INotifyPropertyChanged
 
         string name = (string)image.Tag;
 
-        if (!Global.LightingStateManager.Events.ContainsKey(name)) return;
+        var lightingStateManager = await _lightingStateManager;
+        if (!lightingStateManager.Events.ContainsKey(name)) return;
         if (MessageBox.Show(
                 "Are you sure you want to delete profile for " +
-                (((Application)Global.LightingStateManager.Events[name]).Settings as
+                (((Application)lightingStateManager.Events[name]).Settings as
                     GenericApplicationSettings).ApplicationName + "?", "Remove Profile", MessageBoxButton.YesNo,
                 MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
         var eventList = Global.Configuration.ProfileOrder
-            .ToDictionary(x => x, x => Global.LightingStateManager.Events[x])
+            .ToDictionary(x => x, x => lightingStateManager.Events[x])
             .Where(x => ShowHidden || !(x.Value as Application).Settings.Hidden)
             .ToList();
         var idx = Math.Max(eventList.FindIndex(x => x.Key == name), 0);
-        Global.LightingStateManager.RemoveGenericProfile(name);
-        GenerateProfileStack(eventList[idx].Key);
+        lightingStateManager.RemoveGenericProfile(name);
+        await GenerateProfileStack(eventList[idx].Key);
     }
 
-    private void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
+    private async void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
     {
-
         Window_ProcessSelection dialog = new Window_ProcessSelection { CheckCustomPathExists = true, ButtonLabel = "Add Profile", Title ="Add Profile" };
         if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.ChosenExecutablePath))
             return; // do not need to check if dialog is already in excluded_programs since it is a Set and only contains unique items by definition
 
         string filename = Path.GetFileName(dialog.ChosenExecutablePath.ToLowerInvariant());
 
-        if (Global.LightingStateManager.Events.ContainsKey(filename))
+        var lightingStateManager = await _lightingStateManager;
+        if (lightingStateManager.Events.ContainsKey(filename))
         {
-            if (Global.LightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
-                Global.LightingStateManager.Events.Remove(filename);
+            if (lightingStateManager.Events[filename] is GameEvent_Aurora_Wrapper)
+                lightingStateManager.Events.Remove(filename);
             else
             {
                 MessageBox.Show("Profile for this application already exists.");
@@ -711,7 +725,7 @@ partial class ConfigUI : INotifyPropertyChanged
         }
         ico.Dispose();
 
-        Global.LightingStateManager.RegisterEvent(genAppPm);
+        lightingStateManager.RegisterEvent(genAppPm);
         ConfigManager.Save(Global.Configuration);
         GenerateProfileStack(filename);
     }
@@ -744,7 +758,7 @@ partial class ConfigUI : INotifyPropertyChanged
         foreach (FrameworkElement child in stackPanelManagers.Children)
         {
             if(child.Equals(element))
-                child.Height = totalHeight - (28.0 * (stackPanelManagers.Children.Count - 1));
+                child.Height = totalHeight - 28.0 * (stackPanelManagers.Children.Count - 1);
             else
                 child.Height = 25.0;
         }

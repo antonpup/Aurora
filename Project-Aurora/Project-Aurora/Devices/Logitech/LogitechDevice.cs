@@ -4,9 +4,9 @@ using LedCSharp;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Threading;
 using Microsoft.Win32;
 using System.Threading.Tasks;
+using Aurora.Modules.ProcessMonitor;
 
 namespace Aurora.Devices.Logitech
 {
@@ -31,8 +31,8 @@ namespace Aurora.Devices.Logitech
         protected override async Task<bool> DoInitialize()
         {
             genericKey = Global.Configuration.VarRegistry.GetVariable<DeviceKeys>($"{DeviceName}_devicekey");
-            var ghubRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lghub.exe");
-            var lgsRunning = Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("lcore.exe");
+            var ghubRunning = RunningProcessMonitor.Instance.IsProcessRunning("lghub.exe");
+            var lgsRunning = RunningProcessMonitor.Instance.IsProcessRunning("lcore.exe");
 
             if (!ghubRunning && !lgsRunning)
             {

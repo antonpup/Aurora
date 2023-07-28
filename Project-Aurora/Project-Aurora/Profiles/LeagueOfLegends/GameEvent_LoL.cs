@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Aurora.Modules.ProcessMonitor;
 
 namespace Aurora.Profiles.LeagueOfLegends
 {
@@ -201,7 +202,7 @@ namespace Aurora.Profiles.LeagueOfLegends
 
         private async void UpdateData(object sender, ElapsedEventArgs e)
         {
-            if (!Global.LightingStateManager.RunningProcessMonitor.IsProcessRunning("league of legends.exe"))
+            if (!RunningProcessMonitor.Instance.IsProcessRunning("league of legends.exe"))
             {
                 allGameData = null;
                 return;

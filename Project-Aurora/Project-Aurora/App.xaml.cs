@@ -125,7 +125,7 @@ public partial class App
 
         Global.logger.Information("Loading ConfigUI...");
         var configUi = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
-            HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager);
+            HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager, LightningStateManagerModule.LightningStateManager);
         MainWindow = configUi;
         await configUi.Initialize();
 

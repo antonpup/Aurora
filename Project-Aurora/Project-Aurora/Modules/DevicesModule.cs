@@ -6,10 +6,10 @@ namespace Aurora.Modules;
 
 public sealed class DevicesModule : AuroraModule
 {
-    public Task<DeviceManager?> DeviceManager => _taskSource.Task;
+    public Task<DeviceManager> DeviceManager => _taskSource.Task;
 
     private readonly Task<RzSdkManager?> _rzSdkManager;
-    private readonly TaskCompletionSource<DeviceManager?> _taskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly TaskCompletionSource<DeviceManager> _taskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private DeviceManager? _deviceManager;
 
     public DevicesModule(Task<RzSdkManager?> rzSdkManager)

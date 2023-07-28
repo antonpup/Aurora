@@ -43,8 +43,6 @@ public sealed class LightingStateManager : IInit
     public event EventHandler? PostUpdate;
 
     private ActiveProcessMonitor _processMonitor;
-    private RunningProcessMonitor _runningProcessMonitor;
-    public RunningProcessMonitor RunningProcessMonitor => _runningProcessMonitor;
 
     private Func<string, bool> _isRunningProcess;
     private Func<ILightEvent, bool> _isOverlayActiveProfile;
@@ -68,8 +66,7 @@ public sealed class LightingStateManager : IInit
             return true;
 
         _processMonitor = ActiveProcessMonitor.Instance;
-        _runningProcessMonitor = RunningProcessMonitor.Instance;
-        _isRunningProcess = name => _runningProcessMonitor.IsProcessRunning(name);
+        _isRunningProcess = name => RunningProcessMonitor.Instance.IsProcessRunning(name);
         _isOverlayActiveProfile = evt =>
             evt.IsOverlayEnabled &&
             (evt.Config.ProcessNames == null ||
