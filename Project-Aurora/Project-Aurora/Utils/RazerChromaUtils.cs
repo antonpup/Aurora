@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.ServiceProcess;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Aurora.Modules.Razer;
@@ -139,7 +140,7 @@ namespace Aurora.Utils
             return path;
         }
 
-        public static Task<int> InstallAsync(string installerPath) => Task.Run(() =>
+        public static async Task<int> InstallAsync(string installerPath)
         {
             var processInfo = new ProcessStartInfo
             {
@@ -151,11 +152,11 @@ namespace Aurora.Utils
             };
 
             var process = Process.Start(processInfo);
-            process.WaitForExit(120000);
+            await process.WaitForExitAsync(new CancellationTokenSource(120000).Token);
             return process.ExitCode;
-        });
+        }
 
-        public static async Task<bool> DisableDeviceControlAsync()
+        public static async Task DisableDeviceControlAsync()
         {
             const string file = @"<?xml version=""1.0"" encoding=""utf-8""?>" +
                                 "\n<devices>" +
@@ -177,7 +178,6 @@ namespace Aurora.Utils
             await Task.WhenAll(tasks.ToArray());
 
             RestartChromaService();
-            return tasks.Count > 0;
         }
 
         private static void RestartChromaService()

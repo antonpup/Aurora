@@ -28,8 +28,7 @@ public sealed partial class RazerSdkModule : AuroraModule
             }
             catch (Exception exc)
             {
-                Global.logger.Fatal("RazerSdkManager failed to load!");
-                Global.logger.Fatal(exc.ToString());
+                Global.logger.Fatal(exc, "RazerSdkManager failed to load!");
                 _sdkTaskSource.SetResult(null);
             }
         }
@@ -71,8 +70,7 @@ public sealed partial class RazerSdkModule : AuroraModule
         }
         catch (Exception exc)
         {
-            Global.logger.Fatal("RazerManager failed to dispose!");
-            Global.logger.Fatal(exc.ToString());
+            Global.logger.Fatal(exc, "RazerManager failed to dispose!");
         }
     }
 }

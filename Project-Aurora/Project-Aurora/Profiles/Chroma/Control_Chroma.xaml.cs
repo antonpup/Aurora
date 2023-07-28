@@ -33,6 +33,7 @@ public partial class Control_Chroma : INotifyPropertyChanged
 
         profile.ProfileChanged += (_, _) => SetSettings();
         RefreshEnabledPrograms();
+        ReorderChromaRegistry();
     }
 
     private void ProfileOnChromaAppsChanged(object sender, EventArgs e)

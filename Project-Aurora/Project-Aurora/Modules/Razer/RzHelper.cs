@@ -103,7 +103,7 @@ public static class RzHelper
         return true;
     }
 
-    public static void OnDataUpdated(object s, EventArgs e)
+    public static void OnDataUpdated(object? s, EventArgs e)
     {
         if (s is not AbstractDataProvider provider)
             return;
