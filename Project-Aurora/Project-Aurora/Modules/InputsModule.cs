@@ -13,10 +13,9 @@ public sealed partial class InputsModule : AuroraModule
 {
     private static InputInterceptor? _inputInterceptor;
 
-    public override async Task<bool> InitializeAsync()
+    public override async Task InitializeAsync()
     {
         await Initialize();
-        return true;
     }
 
     protected override Task Initialize()

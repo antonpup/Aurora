@@ -4,6 +4,7 @@ using Aurora.Modules.GameStateListen;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Lombok.NET;
+using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Modules;
 
@@ -29,10 +30,10 @@ public sealed partial class LightningStateManagerModule : AuroraModule
         _deviceManager = deviceManager;
     }
 
-    public override Task<bool> InitializeAsync()
+    public override async Task<bool> InitializeAsync()
     {
-        Initialize();
-        return Task.FromResult(true);
+        await Initialize();
+        return true;
     }
 
     protected override async Task Initialize()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Aurora.Modules.AudioCapture;
@@ -23,7 +22,7 @@ public sealed partial class AudioCaptureModule : AuroraModule
 
     protected override Task Initialize()
     {
-        Application.Current.Dispatcher.Invoke(InitializeLocalInfoProxies);
+        InitializeLocalInfoProxies();
         return Task.CompletedTask;
     }
 

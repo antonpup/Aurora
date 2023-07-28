@@ -7,7 +7,7 @@ namespace Aurora.Modules;
 
 public sealed partial class LayoutsModule : AuroraModule
 {
-    private KeyboardLayoutManager _layoutManager;
+    private KeyboardLayoutManager? _layoutManager;
     private readonly TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     public Task<KeyboardLayoutManager> LayoutManager => _taskCompletionSource.Task;
@@ -18,7 +18,7 @@ public sealed partial class LayoutsModule : AuroraModule
         return Task.CompletedTask;
     }
 
-    protected override async Task Initialize()
+    protected override Task Initialize()
     {
         Global.logger.Information("Loading KB Layouts");
         _layoutManager = new KeyboardLayoutManager();
@@ -26,6 +26,7 @@ public sealed partial class LayoutsModule : AuroraModule
         Global.kbLayout.LoadBrandDefault();
         Global.logger.Information("Loaded KB Layouts");
         _taskCompletionSource.SetResult(_layoutManager);
+        return Task.CompletedTask;
     }
 
     [Async]
