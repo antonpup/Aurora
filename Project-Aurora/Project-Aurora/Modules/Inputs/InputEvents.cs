@@ -87,10 +87,10 @@ public sealed class InputEvents : IInputEvents
     
     private IntPtr Hook(IntPtr hwnd, uint msg, IntPtr wparam, IntPtr lparam)
     {
-        const int WM_INPUT = 0x00FF;
+        const int wmInput = 0x00FF;
 
         // You can read inputs by processing the WM_INPUT message.
-        if (msg != WM_INPUT) return User32.CallWindowProc(_hWndProcHook, _hWnd, msg, wparam, lparam);
+        if (msg != wmInput) return User32.CallWindowProc(_hWndProcHook, _hWnd, msg, wparam, lparam);
         // Create an RawInputData from the handle stored in lParam.
         var data = RawInputData.FromHandle(lparam);
 
@@ -135,7 +135,7 @@ public sealed class InputEvents : IInputEvents
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Exception while handling keyboard input. Error: " + exc);
+            Global.logger.Error(exc, "Exception while handling keyboard input");
         }
     }
 
@@ -163,13 +163,13 @@ public sealed class InputEvents : IInputEvents
             _ => (MouseButtons.Left, false)
         };
 
-        if (isDown)
+        if (isDown && button == MouseButtons.Left)
         {
             if (!_pressedMouseButtons.Contains(button))
                 _pressedMouseButtons.Add(button);
             MouseButtonDown?.Invoke(this, new KeyEvent(Keys.Left));
         }
-        else if (button != MouseButtons.Left)
+        else if (button == MouseButtons.Left)
         {
             _pressedMouseButtons.Remove(button);
             MouseButtonUp?.Invoke(this, new KeyEvent(Keys.Left));
