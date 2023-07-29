@@ -7,523 +7,276 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Timers;
 using System.Windows.Forms;
+using Aurora.Settings;
 using Octokit;
-
+using Timer = System.Timers.Timer;
 using Version = SemanticVersioning.Version;
 
-namespace Aurora_Updater
+namespace Aurora_Updater;
+
+public class LogEntry
 {
-    public class LogEntry
+    private readonly string _message;
+    private readonly Color _color;
+
+    public LogEntry()
     {
-        private String message;
-        private Color color;
+        _message = string.Empty;
+        _color = Color.Black;
+    }
 
-        public LogEntry()
+    public LogEntry(string message)
+    {
+        _message = message;
+        _color = Color.Black;
+    }
+
+    public LogEntry(string message, Color color)
+    {
+        _message = message;
+        _color = color;
+    }
+
+    public Color GetColor()
+    {
+        return _color;
+    }
+
+    public string GetMessage()
+    {
+        return _message;
+    }
+
+    public override string ToString()
+    {
+        return _message;
+    }
+}
+
+public class UpdateManager
+{
+    private readonly string[] _ignoreFiles = { };
+    private readonly Queue<LogEntry> _log = new();
+    private float _downloadProgress;
+    private float _extractProgress;
+    private int? _previousPercentage;
+    private int _secondsLeft = 3;
+    private readonly Configuration _config;
+    private readonly GitHubClient _gClient = new(new ProductHeaderValue("aurora-updater"));
+    public readonly Release LatestRelease;
+
+    public UpdateManager(Version version, string author, string repoName)
+    {
+        try
         {
-            this.message = "";
-            this.color = Color.Black;
+            _config = ConfigManager.Load();
+        }
+        catch
+        {
+            _config = new Configuration();
         }
 
-        public LogEntry(String message)
-        {
-            this.message = message;
-            this.color = Color.Black;
-        }
+        PerformCleanup();
+        LatestRelease = FetchData(version, author, repoName);
+    }
 
-        public LogEntry(String message, Color color)
-        {
-            this.message = message;
-            this.color = color;
-        }
+    public void ClearLog()
+    {
+        _log.Clear();
+    }
 
-        public Color GetColor()
-        {
-            return color;
-        }
+    public LogEntry[] GetLog()
+    {
+        return _log.ToArray();
+    }
 
-        public String GetMessage()
-        {
-            return message;
-        }
+    public int GetTotalProgress()
+    {
+        return (int)((_downloadProgress + _extractProgress) / 2.0f * 100.0f);
+    }
 
-        public override string ToString()
+    private Release FetchData(Version version, string owner, string repositoryName)
+    {
+        if (_config.GetDevReleases || !string.IsNullOrWhiteSpace(version.PreRelease))
+            return _gClient.Repository.Release.GetAll(owner, repositoryName, new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
+        return  _gClient.Repository.Release.GetLatest(owner, repositoryName).Result;
+    }
+
+    public void RetrieveUpdate()
+    {
+        try
         {
-            return message.ToString();
+            var url = LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
+
+            if (string.IsNullOrWhiteSpace(url)) return;
+            _log.Enqueue(new LogEntry("Starting download... "));
+
+            var client = new WebClient();
+            client.DownloadProgressChanged += client_DownloadProgressChanged;
+            client.DownloadFileCompleted += client_DownloadFileCompleted;
+
+            // Starts the download
+            client.DownloadFileAsync(new Uri(url), Path.Combine(Program.ExePath, "update.zip"));
+        }
+        catch (Exception exc)
+        {
+            _log.Enqueue(new LogEntry(exc.Message, Color.Red));
         }
     }
 
-    public enum UpdateStatus
+    private void client_DownloadProgressChanged(object? sender, DownloadProgressChangedEventArgs e)
     {
-        None,
-        InProgress,
-        Complete,
-        Error
+        var bytesIn = double.Parse(e.BytesReceived.ToString());
+        var totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
+        var percentage = bytesIn / totalBytes;
+
+        var newPercentage = (int)(percentage * 100);
+        if (_previousPercentage == newPercentage)
+            return;
+
+        _previousPercentage = newPercentage;
+
+        _log.Enqueue(new LogEntry("Download " + newPercentage + "%"));
+        _downloadProgress = newPercentage / 100.0f;
     }
 
-    public class UpdateManager
+    void client_DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
     {
-        private string infoUrl = @"http://project-aurora.com/vcheck.php";
-        private string[] ignoreFiles = { };
-        //public UpdateResponse response = new UpdateResponse();
-        private Queue<LogEntry> log = new Queue<LogEntry>();
-        private float downloadProgess = 0.0f;
-        private float extractProgess = 0.0f;
-        public UpdateStatus updateState = UpdateStatus.None;
-        private int? previousPercentage;
-        private int secondsLeft = 3;
-        private Aurora.Settings.Configuration Config;
-        private GitHubClient gClient = new GitHubClient(new ProductHeaderValue("aurora-updater"));
-        public Release LatestRelease;
+        _log.Enqueue(new LogEntry("Download complete."));
+        _log.Enqueue(new LogEntry());
+        _downloadProgress = 1.0f;
 
-        public UpdateManager(Version version, string author, string repoName)
+        if (ExtractUpdate())
         {
-            LoadSettings();
-            PerformCleanup();
-            FetchData(version, author, repoName);
+            var shutdownTimer = new Timer(1000);
+            shutdownTimer.Elapsed += ShutdownTimerElapsed;
+            shutdownTimer.Start();
         }
+    }
 
-        public void LoadSettings()
+    private void ShutdownTimerElapsed(object? sender, ElapsedEventArgs e)
+    {
+        if (_secondsLeft > 0)
         {
+            _log.Enqueue(new LogEntry($"Restarting Aurora in {_secondsLeft} second{(_secondsLeft == 1 ? "" : "s")}..."));
+            _secondsLeft--;
+        }
+        else
+        {
+            //Kill all Aurora instances
+            foreach (var proc in Process.GetProcessesByName("Aurora"))
+                proc.Kill();
+
             try
             {
-                Config = Aurora.Settings.ConfigManager.Load();
-            }
-            catch (Exception e)
-            {
-                Config = new Aurora.Settings.Configuration();
-            }
-        }
+                var auroraProc = new ProcessStartInfo();
+                auroraProc.FileName = Path.Combine(Program.ExePath, "Aurora.exe");
+                Process.Start(auroraProc);
 
-        public void ClearLog()
-        {
-            log.Clear();
-        }
-
-        public LogEntry[] GetLog()
-        {
-            return log.ToArray();
-        }
-
-        public int GetTotalProgress()
-        {
-            return (int)((downloadProgess + extractProgess) / 2.0f * 100.0f);
-        }
-
-        private bool FetchData(Version version, string owner, string repositoryName)
-        {
-            try
-            {
-                if (Config.GetDevReleases || !String.IsNullOrWhiteSpace(version.PreRelease))
-                    LatestRelease = gClient.Repository.Release.GetAll(owner, repositoryName, new ApiOptions { PageCount = 1, PageSize = 1 }).Result[0];
-                else
-                    LatestRelease = gClient.Repository.Release.GetLatest(owner, repositoryName).Result;
-
-                //Console.WriteLine(reply);
+                Environment.Exit(0); //Exit, no further action required
             }
             catch (Exception exc)
             {
-                updateState = UpdateStatus.Error;
+                _log.Enqueue(new LogEntry($"Could not restart Aurora. Error:\r\n{exc}", Color.Red));
+                _log.Enqueue(new LogEntry("Please restart Aurora manually.", Color.Red));
+
                 MessageBox.Show(
-                    $"Could not find update.\r\nError:\r\n{exc}",
-                    "Aurora Updater - Error");
+                    $"Could not restart Aurora.\r\nPlease restart Aurora manually.\r\nError:\r\n{exc}",
+                    "Aurora Updater - Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+    }
+
+    private bool ExtractUpdate()
+    {
+        if (File.Exists(Path.Combine(Program.ExePath, "update.zip")))
+        {
+            _log.Enqueue(new LogEntry("Unpacking update..."));
+
+            try
+            {
+                var updateFile = ZipFile.OpenRead(Path.Combine(Program.ExePath, "update.zip"));
+                var countOfEntries = updateFile.Entries.Count;
+                _log.Enqueue(new LogEntry($"{countOfEntries} files detected."));
+
+                for (var i = 0; i < countOfEntries; i++)
+                {
+                    var percentage = i / (float)countOfEntries;
+
+                    var fileEntry = updateFile.Entries[i];
+                    _log.Enqueue(new LogEntry($"[{Math.Truncate(percentage * 100)}%] Updating: {fileEntry.FullName}"));
+                    _extractProgress = (float)(Math.Truncate(percentage * 100) / 100.0f);
+
+                    if (_ignoreFiles.Contains(fileEntry.FullName))
+                        continue;
+
+                    try
+                    {
+                        var filePath = Path.Combine(Program.ExePath, fileEntry.FullName);
+                        if (File.Exists(filePath))
+                            File.Move(filePath, $"{filePath}.updateremove");
+                        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                        fileEntry.ExtractToFile(filePath);
+                    }
+                    catch (IOException e)
+                    {
+                        _log.Enqueue(new LogEntry($"{fileEntry.FullName} is inaccessible.", Color.Red));
+
+                        MessageBox.Show($"{fileEntry.FullName} is inaccessible.\r\nPlease close Aurora.\r\n\r\n {e.Message}");
+                        i--;
+                    }
+                }
+
+                updateFile.Dispose();
+                File.Delete(Path.Combine(Program.ExePath, "update.zip"));
+            }
+            catch (Exception exc)
+            {
+                _log.Enqueue(new LogEntry(exc.Message, Color.Red));
+
                 return false;
             }
+
+            _log.Enqueue(new LogEntry("All files updated."));
+            _log.Enqueue(new LogEntry());
+            _log.Enqueue(new LogEntry("Updater will automatically restart Aurora."));
+            _extractProgress = 1.0f;
 
             return true;
         }
 
-        public bool RetrieveUpdate(UpdateType type)
+        _log.Enqueue(new LogEntry("Update file not found.", Color.Red));
+        return false;
+    }
+
+    private void PerformCleanup()
+    {
+        var messyFiles = Directory.GetFiles(Program.ExePath, "*.updateremove", SearchOption.AllDirectories);
+
+        foreach (var file in messyFiles)
         {
-            //string url = @"http://project-aurora.com/download.php?id=" + (type == UpdateType.Major ? response.Major.ID : response.Minor.ID);
-            //updateState = UpdateStatus.InProgress;
             try
             {
-                string url = LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
-                
-                if (!String.IsNullOrWhiteSpace(url))
-                {
-                    this.log.Enqueue(new LogEntry("Starting download... "));
-
-                    WebClient client = new WebClient();
-                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                    client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-
-                    // Starts the download
-                    client.DownloadFileAsync(new Uri(url), Path.Combine(Program.exePath, "update.zip"));
-
-                }
-
+                File.Delete(file);
             }
-            catch (Exception exc)
+            catch
             {
-                log.Enqueue(new LogEntry(exc.Message, Color.Red));
-                updateState = UpdateStatus.Error;
-                return false;
-            }
-            return false;
-        }
-
-        void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            double bytesIn = double.Parse(e.BytesReceived.ToString());
-            double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            double percentage = bytesIn / totalBytes;
-
-            int newPercentage = (int)(percentage * 100);
-            if (previousPercentage == newPercentage)
-                return;
-
-            previousPercentage = newPercentage;
-
-            log.Enqueue(new LogEntry("Download " + newPercentage + "%"));
-            downloadProgess = newPercentage / 100.0f;
-        }
-
-        void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            this.log.Enqueue(new LogEntry("Download complete."));
-            this.log.Enqueue(new LogEntry());
-            this.downloadProgess = 1.0f;
-
-            if (ExtractUpdate())
-            {
-                System.Timers.Timer shutdownTimer = new System.Timers.Timer(1000);
-                shutdownTimer.Elapsed += ShutdownTimerElapsed;
-                shutdownTimer.Start();
-
-                updateState = UpdateStatus.Complete;
-            }
-            else
-                updateState = UpdateStatus.Error;
-        }
-
-        private void ShutdownTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            if (secondsLeft > 0)
-            {
-                this.log.Enqueue(new LogEntry($"Restarting Aurora in {secondsLeft} second{(secondsLeft == 1 ? "" : "s")}..."));
-                secondsLeft--;
-            }
-            else
-            {
-                //Kill all Aurora instances
-                foreach (Process proc in Process.GetProcessesByName("Aurora"))
-                    proc.Kill();
-
-                try
-                {
-                    ProcessStartInfo auroraProc = new ProcessStartInfo();
-                    auroraProc.FileName = Path.Combine(Program.exePath, "Aurora.exe");
-                    Process.Start(auroraProc);
-
-                    Environment.Exit(0); //Exit, no further action required
-                }
-                catch (Exception exc)
-                {
-                    this.log.Enqueue(new LogEntry($"Could not restart Aurora. Error:\r\n{exc}", Color.Red));
-                    this.log.Enqueue(new LogEntry("Please restart Aurora manually.", Color.Red));
-
-                    MessageBox.Show(
-                        $"Could not restart Aurora.\r\nPlease restart Aurora manually.\r\nError:\r\n{exc}",
-                        "Aurora Updater - Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
+                _log.Enqueue(new LogEntry("Unable to delete file - " + file, Color.Red));
             }
         }
 
-        private bool ExtractUpdate()
-        {
-            if (File.Exists(Path.Combine(Program.exePath, "update.zip")))
-            {
-                log.Enqueue(new LogEntry("Unpacking update..."));
-
-                try
-                {
-                    var updateFile = ZipFile.OpenRead(Path.Combine(Program.exePath, "update.zip"));
-                    var countOfEntries = updateFile.Entries.Count;
-                    log.Enqueue(new LogEntry($"{countOfEntries} files detected."));
-
-                    for (int i = 0; i < countOfEntries; i++)
-                    {
-                        float percentage = i / (float)countOfEntries;
-
-                        var fileEntry = updateFile.Entries[i];
-                        log.Enqueue(new LogEntry($"[{Math.Truncate(percentage * 100)}%] Updating: {fileEntry.FullName}"));
-                        extractProgess = (float)(Math.Truncate(percentage * 100) / 100.0f);
-
-                        if (ignoreFiles.Contains(fileEntry.FullName))
-                            continue;
-
-                        try
-                        {
-                            var filePath = Path.Combine(Program.exePath, fileEntry.FullName);
-                            if (File.Exists(filePath))
-                                File.Move(filePath, $"{filePath}.updateremove");
-                            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                            fileEntry.ExtractToFile(filePath);
-                        }
-                        catch (IOException e)
-                        {
-                            log.Enqueue(new LogEntry($"{fileEntry.FullName} is inaccessible.", Color.Red));
-
-                            MessageBox.Show($"{fileEntry.FullName} is inaccessible.\r\nPlease close Aurora.\r\n\r\n {e.Message}");
-                            i--;
-                        }
-                    }
-
-                    updateFile.Dispose();
-                    File.Delete(Path.Combine(Program.exePath, "update.zip"));
-                }
-                catch (Exception exc)
-                {
-                    log.Enqueue(new LogEntry(exc.Message, Color.Red));
-
-                    return false;
-                }
-
-                log.Enqueue(new LogEntry("All files updated."));
-                log.Enqueue(new LogEntry());
-                log.Enqueue(new LogEntry("Updater will automatically restart Aurora."));
-                this.extractProgess = 1.0f;
-
-                return true;
-            }
-            else
-            {
-                this.log.Enqueue(new LogEntry("Update file not found.", Color.Red));
-                return false;
-            }
-        }
-
-        private void PerformCleanup()
-        {
-            string[] _messyFiles = Directory.GetFiles(Program.exePath, "*.updateremove", SearchOption.AllDirectories);
-
-            foreach (string file in _messyFiles)
-            {
-                try
-                {
-                    File.Delete(file);
-                }
-                catch (Exception exc)
-                {
-                    log.Enqueue(new LogEntry("Unable to delete file - " + file, Color.Red));
-                }
-            }
-
-            if (File.Exists(Path.Combine(Program.exePath, "update.zip")))
-                File.Delete(Path.Combine(Program.exePath, "update.zip"));
-        }
+        if (File.Exists(Path.Combine(Program.ExePath, "update.zip")))
+            File.Delete(Path.Combine(Program.ExePath, "update.zip"));
     }
+}
 
-
-    public class UpdateResponse
-    {
-        protected Newtonsoft.Json.Linq.JObject _ParsedData;
-        protected string json;
-
-        private UpdateInfoNode _Major;
-        public UpdateInfoNode Major
-        {
-            get
-            {
-                if (_Major == null)
-                {
-                    _Major = new UpdateInfoNode(_ParsedData["major"]?.ToString() ?? "");
-                }
-
-                return _Major;
-            }
-        }
-
-        private UpdateInfoNode _Minor;
-        public UpdateInfoNode Minor
-        {
-            get
-            {
-                if (_Minor == null)
-                {
-                    _Minor = new UpdateInfoNode(_ParsedData["minor"]?.ToString() ?? "");
-                }
-
-                return _Minor;
-            }
-        }
-
-        public UpdateResponse()
-        {
-            json = "{}";
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json);
-        }
-
-        public UpdateResponse(string json_data)
-        {
-            if (String.IsNullOrWhiteSpace(json_data))
-            {
-                json_data = "{}";
-            }
-
-            json = json_data;
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
-        }
-
-        public UpdateResponse(UpdateResponse other_state)
-        {
-            _ParsedData = other_state._ParsedData;
-            json = other_state.json;
-        }
-
-        internal String GetNode(string name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(name, out value))
-                return value.ToString();
-            else
-                return "";
-        }
-
-        public override string ToString()
-        {
-            return json;
-        }
-    }
-
-    public class Node
-    {
-        protected Newtonsoft.Json.Linq.JObject _ParsedData;
-
-        internal Node(string json_data)
-        {
-            if (String.IsNullOrWhiteSpace(json_data))
-            {
-                json_data = "{}";
-            }
-            _ParsedData = Newtonsoft.Json.Linq.JObject.Parse(json_data);
-        }
-
-        internal string GetString(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value))
-                return value.ToString();
-            else
-                return "";
-        }
-
-        internal int GetInt(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value))
-                return Convert.ToInt32(value.ToString());
-            else
-                return -1;
-        }
-
-        internal float GetFloat(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value))
-                return Convert.ToSingle(value.ToString());
-            else
-                return -1.0f;
-        }
-
-        internal long GetLong(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value))
-                return Convert.ToInt64(value.ToString());
-            else
-                return -1;
-        }
-
-        internal T GetEnum<T>(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value) && !String.IsNullOrWhiteSpace(value.ToString()))
-            {
-                var type = typeof(T);
-                if (!type.IsEnum) throw new InvalidOperationException();
-                foreach (var field in type.GetFields())
-                {
-                    var attribute = Attribute.GetCustomAttribute(field,
-                        typeof(DescriptionAttribute)) as DescriptionAttribute;
-                    if (attribute != null)
-                    {
-                        if (attribute.Description.ToLowerInvariant().Equals(Name))
-                            return (T)field.GetValue(null);
-                    }
-
-                    if (field.Name.ToLowerInvariant().Equals(Name))
-                        return (T)field.GetValue(null);
-                }
-
-                return (T)Enum.Parse(typeof(T), "Undefined", true);
-            }
-            else
-                return (T)Enum.Parse(typeof(T), "Undefined", true);
-        }
-
-        internal bool GetBool(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value) && value.ToObject<bool>())
-                return value.ToObject<bool>();
-            else
-                return false;
-        }
-
-        internal T[] GetArray<T>(string Name)
-        {
-            Newtonsoft.Json.Linq.JToken value;
-
-            if (_ParsedData.TryGetValue(Name, out value))
-                return value.ToObject<T[]>();
-            else
-                return new T[] { };
-        }
-    }
-
-    public enum UpdateType
-    {
-        Undefined,
-        Major,
-        Minor
-    }
-
-    public class UpdateInfoNode : Node
-    {
-        public readonly int ID;
-        public readonly Version Version;
-        public readonly string Title;
-        public readonly string Description;
-        public readonly string Changelog;
-        public readonly string File;
-        public readonly UpdateType Type;
-        public readonly long FileSize;
-        public readonly bool PreRelease;
-
-        internal UpdateInfoNode(string JSON)
-            : base(JSON)
-        {
-            ID = GetInt("id");
-            Version = new Version(GetString("vnr"), true);
-            Title = GetString("title");
-            Description = GetString("desc").Replace("\\r\\n", "\r\n");
-            Changelog = GetString("clog").Replace("\\r\\n", "\r\n");
-            File = GetString("file");
-            Type = GetEnum<UpdateType>("type");
-            FileSize = GetLong("size");
-            PreRelease = GetInt("prerelease") == 1 ? true : false;
-        }
-    }
+public enum UpdateType
+{
+    Undefined,
+    Major,
+    Minor
 }

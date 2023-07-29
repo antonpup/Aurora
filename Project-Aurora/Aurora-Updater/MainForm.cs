@@ -2,60 +2,48 @@
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Aurora_Updater
+namespace Aurora_Updater;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
+    private readonly System.Windows.Forms.Timer _progressTimer = new();
+    private readonly Thread _updaterThread;
+    private int _logTracker;
+
+    public MainForm()
     {
-        System.Windows.Forms.Timer progressTimer;
-        Thread updaterThread;
-        int logTracker = 0;
-        UpdateType updatetype;
+        _updaterThread = new Thread(() => StaticStorage.Manager.RetrieveUpdate());
+        InitializeComponent();
+        StaticStorage.Manager.ClearLog();
+    }
 
-        public MainForm()
+    private void Form1_Shown(object? sender, EventArgs e)
+    {
+        _progressTimer.Interval = 1000;
+        _progressTimer.Tick += UpdateProgressTick;
+        _progressTimer.Enabled = true;
+        _progressTimer.Start();
+        _updaterThread.IsBackground = true;
+        _updaterThread.Start();
+    }
+
+    private void UpdateProgressTick(object? sender, EventArgs args)
+    {
+        update_progress.Value = StaticStorage.Manager.GetTotalProgress();
+
+        var logs = StaticStorage.Manager.GetLog();
+
+        if (logs.Length <= _logTracker) return;
+        for (; _logTracker < logs.Length; _logTracker++)
         {
-            InitializeComponent();
+            richtextUpdateLog.SelectionStart = richtextUpdateLog.TextLength;
+            richtextUpdateLog.SelectionLength = 0;
+
+            richtextUpdateLog.SelectionColor = logs[_logTracker].GetColor();
+            richtextUpdateLog.AppendText(logs[_logTracker] + "\r\n");
+            richtextUpdateLog.SelectionColor = richtextUpdateLog.ForeColor;
         }
 
-        public MainForm(UpdateType update_type)
-        {
-            InitializeComponent();
-            this.updatetype = update_type;
-            StaticStorage.Manager.ClearLog();
-        }
-
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            progressTimer = new System.Windows.Forms.Timer();
-            progressTimer.Interval = 1000;
-            progressTimer.Tick += this.UpdateProgressTick;
-            progressTimer.Enabled = true;
-            progressTimer.Start();
-            updaterThread = new Thread(() => StaticStorage.Manager.RetrieveUpdate(this.updatetype));
-            updaterThread.IsBackground = true;
-            updaterThread.Start();
-        }
-
-
-        private void UpdateProgressTick(object sender, EventArgs args)
-        {
-            this.update_progress.Value = StaticStorage.Manager.GetTotalProgress();
-
-            LogEntry[] logs = StaticStorage.Manager.GetLog();
-
-            if (logs.Length > logTracker)
-            {
-                for (; logTracker < logs.Length; logTracker++)
-                {
-                    this.richtextUpdateLog.SelectionStart = this.richtextUpdateLog.TextLength;
-                    this.richtextUpdateLog.SelectionLength = 0;
-
-                    this.richtextUpdateLog.SelectionColor = logs[logTracker].GetColor();
-                    this.richtextUpdateLog.AppendText(logs[logTracker] + "\r\n");
-                    this.richtextUpdateLog.SelectionColor = this.richtextUpdateLog.ForeColor;
-                }
-
-                this.richtextUpdateLog.ScrollToCaret();
-            }
-        }
+        richtextUpdateLog.ScrollToCaret();
     }
 }
