@@ -41,7 +41,7 @@ public sealed partial class LightningStateManagerModule : AuroraModule
         var lightingStateManager = new LightingStateManager(_pluginManager, _ipcListener, _deviceManager);
         _manager = lightingStateManager;
         Global.LightingStateManager = lightingStateManager;
-        lightingStateManager.Initialize();
+        await lightingStateManager.Initialize();
 
         _taskSource.SetResult(lightingStateManager);
 

@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Pipes;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +14,6 @@ using Aurora.Modules.GameStateListen;
 using Aurora.Modules.ProcessMonitor;
 using Aurora.Settings;
 using Aurora.Utils;
-using Microsoft.Win32;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Aurora;
@@ -31,8 +27,8 @@ public partial class App
     private static readonly Mutex Mutex = new(false, "{C88D62B0-DE49-418E-835D-CE213D58444C}");
 
     public static bool IsSilent { get; private set; }
-    private bool _ignoreUpdate;
 
+    private static readonly UpdateModule UpdateModule = new();
     private static readonly PluginsModule PluginsModule = new();
     private static readonly IpcListenerModule IpcListenerModule = new();
     private static readonly HttpListenerModule HttpListenerModule = new();
@@ -44,6 +40,7 @@ public partial class App
 
     private readonly List<AuroraModule> _modules = new()
     {
+        UpdateModule,
         new UpdateCleanup(),
         new InputsModule(),
         new MediaInfoModule(),
@@ -68,36 +65,11 @@ public partial class App
         Global.Initialize();
         UseArgs(e);
 
-        try
-        {
-            if (!Mutex.WaitOne(TimeSpan.FromMilliseconds(0), true))
-            {
-                try
-                {
-                    NamedPipeClientStream client = new NamedPipeClientStream(
-                        ".", IpcListener.AuroraInterfacePipe, PipeDirection.Out, PipeOptions.Asynchronous);
-                    client.Connect(2);
-                    if (!client.IsConnected)
-                        throw new InvalidOperationException();
-                    var command = Encoding.ASCII.GetBytes("restore");
-                    client.Write(command, 0, command.Length);
-                    client.Close();
-                }
-                catch
-                {
-                    MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
-                    ForceShutdownApp(0);
-                }
-
-                Closing = true;
-                Environment.Exit(0);
-                return;
-            }
-        }
-        catch(AbandonedMutexException) { /* Means previous instance closed anyway */ }
+        CheckRunningProcesses();
 
         new UserSettingsBackup().BackupIfNew();
-        PrintSystemInfo();
+        var systemInfo = SystemUtils.GetSystemInfo();
+        Global.logger.Information("{}", systemInfo);
 
         var currentDomain = AppDomain.CurrentDomain;
         currentDomain.AppendPrivatePath("x64");
@@ -113,10 +85,6 @@ public partial class App
         if (Global.Configuration.HighPriority)
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
-        }
-        if (Global.Configuration.UpdatesCheckOnStartUp && !_ignoreUpdate)
-        {
-            DesktopUtils.CheckUpdate();
         }
 
         WindowListener.Instance = new WindowListener();
@@ -139,6 +107,37 @@ public partial class App
             Window_BitmapView.Open();
         if (Global.Configuration.HttpWindowOnStartUp)
             Window_GSIHttpDebug.Open(HttpListenerModule.HttpListener);
+    }
+
+    private void CheckRunningProcesses()
+    {
+        try
+        {
+            if (Mutex.WaitOne(TimeSpan.FromMilliseconds(0), true)) return;
+            try
+            {
+                var client = new NamedPipeClientStream(
+                    ".", IpcListener.AuroraInterfacePipe, PipeDirection.Out, PipeOptions.Asynchronous);
+                client.Connect(2);
+                if (!client.IsConnected)
+                    throw new InvalidOperationException();
+                var command = Encoding.ASCII.GetBytes("restore");
+                client.Write(command, 0, command.Length);
+                client.Close();
+            }
+            catch
+            {
+                MessageBox.Show("Aurora is already running.\r\nExiting.", "Aurora - Error");
+                ForceShutdownApp(0);
+            }
+
+            Closing = true;
+            Environment.Exit(0);
+        }
+        catch (AbandonedMutexException)
+        {
+            /* Means previous instance closed anyway */
+        }
     }
 
     private void ForceShutdownApp(int exitCode)
@@ -174,7 +173,7 @@ public partial class App
                     Global.logger.Information("Program started with '-silent' parameter");
                     break;
                 case "-ignore_update":
-                    _ignoreUpdate = true;
+                    UpdateModule.IgnoreUpdate = true;
                     Global.logger.Information("Program started with '-ignore_update' parameter");
                     break;
                 case "-delay":
@@ -185,47 +184,6 @@ public partial class App
                     break;
             }
         }
-    }
-
-    private static void PrintSystemInfo()
-    {
-        var systemInfoSb = new StringBuilder(string.Empty);
-        systemInfoSb.Append("\r\n========================================\r\n");
-
-        try
-        {
-            using var winReg = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion");
-            var productName = (string)winReg.GetValue("ProductName");
-
-            systemInfoSb.Append($"Operation System: {productName}\r\n");
-        }
-        catch (Exception exc)
-        {
-            systemInfoSb.Append($"Operation System: Could not be retrieved. [Exception: {exc.Message}]\r\n");
-        }
-
-        systemInfoSb.AppendFormat("System Architecture: " + (Environment.Is64BitOperatingSystem ? "64 bit" : "32 bit") +
-                                   "\r\n");
-
-        systemInfoSb.Append($"Environment OS Version: {Environment.OSVersion}\r\n");
-
-        systemInfoSb.Append($"System Directory: {Environment.SystemDirectory}\r\n");
-        systemInfoSb.Append($"Executing Directory: {Global.ExecutingDirectory}\r\n");
-        systemInfoSb.Append($"Launch Directory: {Directory.GetCurrentDirectory()}\r\n");
-        systemInfoSb.Append($"Processor Count: {Environment.ProcessorCount}\r\n");
-
-        systemInfoSb.Append($"SystemPageSize: {Environment.SystemPageSize}\r\n");
-        systemInfoSb.Append($"Environment Version: {Environment.Version}\r\n");
-
-        var identity = WindowsIdentity.GetCurrent();
-        var principal = new WindowsPrincipal(identity);
-        systemInfoSb.Append($"Is Elevated: {principal.IsInRole(WindowsBuiltInRole.Administrator)}\r\n");
-        systemInfoSb.Append($"Aurora Assembly Version: {Assembly.GetExecutingAssembly().GetName().Version}\r\n");
-        systemInfoSb.Append(
-            $"Aurora File Version: {FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion}\r\n");
-
-        systemInfoSb.Append("========================================\r\n");
-        Global.logger.Information(systemInfoSb.ToString());
     }
 
     protected override async void OnExit(ExitEventArgs e)

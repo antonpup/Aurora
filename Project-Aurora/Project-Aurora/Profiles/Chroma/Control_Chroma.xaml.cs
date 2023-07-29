@@ -14,8 +14,8 @@ public partial class Control_Chroma : INotifyPropertyChanged
 {
     public ObservableCollection<string> EnabledPrograms { get; } = new();
     public ObservableCollection<string> ExcludedPrograms => _settings.ExcludedPrograms;
-    public string SelectedEnabledProgram { get; set; }
-    public string SelectedExcludedProgram { get; set; }
+    public string SelectedEnabledProgram { get; set; } = "";
+    public string SelectedExcludedProgram { get; set; } = "";
 
     private readonly ChromaApplication _profile;
     private readonly ChromaApplicationSettings _settings;

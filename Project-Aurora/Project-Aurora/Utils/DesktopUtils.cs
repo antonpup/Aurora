@@ -55,7 +55,7 @@ public static class DesktopUtils
     [DllImport("user32.dll", SetLastError = true)]
     private static extern IntPtr CloseDesktop(IntPtr desktop);
 
-    private static void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
+    private static async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
         switch (e.Reason)
         {
@@ -67,7 +67,7 @@ public static class DesktopUtils
                 IsDesktopLocked = false;
                 if (Global.Configuration.UpdatesCheckOnStartUp)
                 {
-                    CheckUpdate();
+                    await CheckUpdate();
                 }
 
                 break;
@@ -75,11 +75,12 @@ public static class DesktopUtils
         }
     }
 
-    public static void CheckUpdate()
+    public static async Task CheckUpdate()
     {
         var updaterPath = Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
 
         if (!File.Exists(updaterPath)) return;
+        await WaitSessionUnlock();
         try
         {
             var updaterProc = new ProcessStartInfo

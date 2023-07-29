@@ -28,7 +28,7 @@ namespace Aurora.Profiles
 {
     public class LightEventConfig : INotifyPropertyChanged
     {
-        public string[]? ProcessNames
+        public string[] ProcessNames
         {
             get => _processNames;
             set
@@ -58,10 +58,8 @@ namespace Aurora.Profiles
         public Type? GameStateType { get; set; }
 
         private readonly Lazy<LightEvent> _lightEvent;
-        private string[]? _processNames;
+        private string[] _processNames = Array.Empty<string>();
         public LightEvent Event => _lightEvent.Value;
-
-        public int? UpdateInterval { get; set; } = null;
 
         public string IconURI { get; set; }
 

@@ -71,10 +71,10 @@ public partial class Control_Settings
         e.Handled = true;
     }
 
-    private void updates_check_Click(object? sender, RoutedEventArgs e)
+    private async void updates_check_Click(object? sender, RoutedEventArgs e)
     {
         if (!IsLoaded) return;
-        DesktopUtils.CheckUpdate();
+        await DesktopUtils.CheckUpdate();
     }
 
     private void btnShowLogsFolder_Click(object? sender, RoutedEventArgs e)

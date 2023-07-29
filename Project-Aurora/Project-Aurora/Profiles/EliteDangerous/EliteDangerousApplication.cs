@@ -11,7 +11,6 @@ public class EliteDangerous : Application
             Name = "Elite: Dangerous",
             ID = "EliteDangerous",
             ProcessNames = new[] { "EliteDangerous64.exe" },
-            UpdateInterval = 16,
             SettingsType = typeof(EliteDangerousSettings),
             ProfileType = typeof(EliteDangerousProfile),
             OverviewControlType = typeof(Control_EliteDangerous),

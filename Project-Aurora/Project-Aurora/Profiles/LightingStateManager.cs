@@ -26,7 +26,7 @@ public sealed class LightingStateManager
 {
     public Dictionary<string, ILightEvent> Events { get; } = new() { { "desktop", new Desktop.Desktop() } };
 
-    public Desktop.Desktop DesktopProfile => (Desktop.Desktop)Events["desktop"];
+    private Desktop.Desktop DesktopProfile => (Desktop.Desktop)Events["desktop"];
 
     private readonly List<ILightEvent> _startedEvents = new();
     private readonly List<ILightEvent> _updatedEvents = new();
@@ -42,36 +42,32 @@ public sealed class LightingStateManager
     public event EventHandler? PreUpdate;
     public event EventHandler? PostUpdate;
 
-    private ActiveProcessMonitor _processMonitor;
+    private readonly ActiveProcessMonitor _processMonitor;
 
-    private Func<string, bool> _isRunningProcess;
-    private Func<ILightEvent, bool> _isOverlayActiveProfile;
+    private readonly Func<ILightEvent, bool> _isOverlayActiveProfile;
 
     private readonly Task<PluginManager> _pluginManager;
     private readonly Task<IpcListener?> _ipcListener;
     private readonly Task<DeviceManager> _deviceManager;
+
+    private bool Initialized { get; set; }
 
     public LightingStateManager(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager)
     {
         _pluginManager = pluginManager;
         _ipcListener = ipcListener;
         _deviceManager = deviceManager;
-    }
-
-    public bool Initialized { get; private set; }
-
-    public bool Initialize()
-    {
-        if (Initialized)
-            return true;
 
         _processMonitor = ActiveProcessMonitor.Instance;
-        _isRunningProcess = name => RunningProcessMonitor.Instance.IsProcessRunning(name);
         _isOverlayActiveProfile = evt =>
             evt.IsOverlayEnabled &&
-            (evt.Config.ProcessNames == null ||
-             evt.Config.ProcessNames.Any(_isRunningProcess));
+            evt.Config.ProcessNames.Any(name => RunningProcessMonitor.Instance.IsProcessRunning(name));
+    }
 
+    public async Task Initialize()
+    {
+        if (Initialized)
+            return;
         // Register all Application types in the assembly
         var profileTypes = from type in Assembly.GetExecutingAssembly().GetLoadableTypes()
             where type.BaseType == typeof(Application) && type != typeof(GenericApplication)
@@ -94,12 +90,12 @@ public sealed class LightingStateManager
             LayerHandlers.Add(type, new LayerHandlerMeta(type, meta));
 
         LoadSettings();
-        LoadPlugins();
+        await LoadPlugins();
 
-        string additionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
+        var additionalProfilesPath = Path.Combine(Global.AppDataDirectory, "AdditionalProfiles");
         if (Directory.Exists(additionalProfilesPath))
         {
-            List<string> additionals = new List<string>(Directory.EnumerateDirectories(additionalProfilesPath));
+            var additionals = new List<string>(Directory.EnumerateDirectories(additionalProfilesPath));
             foreach (var processName in from dir in additionals
                      where File.Exists(Path.Combine(dir, "settings.json"))
                      select Path.GetFileName(dir)
@@ -118,12 +114,11 @@ public sealed class LightingStateManager
         Global.InputEvents.KeyDown += CheckProfileKeybinds;
 
         Initialized = true;
-        return Initialized;
     }
 
-    private void LoadPlugins()
+    private async Task LoadPlugins()
     {
-        _pluginManager.Result.ProcessManager(this);
+        (await _pluginManager).ProcessManager(this);
     }
 
     private void LoadSettings()
@@ -166,12 +161,9 @@ public sealed class LightingStateManager
 
         Events.Add(profileId, @event);
 
-        if (@event.Config.ProcessNames != null)
+        foreach (string exe in @event.Config.ProcessNames)
         {
-            foreach (string exe in @event.Config.ProcessNames)
-            {
-                EventProcesses[exe.ToLower()] = profileId;
-            }
+            EventProcesses[exe.ToLower()] = profileId;
         }
 
         @event.Config.ProcessNamesChanged += (_, _) =>
