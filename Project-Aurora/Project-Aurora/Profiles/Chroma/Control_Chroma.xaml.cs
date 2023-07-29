@@ -92,6 +92,6 @@ public partial class Control_Chroma : INotifyPropertyChanged
         }
         
         using var registryKey = Registry.LocalMachine.OpenSubKey(ChromaApplication.AppsKey, true);
-        registryKey.SetValue(ChromaApplication.PriorityValue, value);
+        registryKey?.SetValue(ChromaApplication.PriorityValue, value);
     }
 }
