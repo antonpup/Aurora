@@ -49,7 +49,7 @@ namespace Aurora.Controls
             this.DataContext = this;
         }
 
-        private void cz_list_add_Click(object sender, RoutedEventArgs e)
+        private void cz_list_add_Click(object? sender, RoutedEventArgs e)
         {
             ColorZone newcz = new ColorZone();
 
@@ -63,7 +63,7 @@ namespace Aurora.Controls
             update_cz_list();
         }
 
-        private void cz_list_remove_Click(object sender, RoutedEventArgs e)
+        private void cz_list_remove_Click(object? sender, RoutedEventArgs e)
         {
             if (cz_list.SelectedIndex != -1)
             {
@@ -88,7 +88,7 @@ namespace Aurora.Controls
             update_cz_list();
         }
 
-        private void cz_name_textbox_TextChanged(object sender, TextChangedEventArgs e)
+        private void cz_name_textbox_TextChanged(object? sender, TextChangedEventArgs e)
         {
             if (this.IsInitialized)
             {
@@ -100,7 +100,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void cz_list_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cz_list_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (cz_list.SelectedItem != null)
             {
@@ -115,7 +115,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void cz_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void cz_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (this.cz_colorpicker.SelectedColor.HasValue)
             {
@@ -141,7 +141,7 @@ namespace Aurora.Controls
             allowListRefresh = true;
         }
 
-        private void cz_effect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cz_effect_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (cz_list.SelectedItem != null)
             {
@@ -154,7 +154,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void effect_settings_button_Click(object sender, RoutedEventArgs e)
+        private void effect_settings_button_Click(object? sender, RoutedEventArgs e)
         {
             if (cz_list.SelectedItem != null)
             {
@@ -166,7 +166,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void Effect_settings_EffectConfigUpdated(object sender, EventArgs e)
+        private void Effect_settings_EffectConfigUpdated(object? sender, EventArgs e)
         {
             if (cz_list.SelectedItem != null)
             {
@@ -175,7 +175,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void cz_list_up_Click(object sender, RoutedEventArgs e)
+        private void cz_list_up_Click(object? sender, RoutedEventArgs e)
         {
             if (cz_list.SelectedIndex > 0)
             {
@@ -194,7 +194,7 @@ namespace Aurora.Controls
             update_cz_list();
         }
 
-        private void cz_list_down_Click(object sender, RoutedEventArgs e)
+        private void cz_list_down_Click(object? sender, RoutedEventArgs e)
         {
             if (cz_list.SelectedIndex != -1 && cz_list.SelectedIndex < cz_list.Items.Count - 1)
             {
@@ -213,7 +213,7 @@ namespace Aurora.Controls
             update_cz_list();
         }
 
-        private void ks_SequenceUpdated(object sender, EventArgs e)
+        private void ks_SequenceUpdated(object? sender, EventArgs e)
         {
             if (cz_list.SelectedItem != null)
             {

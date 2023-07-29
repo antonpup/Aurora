@@ -60,18 +60,18 @@ public partial class RgbNetKeyToDeviceKeyControl
         }
     }
 
-    private void TestBlink(object sender, RoutedEventArgs e)
+    private void TestBlink(object? sender, RoutedEventArgs e)
     {
         BlinkCallback?.Invoke();
     }
 
-    private void Clear(object sender, RoutedEventArgs e)
+    private void Clear(object? sender, RoutedEventArgs e)
     {
         DeviceKeyChanged?.Invoke(this, null);
         UpdateMappedLedId();
     }
 
-    private void DeviceKeyButton_OnClick(object sender, RoutedEventArgs e)
+    private void DeviceKeyButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Global.key_recorder.FinishedRecording += KeyRemapped;
         Global.key_recorder.StartRecording("DeviceRemap", true);

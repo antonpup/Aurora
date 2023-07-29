@@ -154,7 +154,7 @@ partial class ConfigUI : INotifyPropertyChanged
         });
     }
 
-    private void Window_Loaded_Mica(object sender, RoutedEventArgs e)
+    private void Window_Loaded_Mica(object? sender, RoutedEventArgs e)
     {
         // Get PresentationSource
         PresentationSource presentationSource = PresentationSource.FromVisual((Visual)sender);
@@ -238,14 +238,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     internal void DisplayIfNotSilent()
     {
-        if (App.IsSilent)
-        {
-            Visibility = Visibility.Hidden;
-            ShowInTaskbar = false;
-            _virtualKeyboardTimer.Stop();
-            Hide();
-        }
-        else
+        if (!App.IsSilent)
         {
             Display();
         }
@@ -305,7 +298,7 @@ partial class ConfigUI : INotifyPropertyChanged
             SelectedControl = _profilePresenter;   
     }
 
-    private async void KbLayout_KeyboardLayoutUpdated(object sender)
+    private async void KbLayout_KeyboardLayoutUpdated(object? sender)
     {
         _virtualKb = (await _layoutManager).VirtualKeyboard;
 
@@ -326,7 +319,7 @@ partial class ConfigUI : INotifyPropertyChanged
         UpdateLayout();
     }
 
-    private async void Window_Loaded(object sender, RoutedEventArgs e)
+    private async void Window_Loaded(object? sender, RoutedEventArgs e)
     {
         KeyboardRecordMessage.Visibility = Visibility.Hidden;
 
@@ -365,7 +358,7 @@ partial class ConfigUI : INotifyPropertyChanged
     }
 
     private readonly Stopwatch _keyboardTimer = Stopwatch.StartNew();
-    private void virtual_keyboard_timer_Tick(object sender, EventArgs e)
+    private void virtual_keyboard_timer_Tick(object? sender, EventArgs e)
     {
         if (Visibility != Visibility.Visible) return;
         Dispatcher.Invoke(_keyboardTimerCallback);
@@ -374,28 +367,28 @@ partial class ConfigUI : INotifyPropertyChanged
 
     ////Misc
 
-    private void trayicon_menu_quit_Click(object sender, RoutedEventArgs e)
+    private void trayicon_menu_quit_Click(object? sender, RoutedEventArgs e)
     {
         //TODO make async
         ExitApp();
     }
 
-    private void trayicon_menu_settings_Click(object sender, RoutedEventArgs e)
+    private void trayicon_menu_settings_Click(object? sender, RoutedEventArgs e)
     {
         Display();
     }
 
-    private void trayicon_menu_restart_Click(object sender, RoutedEventArgs e)
+    private void trayicon_menu_restart_Click(object? sender, RoutedEventArgs e)
     {
         Restart();
     }
 
-    private void Window_Initialized(object sender, EventArgs e)
+    private void Window_Initialized(object? sender, EventArgs e)
     {
         //unused
     }
 
-    private void Window_Closing(object sender, CancelEventArgs e)
+    private void Window_Closing(object? sender, CancelEventArgs e)
     {
         switch (Global.Configuration.CloseMode)
         {
@@ -450,13 +443,13 @@ partial class ConfigUI : INotifyPropertyChanged
         Hide();
     }
 
-    private async void Window_Activated(object sender, EventArgs e)
+    private async void Window_Activated(object? sender, EventArgs e)
     {
         var lightingStateManager = await _lightingStateManager;
         lightingStateManager.PreviewProfileKey = _savedPreviewKey;
     }
 
-    private async void Window_Deactivated(object sender, EventArgs e)
+    private async void Window_Deactivated(object? sender, EventArgs e)
     {
         var lightingStateManager = await _lightingStateManager;
         _savedPreviewKey = lightingStateManager.PreviewProfileKey;
@@ -565,7 +558,7 @@ partial class ConfigUI : INotifyPropertyChanged
         profiles_stack.Children.Add(_profileHidden);
     }
 
-    private void HiddenProfile_MouseDown(object sender, EventArgs e)
+    private void HiddenProfile_MouseDown(object? sender, EventArgs e)
     {
         ShowHidden = !ShowHidden;
     }
@@ -585,7 +578,7 @@ partial class ConfigUI : INotifyPropertyChanged
         }
     }
 
-    private void mbtnHidden_Checked(object sender, RoutedEventArgs e)
+    private void mbtnHidden_Checked(object? sender, RoutedEventArgs e)
     {
         MenuItem btn = (MenuItem)sender;
 
@@ -598,13 +591,13 @@ partial class ConfigUI : INotifyPropertyChanged
         (img.Tag as Application)?.SaveProfiles();
     }
 
-    private void cmenuProfiles_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+    private void cmenuProfiles_ContextMenuOpening(object? sender, ContextMenuEventArgs e)
     {
         if (((ContextMenu)e.Source).PlacementTarget is not Image)
             e.Handled = true;
     }
 
-    private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+    private void ContextMenu_Opened(object? sender, RoutedEventArgs e)
     {
         ContextMenu context = (ContextMenu)e.OriginalSource;
 
@@ -615,13 +608,13 @@ partial class ConfigUI : INotifyPropertyChanged
         context.DataContext = profile;
     }
 
-    private void Profile_grid_MouseLeave(object sender, MouseEventArgs e)
+    private void Profile_grid_MouseLeave(object? sender, MouseEventArgs e)
     {
         if ((sender as Grid)?.Tag is Image)
             ((Image)((Grid)sender).Tag).Visibility = Visibility.Hidden;
     }
 
-    private void Profile_grid_MouseEnter(object sender, MouseEventArgs e)
+    private void Profile_grid_MouseEnter(object? sender, MouseEventArgs e)
     {
         if ((sender as Grid)?.Tag is Image)
             ((Image)((Grid)sender).Tag).Visibility = Visibility.Visible;
@@ -640,7 +633,7 @@ partial class ConfigUI : INotifyPropertyChanged
         _transitionAmount = 0.0;
     }
 
-    private void ProfileImage_MouseDown(object sender, MouseButtonEventArgs? e)
+    private void ProfileImage_MouseDown(object? sender, MouseButtonEventArgs? e)
     {
         if (sender is not Image { Tag: Application } image) return;
         if (e == null || e.LeftButton == MouseButtonState.Pressed)
@@ -665,7 +658,7 @@ partial class ConfigUI : INotifyPropertyChanged
         th.SelectedControl = value.Control;
     }
 
-    private async void RemoveProfile_MouseDown(object sender, MouseButtonEventArgs e)
+    private async void RemoveProfile_MouseDown(object? sender, MouseButtonEventArgs e)
     {
         if (sender is not Image { Tag: string } image)
         {
@@ -690,7 +683,7 @@ partial class ConfigUI : INotifyPropertyChanged
         await GenerateProfileStack(eventList[idx].Key);
     }
 
-    private async void AddProfile_MouseDown(object sender, MouseButtonEventArgs e)
+    private async void AddProfile_MouseDown(object? sender, MouseButtonEventArgs e)
     {
         Window_ProcessSelection dialog = new Window_ProcessSelection { CheckCustomPathExists = true, ButtonLabel = "Add Profile", Title ="Add Profile" };
         if (dialog.ShowDialog() != true || string.IsNullOrWhiteSpace(dialog.ChosenExecutablePath))
@@ -730,7 +723,7 @@ partial class ConfigUI : INotifyPropertyChanged
         GenerateProfileStack(filename);
     }
 
-    private void DesktopControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    private void DesktopControl_MouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
     {
         FocusedApplication = null;
         SelectedControl = _settingsControl;
@@ -739,10 +732,10 @@ partial class ConfigUI : INotifyPropertyChanged
         _currentColor = _useMica ? _desktopColorScheme : EffectColor.FromRGBA(0, 0, 0, 184);
         _transitionAmount = 0.0;
     }
-    private void cmbtnOpenBitmapWindow_Clicked(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
-    private void cmbtnOpenHttpDebugWindow_Clicked(object sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
+    private void cmbtnOpenBitmapWindow_Clicked(object? sender, RoutedEventArgs e) => Window_BitmapView.Open();
+    private void cmbtnOpenHttpDebugWindow_Clicked(object? sender, RoutedEventArgs e) =>Window_GSIHttpDebug.Open(_httpListener);
 
-    private void trayicon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+    private void trayicon_TrayMouseDoubleClick(object? sender, RoutedEventArgs e)
     {
         Display();
     }
@@ -765,33 +758,33 @@ partial class ConfigUI : INotifyPropertyChanged
         _selectedManager.RaiseEvent(new RoutedEventArgs(GotFocusEvent));
     }
 
-    private void ctrlLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    private void ctrlLayerManager_PreviewMouseDown(object? sender, MouseButtonEventArgs e)
     {
         if (!sender.Equals(_selectedManager))
             SelectedControl = FocusedApplication.Profile.Layers.Count > 0 ? _layerPresenter : FocusedApplication.Control;
         UpdateManagerStackFocus(sender);
     }
 
-    private void ctrlOverlayLayerManager_PreviewMouseDown(object sender, MouseButtonEventArgs e) {
+    private void ctrlOverlayLayerManager_PreviewMouseDown(object? sender, MouseButtonEventArgs e) {
         if (!sender.Equals(_selectedManager))
             SelectedControl = FocusedApplication.Profile.OverlayLayers.Count > 0 ? _layerPresenter : FocusedApplication.Control;
         UpdateManagerStackFocus(sender);
     }
 
-    private void ctrlProfileManager_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    private void ctrlProfileManager_PreviewMouseDown(object? sender, MouseButtonEventArgs e)
     {
         if (!sender.Equals(_selectedManager))
             SelectedControl = _profilePresenter;
         UpdateManagerStackFocus(sender);
     }
 
-    private void brdOverview_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+    private void brdOverview_PreviewMouseDown(object? sender, MouseButtonEventArgs e)
     {
         _selectedManager = SelectedControl = FocusedApplication.Control;
 
     }
 
-    private void Window_SizeChanged(object sender, SizeChangedEventArgs e) {
+    private void Window_SizeChanged(object? sender, SizeChangedEventArgs e) {
         UpdateManagerStackFocus(_selectedManager, true);
     }
 

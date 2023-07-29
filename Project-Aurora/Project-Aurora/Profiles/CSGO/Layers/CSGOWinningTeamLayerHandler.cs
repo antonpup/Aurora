@@ -65,7 +65,7 @@ public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHand
         SetTracks();
     }
 
-    private void Effects_CanvasChanged(object sender, CanvasChangedArgs e)
+    private void Effects_CanvasChanged(object? sender, CanvasChangedArgs e)
     {
         SetTracks();
     }

@@ -174,7 +174,7 @@ public sealed class DeviceManager: IDisposable
     }
 
     #region SystemEvents
-    private async void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    private async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
         Global.logger.Information($"SessionSwitch triggered with {e.Reason}");
         if (!e.Reason.Equals(SessionSwitchReason.SessionUnlock) || (!_suspended && !_resumed)) return;
@@ -184,7 +184,7 @@ public sealed class DeviceManager: IDisposable
         Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
     }
 
-    private async void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+    private async void SystemEvents_PowerModeChanged(object? sender, PowerModeChangedEventArgs e)
     {
         switch (e.Mode)
         {

@@ -189,7 +189,7 @@ namespace Aurora.Controls {
         #endregion
 
         #region Event Handlers
-        private void BackBtn_Click(object sender, RoutedEventArgs e) {
+        private void BackBtn_Click(object? sender, RoutedEventArgs e) {
             if (!string.IsNullOrEmpty(WorkingPath)) {
                 // Make the aux list box take on the same items as the current one so that when animated (since the aux is moved to the middle first) it looks natural
                 auxillaryListbox.ItemsSource = CurrentParameterListItems;
@@ -200,7 +200,7 @@ namespace Aurora.Controls {
             }
         }
 
-        private void MainListBox_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+        private void MainListBox_PreviewMouseLeftButtonDown(object? sender, System.Windows.Input.MouseButtonEventArgs e) {
             /* The reason this is a PreviewMouseLeftButtonDown event rather than using a SelectionChanged event is because I was having issues where when the next items
              * were loaded it was immediately selecting the first item and then selecting a path the user didn't click. There is no click event available for the ListBox
              * so that was out of the question. Next I tried double click but it was counter-intuitive as items were being selected by not actually chosen, which could
@@ -235,7 +235,7 @@ namespace Aurora.Controls {
             }
         }
 
-        private void NumericEntry_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        private void NumericEntry_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e) {
             var v = (sender as Xceed.Wpf.Toolkit.DoubleUpDown).Value;
 
             // If there is no value, then this will have been set programmatically, so do nothing since we don't want to end up in a change event handler loop

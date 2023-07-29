@@ -36,14 +36,14 @@ namespace Aurora.Profiles.Discord
             GameEnabled.IsChecked = profile.Settings.IsEnabled;
         }
 
-        private void GameEnabled_Checked(object sender, RoutedEventArgs e) {
+        private void GameEnabled_Checked(object? sender, RoutedEventArgs e) {
             if (IsLoaded) {
                 profile.Settings.IsEnabled = GameEnabled.IsChecked ?? false;
                 profile.SaveProfiles();
             }
         }
 
-        private void PatchButton_Click(object sender, RoutedEventArgs e)
+        private void PatchButton_Click(object? sender, RoutedEventArgs e)
         {
             string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string pluginDirectory = Path.Combine(appdata, "BetterDiscord", "plugins");
@@ -55,7 +55,7 @@ namespace Aurora.Profiles.Discord
             WriteFile(pluginFile);
         }
 
-        private void UnpatchButton_Click(object sender, RoutedEventArgs e)
+        private void UnpatchButton_Click(object? sender, RoutedEventArgs e)
         {
             string appdata = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string path = Path.Combine(appdata, "BetterDiscord", "plugins", "AuroraGSI.plugin.js");
@@ -73,7 +73,7 @@ namespace Aurora.Profiles.Discord
             }
         }
 
-        private void ManualPatchButton_Click(object sender, RoutedEventArgs e)
+        private void ManualPatchButton_Click(object? sender, RoutedEventArgs e)
         {
             using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
             {

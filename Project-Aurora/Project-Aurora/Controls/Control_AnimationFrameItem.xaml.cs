@@ -22,7 +22,7 @@ namespace Aurora.Controls
     /// </summary>
     public partial class Control_AnimationFrameItem : UserControl
     {
-        public delegate void DragAdjust(object sender, double delta);
+        public delegate void DragAdjust(object? sender, double delta);
 
         public event DragAdjust LeftSplitterDrag;
 
@@ -32,7 +32,7 @@ namespace Aurora.Controls
 
         public event DragAdjust CompletedDrag;
 
-        public delegate void AnimationFrameItemArgs(object sender, AnimationFrame track);
+        public delegate void AnimationFrameItemArgs(object? sender, AnimationFrame track);
 
         public event AnimationFrameItemArgs AnimationFrameItemUpdated;
 
@@ -84,22 +84,22 @@ namespace Aurora.Controls
             InitializeComponent();
         }
 
-        private void grdSplitterLeft_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        private void grdSplitterLeft_DragDelta(object? sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
             LeftSplitterDrag?.Invoke(this, e.HorizontalChange);
         }
 
-        private void grdSplitterRight_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        private void grdSplitterRight_DragDelta(object? sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
             RightSplitterDrag?.Invoke(this, e.HorizontalChange);
         }
 
-        private void grdSplitterContent_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        private void grdSplitterContent_DragDelta(object? sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
             ContentSplitterDrag?.Invoke(this, e.HorizontalChange);
         }
 
-        private void grdSplitter_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        private void grdSplitter_DragCompleted(object? sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
         {
             CompletedDrag?.Invoke(this, 0.0);
         }

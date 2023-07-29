@@ -28,7 +28,7 @@ namespace Aurora.Settings.Layers
             return EffectLayer;
         }
 
-        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _brush.Color = Properties.PrimaryColor;

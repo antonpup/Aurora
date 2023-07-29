@@ -26,15 +26,15 @@ namespace Aurora.Profiles.TheDivision
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {

@@ -173,7 +173,7 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         /// <summary>Event that is applied to the drag area that allows the user to pick up this evaluatable.</summary>
-        private void DragArea_StartDrag(object sender, MouseEventArgs e, Point initialPoint) {
+        private void DragArea_StartDrag(object? sender, MouseEventArgs e, Point initialPoint) {
             var @do = new DataObject(Expression);
             @do.SetData("SourcePresenter", this);
             DragDrop.DoDragDrop(this, @do, DragDropEffects.Move | DragDropEffects.Copy);

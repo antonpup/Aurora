@@ -139,7 +139,7 @@ namespace Aurora.Settings.Overrides {
             OnPropertyChanged("AvailableLayerProperties", "SelectedProperty", "SelectedLogic", "SelectedLogicType", "SelectedLogicControl");
         }
 
-        private void HelpButton_Click(object sender, RoutedEventArgs e) {
+        private void HelpButton_Click(object? sender, RoutedEventArgs e) {
             // Open the overrides page on the documentation page
             Process.Start("explorer", @"https://aurora-rgb.github.io/Docs/advanced-topics/overrides-system/");
         }

@@ -73,7 +73,7 @@ namespace Aurora.Settings
             overridesEditor.Layer = layer;
         }
 
-        private void cmbLayerType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmbLayerType_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is ComboBox)
             {
@@ -100,7 +100,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnReset_Click(object sender, RoutedEventArgs e)
+        private void btnReset_Click(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
@@ -108,7 +108,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnConfig_Click(object sender, RoutedEventArgs e)
+        private void btnConfig_Click(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
             {
@@ -120,13 +120,13 @@ namespace Aurora.Settings
             }
         }
 
-        private void chkLayerSmoothing_Checked(object sender, RoutedEventArgs e)
+        private void chkLayerSmoothing_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
                 Layer.Handler.EnableSmoothing = (sender as CheckBox).IsChecked.Value;
         }
 
-        private void chk_ExcludeMask_Checked(object sender, RoutedEventArgs e)
+        private void chk_ExcludeMask_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is CheckBox)
                 Layer.Handler._EnableExclusionMask = (sender as CheckBox).IsChecked.Value;
@@ -134,13 +134,13 @@ namespace Aurora.Settings
             //keyseq_ExcludeMask.IsEnabled = Layer.Handler.EnableExclusionMask;
         }
 
-        private void keyseq_ExcludeMask_SequenceUpdated(object sender, EventArgs e)
+        private void keyseq_ExcludeMask_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is Aurora.Controls.KeySequence)
                 Layer.Handler._ExclusionMask = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
-        private void sldr_Opacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void sldr_Opacity_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is Slider)
             {
@@ -149,7 +149,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnOverrides_Click(object sender, RoutedEventArgs e) {
+        private void btnOverrides_Click(object? sender, RoutedEventArgs e) {
             if (IsLoaded && !isSettingNewLayer) {
                 bool v = overridesEditor.IsVisible;
                 overridesEditor.Visibility = v ? Visibility.Hidden : Visibility.Visible;

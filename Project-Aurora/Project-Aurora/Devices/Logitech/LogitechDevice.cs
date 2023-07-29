@@ -75,7 +75,7 @@ namespace Aurora.Devices.Logitech
         }
 
         // Handle Logon Event
-        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
         {
             Reset().Wait();
         }

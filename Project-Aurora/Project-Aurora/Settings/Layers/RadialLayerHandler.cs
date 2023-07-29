@@ -50,7 +50,7 @@ namespace Aurora.Settings.Layers {
             Properties.PropertyChanged += PropertiesChanged;
         }
 
-        private void PropertiesChanged(object sender, PropertyChangedEventArgs e)
+        private void PropertiesChanged(object? sender, PropertyChangedEventArgs e)
         {
             invalidated = true;
         }

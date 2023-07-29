@@ -67,7 +67,7 @@ public partial class Control_SettingsGeneral
     /// <summary>The excluded program the user has selected in the excluded list.</summary>
     public string SelectedExcludedProgram { get; set; }
 
-    private void ExcludedAdd_Click(object sender, RoutedEventArgs e)
+    private void ExcludedAdd_Click(object? sender, RoutedEventArgs e)
     {
         Window_ProcessSelection dialog = new Window_ProcessSelection { ButtonLabel = "Exclude Process" };
         if (dialog.ShowDialog() == true &&
@@ -77,13 +77,13 @@ public partial class Control_SettingsGeneral
             Global.Configuration.ExcludedPrograms.Add(dialog.ChosenExecutableName);
     }
 
-    private void ExcludedRemove_Click(object sender, RoutedEventArgs e)
+    private void ExcludedRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (!string.IsNullOrEmpty(SelectedExcludedProgram))
             Global.Configuration.ExcludedPrograms.Remove(SelectedExcludedProgram);
     }
 
-    private void RunAtWinStartup_Checked(object sender, RoutedEventArgs e)
+    private void RunAtWinStartup_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded && sender is CheckBox)
         {
@@ -104,12 +104,12 @@ public partial class Control_SettingsGeneral
 
     }
 
-    private void HighPriorityCheckbox_Checked(object sender, RoutedEventArgs e)
+    private void HighPriorityCheckbox_Checked(object? sender, RoutedEventArgs e)
     {
         Process.GetCurrentProcess().PriorityClass = Global.Configuration.HighPriority ? ProcessPriorityClass.High : ProcessPriorityClass.Normal;
     }
 
-    private void StartDelayAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void StartDelayAmount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         using TaskService service = new TaskService();
         var task = service.FindTask(StartupTaskId);

@@ -44,26 +44,26 @@ namespace Aurora.Profiles.Minecraft {
         }
 
         #region Overview handlers
-        private void GameEnabled_Checked(object sender, RoutedEventArgs e) {
+        private void GameEnabled_Checked(object? sender, RoutedEventArgs e) {
             if (IsLoaded) {
                 profile.Settings.IsEnabled = GameEnabled.IsChecked ?? false;
                 profile.SaveProfiles();
             }
         }
 
-        private void GoToForgePage_Click(object sender, RoutedEventArgs e) {
+        private void GoToForgePage_Click(object? sender, RoutedEventArgs e) {
             Process.Start("explorer", @"https://files.minecraftforge.net/");
         }
 
-        private void GoToReleasesPage_Click(object sender, RoutedEventArgs e) {
+        private void GoToReleasesPage_Click(object? sender, RoutedEventArgs e) {
             Process.Start("explorer", @"https://gitlab.com/aurora-gsi-minecraft");
         }
 
-        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e) {
+        private void GoToModDownloadPage_Click(object? sender, RoutedEventArgs e) {
             Process.Start("explorer", ((sender as Button).DataContext as ModDetails).Link);
         }
 
-        private void GoToFabricDownloadPage(object sender, RoutedEventArgs e) {
+        private void GoToFabricDownloadPage(object? sender, RoutedEventArgs e) {
             Process.Start("explorer", @"https://fabricmc.net/");
         }
 
@@ -96,7 +96,7 @@ namespace Aurora.Profiles.Minecraft {
             } catch { }
         }
 
-        private void RefreshModList_Click(object sender, RoutedEventArgs e) {
+        private void RefreshModList_Click(object? sender, RoutedEventArgs e) {
             PopulateModList();
         }
         #endregion
@@ -104,65 +104,65 @@ namespace Aurora.Profiles.Minecraft {
         #region Preview Handlers
         private GameState_Minecraft State => profile.Config.Event._game_state as GameState_Minecraft;
 
-        private void InGameCh_Checked(object sender, RoutedEventArgs e) {
+        private void InGameCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.InGame = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void HealthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void HealthSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.Health = (float)e.NewValue;
             State.Player.HealthMax = 20f;
         }
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void Slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.Absorption = (float)e.NewValue;
         }
 
-        private void HungerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void HungerSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.FoodLevel = (int)e.NewValue;
         }
 
-        private void ArmorSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void ArmorSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.Armor = (int)e.NewValue;
         }
 
-        private void ExperienceSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void ExperienceSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.Player.Experience = (float)e.NewValue;
         }
 
-        private void IsBurningCh_Checked(object sender, RoutedEventArgs e) {
+        private void IsBurningCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.IsBurning = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void IsInWaterCh_Checked(object sender, RoutedEventArgs e) {
+        private void IsInWaterCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.IsInWater = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void IsSneakingCh_Checked(object sender, RoutedEventArgs e) {
+        private void IsSneakingCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.IsSneaking = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void IsRidingCh_Checked(object sender, RoutedEventArgs e) {
+        private void IsRidingCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.IsRidingHorse = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void HasWitherCh_Checked(object sender, RoutedEventArgs e) {
+        private void HasWitherCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.PlayerEffects.HasWither = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void HasPoisonCh_Checked(object sender, RoutedEventArgs e) {
+        private void HasPoisonCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.PlayerEffects.HasPoison = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void HasRegenCh_Checked(object sender, RoutedEventArgs e) {
+        private void HasRegenCh_Checked(object? sender, RoutedEventArgs e) {
             State.Player.PlayerEffects.HasRegeneration = (sender as CheckBox).IsChecked ?? false;
         }
 
-        private void RainStrengthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void RainStrengthSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.World.RainStrength = (float)e.NewValue;
             State.World.IsRaining = e.NewValue > 0;
         }
 
-        private void WorldTimeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void WorldTimeSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             State.World.WorldTime = (long)(e.NewValue * 24000); // 24000 is max time in Minecraft before next day
             State.World.IsDayTime = e.NewValue <= 0.5; // At half point, it becomes night time?
         }

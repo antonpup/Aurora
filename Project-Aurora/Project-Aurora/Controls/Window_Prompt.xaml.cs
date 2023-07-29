@@ -54,16 +54,16 @@ namespace Aurora.Controls {
             DependencyProperty.Register("ErrorMessage", typeof(string), typeof(Window_Prompt), new PropertyMetadata(""));
         #endregion
 
-        private void OkayButton_Click(object sender, RoutedEventArgs e) {
+        private void OkayButton_Click(object? sender, RoutedEventArgs e) {
             if (Validate?.Invoke(Text) != false)
                 DialogResult = true;
         }
 
-        private void CancelButton_Click(object sender, RoutedEventArgs e) {
+        private void CancelButton_Click(object? sender, RoutedEventArgs e) {
             DialogResult = false;
         }
 
-        private void TextBox_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
+        private void TextBox_PreviewKeyDown(object? sender, System.Windows.Input.KeyEventArgs e) {
             if (e.Key == System.Windows.Input.Key.Enter)
                 OkayButton_Click(null, null);
         }

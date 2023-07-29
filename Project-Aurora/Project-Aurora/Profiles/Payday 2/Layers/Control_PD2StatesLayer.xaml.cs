@@ -40,13 +40,13 @@ namespace Aurora.Profiles.Payday_2.Layers
         {
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void sldSwanSongSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void sldSwanSongSpeed_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             this.lblSwanSongSpeed.Content = $"x {sldSwanSongSpeed.Value.ToString("0.00")}";
         }

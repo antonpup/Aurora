@@ -15,7 +15,7 @@ public sealed class InteractiveParticleLayerHandler : SimpleParticleLayerHandler
         Global.InputEvents.KeyDown += KeyDown;
     }
 
-    private void KeyDown(object sender, KeyEvent e) {
+    private void KeyDown(object? sender, KeyEvent e) {
         _awaitingKeys.Enqueue(e.GetDeviceKey());
     }
 

@@ -26,7 +26,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -36,7 +36,7 @@ namespace Aurora.Profiles.LeagueOfLegends
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -45,15 +45,15 @@ namespace Aurora.Profiles.LeagueOfLegends
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object? sender, RoutedEventArgs e)
         {
             string lolpath;
             try

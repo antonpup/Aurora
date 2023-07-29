@@ -65,7 +65,7 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    private void ProcessStarted(object sender, EventArrivedEventArgs e)
+    private void ProcessStarted(object? sender, EventArrivedEventArgs e)
     {
         // Get the name of the started process
         var targetInstance = (ManagementBaseObject)e.NewEvent.Properties["TargetInstance"].Value;
@@ -80,7 +80,7 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     }
 
     [MethodImpl(MethodImplOptions.Synchronized)]
-    private void ProcessStopped(object sender, EventArrivedEventArgs e)
+    private void ProcessStopped(object? sender, EventArrivedEventArgs e)
     {
         // Get the name of the terminated process
         var targetInstance = (ManagementBaseObject)e.NewEvent.Properties["TargetInstance"].Value;

@@ -22,7 +22,7 @@ using Aurora.Modules.ProcessMonitor;
 
 namespace Aurora.Profiles;
 
-public sealed class LightingStateManager : IInit
+public sealed class LightingStateManager
 {
     public Dictionary<string, ILightEvent> Events { get; } = new() { { "desktop", new Desktop.Desktop() } };
 
@@ -543,7 +543,7 @@ public sealed class LightingStateManager : IInit
 
     /// <summary>KeyDown handler that checks the current application's profiles for keybinds.
     /// In the case of multiple profiles matching the keybind, it will pick the next one as specified in the Application.Profile order.</summary>
-    private void CheckProfileKeybinds(object sender, EventArgs e)
+    private void CheckProfileKeybinds(object? sender, EventArgs e)
     {
         ILightEvent profile = GetCurrentProfile();
 
@@ -562,7 +562,7 @@ public sealed class LightingStateManager : IInit
         application.SwitchToProfile(possibleProfiles[trg]);
     }
 
-    public void GameStateUpdate(object sender, IGameState gs)
+    public void GameStateUpdate(object? sender, IGameState gs)
     {
 #if DEBUG
 #else
@@ -609,7 +609,7 @@ public sealed class LightingStateManager : IInit
 #endif
     }
 
-    public void ResetGameState(object sender, string process)
+    public void ResetGameState(object? sender, string process)
     {
         ILightEvent profile;
         if ((profile = GetProfileFromProcessName(process)) != null)

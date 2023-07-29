@@ -348,7 +348,7 @@ public class KeyboardLayoutManager
 
     private bool _bitmapMapInvalid = true;
 
-    public delegate void LayoutUpdatedEventHandler(object sender);
+    public delegate void LayoutUpdatedEventHandler(object? sender);
 
     public event LayoutUpdatedEventHandler KeyboardLayoutUpdated;
 
@@ -692,7 +692,7 @@ public class KeyboardLayoutManager
         return _pixelToByte(pixel);
     }
 
-    private void Configuration_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void Configuration_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e is not {PropertyName: nameof(Configuration.BitmapAccuracy)}) return;
         _pixelToByte = DefaultPixelToByte;
@@ -700,7 +700,7 @@ public class KeyboardLayoutManager
         Global.LightingStateManager.PostUpdate += LightingStateManager_PostUpdate;
     }
 
-    private void LightingStateManager_PostUpdate(object sender, EventArgs e)
+    private void LightingStateManager_PostUpdate(object? sender, EventArgs e)
     {
         LoadBrandDefault();
         Global.LightingStateManager.PostUpdate -= LightingStateManager_PostUpdate;

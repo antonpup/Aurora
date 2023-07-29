@@ -45,7 +45,7 @@ namespace Aurora.Profiles.ETS2.Layers {
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             /*lightMode.Items.Add(ETS2_BeaconStyle.Simple_Flash);
             lightMode.Items.Add(ETS2_BeaconStyle.Two_Half);
@@ -54,24 +54,24 @@ namespace Aurora.Profiles.ETS2.Layers {
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void lightMode_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void lightMode_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
             if (isReady && sender is ComboBox) {
                 context.Properties._BeaconStyle = (ETS2_BeaconStyle)(sender as ComboBox).SelectedValue;
                 speedSlider.IsEnabled = context.Properties._BeaconStyle == ETS2_BeaconStyle.Simple_Flash;
             }
         }
 
-        private void speedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void speedSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             if (isReady && sender is Slider)
                 context.Properties._Speed = (float)(sender as Slider).Value;
         }
 
-        private void beaconColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void beaconColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (isReady && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 context.Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void keyPicker_SequenceUpdated(object sender, EventArgs e) {
+        private void keyPicker_SequenceUpdated(object? sender, EventArgs e) {
             if (isReady && sender is KeySequence)
                 context.Properties._Sequence = (sender as KeySequence).Sequence;
         }

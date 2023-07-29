@@ -48,13 +48,13 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
+        private void Gradient_editor_BrushChanged(object? sender, ColorBox.BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is ColorBox.ColorBox)
                 (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
         }
 
-        private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
+        private void Button_SetGradientRainbow_Click(object? sender, RoutedEventArgs e)
         {
             (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.Rainbow);
 
@@ -69,7 +69,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
+        private void Button_SetGradientRainbowLoop_Click(object? sender, RoutedEventArgs e)
         {
             (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.RainbowLoop);
 
@@ -84,7 +84,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void effect_speed_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is Slider)
             {
@@ -95,19 +95,19 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void CheckBox_FillEntire_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_FillEntire_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is CheckBox)
                 (this.DataContext as GradientFillLayerHandler).Properties._FillEntireKeyboard = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
         }
 
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is Aurora.Controls.KeySequence)
                 (this.DataContext as GradientFillLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 

@@ -28,7 +28,7 @@ namespace Aurora.Profiles.Payday_2
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -38,7 +38,7 @@ namespace Aurora.Profiles.Payday_2
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -47,12 +47,12 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void get_hook_button_Click(object sender, RoutedEventArgs e)
+        private void get_hook_button_Click(object? sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("explorer", @"http://paydaymods.com/download/");
         }
 
-        private void install_mod_button_Click(object sender, RoutedEventArgs e)
+        private void install_mod_button_Click(object? sender, RoutedEventArgs e)
         {
             string pd2path = Utils.SteamUtils.GetGamePath(218620);
 
@@ -92,7 +92,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_gamestate_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_gamestate_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -100,7 +100,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_levelphase_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_levelphase_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -108,7 +108,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_playerstate_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_playerstate_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -116,7 +116,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_health_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int hp_val = (int)this.preview_health_slider.Value;
             if (this.preview_health_amount is Label)
@@ -127,7 +127,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_ammo_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_ammo_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int ammo_val = (int)this.preview_ammo_slider.Value;
             if (this.preview_ammo_amount is Label)
@@ -138,7 +138,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_suspicion_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_suspicion_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             float susp_val = (float)this.preview_suspicion_slider.Value;
             if (this.preview_suspicion_amount is Label)
@@ -148,7 +148,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_flashbang_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_flashbang_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             float flash_val = (float)this.preview_flashbang_slider.Value;
             if (this.preview_flashbang_amount is Label)
@@ -158,7 +158,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void preview_swansong_Checked(object sender, RoutedEventArgs e)
+        private void preview_swansong_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {
@@ -166,7 +166,7 @@ namespace Aurora.Profiles.Payday_2
             }
         }
 
-        private void get_lib_button_Click(object sender, RoutedEventArgs e)
+        private void get_lib_button_Click(object? sender, RoutedEventArgs e)
         {
             System.Diagnostics.Process.Start("explorer", @"https://github.com/simon-wh/PAYDAY-2-BeardLib");
         }

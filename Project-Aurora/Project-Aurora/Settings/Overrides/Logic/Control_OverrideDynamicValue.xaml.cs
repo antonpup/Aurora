@@ -29,7 +29,7 @@ namespace Aurora.Settings.Overrides.Logic {
             DataContext = this;
         }
 
-        private void VariableEvaluatable_ExpressionChanged(object sender, ExpressionChangeEventArgs e) {
+        private void VariableEvaluatable_ExpressionChanged(object? sender, ExpressionChangeEventArgs e) {
             // Item1 refers to the parameter name, used as the key in the IEvaluatable list
             var paramName = ((dynamic)((Control_EvaluatablePresenter)sender).DataContext).Item1;
             Context.ConstructorParameters[paramName] = e.NewExpression;

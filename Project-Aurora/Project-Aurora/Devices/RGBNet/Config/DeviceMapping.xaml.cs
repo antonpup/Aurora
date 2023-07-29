@@ -33,13 +33,13 @@ public partial class DeviceMapping
         Unloaded += OnClosed;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private void OnLoaded(object? sender, RoutedEventArgs e)
     {
         LoadConfigFile();
         LoadDevices();
     }
 
-    private void OnClosed(object sender, EventArgs e)
+    private void OnClosed(object? sender, EventArgs e)
     {
         _config.SaveConfig();
     }
@@ -202,18 +202,18 @@ public partial class DeviceMapping
 
     #region UI
 
-    private void ReloadButton_Click(object sender, RoutedEventArgs e)
+    private void ReloadButton_Click(object? sender, RoutedEventArgs e)
     {
         ReloadDevices();
     }
         
-    private void SetAllNone_Click(object sender, RoutedEventArgs e)
+    private void SetAllNone_Click(object? sender, RoutedEventArgs e)
     {
         foreach (var key in _keys)
             key.DeviceKey = DeviceKeys.NONE;
     }
         
-    private void SetAllLogo_Click(object sender, RoutedEventArgs e)
+    private void SetAllLogo_Click(object? sender, RoutedEventArgs e)
     {
         foreach (var key in _keys)
             key.DeviceKey = DeviceKeys.Peripheral_Logo;

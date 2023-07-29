@@ -40,7 +40,7 @@ namespace Aurora.Profiles.TModLoader
             GameEnabled.IsChecked = profile.Settings.IsEnabled;
         }
 
-        private void GameEnabled_Checked(object sender, RoutedEventArgs e)
+        private void GameEnabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -49,12 +49,12 @@ namespace Aurora.Profiles.TModLoader
             }
         }
 
-        private void GoToTModLoaderPage_Click(object sender, RoutedEventArgs e)
+        private void GoToTModLoaderPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://tmodloader.net/");
         }
 
-        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
+        private void GoToModDownloadPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://github.com/diogotr7/AuroraGSI-Terraria/releases");
         }

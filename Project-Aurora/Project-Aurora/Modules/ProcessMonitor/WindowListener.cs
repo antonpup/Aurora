@@ -51,7 +51,7 @@ public sealed class WindowListener : IDisposable
         Automation.AddAutomationEventHandler(WindowPattern.WindowOpenedEvent, AutomationElement.RootElement, TreeScope.Descendants, WindowDetected);
     }
 
-    private void WindowDetected(object sender, AutomationEventArgs e)
+    private void WindowDetected(object? sender, AutomationEventArgs e)
     {
         try
         {

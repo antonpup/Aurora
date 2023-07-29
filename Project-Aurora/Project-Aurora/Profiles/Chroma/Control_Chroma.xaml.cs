@@ -36,12 +36,12 @@ public partial class Control_Chroma : INotifyPropertyChanged
         ReorderChromaRegistry();
     }
 
-    private void ProfileOnChromaAppsChanged(object sender, EventArgs e)
+    private void ProfileOnChromaAppsChanged(object? sender, EventArgs e)
     {
         RefreshEnabledPrograms();
     }
 
-    private void ExcludedProgramsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void ExcludedProgramsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         RefreshEnabledPrograms();
     }
@@ -60,21 +60,21 @@ public partial class Control_Chroma : INotifyPropertyChanged
         GameEnabled.IsChecked = _profile.Settings.IsEnabled;
     }
 
-    private void GameEnabled_Checked(object sender, RoutedEventArgs e)
+    private void GameEnabled_Checked(object? sender, RoutedEventArgs e)
     {
         if (!IsLoaded) return;
         _profile.Settings.IsEnabled = GameEnabled.IsChecked ?? false;
         _profile.SaveProfiles();
     }
 
-    private void ExcludedAdd_Click(object sender, RoutedEventArgs e)
+    private void ExcludedAdd_Click(object? sender, RoutedEventArgs e)
     {
         if (string.IsNullOrEmpty(SelectedEnabledProgram)) return;
         _settings.ExcludedPrograms.Add(SelectedEnabledProgram);
         ReorderChromaRegistry();
     }
 
-    private void ExcludedRemove_Click(object sender, RoutedEventArgs e)
+    private void ExcludedRemove_Click(object? sender, RoutedEventArgs e)
     {
         if (string.IsNullOrEmpty(SelectedExcludedProgram)) return;
         _settings.ExcludedPrograms.Remove(SelectedExcludedProgram);

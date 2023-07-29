@@ -136,12 +136,12 @@ namespace Aurora.Settings.Layers
             OnPropertiesChanged(this, new PropertyChangedEventArgs(""));
         }
 
-        public void OnPropertiesChanged(object sender, object args = null)
+        public void OnPropertiesChanged(object? sender, object args = null)
         {
             PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(""));
         }
 
-        public void OnPropertiesChanged(object sender)
+        public void OnPropertiesChanged(object? sender)
         {
             PropertyChanged?.Invoke(sender, new PropertyChangedEventArgs(""));
         }
@@ -392,17 +392,17 @@ namespace Aurora.Settings.Layers
             PropertiesChanged(this, new PropertyChangedEventArgs(""));
         }
         
-        protected virtual void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected virtual void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             
         }
 
-        private void PropertiesChanged(object sender, CanvasChangedArgs e)
+        private void PropertiesChanged(object? sender, CanvasChangedArgs e)
         {
             PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }
 
-        private void PropertiesChanged(object sender, FreeFormChangedEventArgs e)
+        private void PropertiesChanged(object? sender, FreeFormChangedEventArgs e)
         {
             PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }

@@ -60,34 +60,34 @@ public partial class Control_Settings
         await _devicesAndWrappers.Initialize();
     }
 
-    private async void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private async void UserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         ctrlPluginManager.Host = await _pluginManager;
     }
 
-    private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+    private void Hyperlink_RequestNavigate(object? sender, RequestNavigateEventArgs e)
     {
         Process.Start("explorer", e.Uri.AbsoluteUri);
         e.Handled = true;
     }
 
-    private void updates_check_Click(object sender, RoutedEventArgs e)
+    private void updates_check_Click(object? sender, RoutedEventArgs e)
     {
         if (!IsLoaded) return;
         DesktopUtils.CheckUpdate();
     }
 
-    private void btnShowLogsFolder_Click(object sender, RoutedEventArgs e)
+    private void btnShowLogsFolder_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is Button)
             Process.Start("explorer", Path.Combine(Global.LogsDirectory));
     }
 
-    private void btnShowBitmapWindow_Click(object sender, RoutedEventArgs e) => Window_BitmapView.Open();
+    private void btnShowBitmapWindow_Click(object? sender, RoutedEventArgs e) => Window_BitmapView.Open();
 
-    private void btnShowGSILog_Click(object sender, RoutedEventArgs e) => Window_GSIHttpDebug.Open(_httpListener);
+    private void btnShowGSILog_Click(object? sender, RoutedEventArgs e) => Window_GSIHttpDebug.Open(_httpListener);
 
-    private void btnDumpSensors_Click(object sender, RoutedEventArgs e)
+    private void btnDumpSensors_Click(object? sender, RoutedEventArgs e)
     {
         MessageBox.Show(HardwareMonitor.TryDump()
             ? "Successfully wrote sensor info to logs folder"

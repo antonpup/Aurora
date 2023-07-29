@@ -72,7 +72,7 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Handler for when any keyboard button is pressed.
         /// </summary>
-        private void InputEvents_KeyDown(object sender, KeyEvent e) {
+        private void InputEvents_KeyDown(object? sender, KeyEvent e) {
             if (Properties.Sequence.Keys.Contains(e.GetDeviceKey()))
                 _activeKey = e.GetDeviceKey();
         }
@@ -80,7 +80,7 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Handler for the ScrollWheel.
         /// </summary>
-        private void InputEvents_Scroll(object sender, MouseScrollEvent e) {
+        private void InputEvents_Scroll(object? sender, MouseScrollEvent e) {
             if (Properties.EnableScroll && Properties.Sequence.Keys.Count > 1) {
                 // If there's no active key or the ks doesn't contain it (e.g. the sequence was just changed), make the first one active.
                 if (_activeKey == DeviceKeys.NONE || !Properties.Sequence.Keys.Contains(_activeKey))

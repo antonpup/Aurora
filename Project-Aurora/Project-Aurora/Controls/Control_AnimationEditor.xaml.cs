@@ -63,12 +63,12 @@ namespace Aurora.Controls
             Global.kbLayout.KeyboardLayoutUpdated += KbLayout_KeyboardLayoutUpdated;
         }
 
-        private void KbLayout_KeyboardLayoutUpdated(object sender)
+        private void KbLayout_KeyboardLayoutUpdated(object? sender)
         {
             UpdateVirtualKeyboard();
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
         }
 
@@ -102,7 +102,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void KeyboardKey_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void KeyboardKey_PreviewMouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
             if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
             {
@@ -112,7 +112,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void KeyboardKey_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void KeyboardKey_PreviewMouseRightButtonDown(object? sender, MouseButtonEventArgs e)
         {
             if (_selectedFrameItem != null && (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame is AnimationManualColorFrame && sender is Settings.Keycaps.IKeycap)
             {
@@ -131,7 +131,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void animMixer_AnimationMixRendered(object sender)
+        private void animMixer_AnimationMixRendered(object? sender)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void keyboard_overlayPreview_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void keyboard_overlayPreview_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             UpdateScale(e.NewSize.Width);
         }
@@ -185,7 +185,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void animMixer_AnimationFrameItemSelected(object sender, AnimationFrame frame)
+        private void animMixer_AnimationFrameItemSelected(object? sender, AnimationFrame frame)
         {
             //Deselect old frame
             if (_selectedFrameItem != null && _selectedFrameItem is Control_AnimationFrameItem)
@@ -447,7 +447,7 @@ namespace Aurora.Controls
             grpbxProperties.Content = newPanel;
         }
 
-        private void BtnClearColors_Click(object sender, RoutedEventArgs e)
+        private void BtnClearColors_Click(object? sender, RoutedEventArgs e)
         {
             if (_selectedFrameItem != null)
             {
@@ -464,59 +464,59 @@ namespace Aurora.Controls
             }
         }
 
-        private void VarItemSecondaryManualColor_VariableUpdated(object sender, object newVariable)
+        private void VarItemSecondaryManualColor_VariableUpdated(object? sender, object newVariable)
         {
             _SecondaryManualColor = (System.Drawing.Color)newVariable;
         }
 
-        private void VarItemPrimaryManualColor_VariableUpdated(object sender, object newVariable)
+        private void VarItemPrimaryManualColor_VariableUpdated(object? sender, object newVariable)
         {
             _PrimaryManualColor = (System.Drawing.Color)newVariable;
         }
 
-        private void VarItemEndColor_VariableUpdated(object sender, object newVariable)
+        private void VarItemEndColor_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).SetEndColor((System.Drawing.Color)newVariable);
         }
 
-        private void VarItemEndPositionY_VariableUpdated(object sender, object newVariable)
+        private void VarItemEndPositionY_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).SetEndPoint(new PointF(((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).EndPoint.X, (float)newVariable));
         }
 
-        private void VarItemEndPositionX_VariableUpdated(object sender, object newVariable)
+        private void VarItemEndPositionX_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).SetEndPoint(new PointF((float)newVariable, ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).EndPoint.Y));
         }
 
-        private void VarItemStartPositionY_VariableUpdated(object sender, object newVariable)
+        private void VarItemStartPositionY_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).SetStartPoint(new PointF(((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).StartPoint.X, (float)newVariable));
         }
 
-        private void VarItemStartPositionX_VariableUpdated(object sender, object newVariable)
+        private void VarItemStartPositionX_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).SetStartPoint(new PointF((float)newVariable, ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationLine).StartPoint.Y));
         }
 
-        private void VarItemAngle_VariableUpdated(object sender, object newVariable)
+        private void VarItemAngle_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationFrame).SetAngle((float)newVariable);
         }
 
-        private void VarItemTransitionType_VariableUpdated(object sender, object newVariable)
+        private void VarItemTransitionType_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationFrame).SetTransitionType((AnimationFrameTransitionType)newVariable);
         }
 
-        private void BtnRemoveFrame_Click(object sender, RoutedEventArgs e)
+        private void BtnRemoveFrame_Click(object? sender, RoutedEventArgs e)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = null;
@@ -524,25 +524,25 @@ namespace Aurora.Controls
             grpbxProperties.Content = null;
         }
 
-        private void VarItemDimensionRadius_VariableUpdated(object sender, object newVariable)
+        private void VarItemDimensionRadius_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).SetRadius((float)newVariable);
         }
 
-        private void VarItemCenterY_VariableUpdated(object sender, object newVariable)
+        private void VarItemCenterY_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).SetCenter(new PointF(((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).Center.X, (float)newVariable));
         }
 
-        private void VarItemCenterX_VariableUpdated(object sender, object newVariable)
+        private void VarItemCenterX_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).SetCenter(new PointF((float)newVariable, ((_selectedFrameItem as Control_AnimationFrameItem).ContextFrame as AnimationCircle).Center.Y));
         }
 
-        private void VarItemDimensionHeight_VariableUpdated(object sender, object newVariable)
+        private void VarItemDimensionHeight_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
             {
@@ -561,7 +561,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void VarItemDimensionWidth_VariableUpdated(object sender, object newVariable)
+        private void VarItemDimensionWidth_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
             {
@@ -580,7 +580,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void VarItemPositionY_VariableUpdated(object sender, object newVariable)
+        private void VarItemPositionY_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
             {
@@ -599,7 +599,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void VarItemPositionX_VariableUpdated(object sender, object newVariable)
+        private void VarItemPositionX_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
             {
@@ -618,26 +618,26 @@ namespace Aurora.Controls
             }
         }
 
-        private void VarItemWidth_VariableUpdated(object sender, object newVariable)
+        private void VarItemWidth_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetWidth((int)newVariable);
         }
 
-        private void VarItemColor_VariableUpdated(object sender, object newVariable)
+        private void VarItemColor_VariableUpdated(object? sender, object newVariable)
         {
             if (_selectedFrameItem != null)
                 (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame = (_selectedFrameItem as Control_AnimationFrameItem).ContextFrame.SetColor((System.Drawing.Color)newVariable);
         }
 
-        private void animMixer_AnimationMixUpdated(object sender, AnimationMix mix)
+        private void animMixer_AnimationMixUpdated(object? sender, AnimationMix mix)
         {
             SetValue(AnimationMixProperty, mix);
 
             AnimationMixUpdated?.Invoke(this, mix);
         }
 
-        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void UserControl_PreviewKeyDown(object? sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete && _selectedFrameItem != null)
             {

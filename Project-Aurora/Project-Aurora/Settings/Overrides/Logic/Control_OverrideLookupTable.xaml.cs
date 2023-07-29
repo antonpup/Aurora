@@ -27,11 +27,11 @@ namespace Aurora.Settings.Overrides.Logic {
             DataContext = this;
         }
 
-        private void AddNewLookup_Click(object sender, RoutedEventArgs e) {
+        private void AddNewLookup_Click(object? sender, RoutedEventArgs e) {
             Table?.CreateNewLookup();
         }
 
-        private void DeleteLookupEntry_Click(object sender, RoutedEventArgs e) {
+        private void DeleteLookupEntry_Click(object? sender, RoutedEventArgs e) {
             var dc = (OverrideLookupTable.LookupTableEntry)((Button)sender).DataContext;
             Table.LookupTable.Remove(dc);
         }

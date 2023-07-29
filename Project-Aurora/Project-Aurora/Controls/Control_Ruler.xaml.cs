@@ -101,7 +101,7 @@ namespace Aurora.Controls
             GenerateRulerMarks();
         }
 
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void UserControl_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             GenerateRulerMarks();
         }
@@ -176,7 +176,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             GenerateRulerMarks();
         }

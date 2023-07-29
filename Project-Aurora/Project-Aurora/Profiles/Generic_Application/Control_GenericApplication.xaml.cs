@@ -25,7 +25,7 @@ namespace Aurora.Profiles.Generic_Application
             app.ProfileChanged += Profile_manager_ProfileChanged;
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -35,7 +35,7 @@ namespace Aurora.Profiles.Generic_Application
             this.DataContext = app;
         }
 
-        private void profile_nighttime_check_Checked(object sender, RoutedEventArgs e)
+        private void profile_nighttime_check_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !app.Disposed)
             {

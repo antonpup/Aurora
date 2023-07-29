@@ -34,13 +34,13 @@ public partial class Control_RazerLayer
         _settingsSet = true;
     }
 
-    private void OnUserControlLoaded(object sender, RoutedEventArgs e)
+    private void OnUserControlLoaded(object? sender, RoutedEventArgs e)
     {
         SetSettings();
         Loaded -= OnUserControlLoaded;
     }
 
-    private void OnAddKeyCloneButtonClick(object sender, RoutedEventArgs e)
+    private void OnAddKeyCloneButtonClick(object? sender, RoutedEventArgs e)
     {
         if (KeyCloneSourceButtonComboBox.SelectedValue == null || KeyCloneDestinationButtonComboBox.SelectedValue == null)
             return;
@@ -61,7 +61,7 @@ public partial class Control_RazerLayer
         CollectionViewSource.GetDefaultView(KeyCloneListBox.ItemsSource).Refresh();
     }
 
-    private void OnDeleteKeyCloneButtonClick(object sender, RoutedEventArgs e)
+    private void OnDeleteKeyCloneButtonClick(object? sender, RoutedEventArgs e)
     {
         var cloneMap = Context.Properties.KeyCloneMap;
         foreach (var o in KeyCloneListBox.SelectedItems)

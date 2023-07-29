@@ -46,7 +46,7 @@ namespace Aurora.Profiles.Slime_Rancher
         }
 
         #region Overview handlers
-        private void GameEnabled_Checked(object sender, RoutedEventArgs e)
+        private void GameEnabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -55,12 +55,12 @@ namespace Aurora.Profiles.Slime_Rancher
             }
         }
 
-        private void GoToSRMLPage_Click(object sender, RoutedEventArgs e)
+        private void GoToSRMLPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://www.nexusmods.com/slimerancher/mods/2");
         }
 
-        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
+        private void GoToModDownloadPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://www.nexusmods.com/slimerancher/mods/18");
         }
@@ -70,7 +70,7 @@ namespace Aurora.Profiles.Slime_Rancher
         #region Preview Handlers
         private GameState_Slime_Rancher State => profile.Config.Event._game_state as GameState_Slime_Rancher;
 
-        private void InGameCh_Checked(object sender, RoutedEventArgs e)
+        private void InGameCh_Checked(object? sender, RoutedEventArgs e)
         {
             if ((sender as CheckBox).IsChecked == true)
             {
@@ -82,19 +82,19 @@ namespace Aurora.Profiles.Slime_Rancher
             }
         }
 
-        private void HealthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void HealthSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.Health.Current = (int)e.NewValue;
             State.Player.Health.Max = 100;
         }
 
-        private void EnergySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void EnergySlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.Energy.Current = (int)e.NewValue;
             State.Player.Energy.Max = 100;
         }
 
-        private void RadSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void RadSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.Radiation.Current = (int)e.NewValue;
             State.Player.Radiation.Max = 100;

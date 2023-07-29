@@ -34,7 +34,7 @@ namespace Aurora.Devices.Dualshock
             RestoreColor = restoreColor;
         }
 
-        private void OnDeviceReport(object sender, EventArgs e)
+        private void OnDeviceReport(object? sender, EventArgs e)
         {
             Battery = device.Battery;
             Latency = device.Latency;
@@ -125,7 +125,7 @@ namespace Aurora.Devices.Dualshock
             return Task.FromResult(IsInitialized = devices.Count > 0);
         }
 
-        private void DeviceListChanged(object sender, HidSharp.DeviceListChangedEventArgs e)
+        private void DeviceListChanged(object? sender, HidSharp.DeviceListChangedEventArgs e)
         {
             if ((!Global.Configuration?.EnabledDevices?.Contains(typeof(DualshockDevice)) ?? false) ||
                 (!Global.Configuration?.VarRegistry?.GetVariable<bool>($"{DeviceName}_auto_init") ?? false))

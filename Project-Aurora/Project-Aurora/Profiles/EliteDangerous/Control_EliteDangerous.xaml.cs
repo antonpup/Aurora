@@ -40,7 +40,7 @@ namespace Aurora.Profiles.EliteDangerous
 
         }
 
-        private void Control_EliteDangerous_ProfileChanged(object sender, EventArgs e)
+        private void Control_EliteDangerous_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -53,7 +53,7 @@ namespace Aurora.Profiles.EliteDangerous
 
         //Overview
         
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {

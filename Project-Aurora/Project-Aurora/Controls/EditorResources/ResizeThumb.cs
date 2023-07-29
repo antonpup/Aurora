@@ -19,7 +19,7 @@ namespace Aurora.Controls.EditorResources
             DragDelta += new DragDeltaEventHandler(this.ResizeThumb_DragDelta);
         }
 
-        private void ResizeThumb_DragStarted(object sender, DragStartedEventArgs e)
+        private void ResizeThumb_DragStarted(object? sender, DragStartedEventArgs e)
         {
             this.designerItem = DataContext as ContentControl;
 
@@ -39,7 +39,7 @@ namespace Aurora.Controls.EditorResources
             }
         }
 
-        private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void ResizeThumb_DragDelta(object? sender, DragDeltaEventArgs e)
         {
             if (this.designerItem != null)
             {

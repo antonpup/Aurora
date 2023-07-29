@@ -91,7 +91,7 @@ namespace Aurora.Controls
             }
         }
 
-        public delegate void VariableItemArgs(object sender, object newVariable);
+        public delegate void VariableItemArgs(object? sender, object newVariable);
 
         public event VariableItemArgs VariableUpdated;
 
@@ -227,14 +227,14 @@ namespace Aurora.Controls
             grd_control.UpdateLayout();
         }
 
-        private void CmbbxEnum_control_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbbxEnum_control_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             SetValue(VariableObjectProperty, (sender as ComboBox).SelectedValue);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void colorPickerControlValueChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void colorPickerControlValueChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             Type var_type = VariableObject.GetType();
             System.Windows.Media.Color ctrlClr = (System.Windows.Media.Color)((ColorPicker)sender).SelectedColor;
@@ -243,21 +243,21 @@ namespace Aurora.Controls
             VariableObject = clr;
         }
 
-        private void keySequenceControlValueChanged(object sender, EventArgs e)
+        private void keySequenceControlValueChanged(object? sender, EventArgs e)
         {
             SetValue(VariableObjectProperty, ((Aurora.Controls.KeySequence)sender).Sequence);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void ColorPickerMedia_control_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPickerMedia_control_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             SetValue(VariableObjectProperty, (sender as ColorPicker).SelectedColor.Value);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void ColorPickerDrawing_control_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPickerDrawing_control_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             ColorPicker picker = (sender as ColorPicker);
             if (picker.SelectedColor == null)
@@ -268,42 +268,42 @@ namespace Aurora.Controls
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void DoubleUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void DoubleUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SetValue(VariableObjectProperty, (double)((sender as DoubleUpDown).Value ?? 0.0));
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void FloatUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void FloatUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SetValue(VariableObjectProperty, (float)((sender as DoubleUpDown).Value ?? 0.0f));
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void LongUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void LongUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SetValue(VariableObjectProperty, (sender as LongUpDown).Value ?? 0L);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void IntUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void IntUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             SetValue(VariableObjectProperty, (sender as IntegerUpDown).Value ?? 0);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void Txtbx_control_TextChanged(object sender, TextChangedEventArgs e)
+        private void Txtbx_control_TextChanged(object? sender, TextChangedEventArgs e)
         {
             SetValue(VariableObjectProperty, (sender as TextBox).Text);
 
             VariableUpdated?.Invoke(this, VariableObject);
         }
 
-        private void Chkbx_control_VarChanged(object sender, RoutedEventArgs e)
+        private void Chkbx_control_VarChanged(object? sender, RoutedEventArgs e)
         {
             SetValue(VariableObjectProperty, (sender as CheckBox).IsChecked.Value);
 
@@ -320,7 +320,7 @@ namespace Aurora.Controls
             VariableRemark = null;
         }
 
-        private void btn_reset_Click(object sender, RoutedEventArgs e)
+        private void btn_reset_Click(object? sender, RoutedEventArgs e)
         {
             VariableObject = VariableDefaultObject;
 

@@ -54,7 +54,7 @@ namespace Aurora.Utils {
 		#region Events
 		/// <summary>LeftButtonDown event for any elements who have the behaviour attached. Will set that object's <see cref="MouseDownStartProperty" /> to the
 		/// current position of the mouse relative to the sending object.</summary>
-		private static void DependencyTarget_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+		private static void DependencyTarget_MouseLeftButtonDown(object? sender, MouseButtonEventArgs e) {
 			var trg = (UIElement)sender;
 			e.Handled = true;
 			trg.CaptureMouse(); // Capture mouse to detect mouse movement off the element
@@ -63,7 +63,7 @@ namespace Aurora.Utils {
 
 		/// <summary>MouseMove event from any elements who have the behaviour attached. Will check if the mouse went down on this element and then if the user
 		/// has dragged the mouse atleast the distance set by the system parameters. If both these cases are true, fires a single StartDrag event.</summary>
-		private static void DependencyTarget_MouseMove(object sender, MouseEventArgs e) {
+		private static void DependencyTarget_MouseMove(object? sender, MouseEventArgs e) {
 			var @do = (UIElement)sender;
 			var p = GetMouseDownStart(@do);
 			var delta = e.GetPosition((IInputElement)sender) - p; // Calculate the distance between the current mouse position and the initial mouse down position
@@ -79,7 +79,7 @@ namespace Aurora.Utils {
 
 		/// <summary>LeftButtonUp handler for any elements with the behaviour attached. Will set that object's <see cref="MouseDownStartProperty"/> to null to prevent
 		/// the <see cref="DependencyTarget_MouseMove(object, MouseEventArgs)"/> event from running and triggering a StartDrag event.</summary>
-		private static void DependencyTarget_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+		private static void DependencyTarget_MouseLeftButtonUp(object? sender, MouseButtonEventArgs e) {
 			var trg = (UIElement)sender;
 			trg.ReleaseMouseCapture();
 			SetMouseDownStart(trg, null);
@@ -91,5 +91,5 @@ namespace Aurora.Utils {
 	/// <param name="sender">The object that initiated the event.</param>
 	/// <param name="e">The event of the most recent MouseMove event that caused the StartDrag event to fire.</param>
 	/// <param name="initialPoint">The initial mouse location relative to the target when the mouse was originally pressed.</param>
-	public delegate void StartDragEventHandler(object sender, MouseEventArgs e, Point initialPoint);
+	public delegate void StartDragEventHandler(object? sender, MouseEventArgs e, Point initialPoint);
 }

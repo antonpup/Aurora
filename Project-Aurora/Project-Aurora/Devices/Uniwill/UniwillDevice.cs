@@ -88,7 +88,7 @@ namespace Aurora.Devices.Uniwill
             }
         }
 
-        private void OnRegChanged(object sender, EventArgs e)
+        private void OnRegChanged(object? sender, EventArgs e)
         {
             int newSwtich = (int)Registry.GetValue(keyName, "AuroraSwitch", 0);
             if (SwitchOn != newSwtich)

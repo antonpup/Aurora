@@ -92,11 +92,11 @@ namespace Aurora.Settings.Layers {
             return layer;
         }
 
-        private void Timer_Elapsed(object sender) {
+        private void Timer_Elapsed(object? sender) {
             isActive = false;
         }
 
-        private void InputEvents_KeyDown(object sender, EventArgs e) {
+        private void InputEvents_KeyDown(object? sender, EventArgs e) {
             foreach (var keybind in Properties.TriggerKeys) {
                 if (keybind.IsPressed()) {
                     switch (Properties.RepeatAction) {
@@ -134,7 +134,7 @@ namespace Aurora.Settings.Layers {
 
     class CustomTimer {
 
-        public delegate void TriggerHandler(object sender);
+        public delegate void TriggerHandler(object? sender);
         public event TriggerHandler Trigger;
 
         private Timer timer;
@@ -147,7 +147,7 @@ namespace Aurora.Settings.Layers {
             timer.Elapsed += Timer_Elapsed;
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e) {
+        private void Timer_Elapsed(object? sender, ElapsedEventArgs e) {
             Trigger?.Invoke(this);
             timer.Enabled = false;
         }

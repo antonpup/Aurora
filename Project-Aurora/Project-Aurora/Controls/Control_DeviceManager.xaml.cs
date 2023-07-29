@@ -18,7 +18,7 @@ public partial class Control_DeviceManager
         InitializeComponent();
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         UpdateControls();
     }
@@ -29,7 +29,7 @@ public partial class Control_DeviceManager
         lstDevices.Items.Refresh();
     }
 
-        private void btnRestartAll_Click(object sender, RoutedEventArgs e)
+        private void btnRestartAll_Click(object? sender, RoutedEventArgs e)
         {
             Task.Run(async () =>
             {
@@ -40,7 +40,7 @@ public partial class Control_DeviceManager
             });
         }
 
-    private void btnCalibrate_Click(object sender, RoutedEventArgs e)
+    private void btnCalibrate_Click(object? sender, RoutedEventArgs e)
     {
         new Control_DeviceCalibration(_deviceManager).Show();
     }

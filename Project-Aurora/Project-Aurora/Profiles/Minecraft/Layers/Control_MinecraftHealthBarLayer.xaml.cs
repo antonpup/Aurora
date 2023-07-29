@@ -56,63 +56,63 @@ namespace Aurora.Profiles.Minecraft.Layers {
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             Loaded -= UserControl_Loaded;
         }
 
-        private void NormalHealth_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void NormalHealth_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._NormalHealthColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void AbsorptionHealth_Enabled_Checked(object sender, RoutedEventArgs e) {
+        private void AbsorptionHealth_Enabled_Checked(object? sender, RoutedEventArgs e) {
             if (CanSet && (sender as CheckBox).IsChecked.HasValue)
                 Context.Properties._EnableAbsorptionHealthColor = AbsorptionHealth_ColorPicker.IsEnabled = (sender as CheckBox).IsChecked.Value;
         }
-        private void AbsorptionHealth_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void AbsorptionHealth_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._AbsorptionHealthColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void RegenerationHealth_Enabled_Checked(object sender, RoutedEventArgs e) {
+        private void RegenerationHealth_Enabled_Checked(object? sender, RoutedEventArgs e) {
             if (CanSet && (sender as CheckBox).IsChecked.HasValue)
                 Context.Properties._EnableRegenerationHealthColor = RegenerationHealth_ColorPicker.IsEnabled = (sender as CheckBox).IsChecked.Value;
         }
-        private void RegenerationHealth_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void RegenerationHealth_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._RegenerationHealthColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void PoisonHealth_Enabled_Checked(object sender, RoutedEventArgs e) {
+        private void PoisonHealth_Enabled_Checked(object? sender, RoutedEventArgs e) {
             if (CanSet && (sender as CheckBox).IsChecked.HasValue)
                 Context.Properties._EnablePoisonHealthColor = PoisonHealth_ColorPicker.IsEnabled = (sender as CheckBox).IsChecked.Value;
         }
-        private void PoisonHealth_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void PoisonHealth_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._PoisonHealthColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void WitherHealth_Enabled_Checked(object sender, RoutedEventArgs e) {
+        private void WitherHealth_Enabled_Checked(object? sender, RoutedEventArgs e) {
             if (CanSet && (sender as CheckBox).IsChecked.HasValue)
                 Context.Properties._EnableWitherHealthColor = WitherHealth_ColorPicker.IsEnabled = (sender as CheckBox).IsChecked.Value;
         }
-        private void WitherHealth_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void WitherHealth_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._WitherHealthColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void Background_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void Background_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._BackgroundColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void ProgressGradualCh_Checked(object sender, RoutedEventArgs e) {
+        private void ProgressGradualCh_Checked(object? sender, RoutedEventArgs e) {
             if (CanSet && (sender as CheckBox).IsChecked.HasValue)
                 Context.Properties._GradualProgress = (sender as CheckBox).IsChecked.Value;
         }
 
-        private void KeySequence_Keys_SequenceUpdated(object sender, EventArgs e) {
+        private void KeySequence_Keys_SequenceUpdated(object? sender, EventArgs e) {
             if (CanSet)
                 Context.Properties._Sequence = (sender as KeySequence).Sequence;
         }

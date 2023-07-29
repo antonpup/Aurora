@@ -37,7 +37,7 @@ public partial class Control_DeviceItem
             Update_controls_timer_Elapsed);
     }
 
-    private void Update_controls_timer_Elapsed(object sender, ElapsedEventArgs e)
+    private void Update_controls_timer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         try
         {
@@ -49,7 +49,7 @@ public partial class Control_DeviceItem
         }
     }
 
-    private void btnToggleOnOff_Click(object sender, RoutedEventArgs e)
+    private void btnToggleOnOff_Click(object? sender, RoutedEventArgs e)
     {
         btnStart.Content = "Working...";
         btnStart.IsEnabled = false;
@@ -69,7 +69,7 @@ public partial class Control_DeviceItem
         });
     }
 
-    private void btnToggleEnableDisable_Click(object sender, RoutedEventArgs e)
+    private void btnToggleEnableDisable_Click(object? sender, RoutedEventArgs e)
     {
         if (!Global.Configuration.EnabledDevices.Contains(Device.Device.GetType()))
         {
@@ -94,13 +94,13 @@ public partial class Control_DeviceItem
         }
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         UpdateControls();
         _updateControlsTimer.Start();
     }
 
-    private void Control_DeviceItem_OnUnloaded(object sender, RoutedEventArgs e)
+    private void Control_DeviceItem_OnUnloaded(object? sender, RoutedEventArgs e)
     {
         _updateControlsTimer.Stop();
     }
@@ -176,12 +176,12 @@ public partial class Control_DeviceItem
         }
     }
 
-    private void SdkLink_Clicked(object sender, MouseButtonEventArgs e)
+    private void SdkLink_Clicked(object? sender, MouseButtonEventArgs e)
     {
         System.Diagnostics.Process.Start("explorer", Device.Device.Tooltips.SdkLink);
     }
 
-    private void btnViewOptions_Click(object sender, RoutedEventArgs e)
+    private void btnViewOptions_Click(object? sender, RoutedEventArgs e)
     {
         Window_VariableRegistryEditor optionsWindow = new Window_VariableRegistryEditor();
         optionsWindow.Title = $"{Device.Device.DeviceName} - Options";

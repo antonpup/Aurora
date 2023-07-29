@@ -478,7 +478,7 @@ namespace Aurora.EffectsEngine
             }
         }
 
-        private void FreeformOnValuesChanged(object sender, EventArgs args)
+        private void FreeformOnValuesChanged(object? sender, EventArgs args)
         {
             _ksChanged = true;
         }
@@ -1006,7 +1006,7 @@ namespace Aurora.EffectsEngine
             _needsRender = true;
             _keyColors.Clear();
         }
-        private void InvalidateColorMap(object sender, EventArgs args)
+        private void InvalidateColorMap(object? sender, EventArgs args)
         {
             _colormap?.Dispose();
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);

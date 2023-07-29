@@ -51,26 +51,26 @@ namespace Aurora.Profiles.CSGO.Layers
         {
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_RegularKill_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_RegularKill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOKillIndicatorLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOKillIndicatorLayerHandler).Properties._RegularKillColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_HeadshotKill_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_HeadshotKill_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOKillIndicatorLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOKillIndicatorLayerHandler).Properties._HeadshotKillColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOKillIndicatorLayerHandler && sender is Aurora.Controls.KeySequence)
             {

@@ -18,7 +18,7 @@ public partial class Control_DeviceCalibrationItem : UserControl
         InitializeComponent();
     }
 
-    private void ColorPicker_OnSelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
+    private void ColorPicker_OnSelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<System.Windows.Media.Color?> e)
     {
         if (e.NewValue.HasValue && Global.Configuration.DeviceCalibrations.ContainsKey(DeviceColor.Key))
         {
@@ -26,7 +26,7 @@ public partial class Control_DeviceCalibrationItem : UserControl
         }
     }
 
-    private void RemoveButton_OnClick(object sender, RoutedEventArgs e)
+    private void RemoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
         ItemRemoved?.Invoke(this, DeviceColor);
     }

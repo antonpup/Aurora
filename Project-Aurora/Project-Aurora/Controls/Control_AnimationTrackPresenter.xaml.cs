@@ -42,7 +42,7 @@ namespace Aurora.Controls
             }
         }
 
-        public delegate void AnimationTrackArgs(object sender, AnimationTrack track);
+        public delegate void AnimationTrackArgs(object? sender, AnimationTrack track);
 
         public event AnimationTrackArgs AnimationTrackUpdated;
 
@@ -116,7 +116,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void Control_AnimationFrameItem_AnimationFrameItemUpdated(object sender, AnimationFrame frame)
+        private void Control_AnimationFrameItem_AnimationFrameItemUpdated(object? sender, AnimationFrame frame)
         {
             if(frame == null)
             {
@@ -133,18 +133,18 @@ namespace Aurora.Controls
             //UpdateControls();
         }
 
-        private void Control_AnimationFrameItem_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void Control_AnimationFrameItem_PreviewMouseDown(object? sender, MouseButtonEventArgs e)
         {
             //Selected
             AnimationFrameItemSelected?.Invoke(sender, (sender as Control_AnimationFrameItem).ContextFrame);
         }
 
-        private void Control_AnimationFrameItem_CompletedDrag(object sender, double delta)
+        private void Control_AnimationFrameItem_CompletedDrag(object? sender, double delta)
         {
             UpdateAnimationTrack();
         }
 
-        private void Control_AnimationFrameItem_LeftSplitterDrag(object sender, double delta)
+        private void Control_AnimationFrameItem_LeftSplitterDrag(object? sender, double delta)
         {
             double oldMargin = (sender as Control_AnimationFrameItem).Margin.Left;
             double oldWidth = (sender as Control_AnimationFrameItem).Width;
@@ -162,7 +162,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void Control_AnimationFrameItem_RightSplitterDrag(object sender, double delta)
+        private void Control_AnimationFrameItem_RightSplitterDrag(object? sender, double delta)
         {
             double oldWidth = (sender as Control_AnimationFrameItem).Width;
             double newWidth = oldWidth + delta;
@@ -179,7 +179,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void Control_AnimationFrameItem_ContentSplitterDrag(object sender, double delta)
+        private void Control_AnimationFrameItem_ContentSplitterDrag(object? sender, double delta)
         {
             double oldMargin = (sender as Control_AnimationFrameItem).Margin.Left;
             double newMargin = oldMargin + delta;
@@ -241,18 +241,18 @@ namespace Aurora.Controls
             AnimationTrackUpdated?.Invoke(this, ContextTrack);
         }
 
-        private void Expander_Collapsed(object sender, RoutedEventArgs e)
+        private void Expander_Collapsed(object? sender, RoutedEventArgs e)
         {
             _height = this.Height;
             this.Height = 50;
         }
 
-        private void Expander_Expanded(object sender, RoutedEventArgs e)
+        private void Expander_Expanded(object? sender, RoutedEventArgs e)
         {
             this.Height = _height;
         }
 
-        private void gridTrackItems_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void gridTrackItems_PreviewMouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
@@ -266,7 +266,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void grdsplitHeightAdjust_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        private void grdsplitHeightAdjust_DragDelta(object? sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
             double oldHeight = this.ActualHeight;
             double newHeight = oldHeight + e.VerticalChange;
@@ -275,12 +275,12 @@ namespace Aurora.Controls
                 this.Height = newHeight;
         }
 
-        private void btnRemoveTrack_Click(object sender, RoutedEventArgs e)
+        private void btnRemoveTrack_Click(object? sender, RoutedEventArgs e)
         {
             ContextTrack = null;
         }
 
-        private void txtboxTrackNameEdit_TextChanged(object sender, TextChangedEventArgs e)
+        private void txtboxTrackNameEdit_TextChanged(object? sender, TextChangedEventArgs e)
         {
             if(ContextTrack != null)
             {
@@ -289,7 +289,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void txtblkTrackName_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void txtblkTrackName_PreviewMouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
@@ -299,13 +299,13 @@ namespace Aurora.Controls
             }
         }
 
-        private void txtboxTrackNameEdit_LostFocus(object sender, RoutedEventArgs e)
+        private void txtboxTrackNameEdit_LostFocus(object? sender, RoutedEventArgs e)
         {
             txtblkTrackName.Visibility = Visibility.Visible;
             canvasTrackEdit.Visibility = Visibility.Collapsed;
         }
 
-        private void txtboxTrackNameEdit_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void txtboxTrackNameEdit_PreviewKeyDown(object? sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {

@@ -156,7 +156,7 @@ public partial class Control_LayerList : INotifyPropertyChanged {
     /// <summary>
     /// When the add button is clicked, adds a new default layer.
     /// </summary>
-    private void AddButton_Click(object sender, RoutedEventArgs e) {
+    private void AddButton_Click(object? sender, RoutedEventArgs e) {
         AddLayer(new Layer("New layer " + Utils.Time.GetMilliSeconds()));
     }
         
@@ -164,7 +164,7 @@ public partial class Control_LayerList : INotifyPropertyChanged {
     /// Creates a clone of the selected layer and sets <see cref="Global.Clipboard"/> to the clone. The reason for cloning is so that should the layer be
     /// changed after copying, the pasted version will not have this changes (as should be expected).
     /// </summary>
-    private void CopyButton_Click(object sender, RoutedEventArgs e) {
+    private void CopyButton_Click(object? sender, RoutedEventArgs e) {
         Clipboard = SelectedLayer?.Clone();
     }
 
@@ -172,7 +172,7 @@ public partial class Control_LayerList : INotifyPropertyChanged {
     /// Checks if the <see cref="Global.Clipboard"/> object is a layer, and if so adds a copy of this layer to the active collection. The reason for taking
     /// a clone of the layer is so that if it was to be pasted again, the two pasted layers don't equal one another (i.e. don't have the same reference).
     /// </summary>
-    private void PasteButton_Click(object sender, RoutedEventArgs e)
+    private void PasteButton_Click(object? sender, RoutedEventArgs e)
     {
         // Check if clipboard is layer and also that either: The layer on the clipboard is available to ALL applications OR the layer is available to the current application type.
         // This check is to avoid being able to copy application specific layers to other applications, e.g. prevent copying Minecraft health layer to CSGO.
@@ -189,7 +189,7 @@ public partial class Control_LayerList : INotifyPropertyChanged {
     /// <summary>
     /// Asks the user if they wish to delete the currently selected layer and does so if they press "Yes".
     /// </summary>
-    private void DeleteButton_Click(object sender, RoutedEventArgs e)
+    private void DeleteButton_Click(object? sender, RoutedEventArgs e)
     {
         if (!ActiveLayerCollection.Contains(SelectedLayer) ||
             MessageBox.Show(
@@ -202,7 +202,7 @@ public partial class Control_LayerList : INotifyPropertyChanged {
     /// <summary>
     /// Keyboard shortcut listener. Reroutes the call to the relevant button's click handler.
     /// </summary>
-    private void ReorderableListBox_KeyDown(object sender, KeyEventArgs e) {
+    private void ReorderableListBox_KeyDown(object? sender, KeyEventArgs e) {
         if (Keyboard.Modifiers.HasFlag(ModifierKeys.Control)) {
             if (e.Key == Key.C)
                 CopyButton_Click(sender, null);
@@ -216,14 +216,14 @@ public partial class Control_LayerList : INotifyPropertyChanged {
     /// When one of the collection radiobuttons (e.g. nighttime/daytime) changes, then notify that the <see cref="ActiveLayerCollection"/>
     /// property will have changed, thus updating the layer list.
     /// </summary>
-    private void CollectionSelection_Checked(object sender, RoutedEventArgs e) {
+    private void CollectionSelection_Checked(object? sender, RoutedEventArgs e) {
         Notify("ActiveLayerCollection");
     }
 
     /// <summary>
     /// Force selection of the first item of the list when we Get Focus (which is forced from ConfigUI), prevents empty LayerPresenter
     /// </summary>
-    private void UserControl_GotFocus(object sender, RoutedEventArgs e)
+    private void UserControl_GotFocus(object? sender, RoutedEventArgs e)
     {
         var cur = lstLayers.SelectedItem as Layer;
         if ((cur == null || !LayerCollection.Contains(cur)) && (LayerCollection?.Count ?? 0) > 0)

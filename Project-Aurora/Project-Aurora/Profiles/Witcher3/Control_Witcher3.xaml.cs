@@ -36,7 +36,7 @@ namespace Aurora.Profiles.Witcher3
 
         }
 
-        private void Control_Witcher3_ProfileChanged(object sender, EventArgs e)
+        private void Control_Witcher3_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -49,7 +49,7 @@ namespace Aurora.Profiles.Witcher3
 
         //Overview
         
-        private void install_mod_button_Click(object sender, RoutedEventArgs e)
+        private void install_mod_button_Click(object? sender, RoutedEventArgs e)
         {
             String installpath = SteamUtils.GetGamePath(292030);
             if (!String.IsNullOrWhiteSpace(installpath))//if we find the path through steam
@@ -67,7 +67,7 @@ namespace Aurora.Profiles.Witcher3
             }
         }
 
-        private void uninstall_mod_button_Click(object sender, RoutedEventArgs e)
+        private void uninstall_mod_button_Click(object? sender, RoutedEventArgs e)
         {
             String installpath = SteamUtils.GetGamePath(292030);
             if (!String.IsNullOrWhiteSpace(installpath))
@@ -85,14 +85,14 @@ namespace Aurora.Profiles.Witcher3
             }
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (!IsLoaded) return;
             _profileManager.Settings.IsEnabled = game_enabled.IsChecked.HasValue && game_enabled.IsChecked.Value;
             _profileManager.SaveProfiles();
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        private void Hyperlink_RequestNavigate(object? sender, RequestNavigateEventArgs e)
         {
             Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;

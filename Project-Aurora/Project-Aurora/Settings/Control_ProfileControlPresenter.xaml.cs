@@ -62,13 +62,13 @@ namespace Aurora.Settings
             }
         }
 
-        private void btnReset_Click(object sender, RoutedEventArgs e)
+        private void btnReset_Click(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && sender is Button)
                 ResetProfile();
         }
 
-        private void Control_Keybind_KeybindUpdated(object sender, Keybind newKeybind)
+        private void Control_Keybind_KeybindUpdated(object? sender, Keybind newKeybind)
         {
             if (IsLoaded && !isSettingNewLayer && DataContext != null && DataContext is ApplicationProfile)
             {
@@ -76,7 +76,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void buttonResetKeybind_Click(object sender, RoutedEventArgs e)
+        private void buttonResetKeybind_Click(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && !isSettingNewLayer && DataContext != null && DataContext is ApplicationProfile)
             {
@@ -87,7 +87,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void grd_LayerControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void grd_LayerControl_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             if (IsLoaded)
                 this.keybindEditor.Stop();

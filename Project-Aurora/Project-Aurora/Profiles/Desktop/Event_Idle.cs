@@ -40,7 +40,7 @@ public sealed class EventIdle : LightEvent
 
     private bool _invalidated;
 
-    private void IdleTypeChanged(object sender, PropertyChangedEventArgs e)
+    private void IdleTypeChanged(object? sender, PropertyChangedEventArgs e)
     {
         EffectCfg.Speed = Global.Configuration.IdleSpeed;
         _invalidated = true;

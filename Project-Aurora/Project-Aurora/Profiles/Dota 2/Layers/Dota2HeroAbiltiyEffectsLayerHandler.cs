@@ -121,7 +121,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             UpdateAnimations();
         }
 
-        private void Effects_CanvasChanged(object sender, CanvasChangedArgs e)
+        private void Effects_CanvasChanged(object? sender, CanvasChangedArgs e)
         {
             UpdateAnimations();
         }

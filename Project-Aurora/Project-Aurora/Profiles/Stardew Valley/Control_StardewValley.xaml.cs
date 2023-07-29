@@ -39,7 +39,7 @@ namespace Aurora.Profiles.StardewValley {
             GameEnabled.IsChecked = profile.Settings.IsEnabled;
         }
 
-        private void GameEnabled_Checked(object sender, RoutedEventArgs e)
+        private void GameEnabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -48,12 +48,12 @@ namespace Aurora.Profiles.StardewValley {
             }
         }
 
-        private void GoToSMAPIPage_Click(object sender, RoutedEventArgs e)
+        private void GoToSMAPIPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://www.nexusmods.com/stardewvalley/mods/2400");
         }
 
-        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
+        private void GoToModDownloadPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://www.nexusmods.com/stardewvalley/mods/6088");
         }

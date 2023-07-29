@@ -85,7 +85,7 @@ namespace Aurora.Settings
             }
         }
 
-        private void WinBitmapView_Closed(object sender, EventArgs e)
+        private void WinBitmapView_Closed(object? sender, EventArgs e)
         {
             Global.effengine.NewLayerRender -= Effengine_NewLayerRender;
 

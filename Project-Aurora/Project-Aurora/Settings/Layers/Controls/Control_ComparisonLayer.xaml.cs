@@ -50,37 +50,37 @@ namespace Aurora.Settings.Layers.Controls {
             this.SetSettings();
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void operand1Path_TextChanged(object sender, TextChangedEventArgs e) {
+        private void operand1Path_TextChanged(object? sender, TextChangedEventArgs e) {
             if (CanSet)
                 Context.Properties._Operand1Path = (sender as ComboBox).Text;
         }
 
-        private void operator_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void operator_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
             if (CanSet)
                 Context.Properties._Operator = ((KeyValuePair<string, ComparisonOperator>)(sender as ComboBox).SelectedItem).Value;
         }
 
-        private void operand2Path_TextChanged(object sender, TextChangedEventArgs e) {
+        private void operand2Path_TextChanged(object? sender, TextChangedEventArgs e) {
             if (CanSet)
                 Context.Properties._Operand2Path = (sender as ComboBox).Text;
         }
 
-        private void trueColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void trueColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && (sender as ColorPicker).SelectedColor.HasValue)
                 Context.Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
-        private void falseColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void falseColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && (sender as ColorPicker).SelectedColor.HasValue)
                 Context.Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
-        private void keySequence_SequenceUpdated(object sender, EventArgs e) {
+        private void keySequence_SequenceUpdated(object? sender, EventArgs e) {
             if (CanSet)
                 Context.Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }

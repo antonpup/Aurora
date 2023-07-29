@@ -17,7 +17,7 @@ namespace Aurora.Controls.EditorResources
             DragDelta += new DragDeltaEventHandler(this.MoveThumb_DragDelta);
         }
 
-        private void MoveThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void MoveThumb_DragDelta(object? sender, DragDeltaEventArgs e)
         {
             ContentControl designerItem = DataContext as ContentControl;
 

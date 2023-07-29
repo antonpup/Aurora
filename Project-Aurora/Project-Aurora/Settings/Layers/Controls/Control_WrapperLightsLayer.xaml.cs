@@ -33,31 +33,31 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ce_color_factor_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ce_color_factor_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
                 this.ce_color_factor_label.Text = ((float)this.ce_color_factor.Value).ToString();
         }
 
-        private void ce_color_hsv_sine_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ce_color_hsv_sine_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
                 this.ce_color_hsv_sine_label.Text = ((float)this.ce_color_hsv_sine.Value).ToString();
         }
 
-        private void ce_color_hsv_gamma_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void ce_color_hsv_gamma_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
                 this.ce_color_hsv_gamma_label.Text = ((float)this.ce_color_hsv_gamma.Value).ToString();
         }
 
-        private void CloneSourceKS_SequenceKeysChange(object sender, EventArgs e) {
+        private void CloneSourceKS_SequenceKeysChange(object? sender, EventArgs e) {
             // If any items ARE in the clone map but NOT in the sequence, remove them
             // We dont need to worry about adding items to the clone map since CloneDestKS_SequenceUpdated takes care of that
             var toRemove = Context.Properties.CloningMap.Keys.Where(key => !CloneSourceKS.Sequence.Keys.Contains(key)).ToList();
@@ -65,13 +65,13 @@ namespace Aurora.Settings.Layers.Controls
                 Context.Properties.CloningMap.Remove(key);
         }
 
-        private void CloneDestKS_SequenceKeysChange(object sender, EventArgs e) {
+        private void CloneDestKS_SequenceKeysChange(object? sender, EventArgs e) {
             // Adds or updates the sequnce in the cloning map at the source key
             if (CloneSourceKS.SelectedItems.Count() == 1)
                 Context.Properties.CloningMap[CloneSourceKS.SelectedItems.First()] = CloneDestKS.Sequence;
         }
 
-        private void CloneSourceKS_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void CloneSourceKS_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
             int selectedCount = CloneSourceKS.SelectedItems.Count();
             // The destination can only be edited for one source at a time
             CloneDestKS.IsEnabled = selectedCount == 1;

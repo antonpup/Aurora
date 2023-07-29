@@ -47,7 +47,7 @@ namespace Aurora.Profiles.Dota_2
 
         }
 
-        private void Control_Dota2_ProfileChanged(object sender, EventArgs e)
+        private void Control_Dota2_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -64,7 +64,7 @@ namespace Aurora.Profiles.Dota_2
             }
         }
 
-        private void preview_respawn_timer_Tick(object sender, EventArgs e)
+        private void preview_respawn_timer_Tick(object? sender, EventArgs e)
         {
             Dispatcher.Invoke(
                         () =>
@@ -89,7 +89,7 @@ namespace Aurora.Profiles.Dota_2
 
         //Overview
 
-        private void patch_button_Click(object sender, RoutedEventArgs e)
+        private void patch_button_Click(object? sender, RoutedEventArgs e)
         {
             if (InstallGSI())
                 System.Windows.MessageBox.Show("Aurora GSI Config file installed successfully.");
@@ -97,7 +97,7 @@ namespace Aurora.Profiles.Dota_2
                 System.Windows.MessageBox.Show("Aurora GSI Config file could not be installed.\r\nGame is not installed.");
         }
 
-        private void unpatch_button_Click(object sender, RoutedEventArgs e)
+        private void unpatch_button_Click(object? sender, RoutedEventArgs e)
         {
             if (UninstallGSI())
                 System.Windows.MessageBox.Show("Aurora GSI Config file uninstalled successfully.");
@@ -105,7 +105,7 @@ namespace Aurora.Profiles.Dota_2
                 System.Windows.MessageBox.Show("Aurora GSI Config file could not be uninstalled.\r\nGame is not installed.");
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -116,12 +116,12 @@ namespace Aurora.Profiles.Dota_2
 
         ////Preview
 
-        private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_team_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_Dota2).Player.Team = (Aurora.Profiles.Dota_2.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
-        private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_health_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int hp_val = (int)this.preview_health_slider.Value;
             if (this.preview_health_amount is Label)
@@ -135,7 +135,7 @@ namespace Aurora.Profiles.Dota_2
             }
         }
 
-        private void preview_mana_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_mana_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int mana_val = (int)this.preview_mana_slider.Value;
             if (this.preview_mana_amount is Label)
@@ -148,7 +148,7 @@ namespace Aurora.Profiles.Dota_2
             }
         }
 
-        private void preview_killplayer_Click(object sender, RoutedEventArgs e)
+        private void preview_killplayer_Click(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_Dota2).Hero.IsAlive = false;
 
@@ -161,7 +161,7 @@ namespace Aurora.Profiles.Dota_2
             preview_respawn_timer.Start();
         }
 
-        private void preview_addkill_Click(object sender, RoutedEventArgs e)
+        private void preview_addkill_Click(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_Dota2).Player.KillStreak = killstreak++;
             (profile_manager.Config.Event._game_state as GameState_Dota2).Player.Kills++;

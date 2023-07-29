@@ -69,7 +69,7 @@ namespace Aurora.Settings {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BrowseButton_Click(object sender, RoutedEventArgs e) {
+        private void BrowseButton_Click(object? sender, RoutedEventArgs e) {
             OpenFileDialog dialog = new OpenFileDialog() {
                 AddExtension = true,
                 Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*",
@@ -82,7 +82,7 @@ namespace Aurora.Settings {
         /// <summary>
         /// Updates the running process filter when the textbox is changed.
         /// </summary>
-        private void RunningListFilter_TextChanged(object sender, TextChangedEventArgs e) {
+        private void RunningListFilter_TextChanged(object? sender, TextChangedEventArgs e) {
             CollectionViewSource.GetDefaultView(RunningProcessList.ItemsSource).Refresh();
             if (RunningProcessList.SelectedIndex == -1)
                 RunningProcessList.SelectedIndex = 0;
@@ -93,7 +93,7 @@ namespace Aurora.Settings {
         /// This means you don't have to click on the item when you are typing in a filter.
         /// We do not need to handle Enter key here as it is done by setting the OK button "IsDefault" to true.
         /// </summary>
-        private void RunningProcessListFilterText_KeyDown(object sender, KeyEventArgs e) {
+        private void RunningProcessListFilterText_KeyDown(object? sender, KeyEventArgs e) {
             if (e.Key == Key.Up)
                 RunningProcessList.SelectedIndex = Math.Max(RunningProcessList.SelectedIndex - 1, 0);
             else if (e.Key == Key.Down)
@@ -111,7 +111,7 @@ namespace Aurora.Settings {
         /// <summary>
         /// Handler for when the confimation button is clicked. Handles closing and informing the result of the dialog.
         /// </summary>
-        private void OkayButton_Click(object sender, RoutedEventArgs e) {
+        private void OkayButton_Click(object? sender, RoutedEventArgs e) {
             // If the user is on the running process list tab
             if (MainTabControl.SelectedIndex == 0) {
                 if (RunningProcessList.SelectedItem == null) return; // Cannot OK if there is no item selected
@@ -135,7 +135,7 @@ namespace Aurora.Settings {
         /// <summary>
         /// Handler for when the cancel button is clicked. Closes the window.
         /// </summary>
-        private void CancelButton_Click(object sender, RoutedEventArgs e) {
+        private void CancelButton_Click(object? sender, RoutedEventArgs e) {
             DialogResult = false;
             Close();
         }

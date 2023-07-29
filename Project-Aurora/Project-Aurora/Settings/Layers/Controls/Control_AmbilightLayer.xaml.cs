@@ -38,13 +38,13 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void Coordinate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void Coordinate_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (!settingsset)
                 return;
@@ -57,12 +57,12 @@ namespace Aurora.Settings.Layers.Controls
             );
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void TextBox_TextChanged(object? sender, TextChangedEventArgs e)
         {
             (DataContext as AmbilightLayerHandler)?.UpdateSpecificProcessHandle((e.Source as TextBox).Text);
         }
 
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is AmbilightLayerHandler && sender is Aurora.Controls.KeySequence)
             {

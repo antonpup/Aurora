@@ -39,7 +39,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             this.DataContext = context;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
@@ -51,7 +51,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             this.championPicker.SelectedItem = Champion.None;
         }
 
-        private void championPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void championPicker_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (!(sender is ComboBox))
                 return;
@@ -61,7 +61,7 @@ namespace Aurora.Profiles.LeagueOfLegends.Layers
             colorPicker.SelectedColor = Context.Properties.ChampionColors[selectedChampion].ToMediaColor();
         }
 
-        private void colorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void colorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (!(sender is ColorPicker))
                 return;

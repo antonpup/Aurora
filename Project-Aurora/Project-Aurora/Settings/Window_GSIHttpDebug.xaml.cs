@@ -52,7 +52,7 @@ namespace Aurora.Settings {
             DataContext = Global.Configuration;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e) {
+        private void Window_Loaded(object? sender, RoutedEventArgs e) {
             // When the window has opened and loaded, start listening to the NetworkListener for when it
             // recieves new GameStates.
             _httpListener.NewGameState += Net_listener_NewGameState;
@@ -68,7 +68,7 @@ namespace Aurora.Settings {
             }), null, 0, 50);
         }
 
-        private void Window_Closing(object sender, CancelEventArgs e)
+        private void Window_Closing(object? sender, CancelEventArgs e)
         {
             // When the window closes, we need to clean up our listener, otherwise it'll keep listening and
             // this window will never get garbage collected.
@@ -78,14 +78,14 @@ namespace Aurora.Settings {
             _timeDisplayTimer.Dispose();
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closed(object? sender, EventArgs e)
         {
             //Set the HttpDebugWindow instance to null if it got closed.
             if (HttpDebugWindow != null && HttpDebugWindow.Equals(this))
                 HttpDebugWindow = null;
         }
 
-        private void Net_listener_NewGameState(object sender, IGameState gamestate)
+        private void Net_listener_NewGameState(object? sender, IGameState gamestate)
         {
             // This needs to be invoked due to the UI thread being different from the networking thread.
             // Without this, an exception is thrown trying to update the text box.

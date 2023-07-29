@@ -147,7 +147,7 @@ namespace Aurora.Settings.Layers
             return new Control_InteractiveLayer(this);
         }
 
-        private void MouseKeyUp(object sender, EventArgs mouseInputEventArgs)
+        private void MouseKeyUp(object? sender, EventArgs mouseInputEventArgs)
         {
             if (Properties.MouseEffectKey == DeviceKeys.NONE)
                 return;
@@ -155,7 +155,7 @@ namespace Aurora.Settings.Layers
             DeviceKeyUp(Properties.MouseEffectKey);
         }
 
-        private void InputEventsKeyUp(object sender, KeyEvent e)
+        private void InputEventsKeyUp(object? sender, KeyEvent e)
         {
             var deviceKey = e.GetDeviceKey();
             DeviceKeyUp(deviceKey);
@@ -182,7 +182,7 @@ namespace Aurora.Settings.Layers
         private readonly ConcurrentDictionary<DeviceKeys, long> _timeOfLastPress = new();
         private const long PressBuffer = 300L;
 
-        private void MouseKeyDown(object sender, EventArgs mouseInputEventArgs)
+        private void MouseKeyDown(object? sender, EventArgs mouseInputEventArgs)
         {
             if (Properties.MouseEffectKey == DeviceKeys.NONE)
                 return;
@@ -190,7 +190,7 @@ namespace Aurora.Settings.Layers
             DeviceKeyDown(Properties.MouseEffectKey);
         }
 
-        private void InputEventsKeyDown(object sender, KeyEvent e)
+        private void InputEventsKeyDown(object? sender, KeyEvent e)
         {
             var deviceKey = e.GetDeviceKey();
 

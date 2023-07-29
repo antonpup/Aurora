@@ -21,7 +21,7 @@ namespace Aurora.Profiles.EliteDangerous.Helpers
                 {
                     AutoReset = false
                 };
-                _timer.Elapsed += (object sender, ElapsedEventArgs e) =>
+                _timer.Elapsed += (object? sender, ElapsedEventArgs e) =>
                 {
                     action();
                 };

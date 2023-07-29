@@ -15,7 +15,7 @@ public sealed class GameEventWitcher3 : LightEvent
         _gameStateListener.StartReading();
     }
 
-    private void GameStateListenerOnGameStateChanged(object sender, Witcher3StateEventArgs e)
+    private void GameStateListenerOnGameStateChanged(object? sender, Witcher3StateEventArgs e)
     {
         var player = e.GameState.Player;
 

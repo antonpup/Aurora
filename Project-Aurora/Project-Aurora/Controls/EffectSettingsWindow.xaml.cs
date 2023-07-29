@@ -61,7 +61,7 @@ namespace Aurora.Controls
             gradient_editor.BrushChanged += Gradient_editor_BrushChanged;
         }
 
-        private void Gradient_editor_BrushChanged(object sender, BrushChangedEventArgs e)
+        private void Gradient_editor_BrushChanged(object? sender, BrushChangedEventArgs e)
         {
             EffectConfig.Brush = new EffectBrush(gradient_editor.Brush);
         }
@@ -73,7 +73,7 @@ namespace Aurora.Controls
         }
 
 
-        private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void effect_speed_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded)
             {
@@ -87,7 +87,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void primary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void primary_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && (sender as ColorPicker).SelectedColor.HasValue)
             {
@@ -96,7 +96,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void secondary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void secondary_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && (sender as ColorPicker).SelectedColor.HasValue)
             {
@@ -105,24 +105,24 @@ namespace Aurora.Controls
             }
         }
 
-        private void accept_button_Click(object sender, RoutedEventArgs e)
+        private void accept_button_Click(object? sender, RoutedEventArgs e)
         {
             EffectConfig.Brush = new EffectBrush(gradient_editor.Brush);
             FireEffectConfigUpdated();
             Close();
         }
 
-        private void Window_Activated(object sender, EventArgs e)
+        private void Window_Activated(object? sender, EventArgs e)
         {
             Global.LightingStateManager.PreviewProfileKey = preview_key;
         }
 
-        private void Window_Deactivated(object sender, EventArgs e)
+        private void Window_Deactivated(object? sender, EventArgs e)
         {
             Global.LightingStateManager.PreviewProfileKey = null;
         }
 
-        private void effect_angle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void effect_angle_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded)
             {
@@ -142,7 +142,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void effect_animation_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void effect_animation_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -150,7 +150,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void effect_animation_reversed_Checked(object sender, RoutedEventArgs e)
+        private void effect_animation_reversed_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {

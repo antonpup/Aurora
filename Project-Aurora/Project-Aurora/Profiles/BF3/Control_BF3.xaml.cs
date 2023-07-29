@@ -25,7 +25,7 @@ namespace Aurora.Profiles.BF3
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -35,7 +35,7 @@ namespace Aurora.Profiles.BF3
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void patch_button_Click(object sender, RoutedEventArgs e)
+        private void patch_button_Click(object? sender, RoutedEventArgs e)
         {
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
@@ -49,7 +49,7 @@ namespace Aurora.Profiles.BF3
             }
         }
 
-        private void unpatch_button_Click(object sender, RoutedEventArgs e)
+        private void unpatch_button_Click(object? sender, RoutedEventArgs e)
         {
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             System.Windows.Forms.DialogResult result = dialog.ShowDialog();
@@ -63,7 +63,7 @@ namespace Aurora.Profiles.BF3
             }
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -72,11 +72,11 @@ namespace Aurora.Profiles.BF3
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
         }
 

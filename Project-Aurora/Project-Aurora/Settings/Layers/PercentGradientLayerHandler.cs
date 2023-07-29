@@ -37,7 +37,7 @@ namespace Aurora.Settings.Layers
             return new Control_PercentGradientLayer(this);
         }
 
-        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             Invalidated = true;

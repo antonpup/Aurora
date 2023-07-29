@@ -52,20 +52,20 @@ namespace Aurora.Profiles.CSGO.Layers
         {
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_DeathColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_DeathColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGODeathLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGODeathLayerHandler).Properties._DeathColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void IntegerUpDown_FadeOutAfter_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void IntegerUpDown_FadeOutAfter_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGODeathLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown && (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue)
                 (this.DataContext as CSGODeathLayerHandler).Properties._FadeOutAfter = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value;

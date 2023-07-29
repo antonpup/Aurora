@@ -43,22 +43,22 @@ namespace Aurora.Profiles.Minecraft.Layers {
             }
         }
 
-        private void UserControl_Loaded(Object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_DayTime_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void ColorPicker_DayTime_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftBackgroundLayerHandler && e.NewValue.HasValue)
                 Context.Properties._PrimaryColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void ColorPicker_NightTime_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void ColorPicker_NightTime_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftBackgroundLayerHandler && e.NewValue.HasValue)
                 Context.Properties._SecondaryColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void KeySequence_Keys_SequenceUpdated(object sender, EventArgs e) {
+        private void KeySequence_Keys_SequenceUpdated(object? sender, EventArgs e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftBackgroundLayerHandler)
                 Context.Properties._Sequence = (sender as KeySequence).Sequence;
         }

@@ -30,10 +30,9 @@ public sealed partial class LightningStateManagerModule : AuroraModule
         _deviceManager = deviceManager;
     }
 
-    public override async Task<bool> InitializeAsync()
+    public override async Task InitializeAsync()
     {
         await Initialize();
-        return true;
     }
 
     protected override async Task Initialize()
@@ -43,7 +42,7 @@ public sealed partial class LightningStateManagerModule : AuroraModule
         _manager = lightingStateManager;
         Global.LightingStateManager = lightingStateManager;
         lightingStateManager.Initialize();
-        
+
         _taskSource.SetResult(lightingStateManager);
 
         var ipcListener = await _ipcListener;

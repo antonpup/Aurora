@@ -13,12 +13,12 @@ namespace Aurora.Settings.Layers.Controls {
             InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, System.Windows.RoutedEventArgs e) {
             GradientPicker.Brush = handler.Properties.Brush.Colors.ToMediaBrush();
             Loaded -= UserControl_Loaded;
         }
 
-        private void GradientPicker_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e) {
+        private void GradientPicker_BrushChanged(object? sender, ColorBox.BrushChangedEventArgs e) {
             handler.Properties.Brush.Colors = ColorStopCollection.FromMediaBrush(GradientPicker.Brush);
             handler.Properties.OnPropertiesChanged(this);
         }

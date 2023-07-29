@@ -101,14 +101,14 @@ public partial class Control_SettingsDevicesAndWrappers
             });
     }
 
-    private async void LoadBrandDefault(object sender, SelectionChangedEventArgs e)
+    private async void LoadBrandDefault(object? sender, SelectionChangedEventArgs e)
     {
         (await _layoutManager).LoadBrandDefault();
     }
 
-    private void ResetDevices(object sender, RoutedEventArgs e) => Task.Run(async () => await (await _deviceManager).ResetDevices());
+    private void ResetDevices(object? sender, RoutedEventArgs e) => Task.Run(async () => await (await _deviceManager).ResetDevices());
 
-    private void razer_wrapper_install_button_Click(object sender, RoutedEventArgs e)
+    private void razer_wrapper_install_button_Click(object? sender, RoutedEventArgs e)
     {
         void HandleExceptions(AggregateException ae)
         {
@@ -182,7 +182,7 @@ public partial class Control_SettingsDevicesAndWrappers
         });
     }
 
-    private void razer_wrapper_uninstall_button_Click(object sender, RoutedEventArgs e)
+    private void razer_wrapper_uninstall_button_Click(object? sender, RoutedEventArgs e)
     {
         void HandleExceptions(AggregateException ae)
         {
@@ -224,12 +224,12 @@ public partial class Control_SettingsDevicesAndWrappers
         });
     }
 
-    private async void razer_wrapper_disable_device_control_button_Click(object sender, RoutedEventArgs e)
+    private async void razer_wrapper_disable_device_control_button_Click(object? sender, RoutedEventArgs e)
     {
         await RazerChromaUtils.DisableDeviceControlAsync();
     }
 
-    private void Lightsync_install_button_Click(object sender, RoutedEventArgs e)
+    private void Lightsync_install_button_Click(object? sender, RoutedEventArgs e)
     {
         const string wrapperFolder = "C:\\ProgramData\\Aurora";
         const string dllName = "LogitechLed.dll";
@@ -278,7 +278,7 @@ public partial class Control_SettingsDevicesAndWrappers
         }
     }
 
-    private void wrapper_install_lightfx_32_Click(object sender, RoutedEventArgs e)
+    private void wrapper_install_lightfx_32_Click(object? sender, RoutedEventArgs e)
     {
         try
         {
@@ -300,7 +300,7 @@ public partial class Control_SettingsDevicesAndWrappers
         }
     }
 
-    private void wrapper_install_lightfx_64_Click(object sender, RoutedEventArgs e)
+    private void wrapper_install_lightfx_64_Click(object? sender, RoutedEventArgs e)
     {
         try
         {

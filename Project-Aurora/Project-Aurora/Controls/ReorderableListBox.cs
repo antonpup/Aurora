@@ -82,7 +82,7 @@ namespace Aurora.Controls {
         /// <summary>
         /// Event that is fired when the user clicks on a item in the ListBox. Stores the clicked item and the relative mouse location.
         /// </summary>
-        private void ReorderableListBoxItem_PreviewMouseLeftButtonDown(object sender, MouseEventArgs e) {
+        private void ReorderableListBoxItem_PreviewMouseLeftButtonDown(object? sender, MouseEventArgs e) {
             // Guard to check if the sender of the event is a ListBox item (no reason it shouldn't be though)
             // Also check that if the developer has specified a "DragElementTag", the original source of the event (the actual clicked element, even if it is
             // inside the element with the attached listener, so in this case a particular object in the item template) has a tag that matches the provided one.
@@ -97,7 +97,7 @@ namespace Aurora.Controls {
         /// draggedItem becomes null when mouse released) and if the user has moved the mouse a certain distance from the original start mouse
         /// down point then start the drag-drop operation.
         /// </summary>
-        private void ReorderableListBox_MouseMove(object sender, MouseEventArgs e) {
+        private void ReorderableListBox_MouseMove(object? sender, MouseEventArgs e) {
             if (draggedItem != null) {
                 var delta = ApplyScrollOffset(e.GetPosition(this)) - startDragPoint; // Calculate distacne between current mouse point and original mouse down point
                 if (Math.Abs(delta.X) >= SystemParameters.MinimumHorizontalDragDistance || Math.Abs(delta.Y) >= SystemParameters.MinimumVerticalDragDistance) // Check it's moved a certain distance
@@ -126,7 +126,7 @@ namespace Aurora.Controls {
         /// This event fires continuously while the user is dragging something over this list box.
         /// Handles passing new data to the panel so that it can arrange the items to help the user understand where the item will be dropped.
         /// </summary>
-        private void ReorderableListBox_DragOver(object sender, DragEventArgs e) {
+        private void ReorderableListBox_DragOver(object? sender, DragEventArgs e) {
             // Guard to ensure that the drag originated from this list box (if from elsewhere, draggedItem will be null)
             if (draggedItem == null) return;
 
@@ -138,7 +138,7 @@ namespace Aurora.Controls {
         /// <summary>
         /// Event that is fired when the user drops an item on the list box.
         /// </summary>
-        private void ReorderableListBox_Drop(object sender, DragEventArgs e) {
+        private void ReorderableListBox_Drop(object? sender, DragEventArgs e) {
             // Guard to ensure that the drag originated from this list box (if from elsewhere, draggedItem will be null)
             if (draggedItem == null) return;
 

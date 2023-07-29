@@ -814,7 +814,7 @@ namespace Aurora.Settings
             "Aurora.Devices.Creative.SoundBlasterXDevice",
             "Aurora.Devices.NZXT.NZXTDevice",
         };
-        private static void DeserializeErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        private static void DeserializeErrorHandler(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
             if (e.CurrentObject is not ICollection<Type> dd)
             {

@@ -36,7 +36,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         #region New Evaluatable Spawning
         /// <summary>Handler for when the user drags a new evalutable from the list of available evaluatables.</summary>
-        private void EvaluatableSpawnerItem_StartDrag(object sender, MouseEventArgs e, Point initial) {
+        private void EvaluatableSpawnerItem_StartDrag(object? sender, MouseEventArgs e, Point initial) {
             var dc = (EvaluatableRegistry.EvaluatableTypeContainer)((FrameworkElement)sender).DataContext;
             DragDrop.DoDragDrop(this, Activator.CreateInstance(dc.Evaluatable), DragDropEffects.Move);
         }
@@ -45,12 +45,12 @@ namespace Aurora.Settings.Overrides.Logic {
 
         #region Evaluatable Templates
         /// <summary>Handler for when the user drags an evaluatable out from their list of saved evaluatables.</summary>
-        private void EvaluatableTemplateItem_StartDrag(object sender, MouseEventArgs e, Point initial) {
+        private void EvaluatableTemplateItem_StartDrag(object? sender, MouseEventArgs e, Point initial) {
             var dc = (TemplateContext)((FrameworkElement)sender).DataContext;
             DragDrop.DoDragDrop(this, dc.Value.Clone(), DragDropEffects.Move);
         }
 
-        private void EvaluatableTemplateList_DragEnter(object sender, DragEventArgs e) {
+        private void EvaluatableTemplateList_DragEnter(object? sender, DragEventArgs e) {
             // Check for an evaluatable in the drag data. Check also the source is non-null (i.e. check it
             // must have come from a placed evaluatable, not from the toolbox or template list).
             if (TryGetData(e.Data, out _, out var source, null) && source != null) {
@@ -61,7 +61,7 @@ namespace Aurora.Settings.Overrides.Logic {
             }
         }
 
-        private void EvaluatableTemplateList_Drop(object sender, DragEventArgs e) {
+        private void EvaluatableTemplateList_Drop(object? sender, DragEventArgs e) {
             // Check for an evaluatable in the drag data. Check also the source is non-null (i.e. check it
             // must have come from a placed evaluatable, not from the toolbox or template list).
             if (TryGetData(e.Data, out var eval, out var source, null) && source != null && AskUserForName(out var newName))
@@ -97,7 +97,7 @@ namespace Aurora.Settings.Overrides.Logic {
             return res;
         }
 
-        private void RenameTemplateButton_Click(object sender, MouseButtonEventArgs e) {
+        private void RenameTemplateButton_Click(object? sender, MouseButtonEventArgs e) {
             e.Handled = true;
             var dc = (TemplateContext)((FrameworkElement)sender).DataContext;
             if (AskUserForName(out var newName, dc.Key) && dc.Key != newName) {
@@ -106,7 +106,7 @@ namespace Aurora.Settings.Overrides.Logic {
             }
         }
 
-        private void DeleteTemplateButton_Click(object sender, MouseButtonEventArgs e) {
+        private void DeleteTemplateButton_Click(object? sender, MouseButtonEventArgs e) {
             e.Handled = true;
             var dc = (TemplateContext)((FrameworkElement)sender).DataContext;
             if (MessageBox.Show($"Are you sure you wish to remove template '{dc.Key}'? This cannot be undone.", "Confirm delete", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)

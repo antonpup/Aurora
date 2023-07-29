@@ -44,7 +44,7 @@ namespace Aurora.Profiles.Subnautica {
         }
 
         #region Overview handlers
-        private void GameEnabled_Checked(object sender, RoutedEventArgs e)
+        private void GameEnabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -53,12 +53,12 @@ namespace Aurora.Profiles.Subnautica {
             }
         }
 
-        private void GoToQModManagerPage_Click(object sender, RoutedEventArgs e)
+        private void GoToQModManagerPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://www.nexusmods.com/subnautica/mods/16/");
         }
 
-        private void GoToModDownloadPage_Click(object sender, RoutedEventArgs e)
+        private void GoToModDownloadPage_Click(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://www.nexusmods.com/subnautica/mods/171");
         }
@@ -68,7 +68,7 @@ namespace Aurora.Profiles.Subnautica {
         #region Preview Handlers
         private GameState_Subnautica State => profile.Config.Event._game_state as GameState_Subnautica;
 
-        private void InGameCh_Checked(object sender, RoutedEventArgs e)
+        private void InGameCh_Checked(object? sender, RoutedEventArgs e)
         {
             if ((sender as CheckBox).IsChecked == true)
             {
@@ -82,27 +82,27 @@ namespace Aurora.Profiles.Subnautica {
             }
         }
 
-        private void HealthSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void HealthSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.Health = (int)e.NewValue;
         }
 
-        private void HungerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void HungerSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.Food = (int)e.NewValue;
         }
 
-        private void WaterSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void WaterSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.Water = (int)e.NewValue;
         }
 
-        private void Oxygen_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Oxygen_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             State.Player.OxygenAvailable = (int)e.NewValue;
         }
 
-        private void preview_DepthLevel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void preview_DepthLevel_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
                 State.Player.DepthLevel = (sender as IntegerUpDown).Value.Value;

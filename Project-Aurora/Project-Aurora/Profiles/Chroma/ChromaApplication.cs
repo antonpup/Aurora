@@ -56,12 +56,12 @@ public class ChromaApplication : Application
         FilterAndSetProcesses();
     }
 
-    private void ExcludedProgramsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void ExcludedProgramsOnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         FilterAndSetProcesses();
     }
 
-    private void RegistryWatcherOnRegistryChanged(object sender, RegistryChangedEventArgs e)
+    private void RegistryWatcherOnRegistryChanged(object? sender, RegistryChangedEventArgs e)
     {
         if (e.Data is not string chromaAppList)
         {

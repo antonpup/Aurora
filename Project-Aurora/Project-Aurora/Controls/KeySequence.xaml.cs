@@ -178,7 +178,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void sequence_remove_keys_Click(object sender, RoutedEventArgs e)
+        private void sequence_remove_keys_Click(object? sender, RoutedEventArgs e)
         {
             if (Utils.UIUtils.ListBoxRemoveSelected(this.keys_keysequence))
             {
@@ -188,7 +188,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void sequence_up_keys_Click(object sender, RoutedEventArgs e)
+        private void sequence_up_keys_Click(object? sender, RoutedEventArgs e)
         {
             if (Utils.UIUtils.ListBoxMoveSelectedUp(this.keys_keysequence))
             {
@@ -198,7 +198,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void sequence_down_keys_Click(object sender, RoutedEventArgs e)
+        private void sequence_down_keys_Click(object? sender, RoutedEventArgs e)
         {
             if (Utils.UIUtils.ListBoxMoveSelectedDown(this.keys_keysequence))
             {
@@ -208,7 +208,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void btnReverseOrder_Click(object sender, RoutedEventArgs e)
+        private void btnReverseOrder_Click(object? sender, RoutedEventArgs e)
         {
             if (Utils.UIUtils.ListBoxReverseOrder(this.keys_keysequence))
             {
@@ -219,7 +219,7 @@ namespace Aurora.Controls
 
         }
 
-        private void sequence_record_keys_Click(object sender, RoutedEventArgs e)
+        private void sequence_record_keys_Click(object? sender, RoutedEventArgs e)
         {
             RecordKeySequence(RecordingTag, (sender as Button), this.keys_keysequence);
             _allowListRefresh = false;
@@ -277,7 +277,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void sequence_freestyle_checkbox_Checked(object sender, RoutedEventArgs e)
+        private void sequence_freestyle_checkbox_Checked(object? sender, RoutedEventArgs e)
         {
             Settings.KeySequence seq = Sequence;
             if (seq != null && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
@@ -306,7 +306,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void freeform_updated(object sender, FreeFormChangedEventArgs eventArgs)
+        private void freeform_updated(object? sender, FreeFormChangedEventArgs eventArgs)
         {
             if(eventArgs.FreeForm != null)
             {
@@ -328,17 +328,17 @@ namespace Aurora.Controls
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             sequence_updateToLayerEditor();
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
             sequence_removeFromLayerEditor();
         }
 
-        private void UserControl_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void UserControl_IsEnabledChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             if(e.NewValue is bool)
             {
@@ -357,7 +357,7 @@ namespace Aurora.Controls
             }
         }
 
-        private void keys_keysequence_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void keys_keysequence_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if(keys_keysequence.SelectedItems.Count <= 1)
             {
@@ -374,7 +374,7 @@ namespace Aurora.Controls
             SelectionChanged?.Invoke(this, e);
         }
 
-        private void UserControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void UserControl_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue is bool)
             {

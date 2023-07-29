@@ -40,7 +40,7 @@ public partial class Control_GTA5
         game_enabled.IsChecked = _profileManager.Settings.IsEnabled;
     }
 
-    private void preview_state_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void preview_state_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -49,7 +49,7 @@ public partial class Control_GTA5
         }
     }
 
-    private void PreviewWantedLevelTimerElapsed(object sender, ElapsedEventArgs e)
+    private void PreviewWantedLevelTimerElapsed(object? sender, ElapsedEventArgs e)
     {
         if (_frame % 2 == 0)
         {
@@ -65,7 +65,7 @@ public partial class Control_GTA5
         _frame++;
     }
 
-    private void preview_wantedLevel_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_wantedLevel_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (!IsLoaded || sender is not IntegerUpDown || !(sender as IntegerUpDown).Value.HasValue) return;
         var value = (sender as IntegerUpDown).Value.Value;
@@ -82,7 +82,7 @@ public partial class Control_GTA5
         }
     }
     
-    private async void patch_button_Click(object sender, RoutedEventArgs e)
+    private async void patch_button_Click(object? sender, RoutedEventArgs e)
     {
         try
         {
@@ -94,7 +94,7 @@ public partial class Control_GTA5
         }
     }
 
-    private void game_enabled_Checked(object sender, RoutedEventArgs e)
+    private void game_enabled_Checked(object? sender, RoutedEventArgs e)
     {
         if (!IsLoaded) return;
         _profileManager.Settings.IsEnabled = game_enabled.IsChecked.HasValue && game_enabled.IsChecked.Value;

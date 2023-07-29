@@ -21,7 +21,7 @@ namespace Aurora.Profiles.Desktop
             _profileManager.ProfileChanged += Desktop_profile_ProfileChanged;
         }
 
-        private void Desktop_profile_ProfileChanged(object sender, EventArgs e)
+        private void Desktop_profile_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -31,15 +31,15 @@ namespace Aurora.Profiles.Desktop
             profile_enabled.IsChecked = _profileManager.Settings.IsEnabled;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {

@@ -91,13 +91,13 @@ namespace Aurora.Profiles
     public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INotifyPropertyChanged
     {
         #region Public Properties
-        public bool Initialized { get; protected set; }
-        public bool Disposed { get; protected set; }
+        public bool Initialized { get; private set; }
+        public bool Disposed { get; private set; }
         public ApplicationProfile? Profile { get; private set; }
         public ObservableCollection<ApplicationProfile> Profiles { get; set; }
-        public GameStateParameterLookup ParameterLookup { get; }
+        public GameStateParameterLookup? ParameterLookup { get; }
         public event EventHandler? ProfileChanged;
-        public LightEventConfig? Config { get; }
+        public LightEventConfig Config { get; }
         public bool IsEnabled => Settings.IsEnabled;
         public bool IsOverlayEnabled => Settings.IsOverlayEnabled;
 
@@ -113,7 +113,7 @@ namespace Aurora.Profiles
         internal Dictionary<string, IEffectScript> EffectScripts { get; } = new();
         #endregion
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         protected Application(LightEventConfig config)
         {
@@ -377,7 +377,7 @@ namespace Aurora.Profiles
             return null;
         }
 
-        protected virtual void LoadProfilesError(object sender, ErrorEventArgs e)
+        protected virtual void LoadProfilesError(object? sender, ErrorEventArgs e)
         {
             if (e.CurrentObject != null)
             {
@@ -395,7 +395,7 @@ namespace Aurora.Profiles
             }
         }
 
-        private void Profile_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Profile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is ApplicationProfile)
                 SaveProfile(sender as ApplicationProfile);
@@ -657,7 +657,7 @@ namespace Aurora.Profiles
             }
         }
 
-        public void SaveProfilesEvent(object sender, EventArgs e)
+        public void SaveProfilesEvent(object? sender, EventArgs e)
         {
             SaveProfiles();
         }

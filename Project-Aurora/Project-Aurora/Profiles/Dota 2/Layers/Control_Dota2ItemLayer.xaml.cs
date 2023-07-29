@@ -73,14 +73,14 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void item_slot1_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot1_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 1 Key", sender as TextBlock, item1_keys_callback);
         }
@@ -105,7 +105,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot2_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot2_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 2 Key", sender as TextBlock, item2_keys_callback);
         }
@@ -130,7 +130,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot3_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot3_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 3 Key", sender as TextBlock, item3_keys_callback);
         }
@@ -155,7 +155,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot4_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot4_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 4 Key", sender as TextBlock, item4_keys_callback);
         }
@@ -180,7 +180,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot5_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot5_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 5 Key", sender as TextBlock, item5_keys_callback);
         }
@@ -205,7 +205,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot6_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot6_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 6 Key", sender as TextBlock, item6_keys_callback);
         }
@@ -231,7 +231,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         }
 
 
-        private void item_slot7_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot7_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 7 Key", sender as TextBlock, item7_keys_callback);
         }
@@ -256,7 +256,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot8_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot8_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 8 Key", sender as TextBlock, item8_keys_callback);
         }
@@ -281,7 +281,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void item_slot9_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void item_slot9_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Item Slot 9 Key", sender as TextBlock, item9_keys_callback);
         }
@@ -306,7 +306,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void stash_slot1_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void stash_slot1_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 1 Key", sender as TextBlock, stash1_keys_callback);
         }
@@ -331,7 +331,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void stash_slot2_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void stash_slot2_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 2 Key", sender as TextBlock, stash2_keys_callback);
         }
@@ -356,7 +356,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void stash_slot3_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void stash_slot3_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 3 Key", sender as TextBlock, stash3_keys_callback);
         }
@@ -381,7 +381,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void stash_slot4_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void stash_slot4_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 4 Key", sender as TextBlock, stash4_keys_callback);
         }
@@ -406,7 +406,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void stash_slot5_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void stash_slot5_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 5 Key", sender as TextBlock, stash5_keys_callback);
         }
@@ -431,7 +431,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void stash_slot6_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void stash_slot6_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Stash Slot 6 Key", sender as TextBlock, stash6_keys_callback);
         }
@@ -480,31 +480,31 @@ namespace Aurora.Profiles.Dota_2.Layers
             }
         }
 
-        private void ColorPicker_Item_Empty_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Item_Empty_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Dota2ItemLayerHandler).Properties._EmptyItemColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_Item_Cooldown_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Item_Cooldown_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Dota2ItemLayerHandler).Properties._ItemCooldownColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_Item_NoCharges_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Item_NoCharges_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Dota2ItemLayerHandler).Properties._ItemNoChargersColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_Item_Color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Item_Color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Dota2ItemLayerHandler).Properties._ItemsColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void CheckBox_Use_Item_Colors_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Use_Item_Colors_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2ItemLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
                 (this.DataContext as Dota2ItemLayerHandler).Properties._UseItemColors = (sender as CheckBox).IsChecked.Value;

@@ -79,7 +79,7 @@ public sealed class RegistryWatcher : IDisposable
         _eventWatcher = null;
     }
 
-    private void KeyWatcherOnEventArrived(object sender, EventArrivedEventArgs e)
+    private void KeyWatcherOnEventArrived(object? sender, EventArrivedEventArgs e)
     {
         SendData();
     }

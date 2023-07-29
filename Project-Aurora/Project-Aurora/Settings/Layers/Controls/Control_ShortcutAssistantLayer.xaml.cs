@@ -63,7 +63,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void ShortcutPresetClick(object sender, RoutedEventArgs e)
+        private void ShortcutPresetClick(object? sender, RoutedEventArgs e)
         {
             IShortcut shortcut;
             if ((shortcut = (e.OriginalSource as MenuItem)?.Tag as IShortcut) == null) return;
@@ -78,7 +78,7 @@ namespace Aurora.Settings.Layers.Controls
             e.Handled = true;
         }
 
-        private void ButtonRemoveKeybind_Click(object sender, RoutedEventArgs e)
+        private void ButtonRemoveKeybind_Click(object? sender, RoutedEventArgs e)
         {
             if (sender is Button && (sender as Button).Tag is DockPanel)
             {
@@ -87,7 +87,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void ButtonAddNewShortcut_Click(object sender, RoutedEventArgs e)
+        private void ButtonAddNewShortcut_Click(object? sender, RoutedEventArgs e)
         {
             stackPanelShortcuts.Children.Remove(_buttonAddNewShortcut);
 
@@ -132,7 +132,7 @@ namespace Aurora.Settings.Layers.Controls
             stackPanelShortcuts.Children.Add(_buttonAddNewShortcut);
         }
 
-        private void KeybindEditor_KeybindUpdated(object sender, Keybind newKeybind)
+        private void KeybindEditor_KeybindUpdated(object? sender, Keybind newKeybind)
         {
             ApplySettings();
         }
@@ -145,7 +145,7 @@ namespace Aurora.Settings.Layers.Controls
                 select ((Control_Keybind) (child as DockPanel).Tag).ContextKeybind).ToArray();
         }
 
-        private void comboboxPresentationType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void comboboxPresentationType_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && DataContext is ShortcutAssistantLayerHandler && sender is ComboBox)
                 ((ShortcutAssistantLayerHandler)DataContext).Properties._PresentationType = (ShortcutAssistantPresentationType)(sender as ComboBox).SelectedValue;

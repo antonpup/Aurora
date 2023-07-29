@@ -44,7 +44,7 @@ public sealed partial class InputsModule : AuroraModule
         _inputInterceptor?.Dispose();
     }
 
-    private static void SetupVolumeAsBrightness(object sender, PropertyChangedEventArgs eventArgs)
+    private static void SetupVolumeAsBrightness(object? sender, PropertyChangedEventArgs eventArgs)
     {
         //if (eventArgs.PropertyName != nameof(Global.Configuration.UseVolumeAsBrightness)) return;
         //if (Global.Configuration.UseVolumeAsBrightness)
@@ -59,7 +59,7 @@ public sealed partial class InputsModule : AuroraModule
         //}
     }
 
-    private static void InterceptVolumeAsBrightness(object sender, InputInterceptor.InputEventData e)
+    private static void InterceptVolumeAsBrightness(object? sender, InputInterceptor.InputEventData e)
     {
         var keys = (Keys)e.Data.VirtualKeyCode;
         if ((!keys.Equals(Keys.VolumeDown) && !keys.Equals(Keys.VolumeUp)) || !Global.InputEvents.Alt) return;

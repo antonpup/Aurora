@@ -30,7 +30,7 @@ public partial class Control_Keybind
         }
     }
 
-    public delegate void NewKeybindArgs(object sender, Keybind newKeybind);
+    public delegate void NewKeybindArgs(object? sender, Keybind newKeybind);
 
     public event NewKeybindArgs? KeybindUpdated;
 
@@ -82,7 +82,7 @@ public partial class Control_Keybind
         KeybindUpdated?.Invoke(this, ContextKeybind);
     }
 
-    private void buttonToggleAssign_Click(object sender, RoutedEventArgs e)
+    private void buttonToggleAssign_Click(object? sender, RoutedEventArgs e)
     {
         if (_isRecording)
             Stop();
@@ -90,12 +90,12 @@ public partial class Control_Keybind
             Start();
     }
 
-    private void Grid_LostFocus(object sender, RoutedEventArgs e)
+    private void Grid_LostFocus(object? sender, RoutedEventArgs e)
     {
         Stop();
     }
 
-    private void Grid_KeyDown(object sender, KeyEventArgs e)
+    private void Grid_KeyDown(object? sender, KeyEventArgs e)
     {
         if ((e.Key.Equals(Key.Down) || e.Key.Equals(Key.Up) || e.Key.Equals(Key.Left) || e.Key.Equals(Key.Right)) && _isRecording)
             e.Handled = true;

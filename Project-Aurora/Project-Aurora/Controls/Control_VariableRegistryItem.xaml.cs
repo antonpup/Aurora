@@ -219,12 +219,12 @@ namespace Aurora.Controls
             grd_control.UpdateLayout();
         }
 
-        private void CmbbxEnum_control_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CmbbxEnum_control_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             VarRegistry.SetVariable(VariableName, (sender as ComboBox).SelectedItem);
         }
 
-        private void colorPickerControlValueChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void colorPickerControlValueChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             Type var_type = VarRegistry.GetVariableType(VariableName);
             System.Windows.Media.Color ctrlClr = (System.Windows.Media.Color)((ColorPicker)sender).SelectedColor;
@@ -233,36 +233,36 @@ namespace Aurora.Controls
             VarRegistry.SetVariable(VariableName, clr);
         }
 
-        private void keySequenceControlValueChanged(object sender, EventArgs e)
+        private void keySequenceControlValueChanged(object? sender, EventArgs e)
         {
             VarRegistry.SetVariable(VariableName, ((Aurora.Controls.KeySequence)sender).Sequence);
         }
 
-        private void LongUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void LongUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             VarRegistry.SetVariable(VariableName, (sender as LongUpDown).Value);
         }
 
-        private void IntUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void IntUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             VarRegistry.SetVariable(VariableName, (sender as IntegerUpDown).Value);
         }
 
-        private void DoubleUpDown_control_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        private void DoubleUpDown_control_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e) {
             VarRegistry.SetVariable(VariableName, (sender as DoubleUpDown).Value);
         }
 
-        private void Txtbx_control_TextChanged(object sender, TextChangedEventArgs e)
+        private void Txtbx_control_TextChanged(object? sender, TextChangedEventArgs e)
         {
             VarRegistry.SetVariable(VariableName, (sender as TextBox).Text);
         }
 
-        private void HexBoxOnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void HexBoxOnPreviewTextInput(object? sender, TextCompositionEventArgs e)
         {
             e.Handled = !int.TryParse(e.Text, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out int number);
         }
 
-        private void HexBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void HexBox_TextChanged(object? sender, TextChangedEventArgs e)
         {
             string text = (sender as TextBox).Text;
             //Hacky fix to stop error when nothing is entered
@@ -271,12 +271,12 @@ namespace Aurora.Controls
             VarRegistry.SetVariable(VariableName, int.Parse(text, NumberStyles.HexNumber, CultureInfo.CurrentCulture));
         }
 
-        private void Chkbx_control_VarChanged(object sender, RoutedEventArgs e)
+        private void Chkbx_control_VarChanged(object? sender, RoutedEventArgs e)
         {
             VarRegistry.SetVariable(VariableName, (sender as CheckBox).IsChecked.Value);
         }
 
-        private void btn_reset_Click(object sender, RoutedEventArgs e)
+        private void btn_reset_Click(object? sender, RoutedEventArgs e)
         {
             VarRegistry.ResetVariable(VariableName);
 

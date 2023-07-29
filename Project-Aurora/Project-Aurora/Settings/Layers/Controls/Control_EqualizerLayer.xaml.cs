@@ -71,25 +71,25 @@ public partial class ControlEqualizerLayer
         _settingsset = true;
     }
 
-    private void eq_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void eq_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
             ((EqualizerLayerHandler)DataContext).Properties._EQType = (EqualizerType)(sender as ComboBox).SelectedValue;
     }
 
-    private void eq_view_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void eq_view_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
             ((EqualizerLayerHandler)DataContext).Properties.ViewType = (EqualizerPresentationType)(sender as ComboBox).SelectedValue;
     }
 
-    private void eq_background_mode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void eq_background_mode_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
             ((EqualizerLayerHandler)DataContext).Properties._BackgroundMode = (EqualizerBackgroundMode)(sender as ComboBox).SelectedValue;
     }
 
-    private void Clr_primary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+    private void Clr_primary_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler &&
             sender is ColorPicker { SelectedColor: { } } picker)
@@ -97,7 +97,7 @@ public partial class ControlEqualizerLayer
                 ColorUtils.MediaColorToDrawingColor(picker.SelectedColor.Value);
     }
 
-    private void Clr_secondary_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+    private void Clr_secondary_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler &&
             (sender as ColorPicker)?.SelectedColor != null)
@@ -105,13 +105,13 @@ public partial class ControlEqualizerLayer
                 ColorUtils.MediaColorToDrawingColor(((ColorPicker)sender).SelectedColor.Value);
     }
 
-    private void Gradient_editor_BrushChanged(object sender, BrushChangedEventArgs e)
+    private void Gradient_editor_BrushChanged(object? sender, BrushChangedEventArgs e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ColorBox.ColorBox box)
             ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(box.Brush);
     }
 
-    private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
+    private void Button_SetGradientRainbow_Click(object? sender, RoutedEventArgs e)
     {
         ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(ColorSpectrum.Rainbow);
 
@@ -126,7 +126,7 @@ public partial class ControlEqualizerLayer
         }
     }
 
-    private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
+    private void Button_SetGradientRainbowLoop_Click(object? sender, RoutedEventArgs e)
     {
         ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(ColorSpectrum.RainbowLoop);
 
@@ -141,25 +141,25 @@ public partial class ControlEqualizerLayer
         }
     }
 
-    private void updown_max_amplitude_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void updown_max_amplitude_value_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as IntegerUpDown)?.Value != null)
             ((EqualizerLayerHandler)DataContext).Properties.MaxAmplitude = ((IntegerUpDown)sender).Value.Value;
     }
 
-    private void chkbox_scale_with_system_sound_Checked(object sender, RoutedEventArgs e)
+    private void chkbox_scale_with_system_sound_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as CheckBox)?.IsChecked != null)
             ((EqualizerLayerHandler)DataContext).Properties._ScaleWithSystemVolume = ((CheckBox)sender).IsChecked.Value;
     }
 
-    private void Clr_dim_color_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+    private void Clr_dim_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as ColorPicker)?.SelectedColor != null)
             ((EqualizerLayerHandler)DataContext).Properties._DimColor = ColorUtils.MediaColorToDrawingColor(((ColorPicker)sender).SelectedColor.Value);
     }
 
-    private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+    private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
     {
         if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence sequence)
         {
@@ -167,14 +167,14 @@ public partial class ControlEqualizerLayer
         }
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         SetSettings();
 
         Loaded -= UserControl_Loaded;
     }
 
-    private void btn_AddFreq_Click(object sender, RoutedEventArgs e)
+    private void btn_AddFreq_Click(object? sender, RoutedEventArgs e)
     {
         float value;
 
@@ -193,7 +193,7 @@ public partial class ControlEqualizerLayer
             MessageBox.Show("Entered value is not a number!");
     }
 
-    private void btn_DeleteFreq_Click(object sender, RoutedEventArgs e)
+    private void btn_DeleteFreq_Click(object? sender, RoutedEventArgs e)
     {
         if (lstbx_frequencies.SelectedItem != null)
         {
@@ -203,7 +203,7 @@ public partial class ControlEqualizerLayer
         }
     }
 
-    private void btn_ShowPreviewWindow_Click(object sender, RoutedEventArgs e)
+    private void btn_ShowPreviewWindow_Click(object? sender, RoutedEventArgs e)
     {
         if(_previewWindow == null)
         {
@@ -243,7 +243,7 @@ public partial class ControlEqualizerLayer
         _previewWindowOpen = true;
     }
 
-    private void Preview_window_Closed(object sender, EventArgs e)
+    private void Preview_window_Closed(object? sender, EventArgs e)
     {
         _previewWindow = null;
         ((EqualizerLayerHandler)DataContext).NewLayerRender -= Control_EqualizerLayer_NewLayerRender;

@@ -119,7 +119,7 @@ public partial class Control_ProfileManager
         FocusedApplication.DeleteProfile(profile);
     }
 
-    private void btnProfilePath_Click(object sender, RoutedEventArgs e)
+    private void btnProfilePath_Click(object? sender, RoutedEventArgs e)
     {
         if (FocusedApplication != null)
         {
@@ -128,7 +128,7 @@ public partial class Control_ProfileManager
     }
 
 
-    private void btnProfileReset_Click(object sender, RoutedEventArgs e)
+    private void btnProfileReset_Click(object? sender, RoutedEventArgs e)
     {
         if (MessageBox.Show($"Are you sure you want to reset the \"{FocusedApplication.Profile.ProfileName}\" profile?",
                 "Are you sure?", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)

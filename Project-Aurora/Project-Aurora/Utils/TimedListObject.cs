@@ -26,7 +26,7 @@ namespace Aurora.Utils
             }
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if(mainList.Contains(this))
             {

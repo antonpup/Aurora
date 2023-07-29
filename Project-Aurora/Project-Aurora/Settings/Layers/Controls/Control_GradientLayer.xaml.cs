@@ -54,13 +54,13 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void Gradient_editor_BrushChanged(object sender, BrushChangedEventArgs e)
+        private void Gradient_editor_BrushChanged(object? sender, BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is ColorBox.ColorBox)
                 (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush((sender as ColorBox.ColorBox).Brush);
         }
 
-        private void Button_SetGradientRainbow_Click(object sender, RoutedEventArgs e)
+        private void Button_SetGradientRainbow_Click(object? sender, RoutedEventArgs e)
         {
             (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.Rainbow);
 
@@ -75,7 +75,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void Button_SetGradientRainbowLoop_Click(object sender, RoutedEventArgs e)
+        private void Button_SetGradientRainbowLoop_Click(object? sender, RoutedEventArgs e)
         {
             (DataContext as GradientLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.RainbowLoop);
 
@@ -89,7 +89,7 @@ namespace Aurora.Settings.Layers.Controls
                 Global.logger.Error("Could not set brush, exception: " + exc);
             }
         }
-        private void effect_speed_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void effect_speed_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Slider)
             {
@@ -100,7 +100,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void wave_size_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void wave_size_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Slider)
             {
@@ -119,7 +119,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void effect_angle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void effect_angle_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is IntegerUpDown)
             {
@@ -139,7 +139,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void effect_animation_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void effect_animation_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is ComboBox comboBox)
             {
@@ -148,7 +148,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void effect_animation_reversed_Checked(object sender, RoutedEventArgs e)
+        private void effect_animation_reversed_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is CheckBox checkBox)
             {
@@ -157,7 +157,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && settingsset && DataContext is GradientLayerHandler && sender is Aurora.Controls.KeySequence sequence)
             {
@@ -166,7 +166,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 

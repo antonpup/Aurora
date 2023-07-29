@@ -30,7 +30,7 @@ namespace Aurora.Profiles.RocketLeague
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -60,7 +60,7 @@ namespace Aurora.Profiles.RocketLeague
             this.preview_team2_score.Value = 0;
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -69,32 +69,32 @@ namespace Aurora.Profiles.RocketLeague
             }
         }
 
-        private void Button_DownloadBakkesMod(object sender, RoutedEventArgs e)
+        private void Button_DownloadBakkesMod(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://bakkesmod.com/index.php");
         }
 
-        private void Button_BakkesPluginsLink(object sender, RoutedEventArgs e)
+        private void Button_BakkesPluginsLink(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"https://bakkesplugins.com/plugins/view/53");
         }
 
-        private void Button_InstallPluginURI(object sender, RoutedEventArgs e)
+        private void Button_InstallPluginURI(object? sender, RoutedEventArgs e)
         {
             Process.Start("explorer", @"bakkesmod://install/53");
         }
 
-        private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_team_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_RocketLeague).Player.Team = (int)((this.preview_team.SelectedItem as dynamic).Value);
         }
 
-        private void preview_status_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_status_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_RocketLeague).Game.Status = (RLStatus)(this.preview_status.SelectedItem);
         }
 
-        private void preview_boost_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_boost_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (sender is Slider)
             {
@@ -105,19 +105,19 @@ namespace Aurora.Profiles.RocketLeague
             }
         }
 
-        private void preview_team1_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void preview_team1_score_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
                 (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.Blue.Goals = (sender as IntegerUpDown).Value ?? 0;
         }
 
-        private void preview_team2_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void preview_team2_score_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
                 (profile_manager.Config.Event._game_state as GameState_RocketLeague).Match.Orange.Goals = (sender as IntegerUpDown).Value ?? 0;
         }
 
-        private void ColorPicker_Team1_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Team1_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if(sender is ColorPicker)
             {
@@ -126,7 +126,7 @@ namespace Aurora.Profiles.RocketLeague
             }
         }
 
-        private void ColorPicker_Team2_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Team2_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (sender is ColorPicker)
             {

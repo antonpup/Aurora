@@ -41,7 +41,7 @@ namespace Aurora.Settings.Layers
             Properties.PropertyChanged += PropertiesChanged;
         }
 
-        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _invalidated = true;

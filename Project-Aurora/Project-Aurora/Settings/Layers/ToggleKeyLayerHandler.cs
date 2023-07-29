@@ -60,7 +60,7 @@ namespace Aurora.Settings.Layers {
             return EffectLayer;
         }
 
-        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _primaryBrush.Color = Properties.PrimaryColor;
@@ -68,7 +68,7 @@ namespace Aurora.Settings.Layers {
             _invalidated = true;
         }
 
-        private void InputEvents_KeyDown(object sender, EventArgs e)
+        private void InputEvents_KeyDown(object? sender, EventArgs e)
         {
             foreach (var kb in Properties.TriggerKeys)
                 if (kb.IsPressed())

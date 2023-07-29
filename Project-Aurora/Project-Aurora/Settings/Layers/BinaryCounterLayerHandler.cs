@@ -65,7 +65,7 @@ public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerP
         return EffectLayer;
     }
 
-    protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+    protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
     {
         base.PropertiesChanged(sender, args);
 

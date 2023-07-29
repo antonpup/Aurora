@@ -53,38 +53,38 @@ namespace Aurora.Profiles.CSGO.Layers
         {
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_Flash_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Flash_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOBombLayerHandler).Properties._FlashColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_Primed_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Primed_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOBombLayerHandler).Properties._PrimedColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void Checkbox_GradualEffect_Checked(object sender, RoutedEventArgs e)
+        private void Checkbox_GradualEffect_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
                 (this.DataContext as CSGOBombLayerHandler).Properties._GradualEffect = (sender as CheckBox).IsChecked.Value;
         }
 
-        private void Checkbox_DisplayOnPeripherals_Checked(object sender, RoutedEventArgs e)
+        private void Checkbox_DisplayOnPeripherals_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
                 (this.DataContext as CSGOBombLayerHandler).Properties._PeripheralUse = (sender as CheckBox).IsChecked.Value;
         }
 
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBombLayerHandler && sender is Aurora.Controls.KeySequence)
             {

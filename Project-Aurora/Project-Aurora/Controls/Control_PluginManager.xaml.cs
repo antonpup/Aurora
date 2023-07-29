@@ -31,7 +31,7 @@ namespace Aurora.Controls
             InitializeComponent();
         }
 
-        private void chkEnabled_Checked(object sender, RoutedEventArgs e)
+        private void chkEnabled_Checked(object? sender, RoutedEventArgs e)
         {
             CheckBox chk = (CheckBox)sender;
             var plugin = (KeyValuePair<string, IPlugin>)chk.DataContext;

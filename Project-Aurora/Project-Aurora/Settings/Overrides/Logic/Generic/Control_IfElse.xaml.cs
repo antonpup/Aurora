@@ -15,10 +15,10 @@ namespace Aurora.Settings.Overrides.Logic {
         }
 
         // Event handlers for the buttons, marked virtual so they can be overriden and handled far easier by the `Control_Ternary<T>` class.
-        protected virtual void AddElseIfCase_Click(object sender, RoutedEventArgs e) { }
-        protected virtual void CaseUp_Click(object sender, RoutedEventArgs e) { }
-        protected virtual void CaseDown_Click(object sender, RoutedEventArgs e) { }
-        protected virtual void DeleteCase_Click(object sender, RoutedEventArgs e) { }
+        protected virtual void AddElseIfCase_Click(object? sender, RoutedEventArgs e) { }
+        protected virtual void CaseUp_Click(object? sender, RoutedEventArgs e) { }
+        protected virtual void CaseDown_Click(object? sender, RoutedEventArgs e) { }
+        protected virtual void DeleteCase_Click(object? sender, RoutedEventArgs e) { }
     }
 
     public partial class Control_Ternary<T> : Control_Ternary {
@@ -32,14 +32,14 @@ namespace Aurora.Settings.Overrides.Logic {
             };
         }
 
-        protected override void AddElseIfCase_Click(object sender, RoutedEventArgs e) {
+        protected override void AddElseIfCase_Click(object? sender, RoutedEventArgs e) {
             context.ParentCondition.Cases.Insert(
                 context.ParentCondition.Cases.Count - (HasElseCase ? 2 : 1), // If there is an "Else" case, we need to insert this Else-If before that
                 new IfElseGeneric<T>.Branch(new BooleanConstant(), EvaluatableDefaults.Get<T>())
             );
         }
 
-        protected override void CaseUp_Click(object sender, RoutedEventArgs e) {
+        protected override void CaseUp_Click(object? sender, RoutedEventArgs e) {
             var branch = (IfElseGeneric<T>.Branch)((Button)sender).DataContext;
             var index = context.ParentCondition.Cases.IndexOf(branch);
 
@@ -51,7 +51,7 @@ namespace Aurora.Settings.Overrides.Logic {
             }
         }
 
-        protected override void CaseDown_Click(object sender, RoutedEventArgs e) {
+        protected override void CaseDown_Click(object? sender, RoutedEventArgs e) {
             var branch = (IfElseGeneric<T>.Branch)((Button)sender).DataContext;
             var index = context.ParentCondition.Cases.IndexOf(branch);
 
@@ -63,7 +63,7 @@ namespace Aurora.Settings.Overrides.Logic {
             }
         }
 
-        protected override void DeleteCase_Click(object sender, RoutedEventArgs e) {
+        protected override void DeleteCase_Click(object? sender, RoutedEventArgs e) {
             var branch = (IfElseGeneric<T>.Branch)((Button)sender).DataContext;
 
             // Check that when we are deleting, there is atleast two branches left after the deletion, so we have at minimum an If and an Else.

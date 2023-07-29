@@ -115,13 +115,13 @@ namespace Aurora.Settings.Keycaps
             UpdateText();
         }
 
-        private void keyBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        private void keyBorder_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             if (sender is Border)
                 virtualkeyboard_key_selected(associatedKey);
         }
 
-        private void keyBorder_MouseMove(object sender, MouseEventArgs e)
+        private void keyBorder_MouseMove(object? sender, MouseEventArgs e)
         {
         }
 
@@ -136,11 +136,11 @@ namespace Aurora.Settings.Keycaps
             }
         }
 
-        private void keyBorder_MouseLeave(object sender, MouseEventArgs e)
+        private void keyBorder_MouseLeave(object? sender, MouseEventArgs e)
         {
         }
 
-        private void keyBorder_MouseEnter(object sender, MouseEventArgs e)
+        private void keyBorder_MouseEnter(object? sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
                 virtualkeyboard_key_selected(associatedKey);

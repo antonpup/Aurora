@@ -182,7 +182,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
         }
     }
 
-    private void DeviceChanged(object sender, EventArgs e)
+    private void DeviceChanged(object? sender, EventArgs e)
     {
         if (_deviceProxy.Device == null)
             return;
@@ -366,7 +366,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
         return EffectLayer;
     }
 
-    private void OnDataAvailable(object sender, WaveInEventArgs e)
+    private void OnDataAvailable(object? sender, WaveInEventArgs e)
     {
         var buffer = e.Buffer;
         var bytesRecorded = e.BytesRecorded;
@@ -383,7 +383,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
         }
     }
 
-    private void FftCalculated(object sender, FftEventArgs e)
+    private void FftCalculated(object? sender, FftEventArgs e)
     {
         _fftsPrev = _ffts;
         _ffts = e.Result;
@@ -428,7 +428,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
         }
     }
 
-    protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+    protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
     {
         base.PropertiesChanged(sender, args);
         DeviceProxy.DeviceId = Properties.DeviceId;

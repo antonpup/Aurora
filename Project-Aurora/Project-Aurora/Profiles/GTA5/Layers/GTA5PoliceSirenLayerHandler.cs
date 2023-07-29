@@ -274,7 +274,7 @@ public class GTA5PoliceSirenLayerHandler : LayerHandler<Gta5PoliceSirenLayerHand
         base.SetApplication(profile);
     }
 
-    protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+    protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
     {
         base.PropertiesChanged(sender, args);
 

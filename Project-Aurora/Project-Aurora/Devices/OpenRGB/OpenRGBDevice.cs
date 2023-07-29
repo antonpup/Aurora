@@ -113,7 +113,7 @@ namespace Aurora.Devices.OpenRGB
             return IsInitialized;
         }
 
-        private void OnDeviceListUpdated(object sender, EventArgs e)
+        private void OnDeviceListUpdated(object? sender, EventArgs e)
         {
             UpdateDeviceList();
         }

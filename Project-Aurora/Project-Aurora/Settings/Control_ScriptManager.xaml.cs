@@ -53,7 +53,7 @@ namespace Aurora.Settings
             this.DataContext = this;
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_Checked(object? sender, RoutedEventArgs e)
         {
             ProfileManager.SaveProfiles();
         }

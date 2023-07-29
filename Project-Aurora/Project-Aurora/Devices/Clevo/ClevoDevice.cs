@@ -70,7 +70,7 @@ namespace Aurora.Devices.Clevo
         }
 
         // Handle Logon Event
-        void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
         {
             if (IsInitialized&& e.Reason.Equals(SessionSwitchReason.SessionUnlock))
             { // Only Update when Logged In

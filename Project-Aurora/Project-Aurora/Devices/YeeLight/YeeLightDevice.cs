@@ -56,7 +56,7 @@ public class YeeLightDevice : DefaultDevice
         return IsInitialized;
     }
 
-    private void DeviceDetected(object sender, DeviceDetectedEventArgs e)
+    private void DeviceDetected(object? sender, DeviceDetectedEventArgs e)
     {
         Task.Run(async () => await YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress).ConfigureAwait(false));
     }

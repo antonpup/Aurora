@@ -113,7 +113,7 @@ namespace Aurora.Profiles.EliteDangerous
             (_game_state as GameState_EliteDangerous).Journal.initialJournalRead = false;
         }
 
-        private void SwitchToNewJournalFile(object sender, FileSystemEventArgs e)
+        private void SwitchToNewJournalFile(object? sender, FileSystemEventArgs e)
         {
             if (currentJournalFile == null || currentJournalFile.Equals(e.FullPath))
             {
@@ -132,7 +132,7 @@ namespace Aurora.Profiles.EliteDangerous
             }
         }
         
-        private void OnNewJournalFile(object sender, FileSystemEventArgs e)
+        private void OnNewJournalFile(object? sender, FileSystemEventArgs e)
         {
             /*
              * This event can fire multiple times in a row. We need to make sure to read the file only after
@@ -190,7 +190,7 @@ namespace Aurora.Profiles.EliteDangerous
             }
         }
 
-        private void OnBindsFileChanged(object sender, FileSystemEventArgs e)
+        private void OnBindsFileChanged(object? sender, FileSystemEventArgs e)
         {
             /*
              * This event can fire multiple times in a row. We need to make sure to read the file only after

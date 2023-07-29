@@ -18,7 +18,7 @@ public static class DesktopUtils
     {
         return new(() =>
         {
-            void ResetLazyUnlockSource(object sender, SessionSwitchEventArgs e)
+            void ResetLazyUnlockSource(object? sender, SessionSwitchEventArgs e)
             {
                 if (e.Reason != SessionSwitchReason.SessionUnlock) return;
                 Global.logger.Information("Releasing session unlock lock");
@@ -55,7 +55,7 @@ public static class DesktopUtils
     [DllImport("user32.dll", SetLastError = true)]
     private static extern IntPtr CloseDesktop(IntPtr desktop);
 
-    private static void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+    private static void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
         switch (e.Reason)
         {

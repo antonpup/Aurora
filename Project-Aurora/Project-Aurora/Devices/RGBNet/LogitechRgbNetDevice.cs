@@ -36,7 +36,7 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
 
     #region Event handlers
 
-    private void SystemEventsOnSessionSwitch(object sender, SessionSwitchEventArgs e)
+    private void SystemEventsOnSessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
         if (!IsInitialized)
             return;
@@ -51,7 +51,7 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
             });
     }
 
-    private async void SystemEventsPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+    private async void SystemEventsPowerModeChanged(object? sender, PowerModeChangedEventArgs e)
     {
         if (!IsInitialized)
             return;

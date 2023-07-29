@@ -89,7 +89,7 @@ namespace Aurora.Devices.Omen
             return Task.FromResult(IsInitialized);
         }
 
-        private void DeviceChangedHandler(object sender)
+        private void DeviceChangedHandler(object? sender)
         {
             Global.logger.Information("Devices is changed. Reset Omen Devices");
             // Event handler is fire and forget

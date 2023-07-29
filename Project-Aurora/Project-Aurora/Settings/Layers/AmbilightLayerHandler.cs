@@ -347,7 +347,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         return new Control_AmbilightLayer(this);
     }
 
-    private object TakeScreenshot(object sender)
+    private object TakeScreenshot(object? sender)
     {
         try
         {
@@ -366,7 +366,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         _captureStopwatch.Restart();
     }
 
-    private void ScreenshotAction(object sender, Bitmap bitmap)
+    private void ScreenshotAction(object? sender, Bitmap bitmap)
     {
         CreateScreenBrush(bitmap, _cropRegion);
     }
@@ -412,7 +412,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         }
     }
 
-    protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+    protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
     {
         base.PropertiesChanged(sender, args);
             

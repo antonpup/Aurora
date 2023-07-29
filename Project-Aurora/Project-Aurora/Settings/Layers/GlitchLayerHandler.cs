@@ -105,7 +105,7 @@ namespace Aurora.Settings.Layers
 
         }
 
-        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _glitchColors.Clear();

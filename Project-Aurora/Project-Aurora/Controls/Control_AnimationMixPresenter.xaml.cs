@@ -52,12 +52,12 @@ namespace Aurora.Controls
 
         public event Control_AnimationFrameItem.AnimationFrameItemArgs AnimationFrameItemSelected;
 
-        private void NewTrack_AnimationFrameItemSelected(object sender, AnimationFrame track)
+        private void NewTrack_AnimationFrameItemSelected(object? sender, AnimationFrame track)
         {
             AnimationFrameItemSelected?.Invoke(sender, track);
         }
 
-        private void NewTrack_AnimationTrackUpdated(object sender, AnimationTrack track)
+        private void NewTrack_AnimationTrackUpdated(object? sender, AnimationTrack track)
         {
             if (track == null)
                 stkPanelTracks.Children.Remove(sender as Control_AnimationTrackPresenter);
@@ -79,11 +79,11 @@ namespace Aurora.Controls
             UpdatePlaybackTime();
         }
 
-        public delegate void AnimationMixRenderedDelegate(object sender);
+        public delegate void AnimationMixRenderedDelegate(object? sender);
 
         public event AnimationMixRenderedDelegate AnimationMixRendered;
 
-        public delegate void AnimationMixArgs(object sender, AnimationMix mix);
+        public delegate void AnimationMixArgs(object? sender, AnimationMix mix);
 
         public event AnimationMixArgs AnimationMixUpdated;
 
@@ -102,7 +102,7 @@ namespace Aurora.Controls
             _playbackTimer.Elapsed += _playbackTimer_Elapsed;
         }
 
-        private void _playbackTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private void _playbackTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             Dispatcher.Invoke(() =>
             {
@@ -140,7 +140,7 @@ namespace Aurora.Controls
             });
         }
 
-        private void btnPlayStop_Click(object sender, RoutedEventArgs e)
+        private void btnPlayStop_Click(object? sender, RoutedEventArgs e)
         {
             if (_playbackTimer.Enabled)
                 _playbackTimer.Stop();
@@ -148,7 +148,7 @@ namespace Aurora.Controls
                 _playbackTimer.Start();
         }
 
-        private void grdsplitrScrubber_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        private void grdsplitrScrubber_DragDelta(object? sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
         {
             double oldMargin = gridScrubber.Margin.Left;
             double newMargin = oldMargin + e.HorizontalChange;
@@ -202,13 +202,13 @@ namespace Aurora.Controls
             return (float)(loc / 50.0f);
         }
 
-        private void chkbxDrawToDevices_Checked(object sender, RoutedEventArgs e)
+        private void chkbxDrawToDevices_Checked(object? sender, RoutedEventArgs e)
         {
             if (!(sender as CheckBox).IsChecked.Value)
                 Global.effengine.ForceImageRender(null);
         }
 
-        private void btnAddTrack_Click(object sender, RoutedEventArgs e)
+        private void btnAddTrack_Click(object? sender, RoutedEventArgs e)
         {
             (sender as Button).ContextMenu.IsEnabled = true;
             (sender as Button).ContextMenu.PlacementTarget = (sender as Button);
@@ -234,7 +234,7 @@ namespace Aurora.Controls
             return trackName;
         }
 
-        private void menuitemAddCircleTrack_Click(object sender, RoutedEventArgs e)
+        private void menuitemAddCircleTrack_Click(object? sender, RoutedEventArgs e)
         {
             AnimationTrack newCircleTrack = new AnimationTrack(GetAvailableTrackName("Circle Track"), 0.0f);
             newCircleTrack.SetFrame(0.0f, new AnimationCircle());
@@ -242,7 +242,7 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newCircleTrack);
         }
 
-        private void menuitemAddFilledCircleTrack_Click(object sender, RoutedEventArgs e)
+        private void menuitemAddFilledCircleTrack_Click(object? sender, RoutedEventArgs e)
         {
             AnimationTrack newFilledCircleTrack = new AnimationTrack(GetAvailableTrackName("Filled Circle Track"), 0.0f);
             newFilledCircleTrack.SetFrame(0.0f, new AnimationFilledCircle());
@@ -250,7 +250,7 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newFilledCircleTrack);
         }
 
-        private void menuitemAddRectangleTrack_Click(object sender, RoutedEventArgs e)
+        private void menuitemAddRectangleTrack_Click(object? sender, RoutedEventArgs e)
         {
             AnimationTrack newRectangleTrack = new AnimationTrack(GetAvailableTrackName("Rectangle Track"), 0.0f);
             newRectangleTrack.SetFrame(0.0f, new AnimationRectangle());
@@ -258,7 +258,7 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newRectangleTrack);
         }
 
-        private void menuitemAddFilledRectangleTrack_Click(object sender, RoutedEventArgs e)
+        private void menuitemAddFilledRectangleTrack_Click(object? sender, RoutedEventArgs e)
         {
             AnimationTrack newFilledRectangleTrack = new AnimationTrack(GetAvailableTrackName("Filled Rectangle Track"), 0.0f);
             newFilledRectangleTrack.SetFrame(0.0f, new AnimationFilledRectangle());
@@ -266,7 +266,7 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newFilledRectangleTrack);
         }
 
-        private void menuitemAddLineTrack_Click(object sender, RoutedEventArgs e)
+        private void menuitemAddLineTrack_Click(object? sender, RoutedEventArgs e)
         {
             AnimationTrack newLineTrack = new AnimationTrack(GetAvailableTrackName("Line Track"), 0.0f);
             newLineTrack.SetFrame(0.0f, new AnimationLine());
@@ -274,7 +274,7 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newLineTrack);
         }
 
-        private void menuitemAddManualColorTrack_Click(object sender, RoutedEventArgs e)
+        private void menuitemAddManualColorTrack_Click(object? sender, RoutedEventArgs e)
         {
             AnimationTrack newManualColorTrack = new AnimationTrack(GetAvailableTrackName("Manual Color Track"), 0.0f);
             newManualColorTrack.SetFrame(0.0f, new AnimationManualColorFrame());
@@ -282,12 +282,12 @@ namespace Aurora.Controls
             ContextMix = ContextMix.AddTrack(newManualColorTrack);
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
             Global.effengine.ForceImageRender(null);
         }
 
-        private void UserControl_PreviewKeyDown(object sender, KeyEventArgs e)
+        private void UserControl_PreviewKeyDown(object? sender, KeyEventArgs e)
         {
             float deltaT = 0.001f;
 

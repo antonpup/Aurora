@@ -42,27 +42,27 @@ namespace Aurora.Profiles.ETS2.Layers {
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_BlinkerOn_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void ColorPicker_BlinkerOn_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 context.Properties._BlinkerOnColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_BlinkerOff_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void ColorPicker_BlinkerOff_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 context.Properties._BlinkerOffColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void LeftBlinker_keys_SequenceUpdated(object sender, EventArgs e) {
+        private void LeftBlinker_keys_SequenceUpdated(object? sender, EventArgs e) {
             if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Aurora.Controls.KeySequence)
                 context.Properties._LeftBlinkerSequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
-        private void RightBlinker_keys_SequenceUpdated(object sender, EventArgs e) {
+        private void RightBlinker_keys_SequenceUpdated(object? sender, EventArgs e) {
             if (IsLoaded && settingsset && this.DataContext is ETS2BlinkerLayerHandler && sender is Aurora.Controls.KeySequence)
                 context.Properties._RightBlinkerSequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }

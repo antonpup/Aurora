@@ -38,21 +38,21 @@ namespace Aurora.Controls {
         #endregion
 
         // Start listening for when the particle layer is rendered so we can update the preview
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             if (TargetLayer != null)
                 TargetLayer.LayerRender += RenderLayerPreview;
             eventsAttached = true;
         }
 
         // Stop listenting for when the particle layer is rendered (since you can't see the image now anyways)
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e) {
             if (TargetLayer != null)
                 TargetLayer.LayerRender -= RenderLayerPreview;
             eventsAttached = false;
         }
 
         // Take the bitmap from the layer and transform it into a format that can be used by WPF
-        private void RenderLayerPreview(object sender, System.Drawing.Bitmap bitmap) =>
+        private void RenderLayerPreview(object? sender, System.Drawing.Bitmap bitmap) =>
             Dispatcher.Invoke(delegate {
                 using (var ms = new MemoryStream()) {
                     bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);

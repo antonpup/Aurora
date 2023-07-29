@@ -34,7 +34,7 @@ namespace Aurora.Profiles.ETS2 {
         // --------------------- //
         // --- Overview Tab --- //
         // ------------------- //
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e) {
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e) {
             SetSettings();
         }
 
@@ -42,7 +42,7 @@ namespace Aurora.Profiles.ETS2 {
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e) {
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e) {
             if (IsLoaded) {
                 profile_manager.Settings.IsEnabled = (this.game_enabled.IsChecked.HasValue) ? this.game_enabled.IsChecked.Value : false;
                 profile_manager.SaveProfiles();
@@ -71,7 +71,7 @@ namespace Aurora.Profiles.ETS2 {
             return true;
         }
 
-        private void install_button_Click(object sender, RoutedEventArgs e) {
+        private void install_button_Click(object? sender, RoutedEventArgs e) {
             if (!InstallDLL(true)) {
                 MessageBox.Show("64-bit ETS2 Telemetry Server DLL installed failed.");
             } else if (!InstallDLL(false)) {
@@ -81,7 +81,7 @@ namespace Aurora.Profiles.ETS2 {
             }
         }
 
-        private void uninstall_button_Click(object sender, RoutedEventArgs e) {
+        private void uninstall_button_Click(object? sender, RoutedEventArgs e) {
             string gamePath = Utils.SteamUtils.GetGamePath(227300);
             if (String.IsNullOrWhiteSpace(gamePath)) return;
             string x86Path = System.IO.Path.Combine(gamePath, "bin", "win_x86", "plugins", "ets2-telemetry-server.dll");
@@ -93,7 +93,7 @@ namespace Aurora.Profiles.ETS2 {
             MessageBox.Show("ETS2 Telemetry Server DLLs uninstalled successfully.");
         }
 
-        private void visit_ets2ts_button_Click(object sender, RoutedEventArgs e) {
+        private void visit_ets2ts_button_Click(object? sender, RoutedEventArgs e) {
             System.Diagnostics.Process.Start("explorer", "https://github.com/Funbit/ets2-telemetry-server");
         }
 
@@ -117,20 +117,20 @@ namespace Aurora.Profiles.ETS2 {
             this.blinkers.Items.Add(BlinkerComboBoxStates.Hazard);
         }
 
-        private void truckPowerState_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void truckPowerState_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
             TruckPowerComboBoxStates selected = (TruckPowerComboBoxStates)(sender as ComboBox).SelectedItem;
             gameState._memdat.value.electricEnabled = boolToByte(selected != TruckPowerComboBoxStates.Off); // Electric is true for both electric and engine states
             gameState._memdat.value.engineEnabled = boolToByte(selected == TruckPowerComboBoxStates.Engine);
         }
 
-        private void lights_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void lights_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
             LightComboBoxStates selected = (LightComboBoxStates)(sender as ComboBox).SelectedItem;
             gameState._memdat.value.lightsParking = boolToByte(selected == LightComboBoxStates.ParkingLights); // Parking light only comes on when the parking lights are on
             gameState._memdat.value.lightsBeamLow = boolToByte(selected == LightComboBoxStates.LowBeam || selected == LightComboBoxStates.HighBeam); // Low beam light is on when the low beam is on OR when high beam is on
             gameState._memdat.value.lightsBeamHigh = boolToByte(selected == LightComboBoxStates.HighBeam); // Highbeam only on when high beam is on
         }
 
-        private void blinkers_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        private void blinkers_SelectionChanged(object? sender, SelectionChangedEventArgs e) {
             selectedBlinkerMode = (BlinkerComboBoxStates)(sender as ComboBox).SelectedItem;
             if (selectedBlinkerMode == BlinkerComboBoxStates.None) {
                 blinkerTimer.Stop();
@@ -145,7 +145,7 @@ namespace Aurora.Profiles.ETS2 {
             }
         }
 
-        private void BlinkerTimer_Elapsed(object sender, ElapsedEventArgs e) {
+        private void BlinkerTimer_Elapsed(object? sender, ElapsedEventArgs e) {
             // When the timer ticks, toggle the hazard lights based on the selected blinker mode
             if (selectedBlinkerMode == BlinkerComboBoxStates.Left || selectedBlinkerMode == BlinkerComboBoxStates.Hazard)
                 setLeftBlinker();
@@ -165,41 +165,41 @@ namespace Aurora.Profiles.ETS2 {
             gameState._memdat.value.blinkerRightOn = (byte)(newState ? 1 : 0);
         }
 
-        private void beacon_Checked(object sender, RoutedEventArgs e) {
+        private void beacon_Checked(object? sender, RoutedEventArgs e) {
             gameState._memdat.value.lightsBeacon = boolToByte((sender as CheckBox).IsChecked);
         }
 
-        private void trailerAttached_Checked(object sender, RoutedEventArgs e) {
+        private void trailerAttached_Checked(object? sender, RoutedEventArgs e) {
             gameState._memdat.value.trailer_attached = boolToByte((sender as CheckBox).IsChecked);
         }
 
-        private void cruiseControl_Checked(object sender, RoutedEventArgs e) {
+        private void cruiseControl_Checked(object? sender, RoutedEventArgs e) {
             gameState._memdat.value.cruiseControlSpeed = boolToByte((sender as CheckBox).IsChecked);
         }
 
-        private void throttleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void throttleSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.gameThrottle = (float)(sender as Slider).Value;
         }
 
-        private void brakeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void brakeSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.gameBrake = (float)(sender as Slider).Value;
         }
 
-        private void engineRpmSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void engineRpmSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.engineRpm = (float)(sender as Slider).Value;
             gameState._memdat.value.engineRpmMax = 1f;
         }
 
-        private void handbrake_Checked(object sender, RoutedEventArgs e) {
+        private void handbrake_Checked(object? sender, RoutedEventArgs e) {
             gameState._memdat.value.parkBrake = boolToByte((sender as CheckBox).IsChecked);
         }
 
-        private void fuelSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void fuelSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.fuel = (float)(sender as Slider).Value;
             gameState._memdat.value.fuelCapacity = 1;
         }
 
-        private void airSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+        private void airSlider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e) {
             gameState._memdat.value.airPressure = (float)(sender as Slider).Value * gameState.Truck.airPressureMax;
         }
 

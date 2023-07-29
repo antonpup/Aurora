@@ -31,7 +31,7 @@ namespace Aurora.Profiles.Minecraft.Layers {
             DataContext = context;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             Loaded -= UserControl_Loaded;
         }
@@ -45,17 +45,17 @@ namespace Aurora.Profiles.Minecraft.Layers {
             }
         }
 
-        private void ColorPicker_RainColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void ColorPicker_RainColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftRainLayerHandler && e.NewValue.HasValue)
                 (DataContext as MinecraftRainLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void MinimumIntensity_Stepper_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        private void MinimumIntensity_Stepper_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftBackgroundLayerHandler && (sender as IntegerUpDown).Value.HasValue)
                 (DataContext as MinecraftRainLayerHandler).Properties._MinimumInterval = (sender as IntegerUpDown).Value.Value;
         }
 
-        private void MaximumIntensity_Stepper_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+        private void MaximumIntensity_Stepper_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e) {
             if (IsLoaded && settingsSet && DataContext is MinecraftBackgroundLayerHandler && (sender as IntegerUpDown).Value.HasValue)
                 (DataContext as MinecraftRainLayerHandler).Properties._MaximumInterval = (sender as IntegerUpDown).Value.Value;
         }

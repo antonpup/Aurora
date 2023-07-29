@@ -43,22 +43,22 @@ namespace Aurora.Profiles.Minecraft.Layers {
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             Loaded -= UserControl_Loaded;
         }
 
-        private void NoConflict_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void NoConflict_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._PrimaryColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void HardConflict_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void HardConflict_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._SecondaryColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }
 
-        private void SoftConflict_ColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void SoftConflict_ColorPicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (CanSet && e.NewValue.HasValue)
                 Context.Properties._TertiaryColor = ColorUtils.MediaColorToDrawingColor(e.NewValue.Value);
         }

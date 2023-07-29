@@ -121,7 +121,7 @@ public class PercentLayerHandler<TProperty> : LayerHandler<TProperty> where TPro
         base.SetApplication(profile);
     }
 
-    protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+    protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
     {
         base.PropertiesChanged(sender, args);
 

@@ -25,7 +25,7 @@ namespace Aurora.Controls {
         }
 
         // Assign or unassign the `listeningEditor` from this UserControl
-        private void AssignButton_Click(object sender, RoutedEventArgs e) {
+        private void AssignButton_Click(object? sender, RoutedEventArgs e) {
             var assigning = listeningEditor != this;
             listeningEditor?.UpdateButtonText(false);
             UpdateButtonText(assigning);
@@ -36,7 +36,7 @@ namespace Aurora.Controls {
             assignButton.Content = assigning ? "Press a key" : "Assign";
         }
 
-        private static void InputEvents_KeyDown(object sender, KeyEvent e) {
+        private static void InputEvents_KeyDown(object? sender, KeyEvent e) {
             if (listeningEditor != null)
                 listeningEditor.Dispatcher.Invoke(() => {
                     listeningEditor.SelectedKey = e.Key;

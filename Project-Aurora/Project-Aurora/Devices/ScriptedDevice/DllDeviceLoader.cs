@@ -56,7 +56,7 @@ public class DllDeviceLoader : IDeviceLoader
         return devices;
     }
 
-    private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+    private Assembly CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
     {
         if (args.RequestingAssembly == null || !_deviceAssemblies.Contains(args.RequestingAssembly)) return null;
         var searchDir = Path.GetDirectoryName(args.RequestingAssembly.Location);

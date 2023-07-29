@@ -57,38 +57,38 @@ namespace Aurora.Profiles.CSGO.Layers
 
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void ColorPicker_CT_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_CT_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._CTColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_T_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_T_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._TColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_Default_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_Default_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._DefaultColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void Checkbox_DimEnabled_enabled_Checked(object sender, RoutedEventArgs e)
+        private void Checkbox_DimEnabled_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
                 (this.DataContext as CSGOBackgroundLayerHandler).Properties._DimEnabled  = (sender as CheckBox).IsChecked.Value;
         }
 
-        private void Slider_DimSelector_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Slider_DimSelector_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is Slider)
             {
@@ -98,7 +98,7 @@ namespace Aurora.Profiles.CSGO.Layers
             }
         }
 
-        private void IntegerUpDown_DimAmount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void IntegerUpDown_DimAmount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && settingsset && this.DataContext is CSGOBackgroundLayerHandler && sender is IntegerUpDown)
             {

@@ -16,7 +16,7 @@ namespace Aurora.Profiles.Osu {
         /// <summary>
         /// Listener for a HyperLink to open the Uri it has specified.
         /// </summary>
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {
+        private void Hyperlink_RequestNavigate(object? sender, RequestNavigateEventArgs e) {
             Process.Start("explorer", e.Uri.AbsoluteUri);
             e.Handled = true;
         }
@@ -24,14 +24,14 @@ namespace Aurora.Profiles.Osu {
         /// <summary>
         /// Opens the OsuSync release page.
         /// </summary>
-        private void OpenOsuSyncRepo_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void OpenOsuSyncRepo_Click(object? sender, System.Windows.RoutedEventArgs e) {
             Process.Start("explorer", @"https://github.com/OsuSync/Sync/releases");
         }
 
         /// <summary>
         /// Installs the Aurora OsuSync Plugin.
         /// </summary>
-        private void InstallPlugin_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void InstallPlugin_Click(object? sender, System.Windows.RoutedEventArgs e) {
             SelectOsuSync(dir => {
                 try {
                     using (var stream = new MemoryStream(Properties.Resources.OsuSyncAuroraPlugin))
@@ -46,7 +46,7 @@ namespace Aurora.Profiles.Osu {
         /// <summary>
         /// Uninstalls the Aurora OsuSync Plugin.
         /// </summary>
-        private void UninstallPlugin_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void UninstallPlugin_Click(object? sender, System.Windows.RoutedEventArgs e) {
             SelectOsuSync(dir => {
                 try {
                     var f = GetPluginPath(dir);

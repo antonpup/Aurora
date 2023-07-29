@@ -200,7 +200,7 @@ namespace Aurora.Profiles.LeagueOfLegends
                 return new SlotNode(newItem);
         }
 
-        private async void UpdateData(object sender, ElapsedEventArgs e)
+        private async void UpdateData(object? sender, ElapsedEventArgs e)
         {
             if (!RunningProcessMonitor.Instance.IsProcessRunning("league of legends.exe"))
             {

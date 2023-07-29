@@ -120,7 +120,7 @@ namespace Aurora.Controls
             return foundElement;
         }
 
-        private static void OnAngleChanged(object sender, EventArgs e)
+        private static void OnAngleChanged(object? sender, EventArgs e)
         {
             RotateTransform item = (sender as ContentControl).GetValue(RenderTransformProperty) as RotateTransform;
 
@@ -130,7 +130,7 @@ namespace Aurora.Controls
             }
         }
 
-        private static void OnCanvasTopChanged(object sender, EventArgs e)
+        private static void OnCanvasTopChanged(object? sender, EventArgs e)
         {
             object item = (sender as ContentControl).GetValue(Canvas.TopProperty);
 
@@ -140,7 +140,7 @@ namespace Aurora.Controls
             }
         }
 
-        private static void OnCanvasLeftChanged(object sender, EventArgs e)
+        private static void OnCanvasLeftChanged(object? sender, EventArgs e)
         {
             object item = (sender as ContentControl).GetValue(Canvas.LeftProperty);
 
@@ -150,7 +150,7 @@ namespace Aurora.Controls
             }
         }
 
-        private static void Newcontrol_SizeChanged(object sender, SizeChangedEventArgs e)
+        private static void Newcontrol_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
             if ((sender as ContentControl).Tag != null && (sender as ContentControl).Tag is FreeFormObject)
             {

@@ -59,26 +59,26 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void abilities_canuse_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void abilities_canuse_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2AbilityLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Dota2AbilityLayerHandler).Properties._CanCastAbilityColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void abilities_cannotuse_colorpicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void abilities_cannotuse_colorpicker_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is Dota2AbilityLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as Dota2AbilityLayerHandler).Properties._CanNotCastAbilityColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ability_key1_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ability_key1_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Ability 1 Key", sender as TextBlock, ability1_keys_callback);
         }
@@ -103,7 +103,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void ability_key2_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ability_key2_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Ability 2 Key", sender as TextBlock, ability2_keys_callback);
         }
@@ -128,7 +128,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void ability_key3_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ability_key3_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Ability 3 Key", sender as TextBlock, ability3_keys_callback);
         }
@@ -153,7 +153,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void ability_key4_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ability_key4_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Ability 4 Key", sender as TextBlock, ability4_keys_callback);
         }
@@ -178,7 +178,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void ability_key5_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ability_key5_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Ability 5 Key", sender as TextBlock, ability5_keys_callback);
         }
@@ -203,7 +203,7 @@ namespace Aurora.Profiles.Dota_2.Layers
             Global.key_recorder.Reset();
         }
 
-        private void ability_key6_textblock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void ability_key6_textblock_MouseDown(object? sender, MouseButtonEventArgs e)
         {
             RecordSingleKey("Dota 2 - Ultimate Ability Key", sender as TextBlock, ability6_keys_callback);
         }

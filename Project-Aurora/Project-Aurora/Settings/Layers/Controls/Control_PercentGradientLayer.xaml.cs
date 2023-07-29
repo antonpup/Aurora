@@ -53,44 +53,44 @@ namespace Aurora.Settings.Layers.Controls
             VariablePath.Application = MaxVariablePath.Application = profile;
         }
 
-        private void KeySequence_keys_SequenceUpdated(object sender, EventArgs e)
+        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is Aurora.Controls.KeySequence)
                 (this.DataContext as PercentGradientLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
             SetSettings();
 
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void Gradient_editor_BrushChanged(object sender, ColorBox.BrushChangedEventArgs e)
+        private void Gradient_editor_BrushChanged(object? sender, ColorBox.BrushChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ColorBox.ColorBox)
                 (this.DataContext as PercentGradientLayerHandler).Properties._Gradient = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
         }
 
-        private void ColorPicker_progressColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_progressColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as PercentGradientLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void ColorPicker_backgroundColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        private void ColorPicker_backgroundColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is Xceed.Wpf.Toolkit.ColorPicker && (sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as PercentGradientLayerHandler).Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as Xceed.Wpf.Toolkit.ColorPicker).SelectedColor.Value);
         }
 
-        private void updown_blink_value_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void updown_blink_value_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is Xceed.Wpf.Toolkit.IntegerUpDown && (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.HasValue)
                 (this.DataContext as PercentGradientLayerHandler).Properties._BlinkThreshold = (sender as Xceed.Wpf.Toolkit.IntegerUpDown).Value.Value / 100.0D;
         }
 
-        private void ComboBox_effect_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComboBox_effect_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is ComboBox)
             {
@@ -98,7 +98,7 @@ namespace Aurora.Settings.Layers.Controls
             }
         }
 
-        private void CheckBox_threshold_reverse_Checked(object sender, RoutedEventArgs e)
+        private void CheckBox_threshold_reverse_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded && settingsset && this.DataContext is PercentGradientLayerHandler && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             {

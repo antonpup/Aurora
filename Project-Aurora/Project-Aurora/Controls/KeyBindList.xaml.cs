@@ -20,7 +20,7 @@ namespace Aurora.Controls {
     /// </summary>
     public partial class KeyBindList : UserControl {
 
-        public delegate void ChangeHandler(object sender);
+        public delegate void ChangeHandler(object? sender);
         /// <summary>Triggered when a keybind is updated, created or deleted.</summary>
         public event ChangeHandler KeybindsChanged;
 
@@ -47,7 +47,7 @@ namespace Aurora.Controls {
         }
 
         /// <summary>Triggered when the add new button is pressed.</summary>
-        private void addNew_Click(object sender, RoutedEventArgs e) {
+        private void addNew_Click(object? sender, RoutedEventArgs e) {
             // Create a keybind object and a shortcut item to represent it
             Keybind k = new Keybind();
             keybinds.Add(k);
@@ -109,11 +109,11 @@ namespace Aurora.Controls {
             Children.Add(kb);
         }
 
-        private void RaiseDelete(object sender, RoutedEventArgs e) {
+        private void RaiseDelete(object? sender, RoutedEventArgs e) {
             DeleteTriggered?.Invoke(this, Keybind);
         }
 
-        private void RaiseChange(object sender, Keybind @new) {
+        private void RaiseChange(object? sender, Keybind @new) {
             KeybindChange?.Invoke(this, Keybind);
         }
     }

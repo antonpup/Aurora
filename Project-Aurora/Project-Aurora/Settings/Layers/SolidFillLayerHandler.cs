@@ -43,12 +43,12 @@ namespace Aurora.Settings.Layers
             return EffectLayer;
         }
 
-        private void EffectsOnCanvasChanged(object sender, CanvasChangedArgs e)
+        private void EffectsOnCanvasChanged(object? sender, CanvasChangedArgs e)
         {
             EffectLayer.Fill(_solidBrush);
         }
 
-        protected override void PropertiesChanged(object sender, PropertyChangedEventArgs args)
+        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
         {
             base.PropertiesChanged(sender, args);
             _solidBrush.Color = Properties.PrimaryColor;

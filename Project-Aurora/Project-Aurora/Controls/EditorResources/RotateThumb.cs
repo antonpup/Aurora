@@ -23,7 +23,7 @@ namespace Aurora.Controls.EditorResources
             DragStarted += new DragStartedEventHandler(this.RotateThumb_DragStarted);
         }
 
-        private void RotateThumb_DragStarted(object sender, DragStartedEventArgs e)
+        private void RotateThumb_DragStarted(object? sender, DragStartedEventArgs e)
         {
             this.designerItem = DataContext as ContentControl;
 
@@ -55,7 +55,7 @@ namespace Aurora.Controls.EditorResources
             }
         }
 
-        private void RotateThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        private void RotateThumb_DragDelta(object? sender, DragDeltaEventArgs e)
         {
             if (this.designerItem != null && this.designerCanvas != null)
             {

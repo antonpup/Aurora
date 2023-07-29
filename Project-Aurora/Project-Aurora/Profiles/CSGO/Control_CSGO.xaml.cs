@@ -47,7 +47,7 @@ namespace Aurora.Profiles.CSGO
             }
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -62,7 +62,7 @@ namespace Aurora.Profiles.CSGO
             this.preview_team.SelectedItem = Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam.Undefined;
         }
 
-        private void preview_bomb_timer_Tick(object sender, EventArgs e)
+        private void preview_bomb_timer_Tick(object? sender, EventArgs e)
         {
             Dispatcher.Invoke(
                     () =>
@@ -77,7 +77,7 @@ namespace Aurora.Profiles.CSGO
                     });
         }
 
-        private void preview_bomb_remove_effect_timer_Tick(object sender, EventArgs e)
+        private void preview_bomb_remove_effect_timer_Tick(object? sender, EventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_CSGO).Round.Bomb = GSI.Nodes.BombState.Undefined;
             preview_bomb_remove_effect_timer.Stop();
@@ -85,7 +85,7 @@ namespace Aurora.Profiles.CSGO
 
         //Overview
 
-        private void patch_button_Click(object sender, RoutedEventArgs e)
+        private void patch_button_Click(object? sender, RoutedEventArgs e)
         {
             if (InstallGSI())
                 MessageBox.Show("Aurora GSI Config file installed successfully.");
@@ -93,7 +93,7 @@ namespace Aurora.Profiles.CSGO
                 MessageBox.Show("Aurora GSI Config file could not be installed.\r\nGame is not installed.");
         }
 
-        private void unpatch_button_Click(object sender, RoutedEventArgs e)
+        private void unpatch_button_Click(object? sender, RoutedEventArgs e)
         {
             if (UninstallGSI())
                 MessageBox.Show("Aurora GSI Config file uninstalled successfully.");
@@ -101,7 +101,7 @@ namespace Aurora.Profiles.CSGO
                 MessageBox.Show("Aurora GSI Config file could not be uninstalled.\r\nGame is not installed.");
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -112,14 +112,14 @@ namespace Aurora.Profiles.CSGO
 
         ////Preview
 
-        private void preview_team_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void preview_team_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (this.preview_team.Items.Count == 0)
                 return;
             (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Team = (Aurora.Profiles.CSGO.GSI.Nodes.PlayerTeam)this.preview_team.SelectedItem;
         }
 
-        private void preview_health_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_health_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int hp_val = (int)this.preview_health_slider.Value;
             if (this.preview_health_amount is Label)
@@ -129,7 +129,7 @@ namespace Aurora.Profiles.CSGO
             }
         }
 
-        private void preview_ammo_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_ammo_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int ammo_val = (int)this.preview_ammo_slider.Value;
             if (this.preview_ammo_amount is Label)
@@ -140,7 +140,7 @@ namespace Aurora.Profiles.CSGO
             }
         }
 
-        private void preview_flash_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_flash_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int flash_val = (int)this.preview_flash_slider.Value;
             if (this.preview_flash_amount is Label)
@@ -150,7 +150,7 @@ namespace Aurora.Profiles.CSGO
             }
         }
 
-        private void preview_burning_slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void preview_burning_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
         {
             int burning_val = (int)this.preview_burning_slider.Value;
             if (this.preview_burning_amount is Label)
@@ -160,7 +160,7 @@ namespace Aurora.Profiles.CSGO
             }
         }
 
-        private void preview_bomb_start_Click(object sender, RoutedEventArgs e)
+        private void preview_bomb_start_Click(object? sender, RoutedEventArgs e)
         {
             this.preview_bomb_defused.IsEnabled = true;
             this.preview_bomb_start.IsEnabled = false;
@@ -170,7 +170,7 @@ namespace Aurora.Profiles.CSGO
             preview_bomb_remove_effect_timer.Stop();
         }
 
-        private void preview_bomb_defused_Click(object sender, RoutedEventArgs e)
+        private void preview_bomb_defused_Click(object? sender, RoutedEventArgs e)
         {
             this.preview_bomb_defused.IsEnabled = false;
             this.preview_bomb_start.IsEnabled = true;
@@ -180,12 +180,12 @@ namespace Aurora.Profiles.CSGO
             preview_bomb_remove_effect_timer.Start();
         }
 
-        private void preview_typing_enabled_Checked(object sender, RoutedEventArgs e)
+        private void preview_typing_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_CSGO).Player.Activity = (((this.preview_typing_enabled.IsChecked.HasValue) ? this.preview_typing_enabled.IsChecked.Value : false) ? Aurora.Profiles.CSGO.GSI.Nodes.PlayerActivity.TextInput : Aurora.Profiles.CSGO.GSI.Nodes.PlayerActivity.Undefined);
         }
 
-        private void preview_respawn_Click(object sender, RoutedEventArgs e)
+        private void preview_respawn_Click(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
@@ -205,7 +205,7 @@ namespace Aurora.Profiles.CSGO
                 null, 500, System.Threading.Timeout.Infinite);
         }
 
-        private void preview_addkill_hs_Click(object sender, RoutedEventArgs e)
+        private void preview_addkill_hs_Click(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
@@ -229,7 +229,7 @@ namespace Aurora.Profiles.CSGO
             preview_kills_label.Text = String.Format("Kills: {0} Headshots: {1}", preview_kills, preview_killshs);
         }
 
-        private void preview_addkill_Click(object sender, RoutedEventArgs e)
+        private void preview_addkill_Click(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 
@@ -248,7 +248,7 @@ namespace Aurora.Profiles.CSGO
 
             preview_kills_label.Text = String.Format("Kills: {0} Headshots: {1}", preview_kills, preview_killshs);
         }
-        private void preview_kills_reset_Click(object sender, RoutedEventArgs e)
+        private void preview_kills_reset_Click(object? sender, RoutedEventArgs e)
         {
             (profile_manager.Config.Event._game_state as GameState_CSGO).Provider.SteamID = (profile_manager.Config.Event._game_state as GameState_CSGO).Player.SteamID;
 

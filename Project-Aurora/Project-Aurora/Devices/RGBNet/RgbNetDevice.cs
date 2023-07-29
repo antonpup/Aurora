@@ -51,7 +51,7 @@ public abstract class RgbNetDevice : DefaultDevice
         List<Exception> providerExceptions = new();
         List<Exception> criticalExceptions = new();
 
-        void DeviceProviderOnException(object sender, ExceptionEventArgs e)
+        void DeviceProviderOnException(object? sender, ExceptionEventArgs e)
         {
             Global.logger.Error(e.Exception, "Device provider {DeviceProvider} threw exception", DeviceName);
             ErrorMessage = e.Exception.Message;

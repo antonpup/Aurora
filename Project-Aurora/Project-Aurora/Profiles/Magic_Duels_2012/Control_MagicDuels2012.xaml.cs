@@ -32,7 +32,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
             profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
         }
 
-        private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+        private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
         {
             SetSettings();
         }
@@ -42,7 +42,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
             this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
         }
 
-        private void patch_button_Click(object sender, RoutedEventArgs e)
+        private void patch_button_Click(object? sender, RoutedEventArgs e)
         {
             if (InstallWrapper())
                 MessageBox.Show("Aurora LightFX Wrapper installed successfully.");
@@ -51,7 +51,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
 
         }
 
-        private void unpatch_button_Click(object sender, RoutedEventArgs e)
+        private void unpatch_button_Click(object? sender, RoutedEventArgs e)
         {
             if (UninstallWrapper())
                 MessageBox.Show("Aurora LightFX Wrapper uninstalled successfully.");
@@ -59,7 +59,7 @@ namespace Aurora.Profiles.Magic_Duels_2012
                 MessageBox.Show("Aurora LightFX Wrapper could not be uninstalled.\r\nGame is not installed.");
         }
 
-        private void game_enabled_Checked(object sender, RoutedEventArgs e)
+        private void game_enabled_Checked(object? sender, RoutedEventArgs e)
         {
             if (IsLoaded)
             {
@@ -68,11 +68,11 @@ namespace Aurora.Profiles.Magic_Duels_2012
             }
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
         {
         }
 
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        private void UserControl_Unloaded(object? sender, RoutedEventArgs e)
         {
         }
 

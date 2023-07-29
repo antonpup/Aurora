@@ -48,27 +48,27 @@ namespace Aurora.Settings.Layers.Controls {
             this.SetSettings();
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             SetSettings();
             this.Loaded -= UserControl_Loaded;
         }
 
-        private void trueColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void trueColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsset && this.DataContext is ConditionalLayerHandler && (sender as ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as ConditionalLayerHandler).Properties._PrimaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
-        private void falseColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e) {
+        private void falseColor_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e) {
             if (IsLoaded && settingsset && this.DataContext is ConditionalLayerHandler && (sender as ColorPicker).SelectedColor.HasValue)
                 (this.DataContext as ConditionalLayerHandler).Properties._SecondaryColor = Utils.ColorUtils.MediaColorToDrawingColor((sender as ColorPicker).SelectedColor.Value);
         }
 
-        private void conditionPath_TextChanged(object sender, TextChangedEventArgs e) {
+        private void conditionPath_TextChanged(object? sender, TextChangedEventArgs e) {
             if (IsLoaded && settingsset && this.DataContext is ConditionalLayerHandler)
                 (this.DataContext as ConditionalLayerHandler).Properties._ConditionPath = (sender as ComboBox).Text;
         }
 
-        private void keySequence_SequenceUpdated(object sender, EventArgs e) {
+        private void keySequence_SequenceUpdated(object? sender, EventArgs e) {
             if (IsLoaded && settingsset && this.DataContext is ConditionalLayerHandler)
                 (this.DataContext as ConditionalLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
         }

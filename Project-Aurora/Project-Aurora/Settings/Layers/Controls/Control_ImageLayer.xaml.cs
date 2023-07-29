@@ -15,7 +15,7 @@ namespace Aurora.Settings.Layers.Controls {
             DataContext = context;
         }
 
-        private void SelectImage_Click(object sender, RoutedEventArgs e) {
+        private void SelectImage_Click(object? sender, RoutedEventArgs e) {
             OpenFileDialog dialog = new OpenFileDialog {
                 Filter = "Image files (*.jpg, *.jpeg, *.jpe, *.png, *.gif, *.bmp, *.tiff, *.tif) | *.jpg; *.jpeg; *.jpe; *.png; *.gif; *.bmp; *.tiff; *.tif",
                 Title = "Please select an image."

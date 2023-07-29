@@ -29,12 +29,12 @@ namespace Aurora.Settings.Overrides.Logic {
 
         // We don't do UpdateEnumDropDown in the constructor because it won't have been added to the visual tree at the point and therefore
         // the attached application property won't be set. If we wait til the control has added to the tree, the property is set.
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) {
+        private void UserControl_Loaded(object? sender, RoutedEventArgs e) {
             UpdateEnumDropDown();
         }
 
         // Update the enum dropdown when the user selects a different enum path
-        private void GameStateParameterPicker_SelectedPathChanged(object sender, Controls.SelectedPathChangedEventArgs e) {
+        private void GameStateParameterPicker_SelectedPathChanged(object? sender, Controls.SelectedPathChangedEventArgs e) {
             UpdateEnumDropDown();
         }
     }

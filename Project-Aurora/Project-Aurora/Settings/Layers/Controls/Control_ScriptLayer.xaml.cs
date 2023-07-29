@@ -29,7 +29,7 @@ namespace Aurora.Settings.Layers.Controls
             this.Application = application;
         }
 
-        private void cboScripts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cboScripts_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
             ScriptLayerHandler handler = (ScriptLayerHandler)this.DataContext;
             handler.OnScriptChanged();
@@ -45,7 +45,7 @@ namespace Aurora.Settings.Layers.Controls
             ScriptPropertiesEditor.VarRegistrySource = handler.IsScriptValid ? handler.Properties._ScriptProperties : null;
         }
 
-        private void refreshScriptList_Click(object sender, RoutedEventArgs e) {
+        private void refreshScriptList_Click(object? sender, RoutedEventArgs e) {
             Application.ForceScriptReload();
             cboScripts.Items.Refresh();
             cboScripts.IsEnabled = Application.EffectScripts.Keys.Count > 0;

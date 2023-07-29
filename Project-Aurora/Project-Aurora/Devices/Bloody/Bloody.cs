@@ -67,7 +67,7 @@ namespace Aurora.Devices.Bloody
             variableRegistry.Register($"{DeviceName}_send_delay", 32, "Send delay (ms)");
         }
 
-        private void UpdateKeyboard(object sender, Dictionary<DeviceKeys, Color> keyColors)
+        private void UpdateKeyboard(object? sender, Dictionary<DeviceKeys, Color> keyColors)
         {
             foreach (var key in keyColors)
             {
@@ -78,7 +78,7 @@ namespace Aurora.Devices.Bloody
             _keyboard.Update();
         }
 
-        private void UpdatePeripherals(object sender, Dictionary<DeviceKeys, Color> keyColors)
+        private void UpdatePeripherals(object? sender, Dictionary<DeviceKeys, Color> keyColors)
         {
             foreach(var dev in _peripherals)
             {
