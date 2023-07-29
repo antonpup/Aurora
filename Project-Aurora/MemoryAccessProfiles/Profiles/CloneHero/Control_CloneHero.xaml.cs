@@ -24,7 +24,7 @@ public partial class Control_CloneHero : UserControl
         profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
     }
 
-    private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+    private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
     {
         SetSettings();
     }
@@ -34,7 +34,7 @@ public partial class Control_CloneHero : UserControl
         this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
     }
 
-    private void game_enabled_Checked(object sender, RoutedEventArgs e)
+    private void game_enabled_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -42,7 +42,7 @@ public partial class Control_CloneHero : UserControl
             profile_manager.SaveProfiles();
         }
     }
-    private void preview_streak_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_streak_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
         {
@@ -104,7 +104,7 @@ public partial class Control_CloneHero : UserControl
             }
         }
     }
-    private void preview_sp_percent_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_sp_percent_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -116,7 +116,7 @@ public partial class Control_CloneHero : UserControl
             }
         }
     }
-    private void preview_sp_enabled_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_sp_enabled_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -136,7 +136,7 @@ public partial class Control_CloneHero : UserControl
             }
         }
     }
-    private void preview_sp_active(object sender, RoutedEventArgs e)
+    private void preview_sp_active(object? sender, RoutedEventArgs e)
     {
         this.preview_sp_enabled_label.Text = "true";
         if (IsLoaded)
@@ -144,7 +144,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsStarPowerActive = true;
         }
     }
-    private void preview_sp_deactive(object sender, RoutedEventArgs e)
+    private void preview_sp_deactive(object? sender, RoutedEventArgs e)
     {
         this.preview_sp_enabled_label.Text = "false";
         if (IsLoaded)
@@ -152,7 +152,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsStarPowerActive = false;
         }
     }
-    private void preview_menu_active(object sender, RoutedEventArgs e)
+    private void preview_menu_active(object? sender, RoutedEventArgs e)
     {
         this.preview_menu_enabled_label.Text = "true";
         if (IsLoaded)
@@ -160,7 +160,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsAtMenu = true;
         }
     }
-    private void preview_menu_deactive(object sender, RoutedEventArgs e)
+    private void preview_menu_deactive(object? sender, RoutedEventArgs e)
     {
         this.preview_menu_enabled_label.Text = "false";
         if (IsLoaded)
@@ -168,7 +168,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsAtMenu = false;
         }
     }
-    private void preview_fc_active(object sender, RoutedEventArgs e)
+    private void preview_fc_active(object? sender, RoutedEventArgs e)
     {
         this.preview_fc_enabled_label.Text = "true";
         if (IsLoaded)
@@ -176,7 +176,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsFC = true;
         }
     }
-    private void preview_fc_deactive(object sender, RoutedEventArgs e)
+    private void preview_fc_deactive(object? sender, RoutedEventArgs e)
     {
         this.preview_fc_enabled_label.Text = "false";
         if (IsLoaded)
@@ -184,7 +184,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsFC = false;
         }
     }
-    /*private void preview_solo_active(object sender, RoutedEventArgs e)
+    /*private void preview_solo_active(object? sender, RoutedEventArgs e)
     {
         this.preview_solo_enabled_label.Text = "true";
         if (IsLoaded)
@@ -192,7 +192,7 @@ public partial class Control_CloneHero : UserControl
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsSoloActive = true;
         }
     }
-    private void preview_solo_deactive(object sender, RoutedEventArgs e)
+    private void preview_solo_deactive(object? sender, RoutedEventArgs e)
     {
         this.preview_solo_enabled_label.Text = "false";
         if (IsLoaded)
@@ -201,7 +201,7 @@ public partial class Control_CloneHero : UserControl
         }
     }*/
 
-    private void preview_notes_total_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_notes_total_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
         {
@@ -212,7 +212,7 @@ public partial class Control_CloneHero : UserControl
         }
     }
 
-    private void preview_score_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_score_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
         {
@@ -226,14 +226,14 @@ public partial class Control_CloneHero : UserControl
     #region frets
 
     // Green
-    private void preview_green_active(object sender, RoutedEventArgs e)
+    private void preview_green_active(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsGreenPressed = true;
         }
     }
-    private void preview_green_deactive(object sender, RoutedEventArgs e)
+    private void preview_green_deactive(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -242,14 +242,14 @@ public partial class Control_CloneHero : UserControl
     }
 
     // Red
-    private void preview_red_active(object sender, RoutedEventArgs e)
+    private void preview_red_active(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsRedPressed = true;
         }
     }
-    private void preview_red_deactive(object sender, RoutedEventArgs e)
+    private void preview_red_deactive(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -258,14 +258,14 @@ public partial class Control_CloneHero : UserControl
     }
 
     // Yellow
-    private void preview_yellow_active(object sender, RoutedEventArgs e)
+    private void preview_yellow_active(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsYellowPressed = true;
         }
     }
-    private void preview_yellow_deactive(object sender, RoutedEventArgs e)
+    private void preview_yellow_deactive(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -274,14 +274,14 @@ public partial class Control_CloneHero : UserControl
     }
 
     // Blue
-    private void preview_blue_active(object sender, RoutedEventArgs e)
+    private void preview_blue_active(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsBluePressed = true;
         }
     }
-    private void preview_blue_deactive(object sender, RoutedEventArgs e)
+    private void preview_blue_deactive(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -290,14 +290,14 @@ public partial class Control_CloneHero : UserControl
     }
 
     // Orange
-    private void preview_orange_active(object sender, RoutedEventArgs e)
+    private void preview_orange_active(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.IsOrangePressed = true;
         }
     }
-    private void preview_orange_deactive(object sender, RoutedEventArgs e)
+    private void preview_orange_deactive(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -308,7 +308,7 @@ public partial class Control_CloneHero : UserControl
     #endregion
 
     /*
-    private void preview_mana_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_mana_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -322,13 +322,13 @@ public partial class Control_CloneHero : UserControl
         }
     }
 
-    private void preview_manapots_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_manapots_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.ManaPots = (sender as IntegerUpDown).Value.Value;
     }
 
-    private void preview_healthpots_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_healthpots_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
             (profile_manager.Config.Event._game_state as GameState_CloneHero).Player.HealthPots = (sender as IntegerUpDown).Value.Value;

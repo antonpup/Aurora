@@ -35,7 +35,7 @@ public partial class Control_ResidentEvil2RankLayer : UserControl
     {
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         SetSettings();
 

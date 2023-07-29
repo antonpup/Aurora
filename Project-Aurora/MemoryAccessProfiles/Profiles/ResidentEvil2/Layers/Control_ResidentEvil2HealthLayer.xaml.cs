@@ -43,14 +43,14 @@ public partial class Control_ResidentEvil2HealthLayer : UserControl
     {
     }
 
-    private void UserControl_Loaded(object sender, RoutedEventArgs e)
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
     {
         SetSettings();
 
         this.Loaded -= UserControl_Loaded;
     }
 
-    private void status_style_SelectionChanged(object sender, RoutedEventArgs e)
+    private void status_style_SelectionChanged(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded && settingsset && this.DataContext is ResidentEvil2HealthLayerHandler)
         {

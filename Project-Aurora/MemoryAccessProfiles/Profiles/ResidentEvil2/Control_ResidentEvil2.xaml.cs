@@ -25,7 +25,7 @@ public partial class Control_ResidentEvil2 : UserControl
         profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
     }
 
-    private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+    private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
     {
         SetSettings();
     }
@@ -45,7 +45,7 @@ public partial class Control_ResidentEvil2 : UserControl
         }
     }
 
-    private void game_enabled_Checked(object sender, RoutedEventArgs e)
+    private void game_enabled_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -54,7 +54,7 @@ public partial class Control_ResidentEvil2 : UserControl
         }
     }
 
-    private void preview_status_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void preview_status_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -62,13 +62,13 @@ public partial class Control_ResidentEvil2 : UserControl
         }
     }
 
-    private void preview_poison_Checked(object sender, RoutedEventArgs e)
+    private void preview_poison_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded && sender is CheckBox && (sender as CheckBox).IsChecked.HasValue)
             (profile_manager.Config.Event._game_state as GameState_ResidentEvil2).Player.Poison = (sender as CheckBox).IsChecked.Value;
     }
 
-    private void preview_rank_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_rank_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
             (profile_manager.Config.Event._game_state as GameState_ResidentEvil2).Player.Rank = (sender as IntegerUpDown).Value.Value;

@@ -23,7 +23,7 @@ public partial class Control_Borderlands2 : UserControl
         profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
     }
 
-    private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+    private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
     {
         SetSettings();
     }
@@ -33,7 +33,7 @@ public partial class Control_Borderlands2 : UserControl
         this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
     }
 
-    private void game_enabled_Checked(object sender, RoutedEventArgs e)
+    private void game_enabled_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -42,7 +42,7 @@ public partial class Control_Borderlands2 : UserControl
         }
     }
 
-    private void preview_health_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_health_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -56,7 +56,7 @@ public partial class Control_Borderlands2 : UserControl
         }
     }
 
-    private void preview_shield_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_shield_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -70,7 +70,7 @@ public partial class Control_Borderlands2 : UserControl
         }
     }
 
-    private void cz_ColorZonesListUpdated(object sender, EventArgs e)
+    private void cz_ColorZonesListUpdated(object? sender, EventArgs e)
     {
         if (IsLoaded)
         {

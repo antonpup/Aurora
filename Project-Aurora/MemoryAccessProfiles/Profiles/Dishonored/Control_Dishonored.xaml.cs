@@ -24,7 +24,7 @@ public partial class Control_Dishonored : UserControl
         profile_manager.ProfileChanged += Profile_manager_ProfileChanged;
     }
 
-    private void Profile_manager_ProfileChanged(object sender, EventArgs e)
+    private void Profile_manager_ProfileChanged(object? sender, EventArgs e)
     {
         SetSettings();
     }
@@ -34,7 +34,7 @@ public partial class Control_Dishonored : UserControl
         this.game_enabled.IsChecked = profile_manager.Settings.IsEnabled;
     }
 
-    private void game_enabled_Checked(object sender, RoutedEventArgs e)
+    private void game_enabled_Checked(object? sender, RoutedEventArgs e)
     {
         if (IsLoaded)
         {
@@ -42,7 +42,7 @@ public partial class Control_Dishonored : UserControl
             profile_manager.SaveProfiles();
         }
     }
-    private void preview_health_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_health_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -56,7 +56,7 @@ public partial class Control_Dishonored : UserControl
         }
     }
 
-    private void preview_mana_amount_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    private void preview_mana_amount_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (sender is Slider)
         {
@@ -70,13 +70,13 @@ public partial class Control_Dishonored : UserControl
         }
     }
 
-    private void preview_manapots_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_manapots_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
             (profile_manager.Config.Event._game_state as GameState_Dishonored).Player.ManaPots = (sender as IntegerUpDown).Value.Value;
     }
 
-    private void preview_healthpots_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void preview_healthpots_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
         if (IsLoaded && sender is IntegerUpDown && (sender as IntegerUpDown).Value.HasValue)
             (profile_manager.Config.Event._game_state as GameState_Dishonored).Player.HealthPots = (sender as IntegerUpDown).Value.Value;
