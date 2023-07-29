@@ -4,6 +4,7 @@ using System.IO;
 using System.Security.Principal;
 using System.Windows.Forms;
 using System.Linq;
+using System.Threading;
 using Version = SemanticVersioning.Version;
 
 namespace Aurora_Updater;
@@ -37,6 +38,17 @@ internal static class Program
     [STAThread]
     static void Main(string[] args)
     {
+        using Mutex mutex = new(false, "Aurora-Updater");
+        try
+        {
+            if (!mutex.WaitOne(TimeSpan.FromMilliseconds(0), true))
+            {
+                //Updater is already up
+                return;
+            }
+        }
+        catch(AbandonedMutexException) { /* Means previous instance closed anyway */ }
+
         foreach (var arg in args)
         {
             if (string.IsNullOrWhiteSpace(arg))
