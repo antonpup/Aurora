@@ -126,8 +126,8 @@ public partial class App
         Global.logger.Information("Loading ConfigUI...");
         var configUi = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
             HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager, LightningStateManagerModule.LightningStateManager);
-        MainWindow = configUi;
         await configUi.Initialize();
+        MainWindow = configUi;
 
         Global.logger.Information("Waiting for modules...");
         await Task.WhenAll(initModules);
@@ -271,7 +271,7 @@ public partial class App
         return thread;
     }
 
-    private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+    private void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
         Exception exc = (Exception)e.ExceptionObject;
 
@@ -301,7 +301,7 @@ public partial class App
         Current.Shutdown();
     }
 
-    private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    private void App_DispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
     {
         var exc = e.Exception;
 
