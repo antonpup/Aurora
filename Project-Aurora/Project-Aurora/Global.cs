@@ -46,7 +46,7 @@ public static class Global
     public static LightingStateManager? LightingStateManager { get; set; }     //TODO module access
     public static Configuration Configuration { get; set; }
     public static KeyboardLayoutManager? kbLayout { get; set; }                //TODO module access
-    public static Effects? effengine { get; set; }
+    public static Effects effengine { get; set; }
     public static KeyRecorder? key_recorder { get; set; }
     public static RzSdkManager? razerSdkManager { get; set; }                  //TODO module access
     public static AudioDeviceProxy? CaptureProxy { get; set; }
@@ -57,18 +57,18 @@ public static class Global
 #if DEBUG
         isDebug = true;
 #endif
-        var logFile = $"{DateTime.Now:yyyy-MM-dd HH.mm.ss}.log";
+        var logFile = ".log";
         var logPath = Path.Combine(AppDataDirectory, "Logs", logFile);
         logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
-            .WriteTo.Console()
             .WriteTo.File(logPath,
-                rollingInterval: RollingInterval.Day,
+                rollingInterval: RollingInterval.Minute,
                 outputTemplate:
                 "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}",
                 retainedFileCountLimit: 8
             )
 #if DEBUG
+            .WriteTo.Console()
             .WriteTo.Debug()
 #endif
             .CreateLogger();

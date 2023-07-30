@@ -28,7 +28,7 @@ namespace Aurora.Settings.Layers.Controls
         {
             if(this.DataContext is WrapperLightsLayerHandler && !settingsset)
             {
-                CloneSourceKS.Sequence = new KeySequence(Context.Properties._CloningMap.Keys.ToArray());
+                CloneSourceKS.Sequence = new KeySequence(Context.Properties.CloningMap.Keys.ToArray());
                 settingsset = true;
             }
         }

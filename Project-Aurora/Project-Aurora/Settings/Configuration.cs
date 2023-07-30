@@ -11,6 +11,7 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using Windows.Foundation.Metadata;
 using Aurora.Devices;
 using Aurora.Devices.AtmoOrb;
 using Aurora.Devices.Corsair;
@@ -20,6 +21,7 @@ using Aurora.Devices.RGBNet;
 using Aurora.Devices.SteelSeries;
 using Aurora.Modules.AudioCapture;
 using Aurora.Settings.Overrides.Logic;
+using JetBrains.Annotations;
 
 namespace Aurora.Settings
 {
@@ -537,12 +539,15 @@ namespace Aurora.Settings
         ForegroundApp = 1,
         
         [Description("None")]
+        [UsedImplicitly]
         None = -1,
     }
 
     public enum BitmapAccuracy
     {
+        [UsedImplicitly]
         Best = 1,
+        [UsedImplicitly]
         Great = 3,
         Good = 6,
         Okay = 9,
@@ -557,7 +562,6 @@ namespace Aurora.Settings
         [JsonProperty("allow_peripheral_devices")] public bool AllowPeripheralDevices { get; set; } = true;
         [JsonProperty("close_on_exception")] public bool CloseProgramOnException { get; set; } = true;
         [JsonProperty("allow_wrappers_in_background")] public bool AllowWrappersInBackground { get; set; } = true;
-        [JsonProperty("allow_all_logitech_bitmaps")] public bool AllowAllLogitechBitmaps { get; set; } = true;
         public bool AllowTransparency { get; set; } = true;
 
         [JsonProperty("use_volume_as_brightness")] public bool UseVolumeAsBrightness { get; set; }

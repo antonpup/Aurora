@@ -32,9 +32,9 @@ namespace Aurora.Profiles
     public class LightEvent : ILightEvent
     {
         public Application Application { get; set; }
-        public LightEventConfig Config { get; protected set; }
+        public LightEventConfig Config { get; }
 
-        public IGameState _game_state;
+        public IGameState? _game_state;
 
         public LightEvent()
         {

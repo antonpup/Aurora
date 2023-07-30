@@ -99,6 +99,7 @@ public partial class App
 
         Global.logger.Information("Waiting for modules...");
         await Task.WhenAll(initModules);
+        Global.logger.Information("Modules initiated");
         ((ConfigUI)MainWindow).DisplayIfNotSilent();
         WindowListener.Instance.StartListening();
 
@@ -156,7 +157,7 @@ public partial class App
             {
                 case "-debug":
                     Global.isDebug = true;
-                    Global.logger.Information("Program started in debug mode.");
+                    Global.logger.Information("Program started in debug mode");
                     break;
                 case "-restart":
                     var pid = int.Parse(e.Args[++i]);
@@ -165,7 +166,7 @@ public partial class App
                         var previousAuroraProcess = Process.GetProcessById(pid);
                         previousAuroraProcess.WaitForExit();
                     }
-                    catch (ArgumentException exception) { /* process doesn't exist */ }
+                    catch (ArgumentException) { /* process doesn't exist */ }
                     break;
                 case "-minimized":
                 case "-silent":
@@ -179,7 +180,7 @@ public partial class App
                 case "-delay":
                     if (i + 1 >= e.Args.Length || !int.TryParse(e.Args[i++], out var delayTime))
                         delayTime = 5000;
-                    Global.logger.Information("Program started with '-delay' parameter with delay of " + delayTime + " ms");
+                    Global.logger.Information("Program started with '-delay' parameter with delay of {DelayTime} ms", delayTime);
                     Thread.Sleep(delayTime);
                     break;
             }
@@ -231,53 +232,49 @@ public partial class App
 
     private void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
     {
-        Exception exc = (Exception)e.ExceptionObject;
-
+        var exc = (Exception)e.ExceptionObject;
         if (exc is COMException { Message: "0x88890004" })
         {
             return;
         }
-
-        Global.logger.Fatal(exc, "Fatal Exception caught : ");
+        Global.logger.Fatal(exc, "Fatal Exception caught");
 
         if (!e.IsTerminating || Current == null || Closing)
         {
             return;
         }
-
         if (exc is SEHException sehException && sehException.CanResume())
         {
             return;
         }
 
-        Global.logger.Fatal($"Runtime terminating: {e.IsTerminating}");
-        //LogManager.Flush();
-
-        if (!Global.Configuration.CloseProgramOnException) return;
-        MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
-        //Perform exit operations
-        Current.Shutdown();
+        QuitFromError(exc);
     }
 
     private void App_DispatcherUnhandledException(object? sender, DispatcherUnhandledExceptionEventArgs e)
     {
         var exc = e.Exception;
-
         if (exc is COMException { Message: "0x88890004" })
         {
             e.Handled = true;
             return;
         }
+        Global.logger.Fatal(exc, "Fatal Exception caught");
 
-        Global.logger.Fatal(exc, "Fatal Exception caught : " + exc);
-        //LogManager.Flush();
         if (!Global.isDebug)
             e.Handled = true;
         else
             throw exc;
+
+        QuitFromError(exc);
+    }
+
+    private static void QuitFromError(Exception exc)
+    {
         if (!Global.Configuration?.CloseProgramOnException ?? false) return;
         if (Closing) return;
-        MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc, "Aurora has stopped working");
+        MessageBox.Show("Aurora fatally crashed. Please report the follow to author: \r\n\r\n" + exc,
+            "Aurora has stopped working");
         //Perform exit operations
         Current?.Shutdown();
     }

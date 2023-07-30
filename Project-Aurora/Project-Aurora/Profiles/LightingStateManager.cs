@@ -1,4 +1,3 @@
-using Aurora.Profiles.Aurora_Wrapper;
 using Aurora.Profiles.Desktop;
 using Aurora.Profiles.Generic_Application;
 using Aurora.Settings;
@@ -129,7 +128,7 @@ public sealed class LightingStateManager
                 Global.Configuration.ProfileOrder.Add(kvp.Key);
         }
 
-        foreach (string key in Global.Configuration.ProfileOrder.ToList())
+        foreach (var key in Global.Configuration.ProfileOrder.ToList())
         {
             if (!Events.ContainsKey(key) || !(Events[key] is Application))
                 Global.Configuration.ProfileOrder.Remove(key);
@@ -156,12 +155,12 @@ public sealed class LightingStateManager
 
     public void RegisterEvent(ILightEvent @event)
     {
-        string profileId = @event.Config.ID;
+        var profileId = @event.Config.ID;
         if (string.IsNullOrWhiteSpace(profileId) || Events.ContainsKey(profileId)) return;
 
         Events.Add(profileId, @event);
 
-        foreach (string exe in @event.Config.ProcessNames)
+        foreach (var exe in @event.Config.ProcessNames)
         {
             EventProcesses[exe.ToLower()] = profileId;
         }
@@ -190,7 +189,7 @@ public sealed class LightingStateManager
         };
 
         if (@event.Config.ProcessTitles != null)
-            foreach (string titleRx in @event.Config.ProcessTitles)
+            foreach (var titleRx in @event.Config.ProcessTitles)
                 EventTitles.Add(titleRx, profileId);
 
         if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
@@ -211,20 +210,20 @@ public sealed class LightingStateManager
         {
             if (!(Events[key] is GenericApplication))
                 return;
-            GenericApplication profile = (GenericApplication)Events[key];
+            var profile = (GenericApplication)Events[key];
             Events.Remove(key);
             Global.Configuration.ProfileOrder.Remove(key);
 
             profile.Dispose();
 
-            string path = profile.GetProfileFolderPath();
+            var path = profile.GetProfileFolderPath();
             if (Directory.Exists(path))
                 Directory.Delete(path, true);
         }
     }
 
     // Used to match a process's name and optional window title to a profile
-    private ILightEvent GetProfileFromProcessData(string processName, string processTitle = null)
+    private ILightEvent? GetProfileFromProcessData(string processName, string processTitle)
     {
         var processNameProfile = GetProfileFromProcessName(processName);
 
@@ -280,8 +279,8 @@ public sealed class LightingStateManager
                 )
         {
             if (!Events.ContainsKey(value))
-                Global.logger.Warning($"GetProfileFromProcess: The process with title '{title}' matchs an item in EventTitles" +
-                                   $" but subsequently '{value}' does not in Events!");
+                Global.logger.Warning("GetProfileFromProcess: The process with title '{Title}' matches an item in EventTitles" +
+                                      " but subsequently '{Value}' does not in Events!", title, value);
             else
                 return Events[value]; // added in an else so we keep searching for more valid regexes.
         }
@@ -291,12 +290,12 @@ public sealed class LightingStateManager
 
     private ILightEvent? GetProfileFromAppId(string appid)
     {
-        if (!EventAppIDs.ContainsKey(appid)) return Events.ContainsKey(appid) ? Events[appid] : null;
+        if (!EventAppIDs.ContainsKey(appid)) return Events.TryGetValue(appid, out var @event) ? @event : null;
         if (!Events.ContainsKey(EventAppIDs[appid]))
-            Global.logger.Warning($"GetProfileFromAppID: The appid '{appid}' exists in EventAppIDs" +
-                               $" but subsequently '{EventAppIDs[appid]}' does not in Events!");
+            Global.logger.Warning(
+                "GetProfileFromAppID: The appid '{AppId}' exists in EventAppIDs but subsequently '{EventAppID}' does not in Events!",
+                appid, EventAppIDs[appid]);
         return Events[EventAppIDs[appid]];
-
     }
 
     private Timer? _updateTimer;
@@ -345,7 +344,8 @@ public sealed class LightingStateManager
             }
             catch (Exception exc)
             {
-                Global.logger.Error("ProfilesManager.Update() Exception, " + exc);
+                Global.logger.Error(exc, "ProfilesManager.Update() Exception:");
+                //TODO make below non-blocking
                 MessageBox.Show("Error while updating light effects: " + exc.Message);
             }
         }
@@ -367,7 +367,7 @@ public sealed class LightingStateManager
 
     private void UpdateIdleEffects(EffectsEngine.EffectFrame newFrame)
     {
-        User32.tagLASTINPUTINFO lastInput = new User32.tagLASTINPUTINFO();
+        var lastInput = new User32.tagLASTINPUTINFO();
         lastInput.cbSize = (uint)Marshal.SizeOf(lastInput);
         lastInput.dwTime = 0;
 
@@ -405,7 +405,7 @@ public sealed class LightingStateManager
         // Skip if there are no started events or started events are the same since last update
         if (!_startedEvents.Any() || _startedEvents.SequenceEqual(_updatedEvents)) return;
 
-        List<ILightEvent> eventsToStop = _startedEvents.Except(_updatedEvents).ToList();
+        var eventsToStop = _startedEvents.Except(_updatedEvents).ToList();
         foreach (var eventToStop in eventsToStop)
             eventToStop.OnStop();
 
@@ -416,7 +416,7 @@ public sealed class LightingStateManager
     private bool _profilesDisabled;
     private void Update()
     {
-        Stopwatch debugTimer = new Stopwatch();
+        var debugTimer = new Stopwatch();
         PreUpdate?.Invoke(this, EventArgs.Empty);
         _updatedEvents.Clear();
 
@@ -435,7 +435,7 @@ public sealed class LightingStateManager
         var rawProcessName = _processMonitor.ProcessName;
 
         UpdateProcess();
-        EffectsEngine.EffectFrame newFrame = new EffectsEngine.EffectFrame();
+        var newFrame = new EffectsEngine.EffectFrame();
         debugTimer.Restart();
 
         var profile = GetCurrentProfile(out var preview);
@@ -498,8 +498,8 @@ public sealed class LightingStateManager
     {
         var processName = _processMonitor.ProcessName.ToLower();
         var processTitle = _processMonitor.ProcessTitle;
-        ILightEvent profile = null;
-        ILightEvent tempProfile;
+        ILightEvent? profile = null;
+        ILightEvent? tempProfile;
         preview = false;
 
         //TODO: GetProfile that checks based on event type
@@ -537,7 +537,7 @@ public sealed class LightingStateManager
     /// In the case of multiple profiles matching the keybind, it will pick the next one as specified in the Application.Profile order.</summary>
     private void CheckProfileKeybinds(object? sender, EventArgs e)
     {
-        ILightEvent profile = GetCurrentProfile();
+        var profile = GetCurrentProfile();
 
         // Check profile is valid and do not switch profiles if the user is trying to enter a keybind
         if (profile is not Application application || Controls.Control_Keybind._ActiveKeybind != null) return;
@@ -550,7 +550,7 @@ public sealed class LightingStateManager
         if (possibleProfiles.Count <= 0) return;
         // The target profile is the NEXT valid profile after the currently selected one
         // (or the first valid one if the currently selected one doesn't share this keybind)
-        int trg = (possibleProfiles.IndexOf(application.Profile) + 1) % possibleProfiles.Count;
+        var trg = (possibleProfiles.IndexOf(application.Profile) + 1) % possibleProfiles.Count;
         application.SwitchToProfile(possibleProfiles[trg]);
     }
 
@@ -563,34 +563,16 @@ public sealed class LightingStateManager
 #endif
             ILightEvent profile;
 
-            JObject provider = JObject.Parse(gs.GetNode("provider"));
-            string appid = provider.GetValue("appid").ToString();
-            string name = provider.GetValue("name").ToString().ToLowerInvariant();
+            var provider = JObject.Parse(gs.GetNode("provider"));
+            var appid = provider.GetValue("appid").ToString();
+            var name = provider.GetValue("name").ToString().ToLowerInvariant();
 
-            if ((profile = GetProfileFromAppId(appid)) != null || (profile = GetProfileFromProcessName(name)) != null)
-            {
-                IGameState gameState = gs;
-                if (profile.Config.GameStateType != null)
-                    gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
-                profile.SetGameState(gameState);
-            }
-            else if (gs is GameState_Wrapper && Global.Configuration.AllowAllLogitechBitmaps)
-            {
-                string gsProcessName = JObject.Parse(gs.GetNode("provider")).GetValue("name").ToString().ToLowerInvariant();
-                lock (Events)
-                {
-                    profile = GetProfileFromProcessName(gsProcessName);
-
-                    if (profile == null)
-                    {
-                        Events.Add(gsProcessName, new GameEvent_Aurora_Wrapper(
-                            new LightEventConfig { GameStateType = typeof(GameState_Wrapper), ProcessNames = new[] { gsProcessName } }));
-                        profile = Events[gsProcessName];
-                    }
-
-                    profile.SetGameState(gs);
-                }
-            }
+            if ((profile = GetProfileFromAppId(appid)) == null &&
+                (profile = GetProfileFromProcessName(name)) == null) return;
+            var gameState = gs;
+            if (profile.Config.GameStateType != null)
+                gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
+            profile.SetGameState(gameState);
 #if DEBUG
 #else
         }
@@ -603,9 +585,8 @@ public sealed class LightingStateManager
 
     public void ResetGameState(object? sender, string process)
     {
-        ILightEvent profile;
-        if ((profile = GetProfileFromProcessName(process)) != null)
-            profile.ResetGameState();
+        var profile = GetProfileFromProcessName(process);
+        profile?.ResetGameState();
     }
 
     public void Dispose()

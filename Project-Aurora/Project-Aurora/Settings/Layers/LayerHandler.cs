@@ -25,7 +25,7 @@ namespace Aurora.Settings.Layers
         private static readonly Lazy<TypeAccessor> Accessor = new(() => TypeAccessor.Create(typeof(TProperty)));
 
         [GameStateIgnore, JsonIgnore]
-        public TProperty? Logic { get; private set; }
+        public TProperty Logic { get; private set; }
 
         [JsonIgnore]
         private Color? _primaryColor;
@@ -98,7 +98,7 @@ namespace Aurora.Settings.Layers
             {
                 Logic.PropertyChanged -= OnPropertiesChanged;
             }
-            Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true });
+            Logic = (TProperty)Activator.CreateInstance(typeof(TProperty), new object[] { true })!;
             Logic.PropertyChanged += OnPropertiesChanged;
             _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
             if (_Sequence != null)

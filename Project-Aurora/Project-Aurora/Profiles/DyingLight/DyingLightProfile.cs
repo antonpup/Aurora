@@ -75,7 +75,7 @@ namespace Aurora.Profiles.DyingLight
                 {
                     Properties = new WrapperLightsLayerHandlerProperties()
                     {
-                        _ColorEnhanceMode = 1            
+                        ColorEnhanceMode = 1            
                     }
                 })
             };
