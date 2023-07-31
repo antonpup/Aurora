@@ -122,16 +122,16 @@ public sealed class LightingStateManager
 
     private void LoadSettings()
     {
-        foreach (var kvp in Events)
+        foreach (var kvp in Events
+                     .Where(kvp => !Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application))
         {
-            if (!Global.Configuration.ProfileOrder.Contains(kvp.Key) && kvp.Value is Application)
-                Global.Configuration.ProfileOrder.Add(kvp.Key);
+            Global.Configuration.ProfileOrder.Add(kvp.Key);
         }
 
-        foreach (var key in Global.Configuration.ProfileOrder.ToList())
+        foreach (var key in Global.Configuration.ProfileOrder
+                     .Where(key => !Events.ContainsKey(key) || Events[key] is not Application))
         {
-            if (!Events.ContainsKey(key) || !(Events[key] is Application))
-                Global.Configuration.ProfileOrder.Remove(key);
+            Global.Configuration.ProfileOrder.Remove(key);
         }
 
         PutProfileTop("logitech");
@@ -192,7 +192,7 @@ public sealed class LightingStateManager
             foreach (var titleRx in @event.Config.ProcessTitles)
                 EventTitles.Add(titleRx, profileId);
 
-        if (!String.IsNullOrWhiteSpace(@event.Config.AppID))
+        if (!string.IsNullOrWhiteSpace(@event.Config.AppID))
             EventAppIDs.Add(@event.Config.AppID, profileId);
 
         if (@event is Application && !Global.Configuration.ProfileOrder.Contains(profileId))
@@ -206,20 +206,18 @@ public sealed class LightingStateManager
 
     public void RemoveGenericProfile(string key)
     {
-        if (Events.ContainsKey(key))
-        {
-            if (!(Events[key] is GenericApplication))
-                return;
-            var profile = (GenericApplication)Events[key];
-            Events.Remove(key);
-            Global.Configuration.ProfileOrder.Remove(key);
+        if (!Events.ContainsKey(key)) return;
+        if (Events[key] is not GenericApplication)
+            return;
+        var profile = (GenericApplication)Events[key];
+        Events.Remove(key);
+        Global.Configuration.ProfileOrder.Remove(key);
 
-            profile.Dispose();
+        profile.Dispose();
 
-            var path = profile.GetProfileFolderPath();
-            if (Directory.Exists(path))
-                Directory.Delete(path, true);
-        }
+        var path = profile.GetProfileFolderPath();
+        if (Directory.Exists(path))
+            Directory.Delete(path, true);
     }
 
     // Used to match a process's name and optional window title to a profile
@@ -471,6 +469,11 @@ public sealed class LightingStateManager
         // Overlay layers
         if (!preview || Global.Configuration.OverlaysInPreview)
         {
+            if (DesktopProfile.IsOverlayEnabled)
+            {
+                DesktopProfile.UpdateOverlayLights(newFrame);
+            }
+            
             foreach (var @event in GetOverlayActiveProfiles())
                 @event.UpdateOverlayLights(newFrame);
 
@@ -542,7 +545,7 @@ public sealed class LightingStateManager
         // Check profile is valid and do not switch profiles if the user is trying to enter a keybind
         if (profile is not Application application || Controls.Control_Keybind._ActiveKeybind != null) return;
         // Find all profiles that have their keybinds pressed
-        List<ApplicationProfile> possibleProfiles = application.Profiles
+        var possibleProfiles = application.Profiles
             .Where(prof => prof.TriggerKeybind.IsPressed())
             .ToList();
 
@@ -556,8 +559,7 @@ public sealed class LightingStateManager
 
     public void GameStateUpdate(object? sender, IGameState gs)
     {
-#if DEBUG
-#else
+#if !DEBUG
         try
         {
 #endif
@@ -573,8 +575,7 @@ public sealed class LightingStateManager
             if (profile.Config.GameStateType != null)
                 gameState = (IGameState)Activator.CreateInstance(profile.Config.GameStateType, gs.Json);
             profile.SetGameState(gameState);
-#if DEBUG
-#else
+#if !DEBUG
         }
         catch (Exception e)
         {

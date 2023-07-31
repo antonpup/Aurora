@@ -646,7 +646,7 @@ namespace Aurora.EffectsEngine
             if (keyRectangle.Top < 0 || keyRectangle.Bottom > Effects.CanvasHeight ||
                 keyRectangle.Left < 0 || keyRectangle.Right > Effects.CanvasWidth)
             {
-                Global.logger.Warning("Coudln't set key color " + key + ". Key is outside canvas");
+                Global.logger.Warning("Couldn't set key color {Key}. Key is outside canvas", key);
                 return;
             }
 
@@ -667,12 +667,12 @@ namespace Aurora.EffectsEngine
             {
                 return color;
             }
-            var keyMapping = Effects.GetBitmappingFromDeviceKey(key);
+            var keyRectangle = Effects.GetBitmappingFromDeviceKey(key);
 
-            var keyColor = keyMapping.IsEmpty switch
+            var keyColor = keyRectangle.IsEmpty switch
             {
                 true => Color.Black,
-                false => BitmapUtils.GetRegionColor(_colormap, keyMapping.Rectangle)
+                false => BitmapUtils.GetRegionColor(_colormap, keyRectangle.Rectangle)
             };
             _keyColors[key] = keyColor;
             return keyColor;
