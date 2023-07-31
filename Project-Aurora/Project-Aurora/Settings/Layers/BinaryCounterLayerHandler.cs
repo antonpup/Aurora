@@ -12,7 +12,7 @@ namespace Aurora.Settings.Layers;
 public class BinaryCounterLayerHandlerProperties : LayerHandlerProperties<BinaryCounterLayerHandlerProperties> {
 
     // The var path of the variable to use (set though the UI, cannot be set with overrides)
-    [JsonIgnore] private string _variablePath;
+    [JsonIgnore] private string? _variablePath;
 
     [JsonProperty("_VariablePath")]
     public string VariablePath
@@ -25,7 +25,8 @@ public class BinaryCounterLayerHandlerProperties : LayerHandlerProperties<Binary
     [JsonIgnore, LogicOverridable("Value")]
     public double? _Value { get; set; }
 
-    public BinaryCounterLayerHandlerProperties() : base() { }
+    public BinaryCounterLayerHandlerProperties()
+    { }
     public BinaryCounterLayerHandlerProperties(bool empty) : base(empty) { }
 
     public override void Default() {
@@ -37,9 +38,9 @@ public class BinaryCounterLayerHandlerProperties : LayerHandlerProperties<Binary
 
 public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerProperties> {
 
-    private Control_BinaryCounterLayer _control;
+    private Control_BinaryCounterLayer? _control;
     protected override UserControl CreateControl() => _control ??= new Control_BinaryCounterLayer(this);
-    private double lastValue = -1;
+    private double _lastValue = -1;
 
     public BinaryCounterLayerHandler() : base("BinaryCounterLayer") { }
 
@@ -51,7 +52,7 @@ public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerP
     public override EffectLayer Render(IGameState gamestate) {
         // Get the current game state value
         var value = Properties.Logic._Value ?? gamestate.GetNumber(Properties.VariablePath);
-        if (Math.Abs(lastValue - value) < 0.1)
+        if (Math.Abs(_lastValue - value) < 0.1)
         {
             return EffectLayer;
         }
@@ -61,7 +62,7 @@ public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerP
         for (var i = 0; i < Properties.Sequence.Keys.Count; i++)
             if (((int)value & 1 << i) > 0)
                 EffectLayer.Set(Properties.Sequence.Keys[i], Properties.PrimaryColor);
-        lastValue = value;
+        _lastValue = value;
         return EffectLayer;
     }
 
@@ -69,6 +70,6 @@ public class BinaryCounterLayerHandler : LayerHandler<BinaryCounterLayerHandlerP
     {
         base.PropertiesChanged(sender, args);
 
-        lastValue = -1;
+        _lastValue = -1;
     }
 }

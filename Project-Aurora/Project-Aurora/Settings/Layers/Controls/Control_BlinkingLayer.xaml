@@ -9,14 +9,14 @@
     <Grid>
         <TextBlock Text="Primary Color:" Margin="0,3,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <xctk:ColorPicker SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="80,0,0,0" Width="163" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <CheckBox Content="Use a random primary color" IsChecked="{Binding Properties._RandomPrimaryColor}" Margin="0,29,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Use a random primary color" IsChecked="{Binding Properties.RandomPrimaryColor}" Margin="0,29,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <TextBlock Text="Secondary Color:" Margin="0,52,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <xctk:ColorPicker SelectedColor="{Binding Properties._SecondaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="95,49,0,0" Width="148" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <CheckBox Content="Use a random secondary color" IsChecked="{Binding Properties._RandomSecondaryColor}" Margin="0,78,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Use a random secondary color" IsChecked="{Binding Properties.RandomSecondaryColor}" Margin="0,78,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <TextBlock Text="Effect Speed:" Margin="0,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <xctk:SingleUpDown Value="{Binding Properties._EffectSpeed}" Minimum="1" Increment="0.1" Margin="80,100,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:SingleUpDown Value="{Binding Properties.EffectSpeed}" Minimum="1" Increment="0.1" Margin="80,100,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Controls:KeySequence Sequence="{Binding Properties._Sequence}" RecordingTag="Blinking Layer" Title="Affected Keys" Margin="254,0,0,0" Width="230" HorizontalAlignment="Left" />
     </Grid>

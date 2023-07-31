@@ -6,60 +6,58 @@ using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
 using Lombok.NET;
 
-namespace Aurora.Settings.Layers
+namespace Aurora.Settings.Layers;
+
+[NoArgsConstructor]
+public partial class SolidFillLayerHandlerProperties : LayerHandlerProperties<SolidFillLayerHandlerProperties>
 {
-    [NoArgsConstructor]
-    public partial class SolidFillLayerHandlerProperties : LayerHandlerProperties<SolidFillLayerHandlerProperties>
+    public SolidFillLayerHandlerProperties(bool arg = false) : base(arg)
     {
-        public SolidFillLayerHandlerProperties(bool arg = false) : base(arg)
-        {
-
-        }
-
-        public override void Default()
-        {
-            base.Default();
-            _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
-        }
     }
 
-    [Overrides.LogicOverrideIgnoreProperty("_Sequence")]
-    public class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerProperties>
+    public override void Default()
     {
-        private readonly SolidBrush _solidBrush = new(Color.Transparent);
+        base.Default();
+        _PrimaryColor = Utils.ColorUtils.GenerateRandomColor();
+    }
+}
 
-        public SolidFillLayerHandler() : base("Solid Fill Layer")
-        {
-            Effects.CanvasChanged += EffectsOnCanvasChanged;
-        }
+[Overrides.LogicOverrideIgnoreProperty("_Sequence")]
+public sealed class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerProperties>
+{
+    private readonly SolidBrush _solidBrush = new(Color.Transparent);
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_SolidFillLayer(this);
-        }
+    public SolidFillLayerHandler() : base("Solid Fill Layer")
+    {
+        Effects.CanvasChanged += EffectsOnCanvasChanged;
+    }
 
-        public override EffectLayer Render(IGameState gamestate)
-        {
-            return EffectLayer;
-        }
+    protected override UserControl CreateControl()
+    {
+        return new Control_SolidFillLayer(this);
+    }
 
-        private void EffectsOnCanvasChanged(object? sender, CanvasChangedArgs e)
-        {
-            EffectLayer.Fill(_solidBrush);
-        }
+    public override EffectLayer Render(IGameState gamestate)
+    {
+        return EffectLayer;
+    }
 
-        protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
-        {
-            base.PropertiesChanged(sender, args);
-            _solidBrush.Color = Properties.PrimaryColor;
-            EffectLayer.Fill(_solidBrush);
-        }
+    private void EffectsOnCanvasChanged(object? sender, CanvasChangedArgs e)
+    {
+        EffectLayer.Fill(_solidBrush);
+    }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            
-            Effects.CanvasChanged -= EffectsOnCanvasChanged;
-        }
+    protected override void PropertiesChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        base.PropertiesChanged(sender, args);
+        _solidBrush.Color = Properties.PrimaryColor;
+        EffectLayer.Fill(_solidBrush);
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        Effects.CanvasChanged -= EffectsOnCanvasChanged;
     }
 }
