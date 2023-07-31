@@ -34,7 +34,7 @@ public partial class App
     private static readonly HttpListenerModule HttpListenerModule = new();
     private static readonly RazerSdkModule RazerSdkModule = new();
     private static readonly DevicesModule DevicesModule = new(RazerSdkModule.RzSdkManager);
-    private static readonly LightningStateManagerModule LightningStateManagerModule = new(
+    private static readonly LightingStateManagerModule LightingStateManagerModule = new(
         PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener, DevicesModule.DeviceManager);
     private static readonly LayoutsModule LayoutsModule = new();
 
@@ -54,7 +54,7 @@ public partial class App
         RazerSdkModule,
         DevicesModule,
         LayoutsModule,
-        LightningStateManagerModule,
+        LightingStateManagerModule,
         //new PerformanceMonitor(Task.FromResult(RunningProcessMonitor.Instance)),
     };
 
@@ -93,7 +93,7 @@ public partial class App
 
         Global.logger.Information("Loading ConfigUI...");
         var configUi = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
-            HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager, LightningStateManagerModule.LightningStateManager);
+            HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager, LightingStateManagerModule.LightningStateManager);
         await configUi.Initialize();
         MainWindow = configUi;
 

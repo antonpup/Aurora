@@ -4,11 +4,10 @@ using Aurora.Modules.GameStateListen;
 using Aurora.Profiles;
 using Aurora.Settings;
 using Lombok.NET;
-using Xceed.Wpf.Toolkit;
 
 namespace Aurora.Modules;
 
-public sealed partial class LightningStateManagerModule : AuroraModule
+public sealed partial class LightingStateManagerModule : AuroraModule
 {
     private readonly Task<PluginManager> _pluginManager;
     private readonly Task<IpcListener?> _ipcListener;
@@ -21,7 +20,7 @@ public sealed partial class LightningStateManagerModule : AuroraModule
 
     public Task<LightingStateManager> LightningStateManager => _taskSource.Task;
 
-    public LightningStateManagerModule(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener,
+    public LightingStateManagerModule(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener,
         Task<AuroraHttpListener?> httpListener, Task<DeviceManager> deviceManager)
     {
         _pluginManager = pluginManager;

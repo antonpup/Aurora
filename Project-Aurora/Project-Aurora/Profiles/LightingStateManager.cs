@@ -128,7 +128,7 @@ public sealed class LightingStateManager
             Global.Configuration.ProfileOrder.Add(kvp.Key);
         }
 
-        foreach (var key in Global.Configuration.ProfileOrder
+        foreach (var key in Global.Configuration.ProfileOrder.ToList()
                      .Where(key => !Events.ContainsKey(key) || Events[key] is not Application))
         {
             Global.Configuration.ProfileOrder.Remove(key);
