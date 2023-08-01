@@ -23,7 +23,6 @@ public static class BitmapUtils
             rectangle,
             ImageLockMode.ReadOnly,
             PixelFormat.Format32bppRgb);
-        var stride = srcData.Stride;
         var scan0 = srcData.Scan0;
 
         var rectangleHeight = rectangle.Height;
@@ -32,15 +31,15 @@ public static class BitmapUtils
         {
             var p = (byte*)(void*)scan0;
 
+            var j = 0;
             for (var y = 0; y < rectangleHeight; y++)
             {
-                var i = y * stride;
                 for (var x = 0; x < rectangleWidth; x++)
                 {
-                    var j = i + x * 4;
-                    color[0] += p[j];
-                    color[1] += p[j + 1];
-                    color[2] += p[j + 2];
+                    color[0] += p[j++];
+                    color[1] += p[j++];
+                    color[2] += p[j++];
+                    j++; //not going to use color[3], devices don't need Alpha
                 }
             }
         }
