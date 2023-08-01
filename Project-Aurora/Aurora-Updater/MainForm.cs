@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -40,7 +41,8 @@ public partial class MainForm : Form
             richtextUpdateLog.SelectionLength = 0;
 
             richtextUpdateLog.SelectionColor = logs[_logTracker].GetColor();
-            richtextUpdateLog.AppendText(logs[_logTracker] + "\r\n");
+            richtextUpdateLog.AppendText(logs[_logTracker].GetMessage());
+            richtextUpdateLog.AppendText("\r\n");
             richtextUpdateLog.SelectionColor = richtextUpdateLog.ForeColor;
         }
 

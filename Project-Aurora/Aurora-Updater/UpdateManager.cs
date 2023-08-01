@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using Aurora.Settings;
@@ -104,21 +105,50 @@ public class UpdateManager
         return  _gClient.Repository.Release.GetLatest(owner, repositoryName).Result;
     }
 
-    public void RetrieveUpdate()
+    public async Task RetrieveUpdate()
     {
         try
         {
-            var url = LatestRelease.Assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
+            var assets = LatestRelease.Assets;
+            var url = assets.First(s => s.Name.StartsWith("release") || s.Name.StartsWith("Aurora-v")).BrowserDownloadUrl;
 
             if (string.IsNullOrWhiteSpace(url)) return;
             _log.Enqueue(new LogEntry("Starting download... "));
 
             var client = new WebClient();
             client.DownloadProgressChanged += client_DownloadProgressChanged;
-            client.DownloadFileCompleted += client_DownloadFileCompleted;
 
             // Starts the download
-            client.DownloadFileAsync(new Uri(url), Path.Combine(Program.ExePath, "update.zip"));
+            await client.DownloadFileTaskAsync(new Uri(url), Path.Combine(Program.ExePath, "update.zip"));
+
+            foreach (var pluginDll in assets.Where(a => a.Name.EndsWith(".dll")))
+            {
+                var address = new Uri(pluginDll.BrowserDownloadUrl);
+                var installDirPlugin = Path.Combine(Program.ExePath, "Plugins", pluginDll.Name);
+                if (File.Exists(installDirPlugin))
+                {
+                    _log.Enqueue(new LogEntry("Updating " + pluginDll.Name));
+                    await client.DownloadFileTaskAsync(address, installDirPlugin);
+                }
+
+                var userDirPlugin = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Aurora", "Plugin");
+                if (File.Exists(userDirPlugin))
+                {
+                    _log.Enqueue(new LogEntry("Updating " + pluginDll.Name));
+                    await client.DownloadFileTaskAsync(address, userDirPlugin);
+                }
+            }
+
+            _log.Enqueue(new LogEntry("Download complete."));
+            _log.Enqueue(new LogEntry());
+            _downloadProgress = 1.0f;
+
+            if (ExtractUpdate())
+            {
+                var shutdownTimer = new Timer(1000);
+                shutdownTimer.Elapsed += ShutdownTimerElapsed;
+                shutdownTimer.Start();
+            }
         }
         catch (Exception exc)
         {
@@ -140,20 +170,6 @@ public class UpdateManager
 
         _log.Enqueue(new LogEntry("Download " + newPercentage + "%"));
         _downloadProgress = newPercentage / 100.0f;
-    }
-
-    void client_DownloadFileCompleted(object? sender, AsyncCompletedEventArgs e)
-    {
-        _log.Enqueue(new LogEntry("Download complete."));
-        _log.Enqueue(new LogEntry());
-        _downloadProgress = 1.0f;
-
-        if (ExtractUpdate())
-        {
-            var shutdownTimer = new Timer(1000);
-            shutdownTimer.Elapsed += ShutdownTimerElapsed;
-            shutdownTimer.Start();
-        }
     }
 
     private void ShutdownTimerElapsed(object? sender, ElapsedEventArgs e)
