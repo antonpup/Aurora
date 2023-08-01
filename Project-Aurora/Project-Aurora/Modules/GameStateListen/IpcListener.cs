@@ -118,7 +118,7 @@ public class IpcListener
                 catch (Exception exc)
                 {
                     Global.logger.Error(exc, "[IPCServer] ReceiveGameState Exception, ");
-                    Global.logger.Information("Recieved data that caused error:\n\r" + temp);
+                    Global.logger.Information("Received data that caused error:\n\r{Data}", temp);
                 }
             }
         }

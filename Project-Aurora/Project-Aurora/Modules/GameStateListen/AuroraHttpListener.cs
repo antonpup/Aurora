@@ -95,7 +95,10 @@ public class AuroraHttpListener
             var context = _netListener.EndGetContext(result);
             var json = TryProcessRequest(context);
 
-            CurrentGameState = new EmptyGameState(json);
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                CurrentGameState = new EmptyGameState(json);
+            }
         }
         catch (Exception e)
         {
