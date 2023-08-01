@@ -24,11 +24,11 @@ public partial class RgbNetConfigDevice
     /// <inheritdoc />
     public override string ToString()
     {
-        return $"{Name}";
+        return Name;
     }
 
     /// <inheritdoc />
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is not RgbNetConfigDevice device)
             return false;

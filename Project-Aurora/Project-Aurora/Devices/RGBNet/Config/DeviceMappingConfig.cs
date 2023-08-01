@@ -19,17 +19,19 @@ public class DeviceMappingConfig
     [JsonProperty(PropertyName = "d")]
     public List<RgbNetConfigDevice> Devices { get; set; } = new();
 
+    private DeviceMappingConfig()
+    {
+    }
+
     private static DeviceMappingConfig LoadConfig()
     {
-        var config = new DeviceMappingConfig();
-
         if (!File.Exists(_configPath))
         {
             return new DeviceMappingConfig();
         }
 
         var content = File.ReadAllText(_configPath, Encoding.UTF8);
-        return JsonConvert.DeserializeObject<DeviceMappingConfig>(content) ?? config;
+        return JsonConvert.DeserializeObject<DeviceMappingConfig>(content) ?? new DeviceMappingConfig();
     }
 
     public void SaveConfig()
