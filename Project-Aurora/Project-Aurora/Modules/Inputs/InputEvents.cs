@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Interop;
 using Aurora.Utils;
 using Linearstar.Windows.RawInput;
 using Linearstar.Windows.RawInput.Native;
@@ -21,22 +19,22 @@ public sealed class InputEvents : IInputEvents
     /// <summary>
     /// Event for a Key pressed Down on a keyboard
     /// </summary>
-    public event EventHandler<KeyEvent>? KeyDown;
+    public event EventHandler<KeyboardKeyEvent>? KeyDown;
 
     /// <summary>
     /// Event for a Key released on a keyboard
     /// </summary>
-    public event EventHandler<KeyEvent>? KeyUp;
+    public event EventHandler<KeyboardKeyEvent>? KeyUp;
 
     /// <summary>
     /// Event that fires when a mouse button is pressed down.
     /// </summary>
-    public event EventHandler<KeyEvent>? MouseButtonDown;
+    public event EventHandler<MouseKeyEvent>? MouseButtonDown;
 
     /// <summary>
     /// Event that fires when a mouse button is released.
     /// </summary>
-    public event EventHandler<KeyEvent>? MouseButtonUp;
+    public event EventHandler<MouseKeyEvent>? MouseButtonUp;
 
     /// <summary>
     /// Event that fires when the mouse scroll wheel is scrolled.
@@ -114,7 +112,7 @@ public sealed class InputEvents : IInputEvents
     {
         try
         {
-            var (key, makeCode) = KeyUtils.CorrectRawInputData(keyboardData.VirutalKey, keyboardData.ScanCode, (uint)keyboardData.Flags);
+            var key = KeyUtils.CorrectRawInputData(keyboardData.VirutalKey, keyboardData.ScanCode, keyboardData.Flags);
             if ((int)key == 255)
             {
                 // discard "fake keys" which are part of an escaped sequence
@@ -124,13 +122,13 @@ public sealed class InputEvents : IInputEvents
             if ((keyboardData.Flags & RawKeyboardFlags.Up) != 0)
             {
                 _pressedKeySequence.RemoveAll(k => k == key);
-                KeyUp?.Invoke(this, new KeyEvent(key));
+                KeyUp?.Invoke(this, new KeyboardKeyEvent(key, keyboardData.Flags));
             }
             else
             {
                 if (!_pressedKeySequence.Contains(key))
                     _pressedKeySequence.Add(key);
-                KeyDown?.Invoke(this, new KeyEvent(key));
+                KeyDown?.Invoke(this, new KeyboardKeyEvent(key, keyboardData.Flags));
             }
         }
         catch (Exception exc)
@@ -163,16 +161,16 @@ public sealed class InputEvents : IInputEvents
             _ => (MouseButtons.Left, false)
         };
 
-        if (isDown && button == MouseButtons.Left)
+        if (isDown)
         {
             if (!_pressedMouseButtons.Contains(button))
                 _pressedMouseButtons.Add(button);
-            MouseButtonDown?.Invoke(this, new KeyEvent(Keys.Left));
+            MouseButtonDown?.Invoke(this, new MouseKeyEvent(button));
         }
-        else if (button == MouseButtons.Left)
+        else
         {
             _pressedMouseButtons.Remove(button);
-            MouseButtonUp?.Invoke(this, new KeyEvent(Keys.Left));
+            MouseButtonUp?.Invoke(this, new MouseKeyEvent(button));
         }
     }
 

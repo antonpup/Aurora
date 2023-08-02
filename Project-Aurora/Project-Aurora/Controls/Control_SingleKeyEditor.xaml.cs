@@ -36,7 +36,7 @@ namespace Aurora.Controls {
             assignButton.Content = assigning ? "Press a key" : "Assign";
         }
 
-        private static void InputEvents_KeyDown(object? sender, KeyEvent e) {
+        private static void InputEvents_KeyDown(object? sender, KeyboardKeyEvent e) {
             if (listeningEditor != null)
                 listeningEditor.Dispatcher.Invoke(() => {
                     listeningEditor.SelectedKey = e.Key;

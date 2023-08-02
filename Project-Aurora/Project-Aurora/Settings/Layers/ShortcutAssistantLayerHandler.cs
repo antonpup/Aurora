@@ -211,8 +211,8 @@ namespace Aurora.Settings.Layers
                     break;
             }
 
-            return Utils.KeyUtils.GetDeviceKeys(nextPossibleShortcutKeys, true, !Console.NumberLock)
-                        .Concat(Utils.KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
+            return KeyUtils.GetDeviceKeys(nextPossibleShortcutKeys, true, !Console.NumberLock)
+                        .Concat(KeyUtils.GetDeviceKeys(previousShortcutKeys, true)).ToArray();
         }
 
         protected void ApplyKeyColors(EffectLayer layer, Devices.DeviceKeys[] selectedKeys, Devices.DeviceKeys[] backgroundKeys)

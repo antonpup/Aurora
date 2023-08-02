@@ -20,13 +20,13 @@ public class CloneHeroProfile : ApplicationProfile
                 {
                     Properties = new InteractiveLayerHandlerProperties
                     {
-                        _RandomPrimaryColor = false,
-                        _RandomSecondaryColor = false,
-                        _EffectSpeed = 20,
-                        _WaitOnKeyUp = false,
-                        _InteractiveEffect = Aurora.Profiles.Desktop.InteractiveEffects.KeyPress,
-                        _EffectWidth = 1,
-                        _UsePressBuffer = null,
+                        RandomPrimaryColor = false,
+                        RandomSecondaryColor = false,
+                        EffectSpeed = 20,
+                        WaitOnKeyUp = false,
+                        InteractiveEffect = Aurora.Profiles.Desktop.InteractiveEffects.KeyPress,
+                        EffectWidth = 1,
+                        UsePressBuffer = null,
                         _SecondaryColor = Color.FromArgb(0, 9, 43, 83),
                         _PrimaryColor = Color.FromArgb(243, 244, 2)
                     }

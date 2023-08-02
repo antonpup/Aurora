@@ -62,13 +62,15 @@ public static class Global
         logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.File(logPath,
-                rollingInterval: RollingInterval.Minute,
+                rollingInterval: RollingInterval.Hour,
                 outputTemplate:
                 "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}",
                 retainedFileCountLimit: 8
             )
 #if DEBUG
-            .WriteTo.Console()
+            .WriteTo.Console(
+                applyThemeToRedirectedOutput: true
+            )
             .WriteTo.Debug()
 #endif
             .CreateLogger();

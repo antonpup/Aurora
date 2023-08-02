@@ -72,7 +72,7 @@ namespace Aurora.Settings.Layers {
         /// <summary>
         /// Handler for when any keyboard button is pressed.
         /// </summary>
-        private void InputEvents_KeyDown(object? sender, KeyEvent e) {
+        private void InputEvents_KeyDown(object? sender, KeyboardKeyEvent e) {
             if (Properties.Sequence.Keys.Contains(e.GetDeviceKey()))
                 _activeKey = e.GetDeviceKey();
         }

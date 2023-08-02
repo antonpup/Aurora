@@ -8,7 +8,9 @@
              xmlns:u="clr-namespace:Aurora.Utils"
              xmlns:devices="clr-namespace:Aurora.Devices"
              xmlns:sys="clr-namespace:System;assembly=System.Runtime"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             xmlns:layers="clr-namespace:Aurora.Settings.Layers"
+             d:DataContext="{layers:InteractiveLayerHandler}">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="DeviceKeyEnum" MethodName="GetValues"
                             ObjectType="{x:Type sys:Enum}">
@@ -20,24 +22,24 @@
     
     <Grid>
         <TextBlock Text="Interactive Effect Type:" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <ComboBox SelectedValue="{Binding Properties._InteractiveEffect}" ItemsSource="{u:EnumToItemsSource {x:Type e:InteractiveEffects}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="127,-2,0,0" Width="170" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <ComboBox SelectedValue="{Binding Properties.InteractiveEffect}" ItemsSource="{u:EnumToItemsSource {x:Type e:InteractiveEffects}}" DisplayMemberPath="Text" SelectedValuePath="Value" Margin="127,-2,0,0" Width="170" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <TextBlock Text="Primary Color:" Margin="0,28,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <xctk:ColorPicker SelectedColor="{Binding Properties._PrimaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="80,25,0,0" Width="163" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <CheckBox Content="Use a random primary color" IsChecked="{Binding Properties._RandomPrimaryColor}" Margin="0,54,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Use a random primary color" IsChecked="{Binding Properties.RandomPrimaryColor}" Margin="0,54,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <TextBlock Text="Secondary Color:" Margin="0,77,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         <xctk:ColorPicker SelectedColor="{Binding Properties._SecondaryColor, Converter={StaticResource DrawingToMediaColorConv}}" ColorMode="ColorCanvas" UsingAlphaChannel="True" Margin="95,74,0,0" Width="148" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <CheckBox Content="Use a random secondary color" IsChecked="{Binding Properties._RandomSecondaryColor}" Margin="0,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Use a random secondary color" IsChecked="{Binding Properties.RandomSecondaryColor}" Margin="0,103,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
         
         <TextBlock Text="Effect Speed:" Margin="0,125,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <xctk:SingleUpDown Value="{Binding Properties._EffectSpeed}" Minimum="1" Increment="0.5" Margin="80,125,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:SingleUpDown Value="{Binding Properties.EffectSpeed}" Minimum="1" Increment="0.5" Margin="80,125,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <TextBlock Text="Effect Width:" Margin="0,146,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <xctk:IntegerUpDown Value="{Binding Properties._EffectWidth}" Minimum="1" Margin="80,146,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <xctk:IntegerUpDown Value="{Binding Properties.EffectWidth}" Minimum="1" Margin="80,146,0,0" Width="140" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-        <CheckBox Content="Start progress when key released" IsChecked="{Binding Properties._WaitOnKeyUp}" Margin="0,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <CheckBox Content="Mitigate rapid key presses" IsChecked="{Binding Properties._UsePressBuffer}" Margin="0,188,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Start progress when key released" IsChecked="{Binding Properties.WaitOnKeyUp}" Margin="0,167,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <CheckBox Content="Mitigate rapid key presses" IsChecked="{Binding Properties.UsePressBuffer}" Margin="0,188,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
         <Label Content="Mouse Effect Key:" Margin="0,210,0,0" Padding="0" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top"/>
         <ComboBox Margin="100,210,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="120" Name="DeviceKey" SelectedItem="{Binding Properties.MouseEffectKey}" ItemsSource="{Binding Source={StaticResource DeviceKeyEnum}}"/>

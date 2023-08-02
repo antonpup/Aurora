@@ -294,7 +294,7 @@ namespace Aurora.Settings.Layers
         /// <summary>
         /// Event handler for when keys are pressed.
         /// </summary>
-        private void InputEvents_KeyDown(object? sender, KeyEvent e) {
+        private void InputEvents_KeyDown(object? sender, KeyboardKeyEvent e) {
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 
@@ -311,7 +311,7 @@ namespace Aurora.Settings.Layers
         /// <summary>
         /// Event handler for when keys are released.
         /// </summary>
-        private void InputEvents_KeyUp(object? sender, KeyEvent e) {
+        private void InputEvents_KeyUp(object? sender, KeyboardKeyEvent e) {
             // Skip handler if not waiting for a key-related trigger to save memory/CPU time
             if (!IsTriggerKeyBased(Properties.TriggerMode)) return;
 

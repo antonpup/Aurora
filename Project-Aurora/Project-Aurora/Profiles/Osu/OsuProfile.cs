@@ -20,11 +20,11 @@ namespace Aurora.Profiles.Osu {
             Layers = new ObservableCollection<Layer> {
                 new Layer("Typing", new InteractiveLayerHandler {
                     Properties = new InteractiveLayerHandlerProperties {
-                        _InteractiveEffect = Desktop.InteractiveEffects.KeyPress,
+                        InteractiveEffect = Desktop.InteractiveEffects.KeyPress,
                         _PrimaryColor = Color.FromArgb(255, 0, 240),
                         _SecondaryColor = Color.Black,
-                        _EffectSpeed = 20,
-                        _EffectWidth = 5
+                        EffectSpeed = 20,
+                        EffectWidth = 5
                     }
                 }),
 

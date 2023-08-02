@@ -189,13 +189,13 @@ namespace Aurora.Profiles.Desktop
                 {
                     Properties = new InteractiveLayerHandlerProperties()
                     {
-                        _InteractiveEffect = InteractiveEffects.Wave_Filled,
+                        InteractiveEffect = InteractiveEffects.Wave_Filled,
                         _PrimaryColor = Color.FromArgb(0, 255, 0),
-                        _RandomPrimaryColor = true,
+                        RandomPrimaryColor = true,
                         _SecondaryColor = Color.FromArgb(255, 0, 0),
-                        _RandomSecondaryColor = true,
-                        _EffectSpeed = 5.0f,
-                        _EffectWidth = 2
+                        RandomSecondaryColor = true,
+                        EffectSpeed = 5.0f,
+                        EffectWidth = 2
                     }
                 }
                 )

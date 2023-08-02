@@ -177,12 +177,6 @@
         "resolved": "1.0.6-e190117-3",
         "contentHash": "S2IfWAo5bnXSgpr8o0LR3aMqo7QD83VQUPbgta6aOYIBq8M85Hpk8hVUco22GFhSRuf4ZhP8jUs2wPlO0Dbdow=="
       },
-      "MouseKeyHook.NetCore": {
-        "type": "Direct",
-        "requested": "[5.6.1.1, )",
-        "resolved": "5.6.1.1",
-        "contentHash": "MgliDV/5e9kiYQ0D9lPlYRwt1aluIlGM3SQC4UZyT4BQN8KyNimdsDZQQc4t6HdY7QBngt5cbxFTKnOad/rm0w=="
-      },
       "NAudio": {
         "type": "Direct",
         "requested": "[2.1.0, )",
