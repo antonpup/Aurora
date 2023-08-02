@@ -36,19 +36,25 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
 
     #region Event handlers
 
-    private void SystemEventsOnSessionSwitch(object? sender, SessionSwitchEventArgs e)
+    private async void SystemEventsOnSessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
         if (!IsInitialized)
             return;
-
-        if (e.Reason == SessionSwitchReason.SessionUnlock && _suspended)
-            Task.Run(async () =>
-            {
-                // Give LGS a moment to think about its sins
-                await Task.Delay(5000);
-                _suspended = false;
+        
+        
+        switch (e.Reason)
+        {
+            case SessionSwitchReason.SessionLock:
+            case SessionSwitchReason.SessionLogoff:
+                await Shutdown();
+                SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
+                break;
+            case SessionSwitchReason.SessionLogon:
+            case SessionSwitchReason.SessionUnlock:
+                await Task.Delay(TimeSpan.FromSeconds(4));
                 await Initialize();
-            });
+                break;
+        }
     }
 
     private async void SystemEventsPowerModeChanged(object? sender, PowerModeChangedEventArgs e)

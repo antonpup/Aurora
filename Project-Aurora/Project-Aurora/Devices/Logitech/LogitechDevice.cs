@@ -1,4 +1,5 @@
-﻿using Aurora.Settings;
+﻿using System;
+using Aurora.Settings;
 using Aurora.Utils;
 using LedCSharp;
 using System.Collections.Generic;
@@ -75,9 +76,25 @@ namespace Aurora.Devices.Logitech
         }
 
         // Handle Logon Event
-        void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
+        async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
         {
-            Reset().Wait();
+            switch (e.Reason)
+            {
+                case SessionSwitchReason.SessionLock:
+                case SessionSwitchReason.SessionLogoff:
+                    try
+                    {
+                        await Shutdown();
+                    }catch{ /* ignore */}
+                    SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+                    SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
+                    break;
+                case SessionSwitchReason.SessionLogon:
+                case SessionSwitchReason.SessionUnlock:
+                    await Task.Delay(TimeSpan.FromSeconds(4));
+                    await Initialize();
+                    break;
+            }
         }
 
         protected override Task<bool> UpdateDevice(Dictionary<DeviceKeys, Color> keyColors, DoWorkEventArgs e, bool forced = false)
