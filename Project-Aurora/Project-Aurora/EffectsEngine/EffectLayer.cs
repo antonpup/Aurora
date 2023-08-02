@@ -621,7 +621,7 @@ namespace Aurora.EffectsEngine
             SetOneKey(key, new SolidBrush(color));
         }
 
-        private readonly ConcurrentDictionary<DeviceKeys, Color> _keyColors = new(1, 220);
+        private readonly ConcurrentDictionary<DeviceKeys, Color> _keyColors = new(1, Effects.MaxDeviceId);
         private static readonly SolidBrush ClearingBrush = new(Color.Transparent);
         private Color _lastColor = Color.Empty;
 
