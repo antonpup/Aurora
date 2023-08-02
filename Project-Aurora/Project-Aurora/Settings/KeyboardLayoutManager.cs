@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -15,6 +16,7 @@ using Aurora.Settings.Keycaps;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RazerSdkWrapper;
 using Application = System.Windows.Application;
 using Color = System.Drawing.Color;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
@@ -358,15 +360,18 @@ public class KeyboardLayoutManager
 
     private readonly string _layoutsPath;
 
-    public KeyboardLayoutManager()
+    private Task<RzSdkManager?> _rzSdk;
+
+    public KeyboardLayoutManager(Task<RzSdkManager?> rzSdk)
     {
+        _rzSdk = rzSdk;
         _layoutsPath = Path.Combine(Global.ExecutingDirectory, CulturesFolder);
         Global.Configuration.PropertyChanged += Configuration_PropertyChanged;
     }
 
-    public void LoadBrandDefault()
+    public async Task LoadBrandDefault()
     {
-        LoadBrand(
+        await LoadBrand(
             Global.Configuration.KeyboardBrand,
             Global.Configuration.MousePreference,
             Global.Configuration.MousepadPreference,
@@ -376,7 +381,7 @@ public class KeyboardLayoutManager
         );
     }
 
-    private void LoadBrand(PreferredKeyboard keyboardPreference = PreferredKeyboard.None,
+    private async Task LoadBrand(PreferredKeyboard keyboardPreference = PreferredKeyboard.None,
         PreferredMouse mousePreference = PreferredMouse.None,
         PreferredMousepad mousepadPreference = PreferredMousepad.None,
         MouseOrientationType mouseOrientation = MouseOrientationType.RightHanded,
@@ -555,6 +560,10 @@ public class KeyboardLayoutManager
                 LoadGenericLayout(headsetFeaturePath);
             }
 
+            if (chromaLeds == PreferredChromaLeds.Automatic && await _rzSdk is not null)
+            {
+                chromaLeds = PreferredChromaLeds.Suggested;
+            }
             if (PeripheralLayoutMap.ChromaLayoutMap.TryGetValue(chromaLeds, out var chromaLayoutJsonFile))
             {
                 var headsetFeaturePath = Path.Combine(_layoutsPath, "Extra Features", chromaLayoutJsonFile);
@@ -697,13 +706,13 @@ public class KeyboardLayoutManager
         if (e is not {PropertyName: nameof(Configuration.BitmapAccuracy)}) return;
         _pixelToByte = DefaultPixelToByte;
 
-        Global.LightingStateManager.PostUpdate += LightingStateManager_PostUpdate;
+        Global.LightingStateManager.PreUpdate += LightingStateManager_PostUpdate;
     }
 
-    private void LightingStateManager_PostUpdate(object? sender, EventArgs e)
+    private async void LightingStateManager_PostUpdate(object? sender, EventArgs e)
     {
-        LoadBrandDefault();
-        Global.LightingStateManager.PostUpdate -= LightingStateManager_PostUpdate;
+        await LoadBrandDefault();
+        Global.LightingStateManager.PreUpdate -= LightingStateManager_PostUpdate;
     }
 
     private void CalculateBitmap()

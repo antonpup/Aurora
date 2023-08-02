@@ -155,10 +155,12 @@
                             <RowDefinition Height="20" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="160" />
                             <ColumnDefinition Width="10*" />
                             <ColumnDefinition Width="20*" />
                         </Grid.ColumnDefinitions>
+                        
+                        <TextBlock Foreground="LightGray">Not compatible with LGS</TextBlock>
 
                         <Button Grid.Row="0" Grid.Column="2" Content="Install" Width="75"
                                 Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left"

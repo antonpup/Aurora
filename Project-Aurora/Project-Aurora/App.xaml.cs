@@ -36,7 +36,7 @@ public partial class App
     private static readonly DevicesModule DevicesModule = new(RazerSdkModule.RzSdkManager);
     private static readonly LightingStateManagerModule LightingStateManagerModule = new(
         PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener, DevicesModule.DeviceManager);
-    private static readonly LayoutsModule LayoutsModule = new();
+    private static readonly LayoutsModule LayoutsModule = new(RazerSdkModule.RzSdkManager);
 
     private readonly List<AuroraModule> _modules = new()
     {

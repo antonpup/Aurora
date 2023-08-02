@@ -503,16 +503,17 @@ namespace Aurora.Settings
 
     public enum PreferredChromaLeds
     {
-        [Description("None")]
+        [Description("Automatic")]
         Automatic = 0,
         
         [Description("None")]
+        [UsedImplicitly]
         None = 1,
         
         [Description("Suggested")]
         Suggested = 2,
         
-        [Description("Custom Headset")]
+        [Description("Custom Layout")]
         Custom = 10,
     }
 

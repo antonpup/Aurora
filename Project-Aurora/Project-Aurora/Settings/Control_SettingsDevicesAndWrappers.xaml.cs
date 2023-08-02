@@ -90,7 +90,7 @@ public partial class Control_SettingsDevicesAndWrappers
                 {
                     LightsyncConnectionStatusLabel.Content = "Disconnected";
                     LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
-                    LightsyncCurrentApplicationLabel.Content = "";
+                    LightsyncCurrentApplicationLabel.Content = "-";
                 }
                 else
                 {
@@ -103,7 +103,7 @@ public partial class Control_SettingsDevicesAndWrappers
 
     private async void LoadBrandDefault(object? sender, SelectionChangedEventArgs e)
     {
-        (await _layoutManager).LoadBrandDefault();
+        await (await _layoutManager).LoadBrandDefault();
     }
 
     private void ResetDevices(object? sender, RoutedEventArgs e) => Task.Run(async () => await (await _deviceManager).ResetDevices());
