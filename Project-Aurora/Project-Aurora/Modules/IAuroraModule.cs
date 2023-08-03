@@ -25,6 +25,15 @@ public abstract class AuroraModule : IDisposable
     {
         _taskSource = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
+        ModuleThreadPool.QueueWorkItem(WorkItemCallback, null, PostExecuteWorkItemCallback);
+        if (ModuleThreadPool.IsIdle)
+        {
+            ModuleThreadPool.Start();
+        }
+
+        await _taskSource.Task;
+        return;
+
         async Task WorkItemCallback(object _)
         {
             await action();
@@ -34,14 +43,6 @@ public abstract class AuroraModule : IDisposable
         {
             Application.Current.Dispatcher.Invoke(() => { _taskSource.SetResult(); });
         }
-
-        ModuleThreadPool.QueueWorkItem(WorkItemCallback, null, PostExecuteWorkItemCallback);
-        if (ModuleThreadPool.IsIdle)
-        {
-            ModuleThreadPool.Start();
-        }
-
-        await _taskSource.Task;
     }
 
     public virtual async Task InitializeAsync()

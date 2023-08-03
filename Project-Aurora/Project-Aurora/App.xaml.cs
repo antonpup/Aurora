@@ -95,10 +95,10 @@ public partial class App
         var configUi = new ConfigUI(RazerSdkModule.RzSdkManager, PluginsModule.PluginManager, LayoutsModule.LayoutManager,
             HttpListenerModule.HttpListener, IpcListenerModule.IpcListener, DevicesModule.DeviceManager, LightingStateManagerModule.LightningStateManager);
         await configUi.Initialize();
-        MainWindow = configUi;
 
         Global.logger.Information("Waiting for modules...");
         await Task.WhenAll(initModules);
+        MainWindow = configUi;
         Global.logger.Information("Modules initiated");
         ((ConfigUI)MainWindow).DisplayIfNotSilent();
         WindowListener.Instance.StartListening();
