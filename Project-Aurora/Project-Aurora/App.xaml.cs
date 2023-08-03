@@ -55,7 +55,7 @@ public partial class App
         DevicesModule,
         LayoutsModule,
         LightingStateManagerModule,
-        //new PerformanceMonitor(Task.FromResult(RunningProcessMonitor.Instance)),
+        new PerformanceMonitor(),
     };
 
     protected override async void OnStartup(StartupEventArgs e)
