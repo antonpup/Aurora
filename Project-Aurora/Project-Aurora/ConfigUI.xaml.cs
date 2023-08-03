@@ -124,8 +124,6 @@ partial class ConfigUI : INotifyPropertyChanged
             _hwHandle = HwndSource.FromHwnd(mainWindowPtr);
             var darkThemeEnabled = lightThemeEnabled == 0;
 
-            NoiseOpacity = 0.005;
-
             if (_useMica)
             {
                 var trueValue = 0x01;
@@ -143,12 +141,13 @@ partial class ConfigUI : INotifyPropertyChanged
 
                 DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue,
                     Marshal.SizeOf(typeof(int)));
-                TintColor = Color.FromArgb(0, 0, 0, 0);
-                FallbackColor = Color.FromArgb(1, 0, 0, 0);
+                TintColor = Color.FromArgb(1, 0, 0, 0);
+                FallbackColor = Color.FromArgb(64, 0, 0, 0);
             }
             else
             {
                 TintColor = Color.FromArgb(240, 128, 128, 128);
+                FallbackColor = Color.FromArgb(64, 0, 0, 0);
                 Activate();
             }
         });
@@ -202,8 +201,6 @@ partial class ConfigUI : INotifyPropertyChanged
                 {
                     bg_grid.Background =
                         new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
-                    FallbackColor = Colors.Transparent;
-                    TintColor = Colors.Transparent;
                 }
                 else
                 {
