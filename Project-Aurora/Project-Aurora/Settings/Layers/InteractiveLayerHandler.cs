@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
@@ -142,7 +143,7 @@ public sealed class InteractiveLayerHandlerProperties : LayerHandlerProperties2C
 public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandlerProperties>
 {
     private readonly Func<KeyValuePair<DeviceKeys, long>, bool> _keysToRemove;
-    private readonly List<InputItem> _inputList = new();
+    private readonly Dictionary<DeviceKeys, InputItem> _inputDictionary = new(Effects.MaxDeviceId);
         
     private long _previousTime;
     private long _currentTime;
@@ -184,10 +185,9 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
     {
         if (deviceKey == DeviceKeys.NONE) return;
 
-        foreach (var input in _inputList.ToArray())
+        if (_inputDictionary.TryGetValue(deviceKey, out var value))
         {
-            if (input.WaitOnKeyUp && input.Key == deviceKey)
-                input.WaitOnKeyUp = false;
+            value.WaitOnKeyUp = false;
         }
     }
 
@@ -230,7 +230,7 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
 
         _timeOfLastPress.TryAdd(deviceKey, currentTime);
 
-        _inputList.Add(CreateInputItem(deviceKey, pt));
+        _inputDictionary[deviceKey] = CreateInputItem(deviceKey, pt);
     }
 
     private InputItem CreateInputItem(DeviceKeys key, PointF origin)
@@ -344,13 +344,13 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
             _timeOfLastPress.TryRemove(lengthPresses.Key, out _);
         }
 
-        if (_inputList.Count == 0)
+        if (_inputDictionary.Values.Count == 0)
         {
             return EffectLayer.EmptyLayer;
         }
 
         EffectLayer.Clear();
-        foreach (var input in _inputList.ToArray())
+        foreach (var input in _inputDictionary.Values)
         {
             try
             {
@@ -387,22 +387,15 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
             }
         }
 
-        for (var x = _inputList.Count - 1; x >= 0; x--)
+        foreach (var kv in _inputDictionary)
         {
-            try
+            if (kv.Value.Progress > Effects.CanvasWidth)
+                _inputDictionary.Remove(kv.Key);
+            else
             {
-                if (_inputList[x].Progress > Effects.CanvasWidth)
-                    _inputList.RemoveAt(x);
-                else
-                {
-                    if (_inputList[x].WaitOnKeyUp) continue;
-                    var transAdded = (Properties.EffectSpeed * (GetDeltaTime() * 5.0f));
-                    _inputList[x].Progress += transAdded;
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error(exc, "Interactive layer exception");
+                if (kv.Value.WaitOnKeyUp) continue;
+                var transAdded = Properties.EffectSpeed * (GetDeltaTime() * 5.0f);
+                kv.Value.Progress += transAdded;
             }
         }
 
