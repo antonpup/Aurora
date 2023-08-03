@@ -56,7 +56,7 @@ public sealed partial class LightingStateManagerModule : AuroraModule
         {
             httpListener.NewGameState += lightingStateManager.GameStateUpdate;
         }
-        lightingStateManager.InitUpdate();
+        await lightingStateManager.InitUpdate();
     }
 
     [Async]
