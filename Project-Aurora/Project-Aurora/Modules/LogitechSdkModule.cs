@@ -6,14 +6,11 @@ namespace Aurora.Modules;
 
 public sealed partial class LogitechSdkModule : AuroraModule
 {
-    public static LogitechSdkListener LogitechSdkListener { get; private set; }
-    
-    private LogitechSdkListener _logitechSdkListener;
+    public static LogitechSdkListener LogitechSdkListener { get; } = new();
 
     protected override Task Initialize()
     {
-        _logitechSdkListener = new LogitechSdkListener();
-        LogitechSdkListener = _logitechSdkListener;
+        LogitechSdkListener.Initialize();
         return Task.CompletedTask;
     }
 
@@ -21,6 +18,6 @@ public sealed partial class LogitechSdkModule : AuroraModule
     [Async]
     public override void Dispose()
     {
-        _logitechSdkListener.Dispose();
+        LogitechSdkListener.Dispose();
     }
 }

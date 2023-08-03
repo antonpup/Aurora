@@ -22,20 +22,19 @@ public class LogitechSdkListener
     public Color BackgroundColor { get; private set; } = Color.Empty;
     public LogiSetTargetDeviceType DeviceType { get; private set; }
 
-    private readonly PipeListener? _pipeListener;
+    private PipeListener? _pipeListener;
     private readonly ConcurrentDictionary<DeviceKeys, Color> _colors = new();
     private readonly HashSet<DeviceKeys> _excluded = new();
 
     private Dictionary<DeviceKeys, Color> _savedColors = new();
     private Color _savedBackground = Color.Empty;
 
-    public LogitechSdkListener()
+    public void Initialize()
     {
         _pipeListener = new("LGS_LED_SDK-00000001");
         _pipeListener.ClientConnected += PipeListenerOnClientConnected;
         _pipeListener.ClientDisconnected += OnPipeListenerClientDisconnected;
         _pipeListener.CommandReceived += OnPipeListenerCommandReceived;
-        _pipeListener.StartListening();
     }
 
     private void PipeListenerOnClientConnected(object? sender, EventArgs e)
