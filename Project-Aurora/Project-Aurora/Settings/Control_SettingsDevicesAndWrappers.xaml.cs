@@ -108,78 +108,81 @@ public partial class Control_SettingsDevicesAndWrappers
 
     private void ResetDevices(object? sender, RoutedEventArgs e) => Task.Run(async () => await (await _deviceManager).ResetDevices());
 
-    private void razer_wrapper_install_button_Click(object? sender, RoutedEventArgs e)
+    private async void razer_wrapper_install_button_Click(object? sender, RoutedEventArgs e)
     {
+        ChromaInstallButton.IsEnabled = false;
+        ChromaUninstallButton.IsEnabled = false;
+
+        SetButtonContent("Uninstalling...");
+        var uninstallSuccess = await RazerChromaUtils.UninstallAsync()
+            .ContinueWith(t =>
+            {
+                if (t.Exception != null)
+                {
+                    HandleExceptions(t.Exception);
+                    return false;
+                }
+
+                if (t.Result != (int)RazerChromaInstallerExitCode.RestartRequired) return true;
+                ShowMessageBox(
+                    "The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.",
+                    "Restart required!");
+                return false;
+            })
+            .ConfigureAwait(false);
+
+        if (!uninstallSuccess)
+            return;
+
+        SetButtonContent("Downloading...");
+        var downloadPath = await RazerChromaUtils.DownloadAsync()
+            .ContinueWith(t =>
+            {
+                if (t.Exception == null) return t.Result;
+                HandleExceptions(t.Exception);
+                return null;
+            })
+            .ConfigureAwait(false);
+
+        if (downloadPath == null)
+            return;
+
+        SetButtonContent("Installing...");
+        await RazerChromaUtils.InstallAsync(downloadPath)
+            .ContinueWith(t =>
+            {
+                if (t.Exception != null)
+                    HandleExceptions(t.Exception);
+                else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
+                    ShowMessageBox("The installer requested system restart!\nPlease reboot your pc.",
+                        "Restart required!");
+                else
+                {
+                    SetButtonContent("Disabling bloat...");
+                    RazerChromaUtils.DisableChromaBloat();
+                    SetButtonContent("Done!");
+                    ShowMessageBox("Installation successful!\nPlease restart aurora for changes to take effect.",
+                        "Restart required!");
+                }
+            })
+            .ConfigureAwait(false);
+        
+        
+        return;
+
         void HandleExceptions(AggregateException ae)
         {
             ShowMessageBox(ae.ToString(), "Exception!", MessageBoxImage.Error);
             ae.Handle(ex => {
-                Global.logger.Error(ex.ToString());
+                Global.logger.Error(ex, "Chroma install error");
                 return true;
             });
         }
 
-        void SetButtonContent(string s)
-            => Application.Current.Dispatcher.Invoke(() => ChromaInstallButton.Content = s);
+        void SetButtonContent(string s) => Application.Current.Dispatcher.Invoke(() => ChromaInstallButton.Content = s);
 
         void ShowMessageBox(string message, string title, MessageBoxImage image = MessageBoxImage.Exclamation)
             => Application.Current.Dispatcher.Invoke(() => MessageBox.Show(message, title, MessageBoxButton.OK, image));
-
-        ChromaInstallButton.IsEnabled = false;
-        ChromaUninstallButton.IsEnabled = false;
-
-        Task.Run(async () =>
-        {
-            SetButtonContent("Uninstalling");
-            var uninstallSuccess = await RazerChromaUtils.UninstallAsync()
-                .ContinueWith(t =>
-                {
-                    if (t.Exception != null)
-                    {
-                        HandleExceptions(t.Exception);
-                        return false;
-                    }
-
-                    if (t.Result != (int)RazerChromaInstallerExitCode.RestartRequired) return true;
-                    ShowMessageBox("The uninstaller requested system restart!\nPlease reboot your pc and re-run the installation.",
-                        "Restart required!");
-                    return false;
-
-                })
-                .ConfigureAwait(false);
-
-            if (!uninstallSuccess)
-                return;
-
-            SetButtonContent("Downloading");
-            var downloadPath = await RazerChromaUtils.DownloadAsync()
-                .ContinueWith(t =>
-                {
-                    if (t.Exception == null) return t.Result;
-                    HandleExceptions(t.Exception);
-                    return null;
-                })
-                .ConfigureAwait(false);
-
-            if (downloadPath == null)
-                return;
-
-            SetButtonContent("Installing");
-            await RazerChromaUtils.InstallAsync(downloadPath)
-                .ContinueWith(t =>
-                {
-                    if (t.Exception != null)
-                        HandleExceptions(t.Exception);
-                    else if (t.Result == (int)RazerChromaInstallerExitCode.RestartRequired)
-                        ShowMessageBox("The installer requested system restart!\nPlease reboot your pc.", "Restart required!");
-                    else
-                    {
-                        SetButtonContent("Done!");
-                        ShowMessageBox("Installation successful!\nPlease restart aurora for changes to take effect.", "Restart required!");
-                    }
-                })
-                .ConfigureAwait(false);
-        });
     }
 
     private void razer_wrapper_uninstall_button_Click(object? sender, RoutedEventArgs e)

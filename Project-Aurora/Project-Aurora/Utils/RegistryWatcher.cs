@@ -24,7 +24,7 @@ public enum RegistryHiveOpt
 
 public sealed class RegistryWatcher : IDisposable
 {
-    public event EventHandler<RegistryChangedEventArgs> RegistryChanged;
+    public event EventHandler<RegistryChangedEventArgs>? RegistryChanged;
 
     private readonly RegistryHiveOpt _registryHive;
     private readonly string _key;
@@ -41,16 +41,16 @@ public sealed class RegistryWatcher : IDisposable
     public void StartWatching()
     {
         var currentUser = WindowsIdentity.GetCurrent();
-        var scope = new ManagementScope("\\\\.\\root\\default");
-        
+        var scope = new ManagementScope(@"\\.\root\default");
+
         var queryString = _registryHive switch
         {
             RegistryHiveOpt.LocalMachine => string.Format(
                 "SELECT * FROM RegistryValueChangeEvent WHERE Hive='HKEY_LOCAL_MACHINE' AND KeyPath='{0}' AND ValueName='{1}'",
-                _key.Replace("\\", "\\\\"), _value),
+                _key.Replace(@"\", @"\\"), _value),
             RegistryHiveOpt.CurrentUser => string.Format(
-                "SELECT * FROM RegistryValueChangeEvent WHERE Hive='HKEY_USERS' AND KeyPath='{0}\\\\{1}' AND ValueName='{2}'",
-                currentUser.User!.Value, _key.Replace("\\", "\\\\"), _value),
+                @"SELECT * FROM RegistryValueChangeEvent WHERE Hive='HKEY_USERS' AND KeyPath='{0}\\{1}' AND ValueName='{2}'",
+                currentUser.User!.Value, _key.Replace(@"\", @"\\"), _value),
         };
         var query = new WqlEventQuery(queryString);
         _eventWatcher = new ManagementEventWatcher(scope, query);
@@ -58,12 +58,12 @@ public sealed class RegistryWatcher : IDisposable
         try
         {
             _eventWatcher.Start();
-        
+
             SendData();
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Global.logger.Error("Registry not available, Query: {0}", queryString);
+            Global.logger.Error("Registry not available, Query: {Query}", queryString);
         }
     }
 
@@ -73,6 +73,7 @@ public sealed class RegistryWatcher : IDisposable
         {
             return;
         }
+
         _eventWatcher.EventArrived -= KeyWatcherOnEventArrived;
         _eventWatcher.Stop();
         _eventWatcher.Dispose();
@@ -93,6 +94,11 @@ public sealed class RegistryWatcher : IDisposable
         };
         using var key = localMachine.OpenSubKey(_key);
         var data = key?.GetValue(_value);
+        if (data == null)
+        {
+            return;
+        }
+
         RegistryChanged?.Invoke(this, new RegistryChangedEventArgs(data));
     }
 
