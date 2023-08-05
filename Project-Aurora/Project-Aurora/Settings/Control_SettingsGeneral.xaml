@@ -106,7 +106,7 @@
                 <TextBlock Text="{Binding Fps, UpdateSourceTrigger=PropertyChanged}" Margin="180,284,0,0" />
 
                 <StackPanel Orientation="Horizontal" Margin="11,306,0,0">
-                    <CheckBox Content="Enable UI Transparency"
+                    <CheckBox Name="TransparencyCheckbox" Content="Enable UI Transparency (Win11 only)"
                               IsChecked="{Binding AllowTransparency}" />
                 </StackPanel>
 

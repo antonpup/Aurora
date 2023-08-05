@@ -11,9 +11,10 @@ namespace Aurora.Utils;
 
 public class TransparencyComponent
 {
+    public static bool UseMica { get; } = Environment.OSVersion.Version.Build >= 22000;
+
     private readonly AcrylicWindow _window;
     private readonly Panel _bg;
-    private readonly bool _useMica;
     private readonly RegistryWatcher _lightThemeRegistryWatcher;
 
     private HwndSource? _hwHandle;
@@ -22,7 +23,6 @@ public class TransparencyComponent
     {
         _window = window;
         _bg = bg;
-        _useMica = Environment.OSVersion.Version.Build >= 22000;
         _lightThemeRegistryWatcher = new RegistryWatcher(RegistryHiveOpt.CurrentUser,
             @"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
             "AppsUseLightTheme");
@@ -50,7 +50,7 @@ public class TransparencyComponent
         _hwHandle ??= HwndSource.FromHwnd(new WindowInteropHelper(_window).Handle)!;
         var darkThemeEnabled = lightThemeEnabled == 0;
 
-        if (_useMica)
+        if (UseMica && Global.Configuration.AllowTransparency)
         {
             var trueValue = 0x01;
             var falseValue = 0x00;
@@ -79,23 +79,17 @@ public class TransparencyComponent
 
     public void SetBackgroundColor(EffectColor a)
     {
-        if (!Global.Configuration.AllowTransparency)
-        {
-            _window.FallbackColor = Colors.Black;
-            _window.TintColor = Colors.Transparent;
-            _bg.Background =
-                new SolidColorBrush(Color.FromArgb(255, a.Red, a.Green, a.Blue));
-        }
-        else if (_useMica)
+        if (Global.Configuration.AllowTransparency && UseMica)
         {
             _bg.Background =
                 new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
         }
         else
         {
-            var color = (Color)a;
-            _window.TintColor = color;
-            _window.FallbackColor = color with {A = (byte)(a.Alpha * 0.8)};
+            _window.FallbackColor = Colors.Black;
+            _window.TintColor = Colors.Transparent;
+            _bg.Background =
+                new SolidColorBrush(Color.FromArgb(255, a.Red, a.Green, a.Blue));
         }
     }
 }

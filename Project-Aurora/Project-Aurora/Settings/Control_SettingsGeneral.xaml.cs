@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using Aurora.Utils;
 using Microsoft.Win32.TaskScheduler;
 using Xceed.Wpf.Toolkit;
 
@@ -17,6 +18,8 @@ public partial class Control_SettingsGeneral
     public Control_SettingsGeneral()
     {
         InitializeComponent();
+
+        TransparencyCheckbox.IsEnabled = TransparencyComponent.UseMica;
         
         DataContext = Global.Configuration;
 
