@@ -346,8 +346,6 @@ public class KeyboardLayoutManager
 
     public Grid AbstractVirtualKeyboard => CreateUserControl(true);
 
-    private readonly Dictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new();
-
     private bool _bitmapMapInvalid = true;
 
     public delegate void LayoutUpdatedEventHandler(object? sender);
@@ -722,34 +720,34 @@ public class KeyboardLayoutManager
         double curHeight = 0;
         double widthMax = 1;
         double heightMax = 1;
-        _bitmapMap.Clear();
+        var bitmapMap = new Dictionary<DeviceKeys, BitmapRectangle>(Effects.MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
         foreach (var key in _virtualKeyboardGroup.GroupedKeys)
         {
             if (key.Tag.Equals(DeviceKeys.NONE))
                 continue;
 
-            double width = key.Width;
-            int widthBit = PixelToByte(width);
-            double height = key.Height;
-            int heightBit = PixelToByte(height);
-            double xOffset = key.MarginLeft;
-            double yOffset = key.MarginTop;
+            var width = key.Width;
+            var widthBit = PixelToByte(width);
+            var height = key.Height;
+            var heightBit = PixelToByte(height);
+            var xOffset = key.MarginLeft;
+            var yOffset = key.MarginTop;
             double brX, brY;
 
             if (key.AbsoluteLocation)
             {
-                _bitmapMap[key.Tag] =
+                bitmapMap[key.Tag] =
                     new BitmapRectangle(PixelToByte(xOffset), PixelToByte(yOffset), widthBit, heightBit);
                 brX = xOffset + width;
                 brY = yOffset + height;
             }
             else
             {
-                double x = xOffset + curWidth;
-                double y = yOffset + curHeight;
+                var x = xOffset + curWidth;
+                var y = yOffset + curHeight;
 
-                _bitmapMap[key.Tag] = new BitmapRectangle(PixelToByte(x), PixelToByte(y), widthBit, heightBit);
+                bitmapMap[key.Tag] = new BitmapRectangle(PixelToByte(x), PixelToByte(y), widthBit, heightBit);
 
                 brX = x + width;
                 brY = y + height;
@@ -776,7 +774,7 @@ public class KeyboardLayoutManager
         Global.effengine.SetCanvasSize(
             PixelToByte(_virtualKeyboardGroup.Region.Width) + 1,
             PixelToByte(_virtualKeyboardGroup.Region.Height) + 1);
-        Global.effengine.SetBitmapping(_bitmapMap);
+        Global.effengine.SetBitmapping(bitmapMap);
     }
 
     private Grid CreateUserControl(bool abstractKeycaps = false)

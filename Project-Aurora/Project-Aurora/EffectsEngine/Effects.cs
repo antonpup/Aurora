@@ -238,7 +238,7 @@ namespace Aurora
         /// </summary>
         public static Settings.FreeFormObject WholeCanvasFreeForm => new(-GridBaselineX, -GridBaselineY, GridWidth, GridHeight);
 
-        private static Dictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
+        private static IReadOnlyDictionary<DeviceKeys, BitmapRectangle> _bitmapMap = new Dictionary<DeviceKeys, BitmapRectangle>();
 
         private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
