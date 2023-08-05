@@ -69,7 +69,7 @@ public partial class App
 
         new UserSettingsBackup().BackupIfNew();
         var systemInfo = SystemUtils.GetSystemInfo();
-        Global.logger.Information("{}", systemInfo);
+        Global.logger.Information("{Sys}", systemInfo);
 
         var currentDomain = AppDomain.CurrentDomain;
         currentDomain.AppendPrivatePath("x64");
