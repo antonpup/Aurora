@@ -6,12 +6,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.Controls;
@@ -27,8 +25,6 @@ using Aurora.Utils;
 using Hardcodet.Wpf.TaskbarNotification;
 using PropertyChanged;
 using RazerSdkWrapper;
-using SourceChord.FluentWPF;
-using static Aurora.Utils.Win32Transparency;
 using Application = Aurora.Profiles.Application;
 using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
@@ -69,8 +65,7 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Task<IpcListener?> _ipcListener;
     private readonly Task<LightingStateManager> _lightingStateManager;
 
-    private HwndSource _hwHandle;
-    private readonly bool _useMica;
+    private readonly TransparencyComponent _transparencyComponent;
 
     public Application? FocusedApplication
     {
@@ -98,59 +93,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private void Window_ContentRendered(object? sender, EventArgs e)
     {
-        UpdateStyleAttributes();
-    }
-
-    public void UpdateStyleAttributes()
-    {
-        _lightThemeRegistryWatcher = new RegistryWatcher(RegistryHiveOpt.CurrentUser,
-            @"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-            "AppsUseLightTheme");
-        _lightThemeRegistryWatcher.RegistryChanged += LightThemeRegistryWatcherOnRegistryChanged;
-        _lightThemeRegistryWatcher.StartWatching();
-    }
-
-    private void LightThemeRegistryWatcherOnRegistryChanged(object? sender, RegistryChangedEventArgs e)
-    {
-        
-        if (e.Data is not int lightThemeEnabled)
-        {
-            return;
-        }
-
-        Dispatcher.Invoke(() =>
-        {
-            IntPtr mainWindowPtr = new WindowInteropHelper(this).Handle;
-            _hwHandle = HwndSource.FromHwnd(mainWindowPtr);
-            var darkThemeEnabled = lightThemeEnabled == 0;
-
-            if (_useMica)
-            {
-                var trueValue = 0x01;
-                var falseValue = 0x00;
-
-                SetAcrylicAccentState(this, AcrylicAccentState.Disabled);
-
-                // Set dark mode before applying the material, otherwise you'll get an ugly flash when displaying the window.
-                if (darkThemeEnabled)
-                    DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                        ref trueValue, Marshal.SizeOf(typeof(int)));
-                else
-                    DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_USE_IMMERSIVE_DARK_MODE,
-                        ref falseValue, Marshal.SizeOf(typeof(int)));
-
-                DwmSetWindowAttribute(_hwHandle.Handle, DwmWindowAttribute.DWMWA_MICA_EFFECT, ref trueValue,
-                    Marshal.SizeOf(typeof(int)));
-                TintColor = Color.FromArgb(1, 0, 0, 0);
-                FallbackColor = Color.FromArgb(64, 0, 0, 0);
-            }
-            else
-            {
-                TintColor = Color.FromArgb(240, 128, 128, 128);
-                FallbackColor = Color.FromArgb(64, 0, 0, 0);
-                Activate();
-            }
-        });
+        _transparencyComponent.UpdateStyleAttributes();
     }
 
     private void Window_Loaded_Mica(object? sender, RoutedEventArgs e)
@@ -173,9 +116,10 @@ partial class ConfigUI : INotifyPropertyChanged
         _ipcListener = ipcListener;
         _lightingStateManager = lightingStateManager;
         _settingsControl = new(rzSdkManager, pluginManager, layoutManager, httpListener, deviceManager);
-
-        _useMica = Environment.OSVersion.Version.Build >= 22000;
+        
         InitializeComponent();
+
+        _transparencyComponent = new TransparencyComponent(this, bg_grid);
 
         ContentRendered += Window_ContentRendered;
         ctrlProfileManager.ProfileSelected += CtrlProfileManager_ProfileSelected;
@@ -189,25 +133,7 @@ partial class ConfigUI : INotifyPropertyChanged
                 _transitionAmount += _keyboardTimer.Elapsed.TotalSeconds;
                 var smooth = 1 - Math.Pow(1 - Math.Min(_transitionAmount, 1d), 3);
                 var a = EffectColor.BlendColors(_previousColor, _currentColor, smooth);
-
-                if (!Global.Configuration.AllowTransparency)
-                {
-                    FallbackColor = Colors.Black;
-                    TintColor = Colors.Transparent;
-                    bg_grid.Background =
-                        new SolidColorBrush(Color.FromArgb(255, a.Red, a.Green, a.Blue));
-                }
-                else if (_useMica)
-                {
-                    bg_grid.Background =
-                        new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
-                }
-                else
-                {
-                    var color = (Color)a;
-                    TintColor = color;
-                    FallbackColor = color with {A = (byte)(color.A * 0.8)};
-                }
+                _transparencyComponent.SetBackgroundColor(a);
             }
 
             var keyLights = Global.effengine.GetKeyboardLights();
@@ -726,7 +652,7 @@ partial class ConfigUI : INotifyPropertyChanged
         SelectedControl = _settingsControl;
 
         _previousColor = _currentColor;
-        _currentColor = _useMica ? _desktopColorScheme : EffectColor.FromRGBA(0, 0, 0, 184);
+        _currentColor = _desktopColorScheme;
         _transitionAmount = 0.0;
     }
     private void cmbtnOpenBitmapWindow_Clicked(object? sender, RoutedEventArgs e) => Window_BitmapView.Open();
@@ -828,7 +754,6 @@ partial class ConfigUI : INotifyPropertyChanged
     /// <summary>The control that is currently displayed underneath they device preview panel. This could be an overview control or a layer presenter etc.</summary>
     public Control? SelectedControl { get => _selectedControl; set => SetField(ref _selectedControl, value); }
     private Control? _selectedControl;
-    private RegistryWatcher _lightThemeRegistryWatcher;
 
     #endregion
 }
