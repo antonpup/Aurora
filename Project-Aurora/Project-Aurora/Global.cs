@@ -57,15 +57,14 @@ public static class Global
 #if DEBUG
         isDebug = true;
 #endif
-        var logFile = ".log";
+        var logFile = $"{DateTime.Now:yyyy-MM-dd HH.mm.ss}.log";
         var logPath = Path.Combine(AppDataDirectory, "Logs", logFile);
         logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.File(logPath,
-                rollingInterval: RollingInterval.Hour,
-                outputTemplate:
-                "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] [{SourceContext}] {Message:lj}{NewLine}{Exception}",
-                retainedFileCountLimit: 8
+                rollingInterval: RollingInterval.Infinite,
+                fileSizeLimitBytes: 25 * 1000000,  //25 MB
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
             )
 #if DEBUG
             .WriteTo.Console(

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Lombok.NET;
 
@@ -26,14 +27,15 @@ public partial class UpdateCleanup : AuroraModule
     private static void CleanLogs()
     {
         var logFolder = Path.Combine(Global.AppDataDirectory, "Logs");
-        var files = from file in Directory.EnumerateFiles(logFolder) select file;
-        foreach (var file in files)
+        //TODO regex match
+        var logFile = new Regex(".*\\.log");
+        var files = from file in Directory.EnumerateFiles(logFolder)
+            where logFile.IsMatch(Path.GetFileName(file))
+            orderby File.GetCreationTime(file) descending
+            select file;
+        foreach (var file in files.Skip(8))
         {
-            var fileName = Path.GetFileName(file);
-            if (fileName.StartsWith("2023-"))
-            {
-                File.Delete(file);
-            }
+            File.Delete(file);
         }
     }
 
