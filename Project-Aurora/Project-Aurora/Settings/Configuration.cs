@@ -11,10 +11,8 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using Windows.Foundation.Metadata;
 using Aurora.Devices;
 using Aurora.Devices.AtmoOrb;
-using Aurora.Devices.Corsair;
 using Aurora.Devices.Logitech;
 using Aurora.Devices.OpenRGB;
 using Aurora.Devices.RGBNet;
@@ -687,7 +685,6 @@ namespace Aurora.Settings
         {
             EnabledDevices ??= MigrateEnabledDevices();
             PrioritizeDevice(typeof(OpenRgbNetDevice), typeof(OpenRgbAuroraDevice));
-            PrioritizeDevice(typeof(CorsairRgbNetDevice), typeof(CorsairDevice));
             PrioritizeDevice(typeof(SteelSeriesRgbNetDevice), typeof(SteelSeriesDevice));
             PrioritizeDevice(typeof(LogitechDevice), typeof(LogitechRgbNetDevice));
         }

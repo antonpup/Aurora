@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Aurora.Settings;
 using Aurora.Utils;
-using RGB.NET.Devices.Corsair;
+using RGB.NET.Devices.CorsairLegacy;
 
 namespace Aurora.Devices.RGBNet;
 
 public class CorsairRgbNetDevice : RgbNetDevice
 {
-    protected override CorsairDeviceProvider Provider => CorsairDeviceProvider.Instance;
+    protected override CorsairLegacyDeviceProvider Provider => CorsairLegacyDeviceProvider.Instance;
 
     public override string DeviceName => "Corsair (RGB.NET)";
 
@@ -41,12 +42,13 @@ public class CorsairRgbNetDevice : RgbNetDevice
 
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");
 
-        CorsairDeviceProvider.ExclusiveAccess = exclusive;
-        CorsairDeviceProvider.ConnectionTimeout = new TimeSpan(0, 0, 5);
+        //Provider.ExclusiveAccess = exclusive;
+        //Provider.ConnectionTimeout = new TimeSpan(0, 0, 5);
 
-        Provider.SessionStateChanged += SessionStateChanged;
+        //Provider.SessionStateChanged += SessionStateChanged;
     }
 
+    /*
     private void SessionStateChanged(object? sender, CorsairSessionState e)
     {
         if (e != CorsairSessionState.Closed) return;
@@ -54,4 +56,5 @@ public class CorsairRgbNetDevice : RgbNetDevice
 
         IsInitialized = false;
     }
+    */
 }

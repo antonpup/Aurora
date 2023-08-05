@@ -104,6 +104,7 @@
     <!-- waiting for package without System.Management
     <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-z.1" /> -->
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.83" />
+    <PackageReference Include="RGB.NET.Devices.CorsairLegacy" Version="2.0.0-prerelease.94" />
     <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.83" />
     <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.83" />
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.83" />
@@ -133,10 +134,6 @@
     </Reference>
     <Reference Include="RGB.NET.Core, Version=2.0.1.2">
       <HintPath>.\RGB.NET.Core.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Corsair">
-      <HintPath>.\RGB.NET.Devices.Corsair.dll</HintPath>
       <Private>true</Private>
     </Reference>
     <Reference Include="RGB.NET.Devices.OpenRGB">
@@ -182,9 +179,6 @@
     <Content Include="x64\iCUESDK.x64_2019.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="CUESDK.x64_2017.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="x64\CMSDK.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -228,6 +222,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="x64\CTLEDMgr.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x64\CUESDK.x64_2017.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

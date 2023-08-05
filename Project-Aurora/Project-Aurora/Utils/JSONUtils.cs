@@ -51,6 +51,8 @@ public class AuroraSerializationBinder : DefaultSerializationBinder
                 return typeof(Profiles.WrapperProfile);
             case "Aurora.Devices.SteelSeriesHID.SteelSeriesHIDDevice":
                 return typeof(Devices.UnifiedHID.UnifiedHIDDevice);
+            case "Aurora.Devices.Corsair.CorsairDevice":
+                return typeof(Devices.RGBNet.CorsairRgbNetDevice);
             case "Aurora.Settings.Overrides.Logic.IEvaluatableBoolean":
             case "Aurora.Settings.Overrides.Logic.IEvaluatable`1[[System.Boolean, mscorlib]]":
                 return typeof(Evaluatable<bool>);

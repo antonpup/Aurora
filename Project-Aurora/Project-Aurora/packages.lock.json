@@ -236,6 +236,15 @@
           "RGB.NET.Core": "2.0.0-prerelease.83"
         }
       },
+      "RGB.NET.Devices.CorsairLegacy": {
+        "type": "Direct",
+        "requested": "[2.0.0-prerelease.94, )",
+        "resolved": "2.0.0-prerelease.94",
+        "contentHash": "JLNeF33oyGksEV2o7hXqHaFQ3BSAoFhjrTOBVkcoNgz7r5nX5GXMcwNWJ+bogS5XWVLl3KN/UMczsiSp1OciYQ==",
+        "dependencies": {
+          "RGB.NET.Core": "2.0.0-prerelease.94"
+        }
+      },
       "RGB.NET.Devices.Logitech": {
         "type": "Direct",
         "requested": "[2.0.0-prerelease.83, )",
@@ -621,8 +630,8 @@
       },
       "RGB.NET.Core": {
         "type": "Transitive",
-        "resolved": "2.0.0-prerelease.83",
-        "contentHash": "m1nHpBwsMJFK732cCmc55SZPoKGP0xIPbaA+UiGS5bMN2YH8OMg+RYQIq0eo7cfbKNbUj2cYODcJfsW4ALomWA=="
+        "resolved": "2.0.0-prerelease.94",
+        "contentHash": "3z1O2H3x0G6cRiG6/546WfX0b0ahp+gUUpio7oO7+JnOdlmtjfVgIhRDccDbioLdJC6/9J0WD8hmLJXBocf3Ww=="
       },
       "RGB.NET.HID": {
         "type": "Transitive",
