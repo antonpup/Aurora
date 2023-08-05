@@ -64,7 +64,7 @@ public class UpdateManager
     private float _extractProgress;
     private int? _previousPercentage;
     private int _secondsLeft = 3;
-    private readonly Configuration _config;
+    private readonly UpdaterConfiguration _config;
     private readonly GitHubClient _gClient = new(new ProductHeaderValue("aurora-updater"));
     public readonly Release LatestRelease;
 
@@ -72,11 +72,11 @@ public class UpdateManager
     {
         try
         {
-            _config = ConfigManager.Load();
+            _config = UpdaterConfiguration.Load();
         }
         catch
         {
-            _config = new Configuration();
+            _config = new UpdaterConfiguration();
         }
 
         PerformCleanup();
