@@ -142,6 +142,15 @@ partial class ConfigUI : INotifyPropertyChanged
             KeyboardRecordMessage.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
         };
         _virtualKeyboardTimer.Elapsed += virtual_keyboard_timer_Tick;
+
+        //Show hidden profiles button
+        _profileHidden = new Image
+        {
+            Source = _notVisible,
+            ToolTip = "Toggle Hidden profiles' visibility",
+            Margin = new Thickness(0, 5, 0, 0)
+        };
+        _profileHidden.MouseDown += HiddenProfile_MouseDown;
     }
 
     public async Task Initialize()
@@ -397,12 +406,9 @@ partial class ConfigUI : INotifyPropertyChanged
 
         var lightingStateManager = await _lightingStateManager;
         foreach (var application in Global.Configuration.ProfileOrder
-                     .Where(profileName =>
-                     {
-                         return lightingStateManager.Events.ContainsKey(profileName);
-                     })
+                     .Where(profileName => lightingStateManager.Events.ContainsKey(profileName))
                      .Select(profileName => (Application)lightingStateManager.Events[profileName])
-                     .OrderBy(item => item.Settings.Hidden))
+                     .OrderBy(item => item.Settings.Hidden ? 1 : 0))
         {
             ImageSource icon = application.Icon;
             Image profileImage;
@@ -470,14 +476,6 @@ partial class ConfigUI : INotifyPropertyChanged
         _profileAdd.MouseDown += AddProfile_MouseDown;
         profiles_stack.Children.Add(_profileAdd);
 
-        //Show hidden profiles button
-        _profileHidden = new Image
-        {
-            Source = _notVisible,
-            ToolTip = "Toggle Hidden profiles' visibility",
-            Margin = new Thickness(0, 5, 0, 0)
-        };
-        _profileHidden.MouseDown += HiddenProfile_MouseDown;
         profiles_stack.Children.Add(_profileHidden);
     }
 
