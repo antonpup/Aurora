@@ -28,7 +28,6 @@ public partial class App
 
     public static bool IsSilent { get; private set; }
 
-    private static readonly UpdateModule UpdateModule = new();
     private static readonly PluginsModule PluginsModule = new();
     private static readonly IpcListenerModule IpcListenerModule = new();
     private static readonly HttpListenerModule HttpListenerModule = new();
@@ -40,7 +39,7 @@ public partial class App
 
     private readonly List<AuroraModule> _modules = new()
     {
-        UpdateModule,
+        new UpdateModule(),
         new UpdateCleanup(),
         new InputsModule(),
         new MediaInfoModule(),
@@ -76,11 +75,11 @@ public partial class App
         if (!Global.isDebug)
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-        Global.effengine = new Effects(DevicesModule.DeviceManager);
-
         //Load config
         Global.logger.Information("Loading Configuration");
         Global.Configuration = ConfigManager.Load();
+
+        Global.effengine = new Effects(DevicesModule.DeviceManager);
 
         if (Global.Configuration.HighPriority)
         {
@@ -174,7 +173,7 @@ public partial class App
                     Global.logger.Information("Program started with '-silent' parameter");
                     break;
                 case "-ignore_update":
-                    UpdateModule.IgnoreUpdate = true;
+                    new UpdateModule().IgnoreUpdate = true;
                     Global.logger.Information("Program started with '-ignore_update' parameter");
                     break;
                 case "-delay":

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Aurora.Modules.Logitech;
+using Aurora.Utils;
 using Lombok.NET;
 
 namespace Aurora.Modules;
@@ -8,10 +9,10 @@ public sealed partial class LogitechSdkModule : AuroraModule
 {
     public static LogitechSdkListener LogitechSdkListener { get; } = new();
 
-    protected override Task Initialize()
+    protected override async Task Initialize()
     {
+        await DesktopUtils.WaitSessionUnlock();
         LogitechSdkListener.Initialize();
-        return Task.CompletedTask;
     }
 
 

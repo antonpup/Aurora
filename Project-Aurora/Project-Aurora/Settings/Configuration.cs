@@ -607,7 +607,7 @@ namespace Aurora.Settings
         [JsonProperty]
         private ObservableCollection<Type>? DevicesDisabled { get; set; }
         
-        public ObservableCollection<Type>? EnabledDevices { get; set; }
+        public ObservableCollection<Type> EnabledDevices { get; set; }
 
         public List<BitmapAccuracy> BitmapAccuracies { get; } = new()
         {
@@ -677,7 +677,7 @@ namespace Aurora.Settings
         {
             typeof(AsusDevice),
             typeof(CorsairRgbNetDevice),
-            typeof(LogitechRgbNetDevice),
+            typeof(LogitechDevice),
             typeof(OpenRgbNetDevice),
         };
 
@@ -762,7 +762,7 @@ namespace Aurora.Settings
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Exception during ConfigManager.Load(). Error: ", exc);
+                Global.logger.Error(exc, "Exception during ConfigManager.Load(). Error: ");
                 MessageBox.Show("Exception during ConfigManager.Load().Error: " + exc.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
 
                 config = new Configuration();
