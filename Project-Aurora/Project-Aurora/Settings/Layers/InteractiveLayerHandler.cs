@@ -143,7 +143,7 @@ public sealed class InteractiveLayerHandlerProperties : LayerHandlerProperties2C
 public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandlerProperties>
 {
     private readonly Func<KeyValuePair<DeviceKeys, long>, bool> _keysToRemove;
-    private readonly Dictionary<DeviceKeys, InputItem> _inputDictionary = new(Effects.MaxDeviceId);
+    private readonly ConcurrentDictionary<DeviceKeys, InputItem> _inputDictionary = new(new Dictionary<DeviceKeys, InputItem>(Effects.MaxDeviceId));
         
     private long _previousTime;
     private long _currentTime;
@@ -390,7 +390,7 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
         foreach (var kv in _inputDictionary)
         {
             if (kv.Value.Progress > Effects.CanvasWidth)
-                _inputDictionary.Remove(kv.Key);
+                _inputDictionary.Remove(kv.Key, out _);
             else
             {
                 if (kv.Value.WaitOnKeyUp) continue;
