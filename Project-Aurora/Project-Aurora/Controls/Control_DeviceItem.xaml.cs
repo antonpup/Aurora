@@ -45,7 +45,7 @@ public partial class Control_DeviceItem
         }
         catch (Exception ex)
         {
-            Global.logger.Warning("DeviceItem update error:", ex);
+            Global.logger.Warning(ex, "DeviceItem update error:");
         }
     }
 

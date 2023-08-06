@@ -74,9 +74,13 @@ public class ChromaApplication : Application
 
     private void FilterAndSetProcesses()
     {
+        if (Settings is not ChromaApplicationSettings chromaApplicationSettings)
+        {
+            return;
+        }
         Config.ProcessNames = new []{ RzHelper.CurrentAppExecutable }
             .Where(processName => !string.IsNullOrWhiteSpace(processName))
-            .Where(s => !((ChromaApplicationSettings)Settings).ExcludedPrograms.Contains(s))
+            .Where(s => !chromaApplicationSettings.ExcludedPrograms.Contains(s))
             .ToArray();
 
         ChromaAppsChanged?.Invoke(this, EventArgs.Empty);

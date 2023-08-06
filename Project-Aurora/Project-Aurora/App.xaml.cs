@@ -32,7 +32,7 @@ public partial class App
     private static readonly PluginsModule PluginsModule = new();
     private static readonly IpcListenerModule IpcListenerModule = new();
     private static readonly HttpListenerModule HttpListenerModule = new();
-    private static readonly RazerSdkModule RazerSdkModule = new();
+    private static readonly RazerSdkModule RazerSdkModule = new(LightingStateManagerModule.LightningStateManager);
     private static readonly DevicesModule DevicesModule = new(RazerSdkModule.RzSdkManager);
     private static readonly LightingStateManagerModule LightingStateManagerModule = new(
         PluginsModule.PluginManager, IpcListenerModule.IpcListener, HttpListenerModule.HttpListener, DevicesModule.DeviceManager);
@@ -51,10 +51,10 @@ public partial class App
         PluginsModule,
         IpcListenerModule,
         HttpListenerModule,
-        RazerSdkModule,
         DevicesModule,
         LayoutsModule,
         LightingStateManagerModule,
+        RazerSdkModule,
         new PerformanceMonitor(),
     };
 

@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Modules.Razer;
 using Aurora.Settings.Layers.Controls;
+using RazerSdkWrapper.Data;
 
 namespace Aurora.Settings.Layers;
 
@@ -129,7 +130,7 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
 
     private bool TryGetColor(DeviceKeys key, out Color color)
     {
-        (byte r, byte g, byte b) rColor;
+        RzColor rColor;
         if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
             rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
         else if (RazerLayoutMap.Mousepad.TryGetValue(key, out position))
@@ -153,9 +154,9 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         return true;
     }
 
-    private (byte r, byte g, byte b) PostProcessColor((byte r, byte g, byte b) color)
+    private RzColor PostProcessColor(RzColor color)
     {
-        if (color is { r: 0, g: 0, b: 0 })
+        if (color is { R: 0, G: 0, B: 0 })
             return color;
 
         if (Properties.BrightnessChange != 0)
@@ -168,10 +169,10 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         return color;
     }
 
-    private Color FastTransform((byte r, byte g, byte b) color)
+    private Color FastTransform(RzColor color)
     {
         return Properties.TransparencyEnabled ?
-            ColorUtils.FastColorTransparent(color.r, color.g, color.b) :
-            ColorUtils.FastColor(color.r, color.g, color.b);
+            ColorUtils.FastColorTransparent(color.R, color.G, color.B) :
+            ColorUtils.FastColor(color.R, color.G, color.B);
     }
 }

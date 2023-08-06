@@ -14,11 +14,11 @@ public sealed partial class LightingStateManagerModule : AuroraModule
     private readonly Task<AuroraHttpListener?> _httpListener;
     private readonly Task<DeviceManager> _deviceManager;
 
-    private readonly TaskCompletionSource<LightingStateManager> _taskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private static readonly TaskCompletionSource<LightingStateManager> _taskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
     private LightingStateManager? _manager;
 
-    public Task<LightingStateManager> LightningStateManager => _taskSource.Task;
+    public static Task<LightingStateManager> LightningStateManager => _taskSource.Task;
 
     public LightingStateManagerModule(Task<PluginManager> pluginManager, Task<IpcListener?> ipcListener,
         Task<AuroraHttpListener?> httpListener, Task<DeviceManager> deviceManager)

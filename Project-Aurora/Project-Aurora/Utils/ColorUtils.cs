@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.EffectsEngine;
 using Newtonsoft.Json;
+using RazerSdkWrapper.Data;
 using DrawingColor = System.Drawing.Color;
 using MediaColor = System.Windows.Media.Color;
 
@@ -242,6 +243,11 @@ namespace Aurora.Utils
             ToHsv((color.R, color.G, color.B), out hue, out saturation, out value);
         }
 
+        public static void ToHsv(RzColor color, out double hue, out double saturation, out double value)
+        {
+            ToHsv((color.R, color.G, color.B), out hue, out saturation, out value);
+        }
+
         public static void ToHsv((byte r, byte g, byte b) color, out double hue, out double saturation, out double value)
         {
             var max = Math.Max(color.r, Math.Max(color.g, color.b));
@@ -289,7 +295,7 @@ namespace Aurora.Utils
             }
         }
 
-        public static (byte r, byte g, byte b) FromHsvSimple(double hue, double saturation, double value)
+        public static RzColor FromHsvSimple(double hue, double saturation, double value)
         {
             saturation = Math.Max(Math.Min(saturation, 1), 0);
             value = Math.Max(Math.Min(value, 1), 0);
@@ -305,12 +311,12 @@ namespace Aurora.Utils
 
             return hi switch
             {
-                0 => (v, t, p),
-                1 => (q, v, p),
-                2 => (p, v, t),
-                3 => (p, q, v),
-                4 => (t, p, v),
-                _ => (v, p, q)
+                0 => new RzColor(v, t, p, 255),
+                1 => new RzColor(q, v, p, 255),
+                2 => new RzColor(p, v, t, 255),
+                3 => new RzColor(p, q, v, 255),
+                4 => new RzColor(t, p, v, 255),
+                _ => new RzColor(v, p, q, 255)
             };
         }
 
@@ -334,7 +340,7 @@ namespace Aurora.Utils
 
             return FromHsv(hue, saturation, value);
         }
-        public static (byte r, byte g, byte b) ChangeHue((byte r, byte g, byte b) color, double offset)
+        public static RzColor ChangeHue(RzColor color, double offset)
         {
             if (offset == 0)
                 return color;
@@ -368,7 +374,7 @@ namespace Aurora.Utils
             ChangeHsvComponent(ref value, strength);
             return FromHsv(hue, saturation, value);
         }
-        public static (byte r, byte g, byte b) ChangeBrightness((byte r, byte g, byte b) color, double strength)
+        public static RzColor ChangeBrightness(RzColor color, double strength)
         {
             if (strength == 0)
                 return color;
@@ -397,7 +403,7 @@ namespace Aurora.Utils
             ChangeHsvComponent(ref saturation, strength);
             return FromHsv(hue, saturation, value);
         }
-        public static (byte r, byte g, byte b) ChangeSaturation((byte r, byte g, byte b) color, double strength)
+        public static RzColor ChangeSaturation(RzColor color, double strength)
         {
             if (strength == 0)
                 return color;

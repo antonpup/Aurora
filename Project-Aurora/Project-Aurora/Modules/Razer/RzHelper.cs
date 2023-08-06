@@ -17,11 +17,11 @@ public class ChromaAppChangedEventArgs : EventArgs
 
 public static class RzHelper
 {
-    public static readonly (byte r, byte g, byte b)[] KeyboardColors = new (byte r, byte g, byte b)[22 * 6];
-    public static readonly (byte r, byte g, byte b)[] MousepadColors = new (byte r, byte g, byte b)[20];
-    public static readonly (byte r, byte g, byte b)[] MouseColors = new (byte r, byte g, byte b)[9 * 7];
-    public static readonly (byte r, byte g, byte b)[] HeadsetColors = new (byte r, byte g, byte b)[5];
-    public static readonly (byte r, byte g, byte b)[] ChromaLinkColors = new (byte r, byte g, byte b)[5];
+    public static readonly RzColor[] KeyboardColors = new RzColor[22 * 6];
+    public static readonly RzColor[] MousepadColors = new RzColor[20];
+    public static readonly RzColor[] MouseColors = new RzColor[9 * 7];
+    public static readonly RzColor[] HeadsetColors = new RzColor[5];
+    public static readonly RzColor[] ChromaLinkColors = new RzColor[5];
 
     public static event EventHandler<ChromaAppChangedEventArgs>? ChromaAppChanged;
 
@@ -36,7 +36,7 @@ public static class RzHelper
     }
 
     private static readonly Stopwatch UpdateStopwatch = new();
-    private static string _currentAppExecutable;
+    private static string _currentAppExecutable = string.Empty;
 
     static RzHelper()
     {
@@ -88,15 +88,8 @@ public static class RzHelper
         {
             return false;
         }
-        foreach (var provider in new AbstractColorDataProvider[]{
-                     Global.razerSdkManager.GetDataProvider<RzKeyboardDataProvider>(),
-                     Global.razerSdkManager.GetDataProvider<RzMouseDataProvider>(),
-                     Global.razerSdkManager.GetDataProvider<RzMousepadDataProvider>(),
-                     Global.razerSdkManager.GetDataProvider<RzHeadsetDataProvider>(),
-                     Global.razerSdkManager.GetDataProvider<RzChromaLinkDataProvider>()
-                 })
+        foreach (var provider in Global.razerSdkManager.Providers)
         {
-            provider.Update();
             OnDataUpdated(provider, EventArgs.Empty);
         }
         UpdateStopwatch.Restart();
@@ -141,7 +134,7 @@ public static class RzHelper
                 }
                 break;
             case RzAppListDataProvider appList:
-                CurrentAppExecutable = appList.CurrentAppExecutable;
+                CurrentAppExecutable = appList.CurrentAppExecutable ?? string.Empty;
                 break;
         }
     }
@@ -154,6 +147,6 @@ public static class RzHelper
     {
         var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
         appList.Update();
-        CurrentAppExecutable = appList.CurrentAppExecutable;
+        CurrentAppExecutable = appList.CurrentAppExecutable ?? string.Empty;
     }
 }
