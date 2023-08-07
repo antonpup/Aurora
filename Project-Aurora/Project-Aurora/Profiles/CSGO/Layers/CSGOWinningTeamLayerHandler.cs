@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Profiles.CSGO.GSI;
 using Aurora.Profiles.CSGO.GSI.Nodes;
@@ -60,12 +61,12 @@ public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHand
 
     public CSGOWinningTeamLayerHandler(): base("CSGO - Winning Team Effect")
     {
-        WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
+        WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
         _animationMix = new AnimationMix(_tracks);
         SetTracks();
     }
 
-    private void Effects_CanvasChanged(object? sender, CanvasChangedArgs e)
+    private void Effects_CanvasChanged(object? sender, EventArgs e)
     {
         SetTracks();
     }
@@ -173,6 +174,6 @@ public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHand
     {
         base.Dispose();
 
-        WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
+        WeakEventManager<Effects, EventArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
     }
 }

@@ -71,7 +71,7 @@ public sealed partial class ActiveProcessMonitor
 		}
 		catch (Exception exc)
 		{
-			Global.logger.Error("Exception in GetActiveWindowsProcessname" + exc);
+			Global.logger.Error(exc, "Exception in GetActiveWindowsProcessname");
 		}
 
 		return string.Empty;
@@ -86,28 +86,8 @@ public sealed partial class ActiveProcessMonitor
 
 	private string GetWindowProcessName(IntPtr windowHandle)
 	{
-		if (User32.GetWindowThreadProcessId(windowHandle, out var pid) <= 0) return "";
+		if (User32.GetWindowThreadProcessId(windowHandle, out var pid) <= 0) return string.Empty;
 		var proc = Process.GetProcessById((int)pid);
 		return proc.ProcessName + ".exe";
 	}
-
-	private string? GetActiveWindowsProcessName() {
-		try {
-			var windowHandle = User32.GetForegroundWindow();
-			if (windowHandle == IntPtr.Zero)
-			{
-				return null;
-			}
-
-			if (User32.GetWindowThreadProcessId(windowHandle, out var processId) > 0)
-			{
-				var process = Process.GetProcessById((int)processId);
-				return process.ProcessName + ".exe";
-			}
-		} catch (Exception exc) {
-			Global.logger.Error("Exception in GetActiveWindowsProcessTitle", exc);
-		}
-		return null;
-	}
-
 }

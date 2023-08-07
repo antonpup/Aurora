@@ -64,7 +64,7 @@ namespace Aurora.EffectsEngine
         public EffectLayer(string name, Color color)
         {
             _name = name;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
+            WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);

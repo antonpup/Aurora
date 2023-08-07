@@ -1,4 +1,5 @@
-﻿using Aurora.EffectsEngine;
+﻿using System;
+using Aurora.EffectsEngine;
 using Aurora.Profiles;
 using System.ComponentModel;
 using System.Drawing;
@@ -42,7 +43,7 @@ public sealed class SolidFillLayerHandler : LayerHandler<SolidFillLayerHandlerPr
         return EffectLayer;
     }
 
-    private void EffectsOnCanvasChanged(object? sender, CanvasChangedArgs e)
+    private void EffectsOnCanvasChanged(object? sender, EventArgs e)
     {
         EffectLayer.Fill(_solidBrush);
     }

@@ -310,7 +310,7 @@ namespace Aurora.Settings.Layers
             _effectLayer = new(() => new EffectLayer(name));
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
+            WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
         }
 
         public virtual EffectLayer Render(IGameState gamestate)
@@ -397,7 +397,7 @@ namespace Aurora.Settings.Layers
             
         }
 
-        private void PropertiesChanged(object? sender, CanvasChangedArgs e)
+        private void PropertiesChanged(object? sender, EventArgs e)
         {
             PropertiesChanged(sender, ConstPropertyChangedEventArgs);
         }
@@ -414,7 +414,7 @@ namespace Aurora.Settings.Layers
                 _effectLayer.Value.Dispose();
             }
             Properties.PropertyChanged -= PropertiesChanged;
-            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
+            WeakEventManager<Effects, EventArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
         }
     }
 

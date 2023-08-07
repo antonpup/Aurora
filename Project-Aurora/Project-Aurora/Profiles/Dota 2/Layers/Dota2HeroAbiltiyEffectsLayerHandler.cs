@@ -117,11 +117,11 @@ namespace Aurora.Profiles.Dota_2.Layers
 
         public Dota2HeroAbilityEffectsLayerHandler(): base("Dota 2 - Ability Effects")
         {
-            WeakEventManager<Effects, CanvasChangedArgs>.AddHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
+            WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
             UpdateAnimations();
         }
 
-        private void Effects_CanvasChanged(object? sender, CanvasChangedArgs e)
+        private void Effects_CanvasChanged(object? sender, EventArgs e)
         {
             UpdateAnimations();
         }
@@ -1378,7 +1378,7 @@ namespace Aurora.Profiles.Dota_2.Layers
         {
             base.Dispose();
             
-            WeakEventManager<Effects, CanvasChangedArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
+            WeakEventManager<Effects, EventArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
         }
     }
 }

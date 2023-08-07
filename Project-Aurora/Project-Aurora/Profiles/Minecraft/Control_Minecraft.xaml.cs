@@ -88,7 +88,7 @@ namespace Aurora.Profiles.Minecraft {
                     ModList.Add(new ModDetails {
                         Name = project["name"].ToString(), // Get the project name (includes MC version)
                         Version = versionStr, // Get the version string (e.g. "v0.1.2")
-                        Link = $"{project["web_url"].ToString()}/tags/{versionStr}", // Generate a link to the download page (e.g. "https://gitlab.com/aurora-gsi-minecraft/mc1.7.10/tags/v0.1.2")
+                        Link = $"{project["web_url"]}/releases/{versionStr}", // Generate a link to the download page (e.g. "https://gitlab.com/aurora-gsi-minecraft/mc1.7.10/tags/v0.1.2")
                         Date = DateTime.Parse(projectTags[0]["commit"]["created_at"].ToString()).ToShortDateString() // Show the date the latest version of the mod was released.
                     });
                 }
