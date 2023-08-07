@@ -67,7 +67,7 @@ public partial class Control_SettingsDevicesAndWrappers
         }
 
         var logitechSdkListener = LogitechSdkModule.LogitechSdkListener;
-        LightsyncConnectionStatusLabel.Content = "Disconnected";
+        LightsyncConnectionStatusLabel.Content = logitechSdkListener.IsInstalled ? "Waiting for game" : "Not Installed";
         LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
         logitechSdkListener.ApplicationChanged += LogitechSdkListenerOnApplicationChanged;
     }
@@ -273,6 +273,7 @@ public partial class Control_SettingsDevicesAndWrappers
                     @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
                 key.SetValue(null, x86DllPath);
             }
+            LightsyncConnectionStatusLabel.Content = "Waiting for game";
             MessageBox.Show("Logitech wrapper installed!");
         }
         catch (Exception exc)

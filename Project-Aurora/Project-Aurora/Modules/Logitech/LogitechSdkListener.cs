@@ -6,6 +6,7 @@ using System.Text;
 using Aurora.Devices;
 using Aurora.Modules.Logitech.Enums;
 using Aurora.Modules.Logitech.Structs;
+using Microsoft.Win32;
 using RGB.NET.Devices.Logitech;
 using Color = System.Drawing.Color;
 
@@ -17,12 +18,13 @@ public class LogitechSdkListener
     public event EventHandler<string?>? ApplicationChanged;
 
     public bool IsConnected { get; private set; }
+    public bool IsInstalled { get; private set; }
 
     public IReadOnlyDictionary<DeviceKeys, Color> Colors => _colors;
     public Color BackgroundColor { get; private set; } = Color.Empty;
     public LogiSetTargetDeviceType DeviceType { get; private set; }
 
-    private PipeListener? _pipeListener;
+    private readonly PipeListener _pipeListener = new("LGS_LED_SDK-00000001");
     private readonly ConcurrentDictionary<DeviceKeys, Color> _colors = new();
     private readonly HashSet<DeviceKeys> _excluded = new();
 
@@ -31,10 +33,57 @@ public class LogitechSdkListener
 
     public void Initialize()
     {
-        _pipeListener = new("LGS_LED_SDK-00000001");
         _pipeListener.ClientConnected += PipeListenerOnClientConnected;
         _pipeListener.ClientDisconnected += OnPipeListenerClientDisconnected;
         _pipeListener.CommandReceived += OnPipeListenerCommandReceived;
+        _pipeListener.StartListening();
+        
+        CheckInstalled();
+    }
+
+    private void CheckInstalled()
+    {
+        IsInstalled = AuroraInstalled() || ArtemisInstalled();
+    }
+
+    private static bool AuroraInstalled()
+    {
+        const string registryPath64 =
+            @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
+
+        const string registryPath32 =
+            @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
+
+        using var key64 = Registry.LocalMachine.OpenSubKey(registryPath64);
+        using var key32 = Registry.LocalMachine.OpenSubKey(registryPath32);
+
+        const string dllPath32 = @"C:\ProgramData\Aurora\x86\LogitechLed.dll";
+        const string dllPath64 = @"C:\ProgramData\Aurora\x64\LogitechLed.dll";
+
+        var is64BitKeyPresent = key64?.GetValue(null)?.ToString() == dllPath64;
+        var is32BitKeyPresent = key32?.GetValue(null)?.ToString() == dllPath32;
+        
+        return is64BitKeyPresent && is32BitKeyPresent;
+    }
+
+    private static bool ArtemisInstalled()
+    {
+        const string registryPath64 =
+            @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
+
+        const string registryPath32 =
+            @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
+
+        using var key64 = Registry.LocalMachine.OpenSubKey(registryPath64);
+        using var key32 = Registry.LocalMachine.OpenSubKey(registryPath32);
+
+        const string dllPath32 = @"C:\ProgramData\Artemis\Plugins\Artemis.Plugins.Wrappers.Logitech-c6dda69b\x86\LogitechLed.dll";
+        const string dllPath64 = @"C:\ProgramData\Artemis\Plugins\Artemis.Plugins.Wrappers.Logitech-c6dda69b\x64\LogitechLed.dll";
+
+        var is64BitKeyPresent = key64?.GetValue(null)?.ToString() == dllPath64;
+        var is32BitKeyPresent = key32?.GetValue(null)?.ToString() == dllPath32;
+        
+        return is64BitKeyPresent && is32BitKeyPresent;
     }
 
     private void PipeListenerOnClientConnected(object? sender, EventArgs e)
