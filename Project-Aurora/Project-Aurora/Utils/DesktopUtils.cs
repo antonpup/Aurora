@@ -18,6 +18,9 @@ public static class DesktopUtils
     {
         return new(() =>
         {
+            SystemEvents.SessionSwitch += ResetLazyUnlockSource;
+            return new TaskCompletionSource();
+
             void ResetLazyUnlockSource(object? sender, SessionSwitchEventArgs e)
             {
                 if (e.Reason != SessionSwitchReason.SessionUnlock) return;
@@ -25,10 +28,7 @@ public static class DesktopUtils
                 LazyUnlockSource.Value.SetResult();
                 SystemEvents.SessionSwitch -= ResetLazyUnlockSource;
             }
-
-            SystemEvents.SessionSwitch += ResetLazyUnlockSource;
-            return new TaskCompletionSource(LazyThreadSafetyMode.ExecutionAndPublication);
-        });
+        }, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
     public static void StartSessionWatch()
@@ -36,24 +36,32 @@ public static class DesktopUtils
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
     }
 
-    public static async Task WaitSessionUnlock()
+    public static async Task<bool> WaitSessionUnlock()
     {
-        if (!IsSystemLocked()) return;
+        if (!IsSystemLocked()) return false;
         await LazyUnlockSource.Value.Task;
+        return true;
     }
 
     private static bool IsSystemLocked()
     {
-        var input = OpenInputDesktop(0x0001, false, 0);
-        CloseDesktop(input);
-        return input == IntPtr.Zero;
+        var sessionId = Process.GetCurrentProcess().SessionId;
+
+        if (!WTSQuerySessionInformation(IntPtr.Zero, (uint)sessionId, 25, out var x, out _))
+            return false;
+        var sessionInfo = Marshal.ReadInt16(x + 16);
+
+        return sessionInfo == 0;
     }
-
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr OpenInputDesktop(uint dwFlags, bool fInherit, uint dwDesiredAccess);
-
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr CloseDesktop(IntPtr desktop);
+    
+    [DllImport("Wtsapi32.dll", SetLastError=true)]
+    static extern bool WTSQuerySessionInformation(
+        IntPtr hServer, 
+        uint sessionId, 
+        uint wtsInfoClass, 
+        out IntPtr ppBuffer, 
+        out uint pBytesReturned
+    );
 
     private static async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {

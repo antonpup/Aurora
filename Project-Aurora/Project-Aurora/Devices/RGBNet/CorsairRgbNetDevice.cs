@@ -16,7 +16,7 @@ public class CorsairRgbNetDevice : RgbNetDevice
     public CorsairRgbNetDevice()
     {
         const string sdkLink = "https://www.corsair.com/ww/en/s/downloads";
-        _tooltips = new DeviceTooltips(false, true, null, sdkLink);
+        _tooltips = new DeviceTooltips(false, false, null, sdkLink);
     }
 
     protected override void RegisterVariables(VariableRegistry variableRegistry)
@@ -37,8 +37,11 @@ public class CorsairRgbNetDevice : RgbNetDevice
     {
         await base.ConfigureProvider();
 
-        await DesktopUtils.WaitSessionUnlock();
-        Global.logger.Information("Lock released");
+        var waitSessionUnlock = await DesktopUtils.WaitSessionUnlock();
+        if (waitSessionUnlock)
+        {
+            await Task.Delay(2500);
+        }
 
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");
 
