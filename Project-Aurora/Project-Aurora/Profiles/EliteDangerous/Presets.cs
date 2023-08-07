@@ -819,7 +819,7 @@ namespace Aurora.Profiles.EliteDangerous
         private static float GetBlinkStep(long currentTime)
         {
             float animationPosition =
-                currentTime % (10000L / EliteConfig.KEY_BLINK_SPEED) / (10000.0f / EliteConfig.KEY_BLINK_SPEED);
+                currentTime % (10000L / EliteConfig.KeyBlinkSpeed) / (10000.0f / EliteConfig.KeyBlinkSpeed);
             float animationStep = animationPosition * 2;
             return animationStep > 1 ? 1F + (1F - animationStep) : animationStep;
         }

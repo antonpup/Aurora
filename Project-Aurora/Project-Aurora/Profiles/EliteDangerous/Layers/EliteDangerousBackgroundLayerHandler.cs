@@ -1,16 +1,9 @@
-﻿using Aurora.EffectsEngine;
-using Aurora.Settings;
-using Aurora.Settings.Layers;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using System.Windows.Controls;
+using Aurora.EffectsEngine;
 using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
+using Aurora.Settings.Layers;
 
 namespace Aurora.Profiles.EliteDangerous.Layers
 {
@@ -24,19 +17,26 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
         public Color DiscoveryModeColor { get { return Logic._DiscoveryModeColor ?? _DiscoveryModeColor ?? Color.Empty; } }
 
-        public EliteDangerousBackgroundHandlerProperties() : base() { }
+        public EliteDangerousBackgroundHandlerProperties()
+        { }
 
         public EliteDangerousBackgroundHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
         public override void Default()
         {
             base.Default();
-            this._CombatModeColor = Color.FromArgb(61, 19, 0);
-            this._DiscoveryModeColor = Color.FromArgb(0, 38, 61);
+            _CombatModeColor = Color.FromArgb(61, 19, 0);
+            _DiscoveryModeColor = Color.FromArgb(0, 38, 61);
         }
     }
     public class EliteDangerousBackgroundLayerHandler : LayerHandler<EliteDangerousBackgroundHandlerProperties>
     {
+        private readonly SolidBrush _bg = new(Color.Transparent);
+
+        public EliteDangerousBackgroundLayerHandler() : base("Elite: Dangerous - Background")
+        {
+        }
+
         protected override UserControl CreateControl()
         {
             return new Control_EliteDangerousBackgroundLayer(this);
@@ -44,14 +44,12 @@ namespace Aurora.Profiles.EliteDangerous.Layers
 
         public override EffectLayer Render(IGameState state)
         {
-            EffectLayer bg_layer = new EffectLayer("Elite: Dangerous - Background");
-            
             GameState_EliteDangerous gameState = state as GameState_EliteDangerous;
 
-            Color combat_bg_color = gameState.Status.IsFlagSet(Flag.HUD_DISCOVERY_MODE) ? this.Properties.DiscoveryModeColor : this.Properties.CombatModeColor;
-            bg_layer.FillOver(combat_bg_color);
+            _bg.Color = gameState.Status.IsFlagSet(Flag.HUD_DISCOVERY_MODE) ? Properties.DiscoveryModeColor : Properties.CombatModeColor;
+            EffectLayer.FillOver(_bg);
 
-            return bg_layer;
+            return EffectLayer;
         }
 
         public override void SetApplication(Application profile)
