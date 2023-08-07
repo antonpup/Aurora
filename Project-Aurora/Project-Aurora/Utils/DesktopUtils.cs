@@ -12,7 +12,7 @@ public static class DesktopUtils
 {
     public static bool IsDesktopLocked { get; private set; }
 
-    private static readonly Lazy<TaskCompletionSource> LazyUnlockSource = CreateLazyUnlockSource();
+    private static Lazy<TaskCompletionSource> _lazyUnlockSource = CreateLazyUnlockSource();
 
     private static Lazy<TaskCompletionSource> CreateLazyUnlockSource()
     {
@@ -25,13 +25,14 @@ public static class DesktopUtils
             {
                 if (e.Reason != SessionSwitchReason.SessionUnlock) return;
                 Global.logger.Information("Releasing session unlock lock");
-                LazyUnlockSource.Value.SetResult();
+                _lazyUnlockSource.Value.SetResult();
                 SystemEvents.SessionSwitch -= ResetLazyUnlockSource;
+                _lazyUnlockSource = CreateLazyUnlockSource();
             }
         }, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public static void StartSessionWatch()
+    public static void StartSessionWatch()  //TODO static constructor
     {
         SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
     }
@@ -39,7 +40,7 @@ public static class DesktopUtils
     public static async Task<bool> WaitSessionUnlock()
     {
         if (!IsSystemLocked()) return false;
-        await LazyUnlockSource.Value.Task;
+        await _lazyUnlockSource.Value.Task;
         return true;
     }
 
@@ -47,9 +48,10 @@ public static class DesktopUtils
     {
         var sessionId = Process.GetCurrentProcess().SessionId;
 
-        if (!WTSQuerySessionInformation(IntPtr.Zero, (uint)sessionId, 25, out var x, out _))
+        if (!WTSQuerySessionInformation(IntPtr.Zero, (uint)sessionId, 25, out var sessionBuffer, out _))
             return false;
-        var sessionInfo = Marshal.ReadInt16(x + 16);
+        var sessionInfo = Marshal.ReadInt16(sessionBuffer + 16);
+        WTSFreeMemory(sessionBuffer);
 
         return sessionInfo == 0;
     }
@@ -62,6 +64,9 @@ public static class DesktopUtils
         out IntPtr ppBuffer, 
         out uint pBytesReturned
     );
+
+    [DllImport("wtsapi32.dll")]
+    private static extern void WTSFreeMemory(IntPtr pMemory);
 
     private static async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
