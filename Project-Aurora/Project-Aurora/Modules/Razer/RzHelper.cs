@@ -17,11 +17,13 @@ public class ChromaAppChangedEventArgs : EventArgs
 
 public static class RzHelper
 {
-    public static readonly RzColor[] KeyboardColors = new RzColor[22 * 6];
-    public static readonly RzColor[] MousepadColors = new RzColor[20];
-    public static readonly RzColor[] MouseColors = new RzColor[9 * 7];
-    public static readonly RzColor[] HeadsetColors = new RzColor[5];
-    public static readonly RzColor[] ChromaLinkColors = new RzColor[5];
+    private static readonly EmptyGrid EmptyGrid = new();
+
+    public static IRzGrid KeyboardColors { get; private set; } = EmptyGrid;
+    public static IRzGrid MousepadColors { get; private set; } = EmptyGrid;
+    public static IRzGrid MouseColors { get; private set; } = EmptyGrid;
+    public static IRzGrid HeadsetColors { get; private set; } = EmptyGrid;
+    public static IRzGrid ChromaLinkColors { get; private set; } = EmptyGrid;
 
     public static event EventHandler<ChromaAppChangedEventArgs>? ChromaAppChanged;
 
@@ -35,13 +37,9 @@ public static class RzHelper
         }
     }
 
-    private static readonly Stopwatch UpdateStopwatch = new();
+    private static DateTime _lastFetch = DateTime.UnixEpoch;
+    private static DateTime _lastUpdate = DateTime.Now;
     private static string _currentAppExecutable = string.Empty;
-
-    static RzHelper()
-    {
-        UpdateStopwatch.Start();
-    }
 
     /// <summary>
     /// Lowest supported version (inclusive)
@@ -82,17 +80,13 @@ public static class RzHelper
     public static bool IsSdkVersionSupported(RzSdkVersion version)
         => version >= SupportedFromVersion && version < SupportedToVersion;
 
-    public static bool UpdateIfStale()
+    public static bool IsStale()
     {
-        if (Global.razerSdkManager == null || UpdateStopwatch.ElapsedMilliseconds < Global.Configuration.UpdateDelay)
+        if (Global.razerSdkManager == null || _lastFetch > _lastUpdate)
         {
             return false;
         }
-        foreach (var provider in Global.razerSdkManager.Providers)
-        {
-            OnDataUpdated(provider, EventArgs.Empty);
-        }
-        UpdateStopwatch.Restart();
+        _lastFetch = DateTime.Now;
         return true;
     }
 
@@ -101,42 +95,47 @@ public static class RzHelper
         if (s is not AbstractDataProvider provider)
             return;
 
-        provider.Update();
-
         switch (provider)
         {
-            case RzKeyboardDataProvider keyboard:
-            {
-                for (var i = 0; i < keyboard.Grids[0].Height * keyboard.Grids[0].Width; i++)
-                    KeyboardColors[i] = keyboard.GetZoneColor(i);
+            case RzChromaLinkDataProvider:
+                ChromaLinkColors.IsDirty = true;
                 break;
-            }
-            case RzMouseDataProvider mouse:
-                for (var i = 0; i < mouse.Grids[0].Height * mouse.Grids[0].Width; i++)
-                    MouseColors[i] = mouse.GetZoneColor(i);
+            case RzKeyboardDataProvider:
+                KeyboardColors.IsDirty = true;
                 break;
-            case RzMousepadDataProvider mousePad:
-            {
-                for (var i = 0; i < mousePad.Grids[0].Height * mousePad.Grids[0].Width; i++)
-                    MousepadColors[i] = mousePad.GetZoneColor(i);
+            case RzMouseDataProvider:
+                MouseColors.IsDirty = true;
                 break;
-            }
-            case RzHeadsetDataProvider headset:
-                for (var i = 0; i < headset.Grids[0].Height * headset.Grids[0].Width; i++)
-                {
-                    HeadsetColors[i] = headset.GetZoneColor(i);
-                }
+            case RzMousepadDataProvider:
+                MousepadColors.IsDirty = true;
                 break;
-            case RzChromaLinkDataProvider chromaLink:
-                for (var i = 0; i < chromaLink.Grids[0].Height * chromaLink.Grids[0].Width; i++)
-                {
-                    ChromaLinkColors[i] = chromaLink.GetZoneColor(i);
-                }
+            case RzHeadsetDataProvider:
+                HeadsetColors.IsDirty = true;
                 break;
             case RzAppListDataProvider appList:
+                provider.Update();
                 CurrentAppExecutable = appList.CurrentAppExecutable ?? string.Empty;
+
+                if (string.IsNullOrEmpty(appList.CurrentAppExecutable) || Global.razerSdkManager == null)
+                {
+                    KeyboardColors = EmptyGrid;
+                    MousepadColors = EmptyGrid;
+                    MouseColors = EmptyGrid;
+                    HeadsetColors = EmptyGrid;
+                    ChromaLinkColors = EmptyGrid;
+                }
+                else
+                {
+                    KeyboardColors = new ConnectedGrid(22 * 6, Global.razerSdkManager.GetDataProvider<RzKeyboardDataProvider>());
+                    MousepadColors = new ConnectedGrid(20, Global.razerSdkManager.GetDataProvider<RzMousepadDataProvider>());
+                    MouseColors = new ConnectedGrid(9 * 7, Global.razerSdkManager.GetDataProvider<RzMouseDataProvider>());
+                    HeadsetColors = new ConnectedGrid(5, Global.razerSdkManager.GetDataProvider<RzHeadsetDataProvider>());
+                    ChromaLinkColors = new ConnectedGrid(5, Global.razerSdkManager.GetDataProvider<RzChromaLinkDataProvider>());
+                }
+
                 break;
         }
+        _lastUpdate = DateTime.Now;
     }
 
     public static bool IsCurrentAppValid()

@@ -110,7 +110,7 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
             return EffectLayer.EmptyLayer;
         }
         _empty = false;
-        if (!RzHelper.UpdateIfStale())
+        if (!RzHelper.IsStale())
             return EffectLayer;
 
         foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
@@ -134,7 +134,7 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
             rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
         else if (RazerLayoutMap.Mousepad.TryGetValue(key, out position))
-            rColor = RzHelper.MousepadColors[position[0]];
+            rColor = RzHelper.MousepadColors[1, position[0]];
         else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
             rColor = RzHelper.MouseColors[position[1] + position[0] * 7];
         else if (RazerLayoutMap.Headset.TryGetValue(key, out position))

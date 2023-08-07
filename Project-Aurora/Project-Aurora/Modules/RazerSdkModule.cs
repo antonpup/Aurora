@@ -4,7 +4,6 @@ using Aurora.Modules.Razer;
 using Aurora.Profiles;
 using Lombok.NET;
 using RazerSdkWrapper;
-using RazerSdkWrapper.Data;
 
 namespace Aurora.Modules;
 
@@ -52,7 +51,6 @@ public sealed partial class RazerSdkModule : AuroraModule
     {
         _razerSdkManager = new RzSdkManager
         {
-            AppListEnabled = true,
             KeyboardEnabled = true,
             MouseEnabled = true,
             MousepadEnabled = true,
@@ -60,8 +58,8 @@ public sealed partial class RazerSdkModule : AuroraModule
             ChromaLinkEnabled = true,
         };
         Global.razerSdkManager = _razerSdkManager;
-
         _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
+        _razerSdkManager.Start();
 
         RzHelper.Initialize();
     }
