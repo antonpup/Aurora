@@ -32,6 +32,11 @@ public sealed class PipeListener : IDisposable
         _pipeStream = CreatePipe(_pipeName);
         _pipeStream.BeginWaitForConnection(ReceiveAuroraCommand, null);
     }
+
+    public void Disconnect()
+    {
+        _pipeStream?.Close();
+    }
     
     private void ReceiveAuroraCommand(IAsyncResult result)
     {

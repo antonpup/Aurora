@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -266,6 +267,10 @@ public class LogitechSdkListener
     private void Init(ReadOnlySpan<byte> span)
     {
         var name = ReadNullTerminatedUnicodeString(span);
+        if (Path.GetFileName(name) == "Aurora.exe")
+        {
+            _pipeListener.Disconnect();
+        }
         ApplicationChanged?.Invoke(this, name);
     }
 
