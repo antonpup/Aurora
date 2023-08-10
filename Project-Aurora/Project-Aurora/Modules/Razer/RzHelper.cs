@@ -139,8 +139,7 @@ public static class RzHelper
     }
 
     public static bool IsCurrentAppValid()
-        => !string.IsNullOrEmpty(CurrentAppExecutable)
-           && string.Compare(CurrentAppExecutable, "Aurora.exe", StringComparison.OrdinalIgnoreCase) != 0;
+        => !string.IsNullOrEmpty(CurrentAppExecutable) && CurrentAppExecutable != "Aurora.exe";
 
     public static void Initialize()
     {

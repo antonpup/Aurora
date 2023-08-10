@@ -102,18 +102,18 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         return new Control_RazerLayer(this);
     }
 
-    private bool _empty = true;
+    private static readonly DeviceKeys[] DeviceKeysArray = (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys));
+
     public override EffectLayer Render(IGameState gamestate)
     {
         if (!RzHelper.IsCurrentAppValid())
         {
             return EffectLayer.EmptyLayer;
         }
-        _empty = false;
         if (!RzHelper.IsStale())
             return EffectLayer;
 
-        foreach (var key in (DeviceKeys[])Enum.GetValues(typeof(DeviceKeys)))
+        foreach (var key in DeviceKeysArray)
         {
             if (!TryGetColor(key, out var color))
                 continue;
