@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Modules;
+using Aurora.Modules.Logitech;
 using Aurora.Settings.Layers.Controls;
 
 namespace Aurora.Settings.Layers;
@@ -62,7 +63,7 @@ public sealed class LogitechLayerHandler : LayerHandler<LogitechLayerHandlerProp
     public override EffectLayer Render(IGameState gamestate)
     {
         var logitechSdk = LogitechSdkModule.LogitechSdkListener;
-        if (!logitechSdk.IsConnected)
+        if (logitechSdk.State != LightsyncSdkState.Connected)
         {
             return EffectLayer.EmptyLayer;
         }

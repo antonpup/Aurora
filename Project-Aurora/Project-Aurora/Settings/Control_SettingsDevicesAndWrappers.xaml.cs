@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using Aurora.Devices;
 using Aurora.Modules;
+using Aurora.Modules.Logitech;
 using Aurora.Modules.Razer;
 using Aurora.Utils;
 using Microsoft.Win32;
@@ -67,8 +68,25 @@ public partial class Control_SettingsDevicesAndWrappers
         }
 
         var logitechSdkListener = LogitechSdkModule.LogitechSdkListener;
-        LightsyncConnectionStatusLabel.Content = logitechSdkListener.IsInstalled ? "Waiting for game" : "Not Installed";
-        LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+        switch (logitechSdkListener.State)
+        {
+            case LightsyncSdkState.Conflicted:
+                LightsyncConnectionStatusLabel.Content = "Conflicted";
+                LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.Crimson);
+                break;
+            case LightsyncSdkState.NotInstalled:
+                LightsyncConnectionStatusLabel.Content = "Not Installed";
+                LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                break;
+            case LightsyncSdkState.Waiting:
+                LightsyncConnectionStatusLabel.Content = "Waiting for game";
+                LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.Chocolate);
+                break;
+            case LightsyncSdkState.Connected:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
         logitechSdkListener.ApplicationChanged += LogitechSdkListenerOnApplicationChanged;
     }
 
@@ -89,7 +107,7 @@ public partial class Control_SettingsDevicesAndWrappers
                 if (e == null)
                 {
                     LightsyncConnectionStatusLabel.Content = "Disconnected";
-                    LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                    LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.Chocolate);
                     LightsyncCurrentApplicationLabel.Content = "-";
                 }
                 else

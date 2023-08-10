@@ -3,26 +3,39 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using Aurora.Devices;
 using Aurora.Modules.Logitech.Enums;
 using Aurora.Modules.Logitech.Structs;
+using Aurora.Modules.ProcessMonitor;
+using Aurora.Utils;
 using Microsoft.Win32;
 using RGB.NET.Devices.Logitech;
 using Color = System.Drawing.Color;
 
 namespace Aurora.Modules.Logitech;
 
+public enum LightsyncSdkState
+{
+    NotInstalled,
+    Waiting,
+    Connected,
+    Conflicted,
+}
+
 public class LogitechSdkListener
 {
+    private const string RegistryPath64 = @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
+    private const string RegistryPath32 = @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
     public event EventHandler? ColorsUpdated;
     public event EventHandler<string?>? ApplicationChanged;
 
-    public bool IsConnected { get; private set; }
-    public bool IsInstalled { get; private set; }
+    public LightsyncSdkState State { get; private set; }
 
     public IReadOnlyDictionary<DeviceKeys, Color> Colors => _colors;
     public Color BackgroundColor { get; private set; } = Color.Empty;
-    public LogiSetTargetDeviceType DeviceType { get; private set; }
+
+    private LogiSetTargetDeviceType DeviceType { get; set; }
 
     private readonly PipeListener _pipeListener = new("LGS_LED_SDK-00000001");
     private readonly ConcurrentDictionary<DeviceKeys, Color> _colors = new();
@@ -31,31 +44,55 @@ public class LogitechSdkListener
     private Dictionary<DeviceKeys, Color> _savedColors = new();
     private Color _savedBackground = Color.Empty;
 
-    public void Initialize()
+    public async Task Initialize()
     {
+        const string runReg = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+        using var runKey = Registry.LocalMachine.OpenSubKey(runReg);
+        var lgsLaunch = runKey?.GetValue("Launch LCore");
+        var lgsInstalled = lgsLaunch != null;
+        if (lgsInstalled)
+        {
+            const string runApprovedReg = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run";
+            using var runApprovedKey = Registry.LocalMachine.OpenSubKey(runApprovedReg);
+            var lgsLaunchApproved = runApprovedKey?.GetValue("Launch LCore");
+            var runApproved = lgsLaunchApproved is byte[] startValue && startValue[0] == 2;
+
+            if (runApproved)
+            {
+                State = LightsyncSdkState.Conflicted;
+                return;
+            }
+        }
+
+        if (RunningProcessMonitor.Instance.IsProcessRunning("lcore.exe"))
+        {
+            State = LightsyncSdkState.Conflicted;
+            return;
+        }
+
+        var unlocked = await DesktopUtils.WaitSessionUnlock();
+        if (unlocked)
+        {
+            await Task.Delay(5000);
+        }
+
         _pipeListener.ClientConnected += PipeListenerOnClientConnected;
         _pipeListener.ClientDisconnected += OnPipeListenerClientDisconnected;
         _pipeListener.CommandReceived += OnPipeListenerCommandReceived;
         _pipeListener.StartListening();
-        
-        CheckInstalled();
+
+        State = IsInstalled() ? LightsyncSdkState.Waiting : LightsyncSdkState.NotInstalled;
     }
 
-    private void CheckInstalled()
+    private static bool IsInstalled()
     {
-        IsInstalled = AuroraInstalled() || ArtemisInstalled();
+        return AuroraInstalled() || ArtemisInstalled();
     }
 
     private static bool AuroraInstalled()
     {
-        const string registryPath64 =
-            @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
-
-        const string registryPath32 =
-            @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
-
-        using var key64 = Registry.LocalMachine.OpenSubKey(registryPath64);
-        using var key32 = Registry.LocalMachine.OpenSubKey(registryPath32);
+        using var key64 = Registry.LocalMachine.OpenSubKey(RegistryPath64);
+        using var key32 = Registry.LocalMachine.OpenSubKey(RegistryPath32);
 
         const string dllPath32 = @"C:\ProgramData\Aurora\x86\LogitechLed.dll";
         const string dllPath64 = @"C:\ProgramData\Aurora\x64\LogitechLed.dll";
@@ -68,14 +105,8 @@ public class LogitechSdkListener
 
     private static bool ArtemisInstalled()
     {
-        const string registryPath64 =
-            @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
-
-        const string registryPath32 =
-            @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary";
-
-        using var key64 = Registry.LocalMachine.OpenSubKey(registryPath64);
-        using var key32 = Registry.LocalMachine.OpenSubKey(registryPath32);
+        using var key64 = Registry.LocalMachine.OpenSubKey(RegistryPath64);
+        using var key32 = Registry.LocalMachine.OpenSubKey(RegistryPath32);
 
         const string dllPath32 = @"C:\ProgramData\Artemis\Plugins\Artemis.Plugins.Wrappers.Logitech-c6dda69b\x86\LogitechLed.dll";
         const string dllPath64 = @"C:\ProgramData\Artemis\Plugins\Artemis.Plugins.Wrappers.Logitech-c6dda69b\x64\LogitechLed.dll";
@@ -88,12 +119,12 @@ public class LogitechSdkListener
 
     private void PipeListenerOnClientConnected(object? sender, EventArgs e)
     {
-        IsConnected = true;
+        State = LightsyncSdkState.Connected;
     }
 
     private void OnPipeListenerClientDisconnected(object? sender, EventArgs e)
     {
-        IsConnected = false;
+        State = LightsyncSdkState.Waiting;
         ClearData();
         ApplicationChanged?.Invoke(this, null);
     }
@@ -357,8 +388,6 @@ public class LogitechSdkListener
         _colors.Clear();
         _excluded.Clear();
 
-        if (_pipeListener == null)
-            return;
         _pipeListener.ClientDisconnected -= OnPipeListenerClientDisconnected;
         _pipeListener.CommandReceived -= OnPipeListenerCommandReceived;
         _pipeListener.Dispose();
