@@ -233,11 +233,6 @@ public class Effects
 
     private readonly Task<DeviceManager> _deviceManager;
 
-    static Effects()
-    {
-        Global.logger.Information("Effects static load");
-    }
-
     public Effects(Task<DeviceManager> deviceManager)
     {
         _deviceManager = deviceManager;

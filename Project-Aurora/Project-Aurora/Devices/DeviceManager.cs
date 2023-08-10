@@ -95,6 +95,7 @@ public sealed class DeviceManager: IDisposable
 {
     private bool _suspended;
     private bool _resumed;
+    private bool _disposed;
 
     public List<DeviceContainer> DeviceContainers { get; } = new();
 
@@ -167,6 +168,8 @@ public sealed class DeviceManager: IDisposable
 
     public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
     {
+        if(_disposed)
+            return;
         foreach (var dc in InitializedDeviceContainers)
         {
             dc.UpdateDevice(composition, forced);
@@ -206,6 +209,7 @@ public sealed class DeviceManager: IDisposable
 
     public void Dispose()
     {
+        _disposed = true;
         DeviceContainers.Clear();
     }
 }

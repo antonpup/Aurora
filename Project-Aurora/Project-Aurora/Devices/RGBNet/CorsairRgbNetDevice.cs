@@ -40,7 +40,7 @@ public class CorsairRgbNetDevice : RgbNetDevice
         var waitSessionUnlock = await DesktopUtils.WaitSessionUnlock();
         if (waitSessionUnlock)
         {
-            await Task.Delay(2500);
+            await Task.Delay(5000);
         }
 
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");

@@ -57,7 +57,7 @@ public static class DesktopUtils
     }
     
     [DllImport("Wtsapi32.dll", SetLastError=true)]
-    static extern bool WTSQuerySessionInformation(
+    private static extern bool WTSQuerySessionInformation(
         IntPtr hServer, 
         uint sessionId, 
         uint wtsInfoClass, 
