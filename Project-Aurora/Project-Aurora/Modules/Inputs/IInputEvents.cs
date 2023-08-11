@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Aurora.Devices;
 using Aurora.Utils;
+using JetBrains.Annotations;
 using Linearstar.Windows.RawInput.Native;
+using User32 = Aurora.Utils.User32;
 
 namespace Aurora.Modules.Inputs;
 
@@ -78,4 +81,7 @@ public interface IInputEvents : IDisposable
     bool Alt { get; }
     bool Control { get; }
     bool Windows { get; }
+
+    [Pure]
+    public TimeSpan GetTimeSinceLastInput();
 }

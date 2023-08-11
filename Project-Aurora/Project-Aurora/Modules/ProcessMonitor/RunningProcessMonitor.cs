@@ -44,9 +44,20 @@ public sealed partial class RunningProcessMonitor : IDisposable {
     private RunningProcessMonitor() {
         // Fetch all processes running now
         _runningProcesses = Process.GetProcesses()
-            .Select(p => {
-                try { return System.IO.Path.GetFileName(p.MainModule.FileName).ToLower(); }
-                catch { return p.ProcessName.ToLower(); }
+            .Select(p =>
+            {
+                try
+                {
+                    return System.IO.Path.GetFileName(p.MainModule.FileName).ToLower();
+                }
+                catch
+                {
+                    return p.ProcessName.ToLower();
+                }
+                finally
+                {
+                    p.Close();
+                }
             })
             .GroupBy(name => name)
             .ToDictionary(g => g.First(), g => g.Count());

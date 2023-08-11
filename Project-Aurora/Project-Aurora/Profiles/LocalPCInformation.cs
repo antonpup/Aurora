@@ -171,7 +171,7 @@ namespace Aurora.Profiles {
         /// <summary>
         /// Returns focused window's process name.
         /// </summary>
-        public string ActiveProcess => ActiveProcessMonitor.Instance.ActiveProcessName;
+        public string ActiveProcess => ActiveProcessMonitor.Instance.ProcessName;
     }
 
     public class CPUInfo : Node

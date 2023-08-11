@@ -12,6 +12,7 @@ public static class DesktopUtils
 {
     public static bool IsDesktopLocked { get; private set; }
 
+    private static readonly int SessionId = Process.GetCurrentProcess().SessionId;
     private static Lazy<TaskCompletionSource> _lazyUnlockSource = CreateLazyUnlockSource();
 
     private static Lazy<TaskCompletionSource> CreateLazyUnlockSource()
@@ -46,9 +47,7 @@ public static class DesktopUtils
 
     private static bool IsSystemLocked()
     {
-        var sessionId = Process.GetCurrentProcess().SessionId;
-
-        if (!WTSQuerySessionInformation(IntPtr.Zero, (uint)sessionId, 25, out var sessionBuffer, out _))
+        if (!WTSQuerySessionInformation(IntPtr.Zero, (uint)SessionId, 25, out var sessionBuffer, out _))
             return false;
         var sessionInfo = Marshal.ReadInt16(sessionBuffer + 16);
         WTSFreeMemory(sessionBuffer);

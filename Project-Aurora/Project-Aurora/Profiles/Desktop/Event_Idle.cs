@@ -42,6 +42,10 @@ public sealed class EventIdle : LightEvent
 
     private void IdleTypeChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName != nameof(Global.Configuration.IdleType))
+        {
+            return;
+        }
         EffectCfg.Speed = Global.Configuration.IdleSpeed;
         _invalidated = true;
 

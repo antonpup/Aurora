@@ -529,29 +529,30 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     public async Task UpdateSpecificProcessHandle(string process)
     {
         var processes = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process));
-        if (processes.Length == 0)
+        try
         {
-            return;
+            if (processes.Length == 0)
+            {
+                return;
+            }
+            var targetProcess = Array.Find(
+                processes,
+                p => p.MainWindowHandle != IntPtr.Zero
+            );
+            if (targetProcess != null)  //target process is there but doesn't have window yet
+            {
+                _specificProcessHandle = targetProcess.MainWindowHandle;
+            }
         }
-        var targetProcess = Array.Find(
-            processes,
-            p => p.MainWindowHandle != IntPtr.Zero
-        );
-        if (targetProcess != null)  //target process is there but doesn't have window yet
+        finally
         {
-            _specificProcessHandle = targetProcess.MainWindowHandle;
+            foreach (var p in processes)
+            {
+                p.Close();
+            }
         }
     }
-    public async Task UpdateSpecificProcessHandle(int processId)
-    {
-        Process? targetProcess = Process.GetProcessById(processId);
 
-        if (targetProcess != null)  //target process is there but doesn't have window yet
-        {
-            _specificProcessHandle = targetProcess.MainWindowHandle;
-        }
-    }
-    
     #endregion
 
     #region DWM

@@ -56,7 +56,7 @@ public sealed class WindowListener : IDisposable
         try
         {
             var element = (AutomationElement)sender;
-            var process = Process.GetProcessById(element.Current.ProcessId);
+            using var process = Process.GetProcessById(element.Current.ProcessId);
             if (process.ProcessName.StartsWith("Aurora"))
             {
                 return;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using Aurora.Modules.ProcessMonitor;
+using Aurora.Modules.Inputs;
 using Keys = System.Windows.Forms.Keys;
 
 namespace Aurora.Settings.Overrides.Logic {
@@ -186,7 +186,7 @@ namespace Aurora.Settings.Overrides.Logic {
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
         protected override bool Execute(IGameState gameState) {
-            var idleTime = ActiveProcessMonitor.GetTimeSinceLastInput();
+            var idleTime = Global.InputEvents.GetTimeSinceLastInput();
             switch (TimeUnit) {
                 case TimeUnit.Milliseconds: return idleTime.TotalMilliseconds > InactiveTime;
                 case TimeUnit.Seconds: return idleTime.TotalSeconds > InactiveTime;

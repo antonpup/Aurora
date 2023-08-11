@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
 using Aurora.Settings;
 using Aurora.Utils;
 using Lombok.NET;
@@ -24,70 +22,56 @@ public sealed partial class ActiveProcessMonitor
 			ActiveProcessChanged?.Invoke(null, EventArgs.Empty);
 		}
 	}
-	public string ProcessTitle { get; private set; }
-	public event EventHandler? ActiveProcessChanged;
+	public string ProcessTitle { get; private set; } = string.Empty;
 
-	public string ActiveProcessName { get; private set; } = "";
+	public int ProcessId { get; private set; }
+	
+	public event EventHandler? ActiveProcessChanged;
 
 	private readonly User32.WinEventDelegate _dele;
 
 	private ActiveProcessMonitor()
 	{
+		_dele = WinEventProc;
 		if (Global.Configuration.DetectionMode != ApplicationDetectionMode.WindowsEvents)
 		{
 			return;
 		}
-		_dele = WinEventProc;
 		User32.SetWinEventHook(EventSystemForeground, EventSystemForeground, IntPtr.Zero, _dele, 0, 0, WinEventOutOfContext);
 		User32.SetWinEventHook(EventSystemMinimizeEnd, EventSystemMinimizeEnd, IntPtr.Zero, _dele, 0, 0, WinEventOutOfContext);
 	}
 
-	private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
+	private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr windowHandle, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime)
 	{
-		UpdateProcessTitle(hwnd);
-		ProcessName = GetWindowProcessName(hwnd);
-		
+		SetWindowCurrent(windowHandle);
 	}
 
 	public void UpdateActiveProcessPolling()
 	{
 		var windowHandle = User32.GetForegroundWindow();
-		UpdateProcessTitle(windowHandle);
-		ProcessName = GetActiveWindowProcessName(windowHandle);
+		SetWindowCurrent(windowHandle);
 	}
 
-	public static TimeSpan GetTimeSinceLastInput() {
-		var inf = new User32.tagLASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<User32.tagLASTINPUTINFO>() };
-		return !User32.GetLastInputInfo(ref inf) ?
-			new TimeSpan(0) :
-			new TimeSpan(0, 0, 0, 0, Environment.TickCount - inf.dwTime);
-	}
-
-	private string GetActiveWindowProcessName(IntPtr windowHandle)
+	private void SetWindowCurrent(IntPtr windowHandle)
 	{
 		try
 		{
-			return GetWindowProcessName(windowHandle);
+			if (User32.GetWindowThreadProcessId(windowHandle, out var pid) > 0)
+			{
+				using var process = Process.GetProcessById((int)pid);
+				ProcessTitle = process.MainWindowTitle;
+				ProcessName = process.ProcessName + ".exe";
+				ProcessId = (int)pid;
+				return;
+			}
 		}
 		catch (Exception exc)
 		{
-			Global.logger.Error(exc, "Exception in GetActiveWindowsProcessname");
+			Global.logger.Error(exc, "Exception in GetActiveWindowsProcessName");
 		}
 
-		return string.Empty;
-	}
-
-	private void UpdateProcessTitle(IntPtr windowHandle)
-	{
-		var text = new StringBuilder(256);
-		if (User32.GetWindowText(windowHandle, text, text.Capacity) > 0)
-			ProcessTitle = text.ToString();
-	}
-
-	private string GetWindowProcessName(IntPtr windowHandle)
-	{
-		if (User32.GetWindowThreadProcessId(windowHandle, out var pid) <= 0) return string.Empty;
-		var proc = Process.GetProcessById((int)pid);
-		return proc.ProcessName + ".exe";
+		ProcessTitle = string.Empty;
+		ProcessName = string.Empty;
+		ProcessId = 0;
 	}
 }

@@ -739,8 +739,6 @@ namespace Aurora.Scripts.VoronScripts
 		{
 			try
 			{
-				IntPtr handle = User32.GetForegroundWindow();
-
 				var activeProcessName = ActiveProcessMonitor.Instance.ProcessName;
 				if (!string.IsNullOrWhiteSpace(activeProcessName))
 					activeProcessName = Path.GetFileName(activeProcessName).ToLower();

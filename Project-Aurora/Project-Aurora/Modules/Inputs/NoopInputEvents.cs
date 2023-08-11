@@ -6,6 +6,8 @@ namespace Aurora.Modules.Inputs;
 
 public sealed class NoopInputEvents : IInputEvents
 {
+    private static readonly TimeSpan NoopLastInput = new(0);
+
     public void Dispose()
     {
         //noop
@@ -22,4 +24,8 @@ public sealed class NoopInputEvents : IInputEvents
     public bool Alt => false;
     public bool Control => false;
     public bool Windows => false;
+
+    public TimeSpan GetTimeSinceLastInput() {
+        return NoopLastInput;
+    }
 }

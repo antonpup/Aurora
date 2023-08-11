@@ -482,7 +482,10 @@ public sealed class LightingStateManager
             if (preview && Global.Configuration.OverlaysInPreview && !GetOverlayActiveProfiles().Contains(profile))
                 profile.UpdateOverlayLights(newFrame);
 
-            UpdateIdleEffects(newFrame);
+            if (Global.Configuration.IdleType != IdleEffects.None)
+            {
+                UpdateIdleEffects(newFrame);
+            }
         }
 
         lock (Effects.CanvasChangedLock)

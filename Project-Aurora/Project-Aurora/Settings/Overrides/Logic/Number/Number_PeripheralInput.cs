@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using Aurora.Modules.ProcessMonitor;
+using Aurora.Modules.Inputs;
 using Aurora.Profiles;
 using Aurora.Utils;
 
@@ -41,7 +36,7 @@ namespace Aurora.Settings.Overrides.Logic.Number {
 
         /// <summary>Checks to see if the duration since the last input is greater than the given inactive time.</summary>
         protected override double Execute(IGameState gameState) {
-            var idleTime = ActiveProcessMonitor.GetTimeSinceLastInput();
+            var idleTime = Global.InputEvents.GetTimeSinceLastInput();
             switch (TimeUnit) {
                 case TimeUnit.Milliseconds: return idleTime.TotalMilliseconds;
                 case TimeUnit.Seconds: return idleTime.TotalSeconds;

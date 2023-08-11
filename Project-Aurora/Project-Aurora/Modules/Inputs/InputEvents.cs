@@ -174,6 +174,13 @@ public sealed class InputEvents : IInputEvents
         }
     }
 
+    public TimeSpan GetTimeSinceLastInput() {
+        var inf = new User32.tagLASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<User32.tagLASTINPUTINFO>() };
+        return !User32.GetLastInputInfo(ref inf) ?
+            new TimeSpan(0) :
+            new TimeSpan(0, 0, 0, 0, Environment.TickCount - inf.dwTime);
+    }
+
     public void Dispose()
     {
         if (_disposed) return;
