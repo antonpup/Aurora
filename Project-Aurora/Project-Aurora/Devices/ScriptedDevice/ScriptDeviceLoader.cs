@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
-using CSScriptLib;
+using Aurora.Modules.Plugins;
 
 namespace Aurora.Devices.ScriptedDevice;
 
@@ -17,7 +16,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
         _scriptFolder = scriptFolder;
     }
 
-    public IEnumerable<IDevice> LoadDevices()
+    public IEnumerable<IDevice?> LoadDevices()
     {
         if (!Directory.Exists(_scriptFolder))
             Directory.CreateDirectory(_scriptFolder);
@@ -26,13 +25,15 @@ internal class ScriptDeviceLoader : IDeviceLoader
         if (files.Length == 0)
             yield break;
 
-        Global.logger.Information($"Loading device scripts from {_scriptFolder}");
+        Global.logger.Information("Loading device scripts from {ScriptFolder}", _scriptFolder);
 
-        foreach (var deviceScript in files)
+        foreach (var deviceScript in files.OrderBy(s => s))
         {
             yield return LoadScript(deviceScript);
         }
     }
+
+    private readonly List<string> _loadedScripts = new();
 
     private IDevice? LoadScript(string deviceScript)
     {
@@ -42,10 +43,11 @@ internal class ScriptDeviceLoader : IDeviceLoader
             case ".py":
                 return LoadPython(deviceScript);
             case ".cs":
-                CompileCs(deviceScript);
-                break;
+                _loadedScripts.Add(deviceScript + ".dll");
+                PluginCompiler.Compile(deviceScript).Wait();
+                return LoadDll(deviceScript + ".dll");
             case ".dll":
-                return LoadDll(deviceScript);
+                return _loadedScripts.Contains(deviceScript) ? null : LoadDll(deviceScript);
             default:
                 Global.logger.Error("Script with path {Path} has an unsupported type/ext! ({Extension})", deviceScript, ext);
                 break;
@@ -53,7 +55,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
         return null;
     }
 
-    private IDevice? LoadPython(string deviceScript)
+    private static IDevice? LoadPython(string deviceScript)
     {
         var scope = Global.PythonEngine.ExecuteFile(deviceScript);
         if (scope.TryGetVariable("main", out var mainType))
@@ -61,7 +63,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
             var script = Global.PythonEngine.Operations.CreateInstance(mainType);
 
             IDevice scriptedDevice = new ScriptedDevice(script);
-            Global.logger.Information($"Loaded device script {deviceScript}");
+            Global.logger.Information("Loaded device script {DeviceScript}", deviceScript);
             return scriptedDevice;
         }
 
@@ -69,14 +71,7 @@ internal class ScriptDeviceLoader : IDeviceLoader
         return null;
     }
 
-    private void CompileCs(string deviceScript)
-    {
-        CSScript.RoslynEvaluator.CompileAssemblyFromFile(deviceScript, deviceScript + ".dll");
-        File.Delete(deviceScript);  //TODO DON'T DELETE!!! create new process for compiling
-        MessageBox.Show(deviceScript + " is compiled. Aurora will crash but script will be loaded next time.");
-    }
-
-    private IDevice? LoadDll(string deviceScript)
+    private static IDevice? LoadDll(string deviceScript)
     {
         var data = File.ReadAllBytes(deviceScript);
         var scriptAssembly = Assembly.Load(data);
@@ -84,12 +79,12 @@ internal class ScriptDeviceLoader : IDeviceLoader
         var constructorInfo = typ.GetConstructor(Type.EmptyTypes);
         if (constructorInfo == null)
         {
-            Global.logger.Information($"Script {deviceScript} does not have parameterless constructor or device class isn't the first one");
+            Global.logger.Information("Script {DeviceScript} does not have parameterless constructor or device class isn\'t the first one", deviceScript);
             return null;
         }
         dynamic script = Activator.CreateInstance(typ);
         IDevice scriptedDevice = new ScriptedDevice(script);
-        Global.logger.Information($"Loaded device script {deviceScript}");
+        Global.logger.Information("Loaded device script {DeviceScript}", deviceScript);
         return scriptedDevice;
     }
 }

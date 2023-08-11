@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using CSScripting;
 
 namespace Aurora.Devices.Bloody
 {
@@ -54,13 +53,14 @@ namespace Aurora.Devices.Bloody
         {
             var devices = DeviceList.Local.GetHidDevices(vendorID: VendorId, productID: productId); //Find device with given VID PID
 
-            if (devices.IsEmpty())
+            var hidDevices = devices.ToList();
+            if (!hidDevices.Any())
             {
                 return null;
             }
             try
             {
-                HidDevice ctrlDevice = devices.First(d => d.GetMaxFeatureReportLength() > 50);
+                HidDevice ctrlDevice = hidDevices.First(d => d.GetMaxFeatureReportLength() > 50);
 
                 HidStream ctrlStream = null;
                 if ((bool) ctrlDevice?.TryOpen(out ctrlStream))

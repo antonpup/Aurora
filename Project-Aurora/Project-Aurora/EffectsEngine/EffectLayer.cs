@@ -11,7 +11,6 @@ using System.Windows;
 using Aurora.Devices;
 using Aurora.Settings;
 using Aurora.Utils;
-using CSScripting;
 using Point = System.Drawing.Point;
 
 namespace Aurora.EffectsEngine
@@ -570,11 +569,11 @@ namespace Aurora.EffectsEngine
             {
                 var gp = new GraphicsPath();
                 gp.AddRectangle(new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight));
-                sequence.Keys.ForEach(k =>
+                foreach (var k in sequence.Keys)
                 {
                     var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
                     gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
-                });
+                }
                 return gp;
             }
             else
@@ -1112,12 +1111,12 @@ namespace Aurora.EffectsEngine
             switch (sequence.Type)
             {
                 case KeySequenceType.Sequence:
-                    sequence.Keys.ForEach(k =>
+                    foreach (var k in sequence.Keys)
                     {
                         var keyBounds = Effects.GetBitmappingFromDeviceKey(k);
-                        gp.AddRectangle(keyBounds.Rectangle); //Overlapping additons remove that shape
+                        gp.AddRectangle(keyBounds.Rectangle); //Overlapping additions remove that shape
                         _keyColors.Remove(k, out _);
-                    });
+                    }
                     break;
                 case KeySequenceType.FreeForm:
                     var freeform = sequence.Freeform;

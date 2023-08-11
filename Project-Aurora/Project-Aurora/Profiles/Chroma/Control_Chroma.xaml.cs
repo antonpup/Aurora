@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using CSScripting;
 using Microsoft.Scripting.Utils;
 using Microsoft.Win32;
 
@@ -78,7 +77,9 @@ public partial class Control_Chroma : INotifyPropertyChanged
     {
         if (string.IsNullOrEmpty(SelectedExcludedProgram)) return;
         _settings.ExcludedPrograms.Remove(SelectedExcludedProgram);
-        _profile.Config.ProcessNames.AddItem(SelectedExcludedProgram.ToLower());
+        _profile.Config.ProcessNames = _profile.Config.ProcessNames
+            .Append(SelectedExcludedProgram.ToLower())
+            .ToArray();
         ReorderChromaRegistry();
     }
 

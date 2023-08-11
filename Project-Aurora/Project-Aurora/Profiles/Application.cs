@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,11 +13,11 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Aurora.EffectsEngine;
+using Aurora.Modules.Plugins;
 using Aurora.Scripts.VoronScripts;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
-using CSScriptLib;
 using IronPython.Runtime.Types;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
@@ -536,7 +537,9 @@ namespace Aurora.Profiles
 
                             break;
                         case ".cs":
-                            Assembly scriptAssembly = CSScript.RoslynEvaluator.CompileCode(File.ReadAllText(script));
+                            PluginCompiler.Compile(script).Wait();
+                            
+                            Assembly scriptAssembly = Assembly.LoadFrom(script + ".dll");
                             Type effectType = typeof(IEffectScript);
                             foreach (Type typ in scriptAssembly.ExportedTypes)
                             {

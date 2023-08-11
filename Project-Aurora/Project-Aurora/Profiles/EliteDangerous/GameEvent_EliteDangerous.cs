@@ -9,8 +9,6 @@ using Aurora.Profiles.EliteDangerous.GSI;
 using Aurora.Profiles.EliteDangerous.GSI.Nodes;
 using Aurora.Profiles.EliteDangerous.Helpers;
 using Aurora.Profiles.EliteDangerous.Journal;
-using Aurora.Utils;
-using CSScripting;
 using Newtonsoft.Json;
 
 namespace Aurora.Profiles.EliteDangerous;
@@ -195,7 +193,7 @@ public class GameEvent_EliteDangerous : GameEvent_Generic
     private void ReadBindFiles()
     {
         if (!File.Exists(EliteConfig.BindingsPresetFile)) return;
-        string[] currentBindPrefix = File.ReadAllText(EliteConfig.BindingsPresetFile).GetLines();
+        var currentBindPrefix = File.ReadAllText(EliteConfig.BindingsPresetFile).Split("\n");
         _currentBindFile = SearchForBindsFile(EliteConfig.BindingsDir, currentBindPrefix[1].Trim());
 
         if (_currentBindFile == null)

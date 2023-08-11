@@ -14,9 +14,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project-Aurora", "Project-Aurora\Project-Aurora.csproj", "{18D2D471-3F57-4ECE-9C62-836A801473D8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{40085232-ACED-4CBE-945B-90BA8153C151} = {40085232-ACED-4CBE-945B-90BA8153C151}
+		{6F81D40A-6AA0-4C8B-A395-779EF3003CA4} = {6F81D40A-6AA0-4C8B-A395-779EF3003CA4}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MemoryAccessProfiles", "MemoryAccessProfiles\MemoryAccessProfiles.csproj", "{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginCompiler", "PluginCompiler\PluginCompiler.csproj", "{89760F46-E473-4F9A-A85A-A56F6DFB8730}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +47,10 @@ Global
 		{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}.Debug|x64.Build.0 = Debug|x64
 		{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}.Release|x64.ActiveCfg = Release|x64
 		{DD71932E-8E70-4733-AD2B-4BA3C2BA2409}.Release|x64.Build.0 = Release|x64
+		{89760F46-E473-4F9A-A85A-A56F6DFB8730}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{89760F46-E473-4F9A-A85A-A56F6DFB8730}.Debug|x64.Build.0 = Debug|Any CPU
+		{89760F46-E473-4F9A-A85A-A56F6DFB8730}.Release|x64.ActiveCfg = Release|Any CPU
+		{89760F46-E473-4F9A-A85A-A56F6DFB8730}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -119,9 +119,9 @@ public sealed class DeviceManager: IDisposable
 
         foreach (var deviceLoader in deviceLoaders)
         {
-            foreach (var device in deviceLoader.LoadDevices())
+            foreach (var device in deviceLoader.LoadDevices().Where(d => d != null))
             {
-                DeviceContainers.Add(new DeviceContainer(device));
+                DeviceContainers.Add(new DeviceContainer(device!));
             }
         }
 

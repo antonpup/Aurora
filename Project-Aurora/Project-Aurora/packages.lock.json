@@ -25,18 +25,6 @@
         "resolved": "1.1.0",
         "contentHash": "OdWKe2gD8IGU5cGyEEk4+TB9LCeIzog/ET/8O2eKDOc2bx08AEYtPUuYXB+SW258padb3h4Rq5l9KvjwaU71QA=="
       },
-      "CS-Script": {
-        "type": "Direct",
-        "requested": "[4.6.2, )",
-        "resolved": "4.6.2",
-        "contentHash": "sn4S4g0Fxf36RhUe7nZfrjlYVXwZ0MAMhkgkilIvXpJ7yssgOklsxhSaM0e16AefVEbjkc+otFS+ekuUThDSVA==",
-        "dependencies": {
-          "Microsoft.CodeAnalysis.CSharp.Scripting": "4.1.0",
-          "Microsoft.CodeAnalysis.Scripting.Common": "4.1.0",
-          "Microsoft.Extensions.DependencyModel": "6.0.0",
-          "System.Runtime.Loader": "4.3.0"
-        }
-      },
       "Dubya.WindowsMediaController": {
         "type": "Direct",
         "requested": "[2.5.0, )",
@@ -405,6 +393,17 @@
         "requested": "[3.5.50211.1, )",
         "resolved": "3.5.50211.1",
         "contentHash": "CJ2hQCO4gBlMd4OyagGwVYETd99OsG0cn7d0ZlJFLlTK9R5qcLQp4R8+Tp3ZL6Lf3JxZhMTWWsJG0+4KJ97Spg=="
+      },
+      "CS-Script": {
+        "type": "Transitive",
+        "resolved": "4.6.2",
+        "contentHash": "sn4S4g0Fxf36RhUe7nZfrjlYVXwZ0MAMhkgkilIvXpJ7yssgOklsxhSaM0e16AefVEbjkc+otFS+ekuUThDSVA==",
+        "dependencies": {
+          "Microsoft.CodeAnalysis.CSharp.Scripting": "4.1.0",
+          "Microsoft.CodeAnalysis.Scripting.Common": "4.1.0",
+          "Microsoft.Extensions.DependencyModel": "6.0.0",
+          "System.Runtime.Loader": "4.3.0"
+        }
       },
       "DynamicLanguageRuntime": {
         "type": "Transitive",
@@ -1729,6 +1728,13 @@
           "Microsoft.CodeAnalysis.CSharp": "[4.6.0, )",
           "Microsoft.CodeAnalysis.CSharp.Workspaces": "[4.6.0, )",
           "Microsoft.CodeAnalysis.Common": "[4.6.0, )"
+        }
+      },
+      "plugincompiler": {
+        "type": "Project",
+        "dependencies": {
+          "Aurora": "[1.0.0, )",
+          "CS-Script": "[4.6.2, )"
         }
       }
     },

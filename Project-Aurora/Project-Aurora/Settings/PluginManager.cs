@@ -185,7 +185,7 @@ namespace Aurora.Settings
                         //Get the ID of the plugin
                         string id = objPlugin.ID;
 
-                        if ((!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id]))
+                        if (!Settings.PluginManagement.ContainsKey(id) || Settings.PluginManagement[id])
                             objPlugin.PluginHost = this;
 
                         Plugins.Add(id, objPlugin);

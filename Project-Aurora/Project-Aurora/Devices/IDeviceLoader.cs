@@ -8,7 +8,7 @@ namespace Aurora.Devices;
 
 internal interface IDeviceLoader
 {
-    IEnumerable<IDevice> LoadDevices();
+    IEnumerable<IDevice?> LoadDevices();
 }
 
 internal class AssemblyDeviceLoader : IDeviceLoader

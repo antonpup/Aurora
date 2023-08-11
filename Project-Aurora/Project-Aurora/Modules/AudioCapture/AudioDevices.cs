@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using CSScripting;
 using NAudio.CoreAudioApi;
 
 namespace Aurora.Modules.AudioCapture;
@@ -32,7 +31,10 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
     private void RefreshDeviceList(ObservableConcurrentDictionary<string, string> target, DataFlow flow)
     {
         // Note: clear the target then repopulate it to make it easier for data binding. If we re-created this, we could not use {x:Static}.
-        target.Keys.ForEach(key => target.Remove(key));
+        foreach (var key in target.Keys)
+        {
+            target.Remove(key);
+        }
         target.Add(DefaultDeviceId, "Default"); // Add default device to to the top of the list
         foreach (var device in _deviceEnumerator.EnumerateAudioEndPoints(flow, DeviceState.Active)
                      .OrderBy(d => d.DeviceFriendlyName))
