@@ -113,7 +113,6 @@
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <!-- Locked to version 4.0.1 due to an unresolved issue with interop https://github.com/sharpdx/SharpDX/issues/1050 -->
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="SmartThreadPool.dll" Version="2.3.0" />
     <PackageReference Include="System.Management" Version="7.0.2" />
