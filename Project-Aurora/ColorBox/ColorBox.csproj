@@ -19,10 +19,6 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-
   <ItemGroup>
     <Content Include="LICENSE.txt" />
   </ItemGroup>

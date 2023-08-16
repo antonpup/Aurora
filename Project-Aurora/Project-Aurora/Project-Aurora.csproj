@@ -43,14 +43,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\x64\OmenFourZoneLighting.dll</HintPath>
     </Reference>
-
-    <!--
-    <Reference Include="RazerSdkReader">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\x64\RazerSdkReader.dll</HintPath>
-    </Reference>
-    -->
-
     <Reference Include="Roccat-Talk, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\x64\Roccat-Talk.dll</HintPath>
@@ -109,6 +101,7 @@
     <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.83" />
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.83" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
+    <PackageReference Include="Serilog.Aggregating.Filter" Version="1.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -151,21 +144,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ColorBox\ColorBox.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="ver_minor.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="kb_layouts\Extra Features\2led_headset.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="kb_layouts\Extra Features\chroma.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

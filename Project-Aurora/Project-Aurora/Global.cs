@@ -61,6 +61,7 @@ public static class Global
         var logPath = Path.Combine(AppDataDirectory, "Logs", logFile);
         logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
+            .Filter.UniqueOverSpan("true", TimeSpan.FromSeconds(30))
             .WriteTo.File(logPath,
                 rollingInterval: RollingInterval.Infinite,
                 fileSizeLimitBytes: 25 * 1000000,  //25 MB
