@@ -257,7 +257,7 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
                 animMix.AddTrack(wave);
                 break;
             }
-            case InteractiveEffects.Wave_Rainbow:
+            case InteractiveEffects.WaveRainbow:
             {
                 var rainbowWave = new AnimationTrack("Rainbow Wave", 1.0f);
 
@@ -269,7 +269,7 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
                 animMix.AddTrack(rainbowWave);
                 break;
             }
-            case InteractiveEffects.Wave_Filled:
+            case InteractiveEffects.WaveFilled:
             {
                 var wave = new AnimationTrack("Filled Wave effect", 1.0f);
                 wave.SetFrame(0.0f,

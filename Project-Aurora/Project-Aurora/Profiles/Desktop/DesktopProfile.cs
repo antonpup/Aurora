@@ -1,211 +1,394 @@
-﻿using Aurora.Settings;
-using Aurora.Settings.Layers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Aurora.Settings.Overrides.Logic;
+using Aurora.Devices;
 using Aurora.EffectsEngine;
-using System.Runtime.Serialization;
-using System.Linq;
+using Aurora.Settings;
+using Aurora.Settings.Layers;
+using Aurora.Settings.Overrides.Logic;
+using Aurora.Settings.Overrides.Logic.Builder;
+using Aurora.Utils;
 
-namespace Aurora.Profiles.Desktop
+namespace Aurora.Profiles.Desktop;
+
+public enum InteractiveEffects
 {
-    public enum InteractiveEffects
+    [Description("None")] None = 0,
+    [Description("Key Wave")] Wave = 1,
+    [Description("Key Wave (Filled)")] WaveFilled = 3,
+    [Description("Key Fade")] KeyPress = 2,
+    [Description("Arrow Flow")] ArrowFlow = 4,
+    [Description("Key Wave (Rainbow)")] WaveRainbow = 5,
+}
+
+public class DesktopProfile : ApplicationProfile
+{
+    private void AddVolumeOverlay()
     {
-        [Description("None")]
-        None = 0,
-        [Description("Key Wave")]
-        Wave = 1,
-        [Description("Key Wave (Filled)")]
-        Wave_Filled = 3,
-        [Description("Key Fade")]
-        KeyPress = 2,
-        [Description("Arrow Flow")]
-        ArrowFlow = 4,
-        [Description("Key Wave (Rainbow)")]
-        Wave_Rainbow = 5,
+        OverlayLayers.Add(new Layer("Volume Overlay", new PercentGradientLayerHandler
+        {
+            Properties = new PercentGradientLayerHandlerProperties
+            {
+                _Sequence = new KeySequence(new[]
+                {
+                    DeviceKeys.VOLUME_MUTE, DeviceKeys.VOLUME_UP, DeviceKeys.VOLUME_DOWN
+                }),
+                _PercentType = PercentEffectType.AllAtOnce,
+                _Gradient = new EffectBrush
+                {
+                    type = EffectBrush.BrushType.Linear,
+                    wrap = EffectBrush.BrushWrap.None,
+                    colorGradients = new SortedDictionary<double, Color>
+                    {
+                        { 0f, Color.Red },
+                        { 0.18f, Color.FromArgb(255, 251, 0) },
+                        { 0.4f, Color.Lime },
+                        { 0.8f, Color.FromArgb(138, 255, 200) },
+                        { 1f, Color.FromArgb(91, 0, 255) }
+                    }
+                },
+                _VariablePath = "LocalPCInfo/SystemVolume",
+                _MaxVariablePath = "1"
+            },
+        }));
     }
 
-    public class DesktopProfile : ApplicationProfile
+    private void AddPause()
     {
-        public DesktopProfile() : base()
+        OverlayLayers.Add(new Layer("Media Pause", new SolidColorLayerHandler()
         {
-            
-        }
-
-        private void setVolumeOverlay()
-        {
-            OverlayLayers.Add(new Layer("Volume Overlay", new PercentGradientLayerHandler()
+            Properties = new LayerHandlerProperties
             {
-                Properties = new PercentGradientLayerHandlerProperties()
+                _PrimaryColor = Color.Yellow,
+                _Sequence = new KeySequence(new[]
                 {
-                    _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
-                            Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
-                            Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
-                        }),
-                    _Gradient = new EffectsEngine.EffectBrush()
-                    {
-                        type = EffectBrush.BrushType.Linear,
-                        colorGradients = new SortedDictionary<double, Color> {
-                                { 0f, Color.FromArgb(255, 0, 255, 0) },
-                                { 0.5f, Color.OrangeRed },
-                                { 1f, Color.Red }
-                            }
-                    },
-                    _VariablePath = "LocalPCInfo/SystemVolume",
-                    _MaxVariablePath = "100"
-                },
+                    DeviceKeys.MEDIA_PLAY, DeviceKeys.MEDIA_PLAY_PAUSE
+                }),
+            },
+        }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",
+            new BooleanGSIBoolean("LocalPCInfo/Media/MediaPlaying")
+        )));
+    }
 
-            }, new Settings.Overrides.Logic.Builder.OverrideLogicBuilder().SetDynamicBoolean("_Enabled", new BooleanOr(new List<Evaluatable<bool>> { new BooleanKeyDownWithTimer(Keys.VolumeUp, 3), new BooleanKeyDownWithTimer(Keys.VolumeDown, 3) }))));
-        }
-
-        public override void Reset()
+    private void AddPlay()
+    {
+        OverlayLayers.Add(new Layer("Media Play", new SolidColorLayerHandler
         {
-            base.Reset();
-            setVolumeOverlay();
-
-            Layers = new System.Collections.ObjectModel.ObservableCollection<Layer>()
+            Properties = new LayerHandlerProperties
             {
-                new Layer("Ctrl Shortcuts", new ShortcutAssistantLayerHandler()
+                _PrimaryColor = Color.Lime,
+                _Sequence = new KeySequence(new[]
                 {
-                    Properties = new ShortcutAssistantLayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Red,
-                        _ShortcutKeys = new Keybind[]
-                        {
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.X }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.C }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.V }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Z }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.F4 }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.A }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.D }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.R }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Y }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Right }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Left }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Down }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Up }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.Tab }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LMenu, Keys.Delete }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Up }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Down }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Left }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Right }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Escape }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.LShiftKey, Keys.Escape }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.Escape }),
-                            new Keybind( new Keys[] { Keys.LControlKey, Keys.F })
-                        }
-                    }
+                    DeviceKeys.MEDIA_PLAY, DeviceKeys.MEDIA_PLAY_PAUSE
                 }),
-                new Layer("Win Shortcuts", new ShortcutAssistantLayerHandler()
+            },
+        }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",
+            new BooleanAnd(new List<Evaluatable<bool>>
+            {
+                new BooleanGSIBoolean("LocalPCInfo/Media/HasMedia"), new BooleanNot( new BooleanGSIBoolean("LocalPCInfo/Media/MediaPlaying") )
+            } )
+        )));
+    }
+
+    private void AddNext()
+    {
+        OverlayLayers.Add(new Layer("Media Next", new SolidColorLayerHandler
+        {
+            Properties = new LayerHandlerProperties
+            {
+                _PrimaryColor = Color.Lime,
+                _Sequence = new KeySequence(new[]
                 {
-                    Properties = new ShortcutAssistantLayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Blue,
-                        _ShortcutKeys = new Keybind[]
-                        {
-                            new Keybind( new Keys[] { Keys.LWin, Keys.L }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.D }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.B }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.A }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.LMenu, Keys.D }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.E }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.G }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.I }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.M }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.P }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.R }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.S }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.Up }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.Down }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.Left }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.Right }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.Home }),
-                            new Keybind( new Keys[] { Keys.LWin, Keys.D })
-                        }
-                    }
+                    DeviceKeys.MEDIA_NEXT
                 }),
-                new Layer("Alt Shortcuts", new ShortcutAssistantLayerHandler()
+            },
+        }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",
+            new BooleanGSIBoolean("LocalPCInfo/Media/HasNextMedia")
+        )));
+    }
+
+    private void AddPrevious()
+    {
+        OverlayLayers.Add(new Layer("Media Previous", new SolidColorLayerHandler
+        {
+            Properties = new LayerHandlerProperties
+            {
+                _PrimaryColor = Color.Lime,
+                _Sequence = new KeySequence(new[]
                 {
-                    Properties = new ShortcutAssistantLayerHandlerProperties()
-                    {
-                        _PrimaryColor = Color.Yellow,
-                        _ShortcutKeys = new Keybind[]
-                        {
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.Tab }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.F4 }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.Space }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.Left }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.Right }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.PageUp }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.PageDown }),
-                            new Keybind( new Keys[] { Keys.LMenu, Keys.Tab }),
-                        }
-                    }
+                    DeviceKeys.MEDIA_PREVIOUS
                 }),
-                new Layer("CPU Usage", new PercentLayerHandler()
+            },
+        }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",
+            new BooleanGSIBoolean("LocalPCInfo/Media/HasPreviousMedia")
+        )));
+    }
+
+    private void AddHasMedia()
+    {
+        OverlayLayers.Add(new Layer("Media Playing", new SolidColorLayerHandler
+        {
+            Properties = new LayerHandlerProperties
+            {
+                _PrimaryColor = Color.Lime,
+                _Sequence = new KeySequence(new[]
                 {
-                    Properties = new PercentLayerHandlerProperties()
-                    {
-                        _PrimaryColor =  Color.FromArgb(0, 205, 255),
-                        _SecondaryColor = Color.FromArgb(0, 65, 80),
-                        _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3, Devices.DeviceKeys.F4,
-                            Devices.DeviceKeys.F5, Devices.DeviceKeys.F6, Devices.DeviceKeys.F7, Devices.DeviceKeys.F8,
-                            Devices.DeviceKeys.F9, Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
-                        }),
-                        _BlinkThreshold = 0.0,
-                        _BlinkDirection = false,
-                        _VariablePath = "LocalPCInfo/CPU/Usage",
-                        _MaxVariablePath = "100"
-                    },
-                    EnableSmoothing = true
+                    DeviceKeys.VOLUME_MUTE,
+                    DeviceKeys.MEDIA_PREVIOUS,
+                    DeviceKeys.MEDIA_PLAY, DeviceKeys.MEDIA_PLAY_PAUSE,
+                    DeviceKeys.MEDIA_STOP,
+                    DeviceKeys.MEDIA_NEXT,
                 }),
-                new Layer("RAM Usage", new PercentLayerHandler()
+            },
+        }, new OverrideLogicBuilder().SetDynamicBoolean("_Enabled",
+            new BooleanGSIBoolean("LocalPCInfo/Media/HasMedia")
+        )));
+    }
+
+    private void AddOverlays()
+    {
+        AddVolumeOverlay();
+        AddPause();
+        AddPlay();
+        AddNext();
+        AddPrevious();
+        AddHasMedia();
+    }
+
+    public override void Reset()
+    {
+        base.Reset();
+        AddOverlays();
+
+        Layers = new ObservableCollection<Layer>
+        {
+            new("Num Lock", new LockColourLayerHandler
+            {
+                Properties = new LockColourLayerHandlerProperties
                 {
-                    Properties = new PercentLayerHandlerProperties()
-                    {
-                        _PrimaryColor =  Color.FromArgb(255, 80, 0),
-                        _SecondaryColor = Color.FromArgb(90, 30, 0),
-                        _PercentType = PercentEffectType.Progressive_Gradual,
-                        _Sequence = new KeySequence(new Devices.DeviceKeys[] {
-                            Devices.DeviceKeys.ONE, Devices.DeviceKeys.TWO, Devices.DeviceKeys.THREE, Devices.DeviceKeys.FOUR,
-                            Devices.DeviceKeys.FIVE, Devices.DeviceKeys.SIX, Devices.DeviceKeys.SEVEN, Devices.DeviceKeys.EIGHT,
-                            Devices.DeviceKeys.NINE, Devices.DeviceKeys.ZERO, Devices.DeviceKeys.MINUS, Devices.DeviceKeys.EQUALS
-                        }),
-                        _BlinkThreshold = 0.0,
-                        _BlinkDirection = false,
-                        _VariablePath = "LocalPCInfo/RAM/Used",
-                        _MaxVariablePath = "LocalPCInfo/RAM/Total"
-                    },
-                    EnableSmoothing = true
-                }),
-                new Layer("Interactive Layer", new InteractiveLayerHandler()
+                    _ToggledKey = Keys.NumLock,
+                    _PrimaryColor = ColorUtils.FastColor(108, 20, 255),
+                    _SecondaryColor = ColorUtils.FastColor(255, 0, 4, 120),
+                    _Sequence = new KeySequence(new[] { DeviceKeys.NUM_LOCK }),
+                }
+            }),
+            new("Caps", new LockColourLayerHandler
+            {
+                Properties = new LockColourLayerHandlerProperties
                 {
-                    Properties = new InteractiveLayerHandlerProperties()
+                    _ToggledKey = Keys.Capital,
+                    _PrimaryColor = ColorUtils.FastColor(164, 45, 69),
+                    _SecondaryColor = ColorUtils.FastColor(0, 0, 0, 0),
+                    _Sequence = new KeySequence(new[] { DeviceKeys.CAPS_LOCK }),
+                }
+            }),
+            new("Ctrl Shortcuts", new ShortcutAssistantLayerHandler
+            {
+                Properties = new ShortcutAssistantLayerHandlerProperties
+                {
+                    _PrimaryColor = Color.Red,
+                    _ShortcutKeys = new Keybind[]
                     {
-                        InteractiveEffect = InteractiveEffects.Wave_Filled,
-                        _PrimaryColor = Color.FromArgb(0, 255, 0),
-                        RandomPrimaryColor = true,
-                        _SecondaryColor = Color.FromArgb(255, 0, 0),
-                        RandomSecondaryColor = true,
-                        EffectSpeed = 5.0f,
-                        EffectWidth = 2
+                        new(new[] { Keys.LControlKey, Keys.X }),
+                        new(new[] { Keys.LControlKey, Keys.C }),
+                        new(new[] { Keys.LControlKey, Keys.V }),
+                        new(new[] { Keys.LControlKey, Keys.Z }),
+                        new(new[] { Keys.LControlKey, Keys.F4 }),
+                        new(new[] { Keys.LControlKey, Keys.A }),
+                        new(new[] { Keys.LControlKey, Keys.D }),
+                        new(new[] { Keys.LControlKey, Keys.R }),
+                        new(new[] { Keys.LControlKey, Keys.Y }),
+                        new(new[] { Keys.LControlKey, Keys.Right }),
+                        new(new[] { Keys.LControlKey, Keys.Left }),
+                        new(new[] { Keys.LControlKey, Keys.Down }),
+                        new(new[] { Keys.LControlKey, Keys.Up }),
+                        new(new[] { Keys.LControlKey, Keys.LMenu, Keys.Tab }),
+                        new(new[] { Keys.LControlKey, Keys.LMenu, Keys.Delete }),
+                        new(new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Up }),
+                        new(new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Down }),
+                        new(new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Left }),
+                        new(new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Right }),
+                        new(new[] { Keys.LControlKey, Keys.Escape }),
+                        new(new[] { Keys.LControlKey, Keys.LShiftKey, Keys.Escape }),
+                        new(new[] { Keys.LControlKey, Keys.Escape }),
+                        new(new[] { Keys.LControlKey, Keys.F })
                     }
                 }
-                )
-            };
-        }
-
-        [OnDeserialized]
-        void OnDeserialized(StreamingContext context)
-        {
-
-        }
+            }),
+            new("Win Shortcuts", new ShortcutAssistantLayerHandler
+            {
+                Properties = new ShortcutAssistantLayerHandlerProperties
+                {
+                    _PrimaryColor = Color.Blue,
+                    _ShortcutKeys = new Keybind[]
+                    {
+                        new(new[] { Keys.LWin, Keys.L }),
+                        new(new[] { Keys.LWin, Keys.D }),
+                        new(new[] { Keys.LWin, Keys.B }),
+                        new(new[] { Keys.LWin, Keys.A }),
+                        new(new[] { Keys.LWin, Keys.LMenu, Keys.D }),
+                        new(new[] { Keys.LWin, Keys.E }),
+                        new(new[] { Keys.LWin, Keys.G }),
+                        new(new[] { Keys.LWin, Keys.I }),
+                        new(new[] { Keys.LWin, Keys.M }),
+                        new(new[] { Keys.LWin, Keys.P }),
+                        new(new[] { Keys.LWin, Keys.R }),
+                        new(new[] { Keys.LWin, Keys.S }),
+                        new(new[] { Keys.LWin, Keys.Up }),
+                        new(new[] { Keys.LWin, Keys.Down }),
+                        new(new[] { Keys.LWin, Keys.Left }),
+                        new(new[] { Keys.LWin, Keys.Right }),
+                        new(new[] { Keys.LWin, Keys.Home }),
+                        new(new[] { Keys.LWin, Keys.D })
+                    }
+                }
+            }),
+            new("Alt Shortcuts", new ShortcutAssistantLayerHandler
+            {
+                Properties = new ShortcutAssistantLayerHandlerProperties
+                {
+                    _PrimaryColor = Color.Yellow,
+                    _ShortcutKeys = new Keybind[]
+                    {
+                        new(new[] { Keys.LMenu, Keys.Tab }),
+                        new(new[] { Keys.LMenu, Keys.F4 }),
+                        new(new[] { Keys.LMenu, Keys.Space }),
+                        new(new[] { Keys.LMenu, Keys.Left }),
+                        new(new[] { Keys.LMenu, Keys.Right }),
+                        new(new[] { Keys.LMenu, Keys.PageUp }),
+                        new(new[] { Keys.LMenu, Keys.PageDown }),
+                        new(new[] { Keys.LMenu, Keys.Tab }),
+                    }
+                }
+            }),
+            new("CPU Usage", new PercentLayerHandler
+            {
+                Properties = new PercentLayerHandlerProperties
+                {
+                    _PrimaryColor = Color.FromArgb(0, 205, 255),
+                    _SecondaryColor = Color.FromArgb(0, 65, 80),
+                    _PercentType = PercentEffectType.Progressive_Gradual,
+                    _Sequence = new KeySequence(new[]
+                    {
+                        DeviceKeys.F1, DeviceKeys.F2, DeviceKeys.F3, DeviceKeys.F4,
+                        DeviceKeys.F5, DeviceKeys.F6, DeviceKeys.F7, DeviceKeys.F8,
+                        DeviceKeys.F9, DeviceKeys.F10, DeviceKeys.F11, DeviceKeys.F12
+                    }),
+                    _BlinkThreshold = 0.0,
+                    _BlinkDirection = false,
+                    _VariablePath = "LocalPCInfo/CPU/Usage",
+                    _MaxVariablePath = "100"
+                },
+                EnableSmoothing = true,
+            })
+            {
+                Enabled = false,
+            },
+            new("RAM Usage", new PercentLayerHandler
+            {
+                Properties = new PercentLayerHandlerProperties
+                {
+                    _PrimaryColor = Color.FromArgb(255, 80, 0),
+                    _SecondaryColor = Color.FromArgb(90, 30, 0),
+                    _PercentType = PercentEffectType.Progressive_Gradual,
+                    _Sequence = new KeySequence(new[]
+                    {
+                        DeviceKeys.ONE, DeviceKeys.TWO, DeviceKeys.THREE, DeviceKeys.FOUR,
+                        DeviceKeys.FIVE, DeviceKeys.SIX, DeviceKeys.SEVEN, DeviceKeys.EIGHT,
+                        DeviceKeys.NINE, DeviceKeys.ZERO, DeviceKeys.MINUS, DeviceKeys.EQUALS
+                    }),
+                    _BlinkThreshold = 0.0,
+                    _BlinkDirection = false,
+                    _VariablePath = "LocalPCInfo/RAM/Used",
+                    _MaxVariablePath = "LocalPCInfo/RAM/Total"
+                },
+                EnableSmoothing = true
+            })
+            {
+                Enabled = false,
+            },
+            new("Interactive Layer", new InteractiveLayerHandler
+            {
+                Properties = new InteractiveLayerHandlerProperties
+                {
+                    InteractiveEffect = InteractiveEffects.KeyPress,
+                    _PrimaryColor = Color.FromArgb(127, 0, 255, 0),
+                    _SecondaryColor = Color.FromArgb(127, 255, 0, 0),
+                    EffectSpeed = 32.5f,
+                    EffectWidth = 4
+                }
+            }),
+            new("Gradient Wave", new GradientLayerHandler
+            {
+                Properties = new GradientLayerHandlerProperties
+                {
+                    Sequence =
+                    {
+                        Freeform = new FreeFormObject(0, 0, 1600, 400),
+                        Type = KeySequenceType.FreeForm
+                    },
+                    _GradientConfig = new LayerEffectConfig
+                    {
+                        Angle = 90,
+                        Speed = 1,
+                        GradientSize = 19.5f,
+                        AnimationType = AnimationType.TranslateXy,
+                        Brush = new EffectBrush
+                        {
+                            type = EffectBrush.BrushType.Linear,
+                            wrap = EffectBrush.BrushWrap.Repeat,
+                            start = new PointF(0, -0.5f),
+                            center = new PointF(0, 0),
+                            end = new PointF(1, 1),
+                            colorGradients =
+                            {
+                                [0] = ColorUtils.FastColor(0, 0, 0, 0),
+                                [0.06593407690525055] = ColorUtils.FastColor(0, 0, 0, 0),
+                                [0.1538461595773697] = ColorUtils.FastColor(153, 59, 237),
+                                [0.24337075650691986] = ColorUtils.FastColor(10, 0, 0, 0),
+                                [0.4263019561767578] = ColorUtils.FastColor(0, 0, 0, 0),
+                                [0.5358933806419373] = ColorUtils.FastColor(151, 183, 63),
+                                [0.6483517289161682] = ColorUtils.FastColor(4, 0, 0, 0),
+                                [0.7614668011665344] = ColorUtils.FastColor(0, 24, 24, 51),
+                                [0.8626373410224915] = ColorUtils.FastColor(129, 255, 239, 48),
+                                [0.9395604133605957] = ColorUtils.FastColor(4, 194, 189, 127),
+                                [1] = ColorUtils.FastColor(4, 194, 189, 12),
+                            }
+                        }
+                    }
+                }
+            }),
+            new("Background", new GradientLayerHandler
+            {
+                Properties = new GradientLayerHandlerProperties
+                {
+                    _LayerOpacity = 0.08f,
+                    Sequence =
+                    {
+                        Freeform = new FreeFormObject(0, 0, 1600, 400),
+                        Type = KeySequenceType.FreeForm
+                    },
+                    _GradientConfig = new LayerEffectConfig
+                    {
+                        Angle = 0,
+                        Speed = 1,
+                        GradientSize = 0,
+                        AnimationType = AnimationType.TranslateXy,
+                        AnimationReverse = true,
+                        Brush = new EffectBrush(new ColorSpectrum(
+                            ColorUtils.FastColor(253, 83, 30), ColorUtils.FastColor(136, 219, 61), ColorUtils.FastColor(255, 83, 30)
+                            ))
+                        {
+                            start = new PointF(0, -0.5f),
+                            center = new PointF(0, 0),
+                            end = new PointF(1, 1),
+                            wrap = EffectBrush.BrushWrap.Repeat,
+                        }
+                    }
+                }
+            }),
+        };
     }
 }
