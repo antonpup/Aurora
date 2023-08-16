@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -10,7 +9,6 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
-using Aurora.Settings;
 using Octokit;
 using Timer = System.Timers.Timer;
 using Version = SemanticVersioning.Version;

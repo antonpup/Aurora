@@ -63,10 +63,7 @@
     <PackageReference Include="SemanticVersioning">
       <Version>2.0.2</Version>
     </PackageReference>
+    <PackageReference Include="Octokit" Version="7.1.0" />
+    <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Project-Aurora\Project-Aurora.csproj" />
-  </ItemGroup>
-
 </Project>
