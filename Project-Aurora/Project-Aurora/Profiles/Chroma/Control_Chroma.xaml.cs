@@ -75,24 +75,30 @@ public partial class Control_Chroma : INotifyPropertyChanged
 
     private void ExcludedRemove_Click(object? sender, RoutedEventArgs e)
     {
-        if (string.IsNullOrEmpty(SelectedExcludedProgram)) return;
-        _settings.ExcludedPrograms.Remove(SelectedExcludedProgram);
+        var exclusion = SelectedExcludedProgram;
+        if (string.IsNullOrEmpty(exclusion)) return;
+        _settings.ExcludedPrograms.Remove(exclusion);
         _profile.Config.ProcessNames = _profile.Config.ProcessNames
-            .Append(SelectedExcludedProgram.ToLower())
+            .Append(exclusion.ToLower())
             .ToArray();
         ReorderChromaRegistry();
     }
 
     private void ReorderChromaRegistry()
     {
-        var value = string.Join(';', EnabledPrograms) + ";Aurora.exe";
+        var value = string.Join(';', EnabledPrograms.Where(NonEmpty)) + ";Aurora.exe";
         if (ExcludedPrograms.Count > 0)
         {
             value += ";";
-            value += string.Join(';', ExcludedPrograms.Where(s => !s.Equals("Aurora.exe")));
+            value += string.Join(';', ExcludedPrograms.Where(NonEmpty).Where(s => !s.Equals("Aurora.exe")));
         }
         
         using var registryKey = Registry.LocalMachine.OpenSubKey(ChromaApplication.AppsKey, true);
         registryKey?.SetValue(ChromaApplication.PriorityValue, value);
+    }
+
+    private bool NonEmpty(string s)
+    {
+        return !string.IsNullOrWhiteSpace(s);
     }
 }
