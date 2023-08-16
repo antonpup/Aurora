@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -199,10 +200,18 @@ public static class RazerChromaUtils
         using var service = new ServiceController("Razer Chroma SDK Service");
         if (service.Status == ServiceControllerStatus.Running)
         {
-            service.Stop(true);
-            service.WaitForStatus(ServiceControllerStatus.Stopped);
+            try
+            {
+                service.Stop(true);
+                service.WaitForStatus(ServiceControllerStatus.Stopped);
+            }
+            catch(Exception e)
+            {
+                Global.logger.Error(e, "Failed to stop chroma sdk");
+            }
         }
 
+        if (service.Status != ServiceControllerStatus.Stopped) return;
         service.Start();
         service.WaitForStatus(ServiceControllerStatus.Running);
     }

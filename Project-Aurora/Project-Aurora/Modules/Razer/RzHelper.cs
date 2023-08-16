@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Win32;
-using RazerSdkWrapper.Data;
 
 namespace Aurora.Modules.Razer;
 
@@ -19,15 +17,17 @@ public static class RzHelper
 {
     private static readonly EmptyGrid EmptyGrid = new();
 
-    public static IRzGrid KeyboardColors { get; private set; } = EmptyGrid;
-    public static IRzGrid MousepadColors { get; private set; } = EmptyGrid;
-    public static IRzGrid MouseColors { get; private set; } = EmptyGrid;
-    public static IRzGrid HeadsetColors { get; private set; } = EmptyGrid;
-    public static IRzGrid ChromaLinkColors { get; private set; } = EmptyGrid;
+    public static IRzGrid KeyboardColors { get; } = new ConnectedGrid();
+    public static IRzGrid MousepadColors { get; } = new ConnectedGrid();
+    public static IRzGrid MouseColors { get; } = new ConnectedGrid();
+    public static IRzGrid HeadsetColors { get; } = new ConnectedGrid();
+    public static IRzGrid ChromaLinkColors { get; } = new ConnectedGrid();
 
     public static event EventHandler<ChromaAppChangedEventArgs>? ChromaAppChanged;
 
-    public static string CurrentAppExecutable
+    public static uint CurrentAppId;
+
+    public static string? CurrentAppExecutable
     {
         get => _currentAppExecutable;
         private set
@@ -39,7 +39,7 @@ public static class RzHelper
 
     private static DateTime _lastFetch = DateTime.UnixEpoch;
     private static DateTime _lastUpdate = DateTime.Now;
-    private static string _currentAppExecutable = string.Empty;
+    private static string? _currentAppExecutable = string.Empty;
 
     /// <summary>
     /// Lowest supported version (inclusive)
@@ -84,58 +84,10 @@ public static class RzHelper
     {
         if (Global.razerSdkManager == null || _lastFetch > _lastUpdate)
         {
-            return false;
+            return true;
         }
         _lastFetch = DateTime.Now;
-        return true;
-    }
-
-    public static void OnDataUpdated(object? s, EventArgs e)
-    {
-        if (s is not AbstractDataProvider provider)
-            return;
-
-        switch (provider)
-        {
-            case RzChromaLinkDataProvider:
-                ChromaLinkColors.IsDirty = true;
-                break;
-            case RzKeyboardDataProvider:
-                KeyboardColors.IsDirty = true;
-                break;
-            case RzMouseDataProvider:
-                MouseColors.IsDirty = true;
-                break;
-            case RzMousepadDataProvider:
-                MousepadColors.IsDirty = true;
-                break;
-            case RzHeadsetDataProvider:
-                HeadsetColors.IsDirty = true;
-                break;
-            case RzAppListDataProvider appList:
-                provider.Update();
-                CurrentAppExecutable = appList.CurrentAppExecutable ?? string.Empty;
-
-                if (string.IsNullOrEmpty(appList.CurrentAppExecutable) || Global.razerSdkManager == null)
-                {
-                    KeyboardColors = EmptyGrid;
-                    MousepadColors = EmptyGrid;
-                    MouseColors = EmptyGrid;
-                    HeadsetColors = EmptyGrid;
-                    ChromaLinkColors = EmptyGrid;
-                }
-                else
-                {
-                    KeyboardColors = new ConnectedGrid(22 * 6, Global.razerSdkManager.GetDataProvider<RzKeyboardDataProvider>());
-                    MousepadColors = new ConnectedGrid(20, Global.razerSdkManager.GetDataProvider<RzMousepadDataProvider>());
-                    MouseColors = new ConnectedGrid(9 * 7, Global.razerSdkManager.GetDataProvider<RzMouseDataProvider>());
-                    HeadsetColors = new ConnectedGrid(5, Global.razerSdkManager.GetDataProvider<RzHeadsetDataProvider>());
-                    ChromaLinkColors = new ConnectedGrid(5, Global.razerSdkManager.GetDataProvider<RzChromaLinkDataProvider>());
-                }
-
-                break;
-        }
-        _lastUpdate = DateTime.Now;
+        return false;
     }
 
     public static bool IsCurrentAppValid()
@@ -143,8 +95,67 @@ public static class RzHelper
 
     public static void Initialize()
     {
-        var appList = Global.razerSdkManager.GetDataProvider<RzAppListDataProvider>();
-        appList.Update();
-        CurrentAppExecutable = appList.CurrentAppExecutable ?? string.Empty;
+        var sdkManager = Global.razerSdkManager;
+        if (sdkManager == null)
+        {
+            return;
+        }
+        
+        sdkManager.KeyboardUpdated += (_, keyboard) =>
+        {
+            KeyboardColors.Provider = keyboard;
+            KeyboardColors.IsDirty = true;
+            _lastUpdate = DateTime.Now;
+        };
+
+        sdkManager.MouseUpdated += (_, mouse) =>
+        {
+            MouseColors.Provider = mouse;
+            MouseColors.IsDirty = true;
+            _lastUpdate = DateTime.Now;
+        };
+
+        sdkManager.MousepadUpdated += (_, mousepad) =>
+        {
+            MousepadColors.Provider = mousepad;
+            MousepadColors.IsDirty = true;
+            _lastUpdate = DateTime.Now;
+        };
+        
+        sdkManager.HeadsetUpdated += (_, headset) =>
+        {
+            HeadsetColors.Provider = headset;
+            HeadsetColors.IsDirty = true;
+            _lastUpdate = DateTime.Now;
+        };
+
+        sdkManager.ChromaLinkUpdated += (_, link) =>
+        {
+            ChromaLinkColors.Provider = link;
+            ChromaLinkColors.IsDirty = true;
+            _lastUpdate = DateTime.Now;
+        };
+
+        sdkManager.AppDataUpdated += (_, appData) =>
+        {
+            uint currentAppId = 0;
+            string? currentAppName = null;
+            for (var i = 0; i < appData.AppCount; i++)
+            {
+                if (appData.CurrentAppId != appData.AppInfo[i].AppId) continue;
+
+                currentAppId = appData.CurrentAppId;
+                currentAppName = appData.AppInfo[i].AppName;
+                break;
+            }
+
+            CurrentAppId = currentAppId;
+            CurrentAppExecutable = currentAppName;
+        };
+
+
+        //var appList = sdkManager.GetDataProvider<RzAppListDataProvider>();
+        //appList.Update();
+        //CurrentAppExecutable = sdkManager.CurrentAppExecutable ?? string.Empty;
     }
 }

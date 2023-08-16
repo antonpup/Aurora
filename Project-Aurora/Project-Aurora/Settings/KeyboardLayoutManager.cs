@@ -16,7 +16,7 @@ using Aurora.Settings.Keycaps;
 using Aurora.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using RazerSdkWrapper;
+using RazerSdkReader;
 using Application = System.Windows.Application;
 using Color = System.Drawing.Color;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
@@ -358,9 +358,9 @@ public class KeyboardLayoutManager
 
     private readonly string _layoutsPath;
 
-    private Task<RzSdkManager?> _rzSdk;
+    private Task<ChromaReader?> _rzSdk;
 
-    public KeyboardLayoutManager(Task<RzSdkManager?> rzSdk)
+    public KeyboardLayoutManager(Task<ChromaReader?> rzSdk)
     {
         _rzSdk = rzSdk;
         _layoutsPath = Path.Combine(Global.ExecutingDirectory, CulturesFolder);

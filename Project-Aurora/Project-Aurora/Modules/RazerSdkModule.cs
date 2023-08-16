@@ -3,22 +3,22 @@ using System.Threading.Tasks;
 using Aurora.Modules.Razer;
 using Aurora.Profiles;
 using Lombok.NET;
-using RazerSdkWrapper;
+using RazerSdkReader;
 
 namespace Aurora.Modules;
 
 public sealed partial class RazerSdkModule : AuroraModule
 {
     private readonly Task<LightingStateManager> _lsm;
-    private readonly TaskCompletionSource<RzSdkManager?> _sdkTaskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    private RzSdkManager? _razerSdkManager;
+    private readonly TaskCompletionSource<ChromaReader?> _sdkTaskSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private ChromaReader? _razerSdkManager;
 
     public RazerSdkModule(Task<LightingStateManager> lsm)
     {
         _lsm = lsm;
     }
 
-    public Task<RzSdkManager?> RzSdkManager => _sdkTaskSource.Task;
+    public Task<ChromaReader?> RzSdkManager => _sdkTaskSource.Task;
 
     protected override async Task Initialize()
     {
@@ -49,19 +49,11 @@ public sealed partial class RazerSdkModule : AuroraModule
 
     private void TryLoadChroma()
     {
-        _razerSdkManager = new RzSdkManager
-        {
-            KeyboardEnabled = true,
-            MouseEnabled = true,
-            MousepadEnabled = true,
-            HeadsetEnabled = true,
-            ChromaLinkEnabled = true,
-        };
+        _razerSdkManager = new ChromaReader();
         Global.razerSdkManager = _razerSdkManager;
-        _razerSdkManager.DataUpdated += RzHelper.OnDataUpdated;
-        _razerSdkManager.Start();
-
         RzHelper.Initialize();
+
+        _razerSdkManager.Start();
     }
 
     [Async]
@@ -73,7 +65,6 @@ public sealed partial class RazerSdkModule : AuroraModule
             {
                 return;
             }
-            _razerSdkManager.DataUpdated -= RzHelper.OnDataUpdated;
             _razerSdkManager.Dispose();
             Global.razerSdkManager = null;
         }

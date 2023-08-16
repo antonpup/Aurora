@@ -168,6 +168,15 @@
           "NETStandard.Library": "1.6.1"
         }
       },
+      "RazerSdkReader": {
+        "type": "Direct",
+        "requested": "[1.3.0, )",
+        "resolved": "1.3.0",
+        "contentHash": "sTSaIHfLsYvKfYBaOMj6INaeM8kdvc8bRNuImAEkpuKP+kliDAELXkx/3+CVF6GU0B/3rel4NRzseumV4u4jGw==",
+        "dependencies": {
+          "System.Threading.AccessControl": "7.0.1"
+        }
+      },
       "RGB.NET.Devices.CoolerMaster": {
         "type": "Direct",
         "requested": "[2.0.0-prerelease.83, )",
@@ -1519,6 +1528,11 @@
           "System.Threading.Tasks": "4.3.0"
         }
       },
+      "System.Threading.AccessControl": {
+        "type": "Transitive",
+        "resolved": "7.0.1",
+        "contentHash": "uh6LWSk8Dlp1cavk4XQYtDHOMZpSa5KiqM0VBiflhXWGT63RGV+NhNsVxiEykL4S/0LVcgy+/AxC5ITQ9QLo8w=="
+      },
       "System.Threading.Channels": {
         "type": "Transitive",
         "resolved": "7.0.0",
@@ -2541,14 +2555,6 @@
           "Microsoft.NETCore.Targets": "1.1.0",
           "System.Runtime": "4.3.0",
           "runtime.any.System.Threading.Timer": "4.3.0"
-        }
-      },
-      "System.Windows.Extensions": {
-        "type": "Transitive",
-        "resolved": "4.7.0",
-        "contentHash": "CeWTdRNfRaSh0pm2gDTJFwVaXfTq6Xwv/sA887iwPTneW7oMtMlpvDIO+U60+3GWTB7Aom6oQwv5VZVUhQRdPQ==",
-        "dependencies": {
-          "System.Drawing.Common": "4.7.0"
         }
       }
     }

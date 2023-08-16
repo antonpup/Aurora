@@ -6,7 +6,7 @@ using Aurora.Profiles;
 using Aurora.Settings;
 using IronPython.Hosting;
 using Microsoft.Scripting.Hosting;
-using RazerSdkWrapper;
+using RazerSdkReader;
 using Serilog;
 
 namespace Aurora;
@@ -48,7 +48,7 @@ public static class Global
     public static KeyboardLayoutManager? kbLayout { get; set; }                //TODO module access
     public static Effects effengine { get; set; }
     public static KeyRecorder? key_recorder { get; set; }
-    public static RzSdkManager? razerSdkManager { get; set; }                  //TODO module access
+    public static ChromaReader? razerSdkManager { get; set; }                  //TODO module access
     public static AudioDeviceProxy? CaptureProxy { get; set; }
     public static AudioDeviceProxy? RenderProxy { get; set; }
 

@@ -1,19 +1,18 @@
 ﻿using System.Threading.Tasks;
-using System.Windows;
 using Aurora.Settings;
 using Lombok.NET;
-using RazerSdkWrapper;
+using RazerSdkReader;
 
 namespace Aurora.Modules;
 
 public sealed partial class LayoutsModule : AuroraModule
 {
-    private readonly Task<RzSdkManager?> _rzSdk;
+    private readonly Task<ChromaReader?> _rzSdk;
     
     private KeyboardLayoutManager? _layoutManager;
     private readonly TaskCompletionSource<KeyboardLayoutManager> _taskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
 
-    public LayoutsModule(Task<RzSdkManager?> rzSdk)
+    public LayoutsModule(Task<ChromaReader?> rzSdk)
     {
         _rzSdk = rzSdk;
     }

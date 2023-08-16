@@ -24,7 +24,7 @@ using Aurora.Settings.Layers;
 using Aurora.Utils;
 using Hardcodet.Wpf.TaskbarNotification;
 using PropertyChanged;
-using RazerSdkWrapper;
+using RazerSdkReader;
 using Application = Aurora.Profiles.Application;
 using Color = System.Windows.Media.Color;
 using Image = System.Windows.Controls.Image;
@@ -107,7 +107,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     #endregion
 
-    public ConfigUI(Task<RzSdkManager?> rzSdkManager, Task<PluginManager> pluginManager,
+    public ConfigUI(Task<ChromaReader?> rzSdkManager, Task<PluginManager> pluginManager,
         Task<KeyboardLayoutManager> layoutManager, Task<AuroraHttpListener?> httpListener,
         Task<IpcListener?> ipcListener, Task<DeviceManager> deviceManager, Task<LightingStateManager> lightingStateManager)
     {

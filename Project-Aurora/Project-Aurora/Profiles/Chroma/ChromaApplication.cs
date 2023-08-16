@@ -30,6 +30,7 @@ public class ChromaApplication : Application
         SettingsType = typeof(ChromaApplicationSettings)
     })
     {
+        //TODO move to sdk init
         _registryWatcher.RegistryChanged += RegistryWatcherOnRegistryChanged;
         _registryWatcher.StartWatching();
 

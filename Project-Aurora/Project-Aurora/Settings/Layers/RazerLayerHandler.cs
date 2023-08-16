@@ -10,7 +10,7 @@ using System.Drawing;
 using System.Windows.Controls;
 using Aurora.Modules.Razer;
 using Aurora.Settings.Layers.Controls;
-using RazerSdkWrapper.Data;
+using RazerSdkReader.Structures;
 
 namespace Aurora.Settings.Layers;
 
@@ -110,7 +110,7 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         {
             return EffectLayer.EmptyLayer;
         }
-        if (!RzHelper.IsStale())
+        if (RzHelper.IsStale())
             return EffectLayer;
 
         foreach (var key in DeviceKeysArray)
@@ -130,11 +130,11 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
 
     private bool TryGetColor(DeviceKeys key, out Color color)
     {
-        RzColor rColor;
+        ChromaColor rColor;
         if (RazerLayoutMap.GenericKeyboard.TryGetValue(key, out var position))
             rColor = RzHelper.KeyboardColors[position[1] + position[0] * 22];
         else if (RazerLayoutMap.Mousepad.TryGetValue(key, out position))
-            rColor = RzHelper.MousepadColors[1, position[0]];
+            rColor = RzHelper.MousepadColors[position[0]];
         else if (RazerLayoutMap.Mouse.TryGetValue(key, out position))
             rColor = RzHelper.MouseColors[position[1] + position[0] * 7];
         else if (RazerLayoutMap.Headset.TryGetValue(key, out position))
@@ -147,18 +147,18 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
             return false;
         }
 
-        if (Properties.ColorPostProcessEnabled)
-            rColor = PostProcessColor(rColor);
-        color = FastTransform(rColor);
+        color = Properties.ColorPostProcessEnabled ? PostProcessColor(rColor) : FastTransform(rColor);
 
         return true;
     }
 
-    private RzColor PostProcessColor(RzColor color)
+    private Color PostProcessColor(ChromaColor rzColor)
     {
-        if (color is { R: 0, G: 0, B: 0 })
-            return color;
+        if (rzColor is { R: 0, G: 0, B: 0 })
+            return Color.Black;
 
+        var color = FastTransform(rzColor);
+        
         if (Properties.BrightnessChange != 0)
             color = ColorUtils.ChangeBrightness(color, Properties.BrightnessChange);
         if (Properties.SaturationChange != 0)
@@ -169,7 +169,7 @@ public class RazerLayerHandler : LayerHandler<RazerLayerHandlerProperties>
         return color;
     }
 
-    private Color FastTransform(RzColor color)
+    private Color FastTransform(ChromaColor color)
     {
         return Properties.TransparencyEnabled ?
             ColorUtils.FastColorTransparent(color.R, color.G, color.B) :

@@ -13,8 +13,8 @@ using Aurora.Modules.Logitech;
 using Aurora.Modules.Razer;
 using Aurora.Utils;
 using Microsoft.Win32;
-using RazerSdkWrapper;
-using RazerSdkWrapper.Data;
+using RazerSdkReader;
+using RazerSdkReader.Structures;
 using Application = System.Windows.Application;
 using MessageBox = System.Windows.MessageBox;
 
@@ -23,10 +23,10 @@ namespace Aurora.Settings;
 public partial class Control_SettingsDevicesAndWrappers
 {
     private readonly Task<KeyboardLayoutManager> _layoutManager;
-    private readonly Task<RzSdkManager?> _rzSdkManager;
+    private readonly Task<ChromaReader?> _rzSdkManager;
     private readonly Task<DeviceManager> _deviceManager;
     
-    public Control_SettingsDevicesAndWrappers(Task<RzSdkManager?> rzSdkManager, Task<KeyboardLayoutManager> layoutManager,
+    public Control_SettingsDevicesAndWrappers(Task<ChromaReader?> rzSdkManager, Task<KeyboardLayoutManager> layoutManager,
         Task<DeviceManager> deviceManager)
     {
         _rzSdkManager = rzSdkManager;
@@ -54,11 +54,11 @@ public partial class Control_SettingsDevicesAndWrappers
             ChromaConnectionStatusLabel.Content = "Success";
             ChromaConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.LightGreen);
 
-            var appList = razerManager.GetDataProvider<RzAppListDataProvider>();
-            appList.Update();
-            ChromaCurrentApplicationLabel.Content = $"{appList.CurrentAppExecutable ?? "None"} [{appList.CurrentAppPid}]";
+            var currentApp = RzHelper.CurrentAppExecutable;
+            var currentAppId = RzHelper.CurrentAppId;
+            ChromaCurrentApplicationLabel.Content = $"{currentApp ?? "None"} [{currentAppId}]";
 
-            razerManager.DataUpdated += HandleChromaAppChange;
+            razerManager.AppDataUpdated += HandleChromaAppChange;
         }
         else
         {
@@ -90,13 +90,21 @@ public partial class Control_SettingsDevicesAndWrappers
         logitechSdkListener.ApplicationChanged += LogitechSdkListenerOnApplicationChanged;
     }
 
-    private void HandleChromaAppChange(object? s, EventArgs _)
+    private void HandleChromaAppChange(object? s, ChromaAppData appData)
     {
-        if (s is not RzAppListDataProvider appList) return;
+        uint currentAppId = 0;
+        string? currentAppName = null;
+        for (var i = 0; i < appData.AppCount; i++)
+        {
+            if (appData.CurrentAppId != appData.AppInfo[i].AppId) continue;
 
-        appList.Update();
+            currentAppId = appData.CurrentAppId;
+            currentAppName = appData.AppInfo[i].AppName;
+            break;
+        }
+
         Dispatcher.BeginInvoke(DispatcherPriority.Background, 
-            () => ChromaCurrentApplicationLabel.Content = $"{appList.CurrentAppExecutable} [{appList.CurrentAppPid}]");
+            () => ChromaCurrentApplicationLabel.Content = $"{currentAppName} [{currentAppId}]");
     }
 
     private void LogitechSdkListenerOnApplicationChanged(object? sender, string? e)
