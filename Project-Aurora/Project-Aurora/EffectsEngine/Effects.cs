@@ -303,10 +303,7 @@ public class Effects
             }
         }
 
-        var dcc = new DeviceColorComposition
-        {
-            KeyColors = _keyColors,
-        };
+        var dcc = new DeviceColorComposition(_keyColors);
         _deviceManager.Result.UpdateDevices(dcc);
 
         NewLayerRender?.Invoke(Background.GetBitmap());

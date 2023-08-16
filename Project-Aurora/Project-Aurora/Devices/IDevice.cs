@@ -12,7 +12,12 @@ namespace Aurora.Devices;
 /// </summary>
 public struct DeviceColorComposition
 {
-    public Dictionary<DeviceKeys, Color> KeyColors;
+    public readonly Dictionary<DeviceKeys, Color> KeyColors;
+
+    public DeviceColorComposition(Dictionary<DeviceKeys, Color> keyColors)
+    {
+        KeyColors = keyColors;
+    }
 }
 
 /// <summary>

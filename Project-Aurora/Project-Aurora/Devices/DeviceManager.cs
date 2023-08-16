@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 using Amib.Threading;
 using System.Windows.Threading;
 using Aurora.Devices.ScriptedDevice;
-using RazerSdkWrapper;
+using RazerSdkReader;
 
 namespace Aurora.Devices;
 
@@ -19,7 +20,7 @@ public sealed class DeviceContainer : IDisposable
 
     private readonly SmartThreadPool _worker = new(1000, 1);
 
-    private Tuple<DeviceColorComposition, bool> _currentComp;
+    private DeviceColorComposition _currentComp = new(new Dictionary<DeviceKeys, Color>());
 
     private readonly SemaphoreSlim _actionLock = new(1);
     private readonly Action _updateAction;
@@ -31,7 +32,7 @@ public sealed class DeviceContainer : IDisposable
         var args = new DoWorkEventArgs(null);
         _updateAction = () =>
         {
-            WorkerOnDoWork(args);
+            WorkerOnDoWork(args).Wait();
         };
     }
 
@@ -45,7 +46,7 @@ public sealed class DeviceContainer : IDisposable
         await _actionLock.WaitAsync();
         try
         {
-            await Device.UpdateDevice(_currentComp.Item1, doWorkEventArgs, _currentComp.Item2);
+            await Device.UpdateDevice(_currentComp, doWorkEventArgs);
         }
         finally
         {
@@ -53,9 +54,9 @@ public sealed class DeviceContainer : IDisposable
         }
     }
 
-    public void UpdateDevice(DeviceColorComposition composition, bool forced = false)
+    public void UpdateDevice(DeviceColorComposition composition)
     {
-        _currentComp = new Tuple<DeviceColorComposition, bool>(composition, forced);
+        _currentComp = composition;
         if (_worker.WaitingCallbacks < 1 && !Device.isDoingWork)
         {
             _worker.QueueWorkItem(_updateAction);
@@ -65,18 +66,23 @@ public sealed class DeviceContainer : IDisposable
     public async Task EnableDevice()
     {
         var initTask = Device.Initialize();
-        Global.logger.Information(initTask is { IsCompletedSuccessfully: true, Result: true }
-            ? $"[Device][{Device.DeviceName}] Initialized Successfully."
-            : $"[Device][{Device.DeviceName}] Failed to initialize.");
+        if (initTask is { IsCompletedSuccessfully: true, Result: true })
+        {
+            Global.logger.Information("[Device][{DeviceName}] Initialized Successfully", Device.DeviceName);
+        }
+        else
+        {
+            Global.logger.Information("[Device][{DeviceName}] Failed to initialize", Device.DeviceName);
+        }
     }
 
     public async Task DisableDevice()
     {
-        _actionLock.WaitAsync(500);
+        await _actionLock.WaitAsync(500);
         try
         {
             await Device.ShutdownDevice();
-            Global.logger.Information($"[Device][{Device.DeviceName}] Shutdown");
+            Global.logger.Information("[Device][{DeviceName}] Shutdown", Device.DeviceName);
         }
         finally
         {
@@ -101,9 +107,9 @@ public sealed class DeviceManager: IDisposable
 
     public IEnumerable<DeviceContainer> InitializedDeviceContainers => DeviceContainers.Where(d => d.Device.IsInitialized);
 
-    private Task<RzSdkManager?> _rzSdkManager;
+    private readonly Task<ChromaReader?> _rzSdkManager;
 
-    public DeviceManager(Task<RzSdkManager?> rzSdkManager)
+    public DeviceManager(Task<ChromaReader?> rzSdkManager)
     {
         _rzSdkManager = rzSdkManager;
 
@@ -166,25 +172,25 @@ public sealed class DeviceManager: IDisposable
         await Task.WhenAll(resetTasks);
     }
 
-    public void UpdateDevices(DeviceColorComposition composition, bool forced = false)
+    public void UpdateDevices(DeviceColorComposition composition)
     {
         if(_disposed)
             return;
         foreach (var dc in InitializedDeviceContainers)
         {
-            dc.UpdateDevice(composition, forced);
+            dc.UpdateDevice(composition);
         }
     }
 
     #region SystemEvents
     private async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
-        Global.logger.Information($"SessionSwitch triggered with {e.Reason}");
+        Global.logger.Information("SessionSwitch triggered with {Reason}", e.Reason);
         if (!e.Reason.Equals(SessionSwitchReason.SessionUnlock) || (!_suspended && !_resumed)) return;
         Global.logger.Information("Resuming Devices -- Session Switch Session Unlock");
         _suspended = false;
         _resumed = false;
-        Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
+        await Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
     }
 
     private async void SystemEvents_PowerModeChanged(object? sender, PowerModeChangedEventArgs e)
@@ -194,14 +200,14 @@ public sealed class DeviceManager: IDisposable
             case PowerModes.Suspend:
                 Global.logger.Information("Suspending Devices");
                 _suspended = true;
-                Dispatcher.CurrentDispatcher.Invoke(async () => await ShutdownDevices());
+                await Dispatcher.CurrentDispatcher.Invoke(async () => await ShutdownDevices());
                 break;
             case PowerModes.Resume:
                 Global.logger.Information("Resuming Devices -- PowerModes.Resume");
                 Thread.Sleep(TimeSpan.FromSeconds(2));
                 _resumed = true;
                 _suspended = false;
-                Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
+                await Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
                 break;
         }
     }
