@@ -63,7 +63,7 @@ public partial class Control_SettingsGeneral
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Error caught when updating startup task. Error: " + exc);
+            Global.logger.Error(exc, "Error caught when updating startup task");
         }
     }
 
@@ -88,23 +88,18 @@ public partial class Control_SettingsGeneral
 
     private void RunAtWinStartup_Checked(object? sender, RoutedEventArgs e)
     {
-        if (IsLoaded && sender is CheckBox)
+        if (!IsLoaded || sender is not CheckBox checkBox) return;
+        try
         {
-            try
-            {
-                using (TaskService ts = new TaskService())
-                {
-                    //Find existing task
-                    var task = ts.FindTask(StartupTaskId);
-                    task.Enabled = (sender as CheckBox).IsChecked.Value;
-                }
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("RunAtWinStartup_Checked Exception: " + exc);
-            }
+            using var ts = new TaskService();
+            //Find existing task
+            var task = ts.FindTask(StartupTaskId);
+            task.Enabled = checkBox.IsChecked.Value;
         }
-
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "RunAtWinStartup_Checked Exception: ");
+        }
     }
 
     private void HighPriorityCheckbox_Checked(object? sender, RoutedEventArgs e)

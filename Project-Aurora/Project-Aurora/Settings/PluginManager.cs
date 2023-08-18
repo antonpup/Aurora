@@ -143,7 +143,7 @@ namespace Aurora.Settings
                 }
                 catch(Exception e)
                 {
-                    Global.logger.Error($"Failed to load plugin {plugin.Key}", e);
+                    Global.logger.Error(e, "Failed to load plugin {PluginKey}", plugin.Key);
                 }
             }
         }

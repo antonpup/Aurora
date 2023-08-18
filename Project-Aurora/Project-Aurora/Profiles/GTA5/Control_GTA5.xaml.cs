@@ -90,7 +90,7 @@ public partial class Control_GTA5
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Could not start Aurora Logitech Patcher. Error: " + exc);
+            Global.logger.Error(exc, "Could not start Aurora Logitech Patcher");
         }
     }
 

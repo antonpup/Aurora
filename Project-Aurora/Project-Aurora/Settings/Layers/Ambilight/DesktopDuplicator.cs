@@ -77,7 +77,7 @@ public sealed class DesktopDuplicator : IDisposable
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
         {
-            Global.logger.Debug(String.Format("Timeout of {0}ms exceeded while acquiring next frame", timeout));
+            Global.logger.Debug("Timeout of {Timeout}ms exceeded while acquiring next frame", timeout);
             return null;
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessLost)
@@ -92,7 +92,7 @@ public sealed class DesktopDuplicator : IDisposable
         }
         catch (SharpDXException e) when (e.ResultCode.Failure)
         {
-            Global.logger.Warning(e.Message);
+            Global.logger.Warning(e, "SharpDX exception in DesktopDuplicator");
             return null;
         }
 
@@ -152,7 +152,7 @@ public sealed class DesktopDuplicator : IDisposable
         {
             if (e.ResultCode.Failure)
             {
-                Global.logger.Warning(e.Message);
+                Global.logger.Warning(e, "DesktopDuplicator release frame error");
             }
         }
     }

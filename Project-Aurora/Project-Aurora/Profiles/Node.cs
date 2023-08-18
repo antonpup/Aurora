@@ -26,7 +26,7 @@ namespace Aurora.Profiles
             try {
                 _ParsedData = JObject.Parse(json_data);
             } catch (Exception exc) {
-                Global.logger.Error($"Exception during Node parsing. Exception: {exc}");
+                Global.logger.Error(exc, $"Exception during Node parsing");
                 _ParsedData = JObject.Parse("{}");
             }
         }

@@ -43,9 +43,6 @@ public class GameEvent_Aurora_Wrapper : LightEvent
 
             //No need to repeat the code around this everytime this is inherited
             UpdateExtraLights(layers);
-
-            //Scripts
-            Application.UpdateEffectScripts(layers, _game_state);
         }
 
         frame.AddLayers(layers.ToArray());

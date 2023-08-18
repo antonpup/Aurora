@@ -38,7 +38,7 @@ namespace Aurora.Devices.UnifiedHID
 
                     if (IsConnected)
                     {
-                        Global.logger.Information($"[UnifiedHID] connected to device {PrettyNameFull}");
+                        Global.logger.Information("[UnifiedHID] connected to device {Name}", PrettyNameFull);
 
                         DeviceColorMap.Clear();
 
@@ -50,12 +50,12 @@ namespace Aurora.Devices.UnifiedHID
                     }
                     else
                     { 
-                        Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}");
+                        Global.logger.Error("[UnifiedHID] error when attempting to open device {Name}", PrettyName);
                     }
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:", exc);
+                    Global.logger.Error(exc, "[UnifiedHID] error when attempting to open device {Name}:", PrettyName);
                 }
             }
 
@@ -70,12 +70,12 @@ namespace Aurora.Devices.UnifiedHID
                 {
                     device.CloseDevice();
 
-                    Global.logger.Information($"[UnifiedHID] disconnected from device {PrettyNameFull})");
+                    Global.logger.Information("[UnifiedHID] disconnected from device {Name})", PrettyNameFull);
                 }
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:", exc);
+                Global.logger.Error(exc, "[UnifiedHID] error when attempting to close device {Name}:", PrettyName);
             }
 
             return !IsConnected;

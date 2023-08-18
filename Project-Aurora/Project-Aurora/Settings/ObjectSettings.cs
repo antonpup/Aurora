@@ -1,65 +1,60 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Aurora.Settings
+namespace Aurora.Settings;
+
+public class ObjectSettings<T>
 {
-    public class ObjectSettings<T>
+    protected string SettingsSavePath { get; set; }
+    public T Settings { get; protected set; }
+
+    public void SaveSettings()
     {
-        protected string SettingsSavePath { get; set; }
-        public T Settings { get; protected set; }
+        SaveSettings(typeof(T));
+    }
 
-        public void SaveSettings()
-        {
-            this.SaveSettings(typeof(T));
+    protected void SaveSettings(Type settingsType)
+    {
+        if (Settings == null) {
+            Settings = (T)Activator.CreateInstance(settingsType);
+            SettingsCreateHook();
         }
 
-        protected void SaveSettings(Type settingsType)
+        string dir = Path.GetDirectoryName(SettingsSavePath);
+        if (!Directory.Exists(dir))
+            Directory.CreateDirectory(dir);
+
+        File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
+    }
+
+    /// <summary>A method that is called immediately after the settings being created. Can be overriden to provide specalized handling.</summary>
+    protected virtual void SettingsCreateHook() { }
+
+    protected void LoadSettings()
+    {
+        LoadSettings(typeof(T));
+    }
+
+    protected virtual void LoadSettings(Type settingsType)
+    {
+        if (File.Exists(SettingsSavePath))
         {
-            if (Settings == null) {
-                Settings = (T)Activator.CreateInstance(settingsType);
-                SettingsCreateHook();
-            }
-
-            string dir = Path.GetDirectoryName(SettingsSavePath);
-            if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            File.WriteAllText(SettingsSavePath, JsonConvert.SerializeObject(Settings, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, Formatting = Formatting.Indented }));
-        }
-
-        /// <summary>A method that is called immediately after the settings being created. Can be overriden to provide specalized handling.</summary>
-        protected virtual void SettingsCreateHook() { }
-
-        protected void LoadSettings()
-        {
-            this.LoadSettings(typeof(T));
-        }
-
-        protected virtual void LoadSettings(Type settingsType)
-        {
-            if (File.Exists(SettingsSavePath))
+            try
             {
-                try
+                Settings = (T)JsonConvert.DeserializeObject(File.ReadAllText(SettingsSavePath), settingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
+                if (Settings == null)
                 {
-                    Settings = (T)JsonConvert.DeserializeObject(File.ReadAllText(SettingsSavePath), settingsType, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
-                    if (Settings == null)
-                    {
-                        SaveSettings(settingsType);
-                    }
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error($"Exception occured while loading \"{this.GetType().Name}\" Settings.\nException:" + exc);
                     SaveSettings(settingsType);
                 }
             }
-            else
+            catch (Exception exc)
+            {
+                Global.logger.Error(exc, "Exception occured while loading \\\"{Name}\\\" Settings", GetType().Name);
                 SaveSettings(settingsType);
+            }
         }
+        else
+            SaveSettings(settingsType);
     }
 }

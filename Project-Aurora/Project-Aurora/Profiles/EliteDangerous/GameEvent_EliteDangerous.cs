@@ -71,10 +71,8 @@ public class GameEvent_EliteDangerous : GameEvent_Generic
         }
         catch (JsonSerializationException e)
         {
-            Global.logger.Error("Error deserializing Journal event in " + _currentJournalFile + " at line " + lineNumber);
-            Global.logger.Error(lineValue);
-            Global.logger.Error(e.Message);
-            Global.logger.Error(e.StackTrace);
+            Global.logger.Error(e, "Error deserializing Journal event in {Journal} at line {LineNo}\n{Line}",
+                _currentJournalFile, lineNumber, lineValue);
         }
     }
 
@@ -88,11 +86,9 @@ public class GameEvent_EliteDangerous : GameEvent_Generic
 
     private void StopWatchingJournalFile()
     {
-        if (_journalFileWatcher != null)
-        {
-            _journalFileWatcher.Stop();
-            _journalFileWatcher = null;
-        }
+        if (_journalFileWatcher == null) return;
+        _journalFileWatcher.Stop();
+        _journalFileWatcher = null;
     }
 
     private void ReadAllJournalFiles()
@@ -154,11 +150,9 @@ public class GameEvent_EliteDangerous : GameEvent_Generic
 
     private void StopWatchingNewJournalFiles()
     {
-        if (_newJournalWatcher != null)
-        {
-            _newJournalWatcher.Dispose();
-            _newJournalWatcher = null;
-        }
+        if (_newJournalWatcher == null) return;
+        _newJournalWatcher.Dispose();
+        _newJournalWatcher = null;
     }
 
     private void WatchBindFiles()
@@ -241,13 +235,11 @@ public class GameEvent_EliteDangerous : GameEvent_Generic
     private string? GetDefaultBindsDirectoryFromGamePath(string gamePath)
     {
         string defaultBindsDirectory = null;
-        if (File.Exists(gamePath))
+        if (!File.Exists(gamePath)) return defaultBindsDirectory;
+        var bindsDirectory = Path.Combine(Path.GetDirectoryName(gamePath), "ControlSchemes");
+        if (Directory.Exists(bindsDirectory))
         {
-            var bindsDirectory = Path.Combine(Path.GetDirectoryName(gamePath), "ControlSchemes");
-            if (Directory.Exists(bindsDirectory))
-            {
-                defaultBindsDirectory = bindsDirectory;
-            }
+            defaultBindsDirectory = bindsDirectory;
         }
 
         return defaultBindsDirectory;

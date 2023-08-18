@@ -140,7 +140,7 @@ namespace Aurora.Utils
         /// <returns>Path to the location of AppID's install</returns>
         public static string GetGamePath(int gameId)
         {
-            Global.logger.Debug("Trying to get game path for: " + gameId);
+            Global.logger.Debug("Trying to get game path for: {GameId}", gameId);
 
             try
             {
@@ -219,7 +219,7 @@ namespace Aurora.Utils
             }
             catch (Exception exc)
             {
-                Global.logger.Error("SteamUtils: GetGamePath(" + gameId + ") exception: " + exc);
+                Global.logger.Error(exc, "SteamUtils: GetGamePath({GameId})", gameId);
             }
 
             return null;

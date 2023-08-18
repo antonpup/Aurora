@@ -96,8 +96,8 @@ public partial class HardwareMonitor
             var result = hw.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.Identifier.ToString().Contains(identifier));
             if (result is null)
             {
-                Global.logger.Error(
-                    $"[HardwareMonitor] Failed to find sensor \"{identifier}\" in {hw.Name} of type {hw.HardwareType}.");
+                Global.logger.Error("[HardwareMonitor] Failed to find sensor \"{Identifier}\" in {HwName} of type {HwHardwareType}",
+                    identifier, hw.Name, hw.HardwareType);
                 return null;
             }
             result.ValuesTimeWindow = TimeSpan.Zero;
@@ -110,8 +110,8 @@ public partial class HardwareMonitor
             var result = hw.Sensors.OrderBy(s => s.Identifier).FirstOrDefault(s => s.SensorType == type);
             if (result is null)
             {
-                Global.logger.Error(
-                    $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hw.Name} of type {hw.HardwareType}.");
+                Global.logger.Error("[HardwareMonitor] Failed to find sensor of type \"{Type}\" in {HwName} of type {HwHardwareType}",
+                    type, hw.Name, hw.HardwareType);
                 return null;
             }
             result.ValuesTimeWindow = TimeSpan.Zero;
@@ -130,14 +130,11 @@ public partial class HardwareMonitor
                 result.Add(sensor);
             }
 
-            if (result.Count == 0)
-            {
-                Global.logger.Error(
-                    $"[HardwareMonitor] Failed to find sensor of type \"{type}\" in {hw.Name} of type {hw.HardwareType}.");
-                return null;
-            }
+            if (result.Count != 0) return result;
+            Global.logger.Error("[HardwareMonitor] Failed to find sensor of type \"{Type}\" in {HwName} of type {HwHardwareType}",
+                type, hw.Name, hw.HardwareType);
+            return null;
 
-            return result;
         }
 
         #region PropertyChanged

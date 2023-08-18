@@ -157,7 +157,7 @@ namespace Aurora.Profiles.GTA5.GSI
             }
             else
             {
-                Global.logger.Debug("Undefined color - " + state_color);
+                Global.logger.Debug("Undefined color - {Color}", state_color);
                 CurrentState = PlayerState.Undefined;
                 StateColor = state_color;
             }

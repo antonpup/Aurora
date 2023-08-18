@@ -61,7 +61,7 @@ namespace Aurora.Devices.Clevo
             }
             catch (Exception ex)
             {
-                Global.logger.Error("Clevo device, Exception! Message:" + ex);
+                Global.logger.Error(ex, "Clevo device, Exception");
             }
 
             // Mark Initialized = FALSE
@@ -175,7 +175,7 @@ namespace Aurora.Devices.Clevo
             }
             catch (Exception exception)
             {
-                Global.logger.Error("Clevo device, error when updating device. Error: " + exception);
+                Global.logger.Error(exception, "Clevo device, error when updating device");
                 updateResult = false;
             }
 

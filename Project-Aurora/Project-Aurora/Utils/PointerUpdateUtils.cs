@@ -60,7 +60,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchPointers Octokit exception, " + e);
+                        Global.logger.Error(e, "FetchPointers Octokit exception");
                     }
                 }
                 else
@@ -74,7 +74,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchPointers HTTP exception, " + e);
+                        Global.logger.Error(e, "FetchPointers HTTP exception");
                     }
                 }
             }
@@ -107,7 +107,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchDevPointers Octokit exception, " + e);
+                        Global.logger.Error(e, "FetchDevPointers Octokit exception");
                     }
                 }
                 else
@@ -124,7 +124,7 @@ namespace Aurora.Utils
                     }
                     catch (Exception e)
                     {
-                        Global.logger.Error("FetchDevPointers HTTP exception, " + e);
+                        Global.logger.Error(e, "FetchDevPointers HTTP exception");
                     }
                 }
             }

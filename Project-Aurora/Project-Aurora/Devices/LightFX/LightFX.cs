@@ -39,7 +39,7 @@ namespace Aurora.Devices.LightFX
                 int status = LightFXSDK.HIDRead(Buffer, Buffer.Length);
                 bool read = LightFXSDK.getReadStatus();
                 if (!read) {
-                    Global.logger.Information("Error Code: " + Marshal.GetLastPInvokeError());
+                    Global.logger.Information("LightFx Error, Code: {Code}", Marshal.GetLastPInvokeError());
                     return -1;
                 }
 
@@ -178,7 +178,7 @@ namespace Aurora.Devices.LightFX
                     } 
                     catch (Exception ex) 
                     {
-                        Global.logger.Error("LIGHTFX device, Exception! Message: " + ex);
+                        Global.logger.Error(ex, "LIGHTFX device, Exception");
                         IsInitialized = false;
                     }
                 }
@@ -201,7 +201,7 @@ namespace Aurora.Devices.LightFX
                         IsInitialized = false;
                     }
                 } catch (Exception exc) {
-                    Global.logger.Error("LightFX device, Exception during Shutdown. Message: " + exc);
+                    Global.logger.Error(exc, "LightFX device, Exception during Shutdown");
                     IsInitialized = false;
                 }
             }
@@ -491,7 +491,7 @@ namespace Aurora.Devices.LightFX
                 if (e.Cancel) return false;
                 return true;
             } catch (Exception exc) {
-                Global.logger.Error("LightFX device, error when updating device. Error: " + exc);
+                Global.logger.Error(exc, "LightFX device, error when updating device");
                 Console.WriteLine(exc);
                 return false;
             }

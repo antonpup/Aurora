@@ -81,7 +81,7 @@ namespace Aurora.Settings
             }
             catch (Exception ex)
             {
-                Global.logger.Warning(ex.ToString());
+                Global.logger.Warning(ex, "New layer render error");
             }
         }
 

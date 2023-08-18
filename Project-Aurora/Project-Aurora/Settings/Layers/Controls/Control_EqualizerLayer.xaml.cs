@@ -22,9 +22,9 @@ namespace Aurora.Settings.Layers.Controls;
 /// </summary>
 public partial class ControlEqualizerLayer
 {
-    private bool _settingsset;
+    private bool _settingsSet;
 
-    private Window _previewWindow;
+    private Window? _previewWindow;
     private readonly Image _previewImage = new();
     private static bool _previewWindowOpen;
 
@@ -33,16 +33,16 @@ public partial class ControlEqualizerLayer
         InitializeComponent();
     }
 
-    public ControlEqualizerLayer(EqualizerLayerHandler datacontext)
+    public ControlEqualizerLayer(EqualizerLayerHandler dataContext)
     {
         InitializeComponent();
 
-        DataContext = datacontext;
+        DataContext = dataContext;
     }
 
     private void SetSettings()
     {
-        if (DataContext is not EqualizerLayerHandler || _settingsset) return;
+        if (DataContext is not EqualizerLayerHandler || _settingsSet) return;
         affectedKeys.Sequence = ((EqualizerLayerHandler)DataContext).Properties._Sequence;
 
         eq_type.SelectedValue = ((EqualizerLayerHandler)DataContext).Properties._EQType;
@@ -52,14 +52,14 @@ public partial class ControlEqualizerLayer
             ((EqualizerLayerHandler)DataContext).Properties._PrimaryColor ?? System.Drawing.Color.Empty);
         Clr_secondary_color.SelectedColor = ColorUtils.DrawingColorToMediaColor(((EqualizerLayerHandler)DataContext).Properties.SecondaryColor);
 
-        Brush brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
+        var brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
         try
         {
             gradient_editor.Brush = brush;
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Could not set brush, exception: " + exc);
+            Global.logger.Error(exc, "Could not set brush");
         }
 
         updown_max_amplitude_value.Value = (int)((EqualizerLayerHandler)DataContext).Properties.MaxAmplitude;
@@ -68,30 +68,30 @@ public partial class ControlEqualizerLayer
         lstbx_frequencies.ItemsSource = ((EqualizerLayerHandler)DataContext).Properties.Frequencies;
         chkbox_scale_with_system_volume.IsChecked = ((EqualizerLayerHandler)DataContext).Properties._ScaleWithSystemVolume;
 
-        _settingsset = true;
+        _settingsSet = true;
     }
 
     private void eq_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
-            ((EqualizerLayerHandler)DataContext).Properties._EQType = (EqualizerType)(sender as ComboBox).SelectedValue;
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && sender is ComboBox comboBox)
+            ((EqualizerLayerHandler)DataContext).Properties._EQType = (EqualizerType)comboBox.SelectedValue;
     }
 
     private void eq_view_type_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
-            ((EqualizerLayerHandler)DataContext).Properties.ViewType = (EqualizerPresentationType)(sender as ComboBox).SelectedValue;
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && sender is ComboBox comboBox)
+            ((EqualizerLayerHandler)DataContext).Properties.ViewType = (EqualizerPresentationType)comboBox.SelectedValue;
     }
 
     private void eq_background_mode_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ComboBox)
-            ((EqualizerLayerHandler)DataContext).Properties._BackgroundMode = (EqualizerBackgroundMode)(sender as ComboBox).SelectedValue;
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && sender is ComboBox comboBox)
+            ((EqualizerLayerHandler)DataContext).Properties._BackgroundMode = (EqualizerBackgroundMode)comboBox.SelectedValue;
     }
 
     private void Clr_primary_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler &&
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler &&
             sender is ColorPicker { SelectedColor: { } } picker)
             ((EqualizerLayerHandler)DataContext).Properties._PrimaryColor =
                 ColorUtils.MediaColorToDrawingColor(picker.SelectedColor.Value);
@@ -99,7 +99,7 @@ public partial class ControlEqualizerLayer
 
     private void Clr_secondary_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler &&
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler &&
             (sender as ColorPicker)?.SelectedColor != null)
             ((EqualizerLayerHandler)DataContext).Properties.SecondaryColor =
                 ColorUtils.MediaColorToDrawingColor(((ColorPicker)sender).SelectedColor.Value);
@@ -107,7 +107,7 @@ public partial class ControlEqualizerLayer
 
     private void Gradient_editor_BrushChanged(object? sender, BrushChangedEventArgs e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is ColorBox.ColorBox box)
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && sender is ColorBox.ColorBox box)
             ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(box.Brush);
     }
 
@@ -115,14 +115,14 @@ public partial class ControlEqualizerLayer
     {
         ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(ColorSpectrum.Rainbow);
 
-        Brush brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
+        var brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
         try
         {
             gradient_editor.Brush = brush;
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Could not set brush, exception: " + exc);
+            Global.logger.Error(exc, "Could not set brush");
         }
     }
 
@@ -130,38 +130,38 @@ public partial class ControlEqualizerLayer
     {
         ((EqualizerLayerHandler)DataContext).Properties.Gradient = new EffectBrush(ColorSpectrum.RainbowLoop);
 
-        Brush brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
+        var brush = ((EqualizerLayerHandler)DataContext).Properties.Gradient.GetMediaBrush();
         try
         {
             gradient_editor.Brush = brush;
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Could not set brush, exception: " + exc);
+            Global.logger.Error(exc, "Could not set brush");
         }
     }
 
     private void updown_max_amplitude_value_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as IntegerUpDown)?.Value != null)
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && (sender as IntegerUpDown)?.Value != null)
             ((EqualizerLayerHandler)DataContext).Properties.MaxAmplitude = ((IntegerUpDown)sender).Value.Value;
     }
 
     private void chkbox_scale_with_system_sound_Checked(object? sender, RoutedEventArgs e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as CheckBox)?.IsChecked != null)
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && (sender as CheckBox)?.IsChecked != null)
             ((EqualizerLayerHandler)DataContext).Properties._ScaleWithSystemVolume = ((CheckBox)sender).IsChecked.Value;
     }
 
     private void Clr_dim_color_SelectedColorChanged(object? sender, RoutedPropertyChangedEventArgs<Color?> e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && (sender as ColorPicker)?.SelectedColor != null)
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && (sender as ColorPicker)?.SelectedColor != null)
             ((EqualizerLayerHandler)DataContext).Properties._DimColor = ColorUtils.MediaColorToDrawingColor(((ColorPicker)sender).SelectedColor.Value);
     }
 
     private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
     {
-        if (IsLoaded && _settingsset && DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence sequence)
+        if (IsLoaded && _settingsSet && DataContext is EqualizerLayerHandler && sender is Aurora.Controls.KeySequence sequence)
         {
             ((EqualizerLayerHandler)DataContext).Properties._Sequence = sequence.Sequence;
         }
@@ -176,9 +176,7 @@ public partial class ControlEqualizerLayer
 
     private void btn_AddFreq_Click(object? sender, RoutedEventArgs e)
     {
-        float value;
-
-        if (float.TryParse(txtBox_newFreqValue.Text, out value))
+        if (float.TryParse(txtBox_newFreqValue.Text, out var value))
         {
             if (value >= 0.0f && value <= 16000.0f)
             {
@@ -195,12 +193,10 @@ public partial class ControlEqualizerLayer
 
     private void btn_DeleteFreq_Click(object? sender, RoutedEventArgs e)
     {
-        if (lstbx_frequencies.SelectedItem != null)
-        {
-            ((EqualizerLayerHandler)DataContext).Properties.Frequencies.Remove((float)lstbx_frequencies.SelectedItem);
+        if (lstbx_frequencies.SelectedItem == null) return;
+        ((EqualizerLayerHandler)DataContext).Properties.Frequencies.Remove((float)lstbx_frequencies.SelectedItem);
 
-            lstbx_frequencies.Items.Refresh();
-        }
+        lstbx_frequencies.Items.Refresh();
     }
 
     private void btn_ShowPreviewWindow_Click(object? sender, RoutedEventArgs e)
@@ -257,21 +253,21 @@ public partial class ControlEqualizerLayer
             Dispatcher.Invoke(
                 () =>
                 {
-                    using MemoryStream memory = new MemoryStream();
+                    using var memory = new MemoryStream();
                     bitmap.Save(memory, ImageFormat.Png);
                     memory.Position = 0;
-                    BitmapImage bitmapimage = new BitmapImage();
-                    bitmapimage.BeginInit();
-                    bitmapimage.StreamSource = memory;
-                    bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapimage.EndInit();
+                    var bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memory;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
 
-                    _previewImage.Source = bitmapimage;
+                    _previewImage.Source = bitmapImage;
                 });
         }
         catch (Exception ex)
         {
-            Global.logger.Warning(ex.ToString());
+            Global.logger.Warning(ex, "Error in equalizer layer render");
         }
     }
 }

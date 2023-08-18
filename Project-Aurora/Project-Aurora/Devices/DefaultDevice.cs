@@ -133,10 +133,10 @@ public abstract class DefaultDevice : IDevice, IDisposable
 
     protected virtual void RegisterVariables(VariableRegistry variableRegistry) { }
 
-    protected void LogInfo(string s) => Global.logger.Information($"[Device][{DeviceName}] {s}");
+    protected void LogInfo(string s) => Global.logger.Information("[Device][{DeviceName}] {S}", DeviceName, s);
 
-    protected void LogError(string s) => Global.logger.Error($"[Device][{DeviceName}] {s}");
+    protected void LogError(string s) => Global.logger.Error("[Device][{DeviceName}] {S}", DeviceName, s);
 
-    protected void LogError(string s, Exception e) => Global.logger.Error(e, $"[Device][{DeviceName}] {s}");
+    protected void LogError(string s, Exception e) => Global.logger.Error(e, "[Device][{DeviceName}] {S}", DeviceName, s);
     #endregion
 }

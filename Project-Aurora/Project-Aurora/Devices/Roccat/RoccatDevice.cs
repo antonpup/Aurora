@@ -208,7 +208,7 @@ namespace Aurora.Devices.Roccat
                 }
                 catch (Exception ex)
                 {
-                    Global.logger.Error("Roccat device, Exception! Message:" + ex);
+                    Global.logger.Error(ex, "Roccat device, Exception");
                 }
 
                 IsInitialized = false;
@@ -336,7 +336,7 @@ namespace Aurora.Devices.Roccat
             }
             catch (Exception exc)
             {
-                Global.logger.Error("Roccat device, error when updating device. Error: " + exc);
+                Global.logger.Error(exc, "Roccat device, error when updating device");
                 return Task.FromResult(false);
             }
         }

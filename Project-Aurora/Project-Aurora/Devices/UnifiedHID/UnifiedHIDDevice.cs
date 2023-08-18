@@ -175,18 +175,14 @@ namespace Aurora.Devices.UnifiedHID
                 // Check results of connected devices
                 foreach (var result in results)
                 {
-                    if (!result.Value)
-                    {
-                        Global.logger.Error($"[UnifiedHID] error when updating device {result.Key.PrettyName}. Restarting...");
+                    if (result.Value) continue;
+                    Global.logger.Error("[UnifiedHID] error when updating device {KeyName}. Restarting...", result.Key.PrettyName);
 
-                        // Try to restart device
-                        if (result.Key.Disconnect() && !result.Key.Connect())
-                        {
-                            Global.logger.Error($"[UnifiedHID] unable to restart device {result.Key.PrettyName}. Removed from connected device!");
-                            // Remove device from connected list
-                            connectedDevices.Remove(result.Key);
-                        }
-                    }
+                    // Try to restart device
+                    if (!result.Key.Disconnect() || result.Key.Connect()) continue;
+                    Global.logger.Error("[UnifiedHID] unable to restart device {KeyName}. Removed from connected device!", result.Key.PrettyName);
+                    // Remove device from connected list
+                    connectedDevices.Remove(result.Key);
                 }
 
                 return Task.FromResult(true);

@@ -89,14 +89,8 @@ public partial class HardwareMonitor: IHardwareMonitor
         }
         catch (IOException e)
         {
-            Global.logger.Error("Failed to write sensors dump: " + e);
+            Global.logger.Error(e, "Failed to write sensors dump");
             return false;
         }
-    }
-
-    public sealed class Sensor
-    {
-        public string Name { get; set; }
-        public int Index { get; set; }
     }
 }

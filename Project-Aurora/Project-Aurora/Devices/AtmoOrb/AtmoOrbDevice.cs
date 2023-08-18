@@ -28,7 +28,7 @@ public class AtmoOrbDevice : DefaultDevice
         }
         catch (Exception exc)
         {
-            Global.logger.Error(exc, $"Device {DeviceName} encountered an error during Connecting.");
+            Global.logger.Error(exc, "Device {DeviceName} encountered an error during Connecting", DeviceName);
             _isConnected = false;
 
             return false;

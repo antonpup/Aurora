@@ -97,7 +97,7 @@ public partial class Control_ProfileManager
 
     private void btnNewProfile_Click(object? sender, RoutedEventArgs e)
     {
-        FocusedApplication?.NewDefaultProfile();
+        FocusedApplication?.AddNewProfile();
 
         lstProfiles.SelectedIndex = lstProfiles.Items.Count - 1;
     }

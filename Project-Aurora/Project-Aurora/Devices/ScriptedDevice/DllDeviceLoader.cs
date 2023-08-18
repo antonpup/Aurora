@@ -26,7 +26,7 @@ public class DllDeviceLoader : IDeviceLoader
         if (files.Length == 0)
             return ImmutableList<IDevice>.Empty;
 
-        Global.logger.Information($"Loading devices plugins from {_dllFolder}");
+        Global.logger.Information("Loading devices plugins from {DllFolder}", _dllFolder);
 
         _deviceAssemblies = new List<Assembly>();
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
@@ -43,13 +43,13 @@ public class DllDeviceLoader : IDeviceLoader
                     if (!typeof(IDevice).IsAssignableFrom(type) || type.IsAbstract) continue;
                     _deviceAssemblies.Add(deviceAssembly);
                     var devDll = (IDevice)Activator.CreateInstance(type);
-                    Global.logger.Information($"Loaded device plugin {deviceDll}");
+                    Global.logger.Information("Loaded device plugin {DeviceDll}", deviceDll);
                     devices.Add(devDll);
                 }
             }
             catch (Exception e)
             {
-                Global.logger.Error($"Error loading device dll: {deviceDll}. Exception: {e.Message}");
+                Global.logger.Error(e, "Error loading device dll: {DeviceDll}", deviceDll);
             }
         }
 

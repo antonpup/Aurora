@@ -12,7 +12,7 @@ public class DeviceMappingConfig
 {
     private static Lazy<DeviceMappingConfig> _configLoader = new(LoadConfig, LazyThreadSafetyMode.ExecutionAndPublication);
     public static DeviceMappingConfig Config => _configLoader.Value;
-        
+
     [JsonIgnore]
     private static string _configPath = Path.Combine(Global.AppDataDirectory, "DeviceMappings.json");
 
@@ -30,8 +30,10 @@ public class DeviceMappingConfig
             return new DeviceMappingConfig();
         }
 
-        var content = File.ReadAllText(_configPath, Encoding.UTF8);
-        return JsonConvert.DeserializeObject<DeviceMappingConfig>(content) ?? new DeviceMappingConfig();
+        using var file = File.OpenText(_configPath);
+        var serializer = new JsonSerializer();
+        
+        return serializer.Deserialize<DeviceMappingConfig>(new JsonTextReader(file)) ?? new DeviceMappingConfig();
     }
 
     public void SaveConfig()

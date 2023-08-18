@@ -1,117 +1,112 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using Aurora.EffectsEngine;
+using ColorBox;
 
-namespace Aurora.Settings.Layers.Controls
+namespace Aurora.Settings.Layers.Controls;
+
+/// <summary>
+/// Interaction logic for Control_GradientFillLayer.xaml
+/// </summary>
+public partial class Control_GradientFillLayer
 {
-    /// <summary>
-    /// Interaction logic for Control_GradientFillLayer.xaml
-    /// </summary>
-    public partial class Control_GradientFillLayer : UserControl
+    private bool settingsset;
+
+    public Control_GradientFillLayer()
     {
-        private bool settingsset = false;
+        InitializeComponent();
+    }
 
-        public Control_GradientFillLayer()
+    public Control_GradientFillLayer(GradientFillLayerHandler dataContext)
+    {
+        InitializeComponent();
+
+        DataContext = dataContext;
+    }
+
+    private void SetSettings()
+    {
+        if (DataContext is not GradientFillLayerHandler || settingsset) return;
+        effect_speed_slider.Value = (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Speed;
+        effect_speed_label.Text = "x " + (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Speed;
+        CheckBox_FillEntire.IsChecked = (DataContext as GradientFillLayerHandler).Properties._FillEntireKeyboard;
+        var brush = (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
+        try
         {
-            InitializeComponent();
+            gradient_editor.Brush = brush;
+        }
+        catch (Exception exc)
+        {
+            Global.logger.Error(exc, "Could not set brush");
         }
 
-        public Control_GradientFillLayer(GradientFillLayerHandler datacontext)
+        KeySequence_keys.Sequence = (DataContext as GradientFillLayerHandler).Properties._Sequence;
+
+        settingsset = true;
+    }
+
+    private void Gradient_editor_BrushChanged(object? sender, BrushChangedEventArgs e)
+    {
+        if (IsLoaded && settingsset && DataContext is GradientFillLayerHandler && sender is ColorBox.ColorBox colorBox)
+            (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(colorBox.Brush);
+    }
+
+    private void Button_SetGradientRainbow_Click(object? sender, RoutedEventArgs e)
+    {
+        (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.Rainbow);
+
+        var brush = (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
+        try
         {
-            InitializeComponent();
-
-            this.DataContext = datacontext;
+            gradient_editor.Brush = brush;
         }
-
-        public void SetSettings()
+        catch (Exception exc)
         {
-            if(this.DataContext is GradientFillLayerHandler && !settingsset)
-            {
-                this.effect_speed_slider.Value = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Speed;
-                this.effect_speed_label.Text = "x " + (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Speed;
-                this.CheckBox_FillEntire.IsChecked = (this.DataContext as GradientFillLayerHandler).Properties._FillEntireKeyboard;
-                Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
-                try
-                {
-                    this.gradient_editor.Brush = brush;
-                }
-                catch (Exception exc)
-                {
-                    Global.logger.Error("Could not set brush, exception: " + exc);
-                }
-
-                this.KeySequence_keys.Sequence = (this.DataContext as GradientFillLayerHandler).Properties._Sequence;
-
-                settingsset = true;
-            }
+            Global.logger.Error(exc, "Could not set brush");
         }
+    }
 
-        private void Gradient_editor_BrushChanged(object? sender, ColorBox.BrushChangedEventArgs e)
+    private void Button_SetGradientRainbowLoop_Click(object? sender, RoutedEventArgs e)
+    {
+        (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.RainbowLoop);
+
+        var brush = (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
+        try
         {
-            if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is ColorBox.ColorBox)
-                (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectsEngine.EffectBrush((sender as ColorBox.ColorBox).Brush);
+            gradient_editor.Brush = brush;
         }
-
-        private void Button_SetGradientRainbow_Click(object? sender, RoutedEventArgs e)
+        catch (Exception exc)
         {
-            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.Rainbow);
-
-            Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
+            Global.logger.Error(exc, "Could not set brush");
         }
+    }
 
-        private void Button_SetGradientRainbowLoop_Click(object? sender, RoutedEventArgs e)
-        {
-            (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush = new EffectBrush(ColorSpectrum.RainbowLoop);
+    private void effect_speed_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (!IsLoaded || !settingsset || DataContext is not GradientFillLayerHandler || sender is not Slider slider) return;
+        (DataContext as GradientFillLayerHandler).Properties._GradientConfig.Speed = (float)slider.Value;
 
-            Brush brush = (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Brush.GetMediaBrush();
-            try
-            {
-                this.gradient_editor.Brush = brush;
-            }
-            catch (Exception exc)
-            {
-                Global.logger.Error("Could not set brush, exception: " + exc);
-            }
-        }
+        if (effect_speed_label is TextBlock)
+            effect_speed_label.Text = "x " + slider.Value;
+    }
 
-        private void effect_speed_slider_ValueChanged(object? sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is Slider)
-            {
-                (this.DataContext as GradientFillLayerHandler).Properties._GradientConfig.Speed = (float)(sender as Slider).Value;
+    private void CheckBox_FillEntire_Checked(object? sender, RoutedEventArgs e)
+    {
+        if (IsLoaded && settingsset && DataContext is GradientFillLayerHandler && sender is CheckBox)
+            (DataContext as GradientFillLayerHandler).Properties._FillEntireKeyboard = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
+    }
 
-                if (this.effect_speed_label is TextBlock)
-                    this.effect_speed_label.Text = "x " + (sender as Slider).Value;
-            }
-        }
+    private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
+    {
+        if (IsLoaded && settingsset && DataContext is GradientFillLayerHandler && sender is Aurora.Controls.KeySequence)
+            (DataContext as GradientFillLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
+    }
 
-        private void CheckBox_FillEntire_Checked(object? sender, RoutedEventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is CheckBox)
-                (this.DataContext as GradientFillLayerHandler).Properties._FillEntireKeyboard = ((sender as CheckBox).IsChecked.HasValue ? (sender as CheckBox).IsChecked.Value : false);
-        }
+    private void UserControl_Loaded(object? sender, RoutedEventArgs e)
+    {
+        SetSettings();
 
-        private void KeySequence_keys_SequenceUpdated(object? sender, EventArgs e)
-        {
-            if (IsLoaded && settingsset && this.DataContext is GradientFillLayerHandler && sender is Aurora.Controls.KeySequence)
-                (this.DataContext as GradientFillLayerHandler).Properties._Sequence = (sender as Aurora.Controls.KeySequence).Sequence;
-        }
-
-        private void UserControl_Loaded(object? sender, RoutedEventArgs e)
-        {
-            SetSettings();
-
-            this.Loaded -= UserControl_Loaded;
-        }
+        Loaded -= UserControl_Loaded;
     }
 }

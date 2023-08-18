@@ -906,7 +906,7 @@ namespace Aurora.Scripts.VoronScripts
 					string version;
 					if (NVAPI.NvAPI_GetInterfaceVersionString(out version) == NvStatus.OK)
 					{
-						Global.logger.Information($"Version: {version}");
+						Global.logger.Information("Version: {Version}", version);
 					}
 
 					NvPhysicalGpuHandle[] handles =
@@ -922,7 +922,7 @@ namespace Aurora.Scripts.VoronScripts
 						NvStatus status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out count);
 						if (status != NvStatus.OK)
 						{
-							Global.logger.Information($"Status: {status}");
+							Global.logger.Information("Status: {Status}", status);
 							return ngpus.ToArray();
 						}
 					}
@@ -958,7 +958,7 @@ namespace Aurora.Scripts.VoronScripts
 						}
 					}
 
-					Global.logger.Information($"Number of GPUs: {count}");
+					Global.logger.Information("Number of GPUs: {Count}", count);
 
 					for (int i = 0; i < count; i++)
 					{

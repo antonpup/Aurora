@@ -89,7 +89,7 @@ public class SoundBlasterXDevice : DefaultDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error opening " + devicesArr[kbdIdx].friendlyName, exc);
+                    Global.logger.Error(exc, "There was an error opening {Name}", devicesArr[kbdIdx].friendlyName);
                 }
                 finally
                 {
@@ -130,7 +130,7 @@ public class SoundBlasterXDevice : DefaultDevice
         }
         catch (Exception exc)
         {
-            Global.logger.Error("There was an error opening " + devicesArr[moosIdx].friendlyName, exc);
+            Global.logger.Error(exc, "There was an error opening {Name}", devicesArr[moosIdx].friendlyName);
         }
         finally
         {
@@ -159,8 +159,7 @@ public class SoundBlasterXDevice : DefaultDevice
     {
         if (_sbMouse != null)
         {
-            if (_sbMouseSettings != null && _sbMouseSettings.payloadData.HasValue &&
-                _sbMouseSettings.payloadData.Value.opaqueSize > 0)
+            if (_sbMouseSettings is { payloadData.opaqueSize: > 0 })
             {
                 try
                 {
@@ -169,7 +168,7 @@ public class SoundBlasterXDevice : DefaultDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error("There was an error freeing " + _sbMouseInfo?.friendlyName, exc);
+                    Global.logger.Error(exc, "There was an error freeing {Name}", _sbMouseInfo?.friendlyName);
                 }
             }
 
@@ -182,7 +181,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error("There was an error closing " + _sbMouseInfo?.friendlyName, exc);
+                Global.logger.Error(exc, "There was an error closing {Name}", _sbMouseInfo?.friendlyName);
             }
             finally
             {
@@ -196,8 +195,7 @@ public class SoundBlasterXDevice : DefaultDevice
 
         if (_sbKeyboard != null)
         {
-            if (_sbKeyboardSettings != null && _sbKeyboardSettings.payloadData.HasValue &&
-                _sbKeyboardSettings.payloadData.Value.opaqueSize > 0)
+            if (_sbKeyboardSettings is { payloadData.opaqueSize: > 0 })
             {
                 try
                 {
@@ -206,7 +204,7 @@ public class SoundBlasterXDevice : DefaultDevice
                 }
                 catch (Exception exc)
                 {
-                    Global.logger.Error(exc, "There was an error freeing " + _sbKeyboardInfo?.friendlyName);
+                    Global.logger.Error(exc, "There was an error freeing {Name}", _sbKeyboardInfo?.friendlyName);
                 }
             }
 
@@ -219,7 +217,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error(exc, "There was an error closing " + _sbKeyboardInfo?.friendlyName);
+                Global.logger.Error(exc, "There was an error closing {Name}", _sbKeyboardInfo?.friendlyName);
             }
             finally
             {
@@ -239,7 +237,7 @@ public class SoundBlasterXDevice : DefaultDevice
         }
         catch (Exception exc)
         {
-            Global.logger.Error("There was an error closing SoundBlasterX scanner.", exc);
+            Global.logger.Error(exc, "There was an error closing SoundBlasterX scanner");
         }
         finally
         {
@@ -343,8 +341,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error(
-                    "Failed to Update Device " + _sbKeyboardInfo?.friendlyName + ": " + exc);
+                Global.logger.Error(exc,"Failed to Update Device {Name}", _sbKeyboardInfo?.friendlyName);
                 return false;
             }
             finally
@@ -391,7 +388,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error(exc, "Failed to setup data for " + _sbMouseInfo?.friendlyName);
+                Global.logger.Error(exc, "Failed to setup data for {Name}", _sbMouseInfo?.friendlyName);
                 if (_sbMouseSettings.payloadData.Value.opaqueSize > 0)
                     _sbMouseSettings.payloadData = _sbMouse.LedPayloadCleanup(_sbMouseSettings.payloadData.Value,
                         _sbMouseInfo?.totalNumLeds ?? 0);
@@ -409,7 +406,7 @@ public class SoundBlasterXDevice : DefaultDevice
             }
             catch (Exception exc)
             {
-                Global.logger.Error(exc, "Failed to fill color data for " + _sbMouseInfo?.friendlyName);
+                Global.logger.Error(exc, "Failed to fill color data for {Name}", _sbMouseInfo?.friendlyName);
                 return false;
             }
         }
@@ -420,7 +417,7 @@ public class SoundBlasterXDevice : DefaultDevice
         }
         catch (Exception exc)
         {
-            Global.logger.Error(exc, "Failed to Update Device " + _sbMouseInfo?.friendlyName);
+            Global.logger.Error(exc, "Failed to Update Device {Name}", _sbMouseInfo?.friendlyName);
             return false;
         }
 

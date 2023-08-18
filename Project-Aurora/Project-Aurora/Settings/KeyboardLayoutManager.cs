@@ -572,7 +572,7 @@ public class KeyboardLayoutManager
         }
         catch (Exception e)
         {
-            Global.logger.Error(e.ToString());
+            Global.logger.Error(e, "Error loading layouts");
         }
 #endif
 

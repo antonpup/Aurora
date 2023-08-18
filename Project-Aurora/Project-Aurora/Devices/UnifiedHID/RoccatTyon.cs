@@ -27,7 +27,7 @@ namespace Aurora.Devices.UnifiedHID
 
         private bool InitMouseColor()
         {
-            return device.WriteFeatureData(initPacket);
+            return device.WriteFeatureData(InitPacket);
         }
 
         private bool WaitCtrlDevice()
@@ -70,7 +70,7 @@ namespace Aurora.Devices.UnifiedHID
 
                     if (!success)
                     {
-                        Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}");
+                        Global.logger.Error("[UnifiedHID] error when attempting to open device {Name}", PrettyName);
 
                         // Force close devices
                         device.CloseDevice();
@@ -78,7 +78,7 @@ namespace Aurora.Devices.UnifiedHID
                     }
                     else
                     {
-                        Global.logger.Information($"[UnifiedHID] connected to device {PrettyNameFull}");
+                        Global.logger.Information("[UnifiedHID] connected to device {Name}", PrettyNameFull);
 
                         DeviceColorMap.Clear();
 
@@ -92,7 +92,7 @@ namespace Aurora.Devices.UnifiedHID
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when attempting to open device {PrettyName}:", exc);
+                Global.logger.Error(exc, "[UnifiedHID] error when attempting to open device {Name}", PrettyName);
             }
 
             return false;
@@ -109,12 +109,12 @@ namespace Aurora.Devices.UnifiedHID
                 {
                     deviceLeds.CloseDevice();
 
-                    Global.logger.Information($"[UnifiedHID] disconnected from device {PrettyNameFull})");
+                    Global.logger.Information("[UnifiedHID] disconnected from device {Name})", PrettyNameFull);
                 }
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when attempting to close device {PrettyName}:", exc);
+                Global.logger.Error(exc, "[UnifiedHID] error when attempting to close device {Name}:", PrettyName);
             }
 
             return !IsConnected;
@@ -138,27 +138,27 @@ namespace Aurora.Devices.UnifiedHID
 
             try
             {
-                Array.Copy(controlPacket, 0, workbuf, 0, controlPacket.Length);
-                Array.Copy(hwmap, 0, workbuf, controlPacket.Length, hwmap.Length);
+                Array.Copy(ControlPacket, 0, workbuf, 0, ControlPacket.Length);
+                Array.Copy(hwmap, 0, workbuf, ControlPacket.Length, hwmap.Length);
 
                 return device.WriteFeatureData(workbuf);
             }
             catch (Exception exc)
             {
-                Global.logger.Error($"[UnifiedHID] error when writing to device {PrettyName}:", exc);
+                Global.logger.Error(exc, "[UnifiedHID] error when writing to device {Name}:", PrettyName);
                 return false;
             }
         }
 
         // Packet with values set to white for mouse initialization.
-        static readonly byte[] initPacket = new byte[] {
+        private static readonly byte[] InitPacket = {
             0x06,0x1e,0x00,0x00,
             0x06,0x06,0x06,0x10,0x20,0x40,0x80,0xa4,0x02,0x03,0x33,0x00,0x01,0x01,0x03,
             0xff,0xff,0xff,0x00,0x00,0xff,0xff,0xff,0x00,0x01,0x08
         };
 
         // Packet with fixed values for affixing to mouse colors.
-        static readonly byte[] controlPacket = new byte[] {
+        private static readonly byte[] ControlPacket = {
             0x06,0x1e,0x00,0x00,
             0x06,0x06,0x06,0x10,0x20,0x40,0x80,0xa4,0x02,0x03,0x33,0x00,0x01,0x01,0x03
         };

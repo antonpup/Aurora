@@ -54,14 +54,14 @@ public class AuroraHttpListener
         }
         catch (HttpListenerException exc)
         {
+            Global.logger.Error(exc, "Could not start HttpListener");
+            
             if (exc.ErrorCode == 5)//Access Denied
                 MessageBox.Show("Access error during start of network listener.\r\n\r\n" +
                                 "To fix this issue, please run the following commands as admin in Command Prompt:\r\n" +
                                 $"   netsh http add urlacl url=http://localhost:{_port}/ user=Everyone listen=yes\r\nand\r\n" +
                                 $"   netsh http add urlacl url=http://127.0.0.1:{_port}/ user=Everyone listen=yes", 
                     "Aurora - Error");
-
-            Global.logger.Error(exc.ToString());
 
             return false;
         }

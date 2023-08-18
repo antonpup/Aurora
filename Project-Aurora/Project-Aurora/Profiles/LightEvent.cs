@@ -54,7 +54,6 @@ namespace Aurora.Profiles
             UpdateTick();
 
             var layers = new Queue<EffectLayer>(Application.Profile.Layers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state)));
-            Application.UpdateEffectScripts(layers);
             frame.AddLayers(layers.ToArray());
         }
 
@@ -70,12 +69,11 @@ namespace Aurora.Profiles
                     .Reverse()
                     .Select(l => l.Render(_game_state))
                 );
-                Application.UpdateEffectScripts(overlayLayers);
                 frame.AddOverlayLayers(overlayLayers.ToArray());
             }
             catch(Exception e)
             {
-                Global.logger.Error("Error updating overlay layers: " + e);
+                Global.logger.Error(e, "Error updating overlay layers");
             }
         }
 

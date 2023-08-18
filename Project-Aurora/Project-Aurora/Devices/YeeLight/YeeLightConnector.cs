@@ -114,5 +114,5 @@ public static class YeeLightConnector
         return freePort;
     }
 
-    private static void LogError(string s) => Global.logger.Error($"[YeelightConnector] {s}");
+    private static void LogError(string s) => Global.logger.Error("[YeelightConnector] {S}", s);
 }
