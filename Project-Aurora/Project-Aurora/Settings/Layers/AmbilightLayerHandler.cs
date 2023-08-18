@@ -380,6 +380,8 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
             Thread.Sleep(screenshotInterval);
     }
 
+    //B, G, R
+    private static readonly long[] ColorData = {0L, 0L, 0L};
     private void CreateScreenBrush(Bitmap screenCapture, Rectangle cropRegion)
     {
         switch (Properties.AmbilightType)
@@ -393,7 +395,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                 _brushChanged = true;
                 break;
             case AmbilightType.AverageColor:
-                var average = BitmapUtils.GetRegionColor(screenCapture, new Rectangle(Point.Empty, cropRegion.Size));
+                var average = BitmapUtils.GetRegionColor(screenCapture, new Rectangle(Point.Empty, cropRegion.Size), ColorData);
 
                 if (Properties.BrightenImage)
                     average = ColorUtils.ChangeBrightness(average, Properties.BrightnessChange);

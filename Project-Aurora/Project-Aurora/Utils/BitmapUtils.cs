@@ -6,18 +6,23 @@ namespace Aurora.Utils;
 
 public static class BitmapUtils
 {
+    //B, G, R
+    private static readonly long[] ColorData = {0L, 0L, 0L};
 
     /**
      * Gets average color of region, ignoring transparency
+     * NOT thread-safe if optional parameters are null
      */
-    public static Color GetRegionColor(Bitmap map, Rectangle rectangle)
+    public static Color GetRegionColor(Bitmap map, Rectangle rectangle, long[]? color = null)
     {
         var graphicsUnit = GraphicsUnit.Pixel;
         if (rectangle.Width == 0 || rectangle.Height == 0 || !map.GetBounds(ref graphicsUnit).Contains(rectangle))
             return Color.Black;
 
-        //B, G, R
-        var color = new[] {0L, 0L, 0L}; //array because SIMD optimizations
+        color ??= ColorData;
+        color[0] = 0L;
+        color[1] = 0L;
+        color[2] = 0L;
 
         var srcData = map.LockBits(
             rectangle,

@@ -99,7 +99,7 @@ class EnumHashGetter: IEqualityComparer<Enum>
 public class Effects
 {
     //Optimization: used to mitigate dictionary resizing
-    public static readonly int MaxDeviceId = Enum.GetValues(typeof(DeviceKeys)).Cast<int>().Max();
+    public static readonly int MaxDeviceId = Enum.GetValues(typeof(DeviceKeys)).Cast<int>().Max() + 1;
 
     private static readonly DeviceKeys[] PossiblePeripheralKeys = {
         DeviceKeys.Peripheral,
