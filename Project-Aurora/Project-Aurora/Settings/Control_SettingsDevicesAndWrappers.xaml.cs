@@ -267,45 +267,51 @@ public partial class Control_SettingsDevicesAndWrappers
 
         try
         {
-            {
-                const string logiX64 =
-                    "https://raw.githubusercontent.com/Artemis-RGB/Artemis.Plugins.Wrappers/04d1f6acf3a93b0c883118f174b18ced8e264a84/src/Logitech/Artemis.Plugins.Wrappers.Logitech/x64/LogitechLed.dll";
-                var x64DllFolder = Path.Combine(wrapperFolder, "x64");
-                var x64DllPath = Path.Combine(x64DllFolder, dllName);
-                
-                var x64Response = httpClient.GetAsync(new Uri(logiX64));
-                Directory.CreateDirectory(x64DllFolder);
-                using var fs = new FileStream(x64DllPath, FileMode.Create);
-                x64Response.Result.Content.CopyToAsync(fs).Wait();
+            InstallLightsync64(wrapperFolder, dllName, httpClient);
+            InstallLightsync86(wrapperFolder, dllName, httpClient);
 
-                using var key =
-                    Registry.LocalMachine.OpenSubKey(
-                        @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
-                key.SetValue(null, x64DllPath);
-            }
-
-            {
-                var logiX86 =
-                    "https://raw.githubusercontent.com/Artemis-RGB/Artemis.Plugins.Wrappers/04d1f6acf3a93b0c883118f174b18ced8e264a84/src/Logitech/Artemis.Plugins.Wrappers.Logitech/x86/LogitechLed.dll";
-                var x86DllFolder = Path.Combine(wrapperFolder, "x86");
-                
-                var x86Response = httpClient.GetAsync(new Uri(logiX86));
-                Directory.CreateDirectory(x86DllFolder);
-                var x86DllPath = Path.Combine(x86DllFolder, dllName);
-                using var fs = new FileStream(x86DllPath, FileMode.Create);
-                x86Response.Result.Content.CopyToAsync(fs).Wait();
-
-                using var key = Registry.LocalMachine.OpenSubKey(
-                    @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
-                key.SetValue(null, x86DllPath);
-            }
             LightsyncConnectionStatusLabel.Content = "Waiting for game";
             MessageBox.Show("Logitech wrapper installed!");
         }
         catch (Exception exc)
         {
+            Global.logger.Error(exc, "Error installing Lightsync wrapper!");
             MessageBox.Show(exc.Message, "Error installing Lightsync wrapper!");
         }
+    }
+
+    private const string ArtemisRepo =
+        "https://raw.githubusercontent.com/Artemis-RGB/Artemis.Plugins.Wrappers/04d1f6acf3a93b0c883118f174b18ced8e264a84";
+    private static void InstallLightsync64(string wrapperFolder, string dllName, HttpClient httpClient)
+    {
+        const string logiX64 = ArtemisRepo + "/src/Logitech/Artemis.Plugins.Wrappers.Logitech/x64/LogitechLed.dll";
+        var x64DllFolder = Path.Combine(wrapperFolder, "x64");
+        var x64DllPath = Path.Combine(x64DllFolder, dllName);
+
+        var x64Response = httpClient.GetAsync(new Uri(logiX64));
+        Directory.CreateDirectory(x64DllFolder);
+        using var fs = new FileStream(x64DllPath, FileMode.Create);
+        x64Response.Result.Content.CopyToAsync(fs).Wait();
+
+        using var key =Registry.LocalMachine.CreateSubKey(
+                @"SOFTWARE\Classes\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
+        key.SetValue(null, x64DllPath);
+    }
+
+    private static void InstallLightsync86(string wrapperFolder, string dllName, HttpClient httpClient)
+    {
+        const string logiX86 = ArtemisRepo + "/src/Logitech/Artemis.Plugins.Wrappers.Logitech/x86/LogitechLed.dll";
+        var x86DllFolder = Path.Combine(wrapperFolder, "x86");
+
+        var x86Response = httpClient.GetAsync(new Uri(logiX86));
+        Directory.CreateDirectory(x86DllFolder);
+        var x86DllPath = Path.Combine(x86DllFolder, dllName);
+        using var fs = new FileStream(x86DllPath, FileMode.Create);
+        x86Response.Result.Content.CopyToAsync(fs).Wait();
+
+        using var key = Registry.LocalMachine.CreateSubKey(
+            @"SOFTWARE\Classes\WOW6432Node\CLSID\{a6519e67-7632-4375-afdf-caa889744403}\ServerBinary", true);
+        key.SetValue(null, x86DllPath);
     }
 
     private void wrapper_install_lightfx_32_Click(object? sender, RoutedEventArgs e)
@@ -347,7 +353,7 @@ public partial class Control_SettingsDevicesAndWrappers
         }
         catch (Exception exc)
         {
-            Global.logger.Error("Exception during LightFX (64 bit) Wrapper install. Exception: " + exc);
+            Global.logger.Error(exc, "Exception during LightFX (64 bit) Wrapper install");
             MessageBox.Show("Aurora Wrapper Patch for LightFX (64 bit) could not be applied.\r\nException: " + exc.Message);
         }
     }
