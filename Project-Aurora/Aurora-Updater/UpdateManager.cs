@@ -63,11 +63,12 @@ public class UpdateManager
     private int? _previousPercentage;
     private int _secondsLeft = 3;
     private readonly UpdaterConfiguration _config;
-    private readonly GitHubClient _gClient = new(new ProductHeaderValue("aurora-updater"));
+    private readonly GitHubClient _gClient;
     public readonly Release LatestRelease;
 
     public UpdateManager(Version version, string author, string repoName)
     {
+        _gClient = new(new ProductHeaderValue("aurora-updater", version.ToString()));
         try
         {
             _config = UpdaterConfiguration.Load();
