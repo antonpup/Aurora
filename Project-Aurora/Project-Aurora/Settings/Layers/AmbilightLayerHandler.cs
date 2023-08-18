@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -257,7 +258,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     private readonly Stopwatch _captureStopwatch = new();
     private DateTime _lastProcessDetectTry = DateTime.Now;
 
-    public IEnumerable<string> Displays => _screenCapture.GetDisplays();
+    public IEnumerable<string> Displays => _screenCapture?.GetDisplays() ?? ImmutableList<string>.Empty;
 
     public AmbilightLayerHandler() : base("Ambilight Layer")
     {
@@ -303,6 +304,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         else if (DateTime.Now - _lastProcessDetectTry > TimeSpan.FromSeconds(2))
         {
             UpdateSpecificProcessHandle(Properties.SpecificProcess);
+            _lastProcessDetectTry = DateTime.Now;
         }
         //and because of that, this should never happen 
         if (_cropRegion.IsEmpty)
@@ -329,7 +331,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
                         g.Clear(Color.Transparent);
                         g.FillRectangle(_screenBrush, 0, 0, _cropRegion.Width, _cropRegion.Height);
                     }
-                    catch (Exception e)
+                    catch
                     {
                         //rarely matrix
                     }
@@ -347,7 +349,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         return new Control_AmbilightLayer(this);
     }
 
-    private object TakeScreenshot(object? sender)
+    private object? TakeScreenshot(object? sender)
     {
         try
         {
@@ -361,7 +363,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
 
     private void TryTakeScreenshot()
     {
-        _screenCapture.Capture(_cropRegion);
+        _screenCapture?.Capture(_cropRegion);
         WaitTimer(_captureStopwatch.Elapsed);
         _captureStopwatch.Restart();
     }
@@ -528,7 +530,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     /// Updates the handle of the window used to crop the screenshot
     /// </summary>
     /// <param name="process"></param>
-    public async Task UpdateSpecificProcessHandle(string process)
+    public void UpdateSpecificProcessHandle(string process)
     {
         var processes = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(process));
         try
@@ -560,9 +562,9 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
     #region DWM
 
     [DllImport("dwmapi.dll")]
-    public static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out RECT pvAttribute, int cbAttribute);
+    private static extern int DwmGetWindowAttribute(IntPtr hwnd, int dwAttribute, out Rect pvAttribute, int cbAttribute);
 
-    public struct RECT
+    private struct Rect
     {
         public int Left;
         public int Top;
@@ -591,12 +593,10 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         DWMWA_LAST
     }
 
-    public static RECT GetWindowRectangle(IntPtr hWnd)
+    private static Rect GetWindowRectangle(IntPtr hWnd)
     {
-        RECT rect;
-
-        int size = Marshal.SizeOf(typeof(RECT));
-        DwmGetWindowAttribute(hWnd, (int)DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, out rect, size);
+        var size = Marshal.SizeOf(typeof(Rect));
+        DwmGetWindowAttribute(hWnd, (int)DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, out var rect, size);
 
         return rect;
     }

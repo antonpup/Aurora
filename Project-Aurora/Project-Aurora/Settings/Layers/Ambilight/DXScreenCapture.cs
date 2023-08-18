@@ -39,8 +39,8 @@ internal sealed class DxScreenCapture : IScreenCapture
     private void SetTarget(Rectangle desktopRegion)
     {
         var outputs = GetAdapters();
-        Adapter1 currentAdapter = null;
-        Output5 currentOutput = null;
+        Adapter1? currentAdapter = null;
+        Output5? currentOutput = null;
         
         foreach (var (adapter, output) in outputs)
         {
@@ -109,7 +109,7 @@ internal sealed class DxScreenCapture : IScreenCapture
             .SelectMany(m => m.Outputs.Select(n =>
             {
                 var o = n.QueryInterface<Output5>();
-                WeakEventManager<Output5, EventArgs>.AddHandler(o, nameof(o.Disposed), OutputDisposed);
+                WeakEventManager<Output5, EventArgs>.AddHandler(o, nameof(o.Disposing), OutputDisposed);
                 return (M: m, o);
             }))
             .ToList();
@@ -119,15 +119,31 @@ internal sealed class DxScreenCapture : IScreenCapture
 
     private static void FactoryDisposed(object? sender, EventArgs e)
     {
-        _outputs = null;
-        Duplicators.Clear();
+        try
+        {
+            Semaphore.WaitOne();
+            _outputs = null;
+            Duplicators.Clear();
+        }
+        finally
+        {
+            Semaphore.Release();
+        }
     }
 
     private static void OutputDisposed(object? sender, EventArgs e)
     {
-        var output5 = sender as Output5;
-        Duplicators.Remove(output5);
-        _outputs = null;
+        try
+        {
+            Semaphore.WaitOne();
+            var output5 = sender as Output5;
+            Duplicators.Remove(output5);
+            _outputs = null;
+        }
+        finally
+        {
+            Semaphore.Release();
+        }
     }
 
     private static bool RectangleContains(RawRectangle containingRectangle, Rectangle rec)
@@ -142,11 +158,11 @@ internal sealed class DxScreenCapture : IScreenCapture
         try
         {
             Semaphore.WaitOne();
+            _desktopDuplicator = null;
         }
         finally
         {
             Semaphore.Release();
         }
-        _desktopDuplicator = null;
     }
 }

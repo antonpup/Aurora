@@ -7,9 +7,9 @@
              xmlns:u="clr-namespace:Aurora.Utils" 
              xmlns:local="clr-namespace:Aurora.Settings.Layers"
              xmlns:c="clr-namespace:Aurora.Controls"
-             xmlns:ambilight="clr-namespace:Aurora.Settings.Layers.Ambilight"
              xmlns:controls="clr-namespace:Aurora.Settings.Layers.Controls"
-             mc:Ignorable="d" Loaded="UserControl_Loaded">
+             mc:Ignorable="d" Loaded="UserControl_Loaded"
+             d:DataContext="{d:DesignInstance local:AmbilightLayerHandler}">
     
     <UserControl.Resources>
         <controls:AmbilightCaptureTypeValueConverter x:Key="AmbilightCaptureTypeValueConverter" />
@@ -65,10 +65,12 @@
 
             <Label Content="HW Acceleration" Grid.Row="6" Grid.Column="0"></Label>
             <CheckBox Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding Properties.ExperimentalMode, Mode=TwoWay}" Height="16" Margin="0,6"></CheckBox>
-            <Image Grid.Row="6" Grid.Column="2" Margin="6" ToolTip="This experimental mode offers better performance but can be unstable on some systems.&#x0a;It will be turned off automatically if incompatible. Consult the logs for more detail" Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
+            <Image Grid.Row="6" Grid.Column="2" Margin="6"
+                   ToolTip="This experimental mode offers better performance but can be unstable on some systems.&#x0a;It is much more performant while capturing a single monitor multiple times"
+                   Source="/Aurora;component/Resources/info.png" ToolTipService.InitialShowDelay="0" />
 
             <Label Content="Coordinates" Grid.Row="8" VerticalAlignment="Center" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}" Height="26" Margin="0,15" />
-            <Grid Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" Grid.IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
+            <Grid Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" IsEnabled="{Binding ElementName=CaptureType, Path=SelectedValue, Converter={StaticResource AmbilightCaptureTypeValueConverter}, ConverterParameter=Coordinates}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
