@@ -166,8 +166,21 @@
                                 Margin="5 0 5 0" VerticalAlignment="Center" HorizontalAlignment="Left"
                                 Click="Lightsync_install_button_Click" />
 
-                        <Label x:Name="LightsyncConnectionStatusLabel" Grid.Row="1" Grid.Column="2" Margin="5 0 5 0"
-                               Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal" >
+                            <Label x:Name="LightsyncConnectionStatusLabel" Margin="5 0 5 0"
+                                   Padding="0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        
+                            <Border Name="LightsyncInfo" ToolTipService.InitialShowDelay="0" ToolTipService.BetweenShowDelay="0"
+                                    ToolTip="On some systems this only works after restarts!"
+                                    CornerRadius="50"
+                                    Width="15" Height="15"
+                                    Padding="0,0,0,0"
+                                    Background="Orange"
+                                    BorderBrush="Black"
+                                    BorderThickness="1">
+                                <TextBlock HorizontalAlignment="Center" Text="!" Foreground="Black" />
+                            </Border>
+                        </StackPanel>
 
                         <Label Grid.Row="2" Grid.Column="0" Content="Current Application:" Margin="5 0 5 0" Padding="0"
                                VerticalAlignment="Center" />

@@ -73,14 +73,17 @@ public partial class Control_SettingsDevicesAndWrappers
             case LightsyncSdkState.Conflicted:
                 LightsyncConnectionStatusLabel.Content = "Conflicted";
                 LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.Crimson);
+                LightsyncInfo.Visibility = Visibility.Hidden;
                 break;
             case LightsyncSdkState.NotInstalled:
                 LightsyncConnectionStatusLabel.Content = "Not Installed";
                 LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.PaleVioletRed);
+                LightsyncInfo.Visibility = Visibility.Hidden;
                 break;
             case LightsyncSdkState.Waiting:
                 LightsyncConnectionStatusLabel.Content = "Waiting for game";
                 LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.Chocolate);
+                LightsyncInfo.Visibility = Visibility.Visible;
                 break;
             case LightsyncSdkState.Connected:
                 break;
@@ -117,12 +120,14 @@ public partial class Control_SettingsDevicesAndWrappers
                     LightsyncConnectionStatusLabel.Content = "Disconnected";
                     LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.Chocolate);
                     LightsyncCurrentApplicationLabel.Content = "-";
+                    LightsyncInfo.Visibility = Visibility.Hidden;
                 }
                 else
                 {
                     LightsyncConnectionStatusLabel.Content = "Connected";
                     LightsyncConnectionStatusLabel.Foreground = new SolidColorBrush(Colors.LightGreen);
                     LightsyncCurrentApplicationLabel.Content = Path.GetFileName(e);
+                    LightsyncInfo.Visibility = Visibility.Hidden;
                 }
             });
     }
