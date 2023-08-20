@@ -136,6 +136,7 @@ public static class RazerLayoutMap
         {DeviceKeys.Peripheral_Logo,              new[]{7, 3} },
         {DeviceKeys.Peripheral,                   new[]{7, 3} },
         {DeviceKeys.Peripheral_FrontLight,        new[]{4, 3} },
+        {DeviceKeys.PERIPHERAL_DPI,               new[]{3, 2} },
         {DeviceKeys.PERIPHERAL_LIGHT1,            new[]{1, 0} },
         {DeviceKeys.PERIPHERAL_LIGHT2,            new[]{2, 0} },
         {DeviceKeys.PERIPHERAL_LIGHT3,            new[]{3, 0} },
