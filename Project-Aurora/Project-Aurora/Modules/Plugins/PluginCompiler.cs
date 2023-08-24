@@ -31,7 +31,14 @@ public static class PluginCompiler
         {
             throw new ApplicationException("PluginCompiler.exe not found!");
         }
-        //TODO try/catch
-        await process.WaitForExitAsync();
+
+        try
+        {
+            await process.WaitForExitAsync();
+        }
+        catch (Exception e)
+        {
+            Global.logger.Error(e, "Could not load script: {Script}", scriptPath);
+        }
     }
 }
