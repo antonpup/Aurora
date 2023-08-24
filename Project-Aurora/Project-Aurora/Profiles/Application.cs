@@ -17,8 +17,10 @@ using Aurora.Scripts.VoronScripts;
 using Aurora.Settings;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
+using IronPython.Hosting;
 using IronPython.Runtime.Types;
 using JetBrains.Annotations;
+using Microsoft.Scripting.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using EnumConverter = Aurora.Utils.EnumConverter;
@@ -391,7 +393,8 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
             }
         } else if (e.ErrorContext.Path.Equals("$type") && e.ErrorContext.Member == null)
         {
-            MessageBox.Show($"The profile type for {Config.Name} has been changed, your profile will be reset and your old one moved to have the extension '.corrupted', ignore the following error", "Profile type changed", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"The profile type for {Config.Name} has been changed, your profile will be reset and your old one moved to have the extension '.corrupted', ignore the following error",
+                "Profile type changed", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 
@@ -479,6 +482,7 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
 
         foreach (var script in Directory.EnumerateFiles(scriptsPath, "*.*"))
         {
+            var pythonEngine = new Lazy<ScriptEngine>(Python.CreateEngine);
             try
             {
                 var ext = Path.GetExtension(script);
@@ -486,13 +490,13 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
                 switch (ext)
                 {
                     case ".py":
-                        var scope = Global.PythonEngine.ExecuteFile(script);
+                        var scope = pythonEngine.Value.ExecuteFile(script);
                         foreach (var v in scope.GetItems())
                         {
-                            if (v.Value is not PythonType) continue;
-                            var typ = ((PythonType)v.Value).__clrtype__();
+                            if (v.Value is not PythonType type) continue;
+                            var typ = type.__clrtype__();
                             if (typ.IsInterface || !typeof(IEffectScript).IsAssignableFrom(typ)) continue;
-                            if (Global.PythonEngine.Operations.CreateInstance(v.Value) is IEffectScript obj)
+                            if (pythonEngine.Value.Operations.CreateInstance(v.Value) is IEffectScript obj)
                             {
                                 if (!(obj.ID != null && RegisterEffect(obj.ID, obj)))
                                     Global.logger.Warning("Script \"{Script}\" must have a unique string ID variable for the effect {VKey}", script, v.Key);
@@ -532,6 +536,10 @@ public class Application : ObjectSettings<ApplicationSettings>, ILightEvent, INo
             {
                 Global.logger.Error(exc, "An error occured while trying to load script {Script}", script);
                 //Maybe MessageBox info dialog could be included.
+            }
+            if (pythonEngine.IsValueCreated)
+            {
+                pythonEngine.Value.Runtime.Shutdown();
             }
         }
     }

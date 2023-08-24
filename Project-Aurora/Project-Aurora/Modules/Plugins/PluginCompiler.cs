@@ -31,6 +31,7 @@ public static class PluginCompiler
         {
             throw new ApplicationException("PluginCompiler.exe not found!");
         }
+        //TODO try/catch
         await process.WaitForExitAsync();
     }
 }

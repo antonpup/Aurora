@@ -4,9 +4,8 @@
         <TargetFramework>net6.0-windows10.0.19041.0</TargetFramework>
         <Platforms>x64</Platforms>
         <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
-        <OutputType>WinExe</OutputType>
+        <OutputType>Exe</OutputType>
         <PlatformTarget>x64</PlatformTarget>
-        <UseWindowsForms>true</UseWindowsForms>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <InformationalVersion>1.0.0</InformationalVersion>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>

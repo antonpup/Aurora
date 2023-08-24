@@ -4,11 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Aurora.Modules.Plugins;
+using IronPython.Hosting;
+using Microsoft.Scripting.Hosting;
 
 namespace Aurora.Devices.ScriptedDevice;
 
-internal class ScriptDeviceLoader : IDeviceLoader
+internal sealed class ScriptDeviceLoader : IDeviceLoader
 {
+    private readonly Lazy<ScriptEngine> PythonEngine = new(Python.CreateEngine);
     private readonly string _scriptFolder;
 
     public ScriptDeviceLoader(string scriptFolder)
@@ -55,12 +58,12 @@ internal class ScriptDeviceLoader : IDeviceLoader
         return null;
     }
 
-    private static IDevice? LoadPython(string deviceScript)
+    private IDevice? LoadPython(string deviceScript)
     {
-        var scope = Global.PythonEngine.ExecuteFile(deviceScript);
+        var scope = PythonEngine.Value.ExecuteFile(deviceScript);
         if (scope.TryGetVariable("main", out var mainType))
         {
-            var script = Global.PythonEngine.Operations.CreateInstance(mainType);
+            var script = PythonEngine.Value.Operations.CreateInstance(mainType);
 
             IDevice scriptedDevice = new ScriptedDevice(script);
             Global.logger.Information("Loaded device script {DeviceScript}", deviceScript);
@@ -86,5 +89,13 @@ internal class ScriptDeviceLoader : IDeviceLoader
         IDevice scriptedDevice = new ScriptedDevice(script);
         Global.logger.Information("Loaded device script {DeviceScript}", deviceScript);
         return scriptedDevice;
+    }
+
+    public void Dispose()
+    {
+        if (PythonEngine.IsValueCreated)
+        {
+            PythonEngine.Value.Runtime.Shutdown();
+        }
     }
 }

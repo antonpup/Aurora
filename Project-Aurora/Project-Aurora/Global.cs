@@ -17,7 +17,6 @@ namespace Aurora;
 public static class Global
 {
     public static readonly string ScriptDirectory = "Scripts";
-    public static readonly ScriptEngine PythonEngine = Python.CreateEngine();
 
     /// <summary>
     /// A boolean indicating if Aurora was started with Debug parameter

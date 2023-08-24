@@ -129,6 +129,7 @@ public sealed class DeviceManager: IDisposable
             {
                 DeviceContainers.Add(new DeviceContainer(device!));
             }
+            deviceLoader.Dispose();
         }
 
         SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;

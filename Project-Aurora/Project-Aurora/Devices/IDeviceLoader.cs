@@ -6,12 +6,12 @@ using Aurora.Utils;
 
 namespace Aurora.Devices;
 
-internal interface IDeviceLoader
+internal interface IDeviceLoader : IDisposable
 {
     IEnumerable<IDevice?> LoadDevices();
 }
 
-internal class AssemblyDeviceLoader : IDeviceLoader
+internal sealed class AssemblyDeviceLoader : IDeviceLoader
 {
     public IEnumerable<IDevice> LoadDevices()
     {
@@ -28,5 +28,9 @@ internal class AssemblyDeviceLoader : IDeviceLoader
             let inst = (IDevice)Activator.CreateInstance(type)
             orderby inst.DeviceName
             select inst;
+    }
+
+    public void Dispose()
+    {
     }
 }

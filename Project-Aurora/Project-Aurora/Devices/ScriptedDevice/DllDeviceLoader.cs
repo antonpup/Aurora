@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace Aurora.Devices.ScriptedDevice;
 
-public class DllDeviceLoader : IDeviceLoader
+internal sealed class DllDeviceLoader : IDeviceLoader
 {
     private readonly string _dllFolder;
 
-    private List<Assembly> _deviceAssemblies;
+    private readonly List<Assembly> _deviceAssemblies = new();
 
     public DllDeviceLoader(string dllFolder)
     {
@@ -28,7 +28,6 @@ public class DllDeviceLoader : IDeviceLoader
 
         Global.logger.Information("Loading devices plugins from {DllFolder}", _dllFolder);
 
-        _deviceAssemblies = new List<Assembly>();
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
         var devices = new List<IDevice>();
@@ -77,5 +76,9 @@ public class DllDeviceLoader : IDeviceLoader
             }
         }
         return null;
+    }
+
+    public void Dispose()
+    {
     }
 }
