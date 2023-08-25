@@ -35,7 +35,7 @@ internal sealed class DxScreenCapture : IScreenCapture
             }
             ScreenshotTaken?.Invoke(this, bitmap);
             bitmap.Dispose();
-        }finally{
+        } finally {
             Semaphore.Release();
         }
     }

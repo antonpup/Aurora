@@ -289,7 +289,7 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
             _invalidated = false;
         }
 
-        if (_captureWorker.WaitingCallbacks < 2)
+        if (_captureWorker.WaitingCallbacks < 1)
         {
             _captureWorker.QueueWorkItem(_screenshotWork);
         }
@@ -355,8 +355,9 @@ public class AmbilightLayerHandler : LayerHandler<AmbilightLayerHandlerPropertie
         {
             TryTakeScreenshot();
         }
-        catch{
-            // ignored
+        catch(Exception e) {
+            Global.logger.Error(e, "Ambilight Screenshot Error");
+            Thread.Sleep(2000);
         }
         return null;
     }

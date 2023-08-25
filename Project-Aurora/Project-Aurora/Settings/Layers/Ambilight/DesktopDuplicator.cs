@@ -23,7 +23,7 @@ public sealed class DesktopDuplicator : IDisposable
     private readonly Texture2D _desktopImageTexture;
     private readonly Func<OutputDuplication> _newDesktopDuplication;
     
-    private OutputDuplication _deskDupl;
+    private OutputDuplication? _deskDupl;
 
     public DesktopDuplicator(Output5 output, Adapter1 adapter1)
     {
@@ -63,21 +63,27 @@ public sealed class DesktopDuplicator : IDisposable
 
     public Bitmap? Capture(Rectangle desktopRegion, int timeout)
     {
-        if (_deskDupl.IsDisposed || _device.IsDisposed) 
+        if (IsDisposed || _deskDupl is { IsDisposed: true } || _device.IsDisposed) 
             return null;
 
         try
         {
-            var tryAcquireNextFrame = _deskDupl.TryAcquireNextFrame(timeout, out var frameInformation, out var desktopResource);
+            _deskDupl ??= _newDesktopDuplication.Invoke();
+            var tryAcquireNextFrame =
+                _deskDupl.TryAcquireNextFrame(timeout, out var frameInformation, out var desktopResource);
             _deskDupl.ReleaseFrame();
             if (tryAcquireNextFrame.Failure || frameInformation.LastPresentTime == 0)
             {
                 return null;
             }
+
             tryAcquireNextFrame.CheckError();
             using var tempTexture = desktopResource.QueryInterface<Texture2D>();
             _device.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
             desktopResource.Dispose();
+
+            var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
+            return mapSource.IsEmpty ? null : ProcessFrame(mapSource, desktopRegion);
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
         {
@@ -99,8 +105,8 @@ public sealed class DesktopDuplicator : IDisposable
         {
             Global.logger.Information(e, "DesktopDuplicator InvalidCall");
             // Already released?
-            _deskDupl.Dispose();
-            _deskDupl = _newDesktopDuplication.Invoke();
+            _deskDupl?.Dispose();
+            _deskDupl = null;
             return null;
         }
         catch (SharpDXException e) when (e.ResultCode.Failure)
@@ -108,22 +114,15 @@ public sealed class DesktopDuplicator : IDisposable
             Global.logger.Warning(e, "SharpDX exception in DesktopDuplicator");
             return null;
         }
-
-        var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
-        if (mapSource.IsEmpty)
-        {
-            return null;
-        }
-
-        try
-        {
-            return ProcessFrame(mapSource, desktopRegion);
-        }
         finally
         {
             if (_device is { IsDisposed: false, ImmediateContext.IsDisposed: false } && !_desktopImageTexture.IsDisposed)
             {
                 _device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
+            }
+            else
+            {
+                Global.logger.Information("Not unmapping desktop texture");
             }
         }
     }
@@ -162,11 +161,14 @@ public sealed class DesktopDuplicator : IDisposable
             return;
         }
         IsDisposed = true;
-        
-        _deskDupl.ReleaseFrame();
-        if (!_deskDupl.IsDisposed)
+
+        if (_deskDupl != null)
         {
-            _deskDupl.Dispose();
+            _deskDupl.ReleaseFrame();
+            if (!_deskDupl.IsDisposed)
+            {
+                _deskDupl.Dispose();
+            }
         }
         if (!_desktopImageTexture.IsDisposed)
         {
