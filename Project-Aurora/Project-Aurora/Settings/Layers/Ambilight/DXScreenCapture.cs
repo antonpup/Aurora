@@ -27,6 +27,10 @@ internal sealed class DxScreenCapture : IScreenCapture
             var bitmap = _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(_currentBounds, 5000);
             if (bitmap == null)
             {
+                if (_desktopDuplicator?.IsDisposed ?? false)
+                {
+                    _desktopDuplicator = null;
+                }
                 return;
             }
             ScreenshotTaken?.Invoke(this, bitmap);
@@ -54,7 +58,7 @@ internal sealed class DxScreenCapture : IScreenCapture
             break;
         }
 
-        if (currentAdapter == null)
+        if (currentAdapter == null || currentOutput == null)
         {
             return;
         }

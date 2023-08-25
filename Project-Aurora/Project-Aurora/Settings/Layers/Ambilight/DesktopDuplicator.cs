@@ -15,12 +15,15 @@ namespace Aurora.Settings.Layers.Ambilight;
 
 public sealed class DesktopDuplicator : IDisposable
 {
+    public bool IsDisposed { get; private set; }
+    
     private static readonly IDictionary<Adapter1, Device> Devices = new Dictionary<Adapter1, Device>();
 
     private readonly Device _device;
-    private readonly OutputDuplication _deskDupl;
-
     private readonly Texture2D _desktopImageTexture;
+    private readonly Func<OutputDuplication> _newDesktopDuplication;
+    
+    private OutputDuplication _deskDupl;
 
     public DesktopDuplicator(Output5 output, Adapter1 adapter1)
     {
@@ -53,19 +56,20 @@ public sealed class DesktopDuplicator : IDisposable
             Usage = ResourceUsage.Staging
         };
 
-        _deskDupl = output.DuplicateOutput1(_device, 0, 1, new [] { Format.B8G8R8A8_UNorm });
+        _newDesktopDuplication = () => output.DuplicateOutput1(_device, 0, 1, new [] { Format.B8G8R8A8_UNorm });
+        _deskDupl = _newDesktopDuplication.Invoke();
         _desktopImageTexture = new Texture2D(_device, textureDesc);
     }
 
-    public Bitmap Capture(Rectangle desktopRegion, int timeout)
+    public Bitmap? Capture(Rectangle desktopRegion, int timeout)
     {
         if (_deskDupl.IsDisposed || _device.IsDisposed) 
             return null;
 
         try
         {
-            ReleaseFrame();
             var tryAcquireNextFrame = _deskDupl.TryAcquireNextFrame(timeout, out var frameInformation, out var desktopResource);
+            _deskDupl.ReleaseFrame();
             if (tryAcquireNextFrame.Failure || frameInformation.LastPresentTime == 0)
             {
                 return null;
@@ -77,17 +81,26 @@ public sealed class DesktopDuplicator : IDisposable
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.WaitTimeout)
         {
-            Global.logger.Debug("Timeout of {Timeout}ms exceeded while acquiring next frame", timeout);
+            Global.logger.Information("Timeout of {Timeout}ms exceeded while acquiring next frame", timeout);
             return null;
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessLost)
         {
             // Can happen when going fullscreen / exiting fullscreen
+            Global.logger.Information(e, "DesktopDuplicator access lost");
             return null;
         }
         catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.AccessDenied)
         {
             // Happens when locking PC
+            return null;
+        }
+        catch (SharpDXException e) when (e.Descriptor == SharpDX.DXGI.ResultCode.InvalidCall)
+        {
+            Global.logger.Information(e, "DesktopDuplicator InvalidCall");
+            // Already released?
+            _deskDupl.Dispose();
+            _deskDupl = _newDesktopDuplication.Invoke();
             return null;
         }
         catch (SharpDXException e) when (e.ResultCode.Failure)
@@ -142,24 +155,15 @@ public sealed class DesktopDuplicator : IDisposable
         return frame;
     }
 
-    void ReleaseFrame()
-    {
-        try
-        {
-            _deskDupl.ReleaseFrame();
-        }
-        catch (SharpDXException e)
-        {
-            if (e.ResultCode.Failure)
-            {
-                Global.logger.Warning(e, "DesktopDuplicator release frame error");
-            }
-        }
-    }
-
     public void Dispose()
     {
-        ReleaseFrame();
+        if (IsDisposed)
+        {
+            return;
+        }
+        IsDisposed = true;
+        
+        _deskDupl.ReleaseFrame();
         if (!_deskDupl.IsDisposed)
         {
             _deskDupl.Dispose();
