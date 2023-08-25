@@ -175,20 +175,6 @@ namespace Aurora.Settings
         [Description("Generic 60% (US)")]
         Generic60 = 5,
 
-        /*
-        [Description("Logitech")]
-        Logitech = 1,
-        [Description("Corsair")]
-        Corsair = 2,
-        [Description("Razer")]
-        Razer = 3,
-
-        [Description("Clevo")]
-        Clevo = 4,
-        [Description("Cooler Master")]
-        CoolerMaster = 5,
-        */
-
         //Logitech range is 100-199
         [Description("Logitech - G910")]
         Logitech_G910 = 100,
@@ -587,7 +573,7 @@ namespace Aurora.Settings
         [JsonProperty("start_silently")] public bool StartSilently { get; set; }
         [JsonProperty("close_mode")] public AppExitMode CloseMode { get; set; } = AppExitMode.Ask;
         [JsonProperty("mouse_orientation")] public MouseOrientationType MouseOrientation { get; set; } = MouseOrientationType.RightHanded;
-        [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.GenericLaptopNumpad;
+        [JsonProperty("keyboard_brand")] public PreferredKeyboard KeyboardBrand { get; set; } = PreferredKeyboard.None;
         [JsonProperty("keyboard_localization")] public PreferredKeyboardLocalization KeyboardLocalization { get; set; } = PreferredKeyboardLocalization.None;
         [JsonProperty("mouse_preference")] public PreferredMouse MousePreference { get; set; } = PreferredMouse.Generic_Peripheral;
         [JsonProperty("mousepad_preference")] public PreferredMousepad MousepadPreference { get; set; } = PreferredMousepad.None;
