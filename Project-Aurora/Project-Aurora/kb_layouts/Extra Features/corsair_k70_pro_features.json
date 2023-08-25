@@ -5,7 +5,7 @@
     {
       "visualName": "PROF",
       "tag": 290,
-      "margin_left": -708.0,
+      "margin_left": -818.0,
       "margin_top": -37.0,
       "width": 30.0,
       "height": 30.0,
@@ -16,7 +16,7 @@
     {
       "visualName": "LIGHTS",
       "tag": 131,
-      "margin_left": -670.0,
+      "margin_left": -780.0,
       "margin_top": -37.0,
       "width": 30.0,
       "height": 30.0,
@@ -27,7 +27,7 @@
     {
       "visualName": "LOCK",
       "tag": 132,
-      "margin_left": -632.0,
+      "margin_left": -742.0,
       "margin_top": -37.0,
       "width": 30.0,
       "height": 30.0,
@@ -50,7 +50,7 @@
     {
       "visualName": "MUTE",
       "tag": 139,
-      "margin_left": -141.0,
+      "margin_left": -105.0,
       "margin_top": -37.0,
       "width": 30.0,
       "height": 24.66,
