@@ -126,7 +126,7 @@
                                 HorizontalAlignment="Right"
                                 Content="Disable Device Control" Width="160"
                                 ToolTipService.InitialShowDelay="0"
-                                ToolTip="Disabling device control will stop ChromaSDK from controlling Razer Devices.&#x0a; After this you have to control them with OpenRGB. To enable it back reinstall ChromaSDK"
+ToolTip="Disabling device control will stop ChromaSDK from controlling Razer Devices.&#x0a;After this you have to control them with OpenRGB. To enable it back reinstall ChromaSDK&#x0a;Synapse still needs to be closed completely"
                                 Margin="0 0 0 0" VerticalAlignment="Center"
                                 Click="razer_wrapper_disable_device_control_button_Click" />
 
