@@ -132,8 +132,12 @@ public class IpcListener
         {
             return;
         }
-        _ipcPipeStream = CreatePipe("Aurora\\server");
-        _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
+        //run in another thread to reset stack
+        Task.Run(() =>
+        {
+            _ipcPipeStream = CreatePipe("Aurora\\server");
+            _ipcPipeStream.BeginWaitForConnection(ReceiveGameState, null);
+        });
     }
 
     private void ReceiveAuroraCommand(IAsyncResult result)
