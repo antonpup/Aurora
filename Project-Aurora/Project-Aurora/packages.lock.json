@@ -19,12 +19,6 @@
           "System.ValueTuple": "4.5.0"
         }
       },
-      "CorsairRGB.NET": {
-        "type": "Direct",
-        "requested": "[1.1.0, )",
-        "resolved": "1.1.0",
-        "contentHash": "OdWKe2gD8IGU5cGyEEk4+TB9LCeIzog/ET/8O2eKDOc2bx08AEYtPUuYXB+SW258padb3h4Rq5l9KvjwaU71QA=="
-      },
       "Dubya.WindowsMediaController": {
         "type": "Direct",
         "requested": "[2.5.0, )",

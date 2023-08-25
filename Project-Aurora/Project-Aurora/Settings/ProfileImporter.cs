@@ -13,8 +13,8 @@ using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings.Layers;
 using Aurora.Utils;
-using CorsairRGB.NET.Enums;
 using Newtonsoft.Json;
+using RGB.NET.Devices.CorsairLegacy;
 using Application = Aurora.Profiles.Application;
 
 namespace Aurora.Settings;
@@ -105,45 +105,45 @@ public static class ProfileImporter
                                 switch (key.Value)
                                 {
                                     case "0":
-                                        keyValue = CorsairLedId.K_0;
+                                        keyValue = CorsairLedId.D0;
                                         break;
                                     case "1":
-                                        keyValue = CorsairLedId.K_1;
+                                        keyValue = CorsairLedId.D1;
                                         break;
                                     case "2":
-                                        keyValue = CorsairLedId.K_2;
+                                        keyValue = CorsairLedId.D2;
                                         break;
                                     case "3":
-                                        keyValue = CorsairLedId.K_3;
+                                        keyValue = CorsairLedId.D3;
                                         break;
                                     case "4":
-                                        keyValue = CorsairLedId.K_4;
+                                        keyValue = CorsairLedId.D4;
                                         break;
                                     case "5":
-                                        keyValue = CorsairLedId.K_5;
+                                        keyValue = CorsairLedId.D5;
                                         break;
                                     case "6":
-                                        keyValue = CorsairLedId.K_6;
+                                        keyValue = CorsairLedId.D6;
                                         break;
                                     case "7":
-                                        keyValue = CorsairLedId.K_7;
+                                        keyValue = CorsairLedId.D7;
                                         break;
                                     case "8":
-                                        keyValue = CorsairLedId.K_8;
+                                        keyValue = CorsairLedId.D8;
                                         break;
                                     case "9":
-                                        keyValue = CorsairLedId.K_9;
+                                        keyValue = CorsairLedId.D9;
                                         break;
                                     case "Led_KeyboardLogo":
-                                        keyValue = CorsairLedId.K_Logo;
+                                        keyValue = CorsairLedId.Logo;
                                         break;
                                     case "Led_KeyboardTopLogo2":
-                                        keyValue = CorsairLedId.K_Logo;
+                                        keyValue = CorsairLedId.Logo;
                                         break;
                                     default:
                                         if (key.Value.StartsWith("Led_Top"))
                                             key.Value = "G18";
-                                        if(Enum.TryParse<CorsairLedId>("K_" + key.Value, out var corsairLedId)){
+                                        if(Enum.TryParse<CorsairLedId>(key.Value, out var corsairLedId)){
                                             keyValue = corsairLedId;
                                         }
                                         else
@@ -766,279 +766,279 @@ public static class ProfileImporter
     {
         switch (corsairKey)
         {
-            case CorsairLedId.K_Logo:
+            case CorsairLedId.Logo:
                 return DeviceKeys.LOGO;
-            case CorsairLedId.K_Brightness:
+            case CorsairLedId.Brightness:
                 return DeviceKeys.BRIGHTNESS_SWITCH;
-            case CorsairLedId.K_WinLock:
+            case CorsairLedId.WinLock:
                 return DeviceKeys.LOCK_SWITCH;
 
-            case CorsairLedId.K_Mute:
+            case CorsairLedId.Mute:
                 return DeviceKeys.VOLUME_MUTE;
-            case CorsairLedId.K_VolumeUp:
+            case CorsairLedId.VolumeUp:
                 return DeviceKeys.VOLUME_UP;
-            case CorsairLedId.K_VolumeDown:
+            case CorsairLedId.VolumeDown:
                 return DeviceKeys.VOLUME_DOWN;
-            case CorsairLedId.K_Stop:
+            case CorsairLedId.Stop:
                 return DeviceKeys.MEDIA_STOP;
-            case CorsairLedId.K_PlayPause:
+            case CorsairLedId.PlayPause:
                 return DeviceKeys.MEDIA_PLAY_PAUSE;
-            case CorsairLedId.K_ScanPreviousTrack:
+            case CorsairLedId.ScanPreviousTrack:
                 return DeviceKeys.MEDIA_PREVIOUS;
-            case CorsairLedId.K_ScanNextTrack:
+            case CorsairLedId.ScanNextTrack:
                 return DeviceKeys.MEDIA_NEXT;
 
-            case CorsairLedId.K_Escape:
+            case CorsairLedId.Escape:
                 return DeviceKeys.ESC;
-            case CorsairLedId.K_F1:
+            case CorsairLedId.F1:
                 return DeviceKeys.F1;
-            case CorsairLedId.K_F2:
+            case CorsairLedId.F2:
                 return DeviceKeys.F2;
-            case CorsairLedId.K_F3:
+            case CorsairLedId.F3:
                 return DeviceKeys.F3;
-            case CorsairLedId.K_F4:
+            case CorsairLedId.F4:
                 return DeviceKeys.F4;
-            case CorsairLedId.K_F5:
+            case CorsairLedId.F5:
                 return DeviceKeys.F5;
-            case CorsairLedId.K_F6:
+            case CorsairLedId.F6:
                 return DeviceKeys.F6;
-            case CorsairLedId.K_F7:
+            case CorsairLedId.F7:
                 return DeviceKeys.F7;
-            case CorsairLedId.K_F8:
+            case CorsairLedId.F8:
                 return DeviceKeys.F8;
-            case CorsairLedId.K_F9:
+            case CorsairLedId.F9:
                 return DeviceKeys.F9;
-            case CorsairLedId.K_F10:
+            case CorsairLedId.F10:
                 return DeviceKeys.F10;
-            case CorsairLedId.K_F11:
+            case CorsairLedId.F11:
                 return DeviceKeys.F11;
-            case CorsairLedId.K_F12:
+            case CorsairLedId.F12:
                 return DeviceKeys.F12;
-            case CorsairLedId.K_PrintScreen:
+            case CorsairLedId.PrintScreen:
                 return DeviceKeys.PRINT_SCREEN;
-            case CorsairLedId.K_ScrollLock:
+            case CorsairLedId.ScrollLock:
                 return DeviceKeys.SCROLL_LOCK;
-            case CorsairLedId.K_PauseBreak:
+            case CorsairLedId.PauseBreak:
                 return DeviceKeys.PAUSE_BREAK;
-            case CorsairLedId.K_GraveAccentAndTilde:
+            case CorsairLedId.GraveAccentAndTilde:
                 return DeviceKeys.TILDE;
-            case CorsairLedId.K_1:
+            case CorsairLedId.D1:
                 return DeviceKeys.ONE;
-            case CorsairLedId.K_2:
+            case CorsairLedId.D2:
                 return DeviceKeys.TWO;
-            case CorsairLedId.K_3:
+            case CorsairLedId.D3:
                 return DeviceKeys.THREE;
-            case CorsairLedId.K_4:
+            case CorsairLedId.D4:
                 return DeviceKeys.FOUR;
-            case CorsairLedId.K_5:
+            case CorsairLedId.D5:
                 return DeviceKeys.FIVE;
-            case CorsairLedId.K_6:
+            case CorsairLedId.D6:
                 return DeviceKeys.SIX;
-            case CorsairLedId.K_7:
+            case CorsairLedId.D7:
                 return DeviceKeys.SEVEN;
-            case CorsairLedId.K_8:
+            case CorsairLedId.D8:
                 return DeviceKeys.EIGHT;
-            case CorsairLedId.K_9:
+            case CorsairLedId.D9:
                 return DeviceKeys.NINE;
-            case CorsairLedId.K_0:
+            case CorsairLedId.D0:
                 return DeviceKeys.ZERO;
-            case CorsairLedId.K_MinusAndUnderscore:
+            case CorsairLedId.MinusAndUnderscore:
                 return DeviceKeys.MINUS;
-            case CorsairLedId.K_EqualsAndPlus:
+            case CorsairLedId.EqualsAndPlus:
                 return DeviceKeys.EQUALS;
-            case CorsairLedId.K_Backspace:
+            case CorsairLedId.Backspace:
                 return DeviceKeys.BACKSPACE;
-            case CorsairLedId.K_Insert:
+            case CorsairLedId.Insert:
                 return DeviceKeys.INSERT;
-            case CorsairLedId.K_Home:
+            case CorsairLedId.Home:
                 return DeviceKeys.HOME;
-            case CorsairLedId.K_PageUp:
+            case CorsairLedId.PageUp:
                 return DeviceKeys.PAGE_UP;
-            case CorsairLedId.K_NumLock:
+            case CorsairLedId.NumLock:
                 return DeviceKeys.NUM_LOCK;
-            case CorsairLedId.K_KeypadSlash:
+            case CorsairLedId.KeypadSlash:
                 return DeviceKeys.NUM_SLASH;
-            case CorsairLedId.K_KeypadAsterisk:
+            case CorsairLedId.KeypadAsterisk:
                 return DeviceKeys.NUM_ASTERISK;
-            case CorsairLedId.K_KeypadMinus:
+            case CorsairLedId.KeypadMinus:
                 return DeviceKeys.NUM_MINUS;
-            case CorsairLedId.K_Tab:
+            case CorsairLedId.Tab:
                 return DeviceKeys.TAB;
-            case CorsairLedId.K_Q:
+            case CorsairLedId.Q:
                 return DeviceKeys.Q;
-            case CorsairLedId.K_W:
+            case CorsairLedId.W:
                 return DeviceKeys.W;
-            case CorsairLedId.K_E:
+            case CorsairLedId.E:
                 return DeviceKeys.E;
-            case CorsairLedId.K_R:
+            case CorsairLedId.R:
                 return DeviceKeys.R;
-            case CorsairLedId.K_T:
+            case CorsairLedId.T:
                 return DeviceKeys.T;
-            case CorsairLedId.K_Y:
+            case CorsairLedId.Y:
                 return DeviceKeys.Y;
-            case CorsairLedId.K_U:
+            case CorsairLedId.U:
                 return DeviceKeys.U;
-            case CorsairLedId.K_I:
+            case CorsairLedId.I:
                 return DeviceKeys.I;
-            case CorsairLedId.K_O:
+            case CorsairLedId.O:
                 return DeviceKeys.O;
-            case CorsairLedId.K_P:
+            case CorsairLedId.P:
                 return DeviceKeys.P;
-            case CorsairLedId.K_BracketLeft:
+            case CorsairLedId.BracketLeft:
                 return DeviceKeys.OPEN_BRACKET;
-            case CorsairLedId.K_BracketRight:
+            case CorsairLedId.BracketRight:
                 return DeviceKeys.CLOSE_BRACKET;
-            case CorsairLedId.K_Backslash:
+            case CorsairLedId.Backslash:
                 return DeviceKeys.BACKSLASH;
-            case CorsairLedId.K_Delete:
+            case CorsairLedId.Delete:
                 return DeviceKeys.DELETE;
-            case CorsairLedId.K_End:
+            case CorsairLedId.End:
                 return DeviceKeys.END;
-            case CorsairLedId.K_PageDown:
+            case CorsairLedId.PageDown:
                 return DeviceKeys.PAGE_DOWN;
-            case CorsairLedId.K_Keypad7:
+            case CorsairLedId.Keypad7:
                 return DeviceKeys.NUM_SEVEN;
-            case CorsairLedId.K_Keypad8:
+            case CorsairLedId.Keypad8:
                 return DeviceKeys.NUM_EIGHT;
-            case CorsairLedId.K_Keypad9:
+            case CorsairLedId.Keypad9:
                 return DeviceKeys.NUM_NINE;
-            case CorsairLedId.K_KeypadPlus:
+            case CorsairLedId.KeypadPlus:
                 return DeviceKeys.NUM_PLUS;
-            case CorsairLedId.K_CapsLock:
+            case CorsairLedId.CapsLock:
                 return DeviceKeys.CAPS_LOCK;
-            case CorsairLedId.K_A:
+            case CorsairLedId.A:
                 return DeviceKeys.A;
-            case CorsairLedId.K_S:
+            case CorsairLedId.S:
                 return DeviceKeys.S;
-            case CorsairLedId.K_D:
+            case CorsairLedId.D:
                 return DeviceKeys.D;
-            case CorsairLedId.K_F:
+            case CorsairLedId.F:
                 return DeviceKeys.F;
-            case CorsairLedId.K_G:
+            case CorsairLedId.G:
                 return DeviceKeys.G;
-            case CorsairLedId.K_H:
+            case CorsairLedId.H:
                 return DeviceKeys.H;
-            case CorsairLedId.K_J:
+            case CorsairLedId.J:
                 return DeviceKeys.J;
-            case CorsairLedId.K_K:
+            case CorsairLedId.K:
                 return DeviceKeys.K;
-            case CorsairLedId.K_L:
+            case CorsairLedId.L:
                 return DeviceKeys.L;
-            case CorsairLedId.K_SemicolonAndColon:
+            case CorsairLedId.SemicolonAndColon:
                 return DeviceKeys.SEMICOLON;
-            case CorsairLedId.K_ApostropheAndDoubleQuote:
+            case CorsairLedId.ApostropheAndDoubleQuote:
                 return DeviceKeys.APOSTROPHE;
-            case CorsairLedId.K_NonUsTilde:
+            case CorsairLedId.NonUsTilde:
                 return DeviceKeys.HASHTAG;
-            case CorsairLedId.K_Enter:
+            case CorsairLedId.Enter:
                 return DeviceKeys.ENTER;
-            case CorsairLedId.K_Keypad4:
+            case CorsairLedId.Keypad4:
                 return DeviceKeys.NUM_FOUR;
-            case CorsairLedId.K_Keypad5:
+            case CorsairLedId.Keypad5:
                 return DeviceKeys.NUM_FIVE;
-            case CorsairLedId.K_Keypad6:
+            case CorsairLedId.Keypad6:
                 return DeviceKeys.NUM_SIX;
-            case CorsairLedId.K_LeftShift:
+            case CorsairLedId.LeftShift:
                 return DeviceKeys.LEFT_SHIFT;
-            case CorsairLedId.K_NonUsBackslash:
+            case CorsairLedId.NonUsBackslash:
                 return DeviceKeys.BACKSLASH_UK;
-            case CorsairLedId.K_Z:
+            case CorsairLedId.Z:
                 return DeviceKeys.Z;
-            case CorsairLedId.K_X:
+            case CorsairLedId.X:
                 return DeviceKeys.X;
-            case CorsairLedId.K_C:
+            case CorsairLedId.C:
                 return DeviceKeys.C;
-            case CorsairLedId.K_V:
+            case CorsairLedId.V:
                 return DeviceKeys.V;
-            case CorsairLedId.K_B:
+            case CorsairLedId.B:
                 return DeviceKeys.B;
-            case CorsairLedId.K_N:
+            case CorsairLedId.N:
                 return DeviceKeys.N;
-            case CorsairLedId.K_M:
+            case CorsairLedId.M:
                 return DeviceKeys.M;
-            case CorsairLedId.K_CommaAndLessThan:
+            case CorsairLedId.CommaAndLessThan:
                 return DeviceKeys.COMMA;
-            case CorsairLedId.K_PeriodAndBiggerThan:
+            case CorsairLedId.PeriodAndBiggerThan:
                 return DeviceKeys.PERIOD;
-            case CorsairLedId.K_SlashAndQuestionMark:
+            case CorsairLedId.SlashAndQuestionMark:
                 return DeviceKeys.FORWARD_SLASH;
-            case CorsairLedId.K_RightShift:
+            case CorsairLedId.RightShift:
                 return DeviceKeys.RIGHT_SHIFT;
-            case CorsairLedId.K_UpArrow:
+            case CorsairLedId.UpArrow:
                 return DeviceKeys.ARROW_UP;
-            case CorsairLedId.K_Keypad1:
+            case CorsairLedId.Keypad1:
                 return DeviceKeys.NUM_ONE;
-            case CorsairLedId.K_Keypad2:
+            case CorsairLedId.Keypad2:
                 return DeviceKeys.NUM_TWO;
-            case CorsairLedId.K_Keypad3:
+            case CorsairLedId.Keypad3:
                 return DeviceKeys.NUM_THREE;
-            case CorsairLedId.K_KeypadEnter:
+            case CorsairLedId.KeypadEnter:
                 return DeviceKeys.NUM_ENTER;
-            case CorsairLedId.K_LeftCtrl:
+            case CorsairLedId.LeftCtrl:
                 return DeviceKeys.LEFT_CONTROL;
-            case CorsairLedId.K_LeftGui:
+            case CorsairLedId.LeftGui:
                 return DeviceKeys.LEFT_WINDOWS;
-            case CorsairLedId.K_LeftAlt:
+            case CorsairLedId.LeftAlt:
                 return DeviceKeys.LEFT_ALT;
-            case CorsairLedId.K_Space:
+            case CorsairLedId.Space:
                 return DeviceKeys.SPACE;
-            case CorsairLedId.K_RightAlt:
+            case CorsairLedId.RightAlt:
                 return DeviceKeys.RIGHT_ALT;
-            case CorsairLedId.K_RightGui:
+            case CorsairLedId.RightGui:
                 return DeviceKeys.RIGHT_WINDOWS;
-            case CorsairLedId.K_Application:
+            case CorsairLedId.Application:
                 return DeviceKeys.APPLICATION_SELECT;
-            case CorsairLedId.K_RightCtrl:
+            case CorsairLedId.RightCtrl:
                 return DeviceKeys.RIGHT_CONTROL;
-            case CorsairLedId.K_LeftArrow:
+            case CorsairLedId.LeftArrow:
                 return DeviceKeys.ARROW_LEFT;
-            case CorsairLedId.K_DownArrow:
+            case CorsairLedId.DownArrow:
                 return DeviceKeys.ARROW_DOWN;
-            case CorsairLedId.K_RightArrow:
+            case CorsairLedId.RightArrow:
                 return DeviceKeys.ARROW_RIGHT;
-            case CorsairLedId.K_Keypad0:
+            case CorsairLedId.Keypad0:
                 return DeviceKeys.NUM_ZERO;
-            case CorsairLedId.K_KeypadPeriodAndDelete:
+            case CorsairLedId.KeypadPeriodAndDelete:
                 return DeviceKeys.NUM_PERIOD;
 
-            case CorsairLedId.K_Fn:
+            case CorsairLedId.Fn:
                 return DeviceKeys.FN_Key;
 
-            case CorsairLedId.K_G1:
+            case CorsairLedId.G1:
                 return DeviceKeys.G1;
-            case CorsairLedId.K_G2:
+            case CorsairLedId.G2:
                 return DeviceKeys.G2;
-            case CorsairLedId.K_G3:
+            case CorsairLedId.G3:
                 return DeviceKeys.G3;
-            case CorsairLedId.K_G4:
+            case CorsairLedId.G4:
                 return DeviceKeys.G4;
-            case CorsairLedId.K_G5:
+            case CorsairLedId.G5:
                 return DeviceKeys.G5;
-            case CorsairLedId.K_G6:
+            case CorsairLedId.G6:
                 return DeviceKeys.G6;
-            case CorsairLedId.K_G7:
+            case CorsairLedId.G7:
                 return DeviceKeys.G7;
-            case CorsairLedId.K_G8:
+            case CorsairLedId.G8:
                 return DeviceKeys.G8;
-            case CorsairLedId.K_G9:
+            case CorsairLedId.G9:
                 return DeviceKeys.G9;
-            case CorsairLedId.K_G10:
+            case CorsairLedId.G10:
                 return DeviceKeys.G10;
-            case CorsairLedId.K_G11:
+            case CorsairLedId.G11:
                 return DeviceKeys.G11;
-            case CorsairLedId.K_G12:
+            case CorsairLedId.G12:
                 return DeviceKeys.G12;
-            case CorsairLedId.K_G13:
+            case CorsairLedId.G13:
                 return DeviceKeys.G13;
-            case CorsairLedId.K_G14:
+            case CorsairLedId.G14:
                 return DeviceKeys.G14;
-            case CorsairLedId.K_G15:
+            case CorsairLedId.G15:
                 return DeviceKeys.G15;
-            case CorsairLedId.K_G16:
+            case CorsairLedId.G16:
                 return DeviceKeys.G16;
-            case CorsairLedId.K_G17:
+            case CorsairLedId.G17:
                 return DeviceKeys.G17;
-            case CorsairLedId.K_G18:
+            case CorsairLedId.G18:
                 return DeviceKeys.G18;
 
             default:
