@@ -69,27 +69,30 @@
         </tb:TaskbarIcon>
         <Grid Width="Auto" Height="25" Background="#10000000" DockPanel.Dock="Top"></Grid>
         <Grid HorizontalAlignment="Left" Width="56" Background="#3F000000" DockPanel.Dock="Left">
-            <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0">
+            <ScrollViewer HorizontalAlignment="Left" Width="56" UseLayoutRounding="False" CanContentScroll="True"
+                          HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,40" Padding="0,0,6,0">
                 <StackPanel x:Name="profiles_stack" RenderTransformOrigin="0.5,0" MinHeight="542" MaxHeight="542" MinWidth="40" MaxWidth="40" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="6,0,0,0">
                     <StackPanel.ContextMenu>
                         <ContextMenu x:Name="cmenuProfiles" Opened="ContextMenu_Opened" ContextMenuOpening="cmenuProfiles_ContextMenuOpening">
-                            <MenuItem x:Name="mbtnEnabled" Header="Enabled" IsCheckable="True" IsChecked="{Binding Settings.IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <MenuItem Header="Enabled" IsCheckable="True" IsChecked="{Binding Settings.IsEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             <MenuItem Header="Overlays Enabled" IsCheckable="True" IsChecked="{Binding Settings.IsOverlayEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                            <MenuItem x:Name="mbtnHidden" Header="Hidden" IsCheckable="True" IsChecked="{Binding Settings.Hidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="mbtnHidden_Checked" Unchecked="mbtnHidden_Checked"/>
+                            <MenuItem Header="Hidden" IsCheckable="True" IsChecked="{Binding Settings.Hidden, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Checked="mbtnHidden_Checked" Unchecked="mbtnHidden_Checked"/>
                         </ContextMenu>
                     </StackPanel.ContextMenu>
                 </StackPanel>
             </ScrollViewer>
-            <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0" MouseLeftButtonDown="DesktopControl_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+            <Image Source="Resources/settings_icon.png" ToolTip="General Settings" Margin="6,0,10,0"
+                   MouseLeftButtonDown="DesktopControl_MouseLeftButtonDown" RenderTransformOrigin="0.5,0.5" Height="40" VerticalAlignment="Bottom" HorizontalAlignment="Center">
                 <Image.ContextMenu>
-                    <ContextMenu x:Name="cmenuSettings" Background="#FF181818" HorizontalContentAlignment="Center">
+                    <ContextMenu Background="#FF181818" HorizontalContentAlignment="Center">
                         <ContextMenu.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Background="#FF181818" />
                             </ItemsPanelTemplate>
                         </ContextMenu.ItemsPanel>
-                        <MenuItem x:Name="cmbtnOpenBitmap" Header="Open Bitmap Window" Click="cmbtnOpenBitmapWindow_Clicked" Foreground="White"/>
-                        <MenuItem x:Name="cmbtnOpenhttpDebug" Header="Open GSI/HTTP Window" Click="cmbtnOpenHttpDebugWindow_Clicked" Foreground="White"/>
+                        <MenuItem Header="Open Bitmap Window" Click="cmbtnOpenBitmapWindow_Clicked" Foreground="White"/>
+                        <MenuItem Header="Open GSI/HTTP Window" Click="cmbtnOpenHttpDebugWindow_Clicked" Foreground="White"/>
                     </ContextMenu>
                 </Image.ContextMenu>
             </Image>
@@ -97,7 +100,7 @@
 
         <Grid x:Name="gridManagers" Margin="5,5,0,5" HorizontalAlignment="Left" Width="200" DockPanel.Dock="Left">
             <StackPanel x:Name="stackPanelManagers">
-                <Border x:Name="brdOverview" Background="#A5000000" CornerRadius="8" VerticalAlignment="Top" Height="25" PreviewMouseDown="brdOverview_PreviewMouseDown">
+                <Border Background="#A5000000" CornerRadius="8" VerticalAlignment="Top" Height="25" PreviewMouseDown="brdOverview_PreviewMouseDown">
                     <Border Background="#54A8A8A8" CornerRadius="8">
                         <TextBlock TextWrapping="Wrap" Text="Overview" VerticalAlignment="Top" Margin="10,3,10,0"/>
                     </Border>
@@ -134,7 +137,8 @@
                                 <BitmapCache EnableClearType="True"/>
                             </Grid.CacheMode>
                         </Grid>
-                        <Label x:Name="KeyboardRecordMessage" Content="Please select key(s) you want to assign" HorizontalAlignment="Right" Foreground="Red" Height="26" VerticalAlignment="Top" Margin="0,0,10,0" Grid.Column="1" Padding="0" IsHitTestVisible="False"  />
+                        <Label x:Name="KeyboardRecordMessage" Content="Please select key(s) you want to assign"
+                               HorizontalAlignment="Right" Foreground="Red" Height="26" VerticalAlignment="Top" Margin="0,0,10,0" Grid.Column="1" Padding="0" IsHitTestVisible="False"  />
                     </Grid>
                 </Border>
             </Viewbox>
