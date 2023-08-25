@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
@@ -14,6 +16,26 @@ namespace Aurora.Modules.AudioCapture;
 /// </summary>
 public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfaces.IMMNotificationClient
 {
+    static readonly BlockingCollection<Action> ThreadTasks = new();
+
+    private static readonly Thread NAudioThread = new(() =>
+    {
+        while (true)
+        {
+            var act = ThreadTasks.Take();
+            act.Invoke();
+        }
+    })
+    {
+        Name = "NAudioThread",
+        IsBackground = true,
+    };
+
+    static AudioDeviceProxy()
+    {
+        NAudioThread.Start();
+    }
+    
     public static List<AudioDeviceProxy> Instances { get; } = new();
     private readonly MMDeviceEnumerator _deviceEnumerator = new();
 
@@ -83,18 +105,21 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     /// <summary>Gets a new MMDevice and wave in based on the current <see cref="DeviceId"/> and <see cref="Flow"/></summary>
     private void UpdateDevice()
     {
-        // Release the current device (if any), removing any events as required
-        DisposeCurrentDevice();
-        if (_disposed) return;
+        ThreadTasks.Add(() =>
+        {
+            // Release the current device (if any), removing any events as required
+            DisposeCurrentDevice();
+            if (_disposed) return;
 
-        // Get a new device with this ID and flow direction
-        var mmDevice = _deviceId == AudioDevices.DefaultDeviceId
-            ? GetDefaultAudioEndpoint() // Get default if no ID is provided
-            : _deviceEnumerator.EnumerateAudioEndPoints(Flow, DeviceState.Active)
-                .FirstOrDefault(d => d.ID == DeviceId); // Otherwise, get the one with this ID
-        if (mmDevice == null) return;
-        if (mmDevice.ID == Device?.ID) return;
-        SetDevice(mmDevice);
+            // Get a new device with this ID and flow direction
+            var mmDevice = _deviceId == AudioDevices.DefaultDeviceId
+                ? GetDefaultAudioEndpoint() // Get default if no ID is provided
+                : _deviceEnumerator.EnumerateAudioEndPoints(Flow, DeviceState.Active)
+                    .FirstOrDefault(d => d.ID == DeviceId); // Otherwise, get the one with this ID
+            if (mmDevice == null) return;
+            if (mmDevice.ID == Device?.ID) return;
+            SetDevice(mmDevice);
+        });
     }
 
     private MMDevice? GetDefaultAudioEndpoint()
@@ -110,8 +135,16 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private void SetDevice(MMDevice? mmDevice)
+    {
+        if (Thread.CurrentThread == NAudioThread)
+        {
+            SetDeviceOnThread(mmDevice);
+        }
+        ThreadTasks.Add(() => SetDeviceOnThread(mmDevice));
+    }
+
+    private void SetDeviceOnThread(MMDevice? mmDevice)
     {
         if (mmDevice == null)
         {
@@ -132,7 +165,7 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
             WaveIn.RecordingStopped += WaveInOnRecordingStopped;
 
             //"Activate" device
-            var _ = mmDevice.AudioMeterInformation?.MasterPeakValue + mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
+            //var _ = mmDevice.AudioMeterInformation?.MasterPeakValue + mmDevice.AudioEndpointVolume?.MasterVolumeLevel;
 
             Device = mmDevice;
             DeviceName = Device.FriendlyName;
@@ -149,11 +182,10 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
             Device = fallbackDevice;
             DeviceName = Device?.FriendlyName ?? "";
             DeviceChanged?.Invoke(this, EventArgs.Empty);
-            Global.logger.Error("Error while switching sound device", e);
+            Global.logger.Error(e, "Error while switching sound device");
         }
     }
 
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private void WaveInOnRecordingStopped(object? sender, StoppedEventArgs e)
     {
         var audioException = e.Exception;
@@ -168,25 +200,33 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         }
         else if (Device != null)
         {
-            Global.logger.Error("Audio proxy error", audioException);
+            Global.logger.Error(audioException, "Audio proxy error");
             DisposeCurrentDevice();
         }
     }
 
-    /// <summary>Disposes and clears the current <see cref="Device"/> and <see cref="WaveIn"/>.</summary>
-    [MethodImpl(MethodImplOptions.Synchronized)]
     private void DisposeCurrentDevice()
     {
-        if (WaveIn?.CaptureState == CaptureState.Capturing)
+        if (Thread.CurrentThread == NAudioThread)
         {
-            WaveIn?.StopRecording();
+            DisposeCurrentDeviceOnThread();
+        }
+        ThreadTasks.Add(DisposeCurrentDeviceOnThread);
+    }
+
+    private void DisposeCurrentDeviceOnThread()
+    {
+        if (WaveIn != null)
+        {
+            WaveIn.DataAvailable -= _waveInDataAvailable;
+            WaveIn?.Dispose();
         }
 
-        if (WaveIn != null) WaveIn.DataAvailable -= _waveInDataAvailable;
         WaveIn = null;
 
+        Device?.Dispose();
         Device = null;
-        DeviceName = "";
+        DeviceName = string.Empty;
 
         DeviceChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -200,9 +240,12 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
         switch (newState)
         {
             case DeviceState.Active:
-                DisposeCurrentDevice();
-                var mmDevice = _deviceEnumerator.GetDevice(DeviceId);
-                SetDevice(mmDevice);
+                ThreadTasks.Add(() =>
+                {
+                    DisposeCurrentDevice();
+                    var mmDevice = _deviceEnumerator.GetDevice(DeviceId);
+                    SetDevice(mmDevice);
+                });
                 break;
             case DeviceState.Disabled:
             case DeviceState.Unplugged:
@@ -261,7 +304,6 @@ public sealed class AudioDeviceProxy : IDisposable, NAudio.CoreAudioApi.Interfac
     {
         if (_disposed) return;
         _disposed = true;
-        Device?.Dispose();
         DisposeCurrentDevice();
         _deviceEnumerator.UnregisterEndpointNotificationCallback(this);
         _deviceEnumerator.Dispose();

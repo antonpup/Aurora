@@ -184,7 +184,7 @@ public class EqualizerLayerHandler : LayerHandler<EqualizerLayerHandlerPropertie
 
     private void DeviceChanged(object? sender, EventArgs e)
     {
-        if (_deviceProxy.Device == null)
+        if (_deviceProxy?.Device == null || _deviceProxy.WaveIn == null)
             return;
         _channels = _deviceProxy.WaveIn.WaveFormat.Channels;
         _bitsPerSample = _deviceProxy.WaveIn.WaveFormat.BitsPerSample;

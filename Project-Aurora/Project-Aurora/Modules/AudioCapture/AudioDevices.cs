@@ -74,7 +74,7 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
         {
             case DeviceState.Active:
                 var addedDevice = _deviceEnumerator.GetDevice(deviceId);
-                switch (addedDevice.DataFlow)
+                switch (addedDevice?.DataFlow)
                 {
                     case DataFlow.Render:
                         AddPlaybackDevice(addedDevice);
@@ -83,11 +83,12 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
                         AddRecordingDevice(addedDevice);
                         break;
                 }
+                addedDevice?.Dispose();
                 break;
             case DeviceState.Disabled:
             case DeviceState.Unplugged:
                 var removedDevice = _deviceEnumerator.GetDevice(deviceId);
-                switch (removedDevice.DataFlow)
+                switch (removedDevice?.DataFlow)
                 {
                     case DataFlow.Render:
                         RemovePlaybackDevice(removedDevice);
@@ -96,6 +97,7 @@ public sealed class AudioDevices : IDisposable, NAudio.CoreAudioApi.Interfaces.I
                         RemoveRecordingDevice(removedDevice);
                         break;
                 }
+                removedDevice?.Dispose();
                 break;
             case DeviceState.NotPresent:
                 RecordingDevices.Remove(deviceId);

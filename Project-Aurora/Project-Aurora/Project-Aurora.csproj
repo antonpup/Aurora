@@ -80,7 +80,8 @@
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.2" />
     <PackageReference Include="Lombok.NET" Version="2.0.0" />
     <PackageReference Include="Microsoft.Experimental.Collections" Version="1.0.6-e190117-3" />
-    <PackageReference Include="NAudio" Version="2.1.0" />
+    <PackageReference Include="NAudio.Core" Version="2.2.0" />
+    <PackageReference Include="NAudio.Wasapi" Version="22.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Octokit" Version="7.1.0" />
     <PackageReference Include="OpenRGB.NET" Version="2.2.0" />
