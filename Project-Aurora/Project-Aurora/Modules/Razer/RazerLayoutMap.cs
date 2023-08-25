@@ -67,7 +67,7 @@ public static class RazerLayoutMap
         {DeviceKeys.O,                     new[]{2, 10} },
         {DeviceKeys.P,                     new[]{2, 11} },
         {DeviceKeys.OPEN_BRACKET,          new[]{2, 12} },
-        {DeviceKeys.CLOSE_BRACKET,         new[]{2,13} },
+        {DeviceKeys.CLOSE_BRACKET,         new[]{2, 13} },
         {DeviceKeys.BACKSLASH,             new[]{2, 14} },
         {DeviceKeys.DELETE,                new[]{2, 15} },
         {DeviceKeys.END,                   new[]{2, 16} },
@@ -91,6 +91,9 @@ public static class RazerLayoutMap
         {DeviceKeys.APOSTROPHE,            new[]{3, 12} },
         {DeviceKeys.HASHTAG,               new[]{3, 13} },
         {DeviceKeys.ENTER,                 new[]{3, 14} },
+        {DeviceKeys.CAPS_LOCK_LED,         new[]{3, 15} },
+        {DeviceKeys.NUM_LOCK_LED,          new[]{3, 16} },
+        {DeviceKeys.SCROLL_LOCK_LED,       new[]{3, 17} },
         {DeviceKeys.NUM_FOUR,              new[]{3, 18} },
         {DeviceKeys.NUM_FIVE,              new[]{3, 19} },
         {DeviceKeys.NUM_SIX,               new[]{3, 20} },
@@ -127,7 +130,7 @@ public static class RazerLayoutMap
         {DeviceKeys.ARROW_DOWN,            new[]{5, 16} },
         {DeviceKeys.ARROW_RIGHT,           new[]{5, 17} },
         {DeviceKeys.NUM_ZERO,              new[]{5, 19} },
-        {DeviceKeys.NUM_PERIOD,            new[]{5, 20} }
+        {DeviceKeys.NUM_PERIOD,            new[]{5, 20} },
     };
 
     public static readonly IReadOnlyDictionary<DeviceKeys, int[]> Mouse = new Dictionary<DeviceKeys, int[]>

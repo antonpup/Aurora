@@ -1773,6 +1773,24 @@ namespace Aurora.Devices
         HEADSET5 = 300,
 
         /// <summary>
+        /// Num Lock Led
+        /// </summary>
+        [Description("Num Lock Led")]
+        NUM_LOCK_LED = 301,
+
+        /// <summary>
+        /// Caps Lock Led
+        /// </summary>
+        [Description("Caps Lock Led")]
+        CAPS_LOCK_LED = 302,
+
+        /// <summary>
+        /// Scroll Lock Led
+        /// </summary>
+        [Description("Scroll Lock Led")]
+        SCROLL_LOCK_LED = 303,
+
+        /// <summary>
         /// None
         /// </summary>
         [Description("None")]

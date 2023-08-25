@@ -68,6 +68,28 @@
       "font_size": 12.0,
       "enabled": true,
       "absolute_location": true
-    }
+    },
+    {
+      "visualName": "",
+      "tag": 302,
+      "line_break": false,
+      "margin_left": 452.0,
+      "margin_top": -34.0,
+      "width": 14.0,
+      "height": 22.0,
+      "enabled": true,
+      "absolute_location": true
+    },
+    {
+      "visualName": "",
+      "tag": 303,
+      "line_break": false,
+      "margin_left": 489.0,
+      "margin_top": -34.0,
+      "width": 14.0,
+      "height": 22.0,
+      "enabled": true,
+      "absolute_location": true
+    },
   ]
 }
