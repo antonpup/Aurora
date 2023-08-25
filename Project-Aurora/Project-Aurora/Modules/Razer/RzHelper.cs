@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Win32;
+using RazerSdkReader.Structures;
 
 namespace Aurora.Modules.Razer;
 
@@ -101,42 +102,42 @@ public static class RzHelper
             return;
         }
         
-        sdkManager.KeyboardUpdated += (_, keyboard) =>
+        sdkManager.KeyboardUpdated += (object? _, in ChromaKeyboard keyboard) =>
         {
             KeyboardColors.Provider = keyboard;
             KeyboardColors.IsDirty = true;
             _lastUpdate = DateTime.Now;
         };
 
-        sdkManager.MouseUpdated += (_, mouse) =>
+        sdkManager.MouseUpdated += (object? _, in ChromaMouse mouse) =>
         {
             MouseColors.Provider = mouse;
             MouseColors.IsDirty = true;
             _lastUpdate = DateTime.Now;
         };
 
-        sdkManager.MousepadUpdated += (_, mousepad) =>
+        sdkManager.MousepadUpdated += (object? _, in ChromaMousepad mousepad) =>
         {
             MousepadColors.Provider = mousepad;
             MousepadColors.IsDirty = true;
             _lastUpdate = DateTime.Now;
         };
         
-        sdkManager.HeadsetUpdated += (_, headset) =>
+        sdkManager.HeadsetUpdated += (object? _, in ChromaHeadset headset) =>
         {
             HeadsetColors.Provider = headset;
             HeadsetColors.IsDirty = true;
             _lastUpdate = DateTime.Now;
         };
 
-        sdkManager.ChromaLinkUpdated += (_, link) =>
+        sdkManager.ChromaLinkUpdated += (object? _, in ChromaLink link) =>
         {
             ChromaLinkColors.Provider = link;
             ChromaLinkColors.IsDirty = true;
             _lastUpdate = DateTime.Now;
         };
 
-        sdkManager.AppDataUpdated += (_, appData) =>
+        sdkManager.AppDataUpdated += (object? _, in ChromaAppData appData) =>
         {
             uint currentAppId = 0;
             string? currentAppName = null;

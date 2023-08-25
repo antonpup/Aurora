@@ -93,7 +93,7 @@ public partial class Control_SettingsDevicesAndWrappers
         logitechSdkListener.ApplicationChanged += LogitechSdkListenerOnApplicationChanged;
     }
 
-    private void HandleChromaAppChange(object? s, ChromaAppData appData)
+    private void HandleChromaAppChange(object? s, in ChromaAppData appData)
     {
         uint currentAppId = 0;
         string? currentAppName = null;

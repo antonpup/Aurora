@@ -165,9 +165,9 @@
       },
       "RazerSdkReader": {
         "type": "Direct",
-        "requested": "[1.3.0, )",
-        "resolved": "1.3.0",
-        "contentHash": "sTSaIHfLsYvKfYBaOMj6INaeM8kdvc8bRNuImAEkpuKP+kliDAELXkx/3+CVF6GU0B/3rel4NRzseumV4u4jGw==",
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "z2E9cLZa9dBpwLx+71uMsc6An8u0sikL2VpOKQPgY+S/atW19Rqjl7zEJAvHcJ3EGAdrp0yiBFFnZsgKGoWt5A==",
         "dependencies": {
           "System.Threading.AccessControl": "7.0.1"
         }
