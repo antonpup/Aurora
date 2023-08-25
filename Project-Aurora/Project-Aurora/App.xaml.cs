@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -140,7 +141,8 @@ public partial class App
         }
     }
 
-    private void ForceShutdownApp(int exitCode)
+    [DoesNotReturn]
+    internal static void ForceShutdownApp(int exitCode)
     {
         Environment.ExitCode = exitCode;
         Environment.Exit(exitCode);

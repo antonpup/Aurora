@@ -749,9 +749,22 @@ namespace Aurora.Settings
             catch (Exception exc)
             {
                 Global.logger.Error(exc, "Exception during ConfigManager.Load(). Error: ");
-                MessageBox.Show("Exception during ConfigManager.Load().Error: " + exc.Message + "\r\n\r\n Default configuration loaded.", "Aurora - Error");
+                var result = MessageBox.Show(
+                    "Exception during ConfigManager.Load().Error: "
+                    + exc.Message + "\r\n\r\n Do you want to reset settings? (this won't reset profiles).",
+                    "Aurora - Error",
+                    MessageBoxButton.YesNo
+                );
 
-                config = new Configuration();
+                if (result == MessageBoxResult.Yes)
+                {
+                    config = new Configuration();
+                }
+                else
+                {
+                    App.ForceShutdownApp(-1);
+                    throw new Exception();
+                }
             }
 
             config.PropertyChanged += (_, _) =>
