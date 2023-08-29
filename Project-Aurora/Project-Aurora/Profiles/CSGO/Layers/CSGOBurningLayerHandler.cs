@@ -7,99 +7,98 @@ using Aurora.Settings.Layers;
 using Aurora.Utils;
 using Newtonsoft.Json;
 
-namespace Aurora.Profiles.CSGO.Layers
+namespace Aurora.Profiles.CSGO.Layers;
+
+public class CSGOBurningLayerHandlerProperties : LayerHandlerProperties2Color<CSGOBurningLayerHandlerProperties>
 {
-    public class CSGOBurningLayerHandlerProperties : LayerHandlerProperties2Color<CSGOBurningLayerHandlerProperties>
+    public Color? _BurningColor { get; set; }
+
+    [JsonIgnore]
+    public Color BurningColor => Logic._BurningColor ?? _BurningColor ?? Color.Empty;
+
+    public bool? _Animated { get; set; }
+
+    [JsonIgnore]
+    public bool Animated => Logic._Animated ?? _Animated ?? false;
+
+    public CSGOBurningLayerHandlerProperties()
+    { }
+
+    public CSGOBurningLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
+
+    public override void Default()
     {
-        public Color? _BurningColor { get; set; }
+        base.Default();
 
-        [JsonIgnore]
-        public Color BurningColor => Logic._BurningColor ?? _BurningColor ?? Color.Empty;
+        _BurningColor = Color.FromArgb(255, 70, 0);
+        _Animated = true;
+    }
+}
 
-        public bool? _Animated { get; set; }
+public class CSGOBurningLayerHandler : LayerHandler<CSGOBurningLayerHandlerProperties>
+{
+    private readonly Random _randomizer = new();
+    private readonly SolidBrush _solidBrush = new(Color.Empty);
 
-        [JsonIgnore]
-        public bool Animated => Logic._Animated ?? _Animated ?? false;
-
-        public CSGOBurningLayerHandlerProperties()
-        { }
-
-        public CSGOBurningLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
-
-        public override void Default()
-        {
-            base.Default();
-
-            _BurningColor = Color.FromArgb(255, 70, 0);
-            _Animated = true;
-        }
+    public CSGOBurningLayerHandler(): base("CSGO - Burning")
+    {
     }
 
-    public class CSGOBurningLayerHandler : LayerHandler<CSGOBurningLayerHandlerProperties>
+    protected override UserControl CreateControl()
     {
-        private Random randomizer = new();
-        private SolidBrush _solidBrush = new(Color.Empty);
+        return new Control_CSGOBurningLayer(this);
+    }
 
-        public CSGOBurningLayerHandler(): base("CSGO - Burning")
+    public override EffectLayer Render(IGameState state)
+    {
+        if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
+
+        //Update Burning
+
+        if (csgostate.Player.State.Burning <= 0) return EffectLayer.EmptyLayer;
+        var burnColor = Properties.BurningColor;
+
+        if (Properties.Animated)
         {
-        }
+            var redAdjusted = (int)(burnColor.R + (Math.Cos((Time.GetMillisecondsSinceEpoch() + _randomizer.Next(75)) / 75.0) * 0.15 * 255));
 
-        protected override UserControl CreateControl()
-        {
-            return new Control_CSGOBurningLayer(this);
-        }
-
-        public override EffectLayer Render(IGameState state)
-        {
-            if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
-
-            //Update Burning
-
-            if (csgostate.Player.State.Burning <= 0) return EffectLayer.EmptyLayer;
-            var burnColor = Properties.BurningColor;
-
-            if (Properties.Animated)
+            byte red = redAdjusted switch
             {
-                var redAdjusted = (int)(burnColor.R + (Math.Cos((Time.GetMillisecondsSinceEpoch() + randomizer.Next(75)) / 75.0) * 0.15 * 255));
+                > 255 => 255,
+                < 0 => 0,
+                _ => (byte) redAdjusted
+            };
 
-                byte red = redAdjusted switch
-                {
-                    > 255 => 255,
-                    < 0 => 0,
-                    _ => (byte) redAdjusted
-                };
+            var greenAdjusted = (int)(burnColor.G + (Math.Sin((Time.GetMillisecondsSinceEpoch() + _randomizer.Next(150)) / 75.0) * 0.15 * 255));
 
-                var greenAdjusted = (int)(burnColor.G + (Math.Sin((Time.GetMillisecondsSinceEpoch() + randomizer.Next(150)) / 75.0) * 0.15 * 255));
+            byte green = greenAdjusted switch
+            {
+                > 255 => 255,
+                < 0 => 0,
+                _ => (byte) greenAdjusted
+            };
 
-                byte green = greenAdjusted switch
-                {
-                    > 255 => 255,
-                    < 0 => 0,
-                    _ => (byte) greenAdjusted
-                };
+            var blueAdjusted = (int)(burnColor.B + (Math.Cos((Time.GetMillisecondsSinceEpoch() + _randomizer.Next(225)) / 75.0) * 0.15 * 255));
 
-                var blueAdjusted = (int)(burnColor.B + (Math.Cos((Time.GetMillisecondsSinceEpoch() + randomizer.Next(225)) / 75.0) * 0.15 * 255));
+            byte blue = blueAdjusted switch
+            {
+                > 255 => 255,
+                < 0 => 0,
+                _ => (byte) blueAdjusted
+            };
 
-                byte blue = blueAdjusted switch
-                {
-                    > 255 => 255,
-                    < 0 => 0,
-                    _ => (byte) blueAdjusted
-                };
-
-                burnColor = Color.FromArgb(csgostate.Player.State.Burning, red, green, blue);
-            }
-
-            if (_solidBrush.Color == burnColor) return EffectLayer;
-            _solidBrush.Color = burnColor;
-            EffectLayer.Fill(_solidBrush);
-            return EffectLayer;
+            burnColor = Color.FromArgb(csgostate.Player.State.Burning, red, green, blue);
         }
 
-        public override void SetApplication(Application profile)
-        {
-            (Control as Control_CSGOBurningLayer).SetProfile(profile);
-            base.SetApplication(profile);
-        }
+        if (_solidBrush.Color == burnColor) return EffectLayer;
+        _solidBrush.Color = burnColor;
+        EffectLayer.Fill(_solidBrush);
+        return EffectLayer;
+    }
+
+    public override void SetApplication(Application profile)
+    {
+        (Control as Control_CSGOBurningLayer).SetProfile(profile);
+        base.SetApplication(profile);
     }
 }

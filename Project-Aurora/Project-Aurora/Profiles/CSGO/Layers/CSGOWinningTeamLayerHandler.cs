@@ -39,36 +39,10 @@ public class CSGOWinningTeamLayerHandlerProperties : LayerHandlerProperties2Colo
 
 public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHandlerProperties>
 {
-    private readonly AnimationTrack[] _tracks =
-    {
-        new("Winning Team Track 0", 1.0f),
-        new("Winning Team Track 1", 1.0f, 1.0f),
-        new("Winning Team Track 2", 1.0f, 2.0f),
-        new("Winning Team Track 3", 1.0f, 3.0f),
-        new("Winning Team Track 4", 1.0f, 4.0f)
-    };
-    private readonly AnimationMix _animationMix;
-
-    private long _previoustime;
-    private long _currenttime ;
-
-    private static float _winningTeamEffectKeyframe;
-    private const float WinningTeamEffectAnimationTime = 5.0f;
-
-    private bool _showAnimation;
-
     private readonly SolidBrush _solidBrush = new(Color.Empty);
 
     public CSGOWinningTeamLayerHandler(): base("CSGO - Winning Team Effect")
     {
-        WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
-        _animationMix = new AnimationMix(_tracks);
-        SetTracks();
-    }
-
-    private void Effects_CanvasChanged(object? sender, EventArgs e)
-    {
-        SetTracks();
     }
 
     protected override UserControl CreateControl()
@@ -78,9 +52,6 @@ public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHand
 
     public override EffectLayer Render(IGameState state)
     {
-        _previoustime = _currenttime;
-        _currenttime = Utils.Time.GetMillisecondsSinceEpoch();
-
         if (state is not GameState_CSGO csgostate) return EffectLayer.EmptyLayer;
 
         // Block animations after end of round
@@ -120,20 +91,9 @@ public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHand
                     _ => _solidBrush.Color
                 };
             }
-
-            _animationMix.Clear();
-            _showAnimation = true;
         }
 
-        if (!_showAnimation) return EffectLayer;
-
         EffectLayer.Fill(_solidBrush);
-        _animationMix.Draw(EffectLayer.GetGraphics(), _winningTeamEffectKeyframe);
-        _winningTeamEffectKeyframe += (_currenttime - _previoustime) / 1000.0f;
-
-        if (!(_winningTeamEffectKeyframe >= WinningTeamEffectAnimationTime)) return EffectLayer;
-        _showAnimation = false;
-        _winningTeamEffectKeyframe = 0;
 
         return EffectLayer;
     }
@@ -142,38 +102,5 @@ public class CSGOWinningTeamLayerHandler : LayerHandler<CSGOWinningTeamLayerHand
     {
         (Control as Control_CSGOWinningTeamLayer)?.SetProfile(profile);
         base.SetApplication(profile);
-    }
-
-    private void SetTracks()
-    {
-        foreach (var track in _tracks)
-        {
-            track.SetFrame(
-                0.0f,
-                new AnimationCircle(
-                    (int)(Effects.CanvasWidthCenter * 0.9),
-                    Effects.CanvasHeightCenter,
-                    0,
-                    Color.Black,
-                    4)
-            );
-
-            track.SetFrame(
-                1.0f,
-                new AnimationCircle(
-                    (int)(Effects.CanvasWidthCenter * 0.9),
-                    Effects.CanvasHeightCenter,
-                    Effects.CanvasBiggest / 2.0f,
-                    Color.Black,
-                    4)
-            );
-        }
-    }
-
-    public override void Dispose()
-    {
-        base.Dispose();
-
-        WeakEventManager<Effects, EventArgs>.RemoveHandler(null, nameof(Effects.CanvasChanged), Effects_CanvasChanged);
     }
 }
