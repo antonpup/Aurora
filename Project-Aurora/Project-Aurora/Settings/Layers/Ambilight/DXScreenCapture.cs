@@ -22,7 +22,8 @@ internal sealed class DxScreenCapture : IScreenCapture
     public void Capture(Rectangle desktopRegion)
     {
         SetTarget(desktopRegion);
-        try{
+        try
+        {
             Semaphore.WaitOne();
             var bitmap = _currentBounds.IsEmpty ? null : _desktopDuplicator?.Capture(_currentBounds, 5000);
             if (bitmap == null)
@@ -35,6 +36,16 @@ internal sealed class DxScreenCapture : IScreenCapture
             }
             ScreenshotTaken?.Invoke(this, bitmap);
             bitmap.Dispose();
+        }
+        catch(Exception e)
+        {
+            Global.logger.Error(e, "DX Screenshot Error");
+            if (!_desktopDuplicator?.IsDisposed ?? false)
+            {
+                _desktopDuplicator.Dispose(); 
+                _desktopDuplicator = null;
+            }
+            Thread.Sleep(2000);
         } finally {
             Semaphore.Release();
         }
