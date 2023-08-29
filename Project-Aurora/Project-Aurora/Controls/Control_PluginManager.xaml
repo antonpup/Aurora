@@ -83,6 +83,12 @@
                             <TextBlock Text="?" TextDecorations="Underline" ToolTip="Needed for wrappers"
                                        ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
                         </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox Content="Shutdown Aurora On Conflict" IsChecked="{Binding EnableShutdownOnConflict}"></CheckBox>
+                            <TextBlock Text="?" TextDecorations="Underline" ToolTip="Shuts down Aurora when non-compatible software is opened, like games that don't start with Aurora open"
+                                       ToolTipService.InitialShowDelay="0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                        </StackPanel>
                         
                         <TextBlock TextWrapping="Wrap" Text="Application Detection Method:" Margin="0,12,0,0"
                                    HorizontalAlignment="Left" VerticalAlignment="Top" />
@@ -98,7 +104,7 @@
         <Grid Grid.Row="1">
             <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Plugins" VerticalAlignment="Top"/>
             <TextBlock HorizontalAlignment="Right" Foreground="Red" TextWrapping="Wrap" Text="A restart is required for changes to take affect" VerticalAlignment="Top"/>
-            <ListBox x:Name="lstPlugins" Margin="0,26,0,0" ItemsSource="{Binding Path=Plugins}">
+            <ListBox Margin="0,26,0,0" ItemsSource="{Binding Path=Plugins}">
                 <ListBox.ItemTemplate>
                     <HierarchicalDataTemplate>
                         <StackPanel Orientation="Horizontal">

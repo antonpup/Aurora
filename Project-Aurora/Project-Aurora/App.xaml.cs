@@ -48,6 +48,7 @@ public partial class App
         new PointerUpdateModule(),
         new HardwareMonitorModule(),
         new LogitechSdkModule(),
+        new BlacklistMonitor(),
         PluginsModule,
         IpcListenerModule,
         HttpListenerModule,
