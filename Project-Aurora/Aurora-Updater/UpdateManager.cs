@@ -6,6 +6,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -79,7 +81,25 @@ public class UpdateManager
         }
 
         PerformCleanup();
-        LatestRelease = FetchData(version, author, repoName);
+        var tries = 20;
+        while (LatestRelease == null && tries-- == 0)
+        {
+            try
+            {
+                LatestRelease = FetchData(version, author, repoName);
+            }
+            catch (AggregateException e)
+            {
+                if (e.InnerException is HttpRequestException && tries != 0)
+                {
+                    Thread.Sleep(5000);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
     }
 
     public void ClearLog()
@@ -114,7 +134,7 @@ public class UpdateManager
             if (string.IsNullOrWhiteSpace(url)) return;
             _log.Enqueue(new LogEntry("Starting download... "));
 
-            var client = new WebClient();
+            using var client = new WebClient();
             client.DownloadProgressChanged += client_DownloadProgressChanged;
 
             // Starts the download
