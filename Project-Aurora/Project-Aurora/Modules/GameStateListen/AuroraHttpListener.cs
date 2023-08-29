@@ -10,11 +10,11 @@ namespace Aurora.Modules.GameStateListen;
 public class AuroraHttpListener
 {
     private bool _isRunning;
-    private IGameState? _currentGameState;
-    private HttpListener? _netListener;
+    private IGameState _currentGameState = new EmptyGameState("{}");
+    private readonly HttpListener _netListener;
     private readonly int _port;
 
-    public IGameState? CurrentGameState
+    public IGameState CurrentGameState
     {
         get => _currentGameState;
         private set
@@ -30,15 +30,14 @@ public class AuroraHttpListener
     public event EventHandler<IGameState>? NewGameState;
 
     /// <summary>
-    /// A GameStateListener that listens for connections on http://localhost:port/
+    /// A GameStateListener that listens for connections on http://127.0.0.1:port/
     /// </summary>
     /// <param name="port"></param>
     public AuroraHttpListener(int port)
     {
         _port = port;
         _netListener = new HttpListener();
-        _netListener.Prefixes.Add("http://127.0.0.1:" + port + "/");
-        _netListener.Prefixes.Add("http://localhost:" + port + "/");
+        _netListener.Prefixes.Add($"http://127.0.0.1:{port}/");
     }
 
     /// <summary>
@@ -58,8 +57,7 @@ public class AuroraHttpListener
             
             if (exc.ErrorCode == 5)//Access Denied
                 MessageBox.Show("Access error during start of network listener.\r\n\r\n" +
-                                "To fix this issue, please run the following commands as admin in Command Prompt:\r\n" +
-                                $"   netsh http add urlacl url=http://localhost:{_port}/ user=Everyone listen=yes\r\nand\r\n" +
+                                "To fix this issue, please run the following commands as admin in Command Prompt:r\n" +
                                 $"   netsh http add urlacl url=http://127.0.0.1:{_port}/ user=Everyone listen=yes", 
                     "Aurora - Error");
 
@@ -78,14 +76,13 @@ public class AuroraHttpListener
     {
         _isRunning = false;
 
-        _netListener?.Close();
-        _netListener = null;
+        _netListener.Close();
         return Task.CompletedTask;
     }
 
     private void ReceiveGameState(IAsyncResult result)
     {
-        if (_netListener == null || !_isRunning)
+        if (!_isRunning)
         {
             return;
         }
@@ -109,7 +106,7 @@ public class AuroraHttpListener
         Task.Run(() => _netListener.BeginGetContext(ReceiveGameState, null));
     }
 
-    private string TryProcessRequest(HttpListenerContext context)
+    private static string TryProcessRequest(HttpListenerContext context)
     {
         var request = context.Request;
         string json;
@@ -123,7 +120,7 @@ public class AuroraHttpListener
         {
             response.StatusCode = (int)HttpStatusCode.OK;
             response.StatusDescription = "OK";
-            response.ContentType = "text/html";
+            response.ContentType = "application/json";
             response.ContentLength64 = 0;
         }
 
