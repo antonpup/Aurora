@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Aurora.Controls" 
     mc:Ignorable="d" Loaded="UserControl_Loaded">
-    <Grid x:Name="deviceManagerParentGrid">
+    <Grid x:Name="DeviceManagerParentGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="25" />
             <RowDefinition/>
@@ -19,14 +19,13 @@
                 <ColumnDefinition Width="80" />
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0" Text="Available Devices" VerticalAlignment="Top" Margin="2" />
-            <TextBlock Grid.Column="1" x:Name="txtBlk_retries" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Retries Remaining: 0" Margin="2"/>
-            <Button Grid.Column="2" x:Name="btnCalibrate" Content="Calibrate Devices" VerticalAlignment="Top"  Click="btnCalibrate_Click" Margin="2"/>
-            <Button Grid.Column="3" x:Name="btnRestartAll" Content="Restart All" VerticalAlignment="Top"  Click="btnRestartAll_Click" Margin="2"/>
+            <Button Grid.Column="2" Content="Calibrate Devices" VerticalAlignment="Top"  Click="btnCalibrate_Click" Margin="2"/>
+            <Button Grid.Column="3" Content="Restart All" VerticalAlignment="Top"  Click="btnRestartAll_Click" Margin="2"/>
         </Grid>
-        <ListView x:Name="lstDevices" Grid.Row="1" ItemsSource="{Binding ReferenceComparisons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
+        <ListView x:Name="LstDevices" Grid.Row="1" ItemsSource="{Binding ReferenceComparisons, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <local:Control_DeviceItem Device="{Binding}" MaxWidth="{Binding ElementName=deviceManagerParentGrid, Path=ActualWidth}"/>
+                    <local:Control_DeviceItem Device="{Binding}" MaxWidth="{Binding ElementName=DeviceManagerParentGrid, Path=ActualWidth}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListView>

@@ -25,8 +25,8 @@ public partial class Control_DeviceManager
 
     private void UpdateControls()
     {
-        lstDevices.ItemsSource = _deviceManager.Result.DeviceContainers;
-        lstDevices.Items.Refresh();
+        LstDevices.ItemsSource = _deviceManager.Result.DeviceContainers;
+        LstDevices.Items.Refresh();
     }
 
         private void btnRestartAll_Click(object? sender, RoutedEventArgs e)

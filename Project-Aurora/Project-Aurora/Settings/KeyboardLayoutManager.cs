@@ -978,16 +978,13 @@ public class KeyboardLayoutManager
         LayoutKeyConversion = keyboard.KeyConversion ?? new Dictionary<DeviceKeys, DeviceKeys>();
     }
 
-    public void SetKeyboardColors(Dictionary<DeviceKeys, Color> keylights)
+    public void SetKeyboardColors(Dictionary<DeviceKeys, Color> keyLights)
     {
         foreach (var (key, value) in _virtualKeyboardMap)
         {
-            if (keylights.ContainsKey(key))
-            {
-                Color keyColor = keylights[key];
-                var drawingColor = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(keyColor, keyColor.A / 255.0D));
-                value.SetColor(ColorUtils.DrawingColorToMediaColor(drawingColor));
-            }
+            if (!keyLights.TryGetValue(key, out var keyColor)) continue;
+            var drawingColor = Color.FromArgb(255, ColorUtils.MultiplyColorByScalar(keyColor, keyColor.A / 255.0D));
+            value.SetColor(ColorUtils.DrawingColorToMediaColor(drawingColor));
         }
     }
 }
