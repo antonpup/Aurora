@@ -61,7 +61,7 @@ public partial class DeviceMapping
         _devices.Clear();
         foreach (var deviceProvider in DeviceProviders)
         {
-            foreach (var device in deviceProvider.Devices())
+            foreach (var device in deviceProvider.Devices)
             {
                 _devices.Add(device, deviceProvider);
             }

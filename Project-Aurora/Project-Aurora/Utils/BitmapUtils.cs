@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace Aurora.Utils;
 
@@ -8,6 +10,9 @@ public static class BitmapUtils
 {
     //B, G, R
     private static readonly long[] ColorData = {0L, 0L, 0L};
+    private static readonly Dictionary<Size, BitmapData> Bitmaps = new();
+    // ReSharper disable once CollectionNeverQueried.Local //to keep reference
+    private static readonly Dictionary<Size, int[]> BitmapBuffers = new();
 
     /**
      * Gets average color of region, ignoring transparency
@@ -24,10 +29,30 @@ public static class BitmapUtils
         color[1] = 0L;
         color[2] = 0L;
 
+        if (!Bitmaps.TryGetValue(rectangle.Size, out var buff))
+        {
+            var bitmapBuffer = new int[rectangle.Width * rectangle.Height];
+            BitmapBuffers[rectangle.Size] = bitmapBuffer;
+
+            var buffer = Marshal.AllocHGlobal(bitmapBuffer.Length * sizeof(int));
+            Marshal.Copy(bitmapBuffer, 0, buffer, bitmapBuffer.Length);
+            // Create new bitmap data.
+            buff = new BitmapData
+            {
+                Width = rectangle.Width,
+                Height = rectangle.Height,
+                PixelFormat = PixelFormat.Format32bppArgb,
+                Stride = rectangle.Width * sizeof(int),
+                Scan0 = buffer
+            };
+            
+            Bitmaps[rectangle.Size] = buff;
+        }
+
         var srcData = map.LockBits(
             rectangle,
-            ImageLockMode.ReadOnly,
-            PixelFormat.Format32bppRgb);
+            ImageLockMode.UserInputBuffer | ImageLockMode.ReadOnly,
+            PixelFormat.Format32bppRgb, buff);
         var scan0 = srcData.Scan0;
 
         var rectangleHeight = rectangle.Height;

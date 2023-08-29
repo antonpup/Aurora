@@ -22,7 +22,14 @@ public abstract class RgbNetDevice : DefaultDevice
 
     protected readonly IDictionary<string, int> DeviceCountMap = new Dictionary<string, int>();
 
-    protected readonly List<IRGBDevice> DeviceList = new();
+    private readonly List<IRGBDevice> _deviceList = new();
+
+    public IEnumerable<IRGBDevice> Devices { get; }
+
+    protected RgbNetDevice()
+    {
+        Devices = _deviceList.AsReadOnly();
+    }
 
     private string GetDeviceStatus()
     {
@@ -35,14 +42,9 @@ public abstract class RgbNetDevice : DefaultDevice
         return "Initialized: " + string.Join(", ", DeviceCountMap.Select(pair => pair.Value > 1 ? pair.Key + " x" + pair.Value : pair.Key));
     }
 
-    public IEnumerable<IRGBDevice> Devices()
-    {
-        return DeviceList.AsReadOnly();
-    }
-
     public override IEnumerable<string> GetDevices()
     {
-        return Devices().Select(CalibrationName);
+        return Devices.Select(CalibrationName);
     }
 
     protected override async Task<bool> DoInitialize()
@@ -126,7 +128,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     private void ProviderOnDeviceRemoved(IRGBDevice device)
     {
-        DeviceList.Remove(device);
+        _deviceList.Remove(device);
 
         var deviceName = device.DeviceInfo.Manufacturer + " " + device.DeviceInfo.Model;
         DeviceCountMap.TryGetValue(deviceName, out var count);
@@ -142,7 +144,7 @@ public abstract class RgbNetDevice : DefaultDevice
 
     private void ProviderOnDeviceAdded(IRGBDevice device)
     {
-        DeviceList.Add(device);
+        _deviceList.Add(device);
 
         var deviceName = device.DeviceInfo.Manufacturer + " " + device.DeviceInfo.Model;
         if (DeviceCountMap.TryGetValue(deviceName, out var count))
@@ -211,7 +213,7 @@ public abstract class RgbNetDevice : DefaultDevice
         bool forced = false)
     {
         if (Disabled) return Task.FromResult(false);
-        foreach (var device in Devices())
+        foreach (var device in Devices)
         {
             UpdateDevice(keyColors, device);
         }

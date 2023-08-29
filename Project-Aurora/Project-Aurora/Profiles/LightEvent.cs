@@ -63,13 +63,11 @@ namespace Aurora.Profiles
         public virtual void UpdateOverlayLights(EffectFrame frame) {
             try
             {
-                var overlayLayers = new Queue<EffectLayer>(
-                    Application.Profile.OverlayLayers
+                var overlayLayers = Application.Profile.OverlayLayers
                     .Where(l => l.Enabled)
                     .Reverse()
-                    .Select(l => l.Render(_game_state))
-                );
-                frame.AddOverlayLayers(overlayLayers.ToArray());
+                    .Select(l => l.Render(_game_state));
+                frame.AddOverlayLayers(overlayLayers);
             }
             catch(Exception e)
             {
