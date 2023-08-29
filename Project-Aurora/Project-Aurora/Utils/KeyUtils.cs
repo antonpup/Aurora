@@ -43,6 +43,19 @@ public static class KeyUtils
     [DllImport("user32", SetLastError = true, CharSet = CharSet.Unicode)]
     public static extern int GetKeyNameTextW(uint lParam, StringBuilder lpString, int nSize);
 
+    public static string? GetAutomaticText(DeviceKeys associatedKey)
+    {
+        if (!Global.kbLayout.LoadedLocalization.IsAutomaticGeneration()) return null;
+
+        var sb = new StringBuilder(2);
+        var scanCode = GetScanCode(associatedKey);
+        if (scanCode == -1)
+            return null;
+
+        GetKeyNameTextW((uint)scanCode << 16, sb, 2);
+        return sb.ToString();
+    }
+
     public static DeviceKeys GetDeviceKey(Keys formsKey, bool isExtendedKey = false)
     {
         var key = getDeviceKey(formsKey, isExtendedKey);

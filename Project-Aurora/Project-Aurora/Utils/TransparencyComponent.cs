@@ -81,15 +81,17 @@ public class TransparencyComponent
     {
         if (Global.Configuration.AllowTransparency && UseMica)
         {
-            _bg.Background =
-                new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
+            var brush = new SolidColorBrush(Color.FromArgb((byte)(a.Alpha * 64 / 255), a.Red, a.Green, a.Blue));
+            brush.Freeze();
+            _bg.Background = brush;
         }
         else
         {
             _window.FallbackColor = Colors.Black;
             _window.TintColor = Colors.Transparent;
-            _bg.Background =
-                new SolidColorBrush(Color.FromArgb(255, a.Red, a.Green, a.Blue));
+            var brush = new SolidColorBrush(Color.FromArgb(255, a.Red, a.Green, a.Blue));
+            brush.Freeze();
+            _bg.Background = brush;
         }
     }
 }

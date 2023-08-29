@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,183 +8,146 @@ using System.Windows.Media.Imaging;
 using Aurora.Devices;
 using Aurora.Utils;
 
-namespace Aurora.Settings.Keycaps
+namespace Aurora.Settings.Keycaps;
+
+/// <summary>
+/// Interaction logic for Control_DefaultKeycap.xaml
+/// </summary>
+public partial class Control_DefaultKeycap : IKeycap
 {
-    /// <summary>
-    /// Interaction logic for Control_DefaultKeycap.xaml
-    /// </summary>
-    public partial class Control_DefaultKeycap : IKeycap
+    private Color _currentColor = Color.FromArgb(0, 0, 0, 0);
+    private readonly DeviceKeys _associatedKey = DeviceKeys.NONE;
+    private readonly bool _isImage;
+    private readonly SolidColorBrush _keyCapBackground = new(Colors.Transparent);
+    private readonly SolidColorBrush _keyCapForeground = new(Colors.White);
+    private readonly SolidColorBrush _keyBorderBorderBrush = new(Colors.Gray);
+    private readonly SolidColorBrush _keyBorderBackground = new(Colors.Black);
+
+    public Control_DefaultKeycap()
     {
-        private Color current_color = Color.FromArgb(0, 0, 0, 0);
-        private DeviceKeys associatedKey = DeviceKeys.NONE;
-        private bool isImage;
+        InitializeComponent();
+    }
 
-        public Control_DefaultKeycap()
+    public Control_DefaultKeycap(KeyboardKey key, string imagePath)
+    {
+        InitializeComponent();
+
+        _associatedKey = key.Tag;
+
+        Width = key.Width;
+        Height = key.Height;
+
+        //Keycap adjustments
+        KeyBorder.BorderThickness = new Thickness(string.IsNullOrWhiteSpace(key.Image) ? 1.5 : 0.0);
+        KeyBorder.IsEnabled = key.Enabled.Value;
+
+        if (!key.Enabled.Value)
         {
-            InitializeComponent();
+            ToolTipService.SetShowOnDisabled(KeyBorder, true);
+            KeyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
         }
 
-        public Control_DefaultKeycap(KeyboardKey key, string image_path)
+        KeyBorder.Background = _keyBorderBackground;
+        KeyBorder.BorderBrush = _keyBorderBorderBrush;
+        KeyCap.Background = _keyCapBackground;
+        KeyCap.Foreground = _keyCapForeground;
+        if (string.IsNullOrWhiteSpace(key.Image))
         {
-            InitializeComponent();
+            KeyCap.Text = KeyUtils.GetAutomaticText(_associatedKey) ?? key.VisualName;
+            KeyCap.Tag = key.Tag;
+            KeyCap.FontSize = key.FontSize;
+            KeyCap.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            KeyCap.Visibility = Visibility.Hidden;
 
-            associatedKey = key.Tag;
+            KeyCap.Visibility = Visibility.Hidden;
 
-            Width = key.Width;
-            Height = key.Height;
+            if (!File.Exists(imagePath)) return;
+            var memStream = new MemoryStream(File.ReadAllBytes(imagePath));
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.StreamSource = memStream;
+            image.EndInit();
 
-            //Keycap adjustments
-            keyBorder.BorderThickness = new Thickness(string.IsNullOrWhiteSpace(key.Image) ? 1.5 : 0.0);
-            keyBorder.IsEnabled = key.Enabled.Value;
-
-            if (!key.Enabled.Value)
+            var imageBrush = new ImageBrush(image);
+            if (key.Tag == DeviceKeys.NONE)
             {
-                ToolTipService.SetShowOnDisabled(keyBorder, true);
-                keyBorder.ToolTip = new ToolTip { Content = "Changes to this key are not supported" };
-            }
-
-            if (string.IsNullOrWhiteSpace(key.Image))
-            {
-                keyCap.Text = key.VisualName;
-                keyCap.Tag = key.Tag;
-                keyCap.FontSize = key.FontSize;
-                keyCap.Visibility = Visibility.Visible;
+                KeyBorder.Background = imageBrush;
             }
             else
             {
-                keyCap.Visibility = Visibility.Hidden;
-
-                if (File.Exists(image_path))
-                {
-                    var memStream = new MemoryStream(File.ReadAllBytes(image_path));
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.StreamSource = memStream;
-                    image.EndInit();
-
-                    if (key.Tag == DeviceKeys.NONE)
-                        keyBorder.Background = new ImageBrush(image);
-                    else
-                    {
-                        keyBorder.Background = IKeycap.DefaultColorBrush;
-                        keyBorder.OpacityMask = new ImageBrush(image);
-                    }
-
-                    isImage = true;
-                }
+                KeyBorder.OpacityMask = imageBrush;
             }
+
+            _isImage = true;
+        }
+    }
+
+    public DeviceKeys GetKey()
+    {
+        return _associatedKey;
+    }
+
+    public void SetColor(Color keyColor)
+    {
+        if (Global.key_recorder?.HasRecorded(_associatedKey) ?? false)
+        {
+            _keyBorderBackground.Color =
+                Color.FromArgb(255, 0,
+                    (byte)(Math.Min(Math.Pow(Math.Cos(Time.GetMilliSeconds() / 1000.0 * Math.PI) + 0.05, 2.0), 1.0) *
+                           255), 0);
+            return;
         }
 
-        public DeviceKeys GetKey()
+        if (keyColor.Equals(_currentColor))
         {
-            return associatedKey;
+            return;
         }
 
-        public void SetColor(Color key_color)
+        _currentColor = keyColor;
+
+        if (!KeyBorder.IsEnabled) return;
+
+        if (!_isImage)
         {
-            if (!current_color.Equals(key_color))
+            if (string.IsNullOrWhiteSpace(KeyCap.Text))
             {
-                if (!isImage)
-                {
-                    if (string.IsNullOrWhiteSpace(keyCap.Text))
-                        keyBorder.BorderBrush = new SolidColorBrush(key_color);
-                    else
-                        keyCap.Foreground = new SolidColorBrush(key_color);
-                }
-                else
-                {
-                    if (associatedKey != DeviceKeys.NONE)
-                        keyBorder.Background = new SolidColorBrush(key_color);
-                }
-                current_color = key_color;
+                _keyBorderBorderBrush.Color = keyColor;
+                _keyBorderBackground.Color = keyColor;
             }
-
-            if (Global.key_recorder.HasRecorded(associatedKey))
-                keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 0, (byte)(Math.Min(Math.Pow(Math.Cos(Time.GetMilliSeconds() / 1000.0 * Math.PI) + 0.05, 2.0), 1.0) * 255), 0));
             else
             {
-                if (keyBorder.IsEnabled)
-                {
-                    if (!isImage)
-                    {
-                        if (string.IsNullOrWhiteSpace(keyCap.Text))
-                            keyBorder.Background = new SolidColorBrush(ColorUtils.MultiplyColorByScalar(key_color, 0.6));
-                        else
-                            keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 30, 30, 30));
-                    }
-                    else
-                        keyBorder.Background = new SolidColorBrush(key_color);
-                }
-                else
-                {
-                    keyBorder.Background = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
-                }
-            }
-            UpdateText();
-        }
-
-        private void keyBorder_MouseDown(object? sender, MouseButtonEventArgs e)
-        {
-            if (sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
-        }
-
-        private void keyBorder_MouseMove(object? sender, MouseEventArgs e)
-        {
-            /*
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (sender is Border && (sender as Border).Child != null && (sender as Border).Child is TextBlock && last_selected_element != ((sender as Border).Child as TextBlock))
-                {
-                    virtualkeyboard_key_selected((sender as Border).Child as TextBlock);
-                }
-                else if (sender is Border && (sender as Border).Tag != null && last_selected_element != (sender as Border))
-                {
-                    virtualkeyboard_key_selected(sender as Border);
-                }
-            }
-            */
-        }
-
-        private void virtualkeyboard_key_selected(DeviceKeys key)
-        {
-            if(key != DeviceKeys.NONE)
-            {
-                if (Global.key_recorder.HasRecorded(key))
-                    Global.key_recorder.RemoveKey(key);
-                else
-                    Global.key_recorder.AddKey(key);
+                _keyCapForeground.Color = keyColor;
+                _keyBorderBackground.Color = Color.FromArgb(255, 30, 30, 30);
             }
         }
-
-        private void keyBorder_MouseLeave(object? sender, MouseEventArgs e)
+        else
         {
+            if (_associatedKey != DeviceKeys.NONE)
+                _keyBorderBackground.Color = keyColor;
         }
+    }
 
-        private void keyBorder_MouseEnter(object? sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
-                virtualkeyboard_key_selected(associatedKey);
-        }
+    private void keyBorder_MouseDown(object? sender, MouseButtonEventArgs e)
+    {
+        if (sender is Border)
+            virtualkeyboard_key_selected(_associatedKey);
+    }
 
-        public void UpdateText()
-        {
-            if (Global.kbLayout.LoadedLocalization.IsAutomaticGeneration())
-            {
+    private void virtualkeyboard_key_selected(DeviceKeys key)
+    {
+        if (key == DeviceKeys.NONE || Global.key_recorder == null) return;
+        if (Global.key_recorder.HasRecorded(key))
+            Global.key_recorder.RemoveKey(key);
+        else
+            Global.key_recorder.AddKey(key);
+    }
 
-                //if (keyCap.Text.Length > 1)
-                //    return;
-
-                StringBuilder sb = new StringBuilder(2);
-                var scan_code = KeyUtils.GetScanCode(associatedKey);
-                if (scan_code == -1)
-                    return;
-                /*var key = KeyUtils.GetFormsKey((KeyboardKeys)associatedKey.LedID);
-                var scan_code = KeyUtils.MapVirtualKeyEx((uint)key, KeyUtils.MapVirtualKeyMapTypes.MapvkVkToVsc, (IntPtr)0x8090809);*/
-
-                int ret = KeyUtils.GetKeyNameTextW((uint)scan_code << 16, sb, 2);
-                keyCap.Text = sb.ToString();
-            }
-        }
+    private void keyBorder_MouseEnter(object? sender, MouseEventArgs e)
+    {
+        if (e.LeftButton == MouseButtonState.Pressed && sender is Border)
+            virtualkeyboard_key_selected(_associatedKey);
     }
 }
