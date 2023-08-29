@@ -548,6 +548,7 @@ namespace Aurora.Settings
         [JsonProperty("close_on_exception")] public bool CloseProgramOnException { get; set; } = true;
         [JsonProperty("allow_wrappers_in_background")] public bool AllowWrappersInBackground { get; set; } = true;
         public bool AllowTransparency { get; set; } = true;
+        public bool ChromaDisableDeviceControl { get; set; } = false;
 
         [JsonProperty("use_volume_as_brightness")] public bool UseVolumeAsBrightness { get; set; }
         [JsonProperty("global_brightness")] public float GlobalBrightness { get; set; } = 1.0f;

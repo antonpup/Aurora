@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Aurora.Modules.Razer;
 using Aurora.Profiles;
+using Aurora.Utils;
 using Lombok.NET;
 using RazerSdkReader;
 
@@ -29,6 +30,17 @@ public sealed partial class RazerSdkModule : AuroraModule
             {
                 await _lsm; //wait for ChromaApplication.Settings to load
                 TryLoadChroma();
+                if (Global.Configuration.ChromaDisableDeviceControl)
+                {
+                    try
+                    {
+                        await RazerChromaUtils.DisableDeviceControlAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        Global.logger.Error(e, "Error disabling device control automatically");
+                    }
+                }
 
                 Global.logger.Information("RazerSdkManager loaded successfully!");
                 _sdkTaskSource.SetResult(_razerSdkManager);
