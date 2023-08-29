@@ -39,6 +39,8 @@ partial class ConfigUI : INotifyPropertyChanged
     private readonly Control_LayerControlPresenter _layerPresenter = new();
     private readonly Control_ProfileControlPresenter _profilePresenter = new();
 
+    private DateTime _lastActivated = DateTime.Now;
+    private readonly TimeSpan _renderTimeout = TimeSpan.FromMinutes(5);
     private readonly EffectColor _desktopColorScheme = new(0, 0, 0, 0);
 
     private EffectColor _previousColor = new(0, 0, 0, 0);
@@ -128,6 +130,10 @@ partial class ConfigUI : INotifyPropertyChanged
 
         _keyboardTimerCallback = () =>
         {
+            if (DateTime.Now - _lastActivated > _renderTimeout)
+            {
+                return;
+            }
             if (_transitionAmount <= 1.0f)
             {
                 _transitionAmount += _keyboardTimer.Elapsed.TotalSeconds;
@@ -136,10 +142,16 @@ partial class ConfigUI : INotifyPropertyChanged
                 _transparencyComponent.SetBackgroundColor(a);
             }
 
-            var keyLights = Global.effengine.GetKeyboardLights();
-            _layoutManager.Result.SetKeyboardColors(keyLights);
+            Dispatcher.Invoke(UpdateKeyboardLayouts);
+            return;
 
-            KeyboardRecordMessage.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
+            void UpdateKeyboardLayouts()
+            {
+                var keyLights = Global.effengine.GetKeyboardLights();
+                _layoutManager.Result.SetKeyboardColors(keyLights);
+
+                KeyboardRecordMessage.Visibility = Global.key_recorder.IsRecording() ? Visibility.Visible : Visibility.Hidden;
+            }
         };
         _virtualKeyboardTimer.Elapsed += virtual_keyboard_timer_Tick;
 
@@ -377,6 +389,7 @@ partial class ConfigUI : INotifyPropertyChanged
 
     private async void Window_Activated(object? sender, EventArgs e)
     {
+        _lastActivated = DateTime.Now;
         var lightingStateManager = await _lightingStateManager;
         lightingStateManager.PreviewProfileKey = _savedPreviewKey;
     }
