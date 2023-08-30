@@ -163,15 +163,6 @@
           "NETStandard.Library": "1.6.1"
         }
       },
-      "RazerSdkReader": {
-        "type": "Direct",
-        "requested": "[1.5.0, )",
-        "resolved": "1.5.0",
-        "contentHash": "z2E9cLZa9dBpwLx+71uMsc6An8u0sikL2VpOKQPgY+S/atW19Rqjl7zEJAvHcJ3EGAdrp0yiBFFnZsgKGoWt5A==",
-        "dependencies": {
-          "System.Threading.AccessControl": "7.0.1"
-        }
-      },
       "RGB.NET.Devices.CoolerMaster": {
         "type": "Direct",
         "requested": "[2.0.0-prerelease.83, )",
@@ -329,6 +320,12 @@
         "dependencies": {
           "System.Diagnostics.EventLog": "7.0.0"
         }
+      },
+      "System.Threading.AccessControl": {
+        "type": "Direct",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "uh6LWSk8Dlp1cavk4XQYtDHOMZpSa5KiqM0VBiflhXWGT63RGV+NhNsVxiEykL4S/0LVcgy+/AxC5ITQ9QLo8w=="
       },
       "TaskScheduler": {
         "type": "Direct",
@@ -1539,11 +1536,6 @@
           "System.Threading.Tasks": "4.3.0"
         }
       },
-      "System.Threading.AccessControl": {
-        "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "uh6LWSk8Dlp1cavk4XQYtDHOMZpSa5KiqM0VBiflhXWGT63RGV+NhNsVxiEykL4S/0LVcgy+/AxC5ITQ9QLo8w=="
-      },
       "System.Threading.Tasks": {
         "type": "Transitive",
         "resolved": "4.3.0",
@@ -1659,6 +1651,12 @@
         "dependencies": {
           "System.Diagnostics.EventLog": "7.0.0"
         }
+      },
+      "System.Threading.AccessControl": {
+        "type": "Direct",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "uh6LWSk8Dlp1cavk4XQYtDHOMZpSa5KiqM0VBiflhXWGT63RGV+NhNsVxiEykL4S/0LVcgy+/AxC5ITQ9QLo8w=="
       },
       "Microsoft.Win32.Primitives": {
         "type": "Transitive",
@@ -2527,11 +2525,6 @@
           "System.Text.Encoding": "4.3.0",
           "runtime.any.System.Text.Encoding.Extensions": "4.3.0"
         }
-      },
-      "System.Threading.AccessControl": {
-        "type": "Transitive",
-        "resolved": "7.0.1",
-        "contentHash": "uh6LWSk8Dlp1cavk4XQYtDHOMZpSa5KiqM0VBiflhXWGT63RGV+NhNsVxiEykL4S/0LVcgy+/AxC5ITQ9QLo8w=="
       },
       "System.Threading.Overlapped": {
         "type": "Transitive",

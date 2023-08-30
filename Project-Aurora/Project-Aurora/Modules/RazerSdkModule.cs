@@ -62,10 +62,16 @@ public sealed partial class RazerSdkModule : AuroraModule
     private void TryLoadChroma()
     {
         _razerSdkManager = new ChromaReader();
+        _razerSdkManager.Exception += RazerSdkManagerOnException;
         Global.razerSdkManager = _razerSdkManager;
         RzHelper.Initialize();
 
         _razerSdkManager.Start();
+    }
+
+    private void RazerSdkManagerOnException(object? sender, RazerSdkReaderException e)
+    {
+        Global.logger.Error(e, "Chroma Reader Error");
     }
 
     [Async]

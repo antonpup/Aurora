@@ -208,6 +208,7 @@ public static class RazerChromaUtils
             catch(Exception e)
             {
                 Global.logger.Error(e, "Failed to stop chroma sdk");
+                service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(2));
             }
         }
 
@@ -220,7 +221,7 @@ public static class RazerChromaUtils
     {
         using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
         var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-        var path = (string)key?.GetValue("InstallPath", null);
+        var path = key?.GetValue("InstallPath", null) as string;
         return path;
     }
 
@@ -228,7 +229,7 @@ public static class RazerChromaUtils
     {
         using var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
         var key = hklm.OpenSubKey(@"Software\Razer Chroma SDK");
-        var path = (string)key?.GetValue("InstallPath64", null);
+        var path = key?.GetValue("InstallPath64", null) as string;
         return path;
     }
 }

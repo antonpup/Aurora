@@ -111,11 +111,14 @@
     <PackageReference Include="System.Management" Version="7.0.2" />
     <PackageReference Include="System.Net.NameResolution" Version="4.3.0" />
     <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.1" />
+    <PackageReference Include="System.Threading.AccessControl" Version="7.0.1" />
     <PackageReference Include="TaskScheduler" Version="2.10.1" />
     <PackageReference Include="Vulcan.NET" Version="2.2.0" />
     <PackageReference Include="Wooting.NET" Version="1.2.0" />
     <PackageReference Include="WPFToolkits" Version="3.5.50211.1" />
+    <!-- temporary, waiting for manual event reset fix
     <PackageReference Include="RazerSdkReader" Version="1.5.0" />
+     -->
   </ItemGroup>
 
   <ItemGroup>
@@ -138,6 +141,10 @@
     </Reference>
     <Reference Include="RGB.NET.YeeLightStates">
       <HintPath>.\RGB.NET.YeeLightStates.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="RazerSdkReader">
+      <HintPath>.\RazerSdkReader.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>
