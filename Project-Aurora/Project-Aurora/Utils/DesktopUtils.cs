@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -67,7 +66,7 @@ public static class DesktopUtils
     [DllImport("wtsapi32.dll")]
     private static extern void WTSFreeMemory(IntPtr pMemory);
 
-    private static async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
+    private static void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
     {
         switch (e.Reason)
         {
@@ -77,34 +76,8 @@ public static class DesktopUtils
             case SessionSwitchReason.SessionUnlock:
             {
                 IsDesktopLocked = false;
-                if (Global.Configuration.UpdatesCheckOnStartUp)
-                {
-                    await CheckUpdate();
-                }
-
                 break;
             }
-        }
-    }
-
-    public static async Task CheckUpdate()
-    {
-        var updaterPath = Path.Combine(Global.ExecutingDirectory, "Aurora-Updater.exe");
-
-        if (!File.Exists(updaterPath)) return;
-        await WaitSessionUnlock();
-        try
-        {
-            var updaterProc = new ProcessStartInfo
-            {
-                FileName = updaterPath,
-                Arguments = "-silent"
-            };
-            Process.Start(updaterProc);
-        }
-        catch (Exception exc)
-        {
-            Global.logger.Error(exc, "Could not start Aurora Updater");
         }
     }
 }

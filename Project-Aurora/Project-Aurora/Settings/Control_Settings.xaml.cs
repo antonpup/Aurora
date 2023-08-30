@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using Aurora.Controls;
 using Aurora.Devices;
 using Aurora.Devices.RGBNet.Config;
+using Aurora.Modules;
 using Aurora.Modules.GameStateListen;
 using Aurora.Modules.HardwareMonitor;
 using Aurora.Utils;
@@ -74,7 +75,7 @@ public partial class Control_Settings
     private async void updates_check_Click(object? sender, RoutedEventArgs e)
     {
         if (!IsLoaded) return;
-        await DesktopUtils.CheckUpdate();
+        await UpdateModule.CheckUpdate();
     }
 
     private void btnShowLogsFolder_Click(object? sender, RoutedEventArgs e)
