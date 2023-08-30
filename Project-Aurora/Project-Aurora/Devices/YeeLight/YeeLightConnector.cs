@@ -53,11 +53,17 @@ public static class YeeLightConnector
             yeeLightDevice.CloseConnection();
         }
 
-        var light = new YeeLightAPI.YeeLightDevice();
-        light.SetLightIPAddressAndPort(lightIp, Constants.DefaultCommandPort);
+        var light = new YeeLightAPI.YeeLightDevice(lightIp);
 
         var connected = await LightConnectAndEnableMusicMode(light).ConfigureAwait(false);
-        if (connected) lights.Add(light);
+        if (connected)
+        {
+            lights.Add(light);
+            light.Disconnected += (_, _) =>
+            {
+                lights.Remove(light);
+            };
+        }
     }
 
     private static async Task<bool> LightConnectAndEnableMusicMode(YeeLightAPI.YeeLightDevice light)

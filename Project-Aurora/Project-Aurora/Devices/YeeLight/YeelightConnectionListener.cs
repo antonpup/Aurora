@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace Aurora.Devices.YeeLight;
 
@@ -58,8 +59,8 @@ public class YeelightConnectionListener
 
     public void StopListeningConnections()
     {
-        _listener = null;
         var udpClient = _listener;
+        _listener = null;
         udpClient?.Close();
     }
 
@@ -69,9 +70,6 @@ public class YeelightConnectionListener
             return;
         // End the async receive operation and store the received data in a byte array
         byte[] data = _listener.EndReceive(result, ref _discoveryEndpoint);
-
-        // Start listening for the next connection message
-        _listener.BeginReceive(OnReceive, _listener);
 
         // Convert the byte array to a string and print it to the console
         string message = System.Text.Encoding.ASCII.GetString(data);
@@ -86,5 +84,8 @@ public class YeelightConnectionListener
 
             break;
         }
+
+        // Start listening for the next connection message
+        Task.Run(() => _listener.BeginReceive(OnReceive, _listener));
     }
 }

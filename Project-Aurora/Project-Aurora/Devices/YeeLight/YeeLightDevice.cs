@@ -58,7 +58,7 @@ public class YeeLightDevice : DefaultDevice
 
     private void DeviceDetected(object? sender, DeviceDetectedEventArgs e)
     {
-        Task.Run(async () => await YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress).ConfigureAwait(false));
+        Task.Run(async () => await YeeLightConnector.ConnectNewDevice(_lights, e.IpAddress));
     }
 
     private void InitiateState()
@@ -68,6 +68,7 @@ public class YeeLightDevice : DefaultDevice
 
     protected override Task Shutdown()
     {
+        _connectionListener.StopListeningConnections();
         foreach (var light in _lights.Where(x => x.IsConnected()))
         {
             light.CloseConnection();
