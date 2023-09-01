@@ -76,8 +76,25 @@ public static class DesktopUtils
             case SessionSwitchReason.SessionUnlock:
             {
                 IsDesktopLocked = false;
+                ResetDpiAwareness();
                 break;
             }
         }
+    }
+
+    internal static void ResetDpiAwareness()
+    {
+        SetProcessDpiAwarenessContext((int)DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+    }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool SetProcessDpiAwarenessContext(int dpiFlag);
+
+    private enum DPI_AWARENESS_CONTEXT
+    {
+        DPI_AWARENESS_CONTEXT_UNAWARE = 16,
+        DPI_AWARENESS_CONTEXT_SYSTEM_AWARE = 17,
+        DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE = 18,
+        DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = 34
     }
 }

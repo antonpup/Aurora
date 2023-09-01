@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows;
+using Aurora.Utils;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -56,7 +57,18 @@ public sealed class DesktopDuplicator : IDisposable
             Usage = ResourceUsage.Staging
         };
 
-        _newDesktopDuplication = () => output.DuplicateOutput1(_device, 0, 1, new [] { Format.B8G8R8A8_UNorm });
+        _newDesktopDuplication = () =>
+        {
+            try
+            {
+                return output.DuplicateOutput1(_device, 0, 1, new[] { Format.B8G8R8A8_UNorm });
+            }
+            catch
+            {
+                DesktopUtils.ResetDpiAwareness();
+                throw;
+            }
+        };
         _deskDupl = _newDesktopDuplication.Invoke();
         _desktopImageTexture = new Texture2D(_device, textureDesc);
     }
