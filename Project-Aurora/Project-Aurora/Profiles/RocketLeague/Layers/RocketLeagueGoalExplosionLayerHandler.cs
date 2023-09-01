@@ -125,7 +125,10 @@ namespace Aurora.Profiles.RocketLeague.Layers
 
                     goal_explosion_mix = new AnimationMix(tracks);
 
-                    goal_explosion_mix.Draw(layer.GetGraphics(), goalEffect_keyframe);
+                    using (var graphics = layer.GetGraphics())
+                    {
+                        goal_explosion_mix.Draw(graphics, goalEffect_keyframe);
+                    }
                     goalEffect_keyframe += (currenttime - previoustime) / 1000.0f;
 
                     if (goalEffect_keyframe >= goalEffect_animationTime)

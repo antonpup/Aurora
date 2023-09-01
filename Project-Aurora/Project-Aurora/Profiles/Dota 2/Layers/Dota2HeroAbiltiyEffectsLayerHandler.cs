@@ -528,34 +528,35 @@ namespace Aurora.Profiles.Dota_2.Layers
             }
 
             EffectLayer.Clear();
+            using var graphics = EffectLayer.GetGraphics();
             switch (_currentAbilityEffect)
             {
                 case Dota2AbilityEffects.RazorPlasmaField:
-                    _razorPlasmaFieldTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _razorPlasmaFieldTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.CrystalMaidenCrystalNova:
-                    _crystalMaidenCrystalNovaTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _crystalMaidenCrystalNovaTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.RikiSmokeScreen:
-                    _rikiSmokeScreenTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _rikiSmokeScreenTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.LinaDragonSlave:
-                    _linaDragonSlaveTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _linaDragonSlaveTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.LinaLightStrikeArray:
-                    _linaLightStrikeArrayTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _linaLightStrikeArrayTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.LinaLagunaBlade:
-                    _linaLagunaBladeTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _linaLagunaBladeTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.AbaddonDeathCoil:
-                    _abaddonDeathCoilTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _abaddonDeathCoilTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.AbaddonBorrowedTime:
@@ -570,20 +571,20 @@ namespace Aurora.Profiles.Dota_2.Layers
                     break;
                 }
                 case Dota2AbilityEffects.NevermoreShadowraze:
-                    _nevermoreShadowrazeTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _nevermoreShadowrazeTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.NevermoreRequiem:
-                    _nevermoreRequiemTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _nevermoreRequiemTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.ZuusArcLightning:
-                    _zuusArcLightningTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _zuusArcLightningTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.ZuusLightningBolt:
-                    _zuusLightningBoltShadeTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
-                    _zuusLightningBoltTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _zuusLightningBoltShadeTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
+                    _zuusLightningBoltTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.ZuusThundergodsWrath:
@@ -595,12 +596,12 @@ namespace Aurora.Profiles.Dota_2.Layers
                     break;
                 }
                 case Dota2AbilityEffects.AntimageBlink:
-                    _antimageBlinkTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _antimageBlinkTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.AntimageManaVoid:
-                    _antimageManaVoidTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
-                    _antimageManaVoidCoreTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _antimageManaVoidTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
+                    _antimageManaVoidCoreTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.AncientApparitionIceVortex:
@@ -612,7 +613,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     break;
                 }
                 case Dota2AbilityEffects.AncientApparitionIceBlast:
-                    _ancientApparitionIceBlastTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _ancientApparitionIceBlastTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.AlchemistAcidSpray:
@@ -625,27 +626,27 @@ namespace Aurora.Profiles.Dota_2.Layers
                     break;
                 }
                 case Dota2AbilityEffects.AxeBerserkersCall:
-                    _axeBerserkersCallTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _axeBerserkersCallTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.BeastmasterPrimalRoar:
-                    _beastmasterPrimalRoarTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _beastmasterPrimalRoarTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.BrewmasterThunderClap:
-                    _brewmasterThunderClapTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _brewmasterThunderClapTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.CentaurHoofStomp:
-                    _centaurHoofStompTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _centaurHoofStompTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.ChaosKnightChaosBolt:
-                    _chaosKnightChaosBoltMix.Draw(EffectLayer.GetGraphics(), _abilityEffectKeyframe);
+                    _chaosKnightChaosBoltMix.Draw(graphics, _abilityEffectKeyframe);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.RattletrapRocketFlare:
-                    _rattletrapRocketFlareTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _rattletrapRocketFlareTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.DoomBringerScorchedEarth:
@@ -660,7 +661,7 @@ namespace Aurora.Profiles.Dota_2.Layers
                     break;
                 }
                 case Dota2AbilityEffects.DragonKnightBreatheFire:
-                    _dragonKnightBreatheFireTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _dragonKnightBreatheFireTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.EarthshakerFissure:
@@ -686,43 +687,43 @@ namespace Aurora.Profiles.Dota_2.Layers
                     break;
                 }
                 case Dota2AbilityEffects.ElderTitanEarthSplitter:
-                    _elderTitanEarthSplitterTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _elderTitanEarthSplitterTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.KunkkaTorrent:
-                    _kunkkaTorrentMix.Draw(EffectLayer.GetGraphics(), _abilityEffectKeyframe);
+                    _kunkkaTorrentMix.Draw(graphics, _abilityEffectKeyframe);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.KunkkaGhostship:
-                    _kunkkaGhostshipTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _kunkkaGhostshipTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.LegionCommanderOverwhelmingOdds:
-                    _legionCommanderOverwhelmingOddsTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _legionCommanderOverwhelmingOddsTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.LifeStealerRage:
-                    _lifeStealerRageTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _lifeStealerRageTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.MagnataurShockwave:
-                    _magnataurShockwaveTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _magnataurShockwaveTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.OmniknightPurification:
-                    _omniknightPurificationTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _omniknightPurificationTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.OmniknightRepel:
-                    _omniknightRepelTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _omniknightRepelTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.SandkingEpicenter:
-                    _sandkingEpicenterMix.Draw(EffectLayer.GetGraphics(), _abilityEffectKeyframe);
+                    _sandkingEpicenterMix.Draw(graphics, _abilityEffectKeyframe);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
                 case Dota2AbilityEffects.SlardarSlithereenCrush:
-                    _slardarSlithereenCrushTrack.GetFrame(_abilityEffectKeyframe).Draw(EffectLayer.GetGraphics());
+                    _slardarSlithereenCrushTrack.GetFrame(_abilityEffectKeyframe).Draw(graphics);
                     _abilityEffectKeyframe += GetDeltaTime();
                     break;
             }

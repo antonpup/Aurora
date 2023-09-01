@@ -8,7 +8,6 @@ using Aurora.EffectsEngine;
 using Aurora.EffectsEngine.Animations;
 using Aurora.Settings;
 using Aurora.Utils;
-using Lombok.NET;
 
 namespace Aurora.Profiles.Desktop;
 
@@ -125,10 +124,14 @@ internal class DimEffect : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-internal partial class ColorBreathingEffect : AwayEffect
+internal class ColorBreathingEffect : AwayEffect
 {
     private readonly EventIdle _eventIdle;
+
+    public ColorBreathingEffect(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
 
     public override void Update(EffectLayer layer)
     {
@@ -140,10 +143,14 @@ internal partial class ColorBreathingEffect : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-internal partial class RainbowShiftHorizontal : AwayEffect
+internal class RainbowShiftHorizontal : AwayEffect
 {
     private readonly EventIdle _eventIdle;
+
+    public RainbowShiftHorizontal(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
 
     public override void Update(EffectLayer layer)
     {
@@ -151,10 +158,14 @@ internal partial class RainbowShiftHorizontal : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-internal partial class RainbowShiftVertical : AwayEffect
+internal class RainbowShiftVertical : AwayEffect
 {
     private readonly EventIdle _eventIdle;
+
+    public RainbowShiftVertical(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
 
     public override void Update(EffectLayer layer)
     {
@@ -162,13 +173,17 @@ internal partial class RainbowShiftVertical : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-internal partial class StarFall : AwayEffect
+internal class StarFall : AwayEffect
 {
     private readonly EventIdle _eventIdle;
     private long _nextStarSet;
 
     private Dictionary<DeviceKeys, float> _stars = new();
+
+    public StarFall(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
 
     public override void Update(EffectLayer layer)
     {
@@ -177,10 +192,7 @@ internal partial class StarFall : AwayEffect
             for (var x = 0; x < IdleAmount; x++)
             {
                 var star = _eventIdle.AllKeys[_eventIdle.Randomizer.Next(_eventIdle.AllKeys.Length)];
-                if (_stars.ContainsKey(star))
-                    _stars[star] = 1.0f;
-                else
-                    _stars.Add(star, 1.0f);
+                _stars[star] = 1.0f;
             }
 
             _nextStarSet = _eventIdle.CurrentTime + (long) (1000L * IdleFrequency);
@@ -198,16 +210,20 @@ internal partial class StarFall : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-internal partial class RainFall : AwayEffect
+internal class RainFall : AwayEffect
 {
     private readonly EventIdle _eventIdle;
 
-    private Dictionary<DeviceKeys, float> _raindrops = new();
+    private readonly Dictionary<DeviceKeys, float> _raindrops = new();
     private long _nextStarSet;
 
-    private ColorSpectrum _dropSpec = new(Global.Configuration.IdleEffectPrimaryColor,
+    private readonly ColorSpectrum _dropSpec = new(Global.Configuration.IdleEffectPrimaryColor,
         Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
+
+    public RainFall(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
 
     public override void Update(EffectLayer layer)
     {
@@ -216,10 +232,7 @@ internal partial class RainFall : AwayEffect
             for (var x = 0; x < IdleAmount; x++)
             {
                 var star = _eventIdle.AllKeys[_eventIdle.Randomizer.Next(_eventIdle.AllKeys.Length)];
-                if (_raindrops.ContainsKey(star))
-                    _raindrops[star] = 1.0f;
-                else
-                    _raindrops.Add(star, 1.0f);
+                _raindrops[star] = 1.0f;
             }
 
             _nextStarSet = _eventIdle.CurrentTime + (long) (1000L * IdleFrequency);
@@ -229,6 +242,7 @@ internal partial class RainFall : AwayEffect
 
         var raindropsKeys = _raindrops.Keys.ToArray();
 
+        using var g = layer.GetGraphics();
         foreach (var raindrop in raindropsKeys)
         {
             var pt = Effects.GetBitmappingFromDeviceKey(raindrop).Center;
@@ -236,12 +250,11 @@ internal partial class RainFall : AwayEffect
             var transitionValue = 1.0f - _raindrops[raindrop];
             var radius = transitionValue * Effects.CanvasBiggest;
 
-            using (var g = layer.GetGraphics())
-                g.DrawEllipse(new Pen(_dropSpec.GetColorAt(transitionValue), 2),
-                    pt.X - radius,
-                    pt.Y - radius,
-                    2 * radius,
-                    2 * radius);
+            g.DrawEllipse(new Pen(_dropSpec.GetColorAt(transitionValue), 2),
+                pt.X - radius,
+                pt.Y - radius,
+                2 * radius,
+                2 * radius);
 
             _raindrops[raindrop] -= _eventIdle.GetDeltaTime() * 0.05f * IdleSpeed;
         }
@@ -256,13 +269,17 @@ internal class Blackout : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-public partial class Matrix : AwayEffect
+public class Matrix : AwayEffect
 {
     private readonly EventIdle _eventIdle;
 
-    private AnimationMix _matrixLines = new AnimationMix().SetAutoRemove(true); //This will be an infinite Mix
+    private readonly AnimationMix _matrixLines = new AnimationMix().SetAutoRemove(true); //This will be an infinite Mix
     private long _nextStarSet;
+
+    public Matrix(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
 
     public override void Update(EffectLayer layer)
     {
@@ -318,15 +335,20 @@ public partial class Matrix : AwayEffect
     }
 }
 
-[RequiredArgsConstructor]
-internal partial class RainFallSmooth : AwayEffect
+internal class RainFallSmooth : AwayEffect
 {
     private readonly EventIdle _eventIdle;
 
-    private ColorSpectrum _dropSpec = new(Global.Configuration.IdleEffectPrimaryColor,
+    private readonly ColorSpectrum _dropSpec = new(Global.Configuration.IdleEffectPrimaryColor,
         Color.FromArgb(0, Global.Configuration.IdleEffectPrimaryColor));
 
     private long _nextStarSet;
+
+    public RainFallSmooth(EventIdle eventIdle)
+    {
+        _eventIdle = eventIdle;
+    }
+
     private Dictionary<DeviceKeys, float> _raindrops = new();
 
     public override void Update(EffectLayer layer)
@@ -336,10 +358,7 @@ internal partial class RainFallSmooth : AwayEffect
             for (var x = 0; x < IdleAmount; x++)
             {
                 var star = _eventIdle.AllKeys[_eventIdle.Randomizer.Next(_eventIdle.AllKeys.Length)];
-                if (_raindrops.ContainsKey(star))
-                    _raindrops[star] = 1.0f;
-                else
-                    _raindrops.Add(star, 1.0f);
+                _raindrops[star] = 1.0f;
             }
 
             _nextStarSet = _eventIdle.CurrentTime + (long) (1000L * IdleFrequency);
@@ -368,19 +387,19 @@ internal partial class RainFallSmooth : AwayEffect
 
             foreach (var raindrop in drops)
             {
-                float circleInEdge = raindrop.Item4 - circleHalfThickness;
-                float circleOutEdge = raindrop.Item4 + circleHalfThickness;
+                var circleInEdge = raindrop.Item4 - circleHalfThickness;
+                var circleOutEdge = raindrop.Item4 + circleHalfThickness;
                 circleInEdge *= circleInEdge;
                 circleOutEdge *= circleOutEdge;
 
-                float xKey = Math.Abs(keyInfo.Center.X - raindrop.Item2.X);
-                float yKey = Math.Abs(keyInfo.Center.Y - raindrop.Item2.Y);
-                float xKeyInEdge = xKey - btnRadius;
-                float xKeyOutEdge = xKey + btnRadius;
-                float yKeyInEdge = yKey - btnRadius;
-                float yKeyOutEdge = yKey + btnRadius;
-                float keyInEdge = xKeyInEdge * xKeyInEdge + yKeyInEdge * yKeyInEdge;
-                float keyOutEdge = xKeyOutEdge * xKeyOutEdge + yKeyOutEdge * yKeyOutEdge;
+                var xKey = Math.Abs(keyInfo.Center.X - raindrop.Item2.X);
+                var yKey = Math.Abs(keyInfo.Center.Y - raindrop.Item2.Y);
+                var xKeyInEdge = xKey - btnRadius;
+                var xKeyOutEdge = xKey + btnRadius;
+                var yKeyInEdge = yKey - btnRadius;
+                var yKeyOutEdge = yKey + btnRadius;
+                var keyInEdge = xKeyInEdge * xKeyInEdge + yKeyInEdge * yKeyInEdge;
+                var keyOutEdge = xKeyOutEdge * xKeyOutEdge + yKeyOutEdge * yKeyOutEdge;
 
                 var btnDiameter = keyOutEdge - keyInEdge;
                 var inEdgePercent = (circleOutEdge - keyInEdge) / btnDiameter;

@@ -3,13 +3,9 @@ using Aurora.Profiles;
 using Aurora.Settings.Overrides;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Aurora.Settings.Layers.Controls;
 
@@ -22,7 +18,8 @@ namespace Aurora.Settings.Layers
         [JsonIgnore]
         public string ImagePath { get { return Logic._ImagePath ?? _ImagePath; } }
 
-        public ImageLayerHandlerProperties() : base() { }
+        public ImageLayerHandlerProperties()
+        { }
 
         public ImageLayerHandlerProperties(bool assign_default = false) : base(assign_default) { }
 
@@ -41,6 +38,10 @@ namespace Aurora.Settings.Layers
         private System.Drawing.Image _loaded_image = null;
         private string _loaded_image_path = "";
 
+        public ImageLayerHandler(): base("ImageLayer")
+        {
+        }
+
         protected override UserControl CreateControl()
         {
             return new Control_ImageLayer(this);
@@ -48,7 +49,7 @@ namespace Aurora.Settings.Layers
 
         public override EffectLayer Render(IGameState gamestate)
         {
-            EffectLayer image_layer = new EffectLayer("ImageLayer");
+            var image_layer = new EffectLayer("ImageLayer");
 
             if (!String.IsNullOrWhiteSpace(Properties.ImagePath))
             {
@@ -73,7 +74,7 @@ namespace Aurora.Settings.Layers
 
                 if (Properties.Sequence.Type == KeySequenceType.Sequence)
                 {
-                    using (Graphics g = temp_layer.GetGraphics())
+                    using (var g = temp_layer.GetGraphics())
                     {
                         g.DrawImage(_loaded_image, new RectangleF(0, 0, Effects.CanvasWidth, Effects.CanvasHeight), new RectangleF(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
                     }
@@ -83,26 +84,26 @@ namespace Aurora.Settings.Layers
                 }
                 else
                 {
-                    float x_pos = (float)Math.Round((Properties.Sequence.Freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
-                    float y_pos = (float)Math.Round((Properties.Sequence.Freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
-                    float width = (float)Math.Round((double)(Properties.Sequence.Freeform.Width * Effects.EditorToCanvasWidth));
-                    float height = (float)Math.Round((double)(Properties.Sequence.Freeform.Height * Effects.EditorToCanvasHeight));
+                    var x_pos = (float)Math.Round((Properties.Sequence.Freeform.X + Effects.GridBaselineX) * Effects.EditorToCanvasWidth);
+                    var y_pos = (float)Math.Round((Properties.Sequence.Freeform.Y + Effects.GridBaselineY) * Effects.EditorToCanvasHeight);
+                    var width = (float)Math.Round((double)(Properties.Sequence.Freeform.Width * Effects.EditorToCanvasWidth));
+                    var height = (float)Math.Round((double)(Properties.Sequence.Freeform.Height * Effects.EditorToCanvasHeight));
 
                     if (width < 3) width = 3;
                     if (height < 3) height = 3;
 
-                    Rectangle rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
+                    var rect = new Rectangle((int)x_pos, (int)y_pos, (int)width, (int)height);
 
-                    using (Graphics g = temp_layer.GetGraphics())
+                    using (var g = temp_layer.GetGraphics())
                     {
                         g.DrawImage(_loaded_image, rect, new RectangleF(0, 0, _loaded_image.Width, _loaded_image.Height), GraphicsUnit.Pixel);
                     }
 
-                    using (Graphics g = image_layer.GetGraphics())
+                    using (var g = image_layer.GetGraphics())
                     {
-                        PointF rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
+                        var rotatePoint = new PointF(x_pos + (width / 2.0f), y_pos + (height / 2.0f));
 
-                        Matrix myMatrix = new Matrix();
+                        var myMatrix = new Matrix();
                         myMatrix.RotateAt(Properties.Sequence.Freeform.Angle, rotatePoint, MatrixOrder.Append);
 
                         g.Transform = myMatrix;

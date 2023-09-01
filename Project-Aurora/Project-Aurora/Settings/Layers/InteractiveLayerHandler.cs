@@ -376,7 +376,8 @@ public sealed class InteractiveLayerHandler : LayerHandler<InteractiveLayerHandl
                         if (timeValue > 1.0f)
                             continue;
 
-                        input.Animation.Draw(EffectLayer.GetGraphics(), timeValue);
+                        using var graphics = EffectLayer.GetGraphics();
+                        input.Animation.Draw(graphics, timeValue);
                         break;
                     }
                 }
