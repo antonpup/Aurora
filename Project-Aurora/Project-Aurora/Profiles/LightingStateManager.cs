@@ -427,6 +427,8 @@ public sealed class LightingStateManager
         if (Global.Configuration.TimeBasedDimmingEnabled &&
             Time.IsCurrentTimeBetween(dimmingStartTime, dimmingEndTime))
         {
+            var blackFrame = new EffectsEngine.EffectFrame();
+            Global.effengine.PushFrame(blackFrame);
             StopUnUpdatedEvents();
             return;
         }

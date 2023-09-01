@@ -5,7 +5,6 @@ using System.Linq;
 using Aurora.Devices;
 using Aurora.EffectsEngine;
 using Aurora.Utils;
-using LedCSharp;
 
 namespace Aurora.Profiles.Aurora_Wrapper;
 
@@ -22,79 +21,8 @@ public class GameEvent_Aurora_Wrapper : LightEvent
     private readonly float _colorEnhanceColorHsvSine = 0.1f;
     private readonly float _colorEnhanceColorHsvGamma = 2.5f;
 
-    protected virtual void UpdateExtraLights(Queue<EffectLayer> layers)
-    {
-
-    }
-
     public sealed override void UpdateLights(EffectFrame frame)
     {
-        UpdateWrapperLights(frame);
-
-        var layers = new Queue<EffectLayer>();
-
-        if (Application != null)
-        {
-            foreach (var layer in Application.Profile.Layers.Reverse().ToArray())
-            {
-                if (layer.Enabled)
-                    layers.Enqueue(layer.Render(_game_state));
-            }
-
-            //No need to repeat the code around this everytime this is inherited
-            UpdateExtraLights(layers);
-        }
-
-        frame.AddLayers(layers.ToArray());
-    }
-
-    protected virtual void UpdateWrapperLights(EffectFrame frame)
-    {
-        var layers = new Queue<EffectLayer>();
-
-        var colorFillLayer = new EffectLayer("Aurora Wrapper - Color Fill", GetBoostedColor(_lastFillColor));
-
-        layers.Enqueue(colorFillLayer);
-
-        var bitmapLayer = new EffectLayer("Aurora Wrapper - Bitmap");
-
-        var allKeys = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>().ToArray();
-        foreach (var key in allKeys)
-        {
-            if(_extraKeys.TryGetValue(key, out var extraKey))
-                bitmapLayer.Set(key, GetBoostedColor(extraKey));
-            else
-            {
-                var logiKey = DeviceKeysUtils.ToLogitechBitmap(key);
-
-                if (logiKey != Logitech_keyboardBitmapKeys.UNKNOWN && _bitmap.Length > 0)
-                    bitmapLayer.Set(key, GetBoostedColor(ColorUtils.GetColorFromInt(_bitmap[(int)logiKey / 4])));
-            }
-        }
-
-        layers.Enqueue(bitmapLayer);
-
-        var effectsLayer = new EffectLayer("Aurora Wrapper - Effects");
-
-        var currentTime = Time.GetMillisecondsSinceEpoch();
-
-        layers.Enqueue(effectsLayer);
-
-        var entireEffectLayer = new EffectLayer("Aurora Wrapper - EntireKB effect");
-
-        if (_currentEffect != null)
-        {
-            switch (_currentEffect)
-            {
-                default:
-                    _currentEffect.SetEffect(entireEffectLayer, currentTime - _currentEffect.TimeStarted);
-                    break;
-            }
-        }
-
-        layers.Enqueue(entireEffectLayer);
-
-        frame.AddLayers(layers.ToArray());
     }
 
     public override void SetGameState(IGameState newGameState)

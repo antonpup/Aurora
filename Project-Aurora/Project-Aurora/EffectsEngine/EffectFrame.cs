@@ -18,7 +18,12 @@ public sealed class EffectFrame : IDisposable
     public void AddLayers(IEnumerable<EffectLayer> effectLayers)
     {
         foreach (var layer in effectLayers)
-            _layers.Enqueue(layer);
+            AddLayer(layer);
+    }
+
+    public void AddLayer(EffectLayer layer)
+    {
+        _layers.Enqueue(layer);
     }
 
     /// <summary>
@@ -28,7 +33,7 @@ public sealed class EffectFrame : IDisposable
     public void AddOverlayLayers(IEnumerable<EffectLayer> effectLayers)
     {
         foreach(var layer in effectLayers)
-            _overLayers.Enqueue(layer);
+            AddOverlayLayer(layer);
     }
 
     /// <summary>

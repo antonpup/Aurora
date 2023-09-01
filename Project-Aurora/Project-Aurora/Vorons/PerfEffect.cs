@@ -121,7 +121,7 @@ namespace Aurora.Scripts.VoronScripts
 
 			Properties.RegProp("Cycled Gradient Shift Full Speed", 100L, "Cycled gradient shifting speed at 100%", -1000L, 1000L);
 
-			_effectLayer = new EffectLayer(ID);
+			_effectLayer = new EffectLayer(ID, true);
 		}
 
 		private static readonly MathParser MathParser = new();

@@ -96,6 +96,11 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
     private readonly Dictionary<DeviceKeys, Color> _extraKeys = new();
     private Color _lastFillColor = Color.Black;
     private EntireEffect? _currentEffect;
+    private readonly SolidBrush _fillBrush = new(Color.Transparent);
+
+    public WrapperLightsLayerHandler() : base("Aurora Wrapper")
+    {
+    }
 
     protected override UserControl CreateControl()
     {
@@ -107,13 +112,8 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
         if (gamestate is not GameState_Wrapper)
             return EffectLayer.EmptyLayer;
 
-        var layers = new Queue<EffectLayer>();
-
-        var colorFillLayer = new EffectLayer("Aurora Wrapper - Color Fill", GetBoostedColor(_lastFillColor));
-
-        layers.Enqueue(colorFillLayer);
-
-        var bitmapLayer = new EffectLayer("Aurora Wrapper - Bitmap");
+        _fillBrush.Color = GetBoostedColor(_lastFillColor);
+        EffectLayer.Fill(_fillBrush);
 
         var allKeys = Enum.GetValues(typeof(DeviceKeys)).Cast<DeviceKeys>().ToArray();
         foreach (var key in allKeys)
@@ -125,11 +125,11 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
 
             if (_extraKeys.ContainsKey(key))
             {
-                bitmapLayer.Set(key, GetBoostedColor(_extraKeys[key]));
+                EffectLayer.Set(key, GetBoostedColor(_extraKeys[key]));
 
                 // Do the key cloning
                 if (Properties.CloningMap.TryGetValue(key, out var targetKey))
-                    bitmapLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
+                    EffectLayer.Set(targetKey, GetBoostedColor(_extraKeys[key]));
             }
             else
             {
@@ -137,31 +137,18 @@ public class WrapperLightsLayerHandler : LayerHandler<WrapperLightsLayerHandlerP
 
                 if (logiKey == Logitech_keyboardBitmapKeys.UNKNOWN || _bitmap.Length <= 0) continue;
                 var color = GetBoostedColor(ColorUtils.GetColorFromInt(_bitmap[(int)logiKey / 4]));
-                bitmapLayer.Set(key, color);
+                EffectLayer.Set(key, color);
 
                 // Key cloning
                 if (Properties.CloningMap.TryGetValue(key, out var targetKey))
-                    bitmapLayer.Set(targetKey, color);
+                    EffectLayer.Set(targetKey, color);
             }
         }
 
-        layers.Enqueue(bitmapLayer);
-        var effectsLayer = new EffectLayer("Aurora Wrapper - Effects");
-        layers.Enqueue(effectsLayer);
-
-        var entireEffectLayer = new EffectLayer("Aurora Wrapper - EntireKB effect");
-
         var currentTime = Time.GetMillisecondsSinceEpoch();
-        _currentEffect?.SetEffect(entireEffectLayer, currentTime - _currentEffect.TimeStarted);
+        _currentEffect?.SetEffect(EffectLayer, currentTime - _currentEffect.TimeStarted);
 
-        layers.Enqueue(entireEffectLayer);
-
-        var layersArray = layers.ToArray();
-        var finalLayer = layersArray[0];
-        for (var i = 1; i < layersArray.Length; i++)
-            finalLayer += layersArray[i];
-
-        return finalLayer;
+        return EffectLayer;
     }
 
     public override void SetGameState(IGameState gamestate)

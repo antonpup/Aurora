@@ -228,7 +228,7 @@ public class Effects
 
     private readonly Dictionary<DeviceKeys, Color> _keyColors = new(MaxDeviceId, EnumHashGetter.Instance as IEqualityComparer<DeviceKeys>);
 
-    private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black));
+    private readonly Lazy<EffectLayer> _effectLayerFactory = new(() => new EffectLayer("Global Background", Color.Black, true));
     private EffectLayer Background => _effectLayerFactory.Value;
 
     private readonly Task<DeviceManager> _deviceManager;

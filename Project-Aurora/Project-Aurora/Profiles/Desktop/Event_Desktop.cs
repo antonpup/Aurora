@@ -10,45 +10,20 @@ using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 
-namespace Aurora.Profiles.Desktop
+namespace Aurora.Profiles.Desktop;
+
+public class Event_Desktop : LightEvent
 {
-    public class Event_Desktop : LightEvent
+    private readonly EffectLayer _timeBasedDimLayer = new("Time Based Dim", Color.Black, true);
+
+    public override void UpdateLights(EffectFrame frame)
     {
-        private long _internalCounter;
+        var layers = Application.Profile.Layers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state));
+        frame.AddLayers(layers);
+    }
 
-        public Event_Desktop()
-        {
-            _internalCounter = 0;
-        }
+    public override void SetGameState(IGameState newGameState)
+    {
 
-        public override void UpdateLights(EffectFrame frame)
-        {
-            var layers = new Queue<EffectLayer>(
-                Application.Profile.Layers.Where(l => l.Enabled).Reverse().Select(l => l.Render(_game_state))
-            );
-
-            //Scripts before interactive and shortcut assistant layers
-            //ProfilesManager.DesktopProfile.UpdateEffectScripts(layers);
-
-            if (Global.Configuration.TimeBasedDimmingEnabled)
-            {
-                if (Utils.Time.IsCurrentTimeBetween(Global.Configuration.TimeBasedDimmingStartHour, Global.Configuration.TimeBasedDimmingEndHour))
-                {
-                    layers.Clear();
-
-                    var timeBasedDimLayer = new EffectLayer("Time Based Dim");
-                    timeBasedDimLayer.FillOver(Color.Black);
-
-                    layers.Enqueue(timeBasedDimLayer);
-                }
-            }
-
-            frame.AddLayers(layers.ToArray());
-        }
-
-        public override void SetGameState(IGameState newGameState)
-        {
-
-        }
     }
 }

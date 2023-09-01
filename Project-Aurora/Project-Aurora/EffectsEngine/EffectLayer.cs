@@ -21,7 +21,7 @@ namespace Aurora.EffectsEngine
     public sealed class EffectLayer : IDisposable
     {
         private static readonly Lazy<EffectLayer> EmptyLayerFactory = new(
-            () => new EffectLayer("EmptyLayer"), LazyThreadSafetyMode.PublicationOnly);
+            () => new EffectLayer("EmptyLayer", true), LazyThreadSafetyMode.PublicationOnly);
         public static EffectLayer EmptyLayer => EmptyLayerFactory.Value;
 
         private readonly string _name;
@@ -56,19 +56,34 @@ namespace Aurora.EffectsEngine
             }
         }
 
+        [Obsolete("This creates too much garbage memory")]
         public EffectLayer(string name) : this(name, Color.FromArgb(0, 1, 1, 1))
         {
         }
 
+        [Obsolete("This creates too much garbage memory")]
         public EffectLayer(string name, Color color)
         {
             _name = name;
-            WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
             _colormap = new Bitmap(Effects.CanvasWidth, Effects.CanvasHeight);
             _textureBrush = new TextureBrush(_colormap);
             Dimension = new Rectangle(0, 0, Effects.CanvasWidth, Effects.CanvasHeight);
 
             FillOver(color);
+        }
+
+        public EffectLayer(string name, bool persistent) : this(name)
+        {
+            if (!persistent)
+                return;
+            WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
+        }
+
+        public EffectLayer(string name, Color color, bool persistent) : this(name, color)
+        {
+            if (!persistent)
+                return;
+            WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), InvalidateColorMap);
         }
 
         /// <summary>
@@ -1085,6 +1100,7 @@ namespace Aurora.EffectsEngine
         }
 
         private KeySequence _excludeSequence = new();
+
         /// <summary>
         /// Excludes provided sequence from the layer (Applies a mask)
         /// </summary>

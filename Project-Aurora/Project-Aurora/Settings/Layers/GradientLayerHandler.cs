@@ -33,7 +33,7 @@ namespace Aurora.Settings.Layers
     [LogicOverrideIgnoreProperty("_SecondaryColor")]
     public class GradientLayerHandler : LayerHandler<GradientLayerHandlerProperties>
     {
-        private readonly EffectLayer _tempLayerBitmap = new("GradientLayer - Colors");
+        private readonly EffectLayer _tempLayerBitmap = new("GradientLayer - Colors", true);
         private bool _invalidated;
 
         public GradientLayerHandler(): base("GradientLayer")

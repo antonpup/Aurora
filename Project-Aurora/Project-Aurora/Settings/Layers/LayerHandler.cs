@@ -307,7 +307,7 @@ namespace Aurora.Settings.Layers
             _secondPrevImageAttributes = new();
             _secondPrevImageAttributes.SetColorMatrix(colorMatrix2);
 
-            _effectLayer = new(() => new EffectLayer(name));
+            _effectLayer = new(() => new EffectLayer(name, true));
             _ExclusionMask = new KeySequence();
             Properties.PropertyChanged += PropertiesChanged;
             WeakEventManager<Effects, EventArgs>.AddHandler(null, nameof(Effects.CanvasChanged), PropertiesChanged);
@@ -323,7 +323,7 @@ namespace Aurora.Settings.Layers
 
         }
 
-        private readonly Lazy<EffectLayer> _postfxLayer = new(() => new EffectLayer("PostFXLayer"));
+        private readonly Lazy<EffectLayer> _postfxLayer = new(() => new EffectLayer("PostFXLayer", true));
         private readonly ImageAttributes _prevImageAttributes;
         private readonly ImageAttributes _secondPrevImageAttributes;
 

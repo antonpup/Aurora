@@ -13,7 +13,7 @@ namespace Aurora.Profiles.Desktop;
 
 public sealed class EventIdle : LightEvent
 {
-    private readonly EffectLayer _layer = new("IDLE");
+    private readonly EffectLayer _layer = new("IDLE", true);
 
     private long _previousTime = Time.GetMillisecondsSinceEpoch();
     internal long CurrentTime = Time.GetMillisecondsSinceEpoch();
