@@ -82,7 +82,7 @@ public class UpdateManager
 
         PerformCleanup();
         var tries = 20;
-        while (LatestRelease == null && tries-- == 0)
+        while (LatestRelease == null && tries-- != 0)
         {
             try
             {
