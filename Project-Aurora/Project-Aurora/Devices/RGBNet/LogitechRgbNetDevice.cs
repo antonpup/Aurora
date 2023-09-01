@@ -34,6 +34,11 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
         return true;
     }
 
+    protected override bool IsReversed()
+    {
+        return true;
+    }
+
     #region Event handlers
 
     private async void SystemEventsOnSessionSwitch(object? sender, SessionSwitchEventArgs e)

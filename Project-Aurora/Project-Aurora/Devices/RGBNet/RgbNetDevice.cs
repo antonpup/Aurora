@@ -191,6 +191,11 @@ public abstract class RgbNetDevice : DefaultDevice
         return Task.CompletedTask;
     }
 
+    protected virtual bool IsReversed()
+    {
+        return false;
+    }
+
     protected virtual Task ConfigureProvider()
     {
         return Task.CompletedTask;
@@ -223,6 +228,40 @@ public abstract class RgbNetDevice : DefaultDevice
 
     private void UpdateDevice(IReadOnlyDictionary<DeviceKeys, Color> keyColors, IRGBDevice device)
     {
+        if (IsReversed())
+        {
+            UpdateReverse(keyColors, device);
+        }
+        else
+        {
+            UpdateStraight(keyColors, device);
+        }
+
+        device.Update();
+    }
+
+    private static void UpdateReverse(IReadOnlyDictionary<DeviceKeys, Color> keyColors, IRGBDevice device)
+    {
+        var calibrationName = CalibrationName(device);
+        var calibrated = Global.Configuration.DeviceCalibrations.TryGetValue(calibrationName, out var calibration);
+        foreach (var (key, color) in keyColors)
+        {
+            Led? led;
+            if (!RgbNetKeyMappings.AuroraToRgbNet.TryGetValue(key, out var rgbNetLedId) || (led = device[rgbNetLedId]) == null)
+                continue;
+            if (calibrated)
+            {
+                UpdateLedCalibrated(led, color, calibration);
+            }
+            else
+            {
+                UpdateLed(led, color);
+            }
+        }
+    }
+
+    private void UpdateStraight(IReadOnlyDictionary<DeviceKeys, Color> keyColors, IRGBDevice device)
+    {
         var calibrationName = CalibrationName(device);
         var calibrated = Global.Configuration.DeviceCalibrations.TryGetValue(calibrationName, out var calibration);
         foreach (var led in device)
@@ -242,8 +281,6 @@ public abstract class RgbNetDevice : DefaultDevice
                 UpdateLed(led, color);
             }
         }
-
-        device.Update();
     }
 
     private static void UpdateLed(Led led, Color color)
