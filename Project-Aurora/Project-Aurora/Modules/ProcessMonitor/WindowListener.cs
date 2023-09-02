@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Automation;
 using Microsoft.Collections.Extensions;
 
@@ -45,6 +46,7 @@ public sealed class WindowListener : IDisposable
     public event EventHandler<int>? WindowDestroyed;
 
     public readonly MultiValueDictionary<string, WindowProcess> ProcessWindowsMap = new();
+    private static readonly string Aurora = Assembly.GetExecutingAssembly().GetName().Name ?? "Aurora";
 
     public void StartListening()
     {
@@ -57,7 +59,7 @@ public sealed class WindowListener : IDisposable
         {
             var element = (AutomationElement)sender;
             using var process = Process.GetProcessById(element.Current.ProcessId);
-            if (process.ProcessName.StartsWith("Aurora"))
+            if (process.ProcessName == Aurora)
             {
                 return;
             }

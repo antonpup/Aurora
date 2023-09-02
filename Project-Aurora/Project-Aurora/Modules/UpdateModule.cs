@@ -42,7 +42,10 @@ public sealed class UpdateModule : AuroraModule
                 FileName = updaterPath,
                 Arguments = "-silent"
             };
-            Process.Start(updaterProc);
+            var process = Process.Start(updaterProc);
+#if DEBUG
+            await process!.WaitForExitAsync();
+#endif
         }
         catch (Exception exc)
         {
