@@ -19,6 +19,8 @@ public class YeelightRgbNetDevice : RgbNetDevice
             null, null, "Comma separated IPv4 or IPv6 addresses.");
         variableRegistry.Register($"{DeviceName}_auto_discovery", false, "Auto-discovery",
             null, null, "Enable this and empty out the IP field to auto-discover lights.");
+        variableRegistry.Register($"{DeviceName}_music_mode_only", false, "Music Mode Only",
+            null, null, "Only connects as music mode, making sure all devices update fast");
     }
 
     protected override async Task ConfigureProvider()

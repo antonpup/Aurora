@@ -6,10 +6,8 @@ using RGB.NET.Devices.Logitech;
 
 namespace Aurora.Devices.RGBNet;
 
-public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
+public sealed class LogitechRgbNetDevice : RgbNetDevice
 {
-    private bool _suspended;
-
     protected override IRGBDeviceProvider Provider => LogitechDeviceProvider.Instance;
 
     public override string DeviceName => "Logitech (RGB.NET)";
@@ -23,13 +21,12 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
 
     protected override void OnInitialized()
     {
-        SystemEvents.PowerModeChanged += SystemEventsPowerModeChanged;
         SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
     }
 
     protected override bool OnShutdown()
     {
-        SystemEvents.PowerModeChanged -= SystemEventsPowerModeChanged;
+        SystemEvents.SessionSwitch -= SystemEventsOnSessionSwitch;
 
         return true;
     }
@@ -46,7 +43,6 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
         if (!IsInitialized)
             return;
         
-        
         switch (e.Reason)
         {
             case SessionSwitchReason.SessionLock:
@@ -62,20 +58,5 @@ public sealed class LogitechRgbNetDevice : RgbNetDevice, IDisposable
         }
     }
 
-    private async void SystemEventsPowerModeChanged(object? sender, PowerModeChangedEventArgs e)
-    {
-        if (!IsInitialized)
-            return;
-
-        if (e.Mode != PowerModes.Suspend || _suspended) return;
-        _suspended = true;
-        Shutdown();
-    }
-
     #endregion
-
-    public void Dispose()
-    {
-        SystemEvents.SessionSwitch -= SystemEventsOnSessionSwitch;
-    }
 }

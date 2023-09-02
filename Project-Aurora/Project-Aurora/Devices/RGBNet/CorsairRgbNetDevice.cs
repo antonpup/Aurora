@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Aurora.Modules.ProcessMonitor;
 using Aurora.Settings;
 using Aurora.Utils;
+using RGB.NET.Core;
 using RGB.NET.Devices.CorsairLegacy;
 
 namespace Aurora.Devices.RGBNet;
@@ -40,7 +41,14 @@ public class CorsairRgbNetDevice : RgbNetDevice
         var waitSessionUnlock = await DesktopUtils.WaitSessionUnlock();
         if (waitSessionUnlock)
         {
+            Global.logger.Information("Waiting for Corsair to load after unlock");
             await Task.Delay(5000);
+        }
+        
+        var isIcueRunning = RunningProcessMonitor.Instance.IsProcessRunning("icue.exe");
+        if (!isIcueRunning)
+        {
+            throw new DeviceProviderException(new ApplicationException("iCUE is not running!"), false);
         }
 
         var exclusive = Global.Configuration.VarRegistry.GetVariable<bool>($"{DeviceName}_exclusive");

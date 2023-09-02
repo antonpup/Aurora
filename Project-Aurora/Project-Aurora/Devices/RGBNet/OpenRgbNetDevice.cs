@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using Aurora.Modules.ProcessMonitor;
 using Aurora.Settings;
+using RGB.NET.Core;
 using RGB.NET.Devices.OpenRGB;
 
 namespace Aurora.Devices.RGBNet;
@@ -28,6 +32,15 @@ public class OpenRgbNetDevice : RgbNetDevice
         
         var ip = Global.Configuration.VarRegistry.GetVariable<string>($"{DeviceName}_ip");
         var port = Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_port");
+
+        if (ip == IPAddress.Loopback.ToString())
+        {
+            var isOpenRgbRunning = RunningProcessMonitor.Instance.IsProcessRunning("openrgb.exe");
+            if (!isOpenRgbRunning)
+            {
+                throw new DeviceProviderException(new ApplicationException("OpenRGB is not running!"), false);
+            }
+        }
 
         _openRgbServerDefinition.Ip = ip;
         _openRgbServerDefinition.Port = port;

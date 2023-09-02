@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Aurora.Settings;
 
@@ -35,8 +34,9 @@ public abstract class DefaultDevice : IDevice, IDisposable
     public DeviceTooltips Tooltips => _tooltips;
 
     public async Task<bool> Initialize() {
-        if (IsInitialized)
+        if (IsInitialized || isDoingWork)
         {
+            Global.logger.Warning("Device already initialized or initializing");
             return IsInitialized;
         }
         isDoingWork = true;

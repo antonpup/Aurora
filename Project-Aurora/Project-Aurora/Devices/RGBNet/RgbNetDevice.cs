@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -50,57 +49,36 @@ public abstract class RgbNetDevice : DefaultDevice
     protected override async Task<bool> DoInitialize()
     {
         Global.logger.Information("Initializing {DeviceName}", DeviceName);
-        List<Exception> providerExceptions = new();
-        List<Exception> criticalExceptions = new();
 
-        void DeviceProviderOnException(object? sender, ExceptionEventArgs e)
+        var connectSleepTimeSeconds =
+            Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
+        var remainingMillis = connectSleepTimeSeconds * 1000;
+
+        do
         {
-            Global.logger.Error(e.Exception, "Device provider {DeviceProvider} threw exception", DeviceName);
-            ErrorMessage = e.Exception.Message;
-            providerExceptions.Add(e.Exception);
-
-            if (e.IsCritical)
+            try
             {
-                criticalExceptions.Add(e.Exception);
+                await ConfigureProvider();
+
+                Provider.DevicesChanged += ProviderOnDevicesChanged;
+                Provider.Initialize(RGBDeviceType.All, true);
+                IsInitialized = true;
+                break;
             }
-        }
-
-        try
-        {
-            await ConfigureProvider();
-
-            Provider.Exception += DeviceProviderOnException;
-            Provider.DevicesChanged += ProviderOnDevicesChanged;
-            var connectSleepTimeSeconds =
-                Global.Configuration.VarRegistry.GetVariable<int>($"{DeviceName}_connect_sleep_time");
-            var remainingMillis = connectSleepTimeSeconds * 1000;
-
-            do
+            catch (DeviceProviderException e)
             {
-                providerExceptions.Clear();
-                criticalExceptions.Clear();
-                Provider.Initialize();
-                if (criticalExceptions.Count != 0)
-                {
-                    break;
-                }
+                Global.logger.Error(e, "Device {DeviceProvider} init threw exception", DeviceName);
+                ErrorMessage = e.Message;
 
-                if (providerExceptions.Count == 0)
+                if (e.IsCritical)
                 {
-                    IsInitialized = true;
                     break;
                 }
 
                 await Task.Delay(1000);
                 remainingMillis -= 1000;
-            } while (remainingMillis > 0);
-        }
-        catch (Exception e)
-        {
-            ErrorMessage = e.Message;
-        }
-
-        Provider.Exception -= DeviceProviderOnException;
+            }
+        } while (remainingMillis > 0);
 
         if (!IsInitialized)
         {
@@ -110,7 +88,14 @@ public abstract class RgbNetDevice : DefaultDevice
 
         ErrorMessage = null;
         OnInitialized();
+        Provider.Exception += ProviderOnException;
         return true;
+    }
+
+    private async void ProviderOnException(object? sender, ExceptionEventArgs e)
+    {
+        Global.logger.Error(e.Exception, "Device provider {DeviceProvider} threw exception", DeviceName);
+        await Reset();
     }
 
     private void ProviderOnDevicesChanged(object? sender, DevicesChangedEventArgs e)

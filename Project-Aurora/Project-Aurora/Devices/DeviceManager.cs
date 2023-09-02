@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Amib.Threading;
-using System.Windows.Threading;
 using Aurora.Devices.ScriptedDevice;
 using RazerSdkReader;
 
@@ -65,8 +64,8 @@ public sealed class DeviceContainer : IDisposable
 
     public async Task EnableDevice()
     {
-        var initTask = Device.Initialize();
-        if (initTask is { IsCompletedSuccessfully: true, Result: true })
+        var initTask = await Device.Initialize();
+        if (initTask)
         {
             Global.logger.Information("[Device][{DeviceName}] Initialized Successfully", Device.DeviceName);
         }
@@ -133,7 +132,6 @@ public sealed class DeviceManager: IDisposable
         }
 
         SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
-        SystemEvents.SessionSwitch += SystemEvents_SessionSwitch;
     }
 
     public void RegisterVariables()
@@ -184,15 +182,6 @@ public sealed class DeviceManager: IDisposable
     }
 
     #region SystemEvents
-    private async void SystemEvents_SessionSwitch(object? sender, SessionSwitchEventArgs e)
-    {
-        Global.logger.Information("SessionSwitch triggered with {Reason}", e.Reason);
-        if (!e.Reason.Equals(SessionSwitchReason.SessionUnlock) || (!_suspended && !_resumed)) return;
-        Global.logger.Information("Resuming Devices -- Session Switch Session Unlock");
-        _suspended = false;
-        _resumed = false;
-        await Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
-    }
 
     private async void SystemEvents_PowerModeChanged(object? sender, PowerModeChangedEventArgs e)
     {
@@ -201,14 +190,14 @@ public sealed class DeviceManager: IDisposable
             case PowerModes.Suspend:
                 Global.logger.Information("Suspending Devices");
                 _suspended = true;
-                await Dispatcher.CurrentDispatcher.Invoke(async () => await ShutdownDevices());
+                await Task.Run(async () => await ShutdownDevices());
                 break;
             case PowerModes.Resume:
                 Global.logger.Information("Resuming Devices -- PowerModes.Resume");
-                Thread.Sleep(TimeSpan.FromSeconds(2));
+                Thread.Sleep(TimeSpan.FromSeconds(5));
                 _resumed = true;
                 _suspended = false;
-                await Dispatcher.CurrentDispatcher.Invoke(async () => await InitializeDevices());
+                await Task.Run(async () => await InitializeDevices());
                 break;
         }
     }

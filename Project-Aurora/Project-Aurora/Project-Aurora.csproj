@@ -89,17 +89,15 @@
     <!--
     Waiting for #338 and #339 on rgb.net
     <PackageReference Include="RGB.NET.Core" Version="2.0.0-prerelease.83" />
-    <PackageReference Include="RGB.NET.Devices.Corsair" Version="2.0.0-prerelease.83" />
     <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="2.0.0-prerelease.83" />
     -->
-    <!-- waiting for package without System.Management
-    <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-z.1" /> -->
-    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.83" />
-    <PackageReference Include="RGB.NET.Devices.CorsairLegacy" Version="2.0.0-prerelease.94" />
-    <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.83" />
-    <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.83" />
-    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.83" />
-    <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.83" />
+    <PackageReference Include="RGB.NET.Devices.Asus" Version="2.0.0-prerelease.111" />
+    <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="2.0.0-prerelease.111" />
+    <PackageReference Include="RGB.NET.Devices.CorsairLegacy" Version="2.0.0-prerelease.111" />
+    <PackageReference Include="RGB.NET.Devices.Logitech" Version="2.0.0-prerelease.111" />
+    <PackageReference Include="RGB.NET.Devices.Razer" Version="2.0.0-prerelease.111" />
+    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="2.0.0-prerelease.111" />
+    <PackageReference Include="RGB.NET.Devices.Wooting" Version="2.0.0-prerelease.111" />
     <PackageReference Include="SemanticVersioning" Version="2.0.2" />
     <PackageReference Include="Serilog.Aggregating.Filter" Version="1.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
@@ -122,11 +120,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- temporary, this one doesn't have System.Management dependency -->
-    <Reference Include="RGB.NET.Devices.Asus">
-      <HintPath>.\RGB.NET.Devices.Asus.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
     <Reference Include="RGB.NET.Core, Version=2.0.1.2">
       <HintPath>.\RGB.NET.Core.dll</HintPath>
       <Private>true</Private>

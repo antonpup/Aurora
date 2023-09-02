@@ -12,24 +12,19 @@ public static class DesktopUtils
     public static bool IsDesktopLocked { get; private set; }
 
     private static readonly int SessionId = Process.GetCurrentProcess().SessionId;
-    private static Lazy<TaskCompletionSource> _lazyUnlockSource = CreateLazyUnlockSource();
 
-    private static Lazy<TaskCompletionSource> CreateLazyUnlockSource()
+    private static TaskCompletionSource<bool> CreateLazyUnlockSource()
     {
-        return new(() =>
-        {
-            SystemEvents.SessionSwitch += ResetLazyUnlockSource;
-            return new TaskCompletionSource();
+        var taskCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        SystemEvents.SessionSwitch += ResetLazyUnlockSource;
+        return taskCompletionSource;
 
-            void ResetLazyUnlockSource(object? sender, SessionSwitchEventArgs e)
-            {
-                if (e.Reason != SessionSwitchReason.SessionUnlock) return;
-                Global.logger.Information("Releasing session unlock lock");
-                _lazyUnlockSource.Value.SetResult();
-                SystemEvents.SessionSwitch -= ResetLazyUnlockSource;
-                _lazyUnlockSource = CreateLazyUnlockSource();
-            }
-        }, LazyThreadSafetyMode.ExecutionAndPublication);
+        void ResetLazyUnlockSource(object? sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason != SessionSwitchReason.SessionUnlock) return;
+            taskCompletionSource.SetResult(true);
+            SystemEvents.SessionSwitch -= ResetLazyUnlockSource;
+        }
     }
 
     public static void StartSessionWatch()  //TODO static constructor
@@ -40,14 +35,23 @@ public static class DesktopUtils
     public static async Task<bool> WaitSessionUnlock()
     {
         if (!IsSystemLocked()) return false;
-        await _lazyUnlockSource.Value.Task;
+        await CreateLazyUnlockSource().Task;
         return true;
     }
 
     private static bool IsSystemLocked()
     {
-        if (!WTSQuerySessionInformation(IntPtr.Zero, (uint)SessionId, 25, out var sessionBuffer, out _))
+        var tries = 25;
+        IntPtr sessionBuffer;
+        while (!WTSQuerySessionInformation(IntPtr.Zero, (uint)SessionId, 25, out sessionBuffer, out _) && tries-- != 0)
+        {
+            //wait for desktop to initialize
+            Thread.Sleep(200);
+        }
+
+        if(tries == 0)
             return false;
+
         var sessionInfo = Marshal.ReadInt16(sessionBuffer + 16);
         WTSFreeMemory(sessionBuffer);
 
@@ -84,17 +88,14 @@ public static class DesktopUtils
 
     internal static void ResetDpiAwareness()
     {
-        SetProcessDpiAwarenessContext((int)DPI_AWARENESS_CONTEXT.DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+        SetProcessDpiAwarenessContext((int)DpiAwarenessContext.DpiAwarenessContextPerMonitorAwareV2);
     }
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool SetProcessDpiAwarenessContext(int dpiFlag);
 
-    private enum DPI_AWARENESS_CONTEXT
+    private enum DpiAwarenessContext
     {
-        DPI_AWARENESS_CONTEXT_UNAWARE = 16,
-        DPI_AWARENESS_CONTEXT_SYSTEM_AWARE = 17,
-        DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE = 18,
-        DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = 34
+        DpiAwarenessContextPerMonitorAwareV2 = 34
     }
 }
