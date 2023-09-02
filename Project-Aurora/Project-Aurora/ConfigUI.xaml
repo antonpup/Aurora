@@ -44,22 +44,9 @@
                 <ContextMenu Background="#88181818" HorizontalContentAlignment="Center">
                     <ContextMenu.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Background="#88181818" />
+                            <StackPanel Background="#FF181818" />
                         </ItemsPanelTemplate>
                     </ContextMenu.ItemsPanel>
-                    <ContextMenu.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="-20,0,-40,0">
-                                <!--this part is important-->
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="20"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Ident}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Description}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ContextMenu.ItemTemplate>
 
                     <MenuItem Header="Open Aurora" Click="trayicon_menu_settings_Click" Foreground="White" />
                     <MenuItem Header="Restart" Click="trayicon_menu_restart_Click" Foreground="White" />
