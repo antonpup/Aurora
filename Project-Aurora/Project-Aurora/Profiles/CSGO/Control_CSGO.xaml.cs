@@ -281,7 +281,7 @@ public partial class Control_CSGO
     {
         var installPath = SteamUtils.GetGamePath(730);
         if (string.IsNullOrWhiteSpace(installPath)) return false;
-        var path = Path.Combine(installPath, "csgo", "cfg", "gamestate_integration_aurora.cfg");
+        var path = Path.Combine(installPath, "game", "csgo", "cfg", "gamestate_integration_aurora.cfg");
 
         if (!File.Exists(path))
         {
@@ -298,7 +298,7 @@ public partial class Control_CSGO
     {
         var installPath = SteamUtils.GetGamePath(730);
         if (string.IsNullOrWhiteSpace(installPath)) return false;
-        var path = Path.Combine(installPath, "csgo", "cfg", "gamestate_integration_aurora.cfg");
+        var path = Path.Combine(installPath, "game", "csgo", "cfg", "gamestate_integration_aurora.cfg");
 
         if (File.Exists(path))
             File.Delete(path);
